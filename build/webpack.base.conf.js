@@ -68,7 +68,7 @@ module.exports = {
                 rootValue: 30,
                 unitPrecision: 3,
                 propList: ['*', '!border', '!border-radius'],
-                minPixelValue: 2,
+                minPixelValue: 3,
                 selectorBlackList: ['html']
             })]
         }

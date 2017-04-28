@@ -75,9 +75,8 @@
                 }
             }),
             onListener: function (data) {
-                data = JSON.parse(data)
                 if (isFunction(onSuccess)) {
-                    onSuccess(data.result)
+                    onSuccess(data)
                 }
             }
         });
