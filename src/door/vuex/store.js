@@ -7,7 +7,8 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
-        currentDate: new Date(), //日期组件显示的当前日期
+        current_time: 0, //日期组件显示的当前日期
+        source_time: 0,
         ptr_down_time: 0, //下拉刷新的最新时间
         ptr_up_time: 0, //上拉刷洗的最新时间
         logsInDate: {}, //每天的日志缓存,
@@ -17,6 +18,14 @@ const store = new Vuex.Store({
         jumpToDate: false
     },
     mutations: {
+        updateCurrentDate (state, current_time){
+            state.current_time = current_time;
+        },
+
+        updateSourceTime (state, source_time){
+            state.source_time = source_time;
+        },
+
         updateDownTime (state, down_time){
             state.ptr_down_time = down_time;
         },
@@ -90,7 +99,7 @@ const store = new Vuex.Store({
                         }
                     }
                 }
-                log.timeTxt = time.format('HH:mm');
+                log.timeTxt = time.format('HH:mm:ss');
                 store.commit('addDateToList', {
                     timestamp: createTimeStamp,
                     day: key

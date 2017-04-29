@@ -40,13 +40,19 @@
         mounted (){
             HdSmart.Device.getSnapShot((data, service_time) => {
                 this.is_ajax_back = true;
-                this.device.title = '门'+window.device_uuid;
+                this.device.title = '门' + window.device_uuid;
                 this.device.status = data.attr.status;
                 this.$store.commit('updateDownTime', service_time);
                 this.$store.commit('updateUpTime', service_time);
+                this.$store.commit('updateSourceTime', service_time);
             });
-            HdSmart.onDeviceListen((data)=>{
-                alert(data);
+            HdSmart.onDeviceListen((data) => {
+                this.$store.commit('addLogs', [{
+                    time: data.result.timestamp,
+                    attr: Object.assign({}, data.result.attr, {
+                        type: 'add'
+                    })
+                }]);
             })
         }
     }

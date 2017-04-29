@@ -30,7 +30,7 @@
             <div class="calendar-row calendar-date" v-for="days in dayRows">
                 <div class="calendar-cell calendar-cell-date" v-for="day in days">
                     <div class="calendar-cell-content" v-if="day"
-                         :class="{active:checkIsCurrentDate(year,month,dayAttr[day].date),enable:checkIsEnableDate(year,month,dayAttr[day].date)}">
+                         :class="{active:checkIsCurrentDate(year,month,dayAttr[day].date),enable:daysPermission[dayAttr[day].date]}">
                         {{dayAttr[day].date}}
                     </div>
                 </div>
@@ -105,7 +105,7 @@
         border: 1px solid transparent;
     }
 
-    .calendar-cell-content.enable:active{
+    .calendar-cell-content.enable:active {
         background: #ebebeb;
         border: 1px solid #ebebeb !important;
     }
@@ -115,7 +115,7 @@
         color: #13d5dc;
     }
 
-    .calendar-cell-content.enable{
+    .calendar-cell-content.enable {
         color: #808080;
     }
 
@@ -140,7 +140,7 @@
         background-size: 100% 100%;
     }
 
-    .btn-pre-month:active{
+    .btn-pre-month:active {
         background-image: url('../assets/btn_calendar_pre_pressed.png');
     }
 
@@ -159,28 +159,53 @@
         background-size: 100% 100%;
     }
 
-    .btn-next-month:active{
+    .btn-next-month:active {
         background-image: url('../assets/btn_calendar_next_pressed.png');
     }
 </style>
 <script>
+    import {mapState} from 'vuex';
+
     let constDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     export default {
-        props: {
-            currentDate: [Date,Number]
-        },
         data (){
             return {
-                year: 0,
+                year: 1970,
                 month: 0,
                 dayRows: [],
-                dayAttr: {}
+                dayAttr: {},
+                daysPermission: {}
             }
         },
+        computed:mapState(['ptr_up_time']),
         mounted (){
-            this.render(new Date);
+            console.log(this.ptr_up_time)
+            let resetRenderDate = () => {
+                this.render(new Date(this.ptr_up_time * 1000));
+                this.updateEnableDay();
+            };
+            if (this.ptr_up_time) {
+                resetRenderDate();
+            } else {
+                let subscribe = this.$store.subscribe((mutation, state) => {
+                    if (mutation.type == 'updateDownTime') {
+                        resetRenderDate();
+                        subscribe();
+                    }
+                });
+            }
         },
         methods: {
+            updateEnableDay (){
+                HdSmart.Device.getDeviceMonthHistory(new Date(this.year, this.month), (data) => {
+                    let has_log_dates = data.result.has_log;
+                    let enableDays = {};
+                    has_log_dates.forEach((value,key)=>{
+                        enableDays[value] = true;
+                    });
+                    this.daysPermission = enableDays;
+                })
+            },
             checkIsCurrentDate(year, month, date){
                 if (this.currentDate instanceof Date) {
                     let currentYear = this.currentDate.getFullYear();
@@ -188,9 +213,6 @@
                     let currentDate = this.currentDate.getDate();
                     return year == currentYear && month == currentMonth && date == currentDate
                 }
-                return false;
-            },
-            checkIsEnableDate (){
                 return false;
             },
             render (date){

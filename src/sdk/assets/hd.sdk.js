@@ -75,7 +75,7 @@
                 }
             }),
             onListener: function (data) {
-                data = JSON.parse(data)
+                data = JSON.parse(data);
                 if (isFunction(onSuccess)) {
                     onSuccess(data.result)
                 }
@@ -95,6 +95,7 @@
                 }
             }),
             onListener: function (data) {
+                data = JSON.parse(data);
                 if (isFunction(onSuccess)) {
                     onSuccess(data);
                 }
@@ -112,8 +113,8 @@
             data: '',
             onListener: function (data) {
                 data = JSON.parse(data);
-                if (data.code == 200) {
-                    onSuccess(data.result,data.timestamp);
+                if (data.result) {
+                    onSuccess(data.result,data.timestamp || data.result.timestamp);
                 } else {
                     onFailure(data);
                 }

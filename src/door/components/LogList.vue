@@ -2,18 +2,19 @@
     <div class="log-list">
         <pull-to-refresh v-on:onPull="onPull" v-on:onPush="onPush">
             <div class="log-panel-group">
-                <div class="log-panel">
-                    <template v-for="daily in logDateList">
-                        <div class="log-indicator log-header">
-                            <div class="log-indicator-circle"></div>
-                            {{daily.timestamp | tf}}
-                        </div>
-                        <div class="log-indicator log-item" v-for="log in logsInDate[daily.day].logs">
+                <div class="log-panel" v-for="daily in logDateList">
+                    <div class="log-indicator log-header">
+                        <div class="log-indicator-circle"></div>
+                        {{daily.timestamp | tf}}
+                    </div>
+                    <transition-group name="log-group" v-bind:css="false" tag="div">
+                        <div class="log-indicator log-item" :class="[log.attr.status,log.attr.type]" :key="log.time"
+                             v-for="log in logsInDate[daily.day].logs">
                             <div class="log-indicator-circle"></div>
                             <div class="time">{{log.timeTxt}}</div>
                             <div class="status">{{log.attr.status == 'on'?'打开':'关闭'}}</div>
                         </div>
-                    </template>
+                    </transition-group>
                 </div>
             </div>
         </pull-to-refresh>
@@ -30,9 +31,7 @@
                     this.updateDownTime(data.log[0].time);
                     this.updateUpTime(data.log[length - 1].time);
                 }
-            }, 16);
-            this.$store.watch(()=>{
-            })
+            },16);
         },
         computed: mapState(['ptr_down_time', 'ptr_up_time', 'logsInDate', 'logDateList']),
         methods: {
@@ -56,10 +55,14 @@
                 })
             },
             onPull (onPullFinishCallback){
-                console.log('pull')
-                setTimeout(function () {
+                this.getDeviceLog(this.ptr_up_time, 'up', (data) => {
+                    let length = 0;
+                    if (data.log && (length = data.log.length)) {
+                        this.$store.commit('addLogs', data.log);
+                        this.updateUpTime(data.log[length - 1].time);
+                    }
                     onPullFinishCallback();
-                }, 2000)
+                });
             },
             onPush (onPushFinishCallback){
                 this.getDeviceLog(this.ptr_down_time, 'down', (data) => {
@@ -67,8 +70,8 @@
                     if (data.log && (length = data.log.length)) {
                         this.$store.commit('addLogs', data.log);
                         this.updateDownTime(data.log[length - 1].time);
-                        onPushFinishCallback();
                     }
+                    onPushFinishCallback();
                 });
             }
         }
@@ -79,7 +82,6 @@
         width: 100%;
         position: relative;
         margin-bottom: 90px;
-        background: red;
     }
 
     .log-header {
@@ -130,23 +132,30 @@
         margin-top: -6px;
     }
 
+    .log-indicator.on .log-indicator-circle {
+        background: #13d5dc;
+    }
+
     .log-indicator:before {
         position: absolute;
         content: '';
         width: 2px;
-        height: 50%;
         left: -22px;
-        top: 50%;
+        top: 0;
+        height: 100%;
         background: #dbdbdb;
     }
 
-    .log-indicator + .log-indicator:before {
-        top: 0;
-        height: 100%;
+    .log-panel:first-child .log-header:before {
+        top: 50%;
+        height: 50%;
     }
 
-    .log-indicator:last-child:before {
-        top: 0;
-        height: 50% !important;
+    .log-panel:last-child .log-item:last-child:before {
+        height: 50%;
+    }
+
+    .log-item {
+        transition: all 1s;
     }
 </style>

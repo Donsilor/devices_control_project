@@ -1,7 +1,7 @@
 <template>
     <div class="tool">
         <div class="bg" v-if="isCalendarShown" @click="hideCalendar"></div>
-        <calendar class="calendar-box" :class="{active:isCalendarShown}" :current-date="currentDate"></calendar>
+        <calendar class="calendar-box" :class="{active:isCalendarShown}"></calendar>
         <div class="btn-top"></div>
         <div class="btn-calendar" @click="showCalendar"></div>
     </div>
@@ -11,7 +11,6 @@
         data (){
             return {
                 isCalendarShown: false,
-                currentDate: this.$store.state.currentDate
             }
         },
         methods: {

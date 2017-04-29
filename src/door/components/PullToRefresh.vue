@@ -211,8 +211,12 @@
                 max: 0,
                 min: -_this.min,
                 change (value){
-                    pull.translateY = value;
-                    push.translateY = value + scrollHeight - clientHeight;
+                    pull.translateY = value > pullBarHeight ? pullBarHeight : value;
+                    if(clientHeight > scrollHeight){
+                        push.translateY = value <= -pushBarHeight ? -pushBarHeight : value;
+                    }else{
+                        push.translateY = value + scrollHeight - clientHeight;
+                    }
                     _this.value = value;
                 },
                 touchStart (){
@@ -248,7 +252,7 @@
                         });
                         return false;
                     }
-                    let lastLine = clientHeight - scrollHeight - pushBarHeight;
+                    let lastLine = _this.min - pushBarHeight;
                     if (value <= lastLine) {
                         at.to(lastLine);
                         _this.pushStatus = 'loading';

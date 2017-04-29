@@ -1,3 +1,8 @@
+//{ "method":"report" ,"result":{"device_uuid":"c04fcb0b006f0d0001" ,"log":[{ "time": 1493318989 ,"attr":{"status":"on","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318971 ,"attr":{"status":"off","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318969 ,"attr":{"status":"on","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318967 ,"attr":{"status":"off","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318965 ,"attr":{"status":"on","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318934 ,"attr":{"status":"on","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318932 ,"attr":{"status":"off","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318731 ,"attr":{"status":"on","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318730 ,"attr":{"status":"off","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318696 ,"attr":{"status":"on","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318690 ,"attr":{"status":"off","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318688 ,"attr":{"status":"on","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493318686 ,"attr":{"status":"off","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493167232 ,"attr":{"status":"on","alarm_low_battery":"off","alarm_removal":"on"}},{ "time": 1493167229 ,"attr":{"status":"on","alarm_low_battery":"off","alarm_removal":"on"}}]}}
+
+//{"method":"report","result":{"timestamp":1493367110,"device_uuid":"c04fcb0b006f0d0001","attr":{"status":"on","alarm_low_battery":"off","alarm_removal":"on"}}}
+
+//{"method": "report","result": {"device_uuid": "112233445566778810", "has_log": [1,2,10,21 ]}}
 if (location.search.indexOf('env=desktop') != -1) {
     window.HdIot = {
         Device: {
@@ -8,49 +13,73 @@ if (location.search.indexOf('env=desktop') != -1) {
             },
             getSnapShot: function (options) {
                 options.onListener(JSON.stringify({
-                    "timestamp": 1493287676,
-                    "msg": "success",
-                    "code": 200,
                     "method": "report",
                     "result": {
+                        "timestamp": 1493367110,
                         "device_uuid": "c04fcb0b006f0d0001",
-                        "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
                     }
-                }))
+                }));
             },
             getDeviceLog: function (options) {
                 options.onListener(JSON.stringify({
-                        "method": "report",
-                        "result": {
-                            "device_uuid": "c04fcb0b006f0d0001",
-                            "log": [{
-                                "time": 29322104,
-                                "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
-                            }, {
-                                "time": 29322312,
-                                "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
-                            }, {
-                                "time": 29198920,
-                                "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-                            }, {
-                                "time": 29323056,
-                                "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
-                            }, {
-                                "time": 29322520,
-                                "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
-                            }, {
-                                "time": 29323264,
-                                "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-                            }, {
-                                "time": 29323472,
-                                "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-                            }, {
-                                "time": 29323680,
-                                "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-                            }]
-                        }
+                    "method": "report",
+                    "result": {
+                        "device_uuid": "c04fcb0b006f0d0001",
+                        "log": [{
+                            "time": 1493318989,
+                            "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318971,
+                            "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318969,
+                            "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318967,
+                            "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318965,
+                            "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318934,
+                            "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318932,
+                            "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318731,
+                            "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318730,
+                            "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318696,
+                            "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318690,
+                            "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318688,
+                            "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493318686,
+                            "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493167232,
+                            "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }, {
+                            "time": 1493167229,
+                            "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
+                        }]
                     }
-                ));
+                }));
+            },
+            getDeviceMonthHistory (options){
+                options.onListener(JSON.stringify({
+                    "method": "report",
+                    "result": {"device_uuid": "112233445566778810", "has_log": [1, 2, 10, 21]}
+                }));
             }
         },
         UI: {
