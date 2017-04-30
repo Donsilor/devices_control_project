@@ -15,6 +15,7 @@
     "all": "run-s build"
   },
   "dependencies": {
+    "mockjs": "^1.0.1-beta3",
     "moment": "^2.18.1",
     "vue": "^2.2.2",
     "vue-router": "^2.5.2"

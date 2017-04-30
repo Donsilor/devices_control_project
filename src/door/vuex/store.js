@@ -14,12 +14,19 @@ const store = new Vuex.Store({
         logsInDate: {}, //每天的日志缓存,
         logDateList: [],
         logByTime: {},
-        cache: {},
         jumpToDate: false
     },
     mutations: {
-        updateCurrentDate (state, current_time){
-            state.current_time = current_time;
+        chooseDate (state, date){
+            let timestamp = parseInt(date / 1000);
+            let chooseKey = moment(date).format('YYYY-MM-DD');
+            let sourceKey = moment(state.source_time * 1000).format('YYYY-MM-DD');
+            state.jumpToDate = chooseKey != sourceKey;
+            state.ptr_up_time = timestamp;
+            state.ptr_down_time = timestamp;
+            state.logsInDate = {};
+            state.logDateList = [];
+            state.logByTime = {};
         },
 
         updateSourceTime (state, source_time){
@@ -33,37 +40,14 @@ const store = new Vuex.Store({
             state.ptr_up_time = up_time;
         },
         addDateToList (state, {timestamp, day}){
-            let logDateList = state.logDateList.concat([]);
-            let length = logDateList.length;
-            if (length) {
-                for (let index = 0; index < length; index++) {
-                    let logDate = logDateList[index];
-                    if (logDate.day == day) {
-                        break;
-                    } else {
-                        if (logDate.timestamp > timestamp) {
-                            let nextLogDate = logDateList[index + 1];
-                            if (!nextLogDate || (nextLogDate.timestamp < timestamp && nextLogDate.day != day)) {
-                                logDateList.splice(index + 1, 0, {
-                                    timestamp: timestamp,
-                                    day: day
-                                });
-                            }
-                        } else {
-                            logDateList.splice(index, 0, {
-                                timestamp: timestamp,
-                                day: day
-                            });
-                        }
-                        state.logDateList = logDateList.concat();
-                    }
-                }
-            } else {
-                state.logDateList.push({
-                    timestamp: timestamp,
-                    day: day
-                });
-            }
+            let logDateList = state.logDateList.concat({
+                timestamp: timestamp,
+                day: day
+            });
+            logDateList.sort(function (a, b) {
+                return b.timestamp - a.timestamp;
+            });
+            state.logDateList = logDateList;
         },
         addLogs (state, logs){
             let logsInDate = Object.assign({}, state.logsInDate);
@@ -81,29 +65,18 @@ const store = new Vuex.Store({
                         timestamp: createTimeStamp,
                         logs: [log]
                     };
+                    store.commit('addDateToList', {
+                        timestamp: createTimeStamp,
+                        day: key
+                    });
                 } else {
                     let logs = logsInDate[key].logs;
-                    let logsLength = logs.length;
-                    for (let logIndex = 0; logIndex < logsLength; logIndex++) {
-                        let currentLog = logs[logIndex];
-                        if (currentLog.time < log.time) {
-                            logs.unshift(log);
-                            break;
-                            // logs.unshift(log);
-                        } else {
-                            let nextLog = logs[logIndex + 1];
-                            if (!nextLog || nextLog.time < log.time) {
-                                logs.splice(logIndex + 1, 0, log);
-                                break;
-                            }
-                        }
-                    }
+                    logs.push(log);
+                    logs.sort(function (a, b) {
+                        return b.time - a.time;
+                    });
                 }
                 log.timeTxt = time.format('HH:mm:ss');
-                store.commit('addDateToList', {
-                    timestamp: createTimeStamp,
-                    day: key
-                });
             });
             state.logsInDate = Object.assign({}, logsInDate);
         }

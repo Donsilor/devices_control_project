@@ -37,7 +37,7 @@ Vue.filter('tf',function (time) {
     } else if( + new Date(year,month,date - 1) == time){
         dateString = '昨天';
     }else{
-        dateString = `${formatYear}年${formatMonth}月${formatDate}日`;
+        dateString = `${formatYear}年${formatMonth + 1}月${formatDate}日`;
     }
     return `${dateString} ${weeks[day]}`;
 });

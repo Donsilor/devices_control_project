@@ -24,17 +24,25 @@
     import {mapState} from 'vuex';
     export default {
         mounted (){
-            this.getDeviceLog(this.ptr_down_time, 'down', (data) => {
-                let length = 0;
-                if (data.log && (length = data.log.length)) {
-                    this.$store.commit('addLogs', data.log);
-                    this.updateDownTime(data.log[0].time);
-                    this.updateUpTime(data.log[length - 1].time);
+            this.getInitialData();
+            this.$store.subscribe((mutation, state)=>{
+                if(mutation.type == 'chooseDate'){
+                    this.getInitialData();
                 }
-            },16);
+            })
         },
         computed: mapState(['ptr_down_time', 'ptr_up_time', 'logsInDate', 'logDateList']),
         methods: {
+            getInitialData (){
+                this.getDeviceLog(this.ptr_down_time, 'down', (data) => {
+                    let length = data.log.length;
+                    if (length) {
+                        this.$store.commit('addLogs', data.log);
+                        this.updateDownTime(data.log[0].time);
+                        this.updateUpTime(data.log[length - 1].time);
+                    }
+                }, 16);
+            },
             updateDownTime (time){
                 if (time < this.ptr_down_time) {
                     this.$store.commit('updateDownTime', time)
@@ -42,7 +50,7 @@
             },
             updateUpTime(time){
                 if (time > this.ptr_up_time) {
-                    this.$store.commit('updateDownTime', time)
+                    this.$store.commit('updateUpTime', time)
                 }
             },
             getDeviceLog (time, direction, callback, items_per_page){
@@ -51,13 +59,20 @@
                     direction: direction,
                     items_per_page: items_per_page
                 }, (data) => {
+                    if (data.log) {
+                        data.log.sort(function (a, b) {
+                            return a.time - b.time;
+                        })
+                    } else {
+                        data.log = [];
+                    }
                     callback(data);
                 })
             },
             onPull (onPullFinishCallback){
                 this.getDeviceLog(this.ptr_up_time, 'up', (data) => {
-                    let length = 0;
-                    if (data.log && (length = data.log.length)) {
+                    let length = data.log.length;
+                    if (length) {
                         this.$store.commit('addLogs', data.log);
                         this.updateUpTime(data.log[length - 1].time);
                     }

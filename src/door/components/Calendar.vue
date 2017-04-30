@@ -30,7 +30,8 @@
             <div class="calendar-row calendar-date" v-for="days in dayRows">
                 <div class="calendar-cell calendar-cell-date" v-for="day in days">
                     <div class="calendar-cell-content" v-if="day"
-                         :class="{active:checkIsCurrentDate(year,month,dayAttr[day].date),enable:daysPermission[dayAttr[day].date]}">
+                         :class="{active:checkIsCurrentDate(year,month,dayAttr[day].date),enable:daysPermission[dayAttr[day].date]}"
+                         @click="chooseDate(year,month,dayAttr[day].date)">
                         {{dayAttr[day].date}}
                     </div>
                 </div>
@@ -177,9 +178,8 @@
                 daysPermission: {}
             }
         },
-        computed:mapState(['ptr_up_time']),
+        computed: mapState(['ptr_up_time']),
         mounted (){
-            console.log(this.ptr_up_time)
             let resetRenderDate = () => {
                 this.render(new Date(this.ptr_up_time * 1000));
                 this.updateEnableDay();
@@ -200,18 +200,19 @@
                 HdSmart.Device.getDeviceMonthHistory(new Date(this.year, this.month), (data) => {
                     let has_log_dates = data.result.has_log;
                     let enableDays = {};
-                    has_log_dates.forEach((value,key)=>{
+                    has_log_dates.forEach((value, key) => {
                         enableDays[value] = true;
                     });
                     this.daysPermission = enableDays;
                 })
             },
             checkIsCurrentDate(year, month, date){
-                if (this.currentDate instanceof Date) {
-                    let currentYear = this.currentDate.getFullYear();
-                    let currentMonth = this.currentDate.getMonth();
-                    let currentDate = this.currentDate.getDate();
-                    return year == currentYear && month == currentMonth && date == currentDate
+                if (this.ptr_up_time) {
+                    let currentTime = new Date(this.ptr_up_time * 1000);
+                    let currentYear = currentTime.getFullYear();
+                    let currentMonth = currentTime.getMonth();
+                    let currentDate = currentTime.getDate();
+                    return currentYear == year && currentMonth == month && currentDate == date;
                 }
                 return false;
             },
@@ -264,6 +265,11 @@
             },
             renderLastMonth(){
                 this.render(new Date(this.year, this.month + 1));
+            },
+            chooseDate (year, month, date){
+                if (this.daysPermission[this.dayAttr[date].date] && !this.checkIsCurrentDate(year, month, date)) {
+                    this.$emit('chooseDate', year, month, date);
+                }
             }
         }
     }
