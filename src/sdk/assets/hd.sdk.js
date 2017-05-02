@@ -95,6 +95,7 @@
                 }
             }),
             onListener: function (data) {
+                console.log(data)
                 data = JSON.parse(data);
                 if (isFunction(onSuccess)) {
                     onSuccess(data);

@@ -1,4 +1,4 @@
-import * as mockData from './hd.iot.door.mock';
+import * as mockData from './hd.iot.window.mock';
 if (location.search.indexOf('env=desktop') != -1) {
     window.HdIot = {
         Device: {
@@ -49,8 +49,4 @@ if (location.search.indexOf('env=desktop') != -1) {
     };
     window.device_uuid = 'abc123';
     window.onDeviceJsReady();
-
-    setInterval(function () {
-        // window.onDeviceChange(mockData.generateDeviceChangeData(store.state.ptr_up_time));
-    },2000)
 }

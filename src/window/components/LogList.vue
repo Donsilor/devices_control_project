@@ -7,12 +7,14 @@
                         <div class="log-indicator-circle"></div>
                         {{daily.timestamp | tf}}
                     </div>
-                    <div class="log-indicator log-item" :class="[log.attr.status,log.attr.type]" :key="log.time"
-                         v-for="log in logsInDate[daily.day].logs">
-                        <div class="log-indicator-circle"></div>
-                        <div class="time">{{log.timeTxt}}</div>
-                        <div class="status">{{log.attr.status == 'on'?'打开':'关闭'}}</div>
-                    </div>
+                    <transition-group name="log-group" v-bind:css="false" tag="div">
+                        <div class="log-indicator log-item" :class="[log.attr.status,log.attr.type]" :key="log.time"
+                             v-for="log in logsInDate[daily.day].logs">
+                            <div class="log-indicator-circle"></div>
+                            <div class="time">{{log.timeTxt}}</div>
+                            <div class="status">{{log.attr.status == 'on'?'打开':'关闭'}}</div>
+                        </div>
+                    </transition-group>
                 </div>
             </div>
         </pull-to-refresh>
@@ -23,8 +25,8 @@
     export default {
         mounted (){
             this.getInitialData();
-            this.$store.subscribe((mutation, state) => {
-                if (mutation.type == 'chooseDate') {
+            this.$store.subscribe((mutation, state)=>{
+                if(mutation.type == 'chooseDate'){
                     this.getInitialData();
                 }
             })

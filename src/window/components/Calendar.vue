@@ -261,11 +261,9 @@
                 this.dayAttr = dayAttr
             },
             renderPreMonth (){
-                this.updateEnableDay();
                 this.render(new Date(this.year, this.month - 1));
             },
             renderLastMonth(){
-                this.updateEnableDay();
                 this.render(new Date(this.year, this.month + 1));
             },
             chooseDate (year, month, date){

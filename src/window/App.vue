@@ -47,7 +47,6 @@
                 this.$store.commit('updateSourceTime', service_time);
             });
             HdSmart.onDeviceListen((data) => {
-                this.device.status = data.result.attr.status;
                 this.$store.commit('addLogs', [{
                     time: data.result.timestamp,
                     attr: Object.assign({}, data.result.attr, {

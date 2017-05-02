@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-
-import './assets/hd.sdk';
 import './assets/base.css';
 
 import LogTitle from './components/LogTitle.vue';
