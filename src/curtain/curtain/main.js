@@ -9,8 +9,6 @@ import Curtain from './components/Curtain.vue';
 import Clothes from './components/Clothes.vue';
 import Control from './components/Control.vue';
 
-import './assets/hd.sdk';
-
 Vue.component('navigator', Navigator);
 Vue.component('curtain', Curtain);
 Vue.component('clothes', Clothes);

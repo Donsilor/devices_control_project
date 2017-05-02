@@ -197,7 +197,7 @@
         },
         methods: {
             updateEnableDay (){
-                HdSmart.Device.getDeviceMonthHistory(this.year,this.month, (data) => {
+                HdSmart.Device.getDeviceMonthHistory(this.year, this.month + 1, (data) => {
                     let has_log_dates = data.result.has_log;
                     let enableDays = {};
                     has_log_dates.forEach((value, key) => {
@@ -261,12 +261,14 @@
                 this.dayAttr = dayAttr
             },
             renderPreMonth (){
-                this.updateEnableDay();
+                this.daysPermission = {};
                 this.render(new Date(this.year, this.month - 1));
+                this.updateEnableDay();
             },
             renderLastMonth(){
-                this.updateEnableDay();
+                this.daysPermission = {};
                 this.render(new Date(this.year, this.month + 1));
+                this.updateEnableDay();
             },
             chooseDate (year, month, date){
                 if (this.daysPermission[this.dayAttr[date].date] && !this.checkIsCurrentDate(year, month, date)) {

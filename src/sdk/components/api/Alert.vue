@@ -3,7 +3,7 @@
         <div class="panel-heading">
             <h4>
                 <router-link to="/" class="pull-left">返回</router-link>
-                HdIot.UI.alert - HdSmart.UI.alert
+                HdSmart.UI.alert
             </h4>
         </div>
         <div class="panel-body">

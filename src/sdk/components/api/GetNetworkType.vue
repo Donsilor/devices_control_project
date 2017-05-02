@@ -3,7 +3,7 @@
         <div class="panel-heading">
             <h4>
                 <router-link to="/" class="pull-left">返回</router-link>
-                HdIot.Util.getNetworkType - HdSmart.Util.getNetworkType
+                HdSmart.Util.getNetworkType
             </h4>
         </div>
         <div class="panel-body">

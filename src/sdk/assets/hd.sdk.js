@@ -97,7 +97,6 @@
                 }
             }),
             onListener: function (data) {
-                console.log(data)
                 data = JSON.parse(data);
                 if (isFunction(onSuccess)) {
                     onSuccess(data);
@@ -175,6 +174,36 @@
         HdIot.UI.hideLoading({
             data: ''
         });
+    };
+
+    function covertToNumber(num, max) {
+        if (typeof num == 'number') {
+            return num;
+        } else if (typeof num == 'string') {
+            let _num = parseInt(num);
+            if (num.indexOf('%') > -1) {
+                return max * _num / 100;
+            } else if (!isNaN(_num)) {
+                return _num;
+            }
+        }
+        return 0
+    };
+
+    HdSmart.UI.setWebViewTouchRect = function (left, top, right, bottom) {
+        var rect = document.body.getBoundingClientRect();
+        left = covertToNumber(left, rect.width);
+        top = covertToNumber(top, rect.height);
+        right = covertToNumber(right, rect.width);
+        bottom = covertToNumber(bottom, rect.height);
+        HdIot.UI.setTouchRect({
+            data: JSON.stringify({
+                left: left,
+                right: right,
+                top: top,
+                bottom: bottom
+            })
+        })
     };
 
     HdSmart.Util = {};

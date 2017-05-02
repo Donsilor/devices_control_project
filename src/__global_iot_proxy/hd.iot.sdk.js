@@ -1,4 +1,4 @@
-if (location.search.indexOf('env=prod') != -1) {
+if (location.search.indexOf('env=desktop') != -1) {
     window.HdIot = {
         Device: {
             control: function (options) {
@@ -31,6 +31,9 @@ if (location.search.indexOf('env=prod') != -1) {
             },
             hideLoading: function () {
 
+            },
+            setTouchRect:function (options) {
+                console.log(options.data);
             }
         },
         Util: {
@@ -49,5 +52,7 @@ if (location.search.indexOf('env=prod') != -1) {
         }
     };
     window.device_uuid = 'abc123';
-    window.onDeviceJsReady();
+    window.deviceReadyTimer = setTimeout(function () {
+        window.onDeviceJsReady();
+    },500)
 }

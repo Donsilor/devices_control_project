@@ -3,6 +3,7 @@
         <div class="box">
             <div class="icon"></div>
             <div class="title">{{device.title}}</div>
+            <div class="power_status" v-if="device.power_status == 'on'">电量低</div>
             <div class="status active" v-if="device.status == 'on'">已打开</div>
             <div class="status" v-if="device.status == 'off'">已关闭</div>
         </div>
@@ -32,7 +33,7 @@
     }
     .icon{
         content: "";
-        background: url('../assets/icn_window_s.png')  no-repeat center center;
+        background: url('../assets/icn_door_s.png')  no-repeat center center;
         width: 36px;
         height: 36px;
         background-size: 100% 100%;
@@ -64,5 +65,25 @@
     }
     .status.active:before{
         background: #13d5dc;
+    }
+
+
+    .power_status{
+        margin-right: 24px;
+        font-size: 24px;
+        color: #f26161;
+        position: relative;
+        font-weight: normal;
+    }
+    .power_status:before{
+        content:'';
+        display: inline-block;
+        vertical-align: middle;
+        width: 12px;
+        height: 12px;
+        margin: -6px 12px 0 0;
+        line-height: 12px;
+        border-radius: 12px;
+        background: #f26161;
     }
 </style>

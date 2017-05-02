@@ -47,9 +47,9 @@
                 }
             },
             updateUpTime(time){
-                if (time > this.ptr_up_time) {
+//                if (time > this.ptr_up_time) {
                     this.$store.commit('updateUpTime', time)
-                }
+//                }
             },
             getDeviceLog (time, direction, callback, items_per_page){
                 HdSmart.Device.getDeviceLog({

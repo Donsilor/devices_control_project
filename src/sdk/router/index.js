@@ -14,6 +14,7 @@ import GetNetworkType from '../components/api/GetNetworkType'
 import Reload from '../components/api/Reload'
 import Post from '../components/api/Post'
 import SendNotification from '../components/api/SendNotification'
+import  SetWebViewTouchRect from '../components/api/SetWebViewTouchRect.vue'
 
 Vue.use(Router)
 
@@ -63,6 +64,11 @@ export default new Router({
             path: '/api/ui/toast',
             name: 'toast',
             component: Toast
+        },
+        {
+            path: '/api/ui/setWebViewTouchRect',
+            name: 'SetWebViewTouchRect',
+            component: SetWebViewTouchRect
         },
         {
             path: '/api/ui/loading',

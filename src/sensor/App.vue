@@ -1,5 +1,5 @@
 <template>
-    <div v-if="is_ajax_back" class="container">
+    <div v-if="is_ajax_back" class="container" ref="container">
         <log-title :device="device"></log-title>
         <log-list class="list"></log-list>
         <log-tool></log-tool>
@@ -31,7 +31,8 @@
                 is_ajax_back: false,
                 device: {
                     title: '',
-                    status: 'off'
+                    status: 'off',
+                    power_status: 'off'
                 }
             }
         },
@@ -40,14 +41,20 @@
         mounted (){
             HdSmart.Device.getSnapShot((data, service_time) => {
                 this.is_ajax_back = true;
-                this.device.title = '人体传感器' + window.device_uuid;
+                this.device.title = '门' + window.device_uuid;
                 this.device.status = data.attr.status;
+                this.device.power_status = data.attr.alarm_low_battery;
                 this.$store.commit('updateDownTime', service_time);
                 this.$store.commit('updateUpTime', service_time);
                 this.$store.commit('updateSourceTime', service_time);
+                this.$nextTick(() => {
+                    let rect = this.$refs.container.getBoundingClientRect();
+                    HdSmart.UI.setWebViewTouchRect(rect.left, rect.top, rect.left + rect.width, rect.top + rect.height);
+                })
             });
             HdSmart.onDeviceListen((data) => {
                 this.device.status = data.result.attr.status;
+                this.device.power_status = data.result.attr.alarm_low_battery;
                 this.$store.commit('addLogs', [{
                     time: data.result.timestamp,
                     attr: Object.assign({}, data.result.attr, {
