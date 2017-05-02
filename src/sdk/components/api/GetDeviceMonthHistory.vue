@@ -9,7 +9,7 @@
         <div class="panel-body">
             <pre class="text-left">
 //该函数所封装的对应的app函数为HdIot.Device.getDeviceMonthHistory
-HdSmart.Device.getDeviceLog(new Date('2017-4'),function(data){
+HdSmart.Device.getDeviceLog(year,month,function(data){
     this.messages.push('成功=>' + JSON.stringify(data));
 }, function(error){
     this.messages.push('失败=>' + JSON.stringify(error));
@@ -37,7 +37,7 @@ HdSmart.Device.getDeviceLog(new Date('2017-4'),function(data){
         methods: {
             onClick (){
                 var _this = this;
-                HdSmart.Device.getDeviceMonthHistory(new Date('2017-4'), function (data) {
+                HdSmart.Device.getDeviceMonthHistory(2017,5, function (data) {
                     _this.page_number = _this.page_number + 1;
                     _this.messages.push('成功=>' + JSON.stringify(data));
                 }, function (error) {

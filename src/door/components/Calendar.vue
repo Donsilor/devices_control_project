@@ -197,7 +197,7 @@
         },
         methods: {
             updateEnableDay (){
-                HdSmart.Device.getDeviceMonthHistory(new Date(this.year, this.month), (data) => {
+                HdSmart.Device.getDeviceMonthHistory(this.year,this.month, (data) => {
                     let has_log_dates = data.result.has_log;
                     let enableDays = {};
                     has_log_dates.forEach((value, key) => {

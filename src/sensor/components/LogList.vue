@@ -11,7 +11,7 @@
                          v-for="log in logsInDate[daily.day].logs">
                         <div class="log-indicator-circle"></div>
                         <div class="time">{{log.timeTxt}}</div>
-                        <div class="status">{{log.attr.status == 'on'?'打开':'关闭'}}</div>
+                        <div class="status">有人移动</div>
                     </div>
                 </div>
             </div>

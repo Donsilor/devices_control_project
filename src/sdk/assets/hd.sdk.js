@@ -84,14 +84,16 @@
     };
 
 
-    HdSmart.Device.getDeviceMonthHistory = function (date, onSuccess) {
+    HdSmart.Device.getDeviceMonthHistory = function (year, month, onSuccess) {
         HdIot.Device.getDeviceMonthHistory({
             data: JSON.stringify({
                 method: 'getDeviceMonthHistory',
                 req_id: guid(),
                 params: {
                     device_uuid: getDeviceUUID(),
-                    start_time: parseInt(date / 1000)
+                    year: year,
+                    month: month,
+                    // start_time: parseInt(new Date(year, month - 1) / 1000)
                 }
             }),
             onListener: function (data) {
@@ -115,7 +117,7 @@
             onListener: function (data) {
                 data = JSON.parse(data);
                 if (data.result) {
-                    onSuccess(data.result,data.timestamp || data.result.timestamp);
+                    onSuccess(data.result, data.timestamp || data.result.timestamp);
                 } else {
                     onFailure(data);
                 }

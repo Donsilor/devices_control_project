@@ -40,7 +40,7 @@
         mounted (){
             HdSmart.Device.getSnapShot((data, service_time) => {
                 this.is_ajax_back = true;
-                this.device.title = '窗' + window.device_uuid;
+                this.device.title = '人体传感器' + window.device_uuid;
                 this.device.status = data.attr.status;
                 this.$store.commit('updateDownTime', service_time);
                 this.$store.commit('updateUpTime', service_time);
