@@ -79,10 +79,9 @@
             },
             onPush (onPushFinishCallback){
                 this.getDeviceLog(this.ptr_down_time, 'down', (data) => {
-                    let length = 0;
-                    if (data.log && (length = data.log.length)) {
+                    if (data.log) {
                         this.$store.commit('addLogs', data.log);
-                        this.updateDownTime(data.log[length - 1].time);
+                        this.updateDownTime(data.log[0].time);
                     }
                     onPushFinishCallback();
                 });

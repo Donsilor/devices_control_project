@@ -18,9 +18,9 @@ const store = new Vuex.Store({
     },
     mutations: {
         chooseDate (state, date){
-            let timestamp = parseInt(date / 1000);
+            let timestamp = date;
             let chooseKey = moment(date).format('YYYY-MM-DD');
-            let sourceKey = moment(state.source_time * 1000).format('YYYY-MM-DD');
+            let sourceKey = moment(state.source_time).format('YYYY-MM-DD');
             state.jumpToDate = chooseKey != sourceKey;
             state.ptr_up_time = timestamp;
             state.ptr_down_time = timestamp;
@@ -57,7 +57,7 @@ const store = new Vuex.Store({
                 }
                 state.logByTime[log.time] = log;
                 log = Object.assign({}, log);
-                let createTimeStamp = log.time * 1000;
+                let createTimeStamp = log.time;
                 let time = moment(createTimeStamp);
                 let key = time.format('YYYY-MM-DD');
                 if (!logsInDate[key]) {

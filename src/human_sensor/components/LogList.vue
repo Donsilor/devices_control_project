@@ -11,7 +11,7 @@
                          v-for="log in logsInDate[daily.day].logs">
                         <div class="log-indicator-circle"></div>
                         <div class="time">{{log.timeTxt}}</div>
-                        <div class="status">有人移动</div>
+                        <div class="status">{{log.attr.status == 'on'?'打开':'关闭'}}</div>
                     </div>
                 </div>
             </div>
@@ -47,9 +47,9 @@
                 }
             },
             updateUpTime(time){
-                if (time > this.ptr_up_time) {
+//                if (time > this.ptr_up_time) {
                     this.$store.commit('updateUpTime', time)
-                }
+//                }
             },
             getDeviceLog (time, direction, callback, items_per_page){
                 HdSmart.Device.getDeviceLog({
@@ -79,10 +79,9 @@
             },
             onPush (onPushFinishCallback){
                 this.getDeviceLog(this.ptr_down_time, 'down', (data) => {
-                    let length = 0;
-                    if (data.log && (length = data.log.length)) {
+                    if (data.log) {
                         this.$store.commit('addLogs', data.log);
-                        this.updateDownTime(data.log[length - 1].time);
+                        this.updateDownTime(data.log[0].time);
                     }
                     onPushFinishCallback();
                 });

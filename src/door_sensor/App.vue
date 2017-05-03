@@ -44,6 +44,7 @@
                 this.device.title = '门' + window.device_uuid;
                 this.device.status = data.attr.status;
                 this.device.power_status = data.attr.alarm_low_battery;
+                service_time = service_time * 1000;
                 this.$store.commit('updateDownTime', service_time);
                 this.$store.commit('updateUpTime', service_time);
                 this.$store.commit('updateSourceTime', service_time);
@@ -56,7 +57,7 @@
                 this.device.status = data.result.attr.status;
                 this.device.power_status = data.result.attr.alarm_low_battery;
                 this.$store.commit('addLogs', [{
-                    time: data.result.timestamp,
+                    time: data.result.timestamp * 1000,
                     attr: Object.assign({}, data.result.attr, {
                         type: 'add'
                     })

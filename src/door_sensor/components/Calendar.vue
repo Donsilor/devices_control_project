@@ -181,7 +181,7 @@
         computed: mapState(['ptr_up_time']),
         mounted (){
             let resetRenderDate = () => {
-                this.render(new Date(this.ptr_up_time * 1000));
+                this.render(new Date(this.ptr_up_time));
                 this.updateEnableDay();
             };
             if (this.ptr_up_time) {
@@ -208,7 +208,7 @@
             },
             checkIsCurrentDate(year, month, date){
                 if (this.ptr_up_time) {
-                    let currentTime = new Date(this.ptr_up_time * 1000);
+                    let currentTime = new Date(this.ptr_up_time);
                     let currentYear = currentTime.getFullYear();
                     let currentMonth = currentTime.getMonth();
                     let currentDate = currentTime.getDate();

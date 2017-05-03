@@ -1,12 +1,12 @@
 import * as mockData from './hd.iot.door_sensor.mock';
 
 import './hd.iot.sdk';
-
-if (window.HdIot) {
+if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
     HdIot.Device.getSnapShot = function (options) {
         options.onListener(JSON.stringify(mockData.generateSnapShotData()));
     };
     HdIot.Device.getDeviceLog = function (options) {
+        console.log('getDeviceLog')
         let data = JSON.parse(options.data);
         options.onListener(JSON.stringify(mockData.generateDeviceLogData(data.params.start_time, data.params.items_per_page, data.params.direction)));
     };

@@ -1,9 +1,10 @@
 import './hd.sdk';
 
 if (process.env.NODE_ENV == 'development') {
+    let counter = 0;
     window.apiLog = function (apiName, data, result) {
-        console.log('<<<---sdk.debug.log--->>>')
-        console.log(`api名称：${apiName}`);
+        counter = counter + 1;
+        console.log(`<<<---${counter}.api：${apiName} log begin---`)
         console.log(`传入值：${data ? data : '空'}`);
         if (result) {
             let resultStr;
@@ -15,10 +16,11 @@ if (process.env.NODE_ENV == 'development') {
                 resultObj = result;
                 resultStr = JSON.stringify(result);
             }
-            console.log('返回值(object):', resultObj);
-            console.log('返回值(string):', resultStr);
+            console.warn('返回值(object):', resultObj);
+            console.warn('返回值(string):', resultStr);
         } else {
-            console.log('返回值:', '无')
+            console.warn('返回值:', '无')
         }
+        console.log(`---${counter}.api：${apiName} log end--->>>`)
     };
 }

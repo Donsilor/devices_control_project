@@ -23,11 +23,11 @@
                 this.isCalendarShown = false;
             },
             reset (){
-                this.$store.commit('chooseDate', new Date(this.source_time * 1000))
+                this.$store.commit('chooseDate', +new Date(this.source_time * 1000))
             },
             chooseDate (year, month, date){
                 this.isCalendarShown = false;
-                this.$store.commit('chooseDate', new Date(year, month, date, 23, 59, 59))
+                this.$store.commit('chooseDate', +new Date(year, month, date, 23, 59, 59))
             }
         }
     }

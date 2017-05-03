@@ -32,7 +32,7 @@ if (location.search.indexOf('env=desktop') != -1) {
             hideLoading: function () {
 
             },
-            setTouchRect:function (options) {
+            setTouchRect: function (options) {
             }
         },
         Util: {
@@ -53,5 +53,11 @@ if (location.search.indexOf('env=desktop') != -1) {
     window.device_uuid = 'abc123';
     window.deviceReadyTimer = setTimeout(function () {
         window.onDeviceJsReady();
-    },500)
+    }, 500)
+}
+
+if (window.HdSmart) {
+    HdSmart.ready(function () {
+        console.log('device_uuid', window.device_uuid);
+    })
 }
