@@ -33,7 +33,6 @@ if (location.search.indexOf('env=desktop') != -1) {
 
             },
             setTouchRect:function (options) {
-                console.log(options.data);
             }
         },
         Util: {

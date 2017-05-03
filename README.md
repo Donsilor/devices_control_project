@@ -3,25 +3,29 @@
     npm run dev:sdk //开发
     npm run build:sdk //编译
 ```
-### curtain 窗帘
+### window_curtains 窗帘
 ```
-    npm run dev:curtain //开发
-    npm run build:curtain //编译
-```
-
-### door 门窗传感器
-```
-    npm run dev:door //开发
-    npm run build:door //编译
+    npm run dev:window_curtains //开发
+    npm run build:window_curtains //编译
 ```
 
-
-### sensor 人体传感器
+### door_sensor 门窗传感器
 ```
-    npm run dev:sensor //开发
-    npm run build:sensor //编译
+    npm run dev:door_sensor //开发
+    npm run build:door_sensor //编译
+```
+
+
+### infrared_sensor 人体传感器
+```
+    npm run dev:infrared_sensor //开发
+    npm run build:infrared_sensor //编译
 ```
 ### history
+#### 2017.5.3
+- 添加sdk.debug.js 用于开发环境调试
+- 修改项目名称与app端的enum保持一致
+
 #### 2017.5.2
 完成sensor
 

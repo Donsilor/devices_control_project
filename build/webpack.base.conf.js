@@ -14,7 +14,7 @@ function resolve(dir) {
 var app = util.getCommandApp();
 module.exports = {
     entry: {
-        app: ['./src/sdk/assets/hd.sdk.js', `./src/${app}/main.js`]
+        app: [process.env.NODE_ENV === 'production' ? './src/sdk/assets/hd.sdk.js':'./src/sdk/assets/hd.sdk.debug.js', `./src/${app}/main.js`]
     },
     output: {
         path: config.build.assetsRoot,
