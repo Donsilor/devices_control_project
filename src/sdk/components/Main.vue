@@ -31,6 +31,11 @@
             </router-link>
         </li>
         <li class="list-group-item">
+            <router-link to="/api/device/getDeviceLogByDay">HdSmart.Device.getDeviceLogByDay =>
+                (app相关api:HdIot.Device.getDeviceLogByDay)
+            </router-link>
+        </li>
+        <li class="list-group-item">
             <router-link to="/api/device/getDeviceMonthHistory">HdSmart.Device.getDeviceMonthHistory =>
                 (app相关api:HdIot.Device.getDeviceMonthHistory)
             </router-link>

@@ -14,7 +14,8 @@ import GetNetworkType from '../components/api/GetNetworkType'
 import Reload from '../components/api/Reload'
 import Post from '../components/api/Post'
 import SendNotification from '../components/api/SendNotification'
-import  SetWebViewTouchRect from '../components/api/SetWebViewTouchRect.vue'
+import SetWebViewTouchRect from '../components/api/SetWebViewTouchRect.vue'
+import GetDeviceLogByDay from '../components/api/GetDeviceLogByDay.vue'
 
 Vue.use(Router)
 
@@ -49,6 +50,11 @@ export default new Router({
             path: '/api/device/getDeviceLog',
             name: 'getDeviceLog',
             component: GetDeviceLog
+        },
+        {
+            path: '/api/device/getDeviceLogByDay',
+            name: 'getDeviceLogByDay',
+            component: GetDeviceLogByDay
         },
         {
             path: '/api/device/getDeviceMonthHistory',

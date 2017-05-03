@@ -49,3 +49,16 @@
  *  HdSmart.UI.setWebViewTouchRect(0,0,1000,1000);
  *  HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%');
  */
+
+
+/**
+ *  是否显示头部和底部
+ *  @since 2017.5.3
+ *  @method HdSmart.UI.toggleHeadAndFoot
+ *  @param {Boolean} isHeadAndFootShown 是否显示头部
+ *
+ *  @example
+ *
+ *  HdSmart.UI.toggleHeadAndFoot(false);
+ *  HdSmart.UI.toggleHeadAndFoot(true);
+ */

@@ -75,3 +75,18 @@
  *      })
  * })
  */
+
+/**
+ *  是否显示头部和底部
+ *  @since 2017.5.3
+ *  @method HdIot.UI.toggleHeadAndFoot
+ * @param {String} data 传递给app的toast的经过字符串化的相关配置项
+ *  @param {Boolean} data.isHeadAndFootShown 是否显示头部
+ *
+ *  @example
+ * HdIot.UI.toggleHeadAndFoot({
+ *      data:JSON.stringify({
+ *          show_head_foot:true
+ *      })
+ * })
+ */
