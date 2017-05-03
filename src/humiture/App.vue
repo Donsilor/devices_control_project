@@ -43,7 +43,7 @@
 
   import status from './config/status-desc';
   import {timeout} from './utils';
-
+  console.info(1);
   export default {
     data (){
       return {
@@ -72,7 +72,7 @@
       }
     },
     mounted (){
-      //TODO:get data from client.
+      console.info(2);
       this.page_name = 'index';
       HdSmart.Device.getSnapShot(data => {
 
@@ -91,10 +91,9 @@
         (humidity < h_min) && (humidity = h_min);
         (humidity > h_max) && (humidity = h_max);
 
+        console.log(temp, humidity,'调整后的值');
         this.temp = temp;
         this.humidity = humidity;
-
-        console.log(this.temp, this.humidity,'调整后的值');
       });
     }
   }
