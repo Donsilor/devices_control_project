@@ -11,6 +11,11 @@ var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 var util = require('./util');
 var env = config.build.env;
 var appName = util.getCommandAppName();
+var app = util.getCommandApp();
+
+// baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/hd.iot.${app}.js`;
+
+
 var webpackConfig = merge(baseWebpackConfig, {
     module: {
         rules: utils.styleLoaders({
