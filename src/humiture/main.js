@@ -4,15 +4,13 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-import IndexPage from '@/components/IndexPage'
-import DetailPage from '@/components/DetailPage'
-import Wave from '@/components/Wave'
-import Dashboard from '@/components/Dashboard'
-import ListView from '@/components/ListView'
+import IndexPage from './components/IndexPage'
+import DetailPage from './components/DetailPage'
+import Wave from './components/Wave'
+import Dashboard from './components/Dashboard'
+import ListView from './components/ListView'
 
-import './assets/hd.sdk';
-
-import '@/utils';
+import './utils';
 
 // Vue.config.productionTip = true;
 

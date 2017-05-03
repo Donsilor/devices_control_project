@@ -63,7 +63,7 @@
 </style>
 
 <script>
-  import { timeout } from '@/utils';
+  import { timeout } from '../utils';
   export default {
     name: 'wave',
     props : {

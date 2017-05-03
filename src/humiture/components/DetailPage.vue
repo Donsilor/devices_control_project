@@ -74,7 +74,7 @@
 </template>
 
 <script>
-  import { tap } from '@/utils';
+  import { tap } from '../utils';
 export default {
   name: 'detail-page',
   props : {

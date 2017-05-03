@@ -99,8 +99,8 @@
 
 <script>
 
-import status_config from '@/config/status-desc';
-import { interval, time_format, tap } from '@/utils';
+import status_config from '../config/status-desc';
+import { interval, time_format, tap } from '../utils';
 
 export default {
   name: 'index-page',

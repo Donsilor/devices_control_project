@@ -17,6 +17,9 @@ if (location.search.indexOf('env=desktop') != -1) {
             },
             getDeviceMonthHistory: function (options) {
                 options.onListener(options.data);
+            },
+            getDeviceLogByDay: function (options) {
+                options.onListener(options.data)
             }
         },
         UI: {
@@ -34,7 +37,7 @@ if (location.search.indexOf('env=desktop') != -1) {
             },
             setTouchRect: function (options) {
             },
-            toggleHeadAndFoot:function () {
+            toggleHeadAndFoot: function () {
 
             }
         },

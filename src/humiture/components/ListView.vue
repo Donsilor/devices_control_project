@@ -23,7 +23,7 @@
 </style>
 
 <script>
-  import { time_format } from '@/utils';
+  import { time_format } from '../utils';
   export default {
     name: 'list-view',
     data (){

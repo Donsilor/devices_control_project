@@ -48,10 +48,10 @@
 </template>
 
 <script>
-  import bg_1 from '@/assets/instrument_temp.png';
-  import bg_2 from '@/assets/instrument_humidity.png';
-  import status_desc from '@/config/status-desc';
-  import {timeout} from '@/utils';
+  import bg_1 from '../assets/instrument_temp.png';
+  import bg_2 from '../assets/instrument_humidity.png';
+  import status_desc from '../config/status-desc';
+  import {timeout} from '../utils';
 
 export default {
   name: 'dashboard',

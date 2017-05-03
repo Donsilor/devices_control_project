@@ -92,6 +92,26 @@
         });
     };
 
+    HdSmart.Device.getDeviceLogByDay = function (start_time, onSuccess) {
+        var dataOptions = JSON.stringify({
+            method: 'getDeviceLogByDay',
+            req_id: guid(),
+            params: {
+                start_time: start_time,
+                device_uuid: getDeviceUUID()
+            }
+        });
+        HdIot.Device.getDeviceLogByDay({
+            data: dataOptions,
+            onListener: function (data) {
+                window.apiLog('getDeviceLogByDay', dataOptions, data);
+                if (isFunction(onSuccess)) {
+                    onSuccess(data)
+                }
+            }
+        })
+    };
+
 
     HdSmart.Device.getDeviceMonthHistory = function (year, month, onSuccess) {
         var dataOptions = JSON.stringify({
@@ -278,8 +298,8 @@
      */
     HdSmart.UI.toggleHeadAndFoot = function (isShow) {
         HdIot.UI.toggleHeadAndFoot({
-            data : JSON.stringify({
-                show_head_foot : isShow
+            data: JSON.stringify({
+                show_head_foot: isShow
             })
         });
     }
