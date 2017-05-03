@@ -46,8 +46,8 @@ module.exports = {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
                 options: {
-                    limit: 2000000,
-                    name: utils.assetsPath(`${app}/img/[name].[hash:7].[ext]`)
+                    limit: 8000,
+                    name: utils.assetsPath(`images/[name].[hash:7].[ext]`)
                 }
             },
             {
@@ -55,7 +55,7 @@ module.exports = {
                 loader: 'url-loader',
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath(`${app}/fonts/[name].[hash:7].[ext]`)
+                    name: utils.assetsPath(`fonts/[name].[hash:7].[ext]`)
                 }
             }
         ]

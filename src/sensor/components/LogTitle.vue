@@ -31,7 +31,7 @@
     }
     .icon{
         content: "";
-        background: url('../assets/icn_door_s.png')  no-repeat center center;
+        background: url('../assets/icn_sensor_s.png')  no-repeat center center;
         width: 36px;
         height: 36px;
         background-size: 100% 100%;
