@@ -117,7 +117,7 @@ export default {
       //辅助提示
       hint : '--',
       //序号
-      status_index : '1-1',
+      status_index : '-',
       //背景颜色
       bg_color : '',
       //实时的时间

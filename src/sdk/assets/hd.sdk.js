@@ -104,6 +104,7 @@
         HdIot.Device.getDeviceLogByDay({
             data: dataOptions,
             onListener: function (data) {
+                data = JSON.parse(data);
                 window.apiLog('getDeviceLogByDay', dataOptions, data);
                 if (isFunction(onSuccess)) {
                     onSuccess(data)

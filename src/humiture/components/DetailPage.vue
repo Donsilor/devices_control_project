@@ -45,6 +45,11 @@
   .bottom .tit{ height : 72px; }
   .bottom time{font-size : 24px; }
   .line{ border-width : 0px 0 0 0; height : 1px; background: #ccc; margin : 5px 0; }
+  .list-ct{ position: relative; }
+  .list-ct .title{position: absolute;left :0;bottom: 0;top :82px;}
+  .list-ct .title .i{height : 60px; width : 60px;}
+  .list-ct .cont{position: absolute;left :90px;}
+
 </style>
 
 <template>
@@ -66,7 +71,15 @@
       <div>
         <span class="tit">过去24小时温湿度</span>
         <div class="line"></div>
-        <list-view></list-view>
+        <div class="list-ct">
+          <div class="title">
+            <div class="i">温度</div>
+            <div class="i">湿度</div>
+          </div>
+          <div class="cont">
+            <list-view></list-view>
+          </div>
+        </div>
         <div class="line"></div>
       </div>
     </div>
@@ -95,7 +108,7 @@ export default {
     });
 
     //下面的部分放开手势操作，因为有touchview.
-    HdSmart.UI.setWebViewTouchRect(0,800,0,0);
+    HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%');
   }
 }
 </script>

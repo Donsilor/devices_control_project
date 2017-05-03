@@ -8,8 +8,10 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
         },100)
     }
     HdIot.Device.getDeviceLogByDay = function (options) {
-        setTimeout(()=>{
-            options.onListener(JSON.stringify(mockData.generateDeviceLogByDay(+new Date())))
+      let data = JSON.parse(options.data);
+
+      setTimeout(()=>{
+            options.onListener(JSON.stringify(mockData.generateDeviceLogByDay(data.params.start_time)))
         },100)
     }
 }

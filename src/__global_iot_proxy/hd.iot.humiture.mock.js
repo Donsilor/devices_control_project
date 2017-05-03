@@ -14,13 +14,13 @@ export function generateSnapShot() {
     })
 }
 export function generateDeviceLogByDay(time) {
-    time = time - 24 * 60 * 60;
+    time = time - 23 * 60 * 60 * 1000;
     let mockOptions = {
         "method": "report",
         "result": {
             "device_uuid": window.device_uuid,
             "log|24": [{
-                "time|+36000": time,
+                "time|+3600000": time,
                 "num|+1": 0,
                 attr: {
                     "temperature|-2000-6000": 1,

@@ -14,7 +14,7 @@
 
 <style scoped>
   /*.ct{width : 100%; overflow: hidden;white-space: nowrap; }*/
-  .ct{width : 100%; overflow-x:auto;white-space: nowrap; overflow-scrolling : touch;}
+  .ct{width :1680px ; overflow-x:auto;white-space: nowrap; -webkit-overflow-scrolling: touch;}
   ul.data-list{list-style: none; padding:0;width:100%;}
   ul.data-list li{display: inline-block; width : 150px;}
   ul.data-list li.curr{color : #20BCDE;}
@@ -33,7 +33,8 @@
     },
     filters :{
       _time (val){
-        return time_format(val, 'hh:mm');
+          console.log(val, 'dddd');
+        return time_format(val||Date.now(), 'hh:mm');
       },
       _temp  (val){
         return val ? ((val/100).toFixed(1) + '°C') : '-'
@@ -43,21 +44,16 @@
       }
     },
     mounted (){
-      //滚动到最左边。
-      console.log(this.$el, this.$el.scrollLeft);
-      this.$el.scrollLeft = 5000;
-
 //      console.log(this.$refs.container.clientWidth, this.$refs.container.clientHeight);
       get_formated_temp_and_hum(new Date(), list => {
         console.log(list);
         this.datalist = list;
+        //滚动到最左边。
+        this.$nextTick(()=>{
+          console.log(this.$el, this.$el.scrollLeft);
+          this.$el.scrollLeft = 5000;
+        });
       });
-
-//      get_formated_temp_and_hum().then(list=>{
-//        list.unshift(['', '温度', '湿度']);
-//        console.log(list);
-//        this.datalist = list;
-//      });
     }
   }
 
@@ -73,20 +69,35 @@
 
     let starter = new Date(year, month, date, hour);
 
-    let promise_list = [],
-      i = 0;
-    while(i < 24){
-      //      promise_litst.push(g(i++));
-      let time = (starter - (i++) * 3600 * 1000);
-      promise_list.push(get_value(time));
-    }
+//    let promise_list = [],
+//      i = 0;
+//    while(i < 24){
+//      //      promise_litst.push(g(i++));
+//      let time = (starter - (i++) * 3600 * 1000);
+//      promise_list.push(get_value(time));
+//    }
 
-    Promise.all(promise_list).then(list=>{
-//      console.warn(list);
-      fn(list.sort((a, b)=>{
-        return a.time_stap > b.time_stap ? 1 : -1;
-      }));
+    HdSmart.Device.getDeviceLogByDay( +starter, data=>{
+      let list = data.result.log.map((item, i)=>{
+          let attr = item.attr;
+          return {
+            time : item.time,
+            hum : attr.humidity,
+            temp : attr.temperature,
+            //基准线，如5点整
+            time_stap : starter - i * 3600 * 1000
+          }
+      });
+
+      fn(list.reverse());
     });
+
+//    Promise.all(promise_list).then(list=>{
+////      console.warn(list);
+//      fn(list.sort((a, b)=>{
+//        return a.time_stap > b.time_stap ? 1 : -1;
+//      }));
+//    });
 //    return Promise.all(promise_list);
 
 
