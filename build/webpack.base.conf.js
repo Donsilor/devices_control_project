@@ -10,16 +10,16 @@ var util = require('./util');
 function resolve(dir) {
     return path.join(__dirname, '..', dir)
 }
-
+var isProduction = process.env.NODE_ENV === 'production';
 var app = util.getCommandApp();
 module.exports = {
     entry: {
-        app: [process.env.NODE_ENV === 'production' ? './src/sdk/assets/hd.sdk.js':'./src/sdk/assets/hd.sdk.debug.js', `./src/${app}/main.js`]
+        app: [isProduction ? './src/sdk/assets/hd.sdk.js' : './src/sdk/assets/hd.sdk.debug.js', `./src/${app}/main.js`]
     },
     output: {
         path: config.build.assetsRoot,
         filename: '[name].js',
-        publicPath: process.env.NODE_ENV === 'production'
+        publicPath: isProduction
             ? config.build.assetsPublicPath
             : config.dev.assetsPublicPath
     },
@@ -46,8 +46,8 @@ module.exports = {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
                 options: {
-                    limit: 1000000,
-                    name: utils.assetsPath(`images/[name].[hash:7].[ext]`)
+                    limit: 8000,
+                    name: isProduction ? `../../images/[name].[hash:7].[ext]` : utils.assetsPath(`images/[name].[hash:7].[ext]`)
                 }
             },
             {

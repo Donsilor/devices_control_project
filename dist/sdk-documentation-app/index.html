@@ -25,9 +25,9 @@
               
                 
                 <li><a
-                  href='#hdsmartdevicegetdevicelog'
+                  href='#hdsmartdevicegetdevicemonthhistory'
                   class="">
-                  HdSmart.Device.getDeviceLog
+                  HdSmart.Device.getDeviceMonthHistory
                   
                 </a>
                 
@@ -55,9 +55,9 @@
               
                 
                 <li><a
-                  href='#hdsmartdevicegetdevicelogbyday'
+                  href='#hdsmartdevicegetdevicelog'
                   class="">
-                  HdSmart.Device.getDeviceLogByDay
+                  HdSmart.Device.getDeviceLog
                   
                 </a>
                 
@@ -65,9 +65,9 @@
               
                 
                 <li><a
-                  href='#hdsmartdevicegetdevicemonthhistory'
+                  href='#hdsmartdevicegetdevicelogbyday'
                   class="">
-                  HdSmart.Device.getDeviceMonthHistory
+                  HdSmart.Device.getDeviceLogByDay
                   
                 </a>
                 
@@ -208,18 +208,18 @@
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='hdsmartdevicegetdevicelog'>
-      HdSmart.Device.getDeviceLog
+    <h3 class='fl m0' id='hdsmartdevicegetdevicemonthhistory'>
+      HdSmart.Device.getDeviceMonthHistory
     </h3>
     
     
   </div>
   
 
-  <p>获取设备日志</p>
+  <p>获取当月份具有日志的日期</p>
 
 
-  <div class='pre p1 fill-light mt0'>HdSmart.Device.getDeviceLog(data: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, onSuccess: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>, onError: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</div>
+  <div class='pre p1 fill-light mt0'>HdSmart.Device.getDeviceMonthHistory(year: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, month: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
   
   
 
@@ -235,53 +235,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>data</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-	    
-          </div>
-          
-          <table class='mt1 mb2 fixed-table h5 col-12'>
-            <colgroup>
-              <col width='30%' />
-              <col width='70%' />
-            </colgroup>
-            <thead>
-              <tr class='bold fill-light'>
-                <th>Name</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody class='mt1'>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>data.items_per_page</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>每页数据量 默认为8
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>data.start_time</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>数据起始时间戳
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>data.direction</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>获取数据的方式 down或者up (类似asc和desc)
-</span></td>
-                </tr>
-              
-            </tbody>
-          </table>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>onSuccess</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
-	    获取成功后的返回函数
+            <span class='code bold'>year</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    日志年
 
           </div>
           
@@ -289,8 +244,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>onError</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
-	    获取失败后的返回函数
+            <span class='code bold'>month</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    日志月
 
           </div>
           
@@ -309,11 +264,7 @@
     <div class='py1 quiet mt1 prose-big'>Example</div>
     
       
-      <pre class='p1 overflow-auto round fill-light'>HdSmart.Device.getDeviceLog({
-         <span class="hljs-attr">start_time</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2017</span>,<span class="hljs-number">4</span>,<span class="hljs-number">1</span>),
-         <span class="hljs-comment">//items_per_page:8，</span>
-         direction:<span class="hljs-string">'down'</span>
-     }，
+      <pre class='p1 overflow-auto round fill-light'>HdSmart.Device.getDeviceMonthHistory(year,month，
      <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>)</span>{
          <span class="hljs-comment">//data为获取历史成功由设备端返回的数据</span>
      }
@@ -522,6 +473,134 @@
   
   <div class='clearfix'>
     
+    <h3 class='fl m0' id='hdsmartdevicegetdevicelog'>
+      HdSmart.Device.getDeviceLog
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>获取设备日志</p>
+
+
+  <div class='pre p1 fill-light mt0'>HdSmart.Device.getDeviceLog(data: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, onSuccess: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>, onError: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 2017.04.24</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>data</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>data.items_per_page</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>每页数据量 默认为8
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>data.start_time</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>数据起始时间戳
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>data.direction</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>获取数据的方式 down或者up (类似asc和desc)
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>onSuccess</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    获取成功后的返回函数
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>onError</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    获取失败后的返回函数
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>HdSmart.Device.getDeviceLog({
+         <span class="hljs-attr">start_time</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2017</span>,<span class="hljs-number">4</span>,<span class="hljs-number">1</span>),
+         <span class="hljs-comment">//items_per_page:8，</span>
+         direction:<span class="hljs-string">'down'</span>
+     }，
+     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>)</span>{
+         <span class="hljs-comment">//data为获取历史成功由设备端返回的数据</span>
+     }
+})</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
     <h3 class='fl m0' id='hdsmartdevicegetdevicelogbyday'>
       HdSmart.Device.getDeviceLogByDay
     </h3>
@@ -580,85 +659,6 @@
       
       <pre class='p1 overflow-auto round fill-light'>HdSmart.Device.getDeviceLogByDay(+ <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'2017-05-03 05:00:00'</span>),<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>)</span>{
          <span class="hljs-comment">//data为控制成功由设备端返回的数据</span>
-})</pre>
-    
-  
-
-  
-
-  
-
-  
-</section>
-
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='hdsmartdevicegetdevicemonthhistory'>
-      HdSmart.Device.getDeviceMonthHistory
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>获取当月份具有日志的日期</p>
-
-
-  <div class='pre p1 fill-light mt0'>HdSmart.Device.getDeviceMonthHistory(year: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, month: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
-  
-  
-
-  
-  
-  
-  
-  <div>Since: 2017.04.24</div>
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>year</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-	    日志年
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>month</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-	    日志月
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Example</div>
-    
-      
-      <pre class='p1 overflow-auto round fill-light'>HdSmart.Device.getDeviceMonthHistory(year,month，
-     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>)</span>{
-         <span class="hljs-comment">//data为获取历史成功由设备端返回的数据</span>
-     }
 })</pre>
     
   
