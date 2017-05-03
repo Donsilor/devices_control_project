@@ -41,7 +41,7 @@
         mounted (){
             HdSmart.Device.getSnapShot((data, service_time) => {
                 this.is_ajax_back = true;
-                this.device.title = '门' + window.device_uuid;
+                this.device.title = '人体传感器';
                 this.device.status = data.attr.status;
                 this.device.power_status = data.attr.alarm_low_battery;
                 service_time = service_time * 1000;
