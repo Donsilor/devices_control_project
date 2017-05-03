@@ -50,6 +50,18 @@
  * })
  */
 
+/**
+ * 按提供时间提供过去一天内的设备日志
+ * @method HdSmart.Device.getDeviceLogByDay
+ * @since 2017.05.03
+ * @param {String} start_time 准点的时间戳(13位),
+ * @param {Function} onListener 控制成功后的返回函数
+ * @example
+ * HdSmart.Device.getDeviceLogByDay(+ new Date('2017-05-03 05:00:00'),function(data){
+ *          //data为控制成功由设备端返回的数据
+ * })
+ */
+
 
 /**
  * 获取当月份具有日志的日期

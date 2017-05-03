@@ -65,6 +65,16 @@
               
                 
                 <li><a
+                  href='#hdsmartdevicegetdevicelogbyday'
+                  class="">
+                  HdSmart.Device.getDeviceLogByDay
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
                   href='#hdsmartready'
                   class="">
                   HdSmart.ready
@@ -85,9 +95,9 @@
               
                 
                 <li><a
-                  href='#hdsmartuishowloading'
+                  href='#hdsmartuitoggleheadandfoot'
                   class="">
-                  HdSmart.UI.showLoading
+                  HdSmart.UI.toggleHeadAndFoot
                   
                 </a>
                 
@@ -95,9 +105,9 @@
               
                 
                 <li><a
-                  href='#hdsmartuitoast'
+                  href='#hdsmartuishowloading'
                   class="">
-                  HdSmart.UI.toast
+                  HdSmart.UI.showLoading
                   
                 </a>
                 
@@ -128,6 +138,16 @@
                   href='#hdsmartuialert'
                   class="">
                   HdSmart.UI.alert
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#hdsmartuitoast'
+                  class="">
+                  HdSmart.UI.toast
                   
                 </a>
                 
@@ -581,6 +601,83 @@
   
   <div class='clearfix'>
     
+    <h3 class='fl m0' id='hdsmartdevicegetdevicelogbyday'>
+      HdSmart.Device.getDeviceLogByDay
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>按提供时间提供过去一天内的设备日志</p>
+
+
+  <div class='pre p1 fill-light mt0'>HdSmart.Device.getDeviceLogByDay(start_time: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>, onListener: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 2017.05.03</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>start_time</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    准点的时间戳(13位),
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>onListener</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    控制成功后的返回函数
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>HdSmart.Device.getDeviceLogByDay(+ <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'2017-05-03 05:00:00'</span>),<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>)</span>{
+         <span class="hljs-comment">//data为控制成功由设备端返回的数据</span>
+})</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
     <h3 class='fl m0' id='hdsmartready'>
       HdSmart.ready
     </h3>
@@ -717,6 +814,73 @@
   
   <div class='clearfix'>
     
+    <h3 class='fl m0' id='hdsmartuitoggleheadandfoot'>
+      HdSmart.UI.toggleHeadAndFoot
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>是否显示头部和底部</p>
+
+
+  <div class='pre p1 fill-light mt0'>HdSmart.UI.toggleHeadAndFoot(isHeadAndFootShown: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  <div>Since: 2017.5.3</div>
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>isHeadAndFootShown</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+	    是否显示头部
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>HdSmart.UI.toggleHeadAndFoot(<span class="hljs-literal">false</span>);
+ HdSmart.UI.toggleHeadAndFoot(<span class="hljs-literal">true</span>);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
     <h3 class='fl m0' id='hdsmartuishowloading'>
       HdSmart.UI.showLoading
     </h3>
@@ -751,81 +915,6 @@
     
       
       <pre class='p1 overflow-auto round fill-light'>HdSmart.UI.showLoading();</pre>
-    
-  
-
-  
-
-  
-
-  
-</section>
-
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='hdsmartuitoast'>
-      HdSmart.UI.toast
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>显示app原生toast</p>
-
-
-  <div class='pre p1 fill-light mt0'>HdSmart.UI.toast(message: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>, delay: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>)</div>
-  
-  
-
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>message</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-	    toast显示的消息内容
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>delay</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>)</code>
-	    toast显示多久后自动消失(默认为:3000ms)
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Example</div>
-    
-      
-      <pre class='p1 overflow-auto round fill-light'>HdSmart.UI.toast(<span class="hljs-string">"this is a toast"</span>,<span class="hljs-number">3000</span>)</pre>
     
   
 
@@ -1076,6 +1165,81 @@
       <pre class='p1 overflow-auto round fill-light'>HdSmart.UI.alert(title,message,<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
      <span class="hljs-comment">//点击确定的执行函数</span>
 },<span class="hljs-string">'确定'</span>,<span class="hljs-string">'取消'</span>)</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='hdsmartuitoast'>
+      HdSmart.UI.toast
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>显示app原生toast</p>
+
+
+  <div class='pre p1 fill-light mt0'>HdSmart.UI.toast(message: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>, delay: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>message</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    toast显示的消息内容
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>delay</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>)</code>
+	    toast显示多久后自动消失(默认为:3000ms)
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>HdSmart.UI.toast(<span class="hljs-string">"this is a toast"</span>,<span class="hljs-number">3000</span>)</pre>
     
   
 

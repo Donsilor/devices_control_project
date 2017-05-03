@@ -67,6 +67,27 @@
  */
 
 
+/**
+ * 按提供时间提供过去一天内的设备日志
+ * @method HdIot.Device.getDeviceLogByDay
+ * @since 2017.05.03
+ * @param {String} data 经过字符串化的控制协议对象
+ * @param {String} data.start_time 准点的时间戳(13位),
+ * @param {Function} onListener 控制成功后的返回函数
+ * @example
+ * HdIot.Device.getDeviceLogByDay({
+ *      data: JSON.stringify({
+ *          start_time: + new Date('2017-05-03 05:00:00')
+ *      })，
+ *      onListener:function(data){
+ *          //data为控制成功由设备端返回的数据
+ *      }
+ * })
+ */
+
+
+
+
 
 /**
  * 获取当月份具有日志的日期
