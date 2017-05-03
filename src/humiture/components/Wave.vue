@@ -63,7 +63,7 @@
 </style>
 
 <script>
-  import { timeout } from '../utils';
+  import { timeout } from '@/utils';
   export default {
     name: 'wave',
     props : {
@@ -78,7 +78,6 @@
     },
     watch:{
       bg_index (val){
-        console.log('bg_index changed:', val);
         [].forEach.call(this.$el.querySelectorAll('.c1'), el=>{
           let c1_bg = require(`../assets/wave-bg/${val}_1.png`);
           el.style.backgroundImage = `url(${c1_bg})`;
@@ -87,7 +86,6 @@
           let c2_bg = require(`../assets/wave-bg/${val}_2.png`);
           el.style.backgroundImage = `url(${c2_bg})`;
         });
-        console.log('bg-index changed!')
       }
     }
   }

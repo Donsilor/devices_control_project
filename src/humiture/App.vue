@@ -41,8 +41,8 @@
 
 <script>
 
-  import status from './config/status-desc';
-  import {timeout} from './utils';
+  import status from '@/config/status-desc';
+  import {timeout} from '@/utils';
 
   export default {
     data (){
@@ -74,7 +74,9 @@
     mounted (){
       //TODO:get data from client.
       this.page_name = 'index';
+      console.info('start getSnapShot:');
       HdSmart.Device.getSnapShot(data => {
+        console.log('HdSmart.Device.getSnapShot():', data);
 
         let attr = data.attr,
           temp = (attr.temperature/100).toFixed(1) - 0,
@@ -93,8 +95,32 @@
 
         this.temp = temp;
         this.humidity = humidity;
+
+        console.log(this.temp, this.humidity,'调整后的值');
       });
     }
   }
+
+  //TODO: 调试代码：
+  let is_desktop = !navigator.userAgent.match('HUAWEI');
+//  alert(is_desktop)
+  console.log("is=桌面版本：", is_desktop);
+  if(is_desktop){
+    window.HdSmart = {
+      ready : cb => { cb(); },
+      Device : {
+        getSnapShot : (cb)=> {
+          setTimeout(()=>{
+            cb({
+              attr: { temperature: 0, humidity: 8000 }
+            })
+          }, 100);
+        },
+        getDeviceLog : ()=>{}
+      },
+      UI : { toggleHeadAndFoot : (is_show)=>{} }
+    }
+  }
+
 </script>
 

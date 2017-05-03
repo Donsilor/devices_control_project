@@ -99,8 +99,8 @@
 
 <script>
 
-import status_config from '../config/status-desc';
-import { interval, time_format, tap } from '../utils';
+import status_config from '@/config/status-desc';
+import { interval, time_format, tap } from '@/utils';
 
 export default {
   name: 'index-page',
@@ -124,16 +124,25 @@ export default {
       time : ''
     }
   },
+  watch : {
+    temp (){
+      this.update(this.temp, this.humidity);
+    },
+    humidity (){
+      this.update(this.temp, this.humidity);
+    }
+  },
   methods : {
-
+    update (t, h){
+      let status = get_status(t, h);
+      console.info('status:::', status);
+      this.text = status.text;
+      this.hint = status.hint;
+      this.status_index = status.index;
+      this.bg_color = status.bg_color;
+    }
   },
   mounted (){
-    let status = get_status(this.temp, this.humidity);
-    console.info('status:::', status);
-    this.text = status.text;
-    this.hint = status.hint;
-    this.status_index = status.index;
-    this.bg_color = status.bg_color;
 
     //初始化时间
     let refresh_time = ()=>{
@@ -147,7 +156,6 @@ export default {
     [].forEach.call(this.$el.querySelectorAll('.mod'), el => {
       tap(el, ()=>{
         //jump2detail事件注册在App.vue中。
-//        console.log('=========, tap.')
         this.$emit('jump2detail');
       });
     });

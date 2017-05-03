@@ -48,10 +48,10 @@
 </template>
 
 <script>
-  import bg_1 from '../assets/instrument_temp.png';
-  import bg_2 from '../assets/instrument_humidity.png';
-  import status_desc from '../config/status-desc';
-  import {timeout} from '../utils';
+  import bg_1 from '@/assets/instrument_temp.png';
+  import bg_2 from '@/assets/instrument_humidity.png';
+  import status_desc from '@/config/status-desc';
+  import {timeout} from '@/utils';
 
 export default {
   name: 'dashboard',
@@ -82,7 +82,6 @@ export default {
     if(type === 1){
       min = status_desc[0].temp_range[0];
       max = status_desc[2].temp_range[1];
-
       //需要分三个区间，-20 - 0, 0 - 40, 40 - 60]。最大可能的区间优先判断。
       if(0 < val && val < 40){
         let unit = ANGLE_GRID / (10/4);
@@ -90,8 +89,9 @@ export default {
 //        console.log(unit, angle);
       }else{
         //两端
-        if(val < 0){
+        if(val <= 0){
           angle = MIN_ANGLE + (ANGLE_GRID * 2) + (ANGLE_GRID / 10) * val;
+          console.log(val, angle);
         }else{
           angle = MAX_ANGLE - (ANGLE_GRID * 2) + (val - 40) * (ANGLE_GRID / 10);
         }
