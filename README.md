@@ -16,10 +16,10 @@
 ```
 
 
-### infrared_sensor 人体传感器
+### human_sensor 人体传感器
 ```
-    npm run dev:infrared_sensor //开发
-    npm run build:infrared_sensor //编译
+    npm run dev:human_sensor //开发
+    npm run build:human_sensor //编译
 ```
 ### history
 #### 2017.5.3

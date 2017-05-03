@@ -11,8 +11,8 @@
     "build:sdk": "NODE_ENV=production node build/build.js --app=sdk --appName=sdk",
     "dev:door_sensor": "NODE_ENV=development node build/dev-server.js --app=door_sensor --appName=门窗传感器",
     "build:door_sensor": "NODE_ENV=production node build/build.js --app=door_sensor --appName=门窗传感器",
-    "dev:infrared_sensor": "NODE_ENV=development node build/dev-server.js --app=infrared_sensor --appName=人体传感器",
-    "build:infrared_sensor": "NODE_ENV=production node build/build.js --app=infrared_sensor --appName=人体传感器",
+    "dev:human_sensor": "NODE_ENV=development node build/dev-server.js --app=human_sensor --appName=人体传感器",
+    "build:human_sensor": "NODE_ENV=production node build/build.js --app=human_sensor --appName=人体传感器",
     "build": "run-p build:*",
     "all": "run-s build"
   },

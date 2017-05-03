@@ -1,4 +1,4 @@
-import * as mockData from './hd.iot.infrared_sensor.mock';
+import * as mockData from './hd.iot.human_sensor.mock';
 import './hd.iot.sdk';
 
 if (window.HdIot) {
