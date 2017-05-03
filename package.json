@@ -11,8 +11,6 @@
     "build:sdk": "node build/build.js --app=sdk --appName=sdk",
     "dev:door": "node build/dev-server.js --app=door --appName=门",
     "build:door": "node build/build.js --app=door --appName=门",
-    "dev:window": "node build/dev-server.js --app=window --appName=窗",
-    "build:window": "node build/build.js --app=window --appName=窗",
     "dev:sensor": "node build/dev-server.js --app=sensor --appName=人体传感器",
     "build:sensor": "node build/build.js --app=sensor --appName=人体传感器",
     "build": "run-p build:*",

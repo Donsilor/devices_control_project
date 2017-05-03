@@ -9,17 +9,12 @@
     npm run build:curtain //编译
 ```
 
-### door 门
+### door 门窗传感器
 ```
     npm run dev:door //开发
     npm run build:door //编译
 ```
 
-### window 窗
-```
-    npm run dev:window //开发
-    npm run build:window //编译
-```
 
 ### sensor 人体传感器
 ```
@@ -27,7 +22,8 @@
     npm run build:sensor //编译
 ```
 ### history
-
+#### 2017.5.2
+完成sensor
 
 #### 2017.4.27
 - 初始化工程
