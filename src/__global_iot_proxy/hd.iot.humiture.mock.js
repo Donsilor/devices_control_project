@@ -13,12 +13,20 @@ export function generateSnapShot() {
         }
     })
 }
-
-export function generateDeviceLog() {
+export function generateDeviceLogByDay(time) {
+    time = time - 24 * 60 * 60;
     let mockOptions = {
         "method": "report",
         "result": {
-            "device_uuid": window.device_uuid
+            "device_uuid": window.device_uuid,
+            "log|24": [{
+                "time|+36000": time,
+                "num|+1": 0,
+                attr: {
+                    "temperature|-2000-6000": 1,
+                    "humidity|0-10000": 1
+                }
+            }]
         }
     };
     return Mock.mock(mockOptions);
