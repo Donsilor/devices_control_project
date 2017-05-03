@@ -33,6 +33,9 @@ if (location.search.indexOf('env=desktop') != -1) {
 
             },
             setTouchRect: function (options) {
+            },
+            toggleHeadAndFoot:function () {
+
             }
         },
         Util: {

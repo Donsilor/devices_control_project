@@ -1,0 +1,64 @@
+[{
+  "temp_range" : [-20, 18],
+  "humidity" : [{
+    "range" : [0, 30],
+    "text" : "干冷",
+    "hint" : "注意保暖与补充水分",
+    "index" : "0-0",
+    "bg_color" : "#89b0c9"
+  },{
+    "range" : [30, 80],
+    "text" : "偏冷",
+    "hint" : "注意保暖",
+    "index" : "0-1",
+    "bg_color" : "#728adc"
+  },{
+    "range" : [80, 100],
+    "text" : "湿冷",
+    "hint" : "注意保暖与除湿",
+    "index" : "0-2",
+    "bg_color" : "#68a5cc"
+  }]
+},{
+  "temp_range" : [18, 27],
+  "humidity" : [{
+    "range" : [0, 30],
+    "text" : "干燥",
+    "hint" : "注意补充水分",
+    "index" : "1-0",
+    "bg_color" : "#bae8ad"
+  },{
+    "range" : [30, 80],
+    "text" : "舒适",
+    "hint" : "继续保持",
+    "index" : "1-1",
+    "bg_color" : "#a7efbd"
+  },{
+    "range" : [80, 100],
+    "text" : "潮湿",
+    "hint" : "注意除湿",
+    "index" : "1-2",
+    "bg_color" : "#a9e3d1"
+  }]
+},{
+  "temp_range" : [27, 60],
+  "humidity" : [{
+    "range" : [0, 30],
+    "text" : "干热",
+    "hint" : "注意防暑与补充水分",
+    "index" : "2-0",
+    "bg_color" : "#ffd53d"
+  },{
+    "range" : [30, 80],
+    "text" : "偏热",
+    "hint" : "注意防暑",
+    "index" : "2-1",
+    "bg_color" : "#ffc75f"
+  },{
+    "range" : [80, 100],
+    "text" : "湿热",
+    "hint" : "注意防暑与除湿",
+    "index" : "2-2",
+    "bg_color" : "#ecda4c"
+  }]
+}]

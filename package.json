@@ -13,6 +13,8 @@
     "build:door_sensor": "NODE_ENV=production node build/build.js --app=door_sensor --appName=门窗传感器",
     "dev:human_sensor": "NODE_ENV=development node build/dev-server.js --app=human_sensor --appName=人体传感器",
     "build:human_sensor": "NODE_ENV=production node build/build.js --app=human_sensor --appName=人体传感器",
+    "dev:humiture": "NODE_ENV=development node build/dev-server.js --app=humiture --appName=温湿度传感器",
+    "build:humiture": "NODE_ENV=production node build/build.js --app=humiture --appName=温湿度传感器",
     "build": "run-p build:*",
     "all": "run-s build"
   },

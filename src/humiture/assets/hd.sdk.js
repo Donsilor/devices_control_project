@@ -14,11 +14,6 @@
         return window.device_uuid;
     }
 
-    if (!window.apiLog) {
-        window.apiLog = function (apiName, params, result) {
-        };
-    }
-
     function guid() {
         var guid = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 10 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -42,19 +37,17 @@
      * @param onFailure
      */
     HdSmart.Device.control = function (method, command, attr, onSuccess, onFailure) {
-        var dataOptions = JSON.stringify({
-            method: method,
-            req_id: guid(),
-            params: {
-                device_uuid: getDeviceUUID(),
-                cmd: command,
-                attr: attr
-            }
-        });
         HdIot.Device.control({
-            data: dataOptions,
+            data: JSON.stringify({
+                method: method,
+                req_id: guid(),
+                params: {
+                    device_uuid: getDeviceUUID(),
+                    cmd: command,
+                    attr: attr
+                }
+            }),
             onListener: function (data) {
-                window.apiLog('control', dataOptions, data);
                 onSuccess(data)
             }
         });
@@ -70,45 +63,37 @@
      */
 
     HdSmart.Device.getDeviceLog = function (data, onSuccess) {
-        var dataOptions = JSON.stringify({
-            method: 'getDeviceLog',
-            req_id: guid(),
-            params: {
-                device_uuid: getDeviceUUID(),
-                start_time: data.start_time,
-                items_per_page: typeof data.items_per_page === 'number' ? data.items_per_page : 8,
-                direction: data.direction
-            }
-        });
         HdIot.Device.getDeviceLog({
-            data: dataOptions,
+            data: JSON.stringify({
+                method: 'getDeviceLog',
+                req_id: guid(),
+                params: {
+                    device_uuid: getDeviceUUID(),
+                    start_time: data.start_time,
+                    items_per_page: typeof data.items_per_page === 'number' ? data.items_per_page : 8,
+                    direction: data.direction
+                }
+            }),
             onListener: function (data) {
-                window.apiLog('getDeviceLog', dataOptions, data)
-                data = JSON.parse(data);
                 if (isFunction(onSuccess)) {
-                    onSuccess(data.result)
+                    onSuccess(data)
                 }
             }
         });
     };
 
 
-    HdSmart.Device.getDeviceMonthHistory = function (year, month, onSuccess) {
-        var dataOptions = JSON.stringify({
-            method: 'getDeviceMonthHistory',
-            req_id: guid(),
-            params: {
-                device_uuid: getDeviceUUID(),
-                year: year,
-                month: month,
-                // start_time: parseInt(new Date(year, month - 1) / 1000)
-            }
-        })
+    HdSmart.Device.getDeviceMonthHistory = function (date, onSuccess) {
         HdIot.Device.getDeviceMonthHistory({
-            data: dataOptions,
+            data: JSON.stringify({
+                method: 'getDeviceMonthHistory',
+                req_id: guid(),
+                params: {
+                    device_uuid: getDeviceUUID(),
+                    start_time: parseInt(date / 1000)
+                }
+            }),
             onListener: function (data) {
-                window.apiLog('getDeviceMonthHistory', dataOptions, data);
-                data = JSON.parse(data);
                 if (isFunction(onSuccess)) {
                     onSuccess(data);
                 }
@@ -125,10 +110,10 @@
         HdIot.Device.getSnapShot({
             data: '',
             onListener: function (data) {
-                window.apiLog('getSnapShot', '', data);
+                console.log('SnapShot data : ', data)
                 data = JSON.parse(data);
-                if (data.result) {
-                    onSuccess(data.result, data.timestamp || data.result.timestamp);
+                if (data.code == 200) {
+                    onSuccess(data.result,data.timestamp);
                 } else {
                     onFailure(data);
                 }
@@ -188,39 +173,17 @@
         });
     };
 
-    function covertToNumber(num, max) {
-        if (typeof num == 'number') {
-            return num;
-        } else if (typeof num == 'string') {
-            let _num = parseInt(num);
-            if (num.indexOf('%') > -1) {
-                return max * _num / 100;
-            } else if (!isNaN(_num)) {
-                return _num;
-            }
-        }
-        return 0
-    };
-
-    HdSmart.UI.setWebViewTouchRect = function (left, top, right, bottom) {
-        var rect = document.body.getBoundingClientRect();
-        left = covertToNumber(left, rect.width);
-        top = covertToNumber(top, rect.height);
-        right = covertToNumber(right, rect.width);
-        bottom = covertToNumber(bottom, rect.height);
-
-        let dataOptions = JSON.stringify({
-            left: left,
-            right: right,
-            top: top,
-            bottom: bottom
-        });
-        HdIot.UI.setTouchRect({
-            data: dataOptions
-        });
-        window.apiLog('setWebViewTouchRect', dataOptions, '')
-    };
-
+    /**
+     * @method HdSmart.UI.toggleHeadAndFoot
+     * @param isShow { Boolean }
+     */
+    HdSmart.UI.toggleHeadAndFoot = function (isShow) {
+      HdIot.UI.toggleHeadAndFoot({
+        data : JSON.stringify({
+          show_head_foot : isShow
+        })
+      });
+    }
     HdSmart.Util = {};
 
     /**
@@ -228,13 +191,7 @@
      * @param onSuccess
      */
     HdSmart.Util.getNetworkType = function (onSuccess) {
-        HdIot.Util.getNetworkType({
-            data: '',
-            onListener (data){
-                window.apiLog('getNetworkType', '', data);
-                onSuccess(data);
-            }
-        });
+        HdIot.Util.getNetworkType(onSuccess);
     };
 
     /**
@@ -271,18 +228,6 @@
             })
         });
     };
-
-    /**
-     * @method HdSmart.UI.toggleHeadAndFoot
-     * @param isShow { Boolean }
-     */
-    HdSmart.UI.toggleHeadAndFoot = function (isShow) {
-        HdIot.UI.toggleHeadAndFoot({
-            data : JSON.stringify({
-                show_head_foot : isShow
-            })
-        });
-    }
     /**
      * 设备控制页加载资源完成后调用
      * @method HdSmart.ready
@@ -305,7 +250,6 @@
     };
 
     window.onDeviceChange = function (data) {
-        window.apiLog('onDeviceListen', '', data);
         var length = deviceChangeCallbacks.length;
         for (var i = 0; i < length; i++) {
             if (isFunction(deviceChangeCallbacks[i])) {

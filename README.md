@@ -21,6 +21,13 @@
     npm run dev:human_sensor //开发
     npm run build:human_sensor //编译
 ```
+
+### human_sensor 温湿度传感器
+```
+    npm run dev:humiture //开发
+    npm run build:humiture //编译
+```
+
 ### history
 #### 2017.5.3
 - 添加sdk.debug.js 用于开发环境调试

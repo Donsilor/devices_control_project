@@ -6,7 +6,7 @@ export function generateSnapShotData() {
         "method": "report",
         "result": {
             "timestamp": 1493367110,
-            "device_uuid": "c04fcb0b006f0d0001",
+            "device_uuid": window.device_uuid,
             "attr": {
                 "status|1": ["on", "off"],
                 "alarm_low_battery|1": ["on", "off"],
@@ -73,7 +73,7 @@ export function generateDeviceLogData(time, page_size, direction) {
     let mockOptions = {
         "method": "report",
         "result": {
-            "device_uuid": "c04fcb0b006f0d0001"
+            "device_uuid": window.device_uuid
         }
     };
     if (direction == 'down') {
@@ -114,7 +114,7 @@ export function generateDeviceMonthHistoryData() {
     let data =  Mock.mock({
         "method": "report",
         "result": {
-            "device_uuid": "112233445566778810",
+            "device_uuid": window.device_uuid,
             "has_log|1-30":['@PickDates']
         }
     })
