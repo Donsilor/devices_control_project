@@ -19,7 +19,6 @@
     width : 100%;
     /*background: #a7efbd;*/
     overflow: hidden;
-    position: relative;
   }
   .move{
     transition: transform 4s linear;

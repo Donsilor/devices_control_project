@@ -1,14 +1,14 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App'
-import router from './router'
+import App from './App.vue'
+// import router from './router'
 
-import IndexPage from './components/IndexPage'
-import DetailPage from './components/DetailPage'
-import Wave from './components/Wave'
-import Dashboard from './components/Dashboard'
-import ListView from './components/ListView'
+import IndexPage from './components/IndexPage.vue'
+import DetailPage from './components/DetailPage.vue'
+import Wave from './components/Wave.vue'
+import Dashboard from './components/Dashboard.vue'
+import ListView from './components/ListView.vue'
 
 import './utils';
 
@@ -24,7 +24,7 @@ Vue.component('list-view', ListView);
 HdSmart.ready(() => {
   new Vue({
     el: '#app',
-    router,
+    // router,
     template: '<App/>',
     components: { App }
   });
