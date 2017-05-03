@@ -45,7 +45,7 @@
   .bottom .tit{ height : 72px; }
   .bottom time{font-size : 24px; }
   .line{ border-width : 0px 0 0 0; height : 1px; background: #ccc; margin : 5px 0; }
-  .list-ct{ position: relative; }
+  .list-ct{ position: relative; margin-bottom : 240px;}
   .list-ct .title{position: absolute;left :0;bottom: 0;top :82px;}
   .list-ct .title .i{height : 60px; width : 60px;}
   .list-ct .cont{position: absolute;left :90px;}
