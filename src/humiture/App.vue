@@ -72,7 +72,9 @@
     },
     mounted (){
       this.page_name = 'index';
+      console.log('start to get data:');
       HdSmart.Device.getSnapShot( (data) =>{
+        console.log('the data:', data);
         let attr = data.attr,
           temp = (attr.temperature/100).toFixed(1) - 0,
           humidity = (attr.humidity/100).toFixed(1) - 0;
@@ -89,6 +91,7 @@
 
         this.temp = temp;
         this.humidity = humidity;
+        console.info("temp and hum:",temp, humidity);
       });
     }
   }
