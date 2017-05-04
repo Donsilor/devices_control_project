@@ -18,12 +18,18 @@
     /*margin : 24px;*/
   }
   .top .tit{
-    font-family:NotoSansHans-Regular;
     font-size:36px;
-    color:#333;
+    color:#333333;
+    text-align:center;
+  }
+  .tit{
+    font-family:NotoSansHans-Regular;
     letter-spacing:0;
     text-align:center;
     line-height: 96px;
+    font-size:30px;
+    color:#d2d2d2;
+    text-align:left;
   }
 
   .middle{
@@ -47,7 +53,11 @@
   .line{ border-width : 0px 0 0 0; height : 1px; background: #ccc; margin : 5px 0; }
   .list-ct{ position: relative; margin-bottom : 240px;}
   .list-ct .title{position: absolute;left :0;bottom: 0;top :82px;}
-  .list-ct .title .i{height : 60px; width : 60px;}
+  .list-ct .title .i{
+    height : 60px;
+    width : 60px;
+    line-height: 48px;
+  }
   .list-ct .cont{position: absolute;left :90px;}
 
 </style>
@@ -73,8 +83,8 @@
         <div class="line"></div>
         <div class="list-ct">
           <div class="title">
-            <div class="i">温度</div>
-            <div class="i">湿度</div>
+            <div class="tit i">温度</div>
+            <div class="tit i">湿度</div>
           </div>
           <div class="cont">
             <list-view></list-view>

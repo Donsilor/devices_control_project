@@ -3,7 +3,7 @@
     <!--<div class="scroller" :style="{width : 100 * datalist.length + 'px'}">-->
       <ul class="data-list" :style="{width : 100 * datalist.length + 'px'}">
         <li v-for="(item, index) in datalist" v-bind:class="{curr : index === datalist.length -1 }">
-          <time class="i">{{item.time_stap | _time}}</time>
+          <time class="i time">{{item.time_stap | _time}}</time>
           <span class="i temperature">{{item.temp | _temp}}</span>
           <span class="i humidity">{{item.hum | _hum}}</span>
         </li>
@@ -15,11 +15,25 @@
 <style scoped>
   /*.ct{width : 100%; overflow: hidden;white-space: nowrap; }*/
   .ct{width :1680px ; overflow-x:auto;white-space: nowrap; -webkit-overflow-scrolling: touch;}
-  ul.data-list{list-style: none; padding:0;width:100%;}
+  ul.data-list{list-style: none; padding:0;width:100%;margin:0;}
   ul.data-list li{display: inline-block; width : 150px;}
   ul.data-list li.curr{color : #20BCDE;}
-  ul.data-list li .i{display: block;height: 1.8em;}
-  ul.data-list li .temperature,ul.data-list li .humidity{font-size:30px;}
+  ul.data-list li .i{
+    font-family:Roboto-Regular;
+    font-size:30px;
+    color:#808080;
+    letter-spacing:0;
+    line-height:30px;
+    text-align:center;
+    display: block;
+    /*height: 1.8em;color:#808080;*/
+  }
+  ul.data-list li .time{
+    font-size:24px;
+    line-height:24px;
+    margin : 24px 48px 42px 48px;
+  }
+  ul.data-list li .temperature,ul.data-list li .humidity{font-size:30px;margin:24px 0 ;}
 </style>
 
 <script>
@@ -33,7 +47,6 @@
     },
     filters :{
       _time (val){
-          console.log(val, 'dddd');
         return time_format(val||Date.now(), 'hh:mm');
       },
       _temp  (val){
@@ -44,13 +57,12 @@
       }
     },
     mounted (){
-//      console.log(this.$refs.container.clientWidth, this.$refs.container.clientHeight);
       get_formated_temp_and_hum(new Date(), list => {
-        console.log(list);
+//        console.log(list);
         this.datalist = list;
         //滚动到最左边。
         this.$nextTick(()=>{
-          console.log(this.$el, this.$el.scrollLeft);
+//          console.log(this.$el, this.$el.scrollLeft);
           this.$el.scrollLeft = 5000;
         });
       });

@@ -40,19 +40,22 @@
     display: block;
   }
   .tit{
-    opacity:0.5;
     font-family:NotoSansHans-Medium;
+    opacity:0.5;
     font-size:30px;
+    margin-right : 36px;
   }
   .val{
     font-family:RobotoCondensed-Light;
     font-size:108px;
     line-height:108px;
+    margin-right : 8px;
   }
   .unit{
     font-family:NotoSansHans-Regular;
     font-size:42px;
     line-height:42px;
+    margin-right : 12px;
   }
   .arr{
     opacity:0.5;
@@ -134,7 +137,6 @@ export default {
   },
   methods : {
     update (t, h){
-        console.log('============+', t, h);
       let status = get_status(t, h);
       console.info('status:::', status);
       this.text = status.text;
@@ -168,7 +170,6 @@ export default {
  */
 let get_status = (t, h)=>{
   let result = {};
-  console.log('t, h', t, h);
   //先找到匹配温度区间，再找到匹配的湿度区间
   status_config.find(i=>{
     let t_low = i.temp_range[0],

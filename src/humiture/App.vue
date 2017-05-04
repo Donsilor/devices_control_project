@@ -30,11 +30,11 @@
 <template>
   <div id="app">
     <index-page class="page" :temp="temp" :humidity="humidity"
-                v-if="page_name === 'index'" v-on:jump2detail="to_detail">
+                v-show="page_name === 'index'" v-on:jump2detail="to_detail">
     </index-page>
 
     <detail-page class="page" :temp="temp" :humidity="humidity"
-                 v-if="page_name === 'detail'" v-on:return2index="to_index">
+                 v-show="page_name === 'detail'" v-on:return2index="to_index">
     </detail-page>
   </div>
 </template>
