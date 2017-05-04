@@ -2,24 +2,42 @@
  * Created by 041908110 on 2017/4/25.
  */
 
-//TODO:hack一个Array#find的问题，后面再优化
-if(typeof Array.prototype.find !== 'function'){
-  Array.prototype.find = function(iterator){
-    for(let i=0,l=this.length; i < l; i++){
-      let item = this[i];
-      if(iterator(item, i) === true){
-        return item;
+/**
+ * hack一个Array#find的问题
+ */
+let $find = (arr, fn)=>{
+  if(Array.prototype.find){
+    return Array.prototype.find.call(arr, fn);
+  }else{
+    let result = undefined;
+    for(let i=0,l=arr.length; i < l; i++){
+      let item = arr[i];
+      if(fn(item, i) === true){
+        result = item;
+        break;
       }
     }
-    return null;
+    return result;
   }
-}
+};
+
+// if(typeof Array.prototype.find !== 'function'){
+//   Array.prototype.find = function(iterator){
+//     for(let i=0,l=this.length; i < l; i++){
+//       let item = this[i];
+//       if(iterator(item, i) === true){
+//         return item;
+//       }
+//     }
+//     return null;
+//   }
+// }
 
 /**
  * setTimeout的Promise写法
  * setTimeout(fn, 5000); => timeout(5000).then(fn);
  */
-let timeout = function (delay){
+let $timeout = function (delay){
   return new Promise(resolve=>{
     setTimeout(()=>{
       resolve();
@@ -27,7 +45,7 @@ let timeout = function (delay){
   });
 };
 
-let interval = function(duration){
+let $interval = function(duration){
   return new Promise(resolve=>{
     setInterval(()=>{
       resolve();
@@ -39,7 +57,7 @@ let interval = function(duration){
  * 格式化时间
  * @param date {Date}
  */
-let time_format = function (date = new Date, formater){
+let $time_format = function (date = new Date, formater){
   if(typeof date === 'number'){
     date = new Date(date);
   }
@@ -76,7 +94,7 @@ let time_format = function (date = new Date, formater){
 /**
  * 简易的tap事件
  */
-let tap = function(el, fn){
+let $tap = function(el, fn){
   let moved = null,
     _start = () => { moved = false; },
     _move = () => { moved = true; },
@@ -93,4 +111,4 @@ let tap = function(el, fn){
   el.addEventListener('touchcancel',_end,   false);
 };
 
-export { interval, timeout, time_format, tap };
+export { $find, $interval, $timeout, $time_format, $tap };

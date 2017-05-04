@@ -1,3 +1,37 @@
+<template>
+  <div class="detail-page">
+    <div class="top">
+      <div class="arr" ref="arr">
+        <img src="../assets/arrow2.png" />
+      </div>
+      <div class="tit">温湿度计</div>
+    </div>
+    <div class="middle">
+      <!-- 温湿度切换 -->
+      <!--<div class="swicher"></div>-->
+      <!-- 仪表盘 -->
+      <dashboard :type="1" :value="temp" unit="°C">温 度</dashboard>
+      <dashboard :type="2" :value="humidity" unit="%">湿 度</dashboard>
+    </div>
+    <div class="bottom">
+      <div>
+        <span class="tit">过去24小时温湿度</span>
+        <div class="line"></div>
+        <div class="list-ct">
+          <div class="title">
+            <div class="tit i">温度</div>
+            <div class="tit i">湿度</div>
+          </div>
+          <div class="cont">
+            <list-view></list-view>
+          </div>
+        </div>
+        <div class="line"></div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped>
   .detail-page{ width : 100%; height: 100%; position: relative;}
   .top{
@@ -62,42 +96,8 @@
 
 </style>
 
-<template>
-  <div class="detail-page">
-    <div class="top">
-      <div class="arr" ref="arr">
-        <img src="../assets/arrow2.png" />
-      </div>
-      <div class="tit">温湿度计</div>
-    </div>
-    <div class="middle">
-      <!-- 温湿度切换 -->
-      <!--<div class="swicher"></div>-->
-      <!-- 仪表盘 -->
-      <dashboard :type="1" :value="temp" unit="°C">温 度</dashboard>
-      <dashboard :type="2" :value="humidity" unit="%">湿 度</dashboard>
-    </div>
-    <div class="bottom">
-      <div>
-        <span class="tit">过去24小时温湿度</span>
-        <div class="line"></div>
-        <div class="list-ct">
-          <div class="title">
-            <div class="tit i">温度</div>
-            <div class="tit i">湿度</div>
-          </div>
-          <div class="cont">
-            <list-view></list-view>
-          </div>
-        </div>
-        <div class="line"></div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
-  import { tap } from '../utils';
+  import { $tap } from '../utils';
 export default {
   name: 'detail-page',
   props : {
@@ -112,7 +112,7 @@ export default {
     }
   },
   mounted : function(){
-    tap(this.$refs.arr , ()=>{
+    $tap(this.$refs.arr , ()=>{
       //jump2detail事件注册在App.vue中。
       this.$emit('return2index');
     });

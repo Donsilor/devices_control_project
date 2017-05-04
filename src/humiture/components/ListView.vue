@@ -37,7 +37,7 @@
 </style>
 
 <script>
-  import { time_format } from '../utils';
+  import { $time_format } from '../utils';
   export default {
     name: 'list-view',
     data (){
@@ -47,7 +47,7 @@
     },
     filters :{
       _time (val){
-        return time_format(val||Date.now(), 'hh:mm');
+        return $time_format(val||Date.now(), 'hh:mm');
       },
       _temp  (val){
         return val ? ((val/100).toFixed(1) + '°C') : '-'

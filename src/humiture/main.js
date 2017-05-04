@@ -2,7 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App.vue'
-// import router from './router'
 
 import IndexPage from './components/IndexPage.vue'
 import DetailPage from './components/DetailPage.vue'
@@ -22,9 +21,9 @@ Vue.component('list-view', ListView);
 
 // should run in mobile app clint env.
 HdSmart.ready(() => {
+  HdSmart.UI.showLoading();
   new Vue({
     el: '#app',
-    // router,
     template: '<App/>',
     components: { App }
   });
