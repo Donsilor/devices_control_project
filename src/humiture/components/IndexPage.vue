@@ -139,6 +139,9 @@ export default {
     update (t, h){
       let status = get_status(t, h);
       console.info('status:::', status);
+      if(!status){
+        return false;
+      }
       this.text = status.text;
       this.hint = status.hint;
       this.status_index = status.index;
@@ -169,7 +172,7 @@ export default {
  * t:温度(摄氏度), h:湿度(百分比)
  */
 let get_status = (t, h)=>{
-  let result = {};
+  let result = null;
   //先找到匹配温度区间，再找到匹配的湿度区间
   status_config.find(i=>{
     let t_low = i.temp_range[0],
