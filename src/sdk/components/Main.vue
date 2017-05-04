@@ -53,6 +53,9 @@
             <router-link to="/api/ui/setWebViewTouchRect">HdSmart.UI.setWebViewTouchRect => (app相关api:HdIot.UI.setTouchRect)</router-link>
         </li>
         <li class="list-group-item">
+            <router-link to="/api/ui/toggleHeadAndFoot">HdSmart.UI.toggleHeadAndFoot => (app相关api:HdIot.UI.toggleHeadAndFoot)</router-link>
+        </li>
+        <li class="list-group-item">
             <router-link to="/api/ui/loading">loading (HdSmart.UI.showLoading-HdSmart.UI.hideLoading)=>
                 (app相关api:HdIot.UI.showLoading-HdIot.UI.hideLoading)
             </router-link>

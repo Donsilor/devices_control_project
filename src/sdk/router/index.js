@@ -1,21 +1,27 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Main from '../components/Main'
+
+//System
 import Ready from '../components/api/Ready'
 import OnDeviceListen from '../components/api/OnDeviceListen'
+//Device
 import Control from '../components/api/Control'
 import GetSnapShot from '../components/api/GetSnapShot'
 import GetDeviceLog from '../components/api/GetDeviceLog'
+import GetDeviceLogByDay from '../components/api/GetDeviceLogByDay.vue'
 import GetDeviceMonthHistory from '../components/api/GetDeviceMonthHistory'
+//UI
 import Alert from '../components/api/Alert'
 import Toast from '../components/api/Toast'
 import Loading from '../components/api/Loading'
+import SetWebViewTouchRect from '../components/api/SetWebViewTouchRect.vue'
+import ToggleHeadAndFoot from '../components/api/ToggleHeadAndFoot.vue'
+//Util
 import GetNetworkType from '../components/api/GetNetworkType'
 import Reload from '../components/api/Reload'
 import Post from '../components/api/Post'
 import SendNotification from '../components/api/SendNotification'
-import SetWebViewTouchRect from '../components/api/SetWebViewTouchRect.vue'
-import GetDeviceLogByDay from '../components/api/GetDeviceLogByDay.vue'
 
 Vue.use(Router)
 
@@ -75,6 +81,11 @@ export default new Router({
             path: '/api/ui/setWebViewTouchRect',
             name: 'SetWebViewTouchRect',
             component: SetWebViewTouchRect
+        },
+        {
+            path: '/api/ui/toggleHeadAndFoot',
+            name: 'toggleHeadAndFoot',
+            component: ToggleHeadAndFoot
         },
         {
             path: '/api/ui/loading',
