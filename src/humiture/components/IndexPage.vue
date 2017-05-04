@@ -146,6 +146,7 @@ export default {
     }
   },
   mounted (){
+    this.update(this.temp, this.humidity);
     //初始化时间
     let refresh_time = ()=>{
       this.time = time_format(Date.now(), 'hh:mm');
