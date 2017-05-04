@@ -13,7 +13,8 @@ var env = config.build.env;
 var appName = util.getCommandAppName();
 var app = util.getCommandApp();
 
-baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/hd.iot.${app}.js`;
+// 本地测试使用
+// baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/hd.iot.${app}.js`;
 
 
 var webpackConfig = merge(baseWebpackConfig, {
@@ -26,8 +27,8 @@ var webpackConfig = merge(baseWebpackConfig, {
     devtool: config.build.productionSourceMap ? '#source-map' : false,
     output: {
         path: config.build.assetsRoot,
-        filename: utils.assetsPath('js/[name].[chunkhash].js'),
-        chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+        filename: 'js/[name].[chunkhash].js',
+        chunkFilename: 'js/[id].[chunkhash].js'
     },
     plugins: [
         // http://vuejs.github.io/vue-loader/en/workflow/production.html
@@ -42,7 +43,7 @@ var webpackConfig = merge(baseWebpackConfig, {
         }),
         // extract css into its own file
         new ExtractTextPlugin({
-            filename: utils.assetsPath('[name].[contenthash].css')
+            filename: '[name].[contenthash].css'
         }),
         // Compress extracted CSS. We are using this plugin so that possible
         // duplicated CSS from different components can be deduped.
