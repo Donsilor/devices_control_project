@@ -13,7 +13,7 @@ var env = config.build.env;
 var appName = util.getCommandAppName();
 var app = util.getCommandApp();
 
-// baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/hd.iot.${app}.js`;
+baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/hd.iot.${app}.js`;
 
 
 var webpackConfig = merge(baseWebpackConfig, {
@@ -42,7 +42,7 @@ var webpackConfig = merge(baseWebpackConfig, {
         }),
         // extract css into its own file
         new ExtractTextPlugin({
-            filename: utils.assetsPath('css/[name].[contenthash].css')
+            filename: utils.assetsPath('[name].[contenthash].css')
         }),
         // Compress extracted CSS. We are using this plugin so that possible
         // duplicated CSS from different components can be deduped.

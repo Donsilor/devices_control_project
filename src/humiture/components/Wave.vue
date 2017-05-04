@@ -63,6 +63,25 @@
 
 <script>
   import { timeout } from '../utils';
+  let caches = {};
+  caches['0-0_1'] = require('../assets/wave-bg/0-0_1.png');
+  caches['0-0_2'] = require('../assets/wave-bg/0-0_2.png');
+  caches['0-1_1'] = require('../assets/wave-bg/0-1_1.png');
+  caches['0-1_2'] = require('../assets/wave-bg/0-1_2.png');
+  caches['0-2_1'] = require('../assets/wave-bg/0-2_1.png');
+  caches['0-2_2'] = require('../assets/wave-bg/0-2_2.png');
+  caches['1-0_1'] = require('../assets/wave-bg/1-0_1.png');
+  caches['1-0_2'] = require('../assets/wave-bg/1-0_2.png');
+  caches['1-1_1'] = require('../assets/wave-bg/1-1_1.png');
+  caches['1-1_2'] = require('../assets/wave-bg/1-1_2.png');
+  caches['1-2_1'] = require('../assets/wave-bg/1-2_1.png');
+  caches['1-2_2'] = require('../assets/wave-bg/1-2_2.png');
+  caches['2-0_1'] = require('../assets/wave-bg/2-0_1.png');
+  caches['2-0_2'] = require('../assets/wave-bg/2-0_2.png');
+  caches['2-1_1'] = require('../assets/wave-bg/2-1_1.png');
+  caches['2-1_2'] = require('../assets/wave-bg/2-1_2.png');
+  caches['2-2_1'] = require('../assets/wave-bg/2-2_1.png');
+  caches['2-2_2'] = require('../assets/wave-bg/2-2_2.png');
   export default {
     name: 'wave',
     props : {
@@ -78,12 +97,12 @@
     watch:{
       bg_index (val){
         [].forEach.call(this.$el.querySelectorAll('.c1'), el=>{
-          let c1_bg = require(`../assets/wave-bg/${val}_1.png`);
-          el.style.backgroundImage = `url(${c1_bg})`;
+//          let c1_bg = require(`../assets/wave-bg/${val}_1.png`);
+          el.style.backgroundImage = `url(${caches[val+'_1']})`;
         });
         [].forEach.call(this.$el.querySelectorAll('.c2'), el=>{
           let c2_bg = require(`../assets/wave-bg/${val}_2.png`);
-          el.style.backgroundImage = `url(${c2_bg})`;
+          el.style.backgroundImage = `url(${caches[val+'_2']})`;
         });
       }
     }

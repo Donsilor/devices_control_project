@@ -27,7 +27,6 @@ module.exports = {
         extensions: ['.js', '.vue', '.json'],
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
-            '@': resolve('src')
         }
     },
     module: {
@@ -47,7 +46,7 @@ module.exports = {
                 loader: 'url-loader',
                 options: {
                     limit: 8000,
-                    name: isProduction ? `../../images/[name].[hash:7].[ext]` : utils.assetsPath(`images/[name].[hash:7].[ext]`)
+                    name: isProduction ? 'images/[name].[hash:7].[ext]' : utils.assetsPath(`images/[name].[hash:7].[ext]`)
                 }
             },
             {
