@@ -120,9 +120,9 @@ export default {
       //辅助提示
       hint : '--',
       //序号
-      status_index : '-',
+      status_index : '1-1',
       //背景颜色
-      bg_color : '',
+      bg_color : '#a7efbd',
       //实时的时间
       time : ''
     }
@@ -146,7 +146,6 @@ export default {
     }
   },
   mounted (){
-
     //初始化时间
     let refresh_time = ()=>{
       this.time = time_format(Date.now(), 'hh:mm');
