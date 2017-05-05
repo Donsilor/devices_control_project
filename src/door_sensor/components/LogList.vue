@@ -7,7 +7,7 @@
                         <div class="log-indicator-circle"></div>
                         {{daily.timestamp | tf}}
                     </div>
-                    <div class="log-indicator log-item" :class="[log.attr.type]" :key="log.time"
+                    <div class="log-indicator log-item" :class="[log.attr.status]" :key="log.time"
                          v-for="log in logsInDate[daily.day].logs">
                         <div class="log-indicator-circle"></div>
                         <div class="time">{{log.timeTxt}}</div>
