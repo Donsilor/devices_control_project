@@ -271,7 +271,8 @@
                 this.updateEnableDay();
             },
             chooseDate (year, month, date){
-                if (this.daysPermission[this.dayAttr[date].date] && !this.checkIsCurrentDate(year, month, date)) {
+                console.log(!this.checkIsCurrentDate(year,month,date));
+                if (this.daysPermission[this.dayAttr[date].date] && !this.checkIsCurrentDate(year,month,date)) {
                     this.$emit('chooseDate', year, month, date);
                 }
             }

@@ -1,16 +1,6 @@
 <template>
     <div class="pull-to-refresh-wrapper">
         <div class="pull_bar" ref="pull" :class="[pullStatus]">
-            <!--<div class="loading" v-if="pullStatus == 'loading'">-->
-            <!--<div class="circle-1 circle"></div>-->
-            <!--<div class="circle-2 circle"></div>-->
-            <!--<div class="circle-3 circle"></div>-->
-            <!--<div class="circle-4 circle"></div>-->
-            <!--<div class="circle-5 circle"></div>-->
-            <!--<div class="circle-6 circle"></div>-->
-            <!--<div class="circle-7 circle"></div>-->
-            <!--<div class="circle-8 circle"></div>-->
-            <!--</div>-->
         </div>
         <div class="box" ref="box">
             <div class="scroll" ref="scroller">
@@ -18,16 +8,6 @@
             </div>
         </div>
         <div class="push_bar" ref="push" :class="[pushStatus]">
-            <!--<div class="loading" v-if="pushStatus == 'loading'">-->
-            <!--<div class="circle-1 circle"></div>-->
-            <!--<div class="circle-2 circle"></div>-->
-            <!--<div class="circle-3 circle"></div>-->
-            <!--<div class="circle-4 circle"></div>-->
-            <!--<div class="circle-5 circle"></div>-->
-            <!--<div class="circle-6 circle"></div>-->
-            <!--<div class="circle-7 circle"></div>-->
-            <!--<div class="circle-8 circle"></div>-->
-            <!--</div>-->
         </div>
     </div>
 </template>
@@ -61,6 +41,7 @@
         line-height: 90px;
         width: 100%;
         font-size: 24px;
+        background: #fafafa;
     }
 
     .pull_bar {
@@ -115,63 +96,14 @@
         -o-text-size-adjust: none;
         text-size-adjust: none;
     }
-
-    /*.loading{*/
-    /*display: flex;*/
-    /*flex-direction: row;*/
-    /*align-items: center;*/
-    /*justify-content: center;*/
-    /*}*/
-    /*.loading .circle{*/
-    /*width: 16px;*/
-    /*border-radius: 16px;*/
-    /*line-height: 16px;*/
-    /*height: 16px;*/
-    /*margin: 4px;*/
-    /*background: #88e9ed;*/
-    /*transform: scale(0.5);*/
-    /*animation: scale_circle 0.8s linear infinite;*/
-    /*}*/
-    /*.loading .circle-1{*/
-    /*animation-delay: 0s;*/
-    /*}*/
-    /*.loading .circle-2{*/
-    /*animation-delay: 0.1s;*/
-    /*}*/
-    /*.loading .circle-3{*/
-    /*animation-delay: 0.2s;*/
-    /*}*/
-    /*.loading .circle-4{*/
-    /*animation-delay: 0.3s;*/
-    /*}*/
-    /*.loading .circle-5{*/
-    /*animation-delay: 0.4s;*/
-    /*}*/
-    /*.loading .circle-6{*/
-    /*animation-delay: 0.5s;*/
-    /*}*/
-    /*.loading .circle-7{*/
-    /*animation-delay: 0.6s;*/
-    /*}*/
-    /*.loading .circle-8{*/
-    /*animation-delay: 0.7s;*/
-    /*}*/
-    /*@keyframes scale_circle {*/
-    /*0 {*/
-    /*transform: scale(0.5)*/
-    /*}*/
-    /*50%{*/
-    /*transform: scale(1);*/
-    /*}*/
-    /*100%{*/
-    /*transform: scale(0.5);*/
-    /*}*/
-    /*}*/
 </style>
 <script>
     import AlloyTouch from '../assets/alloy_touch';
     import Transform from '../assets/transformjs/transform'
     export default {
+        props: {
+            enablePush: Boolean
+        },
         data (){
             return {
                 min: 0,
@@ -212,10 +144,14 @@
                 min: -_this.min,
                 change (value){
                     pull.translateY = value > pullBarHeight ? pullBarHeight : value;
-                    if(clientHeight > scrollHeight){
-                        push.translateY = value <= -pushBarHeight ? -pushBarHeight : value;
+                    if(_this.enablePush){
+                        if (clientHeight > scrollHeight) {
+                            push.translateY = value <= -pushBarHeight ? -pushBarHeight : value;
+                        } else {
+                            push.translateY = value + scrollHeight - clientHeight;
+                        }
                     }else{
-                        push.translateY = value + scrollHeight - clientHeight;
+                        push.translateY = value + scrollHeight;
                     }
                     _this.value = value;
                 },
@@ -231,7 +167,7 @@
                     }
 
                     if (value <= -_this.min - pushBarHeight) {
-                        _this.pushStatus = 'release';
+//                        _this.pushStatus = 'release';
                     } else if (value < _this.min && value > _this.min - pushBarHeight) {
                         _this.pushStatus = 'none';
                     }
@@ -253,7 +189,7 @@
                         return false;
                     }
                     let lastLine = _this.min - pushBarHeight;
-                    if (value <= lastLine) {
+                    if (value <= lastLine && _this.enablePush) {
                         at.to(lastLine);
                         _this.pushStatus = 'loading';
                         _this.$emit('onPush', () => {
@@ -270,6 +206,12 @@
                     }
                 }
             });
-        }
+            _this.goToTop = function () {
+                at.to(0, 0);
+                _this.min = -getTouchMin();
+                at.min = _this.min;
+            }
+        },
+        methods: {}
     }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="log-list">
-        <pull-to-refresh v-on:onPull="onPull" v-on:onPush="onPush">
+        <pull-to-refresh v-on:onPull="onPull" v-on:onPush="onPush" ref="pullToRefresh" :enablePush="moreData">
             <div class="log-panel-group">
                 <div class="log-panel" v-for="daily in logDateList">
                     <div class="log-indicator log-header">
@@ -15,6 +15,7 @@
                     </div>
                 </div>
             </div>
+            <div class="no-more-item" v-if="!moreData">没有更多信息了</div>
         </pull-to-refresh>
     </div>
 </template>
@@ -22,22 +23,32 @@
     import {mapState} from 'vuex';
     export default {
         mounted (){
-            this.getInitialData();
+            this.getInitialData(() => {
+            });
             this.$store.subscribe((mutation, state) => {
                 if (mutation.type == 'chooseDate') {
-                    this.getInitialData();
+                    this.moreData = true;
+                    this.getInitialData(() => {
+                        this.$refs.pullToRefresh.goToTop()
+                    });
                 }
             })
         },
+        data (){
+            return {
+                moreData: true
+            }
+        },
         computed: mapState(['ptr_down_time', 'ptr_up_time', 'logsInDate', 'logDateList']),
         methods: {
-            getInitialData (){
+            getInitialData (callback){
                 this.getDeviceLog(this.ptr_down_time, 'down', (data) => {
                     let length = data.log.length;
                     if (length) {
                         this.$store.commit('addLogs', data.log);
                         this.updateDownTime(data.log[0].time);
                         this.updateUpTime(data.log[length - 1].time);
+                        callback();
                     }
                 }, 16);
             },
@@ -48,21 +59,26 @@
             },
             updateUpTime(time){
 //                if (time > this.ptr_up_time) {
-                    this.$store.commit('updateUpTime', time)
+                this.$store.commit('updateUpTime', time)
 //                }
             },
             getDeviceLog (time, direction, callback, items_per_page){
+                items_per_page = items_per_page || 8;
                 HdSmart.Device.getDeviceLog({
                     start_time: time,
                     direction: direction,
                     items_per_page: items_per_page
                 }, (data) => {
-                    if (data.log) {
+                    let length = data.log.length;
+                    if (length) {
                         data.log.sort(function (a, b) {
                             return a.time - b.time;
                         })
                     } else {
                         data.log = [];
+                    }
+                    if(length < items_per_page){
+                        this.moreData = false
                     }
                     callback(data);
                 })
@@ -79,7 +95,7 @@
             },
             onPush (onPushFinishCallback){
                 this.getDeviceLog(this.ptr_down_time, 'down', (data) => {
-                    if (data.log) {
+                    if (data.log && data.log.length) {
                         this.$store.commit('addLogs', data.log);
                         this.updateDownTime(data.log[0].time);
                     }
@@ -170,7 +186,15 @@
     .log-item {
         transition: all 1s;
     }
-    .log-header + .log-item.add{
+
+    .log-header + .log-item.add {
         color: #13d5dc;
+    }
+
+    .no-more-item{
+        font-size: 24px;
+        color: #d2d2d2;
+        text-align: center;
+        margin-top: 36px;
     }
 </style>
