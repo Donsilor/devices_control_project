@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <img class="pointer" src="../assets/instument_pointer.png"/>
+    <img ref="pointer" class="pointer" src="../assets/instument_pointer.png"/>
     <div class="val">
       <span class="value">{{value}}</span>
       <span class="unit">{{unit}}</span>
@@ -22,7 +22,7 @@
     height:100%;
     padding: 0;
     margin: 0;
-    transition: transform 1000ms ease;
+    transition: transform 2s ease-out;
     transform: rotate(0);
     transform-origin:50% 50%;
   }
@@ -56,13 +56,38 @@
 export default {
   name: 'dashboard',
   props: {
-    value : Number,
+    //由于固定一位小数位，因此只能用string，如'51.0'
+    value : String,
     unit : String,
     //1:温度；2:湿度
-    type : Number
+    type : Number,
+    //页面名
+    page : String
+  },
+  methods :{
+    //指针旋转到计算的角度（timeout用来使transition生效）
+    rotate (angle){
+      $timeout(0).then(()=>{
+        let pointer = this.$refs.pointer;
+        pointer.style.transform = `rotate(${angle}deg)`;
+      });
+    }
   },
   watch : {
-    value (){
+//    page (name){
+//        console.log(name, '===')
+//      if(name === 'index'){
+//        //初始位置为-40°。
+//        console.log('rotate')
+////        this.rotate(-40);
+//      }else{
+//        //this.rotate(this.value);
+////        this.value = 0;
+//      }
+//    },
+    value (val){
+      console.log('____:', val);
+      val = +val;
       let type = this.type;
       this.$el.style.backgroundImage = `url(${(type === 1) ? bg_1 : bg_2})`;
       // 刻度：整个表盘的弧度是13 * 20 = 260°。
@@ -74,7 +99,7 @@ export default {
       //不同类型不同的区间值
       let min = 0,
         max = 0,
-        val = this.value,
+        //val = +this.value,
         angle = 0;
 
       //从配置文件里面读到温度的区间值，再根据比例来计算出实际的旋转角度
@@ -86,12 +111,10 @@ export default {
         if(0 < val && val < 40){
           let unit = ANGLE_GRID / (10/4);
           angle = MIN_ANGLE + (ANGLE_GRID * 2) + (val - 0) * unit;
-          console.log(unit, angle);
         }else{
           //两端
           if(val <= 0){
             angle = MIN_ANGLE + (ANGLE_GRID * 2) + (ANGLE_GRID / 10) * val;
-            console.log(val, angle);
           }else{
             angle = MAX_ANGLE - (ANGLE_GRID * 2) + (val - 40) * (ANGLE_GRID / 10);
           }
@@ -103,12 +126,8 @@ export default {
         let ratio = (this.value - min)/(max - min);
         angle = MIN_ANGLE + (MAX_ANGLE - MIN_ANGLE) * ratio;
       }
-
-      //指针旋转到计算的角度（timeout用来使transition生效）
-      $timeout(0).then(()=>{
-        let pointer = this.$el.querySelector('.pointer');
-        pointer.style.transform = `rotate(${angle}deg)`;
-      });
+      console.log('当前value和指针旋转角度：', val, angle);
+      this.rotate(angle);
     }
   }
 }
