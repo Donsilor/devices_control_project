@@ -13,7 +13,9 @@ if (location.search.indexOf('env=desktop') != -1) {
                 }))
             },
             getDeviceLog: function (options) {
-                options.onListener(options.data);
+                options.onListener(JSON.stringify({
+                    result: options.data
+                }));
             },
             getDeviceMonthHistory: function (options) {
                 options.onListener(options.data);
@@ -42,8 +44,12 @@ if (location.search.indexOf('env=desktop') != -1) {
             }
         },
         Util: {
-            getNetworkType: function (onSuccess) {
-                onSuccess('wifi')
+            getNetworkType: function (options) {
+                options.onListener(JSON.stringify({
+                    result: {
+                        type: "wifi"
+                    }
+                }));
             },
             reload: function () {
 

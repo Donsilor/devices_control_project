@@ -12,6 +12,8 @@ var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
 var util = require('./util');
+var ip = require('ip');
+var os = require('os');
 // default port where dev server listens for incoming traffic
 var port = util.getCommandPort() || process.env.PORT || config.dev.port
 // automatically open browser, if not set will be false
@@ -63,7 +65,12 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-var uri = 'http://0.0.0.0:' + port + '?env=desktop';
+// let localIp = ip.address() || '0.0.0.0';
+var localIp = '0.0.0.0';
+if(os.platform() == 'win32'){
+    localIp = ip.address();
+}
+var uri = 'http://' + localIp + ':' + port + '?env=desktop';
 
 var _resolve
 var readyPromise = new Promise(resolve => {

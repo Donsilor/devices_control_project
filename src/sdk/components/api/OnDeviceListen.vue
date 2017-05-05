@@ -35,15 +35,21 @@ HdSmart.onDeviceListen(function(data){
         },
         mounted (){
             HdSmart.onDeviceListen((data) => {
+                data  = JSON.stringify(data);
                 this.messages.push(`1st listen : ${data}`);
             });
             HdSmart.onDeviceListen((data) => {
+                data = JSON.stringify(data);
                 this.messages.push(`2nc listen : ${data}`);
             });
         },
         methods: {
             onClick (){
-                window.onDeviceChange('设备变更');
+                window.onDeviceChange({
+                    attr: {
+                        mode: 'off'
+                    }
+                });
             }
         }
     }

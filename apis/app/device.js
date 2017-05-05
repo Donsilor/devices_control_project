@@ -38,6 +38,8 @@
  */
 
 
+
+
 /**
  * 获取设备日志
  * @method HdIot.Device.getDeviceLog
@@ -48,6 +50,7 @@
  * @param {String} data.direction  取值为up或者down
  * @param {String} data.items_per_page 每页数据量
  * @param {Function} onListener 控制成功后的返回函数
+ * @deprecated
  * @example
  * HdIot.Device.getDeviceLog({
  *      data: JSON.stringify({

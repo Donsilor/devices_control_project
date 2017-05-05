@@ -37,23 +37,7 @@ module.exports = merge(baseWebpackConfig, {
             template: 'index.html',
             title: appName,
             inject: true,
-            chunksSortMode: function (chunkA, chunkB) {
-                let orderAWeight = 0;
-                let orderBWeight = 0;
-                if (/^before/.test(chunkA.names[0])) {
-                    orderAWeight = 1;
-                }
-                if (/^before/.test(chunkB.names[0])) {
-                    orderBWeight = 1;
-                }
-                if (/^after/.test(chunkA.names[0])) {
-                    orderAWeight = -1;
-                }
-                if (/^after/.test(chunkB.names[0])) {
-                    orderBWeight = -1;
-                }
-                return orderBWeight - orderAWeight;
-            }
+            chunksSortMode: utils.sortChunks
         }),
         new FriendlyErrorsPlugin()
     ]

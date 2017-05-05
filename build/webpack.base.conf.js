@@ -14,7 +14,8 @@ var isProduction = process.env.NODE_ENV === 'production';
 var app = util.getCommandApp();
 module.exports = {
     entry: {
-        app: [isProduction ? './src/sdk/assets/hd.sdk.js' : './src/sdk/assets/hd.sdk.debug.js', `./src/${app}/main.js`]
+        sdk: [isProduction ? './src/sdk/hdsmart/index.js' : './src/sdk/hdsmart/index.debug.js'],
+        app: [`./src/${app}/main.js`]
     },
     output: {
         path: config.build.assetsRoot,
