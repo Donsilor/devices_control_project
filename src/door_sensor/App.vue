@@ -50,7 +50,6 @@
                 this.$store.commit('updateSourceTime', service_time);
                 this.$nextTick(() => {
                     let rect = this.$refs.container.getBoundingClientRect();
-                    HdSmart.UI.setWebViewTouchRect(rect.left, rect.top, rect.left + rect.width, rect.top + rect.height);
                 })
             });
             HdSmart.onDeviceListen((data) => {
@@ -62,7 +61,9 @@
                         type: 'add'
                     })
                 }]);
-            })
+            });
+
+            HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%');
         }
     }
 </script>

@@ -170,4 +170,7 @@
     .log-item {
         transition: all 1s;
     }
+    .log-header + .log-item.add{
+        color: #13d5dc;
+    }
 </style>

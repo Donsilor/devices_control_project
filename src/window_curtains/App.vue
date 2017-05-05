@@ -52,8 +52,8 @@
                 localStorage.removeItem('close_percent');
             }
             return {
-//                close_percent: close_percent,
-                close_percent: 0,
+                close_percent: close_percent,
+//                close_percent: 0,
                 rafId: 0
             }
         },
@@ -64,10 +64,12 @@
                     close_percent = null;
                     localStorage.removeItem('close_percent');
                 }
-//                this.close_percent = close_percent === null ? data.attr.close_percentage : close_percent;
-                this.close_percent = 0;
+                this.close_percent = close_percent === null ? data.attr.close_percentage : close_percent;
+//                this.close_percent = 0;
                 localStorage.setItem('close_percent', this.close_percent);
             });
+
+            HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%');
         },
         methods: {
             onOpen(onFinishCallback){
