@@ -10,8 +10,8 @@
       <!-- 温湿度切换 -->
       <!--<div class="swicher"></div>-->
       <!-- 仪表盘 -->
-      <dashboard :type="1" :value="temp" unit="°C">温 度</dashboard>
-      <dashboard :type="2" :value="humidity" unit="%">湿 度</dashboard>
+      <dashboard :type="1" :value="temp|formatter" unit="°C" :page="page">温 度</dashboard>
+      <dashboard :type="2" :value="humidity|formatter" unit="%" :page="page">湿 度</dashboard>
     </div>
     <div class="bottom">
       <div>
@@ -104,13 +104,18 @@ export default {
     //温度，单位：°
     temp : Number,
     //湿度，单位：%
-    humidity : Number
+    humidity : Number,
+    //当前页面名, index/detail
+    page : String
   },
-  data () {
-    return {
-      data_list : []
+  filters :{
+    formatter : (val)=>{
+      return (val/100).toFixed(1);
     }
   },
+//  data () {
+//    return {}
+//  },
   mounted : function(){
     $tap(this.$refs.arr , ()=>{
       //jump2detail事件注册在App.vue中。

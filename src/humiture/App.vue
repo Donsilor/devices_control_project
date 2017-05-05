@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <index-page class="page" :temp="temp" :humidity="humidity" :page="page_name"
-                v-show="page_name === 'index'" @jump2detail="to_detail" @set_h="set_humidity" @set_t="set_temp">
+  <div id="app" v-show="loaded">
+    <index-page class="page" :temp="temp" :humidity="humidity"
+                v-show="page_name === 'index'" @jump2detail="to_detail">
     </index-page>
 
     <detail-page class="page" :temp="temp" :humidity="humidity" :page="page_name"
@@ -40,14 +40,15 @@
 </style>
 
 <script>
-  import status_desc from './config/status-desc';
   import { $timeout } from './utils';
   export default {
     data (){
       return {
+        loaded : false,
         page_name : 'index',
+        //原始温湿度值
         temp : 0,
-        humidity : 0
+        humidity : 0,
       }
     },
     methods : {
@@ -57,36 +58,37 @@
       to_index (){
         this.page_name = 'index';
       },
-      set_temp (t){
-          this.set_value({t : t});
-      },
-      set_humidity (h){
-          this.set_value({h : h});
-      },
+
+      /**
+       * 刷新当前温湿度，场景有首次加载、手动下拉、push消息等。
+       * @param options {Object} 参数 {t, h}
+       */
       set_value (options){
-        let temp = this.temp,
-          humidity = this.humidity;
-        if(options.t){
-          temp = (options.t/100).toFixed(1) - 0;
-        }
-        if(options.h){
-          humidity = (options.h/100).toFixed(1) - 0;
-        }
+        let t = options.t || this.temp,
+          h = options.h || this.humidity;
 
         // 边界修正
-        let t_min = status_desc[0].temp_range[0],
-          t_max = status_desc[2].temp_range[1],
+        let t_min = -2000,
+          t_max = 6000,
           h_min = 0,
-          h_max = 100;
+          h_max = 10000;
 
-        (temp < t_min) && (temp = t_min);
-        (temp > t_max) && (temp = t_max);
-        (humidity < h_min) && (humidity = h_min);
-        (humidity > h_max) && (humidity = h_max);
+        if(t < t_min) {
+          t = t_min;
+        }
+        if(t > t_max){
+          t = t_max;
+        }
+        if(h < h_min) {
+          h = h_min;
+        }
+        if(h > h_max){
+          h = h_max;
+        }
 
-        this.temp = temp;
-        this.humidity = humidity;
-        console.info("temp and hum:",temp, humidity);
+        this.temp = t;
+        this.humidity = h;
+        console.info("temp and hum:",t, h);
       }
     },
     watch : {
@@ -94,6 +96,7 @@
         if(val === 'detail'){
           HdSmart.UI.toggleHeadAndFoot(false);
         }else{
+            //TODO:这里可能有体验问题，切换时会跳。
           $timeout(100).then(()=>{
             HdSmart.UI.toggleHeadAndFoot(true);
           });
@@ -101,16 +104,34 @@
       }
     },
     mounted (){
-      console.log('start to get data:');
+      //初始化
       HdSmart.Device.getSnapShot( data =>{
+        let attr = data && data.attr;
+        if(!attr){
+          return false;
+        }
         HdSmart.UI.hideLoading();
-        let attr = data.attr;
-        console.log('first data:', attr);
+        console.warn('first data:', attr);
+        this.loaded = true;
         this.set_value({
           h : attr.humidity,
           t : attr.temperature
         });
       });
+
+      //接受push消息，调整状态值。
+      HdSmart.onDeviceListen(json => {
+        console.warn('listen data:', json);
+        let attr = json && json.result && json.result.attr;
+        //只有在indexPage需要实时显示状态变化。
+        if(this.page_name === 'detail'){
+          return true;
+        }
+        this.set_value({
+          h : attr.humidity,
+          t : attr.temperature
+        });
+      })
     }
   }
 </script>

@@ -12,13 +12,13 @@
       <div class="bottom">
         <div class="mod">
           <span class="tit">室内温度</span>
-          <span class="val">{{temp}}</span>
+          <span class="val">{{temp | formatter}}</span>
           <span class="unit">°C</span>
           <img class="arr" src="../assets/arrow.png"/>
         </div>
         <div class="mod">
           <span class="tit">室内湿度</span>
-          <span class="val">{{humidity}}</span>
+          <span class="val">{{humidity | formatter}}</span>
           <span class="unit">%</span>
           <img class="arr" src="../assets/arrow.png"/>
         </div>
@@ -112,9 +112,7 @@ export default {
     //温度，单位：°
     temp : Number,
     //湿度，单位：%
-    humidity : Number,
-    //当前显示页面名
-    page : String
+    humidity : Number
   },
   data () {
     return {
@@ -130,6 +128,12 @@ export default {
       time : ''
     }
   },
+  filters :{
+    //温湿度的计算规则刚好一致，可以共用一个filter.
+    formatter (val){
+      return (val/100).toFixed(1);
+    }
+  },
   watch : {
     temp (){
       this.update(this.temp, this.humidity);
@@ -140,8 +144,12 @@ export default {
   },
   methods : {
     update (t, h){
+      //为了和显示值保持一致，这里采取和上面的filter同样的算法
+      t = (t/100).toFixed(1)*1;
+      h = (h/100).toFixed(1)*1;
+
       let status = get_status(t, h);
-      console.info('status:::', status);
+      console.info('status:::', t, h, status);
       if(!status){
         return false;
       }
@@ -168,22 +176,6 @@ export default {
         this.$emit('jump2detail');
       });
     });
-
-    //接受push消息，调整状态值。
-    HdSmart.onDeviceListen(json => {
-        console.warn('json:', json);
-        let data = json && json.result && json.result.attr;
-        //只有在indexPage需要实时显示状态变化。
-        if(this.page === 'detail'){
-            return true;
-        }
-        if(data.temperature && typeof data.temperature === 'number'){
-          this.$emit('set_t', data.temperature);
-        }
-        if(data.humidity && typeof data.humidity === 'number'){
-          this.$emit('set_h', data.humidity);
-        }
-    })
   }
 }
 
@@ -198,11 +190,12 @@ let get_status = (temp, hum)=>{
       t_top = i.temp_range[1],
       humidity = i.humidity;
 
-    if(temp >= t_low && temp <= t_top){
+    //温湿度区间值都是左开右闭。
+    if(t_low < temp && temp <= t_top){
       $find(humidity, j=>{
         let h_low = j.range[0],
           h_top = j.range[1];
-        if(hum >= h_low && hum <= h_top){
+        if(h_low < hum && hum <= h_top){
           result = {
             index : j.index,
             text : j.text,
