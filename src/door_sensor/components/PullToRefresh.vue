@@ -180,11 +180,11 @@
                             _this.pullStatus = 'done';
                             _this.min = -getTouchMin();
                             at.min = _this.min;
-                            setTimeout(() => {
-                                if (_this.value == pushBarHeight) {
+//                            setTimeout(() => {
+                                if (_this.value >= pullBarHeight) {
                                     at.to(at.initialValue);
                                 }
-                            }, 1000);
+//                            }, 1000);
                         });
                         return false;
                     }
@@ -196,11 +196,11 @@
                             _this.pushStatus = 'done';
                             _this.min = -getTouchMin();
                             at.min = _this.min;
-                            setTimeout(() => {
-                                if (_this.value == lastLine) {
+//                            setTimeout(() => {
+                                if (_this.value <= lastLine) {
                                     at.to(lastLine + pushBarHeight);
                                 }
-                            }, 1000);
+//                            }, 1000);
                         });
                         return false;
                     }

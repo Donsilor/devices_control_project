@@ -1,5 +1,5 @@
 import {guid, getDeviceUUID, log, isFunction} from '../helper';
-export default function (data, onSuccess) {
+export default function (data, onSuccess, onError) {
     let dataOptions = JSON.stringify({
         method: 'getDeviceLog',
         req_id: guid(),
@@ -13,10 +13,19 @@ export default function (data, onSuccess) {
     HdIot.Device.getDeviceLog({
         data: dataOptions,
         onListener: function (data) {
+            data = {
+                code: 504
+            };
             log('getDeviceLog', dataOptions, data);
-            data = JSON.parse(data);
-            if (isFunction(onSuccess)) {
-                onSuccess(data.result)
+            // data = JSON.parse(data);
+            if (data.code == 504) {
+                if (isFunction(onError)) {
+                    onError(data)
+                }
+            } else if (data.result) {
+                if (isFunction(onSuccess)) {
+                    onSuccess(data.result)
+                }
             }
         }
     });

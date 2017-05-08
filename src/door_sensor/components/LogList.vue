@@ -53,7 +53,7 @@
                         this.updateUpTime(data.log[length - 1].time);
                         callback();
                     }
-                }, 16);
+                },()=>{}, 16);
             },
             updateDownTime (time){
                 if (time < this.ptr_down_time) {
@@ -65,7 +65,7 @@
                 this.$store.commit('updateUpTime', time)
 //                }
             },
-            getDeviceLog (time, direction, callback, items_per_page){
+            getDeviceLog (time, direction, successCallback, errorCallback, items_per_page){
                 items_per_page = items_per_page || 8;
                 HdSmart.Device.getDeviceLog({
                     start_time: time,
@@ -80,10 +80,12 @@
                     } else {
                         data.log = [];
                     }
-                    if(length < items_per_page){
+                    if (length < items_per_page) {
                         this.moreData = false
                     }
-                    callback(data);
+                    successCallback(data);
+                }, () => {
+                    errorCallback();
                 })
             },
             onPull (onPullFinishCallback){
@@ -94,6 +96,8 @@
                         this.updateUpTime(data.log[length - 1].time);
                     }
                     onPullFinishCallback();
+                }, () => {
+                    onPullFinishCallback();
                 });
             },
             onPush (onPushFinishCallback){
@@ -102,6 +106,8 @@
                         this.$store.commit('addLogs', data.log);
                         this.updateDownTime(data.log[0].time);
                     }
+                    onPushFinishCallback();
+                }, () => {
                     onPushFinishCallback();
                 });
             }
@@ -193,20 +199,20 @@
         color: #13d5dc;
     }
 
-    .no-more-item{
+    .no-more-item {
         font-size: 24px;
         color: #d2d2d2;
         text-align: center;
         margin-top: 36px;
     }
 
-    .no-item{
+    .no-item {
         text-align: center;
         font-size: 30px;
         color: #d2d2d2;
     }
 
-    .no-item:before{
+    .no-item:before {
         content: '';
         display: block;
         margin: 120px auto 36px auto;
