@@ -1,6 +1,4 @@
 import Mock from 'mockjs';
-
-//{"method":"report","result":{"timestamp":1493367110,"device_uuid":"c04fcb0b006f0d0001","attr":{"status":"on","alarm_low_battery":"off","alarm_removal":"on"}}}
 export function generateSnapShotData() {
     return Mock.mock({
         "method": "report",
@@ -16,60 +14,8 @@ export function generateSnapShotData() {
     })
 }
 
-// {
-//     "method": "report",
-//     "result": {
-//     "device_uuid": "c04fcb0b006f0d0001",
-//         "log": [{
-//         "time": 1493318989,
-//         "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318971,
-//         "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318969,
-//         "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318967,
-//         "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318965,
-//         "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318934,
-//         "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318932,
-//         "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318731,
-//         "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318730,
-//         "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318696,
-//         "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318690,
-//         "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318688,
-//         "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493318686,
-//         "attr": {"status": "off", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493167232,
-//         "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }, {
-//         "time": 1493167229,
-//         "attr": {"status": "on", "alarm_low_battery": "off", "alarm_removal": "on"}
-//     }]
-// }
-// }
-
 export function generateDeviceLogData(time, page_size, direction) {
+    page_size = 0;
     let mockOptions = {
         "method": "report",
         "result": {
@@ -98,8 +44,6 @@ export function generateDeviceLogData(time, page_size, direction) {
     return Mock.mock(mockOptions);
 }
 
-
-//{"method": "report","result": {"device_uuid": "112233445566778810", "has_log": [1,2,10,21 ]}}
 
 let Random = Mock.Random;
 Random.extend({

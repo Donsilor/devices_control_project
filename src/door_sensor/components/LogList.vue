@@ -2,7 +2,7 @@
     <div class="log-list">
         <pull-to-refresh v-on:onPull="onPull" v-on:onPush="onPush" ref="pullToRefresh" :enablePush="moreData">
             <div class="log-panel-group">
-                <div class="log-panel" v-for="daily in logDateList">
+                <div class="log-panel" v-for="daily in logDateList" v-if="logDateList.length">
                     <div class="log-indicator log-header">
                         <div class="log-indicator-circle"></div>
                         {{daily.timestamp | tf}}
@@ -14,8 +14,11 @@
                         <div class="status">{{log.attr.status == 'on'?'打开':'关闭'}}</div>
                     </div>
                 </div>
+                <div v-if="!logDateList.length" class="no-item">
+                    暂无数据
+                </div>
             </div>
-            <div class="no-more-item" v-if="!moreData">没有更多信息了</div>
+            <div class="no-more-item" v-if="!moreData && logDateList.length">没有更多信息了</div>
         </pull-to-refresh>
     </div>
 </template>
@@ -109,7 +112,6 @@
     .log-list {
         width: 100%;
         position: relative;
-        margin-bottom: 90px;
     }
 
     .log-header {
@@ -196,5 +198,21 @@
         color: #d2d2d2;
         text-align: center;
         margin-top: 36px;
+    }
+
+    .no-item{
+        text-align: center;
+        font-size: 30px;
+        color: #d2d2d2;
+    }
+
+    .no-item:before{
+        content: '';
+        display: block;
+        margin: 120px auto 36px auto;
+        width: 360px;
+        height: 360px;
+        background: url('../assets/img_emptydata.png');
+        background-size: 100% 100%;
     }
 </style>

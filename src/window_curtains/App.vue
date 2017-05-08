@@ -25,16 +25,19 @@
     }
 
     #app {
-        height: 100%;
         display: flex;
-        justify-content: center;
         align-items: center;
         background-image: linear-gradient(-180deg, #2499ff 0%, #13d5dc 100%);
         flex-direction: column;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 170px;;
     }
 
     .navigator {
-        margin-top: 96px;
+        margin-top: 190px;
     }
 
     .curtain {
@@ -69,7 +72,7 @@
                 localStorage.setItem('close_percent', this.close_percent);
             });
 
-            HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%');
+            HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
         },
         methods: {
             onOpen(onFinishCallback){

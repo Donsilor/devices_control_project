@@ -36,7 +36,7 @@
     .tool {
         position: fixed;
         right: 60px;
-        bottom: 84px;
+        bottom: 240px;
         z-index: 100;
     }
 

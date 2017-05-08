@@ -15,8 +15,11 @@
         justify-content: center;
         width: 780px;
         margin: 0 auto;
-        padding-top: 120px;
-        height: 100%;
+        position: absolute;
+        top: 120px;
+        bottom: 224px;
+        left: 0;
+        right:0;
     }
 
     .list {
