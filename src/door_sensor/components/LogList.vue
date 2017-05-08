@@ -95,9 +95,9 @@
                         this.$store.commit('addLogs', data.log);
                         this.updateUpTime(data.log[length - 1].time);
                     }
-                    onPullFinishCallback();
+                    onPullFinishCallback(true);
                 }, () => {
-                    onPullFinishCallback();
+                    onPullFinishCallback(false);
                 });
             },
             onPush (onPushFinishCallback){
@@ -106,9 +106,9 @@
                         this.$store.commit('addLogs', data.log);
                         this.updateDownTime(data.log[0].time);
                     }
-                    onPushFinishCallback();
+                    onPushFinishCallback(true);
                 }, () => {
-                    onPushFinishCallback();
+                    onPushFinishCallback(false);
                 });
             }
         }

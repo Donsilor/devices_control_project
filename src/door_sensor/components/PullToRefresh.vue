@@ -4,6 +4,7 @@
         </div>
         <div class="box" ref="box">
             <div class="scroll" ref="scroller">
+                <div class="loading"></div>
                 <slot></slot>
             </div>
         </div>
@@ -67,12 +68,23 @@
 
     .pull_bar.loading:before,
     .push_bar.loading:before {
-        content: '刷新中';
+        content: '';
+        display: block;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 138px 12px;
+        animation: loading 1600ms linear infinite;
+        height: 100%;
     }
 
     .pull_bar.done:before,
     .push_bar.done:before {
         content: '刷新完成';
+    }
+
+    .pull_bar.fail:before,
+    .push_bar.fail:before {
+        content: '网络问题,刷新失败';
     }
 
     .scroll {
@@ -95,6 +107,60 @@
         -ms-text-size-adjust: none;
         -o-text-size-adjust: none;
         text-size-adjust: none;
+    }
+
+    @keyframes loading {
+        0% {
+            background-image: url('../assets/icn_loading_01.png');
+        }
+        6.25% {
+            background-image: url('../assets/icn_loading_02.png');
+        }
+        12.5% {
+            background-image: url('../assets/icn_loading_03.png');
+        }
+        18.75% {
+            background-image: url('../assets/icn_loading_04.png');
+        }
+        25% {
+            background-image: url('../assets/icn_loading_05.png');
+        }
+        31.25% {
+            background-image: url('../assets/icn_loading_06.png');
+        }
+        37.5% {
+            background-image: url('../assets/icn_loading_07.png');
+        }
+        43.75% {
+            background-image: url('../assets/icn_loading_08.png');
+        }
+        50% {
+            background-image: url('../assets/icn_loading_09.png');
+        }
+        56.25% {
+            background-image: url('../assets/icn_loading_10.png');
+        }
+        62.5% {
+            background-image: url('../assets/icn_loading_11.png');
+        }
+        68.75% {
+            background-image: url('../assets/icn_loading_12.png');
+        }
+        75% {
+            background-image: url('../assets/icn_loading_13.png');
+        }
+        81.25% {
+            background-image: url('../assets/icn_loading_14.png');
+        }
+        87.5% {
+            background-image: url('../assets/icn_loading_14.png');
+        }
+        93.75% {
+            background-image: url('../assets/icn_loading_14.png');
+        }
+        100% {
+            background-image: url('../assets/icn_loading_01.png');
+        }
     }
 </style>
 <script>
@@ -144,13 +210,13 @@
                 min: -_this.min,
                 change (value){
                     pull.translateY = value > pullBarHeight ? pullBarHeight : value;
-                    if(_this.enablePush){
+                    if (_this.enablePush) {
                         if (clientHeight > scrollHeight) {
                             push.translateY = value <= -pushBarHeight ? -pushBarHeight : value;
                         } else {
                             push.translateY = value + scrollHeight - clientHeight;
                         }
-                    }else{
+                    } else {
                         push.translateY = value + scrollHeight;
                     }
                     _this.value = value;
@@ -176,15 +242,13 @@
                     if (value >= pullBarHeight) {
                         at.to(pullBarHeight);
                         _this.pullStatus = 'loading';
-                        _this.$emit('onPull', () => {
-                            _this.pullStatus = 'done';
+                        _this.$emit('onPull', (isSuccess) => {
+                            _this.pullStatus = isSuccess ? 'done' : 'fail';
                             _this.min = -getTouchMin();
                             at.min = _this.min;
-//                            setTimeout(() => {
-                                if (_this.value >= pullBarHeight) {
-                                    at.to(at.initialValue);
-                                }
-//                            }, 1000);
+                            if (_this.value >= pullBarHeight) {
+                                at.to(at.initialValue);
+                            }
                         });
                         return false;
                     }
@@ -192,15 +256,13 @@
                     if (value <= lastLine && _this.enablePush) {
                         at.to(lastLine);
                         _this.pushStatus = 'loading';
-                        _this.$emit('onPush', () => {
-                            _this.pushStatus = 'done';
+                        _this.$emit('onPush', (isSuccess) => {
+                            _this.pushStatus = isSuccess ? 'done' : 'fail';
                             _this.min = -getTouchMin();
                             at.min = _this.min;
-//                            setTimeout(() => {
-                                if (_this.value <= lastLine) {
-                                    at.to(lastLine + pushBarHeight);
-                                }
-//                            }, 1000);
+                            if (_this.value <= lastLine) {
+                                at.to(lastLine + pushBarHeight);
+                            }
                         });
                         return false;
                     }
