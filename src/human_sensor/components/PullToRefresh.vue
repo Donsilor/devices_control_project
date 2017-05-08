@@ -4,6 +4,7 @@
         </div>
         <div class="box" ref="box">
             <div class="scroll" ref="scroller">
+                <div class="loading"></div>
                 <slot></slot>
             </div>
         </div>
@@ -20,6 +21,11 @@
         width: 100%;
         height: 100%;
         position: absolute;
+    }
+
+    .loading{
+
+        animation:loading 1600ms linear infinite;
     }
 
     .box {
@@ -95,6 +101,12 @@
         -ms-text-size-adjust: none;
         -o-text-size-adjust: none;
         text-size-adjust: none;
+    }
+
+    @keyframes loading {
+        0%{
+            background-image: url('../assets/icn_loading_01.png');
+        }
     }
 </style>
 <script>
