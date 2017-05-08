@@ -31,3 +31,23 @@ export function generateDeviceLogByDay(time) {
     };
     return Mock.mock(mockOptions);
 }
+
+export function generateDeviceLog(time) {
+  let mockOptions = {
+    "method": "report",
+    "result": {
+      "device_uuid": window.device_uuid,
+      "log|1": [{
+        "time|+3600000": time,
+        "num|+1": 0,
+        attr: {
+          "temperature|-2000-6000": 1,
+          "humidity|0-10000": 1
+        }
+      }]
+    }
+  };
+  return Mock.mock(mockOptions);
+}
+
+

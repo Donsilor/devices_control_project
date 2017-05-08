@@ -185,17 +185,20 @@ export default {
 let get_status = (temp, hum)=>{
   let result = null;
   //先找到匹配温度区间，再找到匹配的湿度区间
-  $find(status_config, i=>{
+  $find(status_config, (i, index_i)=>{
     let t_low = i.temp_range[0],
       t_top = i.temp_range[1],
       humidity = i.humidity;
 
-    //温湿度区间值都是左开右闭。
-    if(t_low < temp && temp <= t_top){
-      $find(humidity, j=>{
+    //TODO:温湿度区间值都是左开右闭，但是有个例外就是起始值是闭区间:
+    // 温度区间:[-20, 18] (18, 27] (27, 60]
+    // 湿度区间:[0, 30] (30, 80] (80, 100]
+    if((index_i === 0 && temp === t_low) || (t_low < temp && temp <= t_top) ){
+      $find(humidity, (j, index_j)=>{
         let h_low = j.range[0],
           h_top = j.range[1];
-        if(h_low < hum && hum <= h_top){
+        //TODO:规则同温度，第一个值特殊化为闭区间。
+        if((index_j === 0 && hum === h_low) || (h_low < hum && hum <= h_top)){
           result = {
             index : j.index,
             text : j.text,
