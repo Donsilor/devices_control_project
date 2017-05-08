@@ -23,7 +23,7 @@
             <div class="tit i">湿度</div>
           </div>
           <div class="cont">
-            <list-view :humidity="humidity" :temp="temp"></list-view>
+            <list-view :temp="temp" :hum="humidity"></list-view>
           </div>
         </div>
         <div class="line"></div>
@@ -113,17 +113,11 @@ export default {
       return (val/100).toFixed(1);
     }
   },
-//  data () {
-//    return {}
-//  },
   mounted : function(){
     $tap(this.$refs.arr , ()=>{
       //jump2detail事件注册在App.vue中。
       this.$emit('return2index');
     });
-
-    //下面的部分放开手势操作，因为有touchview.
-    HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%');
   }
 }
 </script>

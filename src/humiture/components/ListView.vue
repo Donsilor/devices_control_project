@@ -2,10 +2,15 @@
   <div class="ct">
     <!--<div class="scroller" :style="{width : 100 * datalist.length + 'px'}">-->
       <ul class="data-list" :style="{width : 100 * datalist.length + 'px'}">
-        <li v-for="(item, index) in datalist" v-bind:class="{curr : index === datalist.length -1 }">
+        <li v-for="(item, index) in datalist">
           <time class="i time">{{item.time_stap | _time}}</time>
           <span class="i temperature">{{item.temp | _temp}}</span>
           <span class="i humidity">{{item.hum | _hum}}</span>
+        </li>
+        <li class="curr">
+          <time class="i time">现在</time>
+          <span class="i temperature">{{temp | _temp}}</span>
+          <span class="i humidity">{{hum | _hum}}</span>
         </li>
       </ul>
     <!--</div>-->
@@ -39,7 +44,10 @@
   import { $time_format } from '../utils';
   export default {
     name: 'list-view',
-    props : ['temp, humidity'],
+    props : {
+      'temp' : Number,
+      'hum' : Number
+    },
     data (){
       return {
         datalist : []
@@ -67,7 +75,7 @@
         starter = +new Date(year, month, date, hour);
 
       HdSmart.Device.getDeviceLogByDay( starter, data=> {
-        console.info('all data:', JSON.stringify(data, null, 2));
+        console.info(JSON.stringify(data, null, 2));
         let list = data.result.log.map((item, i) => {
           let attr = item.attr;
           return {
@@ -78,14 +86,7 @@
             time_stap: starter - i * 3600 * 1000
           }
         });
-        list.reverse().push({
-          time: now,
-          hum: this.humidity,
-          temp: this.temp,
-          time_stap: '现在'
-        });
-
-        this.datalist = list;
+        this.datalist = list.reverse();
         //滚动到最左边。
         this.$nextTick(()=>{
           this.$el.scrollLeft = 5000;
