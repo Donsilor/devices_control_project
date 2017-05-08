@@ -23,7 +23,7 @@
             <div class="tit i">湿度</div>
           </div>
           <div class="cont">
-            <list-view></list-view>
+            <list-view :humidity="humidity" :temp="temp"></list-view>
           </div>
         </div>
         <div class="line"></div>
