@@ -93,13 +93,16 @@
     },
     watch : {
       page_name (val){
-        if(val === 'detail'){
-          HdSmart.UI.toggleHeadAndFoot(false);
-        }else{
-            //TODO:这里可能有体验问题，切换时会跳。
-          $timeout(100).then(()=>{
+        if(val === 'index'){
+          //TODO:这里可能有体验问题，切换时会跳。
+          $timeout(0).then(()=>{
             HdSmart.UI.toggleHeadAndFoot(true);
+            //首页允许下拉刷新，详情页不允许
+            HdSmart.UI.setWebViewTouchRect(0,0,0,0);
           });
+        }else{
+          HdSmart.UI.toggleHeadAndFoot(false);
+          HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%');
         }
       }
     },
