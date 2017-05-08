@@ -22,12 +22,6 @@
         height: 100%;
         position: absolute;
     }
-
-    .loading{
-
-        animation:loading 1600ms linear infinite;
-    }
-
     .box {
         position: absolute;
         left: 0;
@@ -73,7 +67,12 @@
 
     .pull_bar.loading:before,
     .push_bar.loading:before {
-        content: '刷新中';
+        content: '';
+        display: block;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 138px 12px;
+        animation:loading 1600ms linear infinite;
     }
 
     .pull_bar.done:before,
@@ -105,6 +104,54 @@
 
     @keyframes loading {
         0%{
+            background-image: url('../assets/icn_loading_01.png');
+        }
+        6.25%{
+            background-image: url('../assets/icn_loading_02.png');
+        }
+        12.5%{
+            background-image: url('../assets/icn_loading_03.png');
+        }
+        18.75%{
+            background-image: url('../assets/icn_loading_04.png');
+        }
+        25%{
+            background-image: url('../assets/icn_loading_05.png');
+        }
+        31.25%{
+            background-image: url('../assets/icn_loading_06.png');
+        }
+        37.5%{
+            background-image: url('../assets/icn_loading_07.png');
+        }
+        43.75%{
+            background-image: url('../assets/icn_loading_08.png');
+        }
+        50%{
+            background-image: url('../assets/icn_loading_09.png');
+        }
+        56.25%{
+            background-image: url('../assets/icn_loading_10.png');
+        }
+        62.5%{
+            background-image: url('../assets/icn_loading_11.png');
+        }
+        68.75%{
+            background-image: url('../assets/icn_loading_12.png');
+        }
+        75%{
+            background-image: url('../assets/icn_loading_13.png');
+        }
+        81.25%{
+            background-image: url('../assets/icn_loading_14.png');
+        }
+        87.5%{
+            background-image: url('../assets/icn_loading_14.png');
+        }
+        93.75%{
+            background-image: url('../assets/icn_loading_14.png');
+        }
+        100%{
             background-image: url('../assets/icn_loading_01.png');
         }
     }
