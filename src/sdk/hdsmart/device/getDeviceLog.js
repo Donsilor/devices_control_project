@@ -13,11 +13,8 @@ export default function (data, onSuccess, onError) {
     HdIot.Device.getDeviceLog({
         data: dataOptions,
         onListener: function (data) {
-            data = {
-                code: 504
-            };
             log('getDeviceLog', dataOptions, data);
-            // data = JSON.parse(data);
+            data = JSON.parse(data);
             if (data.code == 504) {
                 if (isFunction(onError)) {
                     onError(data)

@@ -59,7 +59,7 @@
                 this.device.status = data.result.attr.status;
                 this.device.power_status = data.result.attr.alarm_low_battery;
                 this.$store.commit('addLogs', [{
-                    time: data.result.timestamp * 1000,
+                    time: data.result.timestamp,
                     attr: Object.assign({}, data.result.attr, {
                         type: 'add'
                     })
