@@ -1,6 +1,6 @@
 <template>
-  <div class="ct">
-    <!--<div class="scroller" :style="{width : 100 * datalist.length + 'px'}">-->
+  <div class="ct" ref="listct">
+    <div :style="{width : 100 * datalist.length + 'px'}">
       <ul class="data-list" :style="{width : 100 * datalist.length + 'px'}">
         <li v-for="(item, index) in datalist">
           <time class="i time">{{item.time_stap | _time}}</time>
@@ -13,13 +13,12 @@
           <span class="i humidity">{{hum | _hum}}</span>
         </li>
       </ul>
-    <!--</div>-->
+    </div>
   </div>
 </template>
 
 <style scoped>
-  /*.ct{width : 100%; overflow: hidden;white-space: nowrap; }*/
-  .ct{width :1680px ; overflow-x:scroll;white-space: nowrap;}
+  .ct{width :1680px ;overflow: hidden; white-space: nowrap;}
   ul.data-list{list-style: none; padding:0;width:100%;margin:0;}
   ul.data-list li{display: inline-block; width : 150px;color:#808080;}
   ul.data-list li.curr{color : #20BCDE;}
@@ -41,16 +40,21 @@
 </style>
 
 <script>
-  import { $time_format } from '../utils';
+  import { $time_format, $timeout } from '../utils';
+  import IScroll from 'iscroll/build/iscroll-lite';
+
   export default {
     name: 'list-view',
     props : {
       'temp' : Number,
-      'hum' : Number
+      'hum' : Number,
+      'is_current' : Boolean
+//      'page' : String
     },
     data (){
       return {
-        datalist : []
+        datalist : [],
+        scroller : null
       }
     },
     filters :{
@@ -65,17 +69,35 @@
         return val ? ((val/100).toFixed(1) + '%') : '-'
       }
     },
+    watch : {
+      is_current (val){
+        //当切换到详情页，如果scroller还没有初始化，立即初始化。
+        val && (!this.scroller) && this.init_scroller();
+      }
+    },
+    methods : {
+      init_scroller (){
+        $timeout(200).then(()=>{
+          let wp = this.$refs.listct;
+          this.scroller = new IScroll(wp, {
+            scrollX : true,
+            scrollY : false,
+            //TODO:这里需要再看看，为什么差值为1280，而实际上需要1380才对。
+            startX : -1380,//wp.clientWidth - wp.firstElementChild.clientWidth,
+          });
+        });
+      }
+    },
     mounted (){
       let d = new Date(),
         year = d.getFullYear(),
         month = d.getMonth(),
         date = d.getDate(),
         hour = d.getHours(),
-        now = +d,
         starter = +new Date(year, month, date, hour);
 
       HdSmart.Device.getDeviceLogByDay( starter, data=> {
-        console.info(JSON.stringify(data, null, 2));
+//        console.info(JSON.stringify(data, null, 2));
         let list = data.result.log.map((item, i) => {
           let attr = item.attr;
           return {
@@ -87,148 +109,9 @@
           }
         });
         this.datalist = list.reverse();
-        //滚动到最左边。
-        this.$nextTick(()=>{
-          this.$el.scrollLeft = 5000;
-        });
       });
     }
   }
-
-//  /**
-//   * 获取当前时间往前24小时的整点的温湿度值
-//   */
-//  function get_formated_temp_and_hum (d = new Date(), fn){
-//    let year = d.getFullYear(),
-//      month = d.getMonth(),
-//      date = d.getDate(),
-//      hour = d.getHours(),
-//      now = +d,
-//      starter = +new Date(year, month, date, hour);
-//
-////    return Promise.all(
-////      [get_now_status(now), get_history_status(starter)]
-////    ).then(data=>{
-////      let now = data[0],
-////        history = data[1];
-////      history.push(now);
-////      return history;
-////    });
-//
-////    //获取历史24小时的准点log
-////    function get_history_status(time){
-////      return new Promise((resolve, reject)=>{
-////        HdSmart.Device.getDeviceLogByDay( time, data=>{
-////          let list = data.result.log.map((item, i)=>{
-////            let attr = item.attr;
-////            return {
-////              time : item.time,
-////              hum : attr.humidity,
-////              temp : attr.temperature,
-////              //基准线，如5点整
-////              time_stap : starter - i * 3600 * 1000
-////            }
-////          });
-////          resolve(list.reverse());
-////        }, err=>{
-////          reject(err);
-////        });
-////      });
-////    }
-//
-//
-//
-////    //获取当前时间往前的一个log
-////    function get_now_status (time){
-////      return new Promise((resolve, reject)=>{
-////        HdSmart.Device.getDeviceLog({
-////          start_time : time,
-////          items_per_page:1,
-////          direction : 'down'
-////        },data=>{
-////          console.log('99999999999', data);
-////          let attr = data && data.log && data.log[0] && data.log[0].attr;
-////          resolve({
-////            time : time,
-////            hum : attr && attr.humidity,
-////            temp : attr && attr.temperature,
-////            //基准线，如5点整
-////            time_stap : '现在'
-////          });
-////        }, err=>{
-////          reject(err);
-////        });
-////      });
-////    }
-//
-////    function get_value(time){
-////      let get_single_data = direction => {
-//////        console.log('get_single_data============', new Date(time).toLocaleTimeString());
-////        let params = {
-////          items_per_page : 1,
-////          start_time : +time,
-////          direction : direction
-////        };
-////        return new Promise((resolve)=>{
-////          HdSmart.Device.getDeviceLog(params, str=>{
-////            let json = JSON.parse(str);
-//////             console.log('data::', json);
-////            if(json.code == 200){
-////              let res = null,
-////                log = json.result.log[0];
-////              if(log){
-////                res = {
-////                  time : log.time,
-////                  hum : log.attr.humidity,
-////                  temp : log.attr.temperature,
-////                  //基准线，如5点整
-////                  time_stap : time
-////                }
-////              }else{
-////                res = { time_stap : time };
-////              }
-////              resolve(res);
-////            }else{
-////              resolve({ time_stap : time });
-////            }
-////          });
-////
-////          //超时处理
-////          setTimeout(()=>{
-////            resolve({ time_stap : time });
-////          }, 2000);
-////        });
-////      };
-////
-////      //虽然两次取值的行为本来可以并行，但是客户端接口问题，只能并行
-////      return new Promise(resolve => {
-////        get_single_data('down').then(down=>{
-//////          console.log(`down(${new Date(time).toLocaleTimeString()}):`,down )
-////          resolve(down);
-//////          get_single_data('up').then(up=>{
-//////            console.info('★★★ up & down:',new Date(time), up, down);
-//////            //如果前后两个点的时间超过1小时，那么认为当前值无效。
-//////            if(Math.abs(up.time - down.time) > 60 * 60 * 1000){
-//////              console.error('间隔时间超过1小时，无效。');
-//////              resolve({});
-//////            }
-//////            let integer_timer = up.time_stap,
-//////              ratio_hum = (up.hum - down.hum)/(up.time - down.time),
-//////              hum = up.hum + (integer_timer - up.time) * ratio_hum,
-//////              ratio_temp = (up.temp - down.temp)/(up.time - down.time),
-//////              temp = up.temp + (integer_timer - up.time) * ratio_temp;
-//////
-//////            resolve({ hum : hum, temp : temp });
-//////          });
-////        }).catch(e=>{
-////          console.error(e);
-////          resolve({ time_stap : time });
-////        });
-////      });
-////    }
-//  }
-
-
 
 </script>
 

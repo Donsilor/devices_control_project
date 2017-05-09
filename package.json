@@ -19,6 +19,7 @@
     "all": "run-s build"
   },
   "dependencies": {
+    "iscroll": "^5.2.0",
     "mockjs": "^1.0.1-beta3",
     "moment": "^2.18.1",
     "vue": "^2.2.2",
