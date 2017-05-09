@@ -195,7 +195,7 @@
         transition: all 1s;
     }
 
-    .log-header + .log-item.add {
+    .log-panel:first-child > .log-header + .log-item {
         color: #13d5dc;
     }
 

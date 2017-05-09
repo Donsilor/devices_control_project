@@ -15,7 +15,6 @@ export function generateSnapShotData() {
 }
 
 export function generateDeviceLogData(time, page_size, direction) {
-    page_size = 0;
     let mockOptions = {
         "method": "report",
         "result": {
