@@ -1,6 +1,8 @@
 import alert from './alert';
 import {showLoading, hideLoading} from './loading';
-import setTouchRect from './setTouchRect'
+import setTouchRect from './setTouchRect';
+import toast from './toast';
+import toggleHeadAndFoot from './toggleHeadAndFoot';
 /**
  * @module UI
  */
@@ -8,5 +10,7 @@ export {
     alert,
     showLoading,
     hideLoading,
-    setTouchRect
+    setTouchRect,
+    toast,
+    toggleHeadAndFoot
 }

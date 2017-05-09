@@ -1,6 +1,6 @@
 import {log} from '../helper';
 /**
- *
+ * 发送推送信息
  * @function sendNotification
  * @memberOf module:Util
  * @author ive.chen

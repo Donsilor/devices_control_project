@@ -9,7 +9,7 @@
  * @param {number} options.data.right 区域的右下角x坐标
  * @param {number} options.data.bottom 区域的右下角y坐标
  * @example
- * HdIot.Device.control({
+ * HdIot.UI.setTouchRect({
  *      data: JSON.stringify({
  *          left:0,
  *          top:0,
