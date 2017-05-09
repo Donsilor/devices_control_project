@@ -118,7 +118,6 @@
     .log-list {
         width: 100%;
         position: relative;
-        margin-bottom: 90px;
     }
 
     .log-header {
