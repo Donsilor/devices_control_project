@@ -8,13 +8,26 @@ window.HdSmart = {
     ready: System.beforeReady,
     onDeviceListen: System.onDeviceListen
 };
-//打印api日志
+/**
+ * 用于打印api的request和response，在index.debug.js中进行了重写
+ * @function apiLog
+ * @private
+ * @param apiName
+ * @param data
+ * @param result
+ * @example
+ * window.apiLog('getSnapShot','','{data:'blablablabla'}');
+ */
 window.apiLog = function (apiName, data, result) {
 
 };
 
-//app在webview ready后调用
+/**
+ * 此app用于
+ * @function onDeviceJsReady
+ */
 let is_ready = false;
+
 window.onDeviceJsReady = function () {
     if (!window.HdIot) {
         throw new Error("当前环境没有可用的api")

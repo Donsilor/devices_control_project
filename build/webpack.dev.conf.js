@@ -15,7 +15,7 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
 var app = util.getCommandApp();
 var appName = util.getCommandAppName();
 
-baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/hd.iot.${app}.js`;
+baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/${app}/index.js`;
 
 module.exports = merge(baseWebpackConfig, {
     module: {

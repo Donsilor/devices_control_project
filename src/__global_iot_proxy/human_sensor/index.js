@@ -1,5 +1,5 @@
-import * as mockData from './hd.iot.human_sensor.mock';
-import './hd.iot.sdk';
+import * as mockData from './mock';
+import '../sdk/index';
 
 if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
     HdIot.Device.getSnapShot = function (options) {

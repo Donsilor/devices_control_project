@@ -14,7 +14,7 @@ var appName = util.getCommandAppName();
 var app = util.getCommandApp();
 
 // 本地测试使用
-// baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/hd.iot.${app}.js`;
+// baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/${app}/index.js`;
 // 使用此entry可以进行打包后代码测试，但需要在链接后面加上 ?env=desktop
 
 var webpackConfig = merge(baseWebpackConfig, {
