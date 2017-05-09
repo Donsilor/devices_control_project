@@ -7,6 +7,10 @@ import {
     onDeviceListen,
     runDeviceListenCallback
 } from './onDeviceListen';
+
+/**
+ * @module System
+ */
 export {
     ready,
     beforeReady,

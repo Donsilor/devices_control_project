@@ -1,31 +1,3 @@
-// var gulpDocumentation = require('gulp-documentation');
-// var gulp = require('gulp');
-// var config = require('./package.json');
-// gulp.task('web', function () {
-//     return gulp.src(['./apis/web/*.js'])
-//         .pipe(gulpDocumentation('html', {}, {
-//             name: 'Web Sdk',
-//             version: config.version
-//         }))
-//         .pipe(gulp.dest('dist/sdk-documentation-web'));
-// });
-//
-// gulp.task('app', function () {
-//     return gulp.src(['./apis/app/*.js'])
-//         .pipe(gulpDocumentation('html', {}, {
-//             name: 'App Sdk',
-//             version: config.version
-//         }))
-//         .pipe(gulp.dest('dist/sdk-documentation-app'));
-// });
-//
-// gulp.task('watch', function () {
-//     gulp.watch(['./apis/**/*.js'], ['web', 'app']);
-// });
-// gulp.task('build',function () {
-//     gulp.run(['web','app']);
-// })
-
 var jsdoc = require('gulp-jsdoc3');
 var gulp = require('gulp');
 
@@ -56,7 +28,7 @@ gulp.task('web', function (cb) {
             destination: './dist/web-document'
         }
     });
-    gulp.src(['./src/sdk/assets/hd.sdk.js']).pipe(jsdoc(option, cb))
+    gulp.src(['./src/sdk/hdsmart/**/*.js']).pipe(jsdoc(option, cb))
 });
 
 gulp.task('app', function (cb) {
@@ -70,8 +42,8 @@ gulp.task('app', function (cb) {
 
 
 gulp.task('watch', function () {
-    gulp.watch(['./src/sdk/assets/hd.sdk.js'], ['web', 'app']);
+    gulp.watch(['./src/sdk/hdsmart/**/*.js'], ['web']);
 });
 gulp.task('build',function () {
     gulp.run(['web','app']);
-})
+});

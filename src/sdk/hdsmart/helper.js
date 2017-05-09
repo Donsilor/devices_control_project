@@ -1,6 +1,12 @@
 /**
+ * @module helper
+ * @private
+ */
+
+/**
+ *
  * 检测是否函数
- * @param fun
+ * @param fun {function} 函数
  * @returns {boolean}
  */
 export function isFunction(fun) {
@@ -38,19 +44,19 @@ export function getDeviceUUID() {
 }
 /**
  * 打赢api日志
- * @param apiName
- * @param data
- * @param result
+ * @param apiName {string} 调用的api名
+ * @param data {string} 传入值
+ * @param result {string | object} 返回值
  */
 export function log(apiName, data, result) {
     window.apiLog(apiName, data, result)
 }
 
 /**
- * 将百分比转为数字
- * @param num
- * @param max
- * @returns {*}
+ * 将百分比转为值
+ * @param num {number | string} 数字或者带百分号的字符串
+ * @param max {number}  最大值
+ * @returns {number}
  */
 
 export function covertToNumber(num, max) {
@@ -67,6 +73,10 @@ export function covertToNumber(num, max) {
     return 0;
 }
 
-export const HTTP_CODE_MSG = {
+/**
+ * 请求返回状态码
+ * @type {{504: string}}
+ */
+export const HTTP_CODE = {
     504: '请求超时'
 };

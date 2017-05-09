@@ -15,6 +15,8 @@
     "build:human_sensor": "node build/build.js --app=human_sensor --appName=人体传感器",
     "dev:humiture": "node build/dev-server.js --app=humiture --appName=温湿度传感器",
     "build:humiture": "node build/build.js --app=humiture --appName=温湿度传感器",
+    "dev:document":"gulp watch",
+    "build:document":"gulp build",
     "build": "run-p build:*",
     "all": "run-s build"
   },
