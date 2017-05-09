@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Web SDK Module: Util</title>
+	<title>Web SDK Module: UI</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,7 +65,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: Util</h1>
+	<h1 class="page-title">Module: UI</h1>
 <section>
 
 <header>
@@ -141,7 +141,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".getNetworkType"><span class="type-signature">&lt;static> </span>getNetworkType(onSuccess)</h4>
+    <h4 class="name" id=".alert"><span class="type-signature">&lt;static> </span>alert(title, message, onSuccess [, okText] [, cancelText])</h4>
     
     
 </dt>
@@ -149,150 +149,7 @@
 
     
     <div class="description">
-        获取设备网络状态
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>onSuccess</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">回调函数中将会获得当前的网络类型</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-	<dt class="tag-author method-doc-label method-doc-details-label">Author:</dt>
-	<dd class="tag-author">
-		<ul>
-			<li>ive.chen</li>
-			</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">HdSmart.Util.getNetworkType(function(type){
-     //返回网络类型 type : wifi 4g 3g .etc
-});</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".post"><span class="type-signature">&lt;static> </span>post(url, data, onSuccess [, onFailure])</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        通过app代理外部ajax请求
+        调用源生弹出框
     </div>
     
 
@@ -331,7 +188,7 @@
 
         <tr>
             
-                <td class="name"><code>url</code></td>
+                <td class="name"><code>title</code></td>
             
 
             <td class="type">
@@ -360,20 +217,20 @@
                 </td>
             
 
-            <td class="description last">请求的资源地址</td>
+            <td class="description last">弹出框的标题</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>data</code></td>
+                <td class="name"><code>message</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">string</span>
 
 
 
@@ -393,12 +250,10 @@
             
                 <td class="default">
                 
-                    {}
-                
                 </td>
             
 
-            <td class="description last">请求的数据</td>
+            <td class="description last">弹出框的消息</td>
         </tr>
 
     
@@ -434,20 +289,20 @@
                 </td>
             
 
-            <td class="description last">请求成功的返回</td>
+            <td class="description last">弹出框的点击'确定'按钮的回调函数</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>onFailure</code></td>
+                <td class="name"><code>okText</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">string</span>
 
 
 
@@ -469,10 +324,52 @@
             
                 <td class="default">
                 
+                    确定
+                
                 </td>
             
 
-            <td class="description last">请求失败的返回</td>
+            <td class="description last">弹出框'确定'按钮的文本</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cancelText</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    取消
+                
+                </td>
+            
+
+            <td class="description last">弹出框'取消'按钮的文本</td>
         </tr>
 
     
@@ -543,11 +440,9 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">HdSmart.Util.post(&quot;http://www.baidu.com/getCity&quot;,{provice:&quot;guangdong&quot;},function(data){
-     //请求的返回结果 data
-},function(error){
-     //错误
-});</pre>
+    <pre class="sunlight-highlight-javascript">HdSmart.UI.alert(title,message,function(){
+     //点击确定的执行函数
+},&#x27;确定&#x27;,&#x27;取消&#x27;);</pre>
 
 
     
@@ -557,7 +452,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".reload"><span class="type-signature">&lt;static> </span>reload()</h4>
+    <h4 class="name" id=".hideLoading"><span class="type-signature">&lt;static> </span>hideLoading()</h4>
     
     
 </dt>
@@ -565,7 +460,312 @@
 
     
     <div class="description">
-        刷新当前webView
+        隐藏源生loading
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">HdSmart.UI.hideLoading();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".setWebViewTouchRect"><span class="type-signature">&lt;static> </span>setWebViewTouchRect(x1, y1, x2, y2)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        允许webView 点击使用js来进行touch事件的区域
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">percentage</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">区域左上角的坐标x轴</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">percentage</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">区域左上角的坐标y轴</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>x2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">percentage</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">区域右下角的坐标x轴</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">percentage</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">区域右下角的坐标y轴</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">//当值为数字是单位为px
+HdSmart.UI.setWebViewTouchRect(0,0,50,50);
+//当值为百分比时，会根据屏幕的宽高和百分比值转为实际像素
+HdSmart.UI.setWebViewTouchRect(0,0.&#x27;50%&#x27;,&#x27;50%&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".showLoading"><span class="type-signature">&lt;static> </span>showLoading()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        显示源生loading
     </div>
     
 
@@ -638,7 +838,7 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">HdSmart.Util.reload();</pre>
+    <pre class="sunlight-highlight-javascript">HdSmart.UI.showLoading();</pre>
 
 
     
@@ -648,12 +848,16 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".sendNotification"><span class="type-signature">&lt;static> </span>sendNotification(title, message)</h4>
+    <h4 class="name" id=".toast"><span class="type-signature">&lt;static> </span>toast(message [, duration])</h4>
     
     
 </dt>
 <dd>
 
+    
+    <div class="description">
+        调用原生toast
+    </div>
     
 
     
@@ -675,7 +879,11 @@
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -683,30 +891,6 @@
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>title</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">notification标题</td>
-        </tr>
-
     
 
         <tr>
@@ -725,10 +909,62 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last">notification消息体</td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">toast的文本</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    3000
+                
+                </td>
+            
+
+            <td class="description last">显示的时长</td>
         </tr>
 
     
@@ -757,13 +993,6 @@
 
 	
 
-	
-	<dt class="tag-author method-doc-label method-doc-details-label">Author:</dt>
-	<dd class="tag-author">
-		<ul>
-			<li>ive.chen</li>
-			</ul>
-	</dd>
 	
 
 	
@@ -799,7 +1028,142 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">HdSmart.Util.sendNotification(&#x27;消息标题&#x27;,&#x27;消息体&#x27;);</pre>
+    <pre class="sunlight-highlight-javascript">HdSmart.UI.toast(&#x27;我要显示toast信息&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".toggleHeadAndFoot"><span class="type-signature">&lt;static> </span>toggleHeadAndFoot(isDisplayed)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        切换显示头部和底部
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>isDisplayed</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">是否显示头部和底部</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">HdSmart.UI.toggleHeadAndFoot(true);
+HdSmart.UI.toggleHeadAndFoot(false);</pre>
 
 
     
