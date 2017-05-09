@@ -88,7 +88,7 @@
 
         this.temp = t;
         this.humidity = h;
-        console.info("temp and hum:",t, h);
+        //console.info("temp and hum:",t, h);
       }
     },
     watch : {
@@ -107,6 +107,7 @@
       }
     },
     mounted (){
+      console.info('组建创建成功：', Date.now() - window.startTime);
       //初始化
       HdSmart.Device.getSnapShot( data =>{
         let attr = data && data.attr;
@@ -114,12 +115,12 @@
           return false;
         }
         HdSmart.UI.hideLoading();
-        console.warn('first data:', attr);
         this.loaded = true;
         this.set_value({
           h : attr.humidity,
           t : attr.temperature
         });
+        console.info('getSnapShot返回，页面数据渲染：', Date.now() - window.startTime);
       });
 
       //接受push消息，调整状态值。

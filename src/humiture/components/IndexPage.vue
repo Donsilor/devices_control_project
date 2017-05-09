@@ -149,7 +149,7 @@ export default {
       h = (h/100).toFixed(1)*1;
 
       let status = get_status(t, h);
-      console.info('status:::', t, h, status);
+//      console.info('status:::', t, h, status);
       if(!status){
         return false;
       }

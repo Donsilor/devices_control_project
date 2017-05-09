@@ -1,6 +1,6 @@
 <template>
-  <div class="ct" ref="listct">
-    <div :style="{width : 100 * datalist.length + 'px'}">
+  <div class="ct" ref="list_ct">
+    <div ref="list_scroller" :style="{width : 100 * datalist.length + 'px'}">
       <ul class="data-list" :style="{width : 100 * datalist.length + 'px'}">
         <li v-for="(item, index) in datalist">
           <time class="i time">{{item.time_stap | _time}}</time>
@@ -29,19 +29,32 @@
     line-height:30px;
     text-align:center;
     display: block;
-    /*height: 1.8em;color:#808080;*/
   }
   ul.data-list li .time{
     font-size:24px;
     line-height:24px;
-    margin : 24px 48px 42px 48px;
+    /*margin : 24px 48px 42px 48px;*/
+    margin : 24px 0 42px 0;
   }
   ul.data-list li .temperature,ul.data-list li .humidity{font-size:30px;margin:24px 0 ;}
 </style>
 
 <script>
   import { $time_format, $timeout } from '../utils';
+  import { AlloyTouch } from 'alloytouch';
+  console.log('AlloyTouch:', AlloyTouch);
+
   import IScroll from 'iscroll/build/iscroll-lite';
+
+  let d = new Date(),
+    year = d.getFullYear(),
+    month = d.getMonth(),
+    date = d.getDate(),
+    hour = d.getHours(),
+    //当前时间往回去的最近一个整点时间
+    last_hour = +new Date(year, month, date, hour),
+    //当前时间往回去的最近一个自然日的0点时刻。
+    last_date = +new Date(year, month, date)
 
   export default {
     name: 'list-view',
@@ -54,13 +67,22 @@
     data (){
       return {
         datalist : [],
-        scroller : null
+        scroller : null,
+//        last_date : 0
       }
     },
     filters :{
       _time (val){
-        return typeof val === "number" ?
-          $time_format(val, 'hh:mm') : val;
+        if(typeof val === "number"){
+          let t = $time_format(val, 'hh:mm');
+          console.log('this.last_date:::',this);
+          if(val < last_date){
+            t = '昨天 ' + t;
+          }
+          return  t;
+        }else{
+          return val;
+        }
       },
       _temp  (val){
         return val ? ((val/100).toFixed(1) + '°C') : '-'
@@ -78,26 +100,36 @@
     methods : {
       init_scroller (){
         $timeout(200).then(()=>{
-          let wp = this.$refs.listct;
+          let wp = this.$refs.list_ct;
+
+
+//          //给element注入transform属性
+//          Transform(target,true);
+//          new AlloyTouch({
+//            touch:wp,//反馈触摸的dom
+//            vertical: false,//不必需，默认是true代表监听竖直方向touch
+//            target: this.$refs.list_scroller, //运动的对象
+//            property: "translateX",  //被运动的属性
+////            min: 100, //不必需,运动属性的最小值
+////            max: 2000, //不必需,滚动属性的最大值
+////            sensitivity: 1,//不必需,触摸区域的灵敏度，默认值为1，可以为负数
+////            factor: 1,//不必需,表示触摸位移与被运动属性映射关系，默认值是1
+//            step: 45,//用于校正到step的整数倍
+//            bindSelf: false,
+//            initialValue: 0
+//          });
           this.scroller = new IScroll(wp, {
             scrollX : true,
             scrollY : false,
             //TODO:这里需要再看看，为什么差值为1280，而实际上需要1380才对。
             startX : -1380,//wp.clientWidth - wp.firstElementChild.clientWidth,
           });
+
         });
       }
     },
     mounted (){
-      let d = new Date(),
-        year = d.getFullYear(),
-        month = d.getMonth(),
-        date = d.getDate(),
-        hour = d.getHours(),
-        starter = +new Date(year, month, date, hour);
-
-      HdSmart.Device.getDeviceLogByDay( starter, data=> {
-//        console.info(JSON.stringify(data, null, 2));
+      HdSmart.Device.getDeviceLogByDay( last_hour, data=> {
         let list = data.result.log.map((item, i) => {
           let attr = item.attr;
           return {
@@ -105,7 +137,7 @@
             hum: attr.humidity,
             temp: attr.temperature,
             //基准线，如5点整
-            time_stap: starter - i * 3600 * 1000
+            time_stap: last_hour - i * 3600 * 1000
           }
         });
         this.datalist = list.reverse();
