@@ -23,8 +23,9 @@ window.apiLog = function (apiName, data, result) {
 };
 
 /**
- * 此app用于
+ * 此api用于app在webView加载完后调用，初始化HdSmart
  * @function onDeviceJsReady
+ *
  */
 let is_ready = false;
 
@@ -42,7 +43,12 @@ window.onDeviceJsReady = function () {
 
     System.runReadyCallbacks();
 };
-// app在device mqtt有数据上报后调用
+
+/**
+ * 此api供app在设备变更上报后调用，用于监听设备
+ * @function onDeviceChange
+ * @param {object} data 设备变更的上报数据
+ */
 window.onDeviceChange = function (data) {
     System.runDeviceListenCallback(data);
 };

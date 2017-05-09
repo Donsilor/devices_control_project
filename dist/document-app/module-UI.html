@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Web SDK Module: Device</title>
+	<title>App SDK Document Module: UI</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -20,7 +20,7 @@
 <div class="navbar navbar-default navbar-fixed-top ">
 <div class="container">
 	<div class="navbar-header">
-		<a class="navbar-brand" href="index.html">Web SDK</a>
+		<a class="navbar-brand" href="index.html">App SDK Document</a>
 		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-Device.html">Device</a></li><li><a href="module-System.html">System</a></li><li><a href="module-UI.html">UI</a></li><li><a href="module-Util.html">Util</a></li>
+					<li><a href="module-Device.html">Device</a></li><li><a href="module-UI.html">UI</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#onDeviceJsReady">onDeviceJsReady</a></li>
+					<li><a href="global.html#device_uuid">device_uuid</a></li><li><a href="global.html#deviceReadyTimer">deviceReadyTimer</a></li><li><a href="global.html#onDeviceChange">onDeviceChange</a></li><li><a href="global.html#onDeviceJsReady">onDeviceJsReady</a></li>
 				</ul>
 			</li>
 			
@@ -72,7 +72,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: Device</h1>
+	<h1 class="page-title">Module: UI</h1>
 <section>
 
 <header>
@@ -148,7 +148,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".control"><span class="type-signature">&lt;static> </span>control(method, command, attr, onSuccess, onFailure)</h4>
+    <h4 class="name" id=".alert"><span class="type-signature">&lt;static> </span>alert(options)</h4>
     
     
 </dt>
@@ -156,7 +156,7 @@
 
     
     <div class="description">
-        发送设备的控制命令
+        调用源生的弹出窗口
     </div>
     
 
@@ -191,55 +191,7 @@
 
         <tr>
             
-                <td class="name"><code>method</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">控制的方法名</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>command</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">控制的设备名</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>attr</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
@@ -256,152 +208,9 @@
 
             
 
-            <td class="description last">变更的属性名</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>onSuccess</code></td>
-            
-
-            <td class="type">
-            
+            <td class="description last">JsBridge通信协议要求实现
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
                 
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">变更成功的回调函数</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>onFailure</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">变更失败的回调函数</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">HdSmart.Device.control(&#x27;method&#x27;,&#x27;cmd&#x27;,attr,function(data){
-     //data为控制成功后设备返回的状态
-},function(error){
-     //控制失败
-});</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".getDeviceLog"><span class="type-signature">&lt;static> </span>getDeviceLog(data, onSuccess, onFailure)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        获取设备的日志
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
 
 <table class="params table table-striped">
     <thead>
@@ -431,7 +240,7 @@
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">string</span>
 
 
 
@@ -442,7 +251,7 @@
 
             
 
-            <td class="description last">要发送的日志查询条件
+            <td class="description last">JsBridge通信协议要求传递数据,需要JSON格式字符串
                 <h6 class="method-params-label method-subparams-label">Properties</h6>
                 
 
@@ -456,7 +265,302 @@
         <th>Type</th>
 
         
-        <th>Argument</th>
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">弹窗的标题</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">弹窗的内容</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>okText</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">弹窗的'确定'按钮文本</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cancelText</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">弹窗的'取消'按钮'文本</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onListener</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">JsBridge通信协议要求回调方式，当点击了确定按钮以后，触发此回调</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">HdIot.UI.alert({
+     data: JSON.stringify({
+         title:&#x27;alert title&#x27;,
+         message:&#x27;alert message&#x27;,
+         okText:&#x27;确定&#x27;,
+         cancelText:&#x27;取消&#x27;
+     })，
+     onListener:function(){
+         //当点击了确定以后执行的回调函数
+     }
+})</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".hideLoading"><span class="type-signature">&lt;static> </span>hideLoading(options)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        隐藏源生的loading
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">JsBridge通信协议要求实现
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
         
 
         
@@ -472,13 +576,13 @@
 
         <tr>
             
-                <td class="name"><code>start_time</code></td>
+                <td class="name"><code>data</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">date</span>
+<span class="param-type">string</span>
 
 
 
@@ -486,98 +590,16 @@
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
                 <td class="default">
                 
-                </td>
-            
-
-            <td class="description last">13位的时间戳</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>items_per_page</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
+                    ''
                 
                 </td>
             
 
-            
-                <td class="default">
-                
-                    8
-                
-                </td>
-            
-
-            <td class="description last">每页加载的日志数量</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>direction</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">direction</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">日志查询的方向:'down','up'</td>
+            <td class="description last">JsBridge通信协议要求传递数据,需要JSON格式字符串</td>
         </tr>
 
     
@@ -585,54 +607,6 @@
 </table>
 
             </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>onSuccess</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">当获取日志成功时的回调函数</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>onFailure</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">当获取日志失败时的回调函数</td>
         </tr>
 
     
@@ -696,15 +670,9 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">HdSmart.Device.getDeviceLog({
-         start_time: new Date(2017,4,1),
-         //items_per_page:8，
-         direction:&#x27;down&#x27;
-     }，
-     function(data){
-         //data为获取历史成功由设备端返回的数据
-     }
-})</pre>
+    <pre class="sunlight-highlight-javascript">HdIot.UI.hideLoading({
+     data: &#x27;&#x27;
+});</pre>
 
 
     
@@ -714,7 +682,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".getDeviceLogByDay"><span class="type-signature">&lt;static> </span>getDeviceLogByDay(start_time, onSuccess, onFailure)</h4>
+    <h4 class="name" id=".setTouchRect"><span class="type-signature">&lt;static> </span>setTouchRect(options)</h4>
     
     
 </dt>
@@ -722,7 +690,7 @@
 
     
     <div class="description">
-        获取每天24个整时的日志
+        设置允许前端设置touch事件的区域
     </div>
     
 
@@ -757,13 +725,13 @@
 
         <tr>
             
-                <td class="name"><code>start_time</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">date</span>
+<span class="param-type">object</span>
 
 
 
@@ -774,20 +742,106 @@
 
             
 
-            <td class="description last">13位的时间戳(需要到整点时刻)</td>
+            <td class="description last">JsBridge通信协议要求实现
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">JsBridge通信协议要求传递数据,需要JSON格式字符串
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>left</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">区域的左上角x坐标</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>onSuccess</code></td>
+                <td class="name"><code>top</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">number</span>
 
 
 
@@ -798,20 +852,20 @@
 
             
 
-            <td class="description last">当获取日志成功后的回调函数</td>
+            <td class="description last">区域的左上角y坐标</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>onFailure</code></td>
+                <td class="name"><code>right</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">number</span>
 
 
 
@@ -822,7 +876,45 @@
 
             
 
-            <td class="description last">当获取日志失败后的回调函数</td>
+            <td class="description last">区域的右下角x坐标</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>bottom</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">区域的右下角y坐标</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -886,8 +978,13 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">HdSmart.Device.getDeviceLogByDay(+ new Date(&#x27;2017-05-03 05:00:00&#x27;),function(data){
-         //data为控制成功由设备端返回的数据
+    <pre class="sunlight-highlight-javascript">HdIot.Device.control({
+     data: JSON.stringify({
+         left:0,
+         top:0,
+         right:500,
+         bottom:500
+     })
 })</pre>
 
 
@@ -898,7 +995,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".getDeviceMonthHistory"><span class="type-signature">&lt;static> </span>getDeviceMonthHistory(year, month, onSuccess, onFailure)</h4>
+    <h4 class="name" id=".showLoading"><span class="type-signature">&lt;static> </span>showLoading(options)</h4>
     
     
 </dt>
@@ -906,7 +1003,7 @@
 
     
     <div class="description">
-        根据年月查询有日志的日子
+        显示源生的loading
     </div>
     
 
@@ -941,13 +1038,13 @@
 
         <tr>
             
-                <td class="name"><code>year</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">object</span>
 
 
 
@@ -958,176 +1055,9 @@
 
             
 
-            <td class="description last">查询的年</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>month</code></td>
-            
-
-            <td class="type">
-            
+            <td class="description last">JsBridge通信协议要求实现
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
                 
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">查询的月</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>onSuccess</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">查询成功的回调函数</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>onFailure</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">查询失败的回调函数</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">HdSmart.Device.getDeviceMonthHistory(year,month，
-     function(data){
-         //data为获取历史成功由设备端返回的数据
-     }
-})</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".getSnapShot"><span class="type-signature">&lt;static> </span>getSnapShot(onSuccess, onFailure)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        获取设备当前快照
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
 
 <table class="params table table-striped">
     <thead>
@@ -1141,6 +1071,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1151,13 +1083,13 @@
 
         <tr>
             
-                <td class="name"><code>onSuccess</code></td>
+                <td class="name"><code>data</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">string</span>
 
 
 
@@ -1167,32 +1099,21 @@
             
 
             
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
 
-            <td class="description last">获取快照成功的回调函数</td>
+            <td class="description last">JsBridge通信协议要求传递数据,需要JSON格式字符串</td>
         </tr>
 
     
+    </tbody>
+</table>
 
-        <tr>
-            
-                <td class="name"><code>onFailure</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
             </td>
-
-            
-
-            
-
-            <td class="description last">获取快照失败的回调函数</td>
         </tr>
 
     
@@ -1256,11 +1177,8 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">HdSmart.Device.getSnapShot(function(data,service_time){
-     //data为获取快照成功后返回的数据
-     //service_time 服务器时间
-},function(error){
-     //返回失败的原因
+    <pre class="sunlight-highlight-javascript">HdIot.UI.showLoading({
+     data: &#x27;&#x27;
 });</pre>
 
 
@@ -1317,7 +1235,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-05-09T10:35:44+08:00
+		on 2017-05-09T15:26:36+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

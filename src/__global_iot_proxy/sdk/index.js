@@ -1,75 +1,28 @@
-if (location.search.indexOf('env=desktop') != -1) {
+import {isDesktopEnv} from './helper';
+import * as Device from './device/index';
+
+if (isDesktopEnv()) {
     window.HdIot = {
-        Device: {
-            control: function (options) {
-                options.onListener(options.data)
-            },
-            getSnapShot: function (options) {
-                options.onListener(JSON.stringify({
-                    code: 200,
-                    result: {
-                        'getSnapShot': 'test'
-                    }
-                }))
-            },
-            getDeviceLog: function (options) {
-                options.onListener(JSON.stringify({
-                    result: options.data
-                }));
-            },
-            getDeviceMonthHistory: function (options) {
-                options.onListener(options.data);
-            },
-            getDeviceLogByDay: function (options) {
-                options.onListener(options.data)
-            }
-        },
-        UI: {
-            alert: function (options) {
-                options.onListener();
-            },
-            toast: function () {
-
-            },
-            showLoading: function () {
-
-            },
-            hideLoading: function () {
-
-            },
-            setTouchRect: function (options) {
-            },
-            toggleHeadAndFoot: function () {
-
-            }
-        },
-        Util: {
-            getNetworkType: function (options) {
-                options.onListener(JSON.stringify({
-                    result: {
-                        type: "wifi"
-                    }
-                }));
-            },
-            reload: function () {
-
-            },
-            post: function (options) {
-                options.onListener(options.data)
-            },
-            sendNotification: function (options) {
-
-            }
-        }
+        Device
     };
+    /**
+     *  设备的device_uuid，由app注入到webView的全局变量中。在桌面测试时，此值为abc123
+     *  @member device_uuid
+     */
     window.device_uuid = 'abc123';
+    /**
+     * 桌面测试专用,setTimeout定时器id,默认在0.5秒后启动，可clearTimeout此值，重新设定启动时刻
+     * @member deviceReadyTimer
+     */
     window.deviceReadyTimer = setTimeout(function () {
         window.onDeviceJsReady();
-    }, 500)
+    }, 500);
 }
 
 if (window.HdSmart) {
     HdSmart.ready(function () {
-        console.log('device_uuid', window.device_uuid);
-    })
+        console.log('<--- device_uuid log begin ---');
+        console.log('device_uuid:'+device_uuid);
+        console.log('--- device_uuid log end --->');
+    });
 }
