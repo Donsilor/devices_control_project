@@ -1,11 +1,11 @@
 <template>
-  <div id="app" v-show="loaded">
+  <div id="app"><!-- v-show="loaded" -->
     <index-page class="page" :temp="temp" :humidity="humidity"
-                v-show="page_name === 'index'" @jump2detail="to_detail">
+                v-show="data_loaded && page_name === 'index'" @jump2detail="to_detail">
     </index-page>
 
     <detail-page class="page" :temp="temp" :humidity="humidity" :page="page_name"
-                 v-show="page_name === 'detail'" @return2index="to_index">
+                 v-if="detail_init" v-show="page_name === 'detail'" @return2index="to_index">
     </detail-page>
   </div>
 </template>
@@ -41,19 +41,37 @@
 
 <script>
   import { $timeout } from './utils';
+
+  const STORAGE_KEY = 'humiture';
+
+  //保存全局的温湿度
+  let temp = 0,
+    hum = 0;
+
+  //获取初始温湿度
+  let val = (localStorage.getItem(STORAGE_KEY)||"").split('|'),
+    t = +val[0],
+    h = +val[1];
+  !isNaN(t) && (temp = t);
+  !isNaN(h) && (hum = h);
+
   export default {
     data (){
       return {
-        loaded : false,
         page_name : 'index',
         //原始温湿度值
-        temp : 0,
-        humidity : 0,
+        temp : temp,
+        humidity : hum,
+        //首页是否加载成功
+        data_loaded : false,
+        //详情页是否加载成功
+        detail_init : false,
       }
     },
     methods : {
       to_detail (){
         this.page_name = 'detail';
+        this.detail_init = true;
       },
       to_index (){
         this.page_name = 'index';
@@ -88,8 +106,10 @@
 
         this.temp = t;
         this.humidity = h;
-        //console.info("temp and hum:",t, h);
-      }
+        localStorage.setItem(STORAGE_KEY, [t, h].join('|'));
+        console.info("temp and hum:",t, h);
+      },
+
     },
     watch : {
       page_name (val){
@@ -107,7 +127,7 @@
       }
     },
     mounted (){
-      console.info('组建创建成功：', Date.now() - window.startTime);
+      console.info('组件创建成功：', Date.now() - window.startTime);
       //初始化
       HdSmart.Device.getSnapShot( data =>{
         let attr = data && data.attr;
@@ -115,7 +135,7 @@
           return false;
         }
         HdSmart.UI.hideLoading();
-        this.loaded = true;
+        this.data_loaded = true;
         this.set_value({
           h : attr.humidity,
           t : attr.temperature
@@ -125,7 +145,7 @@
 
       //接受push消息，调整状态值。
       HdSmart.onDeviceListen(json => {
-        console.warn('listen data:', json);
+//        console.warn('listen data:', json);
         let attr = json && json.result && json.result.attr;
         //只有在indexPage需要实时显示状态变化。
         if(this.page_name === 'detail'){
