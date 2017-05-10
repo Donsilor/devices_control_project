@@ -41,8 +41,8 @@
 
 <script>
   import { $time_format, $timeout } from '../utils';
-  import { AlloyTouch } from 'alloytouch';
-  console.log('AlloyTouch:', AlloyTouch);
+//  import { AlloyTouch } from 'alloytouch';
+//  console.log('AlloyTouch:', AlloyTouch);
 
   import IScroll from 'iscroll/build/iscroll-lite';
 
@@ -74,12 +74,7 @@
     filters :{
       _time (val){
         if(typeof val === "number"){
-          let t = $time_format(val, 'hh:mm');
-          console.log('this.last_date:::',this);
-          if(val < last_date){
-            t = '昨天 ' + t;
-          }
-          return  t;
+          return (val < last_date ? '昨天 ' : '') + $time_format(val, 'hh:mm');
         }else{
           return val;
         }

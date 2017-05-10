@@ -86,7 +86,6 @@ export default {
 //      }
 //    },
     value (val){
-      console.log('____:', val);
       val = +val;
       let type = this.type;
       this.$el.style.backgroundImage = `url(${(type === 1) ? bg_1 : bg_2})`;
