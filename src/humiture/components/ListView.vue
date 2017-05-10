@@ -1,5 +1,5 @@
 <template>
-  <div class="ct" ref="list_ct">
+  <div class="ct" ref="list_ct" v-show="data_loaded">
     <div ref="list_scroller" :style="{width : 100 * datalist.length + 'px'}">
       <ul class="data-list" :style="{width : 100 * datalist.length + 'px'}">
         <li v-for="(item, index) in datalist">
@@ -68,6 +68,7 @@
       return {
         datalist : [],
         scroller : null,
+        data_loaded : false,
 //        last_date : 0
       }
     },
@@ -125,6 +126,7 @@
     },
     mounted (){
       HdSmart.Device.getDeviceLogByDay( last_hour, data=> {
+        this.data_loaded = true;
         let list = data.result.log.map((item, i) => {
           let attr = item.attr;
           return {

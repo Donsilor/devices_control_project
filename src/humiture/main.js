@@ -21,7 +21,7 @@ Vue.component('list-view', ListView);
 
 // should run in mobile app clint env.
 HdSmart.ready(() => {
-  HdSmart.UI.showLoading();
+  // HdSmart.UI.showLoading();
   new Vue({
     el: '#app',
     template: '<App/>',
