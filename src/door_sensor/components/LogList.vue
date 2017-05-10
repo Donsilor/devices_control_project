@@ -14,7 +14,7 @@
                         <div class="status">{{log.attr.status == 'on'?'打开':'关闭'}}</div>
                     </div>
                 </div>
-                <div v-if="!logDateList.length" class="no-item">
+                <div v-if="!logDateList.length && isInitial" class="no-item">
                     暂无数据
                 </div>
             </div>
@@ -39,13 +39,15 @@
         },
         data (){
             return {
-                moreData: true
+                moreData: true,
+                isInitial: false
             }
         },
         computed: mapState(['ptr_down_time', 'ptr_up_time', 'logsInDate', 'logDateList']),
         methods: {
             getInitialData (callback){
                 this.getDeviceLog(this.ptr_down_time, 'down', (data) => {
+                    this.isInitial = true;
                     let length = data.log.length;
                     if (length) {
                         this.$store.commit('addLogs', data.log);
@@ -53,7 +55,9 @@
                         this.updateUpTime(data.log[length - 1].time);
                         callback();
                     }
-                },()=>{}, 16);
+                }, () => {
+                    this.isInitial = true;
+                }, 16);
             },
             updateDownTime (time){
                 if (time < this.ptr_down_time) {

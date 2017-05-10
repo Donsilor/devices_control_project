@@ -15,7 +15,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="!logDateList.length" class="no-item">
+            <div v-if="!logDateList.length && isInitial" class="no-item">
                 暂无数据
             </div>
             <div class="no-more-item" v-if="!moreData && logDateList.length">没有更多信息了</div>
@@ -39,7 +39,8 @@
         },
         data (){
             return {
-                moreData: true
+                moreData: true,
+                isInitial: false
             }
         },
         computed: mapState(['ptr_down_time', 'ptr_up_time', 'logsInDate', 'logDateList']),
@@ -47,13 +48,16 @@
             getInitialData (callback){
                 this.getDeviceLog(this.ptr_down_time, 'down', (data) => {
                     let length = data.log.length;
+                    this.isInitial = true;
                     if (length) {
                         this.$store.commit('addLogs', data.log);
                         this.updateDownTime(data.log[0].time);
                         this.updateUpTime(data.log[length - 1].time);
                         callback();
                     }
-                },()=>{}, 16);
+                }, () => {
+                    this.isInitial = true;
+                }, 16);
             },
             updateDownTime (time){
                 if (time < this.ptr_down_time) {
@@ -199,21 +203,20 @@
         color: #13d5dc;
     }
 
-    .no-more-item{
+    .no-more-item {
         font-size: 24px;
         color: #d2d2d2;
         text-align: center;
         margin-top: 36px;
     }
 
-
-    .no-item{
+    .no-item {
         text-align: center;
         font-size: 30px;
         color: #d2d2d2;
     }
 
-    .no-item:before{
+    .no-item:before {
         content: '';
         display: block;
         margin: 120px auto 36px auto;
