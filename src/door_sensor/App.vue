@@ -1,8 +1,8 @@
 <template>
-    <div v-if="is_ajax_back" class="container" ref="container">
+    <div class="container" ref="container">
         <log-title :device="device"></log-title>
-        <log-list class="list"></log-list>
-        <log-tool></log-tool>
+        <log-list class="list" v-if="is_ajax_back"></log-list>
+        <log-tool v-if="is_ajax_back"></log-tool>
     </div>
 </template>
 
@@ -12,14 +12,13 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         width: 780px;
         margin: 0 auto;
         position: absolute;
         top: 120px;
         bottom: 224px;
         left: 0;
-        right:0;
+        right: 0;
     }
 
     .list {
@@ -43,6 +42,7 @@
         name: 'app',
         mounted (){
             HdSmart.Device.getSnapShot((data, service_time) => {
+                HdSmart.UI.hideLoading();
                 this.is_ajax_back = true;
                 this.device.title = '门窗传感器';
                 this.device.status = data.attr.status;
@@ -54,6 +54,8 @@
                 this.$nextTick(() => {
                     let rect = this.$refs.container.getBoundingClientRect();
                 })
+            }, () => {
+                HdSmart.UI.hideLoading();
             });
             HdSmart.onDeviceListen((data) => {
                 this.device.status = data.result.attr.status;
@@ -66,7 +68,7 @@
                 }]);
             });
 
-            HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%');
+            HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
         }
     }
 </script>

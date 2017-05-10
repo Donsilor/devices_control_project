@@ -33,10 +33,8 @@ export default function (method, command, attr, onSuccess, onFailure) {
             log('control', dataOptions, data);
             if (data.code == 504) {
                 onFailure(data);
-            } else if (data.result) {
-                if (isFunction(onSuccess)) {
-                    onSuccess(data.result)
-                }
+            } else if (isFunction(onSuccess)) {
+                onSuccess()
             }
         }
     });

@@ -45,31 +45,32 @@
     }
 </style>
 <script>
-    var percentPerSecond = 3.9;
+    let percentPerSecond = 3.9;
     export default {
         name: 'app',
         data (){
-            var close_percent = localStorage.getItem('close_percent');
+            var close_percent = parseInt(localStorage.getItem('close_percent'));
             if (isNaN(close_percent)) {
                 close_percent = null;
                 localStorage.removeItem('close_percent');
             }
             return {
                 close_percent: close_percent,
-//                close_percent: 0,
                 rafId: 0
             }
         },
         mounted (){
             HdSmart.Device.getSnapShot((data) => {
+                HdSmart.UI.hideLoading();
                 var close_percent = parseInt(localStorage.getItem('close_percent'));
                 if (isNaN(close_percent)) {
                     close_percent = null;
                     localStorage.removeItem('close_percent');
                 }
                 this.close_percent = close_percent === null ? data.attr.close_percentage : close_percent;
-//                this.close_percent = 0;
                 localStorage.setItem('close_percent', this.close_percent);
+            }, () => {
+                HdSmart.UI.hideLoading();
             });
 
             HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
@@ -94,7 +95,7 @@
                 }, (data) => {
                     cancelAnimationFrame(this.rafId);
                     onFinishCallback();
-                    this.rafId = window.requestAnimationFrame(onOpen);
+                    onOpen();
                 });
             },
 
@@ -117,7 +118,7 @@
                 }, (data) => {
                     cancelAnimationFrame(this.rafId);
                     onFinishCallback();
-                    this.rafId = window.requestAnimationFrame(onClose);
+                    onClose();
                 });
             },
             onPause(onFinishCallback){

@@ -43,6 +43,7 @@
         name: 'app',
         mounted (){
             HdSmart.Device.getSnapShot((data, service_time) => {
+                HdSmart.UI.hideLoading();
                 this.is_ajax_back = true;
                 this.device.title = '人体传感器';
                 this.device.status = data.attr.status;
@@ -54,6 +55,8 @@
                 this.$nextTick(() => {
                     let rect = this.$refs.container.getBoundingClientRect();
                 })
+            }, () => {
+                HdSmart.UI.hideLoading();
             });
             HdSmart.onDeviceListen((data) => {
                 this.device.status = data.result.attr.status;

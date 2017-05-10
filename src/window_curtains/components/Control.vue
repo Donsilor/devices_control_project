@@ -67,17 +67,17 @@
         left: 36px;
         top: 36px;
         border-radius: 100%;
-        animation: whirl 0.4s linear infinite;
+        /*animation: whirl 0.4s linear infinite;*/
         background-size: 100% 100%;
     }
 
     @keyframes whirl {
         0 {
-            transform: rotate3d(0,0,1,0deg);
+            transform: rotateX(0deg);
         }
 
         100%{
-            transform: rotate3d(0,0,1,360deg);
+            transform: rotateX(360deg);
         }
     }
 </style>
