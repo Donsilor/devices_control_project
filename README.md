@@ -22,13 +22,18 @@
     npm run build:human_sensor //编译
 ```
 
-### human_sensor 温湿度传感器
+### humiture 温湿度传感器
 ```
     npm run dev:humiture //开发
     npm run build:humiture //编译
 ```
 
 ### history
+
+### 2017.5.11
+删除原文档书写方式，正式在代码中通过注释写代码
+
+
 #### 2017.5.3
 - 添加sdk.debug.js 用于开发环境调试
 - 修改项目名称与app端的enum保持一致
