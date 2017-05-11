@@ -6,6 +6,13 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
             result: {
                 close_percent: 0
             }
-        }))
+        }));
     };
+    HdIot.Device.control = function (options) {
+        setTimeout(function () {
+            options.onListener(JSON.stringify({
+                result:options.data
+            }));
+        },2000)
+    }
 }

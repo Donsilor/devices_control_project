@@ -19,7 +19,7 @@ if (isDesktopEnv()) {
      */
     window.deviceReadyTimer = setTimeout(function () {
         window.onDeviceJsReady();
-    }, 500);
+    }, 2000);
 }
 
 if (window.HdSmart) {

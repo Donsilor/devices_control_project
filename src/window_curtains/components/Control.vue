@@ -60,26 +60,16 @@
 
     .loading:before {
         content: '';
-        background: url('../assets/icn_buffering_white.png') center center no-repeat;
+        background: url('../assets/icn_buffering_white.gif') center center no-repeat;
         position: absolute;
         width: 72px;
         height: 72px;
         left: 36px;
         top: 36px;
         border-radius: 100%;
-        /*animation: whirl 0.4s linear infinite;*/
         background-size: 100% 100%;
     }
 
-    @keyframes whirl {
-        0 {
-            transform: rotateX(0deg);
-        }
-
-        100%{
-            transform: rotateX(360deg);
-        }
-    }
 </style>
 <script>
     export default {
