@@ -84,7 +84,7 @@
                     } else {
                         data.log = [];
                     }
-                    if (length < items_per_page) {
+                    if (direction == 'down' && length < items_per_page) {
                         this.moreData = false
                     }
                     successCallback(data);
