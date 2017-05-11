@@ -14,7 +14,7 @@ var isProduction = process.env.NODE_ENV === 'production';
 var app = util.getCommandApp();
 module.exports = {
     entry: {
-        sdk: [isProduction ? './src/sdk/hdsmart/index.js' : './src/sdk/hdsmart/index.debug.js'],
+        sdk: ['./src/sdk/hdsmart/index.debug.js'],
         app: [`./src/${app}/main.js`]
     },
     output: {
