@@ -11,7 +11,7 @@ import {
 /**
  * @module System
  */
-export {
+export default {
     ready,
     beforeReady,
     runReadyCallbacks,

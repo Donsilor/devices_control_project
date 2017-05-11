@@ -6,7 +6,7 @@ import sendNotification from './sendNotification';
 /**
  * @module Util
  */
-export {
+export default {
     getNetworkType,
     reload,
     post,

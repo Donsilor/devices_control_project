@@ -6,7 +6,7 @@ import toggleHeadAndFoot from './toggleHeadAndFoot';
 /**
  * @module UI
  */
-export {
+export default {
     alert,
     toast,
     showLoading,

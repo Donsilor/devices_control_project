@@ -5,7 +5,7 @@ import post from './post';
 /**
  * @module Util
  */
-export {
+export default {
     getNetworkType,
     reload,
     sendNotification,

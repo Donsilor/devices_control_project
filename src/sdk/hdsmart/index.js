@@ -1,7 +1,7 @@
-import * as System from './system';
-import * as Device from './device';
-import * as UI from './ui';
-import * as Util from './util';
+import System from './system';
+import Device from './device';
+import UI from './ui';
+import Util from './util';
 
 
 window.HdSmart = {

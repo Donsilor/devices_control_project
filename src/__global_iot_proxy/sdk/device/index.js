@@ -6,7 +6,7 @@ import getDeviceMonthHistory from './getDeviceMonthHistory';
 /**
  * @module Device
  */
-export {
+export default {
     control,
     getSnapShot,
     getDeviceLog,
