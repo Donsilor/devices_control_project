@@ -15,8 +15,7 @@ var appName = util.getCommandAppName()
 
 var spinner = ora(`building for ${app}:${appName}...`)
 spinner.start()
-
-rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
+rm(path.resolve(config.build.assetsRoot), err => {
   if (err) throw err
   webpack(webpackConfig, function (err, stats) {
     spinner.stop()
