@@ -142,7 +142,8 @@
         });
         console.info('getSnapShot返回，页面数据渲染：', Date.now() - window.startTime);
       },()=>{
-          HdSmart.UI.hideLoading();
+        HdSmart.UI.hideLoading();
+        this.data_loaded = true;
       });
 
       //接受push消息，调整状态值。

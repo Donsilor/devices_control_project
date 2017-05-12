@@ -1,7 +1,7 @@
 <template>
   <div class="ct" ref="list_ct" v-show="data_loaded">
-    <div ref="list_scroller" :style="{width : 100 * datalist.length + 'px'}">
-      <ul class="data-list" :style="{width : 100 * datalist.length + 'px'}">
+    <div ref="list_scroller" :style="{width : 100 * (datalist.length + 1) + 'px'}">
+      <ul class="data-list" :style="{width : 100 * (datalist.length + 1) + 'px'}">
         <li v-for="(item, index) in datalist">
           <time class="i time">{{item.time_stap | _time}}</time>
           <span class="i temperature">{{item.temp | _temp}}</span>
@@ -91,14 +91,14 @@
 //    },
     methods : {
       init_scroller (){
-        $timeout(200).then(()=>{
+        $timeout(300).then(()=>{
           let wp = this.$refs.list_ct;
 
           this.scroller = new IScroll(wp, {
             scrollX : true,
             scrollY : false,
             //TODO:这里需要再看看，为什么差值为1280，而实际上需要1380才对。
-            startX : -1380,//wp.clientWidth - wp.firstElementChild.clientWidth,
+            startX : wp.clientWidth - wp.firstElementChild.clientWidth,
           });
 
         });
@@ -119,17 +119,18 @@
         });
         this.datalist = list.reverse();
 
-        let wp = this.$refs.list_ct;
-        $timeout(500).then(()=>{
-          console.log('init ---scroller..', wp.clientWidth);
-          this.scroller = new IScroll(wp, {
-            bounce : false,
-            scrollX : true,
-            scrollY : false,
-            //TODO:这里需要再看看，为什么差值为1280，而实际上需要1380才对。
-            startX : -1380,//wp.clientWidth - wp.firstElementChild.clientWidth,
-          });
-        });
+        this.init_scroller();
+//        let wp = this.$refs.list_ct;
+//        $timeout(500).then(()=>{
+//          console.log('init ---scroller..', wp.clientWidth);
+//          this.scroller = new IScroll(wp, {
+//            bounce : false,
+//            scrollX : true,
+//            scrollY : false,
+//            //TODO:这里需要再看看，为什么差值为1280，而实际上需要1380才对。
+//            startX : wp.clientWidth - wp.firstElementChild.clientWidth,
+//          });
+//        });
       });
     }
   }
