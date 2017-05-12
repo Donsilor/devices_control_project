@@ -1,9 +1,9 @@
 <template>
     <div id="app">
-        <navigator class="navigator" v-if="close_percent !== null"></navigator>
-        <curtain class="curtain" v-if="close_percent !== null" :close_percent="close_percent"></curtain>
-        <control class="control" v-if="close_percent !== null" :close_percent="close_percent" v-on:onOpen="onOpen"
-                 v-on:onPause="onPause" v-on:onClose="onClose"></control>
+        <navigator class="navigator"></navigator>
+        <curtain class="curtain" :is_ready="is_ready" :close_percent="close_percent"></curtain>
+        <control class="control" :close_percent="close_percent" v-on:onOpen="onOpen"
+                 v-on:onPause="onPause" v-on:onClose="onClose" :is_ready="is_ready"></control>
     </div>
 </template>
 
@@ -55,25 +55,29 @@
                 localStorage.removeItem('close_percent');
             }
             return {
+                is_ready: false,
                 close_percent: close_percent,
                 rafId: 0
             }
         },
         mounted (){
-            HdSmart.Device.getSnapShot((data) => {
-                HdSmart.UI.hideLoading();
-                var close_percent = parseInt(localStorage.getItem('close_percent'));
-                if (isNaN(close_percent)) {
-                    close_percent = null;
-                    localStorage.removeItem('close_percent');
-                }
-                this.close_percent = close_percent === null ? data.attr.close_percentage : close_percent;
-                localStorage.setItem('close_percent', this.close_percent);
-            }, () => {
-                HdSmart.UI.hideLoading();
+            HdSmart.ready(() => {
+                HdSmart.Device.getSnapShot((data) => {
+                    this.is_ready = true;
+                    HdSmart.UI.hideLoading();
+                    var close_percent = parseInt(localStorage.getItem('close_percent'));
+                    if (isNaN(close_percent)) {
+                        close_percent = null;
+                        localStorage.removeItem('close_percent');
+                    }
+                    this.close_percent = close_percent === null ? data.attr.close_percentage : close_percent;
+                    localStorage.setItem('close_percent', this.close_percent);
+                }, () => {
+                    this.is_ready = true;
+                    HdSmart.UI.hideLoading();
+                });
+                HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
             });
-
-            HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
         },
         methods: {
             onOpen(onFinishCallback){

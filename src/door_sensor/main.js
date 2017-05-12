@@ -34,17 +34,15 @@ Vue.filter('tf', function (time) {
         dateString = '今天';
     } else if (+new Date(year, month, date - 1) == time) {
         dateString = '昨天';
-    }else if(formatYear != year){
+    } else if (formatYear != year) {
         dateString = `${formatYear}年${formatMonth + 1}月${formatDate}日`;
-    }else{
+    } else {
         dateString = `${formatMonth + 1}月${formatDate}日`;
     }
     return `${dateString} ${weeks[day]}`;
 });
-HdSmart.ready(() => {
-    new Vue({
-        el: '#app',
-        store: store,
-        render: h => h(App)
-    });
+new Vue({
+    el: '#app',
+    store: store,
+    render: h => h(App)
 });

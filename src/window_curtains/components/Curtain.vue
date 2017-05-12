@@ -1,8 +1,8 @@
 <template>
     <div class="wrap">
         <div class="bg" :style="{transform:'translate3d(-50%,-'+translateX+'px,0)',opacity:opacity}"></div>
-        <clothes class="left" :close_percent="close_percent"></clothes>
-        <clothes class="right" :close_percent="close_percent"></clothes>
+        <clothes class="left" :close_percent="close_percent" v-if="is_ready"></clothes>
+        <clothes class="right" :close_percent="close_percent" v-if="is_ready"></clothes>
     </div>
 </template>
 <style scoped lang="scss">
@@ -40,7 +40,8 @@
 <script>
     export default {
         props: {
-            close_percent: Number
+            close_percent: Number,
+            is_ready:Boolean
         },
         data (){
             return {

@@ -17,6 +17,11 @@ const store = new Vuex.Store({
         jumpToDate: false
     },
     mutations: {
+        resetLogs (state){
+            state.logsInDate = {};
+            state.logDateList = [];
+            state.logByTime = {};
+        },
         chooseDate (state, date){
             let timestamp = date;
             let chooseKey = moment(date).format('YYYY-MM-DD');

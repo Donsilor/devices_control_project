@@ -1,7 +1,7 @@
 <template>
     <div class="tool">
         <div class="bg" v-if="isCalendarShown" @click="hideCalendar"></div>
-        <calendar class="calendar-box" :class="{active:isCalendarShown}" @chooseDate="chooseDate"></calendar>
+        <calendar class="calendar-box" :class="{active:isCalendarShown}" @chooseDate="chooseDate" v-if="is_ready"></calendar>
         <div class="btn-top" v-if="jumpToDate" @click="reset"></div>
         <div class="btn-calendar" @click="showCalendar"></div>
     </div>
@@ -9,9 +9,12 @@
 <script>
     import {mapState} from 'vuex';
     export default {
+        props: {
+            is_ready: Boolean
+        },
         data (){
             return {
-                isCalendarShown: false,
+                isCalendarShown: false
             }
         },
         computed: mapState(['jumpToDate', 'source_time']),

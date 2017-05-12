@@ -28,6 +28,8 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        justify-content:center;
+        height: 100%;
     }
     .icon{
         content: "";

@@ -25,7 +25,7 @@ if (isDesktopEnv()) {
 if (window.HdSmart) {
     HdSmart.ready(function () {
         console.log('<--- device_uuid log begin ---');
-        console.log('device_uuid:' + device_uuid);
+        console.warn('device_uuid:' + device_uuid);
         console.log('--- device_uuid log end --->');
     });
 }

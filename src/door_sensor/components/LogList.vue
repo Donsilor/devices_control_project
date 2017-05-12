@@ -7,7 +7,7 @@
                         <div class="log-indicator-circle"></div>
                         {{daily.timestamp | tf}}
                     </div>
-                    <div class="log-indicator log-item" :class="[log.attr.status]" :key="log.time"
+                    <div class="log-indicator log-item" :class="[log.attr.status,log.attr.type]" :key="log.time"
                          v-for="log in logsInDate[daily.day].logs">
                         <div class="log-indicator-circle"></div>
                         <div class="time">{{log.timeTxt}}</div>
@@ -24,14 +24,30 @@
 </template>
 <script>
     import {mapState} from 'vuex';
+    import {save_cache, get_cache} from '../helper';
     export default {
+        props: {
+            is_ready: Boolean
+        },
+        watch: {
+            is_ready (value){
+                if (value) {
+                    this.getInitialData((data) => {
+                        save_cache('init_data', JSON.stringify(data));
+                    });
+                }
+            }
+        },
         mounted (){
-            this.getInitialData(() => {
-            });
+            let cacheData = get_cache('init_data');
+            if (cacheData) {
+                cacheData = JSON.parse(cacheData);
+                this.initView(cacheData);
+            }
             this.$store.subscribe((mutation, state) => {
                 if (mutation.type == 'chooseDate') {
                     this.moreData = true;
-                    this.getInitialData(() => {
+                    this.getInitialData((data) => {
                         this.$refs.pullToRefresh.goToTop()
                     });
                 }
@@ -45,19 +61,23 @@
         },
         computed: mapState(['ptr_down_time', 'ptr_up_time', 'logsInDate', 'logDateList']),
         methods: {
+            initView (data){
+                this.isInitial = true;
+                let length = data.log.length;
+                if (length) {
+                    this.$store.commit('addLogs', data.log);
+                    this.updateDownTime(data.log[0].time);
+                    this.updateUpTime(data.log[length - 1].time);
+                }
+            },
             getInitialData (callback){
                 this.getDeviceLog(this.ptr_down_time, 'down', (data) => {
-                    this.isInitial = true;
-                    let length = data.log.length;
-                    if (length) {
-                        this.$store.commit('addLogs', data.log);
-                        this.updateDownTime(data.log[0].time);
-                        this.updateUpTime(data.log[length - 1].time);
-                        callback();
-                    }
+                    this.$store.commit('resetLogs');
+                    this.initView(data);
+                    callback(data);
                 }, () => {
                     this.isInitial = true;
-                }, 16);
+                });
             },
             updateDownTime (time){
                 if (time < this.ptr_down_time) {
@@ -70,7 +90,7 @@
 //                }
             },
             getDeviceLog (time, direction, successCallback, errorCallback, items_per_page){
-                items_per_page = items_per_page || 8;
+                items_per_page = items_per_page || 20;
                 HdSmart.Device.getDeviceLog({
                     start_time: time,
                     direction: direction,

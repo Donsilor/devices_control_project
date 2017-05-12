@@ -18,9 +18,7 @@ Vue.use(AlloyFingerVue, {
     AlloyFinger
 });
 
-HdSmart.ready(() => {
-    new Vue({
-        el: '#app',
-        render: h => h(App)
-    });
+new Vue({
+    el: '#app',
+    render: h => h(App)
 });

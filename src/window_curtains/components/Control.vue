@@ -1,11 +1,11 @@
 <template>
     <div class="box">
         <div class="on button" v-finger:touch-start="onOpenTouchStart"
-             :class="{loading:is_on_loading,normal:!is_on_loading}"></div>
+             :class="[loading_type=='on' ? 'loading':'normal']"></div>
         <div class="pause button" v-finger:touch-start="onPauseTouchStart"
-             :class="{loading:is_pause_loading,normal:!is_pause_loading}"></div>
+             :class="[loading_type=='pause' ? 'loading':'normal']"></div>
         <div class="off button" v-finger:touch-start="onCloseTouchStart"
-             :class="{loading:is_off_loading,normal:!is_off_loading}"></div>
+             :class="[loading_type=='off' ? 'loading':'normal']"></div>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -54,7 +54,8 @@
         position: relative;
         background-image: url('../assets/btn_curtain_buffering.png');
     }
-    .loading{
+
+    .loading {
         position: relative;
     }
 
@@ -74,38 +75,34 @@
 <script>
     export default {
         props: {
-            close_percent: Number
+            close_percent: Number,
+            is_ready: Boolean
         },
         data (){
             return {
-                is_on_loading: false,
-                is_off_loading: false,
-                is_pause_loading: false
+                loading_type: ''
             }
         },
         methods: {
             onOpenTouchStart (){
-                this.is_on_loading = true;
-                this.is_off_loading = false;
-                this.is_pause_loading = false;
+                if(!this.is_ready) return false;
+                this.loading_type = 'on';
                 this.$emit('onOpen', () => {
-                    this.is_on_loading = false;
+                    this.loading_type = '';
                 });
             },
             onCloseTouchStart(){
-                this.is_on_loading = false;
-                this.is_off_loading = true;
-                this.is_pause_loading = false;
+                if(!this.is_ready) return false;
+                this.loading_type = 'off';
                 this.$emit('onClose', () => {
-                    this.is_off_loading = false;
+                    this.loading_type = '';
                 });
             },
             onPauseTouchStart(){
-                this.is_on_loading = false;
-                this.is_off_loading = false;
-                this.is_pause_loading = true;
+                if(!this.is_ready) return false;
+                this.loading_type = 'pause';
                 this.$emit('onPause', () => {
-                    this.is_pause_loading = false;
+                    this.loading_type = '';
                 });
             }
         }
