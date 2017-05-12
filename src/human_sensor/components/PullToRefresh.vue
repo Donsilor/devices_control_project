@@ -224,6 +224,12 @@
                 touchStart (){
                     _this.min = -getTouchMin();
                     at.min = _this.min;
+                    if(_this.pullStatus == 'done' || _this.pullStatus== 'fail'){
+                        _this.pullStatus = 'none'
+                    }
+                    if(_this.pushStatus == 'done' || _this.pushStatus == 'fail'){
+                        _this.pushStatus = 'none';
+                    }
                 },
                 touchMove (evt, value){
                     if (value >= pullBarHeight) {
