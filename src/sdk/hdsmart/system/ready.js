@@ -1,5 +1,4 @@
-import {isFunction} from '../helper';
-let is_ready = false;
+import {isFunction, log} from '../helper';
 let callbacks = [];
 /**
  * 当webView加载完成后，会执行此函数中的回调函数
@@ -35,6 +34,7 @@ export function beforeReady(onReadyCallback) {
 }
 
 export function runReadyCallbacks() {
+    log('ready','','');
     callbacks.forEach((callback) => {
         callback();
     });

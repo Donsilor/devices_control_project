@@ -1,3 +1,4 @@
+import {log} from '../helper';
 /**
  * 显示源生loading
  * @function showLoading
@@ -21,6 +22,7 @@ export function showLoading() {
  */
 
 export function hideLoading() {
+    log('hideLoading','','');
     HdIot.UI.hideLoading({
         data: ''
     });
