@@ -985,6 +985,15 @@
     
 
 	
+	<dt class="important tag-deprecated method-doc-label method-doc-details-label">Deprecated:</dt>
+	
+    <dd class="yes-def tag-deprecated">
+        <ul class="dummy">
+            <li>Yes</li>
+        </ul>
+    </dd>
+    
+    
 
 	
 
@@ -1395,6 +1404,15 @@
     
 
 	
+	<dt class="important tag-deprecated method-doc-label method-doc-details-label">Deprecated:</dt>
+	
+    <dd class="yes-def tag-deprecated">
+        <ul class="dummy">
+            <li>Yes</li>
+        </ul>
+    </dd>
+    
+    
 
 	
 
@@ -1827,6 +1845,15 @@
     
 
 	
+	<dt class="important tag-deprecated method-doc-label method-doc-details-label">Deprecated:</dt>
+	
+    <dd class="yes-def tag-deprecated">
+        <ul class="dummy">
+            <li>Yes</li>
+        </ul>
+    </dd>
+    
+    
 
 	
 
@@ -2107,6 +2134,331 @@
     
 </dd>
 
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".postRequest"><span class="type-signature">&lt;static> </span>postRequest(options)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        获取设备的日志
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">JsBridge通信协议要求实现
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">JsBridge通信协议要求传递数据,需要JSON格式字符串
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>method</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">使用的方法名</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">请求参数</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onListener</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">JsBridge通信协议要求回调方式</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">//获取设备日志 目前使用 人体传感器 门窗传感器
+HdIot.Device.postRequest({
+     data: JSON.stringify({
+             method:&#x27;getDeviceLog&#x27;,
+             params:{
+                 device_uuid:&#x27;abc123&#x27;,
+                 page_number:1, //要请求的分页数
+                 direction:&#x27;down&#x27;, //要请求数据的方向: &#x27;down&#x27;,&#x27;up&#x27;
+                 items_per_page:8 //每页的日志数量
+             }
+     })，
+     onListener:function(data){
+         //data为获取的设备日志
+     }
+})</pre>
+
+    <pre class="sunlight-highlight-javascript">//获取过去24个整点时刻的日志 目前用于温湿度传感器
+HdIot.Device.postRequest({
+     data: JSON.stringify({
+         method:&#x27;getDeviceLogByDay&#x27;,
+         params:{
+             device_uuid:&#x27;abc123&#x27;,
+             start_time: + new Date(&#x27;2017-5-10 05:00:00&#x27;) //请求的13位时间戳(要求整点),将从这个时刻倒数24小时
+         }
+     })，
+     onListener:function(data){
+         //data为获取的日志
+     }
+})</pre>
+
+    <pre class="sunlight-highlight-javascript">//获取指定月份有日志的日期  目前用于温湿度传感器
+HdIot.Device.postRequest({
+     data: JSON.stringify({
+             method:&#x27;getDeviceMonthHistory&#x27;,
+             params:{
+                 device_uuid:&#x27;abc123&#x27;,
+                 year:2017, //请求日志的年份
+                 month:12 //请求日志的月份
+             }
+     })，
+     onListener:function(data){
+         //data为指定年月的有日志日期
+     }
+})</pre>
+
+
+    
+</dd>
+
         </dl>
     
 
@@ -2157,7 +2509,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-05-12T16:36:33+08:00
+		on 2017-05-15T10:09:09+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

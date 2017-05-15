@@ -2,6 +2,7 @@
  * 获取设备的日志
  * @function getDeviceLog
  * @memberOf module:Device
+ * @deprecated
  * @param {object} options JsBridge通信协议要求实现
  * @param {string} options.data JsBridge通信协议要求传递数据,需要JSON格式字符串
  * @param {string} options.data.method='getDeviceLog' 请求名

@@ -2,6 +2,7 @@
  * 获取指定月份有日志的日期
  * @function getDeviceMonthHistory
  * @memberOf module:Device
+ * @deprecated
  * @param {object} options JsBridge通信协议要求实现
  * @param {string} options.data JsBridge通信协议要求传递数据,需要JSON格式字符串
  * @param {string} options.data.method='getDeviceMonthHistory' 请求名
