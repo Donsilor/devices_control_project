@@ -8,6 +8,7 @@ import OnDeviceListen from '../components/api/OnDeviceListen'
 //Device
 import Control from '../components/api/Control'
 import GetSnapShot from '../components/api/GetSnapShot'
+import PostRequest  from '../components/api/postRequest.vue';
 import GetDeviceLog from '../components/api/GetDeviceLog'
 import GetDeviceLogByDay from '../components/api/GetDeviceLogByDay.vue'
 import GetDeviceMonthHistory from '../components/api/GetDeviceMonthHistory'
@@ -51,6 +52,11 @@ export default new Router({
             path: '/api/device/getSnapShot',
             name: 'getSnapShot',
             component: GetSnapShot
+        },
+        {
+            path: '/api/device/postRequest',
+            name: 'postRequest',
+            component: PostRequest
         },
         {
             path: '/api/device/getDeviceLog',

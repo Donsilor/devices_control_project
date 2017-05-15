@@ -1,5 +1,5 @@
 /**
- * 获取设备的日志
+ * 获取设备的业务数据统一接口
  * @function postRequest
  * @memberOf module:Device
  * @param {object} options JsBridge通信协议要求实现
