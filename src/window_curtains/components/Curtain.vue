@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <div class="bg" :style="{transform:'translate3d(-50%,-'+translateX+'px,0)',opacity:opacity}"></div>
+        <div class="bg" :style="{transform:'translate3d(-50%,-'+translateX+'px,0)',opacity:opacity}" v-if="is_ready"></div>
         <clothes class="left" :close_percent="close_percent" v-if="is_ready"></clothes>
         <clothes class="right" :close_percent="close_percent" v-if="is_ready"></clothes>
     </div>
@@ -14,13 +14,13 @@
 
     .bg {
         background: url('../assets/img_curtain_view.png') center center no-repeat;
-        width:954px;
-        height:348px;
+        width: 954px;
+        height: 348px;
         background-size: 100% 100%;
         position: absolute;
         bottom: 0;
-        left:50%;
-        transform: translate3d(-50%,0,0);
+        left: 50%;
+        transform: translate3d(-50%, 0, 0);
     }
 
     .left {
@@ -38,20 +38,21 @@
     }
 </style>
 <script>
+    let bg_move_distance = 24;
     export default {
         props: {
             close_percent: Number,
-            is_ready:Boolean
+            is_ready: Boolean
         },
         data (){
             return {
-                translateX: 30 - 30 * this.close_percent / 100,
+                translateX: bg_move_distance - bg_move_distance * this.close_percent / 100,
                 opacity: 1 - 0.7 * this.close_percent / 100
             }
         },
         watch: {
             close_percent (){
-                this.translateX = 30 - 30 * this.close_percent / 100;
+                this.translateX = bg_move_distance - bg_move_distance * this.close_percent / 100;
                 this.opacity = 1 - 0.7 * this.close_percent / 100;
             }
         }

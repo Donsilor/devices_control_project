@@ -8,7 +8,8 @@
  * @param {object} options.data.params 请求参数
  * @param {function} options.onListener JsBridge通信协议要求回调方式
  * @example
- * //获取设备日志 目前使用 人体传感器 门窗传感器
+ * //获取设备日志
+ * //使用设备：人体传感器 门窗传感器
  * HdIot.Device.postRequest({
  *      data: JSON.stringify({
  *              method:'getDeviceLog',
@@ -25,7 +26,8 @@
  * })
  *
  * @example
- * //获取过去24个整点时刻的日志 目前用于温湿度传感器
+ * //获取过去24个整点时刻的日志
+ * //使用设备：温湿度传感器
  * HdIot.Device.postRequest({
  *      data: JSON.stringify({
  *          method:'getDeviceLogByDay',
@@ -39,7 +41,8 @@
  *      }
  * })
  * @example
- * //获取指定月份有日志的日期  目前用于温湿度传感器
+ * //获取指定月份有日志的日期
+ * //使用设备：人体传感器 门窗传感器
  * HdIot.Device.postRequest({
  *      data: JSON.stringify({
  *              method:'getDeviceMonthHistory',

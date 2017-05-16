@@ -100,6 +100,8 @@
                     cancelAnimationFrame(this.rafId);
                     onFinishCallback();
                     onOpen();
+                },()=>{
+                    onFinishCallback();
                 });
             },
 
@@ -123,6 +125,8 @@
                     cancelAnimationFrame(this.rafId);
                     onFinishCallback();
                     onClose();
+                },()=>{
+                    onFinishCallback();
                 });
             },
             onPause(onFinishCallback){
@@ -132,6 +136,8 @@
                     cancelAnimationFrame(this.rafId);
                     onFinishCallback();
                     localStorage.setItem('close_percent', this.close_percent);
+                },()=>{
+                    onFinishCallback();
                 });
             }
         }
