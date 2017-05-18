@@ -13,6 +13,6 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
             options.onListener(JSON.stringify({
                 result:options.data
             }));
-        },200)
+        },300)
     }
 }

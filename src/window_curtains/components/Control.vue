@@ -73,6 +73,7 @@
 
 </style>
 <script>
+    const LOADING_DELAY = 500;//ms
     export default {
         props: {
             close_percent: Number,
@@ -80,30 +81,55 @@
         },
         data (){
             return {
-                loading_type: ''
+                loading_type: '',
+                timer: null,
             }
         },
         methods: {
+            stopLoading (){
+                this.loading_type = '';
+                clearTimeout(this.timer);
+            },
+            delayLoading  (callback){
+                this.timer = setTimeout(() => {
+                    callback()
+                }, LOADING_DELAY);
+            },
             onOpenTouchStart (){
-                if(!this.is_ready) return false;
-                this.loading_type = 'on';
-                this.$emit('onOpen', () => {
-                    this.loading_type = '';
-                });
+                if (!this.is_ready) return false;
+                if(this.loading_type != 'on'){
+                    this.stopLoading();
+                    this.delayLoading(()=>{
+                        this.loading_type = 'on';
+                    });
+                    this.$emit('onOpen', () => {
+                        this.stopLoading();
+                    });
+                }
             },
             onCloseTouchStart(){
-                if(!this.is_ready) return false;
-                this.loading_type = 'off';
-                this.$emit('onClose', () => {
-                    this.loading_type = '';
-                });
+                if (!this.is_ready) return false;
+                if(this.loading_type != 'off'){
+                    this.stopLoading();
+                    this.delayLoading(()=>{
+                        this.loading_type = 'off';
+                    });
+                    this.$emit('onClose', () => {
+                        this.stopLoading();
+                    });
+                }
             },
             onPauseTouchStart(){
-                if(!this.is_ready) return false;
-                this.loading_type = 'pause';
-                this.$emit('onPause', () => {
-                    this.loading_type = '';
-                });
+                if (!this.is_ready) return false;
+                if(this.loading_type != 'pause'){
+                    this.stopLoading();
+                    this.delayLoading(()=>{
+                        this.loading_type = 'pause';
+                    });
+                    this.$emit('onPause', () => {
+                        this.stopLoading();
+                    });
+                }
             }
         }
     }
