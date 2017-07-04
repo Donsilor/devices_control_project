@@ -60,17 +60,20 @@ module.exports = {
             }
         ]
     },
-    plugins: [new webpack.LoaderOptionsPlugin({
-        vue: {
-            postcss: [autoprefixer({
-                remove: false
-            }), pxtorem({
-                rootValue: 30,
-                unitPrecision: 3,
-                propList: ['*', '!border', '!border-radius'],
-                minPixelValue: 3,
-                selectorBlackList: ['html']
-            })]
-        }
-    })]
+    plugins: [
+        new webpack.LoaderOptionsPlugin({
+            vue: {
+                postcss: [autoprefixer({
+                    remove: false
+                }), pxtorem({
+                    rootValue: 30,
+                    unitPrecision: 3,
+                    propList: ['*', '!border', '!border-radius'],
+                    minPixelValue: 3,
+                    selectorBlackList: ['html']
+                })]
+            }
+        }),
+        new webpack.optimize.ModuleConcatenationPlugin()
+    ]
 }
