@@ -4,7 +4,9 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
         options.onListener(JSON.stringify({
             code: 200,
             result: {
-                close_percent: 0
+                attrs:{
+                    close_percent: 0
+                }
             }
         }));
     };

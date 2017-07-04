@@ -9,10 +9,6 @@
 
 
 <style lang="scss">
-    html {
-        font-size: 20px;
-        height: 100%;
-    }
 
     body {
         margin: 0;
@@ -49,83 +45,77 @@
     export default {
         name: 'app',
         data (){
-            var close_percent = parseInt(localStorage.getItem('close_percent'));
-            if (isNaN(close_percent)) {
-                close_percent = null;
-                localStorage.removeItem('close_percent');
-            }
             return {
                 is_ready: false,
-                close_percent: close_percent,
-                rafId: 0
+                close_percent: 0,
+//                rafId: 0
             }
         },
         mounted (){
             HdSmart.ready(() => {
                 HdSmart.Device.getSnapShot((data) => {
                     this.is_ready = true;
+                    this.close_percentage = data.attr.close_percentage;
                     HdSmart.UI.hideLoading();
-                    var close_percent = parseInt(localStorage.getItem('close_percent'));
-                    if (isNaN(close_percent)) {
-                        close_percent = null;
-                        localStorage.removeItem('close_percent');
-                    }
-                    this.close_percent = close_percent === null ? data.attr.close_percentage : close_percent;
-                    localStorage.setItem('close_percent', this.close_percent);
                 }, () => {
                     this.is_ready = true;
                     HdSmart.UI.hideLoading();
                 });
                 HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
             });
+            HdSmart.onDeviceListen(() => {
+                console.log(arguments)
+            })
         },
         methods: {
             onOpen(onFinishCallback){
-                let onOpen = () => {
-                    let percent = this.close_percent - percentPerSecond;
-                    if (percent <= 0) {
-                        percent = 0;
-                    }
-                    if (percent === 0) {
-                        cancelAnimationFrame(this.rafId);
-                    } else {
-                        this.rafId = window.requestAnimationFrame(onOpen);
-                    }
-                    this.close_percent = percent;
-                    localStorage.setItem('close_percent', this.close_percent);
-                };
+//                let onOpen = () => {
+//                    let percent = this.close_percent - percentPerSecond;
+//                    if (percent <= 0) {
+//                        percent = 0;
+//                    }
+//                    if (percent === 0) {
+//                        cancelAnimationFrame(this.rafId);
+//                    } else {
+//                        this.rafId = window.requestAnimationFrame(onOpen);
+//                    }
+//                    this.close_percent = percent;
+//                    localStorage.setItem('close_percent', this.close_percent);
+//                };
                 HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
                     mode: 'on'
                 }, (data) => {
-                    cancelAnimationFrame(this.rafId);
+                    console.log(data);
+//                    cancelAnimationFrame(this.rafId);
+//                    onOpen();
                     onFinishCallback();
-                    onOpen();
-                },()=>{
+                }, () => {
                     onFinishCallback();
                 });
             },
 
             onClose(onFinishCallback){
-                let onClose = () => {
-                    let percent = this.close_percent + percentPerSecond;
-                    if (percent >= 100) {
-                        percent = 100;
-                    }
-                    if (percent === 100) {
-                        cancelAnimationFrame(this.rafId);
-                    } else {
-                        this.rafId = window.requestAnimationFrame(onClose);
-                    }
-                    this.close_percent = percent;
-                    localStorage.setItem('close_percent', this.close_percent);
-                };
+//                let onClose = () => {
+//                    let percent = this.close_percent + percentPerSecond;
+//                    if (percent >= 100) {
+//                        percent = 100;
+//                    }
+//                    if (percent === 100) {
+//                        cancelAnimationFrame(this.rafId);
+//                    } else {
+//                        this.rafId = window.requestAnimationFrame(onClose);
+//                    }
+//                    this.close_percent = percent;
+//                    localStorage.setItem('close_percent', this.close_percent);
+//                };
                 HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
                     mode: 'off'
                 }, (data) => {
-                    cancelAnimationFrame(this.rafId);
+//                    cancelAnimationFrame(this.rafId);
+//                    onClose();
+                    console.log(data)
                     onFinishCallback();
-                    onClose();
-                },()=>{
+                }, () => {
                     onFinishCallback();
                 });
             },
@@ -133,10 +123,9 @@
                 HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
                     mode: 'pause'
                 }, (data) => {
-                    cancelAnimationFrame(this.rafId);
+//                    cancelAnimationFrame(this.rafId);
                     onFinishCallback();
-                    localStorage.setItem('close_percent', this.close_percent);
-                },()=>{
+                }, () => {
                     onFinishCallback();
                 });
             }
