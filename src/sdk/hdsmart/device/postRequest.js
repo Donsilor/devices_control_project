@@ -41,7 +41,7 @@ import {guid, getDeviceUUID, log, isFunction} from '../helper';
  */
 export default function (method, params, onSuccess, onFailure) {
     let dataOptions = JSON.stringify(params);
-    HdIot.Device.getDeviceLog({
+    HdIot.Device.postRequest({
         method: method,
         data: dataOptions,
         onListener: function (data) {

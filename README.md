@@ -28,6 +28,12 @@
     npm run build:humiture //编译
 ```
 
+### air_condition 空调
+```
+    npm run dev:air_condition //开发
+    npm run build:air_condition //编译
+```
+
 ### history
 
 ### 2017.5.11

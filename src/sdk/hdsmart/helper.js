@@ -42,6 +42,14 @@ export function guid() {
 export function getDeviceUUID() {
     return window.device_uuid;
 }
+
+/**
+ * 获取token
+ * @returns { string }
+ */
+export function getToken() {
+    return window.token;
+}
 /**
  * 打赢api日志
  * @param apiName {string} 调用的api名
