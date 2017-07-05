@@ -1,6 +1,6 @@
 <template>
     <div class="timer">
-        <span>{{title}}</span>
+        <span>{{desc}}</span>
         <time-picker :value="value" :title="title"></time-picker>
     </div>
 </template>
@@ -10,12 +10,14 @@
 <script>
     import TimePicker from './TimePicker.vue';
     export default{
+        name: 'time-setter',
         props:
             {
-                title: String,
+                desc: String,
                 on: Boolean,
-                value: String
+                value: String,
+                title: String
             },
-        components: [TimePicker]
+        components: { TimePicker }
     }
 </script>

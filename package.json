@@ -15,7 +15,7 @@
     "build:human_sensor": "node build/build.js --app=human_sensor --appName=人体传感器",
     "dev:humiture": "node build/dev-server.js --app=humiture --appName=温湿度传感器",
     "build:humiture": "node build/build.js --app=humiture --appName=温湿度传感器",
-    "dev:air_condition": "node build/dev-server.js --app=air_condition --appName=空调  --port=8081",
+    "dev:ac": "node build/dev-server.js --app=air_condition --appName=空调  --port=8081",
     "build:air_condition": "node build/build.js --app=air_condition --appName=空调",
     "dev:document":"gulp watch",
     "build:document":"gulp build",

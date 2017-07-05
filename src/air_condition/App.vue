@@ -24,7 +24,7 @@
             </div>
             <devider :content="'定时'"></devider>
             <div class="more-timing">
-                <time-setter :title="'设置空调开机时间'" :value="params.bootTime"></time-setter>
+                <time-setter :desc="'开机时间'" :title="'设置空调开机时间'" :value="params.bootTime" :on="true"></time-setter>
             </div>
         </div>
     </div>

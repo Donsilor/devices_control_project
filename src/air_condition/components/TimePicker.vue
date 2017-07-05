@@ -24,13 +24,16 @@
 
 <script>
     export default{
-        prop:
+        name: 'time-picker',
+        props:
             {
                 value: String,
                 title: String
             },
         data(){
-            showSelectPanel: true
+            return{
+                showSelectPanel: true
+            }
         },
         methods:{
             setPanelVisibility: function (visible) {
