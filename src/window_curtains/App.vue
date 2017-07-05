@@ -1,15 +1,14 @@
 <template>
     <div id="app">
         <navigator class="navigator"></navigator>
-        <curtain class="curtain" :is_ready="is_ready" :close_percent="close_percent"></curtain>
-        <control class="control" :close_percent="close_percent" v-on:onOpen="onOpen"
+        <curtain class="curtain" :is_ready="is_ready" :close_percentage="close_percentage"></curtain>
+        <control class="control" :close_percentage="close_percentage" v-on:onOpen="onOpen"
                  v-on:onPause="onPause" v-on:onClose="onClose" :is_ready="is_ready"></control>
     </div>
 </template>
 
 
 <style lang="scss">
-
     body {
         margin: 0;
         height: 100%;
@@ -47,8 +46,7 @@
         data (){
             return {
                 is_ready: false,
-                close_percent: 0,
-//                rafId: 0
+                close_percentage: 0
             }
         },
         mounted (){
@@ -63,31 +61,21 @@
                 });
                 HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
             });
-            HdSmart.onDeviceListen(() => {
-                console.log(arguments)
+            HdSmart.onDeviceListen((data) => {
+                try{
+                    if(this.close_percentage !== data.result.attr.close_percentage){
+                        this.close_percentage = data.result.attr.close_percentage;
+                    }
+                }catch (error){
+
+                }
             })
         },
         methods: {
             onOpen(onFinishCallback){
-//                let onOpen = () => {
-//                    let percent = this.close_percent - percentPerSecond;
-//                    if (percent <= 0) {
-//                        percent = 0;
-//                    }
-//                    if (percent === 0) {
-//                        cancelAnimationFrame(this.rafId);
-//                    } else {
-//                        this.rafId = window.requestAnimationFrame(onOpen);
-//                    }
-//                    this.close_percent = percent;
-//                    localStorage.setItem('close_percent', this.close_percent);
-//                };
                 HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
                     mode: 'on'
-                }, (data) => {
-                    console.log(data);
-//                    cancelAnimationFrame(this.rafId);
-//                    onOpen();
+                }, () => {
                     onFinishCallback();
                 }, () => {
                     onFinishCallback();
@@ -95,25 +83,9 @@
             },
 
             onClose(onFinishCallback){
-//                let onClose = () => {
-//                    let percent = this.close_percent + percentPerSecond;
-//                    if (percent >= 100) {
-//                        percent = 100;
-//                    }
-//                    if (percent === 100) {
-//                        cancelAnimationFrame(this.rafId);
-//                    } else {
-//                        this.rafId = window.requestAnimationFrame(onClose);
-//                    }
-//                    this.close_percent = percent;
-//                    localStorage.setItem('close_percent', this.close_percent);
-//                };
                 HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
                     mode: 'off'
-                }, (data) => {
-//                    cancelAnimationFrame(this.rafId);
-//                    onClose();
-                    console.log(data)
+                }, () => {
                     onFinishCallback();
                 }, () => {
                     onFinishCallback();
@@ -122,8 +94,7 @@
             onPause(onFinishCallback){
                 HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
                     mode: 'pause'
-                }, (data) => {
-//                    cancelAnimationFrame(this.rafId);
+                }, () => {
                     onFinishCallback();
                 }, () => {
                     onFinishCallback();
