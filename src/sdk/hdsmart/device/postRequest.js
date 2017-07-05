@@ -40,7 +40,13 @@ import {guid, getDeviceUUID, log, isFunction} from '../helper';
  * })
  */
 export default function (method, params, onSuccess, onFailure) {
-    let dataOptions = JSON.stringify(params);
+    let dataOptions = JSON.stringify({
+        method: method,
+        req_id: guid(),
+        params: Object.assign({
+            device_uuid: getDeviceUUID()
+        }, params)
+    });
     HdIot.Device.postRequest({
         method: method,
         data: dataOptions,

@@ -35,9 +35,17 @@
 ```
 
 ### history
+### 2017.7.5
+正式废弃原来的getDeviceLog getDeviceMonthHistory getDeviceLogByDay
+统一整合到postRequest，并已经将项目的相关部分修改
+
+### 2017.7.4
+升级webpack 2.0 => 3.0
+增加scope hoisting
+移除生成产品阶段的source map
 
 ### 2017.5.11
-删除原文档书写方式，正式在代码中通过注释写代码
+删除原文档书写方式，正式在代码中通过注释写文档
 
 
 #### 2017.5.3

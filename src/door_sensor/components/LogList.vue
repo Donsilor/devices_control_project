@@ -91,7 +91,7 @@
             },
             getDeviceLog (time, direction, successCallback, errorCallback, items_per_page){
                 items_per_page = items_per_page || 20;
-                HdSmart.Device.getDeviceLog({
+                HdSmart.Device.postRequest('getDeviceLog', {
                     start_time: time,
                     direction: direction,
                     items_per_page: items_per_page

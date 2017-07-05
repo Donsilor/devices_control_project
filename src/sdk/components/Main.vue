@@ -30,21 +30,6 @@
                 (app相关api:HdIot.Device.getSnapShot)
             </router-link>
         </li>
-        <li class="list-group-item">
-            <router-link to="/api/device/getDeviceLog">HdSmart.Device.getDeviceLog =>
-                (app相关api:HdIot.Device.getDeviceLog)(即将放弃)
-            </router-link>
-        </li>
-        <li class="list-group-item">
-            <router-link to="/api/device/getDeviceLogByDay">HdSmart.Device.getDeviceLogByDay =>
-                (app相关api:HdIot.Device.getDeviceLogByDay)(即将放弃)
-            </router-link>
-        </li>
-        <li class="list-group-item">
-            <router-link to="/api/device/getDeviceMonthHistory">HdSmart.Device.getDeviceMonthHistory =>
-                (app相关api:HdIot.Device.getDeviceMonthHistory)(即将放弃)
-            </router-link>
-        </li>
         <li class="list-group-item-heading">
             <h3>UI</h3>
         </li>

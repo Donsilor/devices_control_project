@@ -7,18 +7,18 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
             options.onListener(JSON.stringify(mockData.generateSnapShot()))
         },100)
     }
-    HdIot.Device.getDeviceLogByDay = function (options) {
-      let data = JSON.parse(options.data);
+    HdIot.Device.postRequest = function (options) {
+        if(options.method == 'getDeviceLogByDay'){
+            let data = JSON.parse(options.data);
+            setTimeout(()=>{
+                options.onListener(JSON.stringify(mockData.generateDeviceLogByDay(data.params.start_time)))
+            },100)
+        }else if(options.method == 'getDeviceLog'){
+            let data = JSON.parse(options.data);
 
-      setTimeout(()=>{
-            options.onListener(JSON.stringify(mockData.generateDeviceLogByDay(data.params.start_time)))
-        },100)
-    }
-    HdIot.Device.getDeviceLog = function (options) {
-      let data = JSON.parse(options.data);
-
-      setTimeout(()=>{
-        options.onListener(JSON.stringify(mockData.generateDeviceLog(data.params.start_time)))
-      },200)
+            setTimeout(()=>{
+                options.onListener(JSON.stringify(mockData.generateDeviceLog(data.params.start_time)))
+            },200)
+        }
     }
 }

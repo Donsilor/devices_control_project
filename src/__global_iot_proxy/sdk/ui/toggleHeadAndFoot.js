@@ -14,7 +14,4 @@
  */
 
 export default function (options) {
-    options.onListener(JSON.stringify({
-        result:options.data
-    }));
 }

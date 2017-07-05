@@ -197,8 +197,11 @@
         },
         methods: {
             updateEnableDay (){
-                HdSmart.Device.getDeviceMonthHistory(this.year, this.month + 1, (data) => {
-                    let has_log_dates = data.result.has_log;
+                HdSmart.Device.postRequest('getDeviceMonthHistory', {
+                    year: this.year,
+                    month: this.month + 1
+                }, (data) => {
+                    let has_log_dates = data.has_log;
                     let enableDays = {};
                     has_log_dates.forEach((value, key) => {
                         enableDays[value] = true;
@@ -271,8 +274,8 @@
                 this.updateEnableDay();
             },
             chooseDate (year, month, date){
-                console.log(!this.checkIsCurrentDate(year,month,date));
-                if (this.daysPermission[this.dayAttr[date].date] && !this.checkIsCurrentDate(year,month,date)) {
+                console.log(!this.checkIsCurrentDate(year, month, date));
+                if (this.daysPermission[this.dayAttr[date].date] && !this.checkIsCurrentDate(year, month, date)) {
                     this.$emit('chooseDate', year, month, date);
                 }
             }
