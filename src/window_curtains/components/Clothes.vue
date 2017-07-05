@@ -9,6 +9,7 @@
         height: 480px;
         position: absolute;
         width: 588px;
+        transition:transform 1.0s linear;
     }
 
     .clothes {
@@ -25,23 +26,24 @@
         background-size: 100% 100%;
         position: absolute;
         top: 0;
+        transition:opacity 1.0s linear;
     }
 </style>
 <script>
     export default {
         props: {
-            close_percent: Number
+            close_percentage: Number
         },
         data (){
             return {
-                percent: 0.2 + 0.8 * this.close_percent / 100,
-                opacity: 1 - 0.9 * this.close_percent / 100
+                percent: 0.2 + 0.8 * this.close_percentage / 100,
+                opacity: 1 - 0.9 * this.close_percentage / 100
             }
         },
         watch: {
-            close_percent (){
-                this.percent = 0.2 + 0.8 * this.close_percent / 100;
-                this.opacity = 1 - 0.9 * this.close_percent / 100;
+            close_percentage (){
+                this.percent = 0.2 + 0.8 * this.close_percentage / 100;
+                this.opacity = 1 - 0.9 * this.close_percentage / 100;
             }
         }
     }

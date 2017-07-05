@@ -1,20 +1,17 @@
 import '../sdk/index';
+import * as mockData from './mock';
 if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
     HdIot.Device.getSnapShot = function (options) {
-        options.onListener(JSON.stringify({
-            code: 200,
-            result: {
-                attrs:{
-                    close_percent: 0
-                }
-            }
-        }));
+        options.onListener(JSON.stringify(mockData.generateSnapShot()));
     };
     HdIot.Device.control = function (options) {
         setTimeout(function () {
             options.onListener(JSON.stringify({
-                result:options.data
+                result: options.data
             }));
-        },600)
-    }
+        }, 600)
+    };
+    setInterval(() => {
+        window.onDeviceChange(mockData.generateSnapShot())
+    }, 2000)
 }

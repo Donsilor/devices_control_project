@@ -1,8 +1,8 @@
 <template>
     <div class="wrap">
         <div class="bg" :style="{transform:'translate3d(-50%,-'+translateX+'px,0)',opacity:opacity}" v-if="is_ready"></div>
-        <clothes class="left" :close_percent="close_percent" v-if="is_ready"></clothes>
-        <clothes class="right" :close_percent="close_percent" v-if="is_ready"></clothes>
+        <clothes class="left" :close_percentage="close_percentage" v-if="is_ready"></clothes>
+        <clothes class="right" :close_percentage="close_percentage" v-if="is_ready"></clothes>
     </div>
 </template>
 <style scoped lang="scss">
@@ -21,6 +21,7 @@
         bottom: 0;
         left: 50%;
         transform: translate3d(-50%, 0, 0);
+        transition:transform 1.0s linear;
     }
 
     .left {
@@ -41,19 +42,19 @@
     let bg_move_distance = 24;
     export default {
         props: {
-            close_percent: Number,
+            close_percentage: Number,
             is_ready: Boolean
         },
         data (){
             return {
-                translateX: bg_move_distance - bg_move_distance * this.close_percent / 100,
-                opacity: 1 - 0.7 * this.close_percent / 100
+                translateX: bg_move_distance - bg_move_distance * this.close_percentage / 100,
+                opacity: 1 - 0.7 * this.close_percentage / 100
             }
         },
         watch: {
-            close_percent (){
-                this.translateX = bg_move_distance - bg_move_distance * this.close_percent / 100;
-                this.opacity = 1 - 0.7 * this.close_percent / 100;
+            close_percentage (){
+                this.translateX = bg_move_distance - bg_move_distance * this.close_percentage / 100;
+                this.opacity = 1 - 0.7 * this.close_percentage / 100;
             }
         }
     }

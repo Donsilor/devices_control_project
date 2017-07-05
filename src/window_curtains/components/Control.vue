@@ -82,7 +82,7 @@
         data (){
             return {
                 loading_type: '',
-                timer: null,
+                timer: null
             }
         },
         methods: {
