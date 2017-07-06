@@ -14,7 +14,8 @@ function addReadMe(appName) {
             if (error) throw error;
             let html = buffer.toString();
             if (html.indexOf(`dev:${appName}`) > -1 || html.indexOf(`build:${appName}`)> -1){
-                console.log(chalk.red(`已存在${appName}的相关命令，不做添加`));
+                console.log(chalk.red(`已存在${appName}的相关说明，不做任何修改`));
+                resolve();
             }else{
                 html = `### ${appName}\n\`\`\`\n\tnpm run dev:${appName} //开发\n\tnpm run build:${appName} //编译\n\`\`\`\n${html}`
 
@@ -37,6 +38,7 @@ function addCommand(appName) {
             let html = buffer.toString();
             if (html.indexOf(`dev:${appName}`) > -1 || html.indexOf(`build:${appName}`)> -1){
                 console.log(chalk.red(`已存在${appName}的相关命令，不做任何修改`));
+                resolve();
             }else{
                 html = html.replace(/\"scripts\"\s*:\s*\{/,function (matchContent) {
                     return `${matchContent}\n\t"dev:${appName}": "node build/dev-server.js --app=${appName} --appName=${appName}  --port=8081",\n\t"build:${appName}": "node build/build.js --app=${appName} --appName=${appName}",`
@@ -114,7 +116,7 @@ function run(appPath, appProxy, appName) {
         addProxy(appProxy, appName).then(function () {
             addCommand(appName).then(function () {
                 addReadMe(appName).then(function () {
-                    console.log(chalk.green(`添加完成,运行dev:${appName}即可查看相关页面`))
+                    console.log(chalk.green(`添加完成,运行npm run dev:${appName}即可查看相关页面`))
                 })
             })
         })
@@ -135,7 +137,7 @@ function add(appPath, appProxy, appName) {
                     if (answers.ok) {
                         run(appPath, appProxy, appName);
                     } else {
-                        console.log(chalk.red(` 已取消添加新的控制设备: `), chalk.green.bgBlack(` ${appName} `))
+                        console.log(chalk.red(`已取消添加新的控制设备:`), chalk.green(` ${appName} `))
                     }
                 })
             }
