@@ -6,6 +6,28 @@ let inquirer = require('inquirer');
 let async = require('async');
 let consolidate = require('consolidate');
 
+function addReadMe(appName) {
+    return new Promise((resolve) => {
+        console.log(chalk.green(`正在为${appName}工程添加readme说明`));
+        let file = path.join(__dirname, '../readme.md');
+        fs.readFile(file, function (error, buffer) {
+            if (error) throw error;
+            let html = buffer.toString();
+            if (html.indexOf(`dev:${appName}`) > -1 || html.indexOf(`build:${appName}`)> -1){
+                console.log(chalk.red(`已存在${appName}的相关命令，不做添加`));
+            }else{
+                html = `### ${appName}\n\`\`\`\n\tnpm run dev:${appName} //开发\n\tnpm run build:${appName} //编译\n\`\`\`\n${html}`
+
+                fs.writeFile(file, html, function (error) {
+                    if (error) throw error;
+                    console.log(chalk.red(`readme.md修改成功`));
+                    resolve();
+                })
+            }
+        });
+    })
+}
+
 function addCommand(appName) {
     return new Promise((resolve) => {
         console.log(chalk.green(`正在为${appName}工程添加开发编译命令`));
@@ -23,7 +45,6 @@ function addCommand(appName) {
                 fs.writeFile(file, html, function (error) {
                     if (error) throw error;
                     console.log(chalk.red(`命令添加成功,查看package.json中scripts中的dev:${appName}和build:${appName}`));
-                    console.log(chalk.green(`运行dev:${appName}即可查看相关页面`))
                     resolve();
                 })
             }
@@ -91,7 +112,11 @@ function addApp(appPath, appName) {
 function run(appPath, appProxy, appName) {
     addApp(appPath, appName).then(function () {
         addProxy(appProxy, appName).then(function () {
-            addCommand(appName);
+            addCommand(appName).then(function () {
+                addReadMe(appName).then(function () {
+                    console.log(chalk.green(`添加完成,运行dev:${appName}即可查看相关页面`))
+                })
+            })
         })
     })
 }

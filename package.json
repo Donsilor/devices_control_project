@@ -5,6 +5,8 @@
   "author": "chenjiancai <chenjiancai1988@163.com>",
   "private": true,
   "scripts": {
+	"dev:helloworld": "node build/dev-server.js --app=helloworld --appName=helloworld  --port=8081",
+	"build:helloworld": "node build/build.js --app=helloworld --appName=helloworld",
     "dev:window_curtains": "node build/dev-server.js --app=window_curtains --appName=窗帘 --port=8081",
     "build:window_curtains": "node build/build.js --app=window_curtains --appName=窗帘",
     "dev:sdk": "node build/dev-server.js --app=sdk --appName=sdk",

@@ -1,3 +1,8 @@
+### helloworld
+```
+	npm run dev:helloworld //开发
+	npm run build:helloworld //编译
+```
 ### sdk js-sdk
 ```
     npm run dev:sdk //开发
