@@ -1,15 +1,30 @@
 <template>
-    <div class="wrap">
-        <div class="bg" :style="{transform:'translate3d(-50%,-'+translateX+'px,0)',opacity:opacity}" v-if="is_ready"></div>
-        <clothes class="left" :close_percentage="close_percentage" v-if="is_ready"></clothes>
-        <clothes class="right" :close_percentage="close_percentage" v-if="is_ready"></clothes>
+    <div class="wrap" :class="{visible:is_ready}">
+        <div class="bg"
+             :style="{transform:'translate3d(-50%,-'+translateX+'px,0)',opacity:bg_opacity,transitionDuration:time+'ms'}"
+             ref="c_bg"></div>
+        {{times}}
+        <div class="box left" :style="{transform:'scale3d('+percent+',1,1)',transitionDuration:time+'ms'}">
+            <div class="clothes"></div>
+            <div class="folding" :style="{opacity: opacity,transitionDuration:time+'ms'}"></div>
+        </div>
+
+        <div class="box right" :style="{transform:'scale3d('+percent+',1,1)',transitionDuration:time+'ms'}">
+            <div class="clothes"></div>
+            <div class="folding" :style="{opacity: opacity,transitionDuration:time+'ms'}"></div>
+        </div>
     </div>
 </template>
 <style scoped lang="scss">
     .wrap {
         width: 1182px;
-        height: 480px;
+        height: 468px;
         position: relative;
+        visibility: hidden;
+    }
+
+    .wrap.visible {
+        visibility: visible;
     }
 
     .bg {
@@ -21,7 +36,8 @@
         bottom: 0;
         left: 50%;
         transform: translate3d(-50%, 0, 0);
-        transition:transform 1.0s linear;
+        transition-property: transform, opacity;
+        transition-timing-function: linear;
     }
 
     .left {
@@ -37,24 +53,80 @@
         top: 0;
         transform-origin: 100% 0;
     }
+
+    .box {
+        height: 468px;
+        position: absolute;
+        width: 588px;
+        transition-property: transform;
+        transition-timing-function: linear;
+    }
+
+    .clothes {
+        background: url('../assets/img_curtain_clothes.png') center center no-repeat;
+        width: 100%;
+        height: 100%;
+        background-size: 100% 100%;
+    }
+
+    .folding {
+        background: url('../assets/img_curtain_folding.png') center center no-repeat;
+        width: 100%;
+        height: 100%;
+        background-size: 100% 100%;
+        position: absolute;
+        top: 0;
+        transition-property: opacity;
+        transition-timing-function: linear;
+    }
 </style>
 <script>
-    let bg_move_distance = 24;
+    let BGMOVEDISTANCE = 24;
+    let TOTALCLOSETIME = 5000;
     export default {
         props: {
             close_percentage: Number,
-            is_ready: Boolean
+            is_ready: Boolean,
+        },
+        computed: {
+            translateX (){
+                return BGMOVEDISTANCE - BGMOVEDISTANCE * this.close_percentage / 100
+            },
+            bg_opacity (){
+                return 1 - 0.7 * this.close_percentage / 100;
+            },
+            percent (){
+                return 0.2 + 0.8 * this.close_percentage / 100;
+            },
+            opacity (){
+                return 1 - 0.9 * this.close_percentage / 100;
+            }
         },
         data (){
             return {
-                translateX: bg_move_distance - bg_move_distance * this.close_percentage / 100,
-                opacity: 1 - 0.7 * this.close_percentage / 100
+                resourceBottom: 0,
+                time: 0,
+                firstRender: true,
+                times: []
             }
+        },
+        mounted (){
+            let rect = this.$refs.c_bg.getBoundingClientRect();
+            this.resourceBottom = rect.bottom;
         },
         watch: {
             close_percentage (){
-                this.translateX = bg_move_distance - bg_move_distance * this.close_percentage / 100;
-                this.opacity = 1 - 0.7 * this.close_percentage / 100;
+                if (this.$refs.c_bg) {
+                    let rect = this.$refs.c_bg.getBoundingClientRect();
+                    //计算要从当前位置移动到this.translateX需要的实际时间
+                    if(this.firstRender){
+                        this.time = 0;
+                        this.firstRender = false;
+                    }else{
+                        this.time = Math.abs((BGMOVEDISTANCE - this.translateX + this.resourceBottom - rect.bottom) * TOTALCLOSETIME / BGMOVEDISTANCE);
+                    }
+                }
+                this.times.push(this.close_percentage);
             }
         }
     }

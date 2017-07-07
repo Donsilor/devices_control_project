@@ -1,11 +1,19 @@
 <template>
-    <div class="box">
-        <div class="on button" v-finger:touch-start="onOpenTouchStart"
-             :class="[loading_type=='on' ? 'loading':'normal']"></div>
-        <div class="pause button" v-finger:touch-start="onPauseTouchStart"
-             :class="[loading_type=='pause' ? 'loading':'normal']"></div>
-        <div class="off button" v-finger:touch-start="onCloseTouchStart"
-             :class="[loading_type=='off' ? 'loading':'normal']"></div>
+    <div class="control-container">
+        <div class="box tap-box">
+            <div class="tap" v-finger:touch-start="onGo(0)" :class="{active:target_percentage === 0 }">0%</div>
+            <div class="tap" v-finger:touch-start="onGo(50)" :class="{active:target_percentage === 50 }">50%</div>
+            <div class="tap" v-finger:touch-start="onGo(80)" :class="{active:target_percentage === 80 }">80%</div>
+            <div class="tap" v-finger:touch-start="onGo(100)" :class="{active:target_percentage === 100 }">100%</div>
+        </div>
+        <div class="box button-box">
+            <div class="on button" v-finger:touch-start="onOpenTouchStart"
+                 :class="[loading_type=='on' ? 'loading':'normal']"></div>
+            <div class="pause button" v-finger:touch-start="onPauseTouchStart"
+                 :class="[loading_type=='pause' ? 'loading':'normal']"></div>
+            <div class="off button" v-finger:touch-start="onCloseTouchStart"
+                 :class="[loading_type=='off' ? 'loading':'normal']"></div>
+        </div>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -21,9 +29,18 @@
         opacity: 0.3;
     }
 
+    .control-container {
+        width: 100%;
+    }
+
+    .button-box {
+        margin-top: 36px;
+    }
+
     .box {
         display: flex;
         flex-direction: row;
+        justify-content: center;
     }
 
     .on {
@@ -71,35 +88,53 @@
         background-size: 100% 100%;
     }
 
+    .tap {
+        width: 144px;
+        height: 54px;
+        line-height: 54px;
+        font-size: 30px;
+        color: #ffffff;
+        font-family: Roboto-Regular;
+        text-align: center;
+        margin: 0 24px;
+    }
+
+    .tap.active {
+        background: #ffffff;
+        border-radius: 27px;
+        color: #46bcff;
+    }
+
 </style>
 <script>
-    const LOADING_DELAY = 500;//ms
     export default {
         props: {
-            close_percent: Number,
+            close_percentage: Number,
             is_ready: Boolean
         },
         data (){
             return {
                 loading_type: '',
-                timer: null
+                timer: null,
+                target_percentage: ''
             }
         },
         methods: {
             stopLoading (){
+                this.target_percentage = '';
                 this.loading_type = '';
                 clearTimeout(this.timer);
             },
             delayLoading  (callback){
                 this.timer = setTimeout(() => {
                     callback()
-                }, LOADING_DELAY);
+                }, 500);
             },
             onOpenTouchStart (){
                 if (!this.is_ready) return false;
-                if(this.loading_type != 'on'){
+                if (this.loading_type != 'on') {
                     this.stopLoading();
-                    this.delayLoading(()=>{
+                    this.delayLoading(() => {
                         this.loading_type = 'on';
                     });
                     this.$emit('onOpen', () => {
@@ -109,9 +144,9 @@
             },
             onCloseTouchStart(){
                 if (!this.is_ready) return false;
-                if(this.loading_type != 'off'){
+                if (this.loading_type != 'off') {
                     this.stopLoading();
-                    this.delayLoading(()=>{
+                    this.delayLoading(() => {
                         this.loading_type = 'off';
                     });
                     this.$emit('onClose', () => {
@@ -121,14 +156,21 @@
             },
             onPauseTouchStart(){
                 if (!this.is_ready) return false;
-                if(this.loading_type != 'pause'){
+                if (this.loading_type != 'pause') {
                     this.stopLoading();
-                    this.delayLoading(()=>{
+                    this.delayLoading(() => {
                         this.loading_type = 'pause';
                     });
                     this.$emit('onPause', () => {
                         this.stopLoading();
                     });
+                }
+            },
+            onGo (target_percentage){
+                return () => {
+                    this.stopLoading();
+                    this.target_percentage = target_percentage;
+                    this.$emit('onGoPercentage', target_percentage);
                 }
             }
         }

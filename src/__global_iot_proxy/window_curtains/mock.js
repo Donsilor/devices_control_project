@@ -4,7 +4,7 @@ export function generateSnapShot() {
     return Mock.mock({
         method: 'report',
         result: {
-            attribute: {
+            attr: {
                 'close_percentage|1-100': 1,
             }
         }
