@@ -35,6 +35,9 @@
 ```
 
 ### history
+### 2017.7.6
+添加新的命令npm run add <appName> 用于添加新的设备工程
+
 ### 2017.7.5
 正式废弃原来的getDeviceLog getDeviceMonthHistory getDeviceLogByDay
 统一整合到postRequest，并已经将项目的相关部分修改
