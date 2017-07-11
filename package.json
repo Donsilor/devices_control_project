@@ -5,6 +5,8 @@
   "author": "chenjiancai <chenjiancai1988@163.com>",
   "private": true,
   "scripts": {
+    "dev:tv": "node build/dev-server.js --app=tv --appName=电视",
+    "build:tv": "node build/build.js --app=tv --appName=电视",
     "dev:window_curtains": "node build/dev-server.js --app=window_curtains --appName=窗帘 --port=8081",
     "build:window_curtains": "node build/build.js --app=window_curtains --appName=窗帘",
     "dev:sdk": "node build/dev-server.js --app=sdk --appName=sdk",

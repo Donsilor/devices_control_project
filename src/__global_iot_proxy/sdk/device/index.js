@@ -7,5 +7,5 @@ import postRequest from './postRequest';
 export default {
     control,
     getSnapShot,
-    postRequest,
+    postRequest
 }

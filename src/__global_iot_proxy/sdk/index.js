@@ -2,6 +2,7 @@ import {isDesktopEnv} from './helper';
 import Device from './device/index';
 import UI from './ui/index';
 import Util from './util/index'
+
 if (isDesktopEnv()) {
     window.HdIot = {
         Device:Device,
