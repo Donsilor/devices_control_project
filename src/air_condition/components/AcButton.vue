@@ -1,7 +1,8 @@
 <template>
     <div :class="classObj">
         <div class="imgWrapper" @click="click">
-            <img v-if="info.imgSrc" :src="info.imgSrc" />
+            <img v-if="info.imgSrc" v-show="!classObj.active" :src="info.imgSrc" />
+            <img v-if="info.imgActiveSrc" v-show="classObj.active" :src="info.imgActiveSrc" />
         </div>
         <span class="btnName" v-if="info.title">{{info.title}}</span>
     </div>
@@ -16,9 +17,6 @@
         border-radius: 100%;
         text-align: center;
         cursor: pointer;
-    }
-    .active .btnName{
-        color: #46bcff;
     }
     .imgWrapper{
         transition: background-color 0.5s linear;
@@ -42,12 +40,13 @@
 
 <script>
     export default {
-        props: [ 'info', 'curValue' ],
+        props: [ 'info', 'curValue'],
         computed:{
             classObj(){
                 var obj = {
                     'button': true,
-                    'active': this.info.value === this.curValue
+//                    'active': this.info.value === this.curValue
+                    'active': this.info.value === 'on' || (this.info.value === this.curValue)
                 };
                 obj[this.info.type] = true;
                 return obj;
@@ -55,12 +54,11 @@
         },
         methods:{
             click(){
-//                this.$emit('click', this.info.type, this.info.value);
-                if(this.curValue !== this.info.value){
-                    this.$emit('click', this.info.type, this.info.value);
-                }
+                this.$emit('click', this.info.type, this.info.value, this.info.tip);
+//                if(this.curValue !== this.info.value){
+//                    this.$emit('click', this.info.type, this.info.value);
+//                }
             }
-        },
-
+        }
     }
 </script>

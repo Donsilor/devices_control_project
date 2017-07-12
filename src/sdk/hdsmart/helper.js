@@ -50,6 +50,15 @@ export function getDeviceUUID() {
 export function getToken() {
     return window.token;
 }
+
+/**
+ * 获取设备device_name
+ * @returns {string}
+ * */
+export function getDeviceName() {
+    return window.device_name;
+}
+
 /**
  * 打赢api日志
  * @param apiName {string} 调用的api名
