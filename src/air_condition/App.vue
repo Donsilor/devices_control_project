@@ -2,26 +2,27 @@
     <div id="app" :class="appClassObj" @click="showMore=false;">
         <p class="title">{{ deviceName }}</p>
         <div v-show="params.switch === 'on'">
-            <!--温度-->
+            <!--温度Start-->
             <div class="temp">
                 <ac-button :info="minusBtn" @click="setParam"></ac-button>
                 <div class="temp-show"><label class="temp-number">{{params.temperature}}</label><label class="temp-unit">℃</label></div>
                 <ac-button :info="plusBtn" @click="setParam"></ac-button>
             </div>
+            <!--温度End-->
             <p class="tip">{{ tip }}</p>
-            <!--底部按钮-->
+            <!--底部按钮Start-->
             <div class="bottom">
-                <!--<ac-button v-for="btn in bottomBtnList" :info = "btn" :curValue="params[btn.type]" @click="setParam"></ac-button>-->
                 <ac-button :info="buttonList.cool" :curValue="params[buttonList.cool.type]" @click="setParam"></ac-button>
                 <ac-button :info="buttonList.heat" :curValue="params[buttonList.heat.type]" @click="setParam"></ac-button>
                 <ac-button :info="buttonList.dehumidify" :curValue="params[buttonList.dehumidify.type]" @click="setParam"></ac-button>
-                <ac-button v-show="params.switch === 'on'" :info="buttonList.on" @click="toggleOn"></ac-button>
+                <ac-button :info="buttonList.on" v-show="params.switch === 'on'" @click="toggle"></ac-button>
                 <ac-button :info="buttonList.low" :curValue="params[buttonList.low.type]" @click="setParam"></ac-button>
                 <ac-button :info="buttonList.normal" :curValue="params[buttonList.normal.type]" @click="setParam"></ac-button>
                 <ac-button :info="buttonList.high" :curValue="params[buttonList.high.type]" @click="setParam"></ac-button>
             </div>
+            <!--底部按钮End-->
             <div class="more" v-show="!showMore" @click.stop="showMore=true;"></div>
-            <!--更多子菜单-->
+            <!--更多子菜单Start-->
             <div class="subMenu" v-show="showMore" @click.stop="">
                 <devider :content="'模式'"></devider>
                 <div class="more-mode">
@@ -30,15 +31,15 @@
                 </div>
                 <devider :content="'摆风'"></devider>
                 <div class="more-wind-direction">
-                    <ac-button :info="lrBtn" @click="toggleOn"></ac-button>
-                    <ac-button :info="udBtn" @click="toggleOn"></ac-button>
+                    <ac-button v-if="params.deviceSubCategory === 1" :info="lrBtn" @click="toggle"></ac-button>
+                    <ac-button :info="udBtn" @click="toggle"></ac-button>
                 </div>
                 <devider :content="'定时'"></devider>
                 <div class="more-timing">
                     <div class="timing-item">
                         <span class="timing-desc">开机时间</span>
                         <span :class="{'timing-time':true, 'invisible':!params.bootSwitch}" @click="bootTpVisible = params.bootSwitch">{{ params.bootTime }}</span>
-                        <div :class="{'timing-switch': true, 'timer-on': params.bootSwitch}" @click="toggleOn('bootSwitch')">
+                        <div :class="{'timing-switch': true, 'timer-on': params.bootSwitch}" @click="toggle('bootSwitch')">
                             <div class="timing-switch-circle"></div>
                         </div>
                         <!--@click="params.bootSwitch = !params.bootSwitch"-->
@@ -46,23 +47,26 @@
                     <div class="timing-item">
                         <span class="timing-desc">关机时间</span>
                         <span :class="{'timing-time':true, 'invisible':!params.offSwitch}" @click="offTpVisible = params.offSwitch">{{ params.offTime }}</span>
-                        <div :class="{'timing-switch': true, 'timer-on': params.offSwitch}" @click="toggleOn('offSwitch')">
+                        <div :class="{'timing-switch': true, 'timer-on': params.offSwitch}" @click="toggle('offSwitch')">
                             <div class="timing-switch-circle"></div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!--更多子菜单End-->
+            <!--时间选择器Start-->
             <time-picker v-show="bootTpVisible" :hour="bootHour" :minute="bootMinute" :title="'设置空调开机时间'"
                          @vchange="setBootTimePickerVisibility" @change="setBootTime"></time-picker>
             <time-picker v-show="offTpVisible" :hour="offHour" :minute="offMinute" :title="'设置空调关机时间'"
                          @vchange="setOffTimePickerVisibility" @change="setOffTime"></time-picker>
+            <!--时间选择器End-->
         </div>
         <div v-show="params.switch !== 'on'">
             <div v-if="params.deviceSubCategory === 0" class="hanging"></div>
             <div v-if="params.deviceSubCategory === 1" class="package"></div>
             <p class="tip">已关闭</p>
             <div class="bottom">
-                <ac-button v-show="params.switch === 'off'" :info="buttonList.off" @click="toggleOn"></ac-button>
+                <ac-button v-show="params.switch === 'off'" :info="buttonList.off" @click="toggle"></ac-button>
             </div>
         </div>
     </div>
@@ -258,9 +262,9 @@
     const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] =
         ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
     const [ON, OFF] = ['on', 'off'];
-//    const [HAC, PAC] = ['hanging', 'package'];
     const NODE_ID = 'airconditioner.main.';
 
+    //Button构造方法
     function Button(title, type, value, imgSrc, imgActiveSrc, tip) {
         this.title = title;
         this.type = type;
@@ -269,6 +273,7 @@
         this.imgActiveSrc = imgActiveSrc;
         this.tip = tip;
     }
+
     export default {
         components: { AcButton, Devider, TimePicker },
         data() {
@@ -291,9 +296,8 @@
                     off: new Button('', POWER, '', require('./assets/off_normal.png'), require('./assets/off_active.png'), '')
                 },
                 params: {
-                    name: '',
-                    deviceSubCategory: null,
-                    switch: '',
+                    deviceSubCategory: null,//空调类型，0：挂机，1：柜机
+                    switch: '',//开关
                     temperature: null,//温度
                     mode: '',//模式
                     speed: '',//风速
@@ -305,27 +309,34 @@
                     bootTime: '',//开机时间
                     offTime: ''//关机时间
                 },
-                tip: '',
-                tipTimer: '',
-                showMore: false,
-                bootTpVisible: false,
-                offTpVisible: false
-
+                tip: '',//提示，3秒后隐藏
+                tipTimer: '',//提示计时器
+                showMore: false,//更多菜单是否可见
+                bootTpVisible: false,//开机时间选择器是否可见
+                offTpVisible: false,//关机时间选择器是否可见
+                deviceName: ''//设备名
             }
         },
         mounted: function () {
-//            this.title = getDeviceName();
+//            this.deviceName = getDeviceName();
             this.deviceName = '挂式空调';
             HdSmart.ready(()=>{
-                HdSmart.UI.hideLoading();
-                HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
-
                 HdSmart.Device.getSnapShot((data) => {
                     this.setState(data.attr);
+                    HdSmart.UI.hideLoading();
+                    HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
                 }, () => {
+                    HdSmart.UI.hideLoading();
+                    HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
                 });
 
-
+//                HdSmart.onDeviceListen((data) => {
+//                    try {
+//                        this.setState(data.result.attr);
+//                    }
+//                    catch (err) {
+//                    }
+//                })
 //                this.params.name = '挂式空调';
 //                this.params.type = PAC;
 //                this.params.switch = ON;
@@ -337,14 +348,6 @@
 //                this.params.bootTime = '20:00';
 //                this.params.offTime= '';
             });
-
-//            HdSmart.onDeviceListen((data) => {
-//                try{
-//                    this.setState(data.attr);
-//                }
-//                catch (err){
-//                }
-//            })
         },
         computed: {
             appClassObj: function () {
@@ -376,11 +379,6 @@
                     value: this.params.temperature < MAX_TEMP ? this.params.temperature + 1 : this.params.temperature
                 }
             },
-//            bottomBtnList: function () {
-//                let t = [];
-//                t.push(this.buttonList.cool, this.buttonList.heat, this.buttonList.dehumidify, this.buttonList.on, this.buttonList.low, this.buttonList.normal, this.buttonList.high);
-//                return t;
-//            },
             bootHour: function () {
                 return this.getHour(this.params.bootTime);
             },
@@ -428,17 +426,16 @@
                     this.params.offTime = '';
                 }
             },
-            toggleOn(type){
+            toggle(type){
                 let str = '';
                 let oldValue = this.params[type];
                 let newValue;
+
                 if(oldValue === ON){
-//                    this.params[type] = OFF;
                     newValue = OFF;
                     str = '已关闭';
                 }
                 else if(oldValue === OFF){
-//                    this.params[type] = ON;
                     newValue = ON;
                     str = '已启动';
                 }
@@ -452,13 +449,9 @@
                 }
 
                 if(type === WIND_LEFT_RIGHT){
-//                    this.buttonList.leftRight.value = this.params[type];
-//                    this.setTip('左右扫风' + str);
                     this.setParam(type, newValue, '左右扫风' + str);
                 }
                 else if (type === WIND_UP_DOWN){
-//                    this.buttonList.upDown.value = this.params[type];
-//                    this.setTip('上下扫风' + str);
                     this.setParam(type, newValue, '上下扫风' + str);
                 }
                 else if (type === BOOT_SWITCH){
@@ -475,8 +468,8 @@
                     this.setParam(type, newValue);
                 }
             },
-            setParam(type, value, tip, timerObj){
-                if(this.params[type] === value && !timerObj){
+            setParam(type, value, tip){
+                if(this.params[type] === value){//如果参数值没有变化，直接返回
                     return;
                 }
 
@@ -490,15 +483,18 @@
                     () => {
                         //错误提示，未完待续。。。
                         this.setTip('设置失败');
-                    },
-                    timerObj
+                    }
                 );
             },
             setTimer(switchType, switchValue, time, tip){
-                let timerObj = this.getTimerObj(switchType, switchValue, time);
-                if(!timerObj){
+                //开关打开，但是没有设置时间
+                if(switchValue && !time){
+                    this.params[switchType] = switchValue;
+                    this.setTip(tip);
                     return;
                 }
+
+                let timerObj = this.getTimerObj(switchValue, time);
 
                 let attr = {};
                 attr[POWER] = switchType === BOOT_SWITCH ? ON : OFF;
@@ -521,9 +517,9 @@
                     timerObj
                 );
             },
-            getTimerObj(switchType, switchValue, time){
+            getTimerObj(switchValue, time){
                 if(switchValue === true){//打开开关
-                    if(switchType === BOOT_SWITCH){
+                    /*if(switchType === BOOT_SWITCH){
                         //没有设置时间，或者时间没有改变，返回null
 //                        !time || this.params.bootTime === time
                         return !time ? null : { operation: "add", time: time, periodic: 1 };
@@ -534,7 +530,9 @@
                     }
                     else{
                         return null;
-                    }
+                    }*/
+
+                    return { operation: "add", time: time, periodic: 1 };
                 }
                 else{
                     return { operation: "delete" };

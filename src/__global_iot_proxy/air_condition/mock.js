@@ -25,7 +25,7 @@ let res = {
             {
                 "type": "air_switch_off",
                 "status": 0,
-                "time": "20:30",
+                "time": "",
                 "periodic": 1
             }
         ]
