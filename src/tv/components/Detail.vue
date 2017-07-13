@@ -2,7 +2,7 @@
     <div class="page-detail" :class="{show:visible}">
         <div class="detail-hd">
             <a href="#" class="back" @click.prevent="visible=false"></a>
-            <div class="title">{{cur.title}} ={{vid}}</div>
+            <div class="title">{{cur.title}}</div>
         </div>
         <div class="detail-info clearfix">
             <div class="pic">
@@ -16,20 +16,23 @@
                     <p>主演：{{cur.starring}}</p>
                 </div>
                 <!-- 未播放 -->
-                <div class="playstate playstate_unplay">
+                <div class="playstate playstate_unplay" v-show="true">
                     <a href="" class="btn"><i class="icon-play"></i>在电视上播放</a>
                 </div>
                 <!-- 正在播放 -->
-                <div class="playstate playstate_play">
+                <div class="playstate playstate_play" v-show="false">
                     <a href="" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
                 </div>
                 <!-- 继续播放 -->
-                <div class="playstate playstate_conplay">
+                <div class="playstate playstate_conplay" v-show="false">
                     <a href="#" class="btn"><i class="icon-time"></i>继续播放</a>
                     <span class="tip"><i class="arrow"></i>上次观看到第22集</span>
                 </div>
 
-                <div class="desc">{{cur.desc}}</div>
+                <div class="desc">
+                    <div class="desc-cont" v-substrline="cur.desc"></div>
+
+                </div>
             </div>
         </div>
         <div class="line"></div>
@@ -73,7 +76,7 @@
             background-repeat: norepeat;
             float: left;
             margin-top: 32px;
-            margin-left: 24px;
+            margin-left: 224px;
             background-image: url(../assets/icn_topbar_arrowdown_w_normal.png);
             &:active{   
                 background-image: url(../assets/icn_topbar_arrowdown_w_pressed.png);
@@ -92,7 +95,6 @@
             height: 630px;
             float: left;
             margin-left: 30px;
-            background: red;
             img{
                 width: 100%;
                 height: 100%;
@@ -102,7 +104,23 @@
             margin-left: 516px;
         }
         .desc{  
+            padding-top: 36px;
             border-top: 1px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,.5);
+        }
+        .desc-cont{ 
+            overflow: hidden;
+            height: 78px;
+        }
+        .text-hide{ 
+            height: auto;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+        .text-show{ 
+            display: block;
         }
     }
     .shortinfo{  
@@ -133,7 +151,7 @@
             }
             .icon-play{ 
                 width: 36px;
-                height: 30px;
+                height: 36px;
                 background-image: url(../assets/icn_play_white_s.png);
             }
             .icon-time{ 
@@ -216,7 +234,7 @@
 
     //隐藏body滚动条
     function toggleBoayScroll(val){  
-        document.documentElement.className = val ? 'hidescroll' : ''
+        //document.documentElement.className = val ? 'hidescroll' : ''
     }
 
     export default {
@@ -224,6 +242,7 @@
         data() {    
             return {
                 visible: false,
+                desc_open: false, 
                 cur: {}
             }
         },
@@ -241,8 +260,26 @@
                     channelId: this.channelId,
                     vid: this.vid
                 },(data) => {   
-                    this.cur = data.getDetaileData
+                    this.cur = data.data
                 })
+            }
+        },  
+        directives: { 
+            substrline: {   
+                inserted(el,binding) {},
+                update(el,binding) {
+                    if(binding.oldValue !== binding.value){
+                        el.innerHTML = '<p>' + binding.value + '</p>'
+                        var wrapHeight = el.offsetHeight
+                        var textHeight = el.getElementsByTagName('p')[0].offsetHeight
+                        console.log(textHeight,wrapHeight)
+                        if(textHeight > wrapHeight){    
+                            el.classList.add('text-hide')
+                        }else{  
+                            el.classList.remove('text-hide')
+                        }
+                    }
+                }
             }
         },
         mounted() {

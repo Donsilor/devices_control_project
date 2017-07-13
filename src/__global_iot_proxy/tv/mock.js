@@ -1,37 +1,73 @@
 import Mock from 'mockjs';
 
 export function getInitData(){  
-    return {    
-        "channels": [
-            {
-            "channelId": "001",
-            "channel": "电影"
-            },
-            {
-            "channelId": "002",
-            "channel": "电视剧"
-            },
-            {
-            "channelId": "003",
-            "channel": "动漫"
-            },
-            {
-            "channelId": "004",
-            "channel": "综艺"
-            }
-        ],
-        "homePageInfo": [
-            {
-                "title": "爱情保卫战",
-                "sTitle": "",
-                "channelId": "004",
-                "pictureUrl": "http://puui.qpic.cn/tv/0/11335355_722354/0",
-                "postUrl": "",
-                "sourceId": "9",
-                "vid": "8qx2ghgdjufkks6"
-            }
-        ]
+    return JSON.stringify({
+  "homePageInfo": [
+    {
+      "title": "我的前半生",
+      "sTitle": "",
+      "channelId": "002",
+      "pictureUrl": "http:\/\/puui.qpic.cn\/tv\/0\/11301712_722354\/0",
+      "postUrl": "",
+      "sourceId": "9",
+      "vid": "6oysp96a4pku9up"
+    },
+    {
+      "title": "一条狗的使命",
+      "sTitle": "",
+      "channelId": "001",
+      "pictureUrl": "http:\/\/puui.qpic.cn\/tv\/0\/9937170_722354\/0",
+      "postUrl": "",
+      "sourceId": "9",
+      "vid": "950h5k5p7h7m2qn"
+    },
+    {
+      "title": "奔跑吧 第13期 精编版",
+      "sTitle": "",
+      "channelId": "004",
+      "pictureUrl": "http:\/\/puui.qpic.cn\/tv\/0\/11427977_722354\/0",
+      "postUrl": "",
+      "sourceId": "9",
+      "vid": "oyn5yjpdug4l1dd"
+    },
+    {
+      "title": "我们的少年时代",
+      "sTitle": "",
+      "channelId": "002",
+      "pictureUrl": "http:\/\/puui.qpic.cn\/tv\/0\/11402155_722354\/0",
+      "postUrl": "",
+      "sourceId": "9",
+      "vid": "e8sbq7ko8jvgcty"
+    },
+    {
+      "title": "开心相对论 首播 完整版",
+      "sTitle": "",
+      "channelId": "004",
+      "pictureUrl": "http:\/\/puui.qpic.cn\/tv\/0\/11432604_722354\/0",
+      "postUrl": "",
+      "sourceId": "9",
+      "vid": "rf5jb15j96rkbro"
     }
+  ],
+  "channels": [
+    {
+      "channelId": "001",
+      "channel": "电影"
+    },
+    {
+      "channelId": "002",
+      "channel": "电视剧"
+    },
+    {
+      "channelId": "003",
+      "channel": "动漫"
+    },
+    {
+      "channelId": "004",
+      "channel": "综艺"
+    }
+  ]
+})
 }
 
 export function getChannelData() {
@@ -62,7 +98,8 @@ export function getChannelData() {
                     "hasPart": true,
                     "crawler": false
                 }
-            ],
+            ]
+        },
             "category": [
                 {"cate": "纪录片","cateId": "4359"},
                 { "cate": "恐怖","cateId": "4361"},
@@ -75,13 +112,12 @@ export function getChannelData() {
                 { "year": "2017", "yearrange": "2017-2017" }, 
                 { "year": "2016", "yearrange": "2016-2016" }
             ]
-	    }
     }
 }
 
 export function getDetaileData(){   
     return {    
-          "getDetaileData": {
+          "data": {
             "title": "特殊关系",
             "pictureUrl": "http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/a/asbi8alnlba8sni.jpg",
             "starring": "麦克·辛 Michael Sheen 丹尼斯·奎德 Dennis Quaid 霍普·戴维斯 海伦·麦克洛瑞 Helen McCrory 马克·巴泽利",
@@ -118,7 +154,7 @@ export function getDetaileData(){
 
 export function searchData(){   
     return {
-        "searchData": {
+        "data": {
             "total": 9,
             "pageNo": 1,
             "pageSize": 20,
@@ -151,7 +187,7 @@ export function searchData(){
 
 export function fuzzySearch(){  
     return {    
-        "fuzzySearch": [
+        "data": [
             "变形金刚4：绝迹重生",
             "变身小姐",
             "变态假面",
@@ -168,7 +204,7 @@ export function fuzzySearch(){
 
 export function getSearchHistory(){ 
     return {    
-        "getSearchHistory": [
+        "data": [
             "变形金刚",
             "中国嘻哈",
             "欢乐喜剧"

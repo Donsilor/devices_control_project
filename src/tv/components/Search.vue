@@ -31,13 +31,20 @@
         <div class="search_result" v-show="curpage===3">
             <div class="hd clearfix">
                 <div class="tab">
-                    <a href="" class="active">全部</a>
-                    <a href="">电影</a>
-                    <a href="">动漫</a>
+                    <a href="#" 
+                        v-for="item in channels"
+                        @click.prevent="setParam('current_channel',item.channelId)"
+                        v-bind:class="{active:current_channel==item.channelId}">
+                        {{item.channel}}
+                    </a>
                 </div>
                 <div class="sorts">
-                    <a href="">最新</a>
-                    <a href="">最热</a>
+                    <a href="#" 
+                        v-for="item in orderby"
+                        @click.prevent="setParam('current_orderby',item.orderId)"
+                        v-bind:class="{active:current_orderby==item.orderId}">
+                        {{item.text}}
+                    </a>
                 </div>
             </div>
             <ul class="vlist clearfix">
@@ -186,6 +193,7 @@
 <script>
 
     import * as service from '../service'
+    import config from '../config'
     
     function splitWord(kw,input){   
         return input.replace(new RegExp('('+kw+')','g'),'<strong>$1</strong>')
@@ -196,11 +204,21 @@
             return {    
                 word: '',
                 curpage: 1, // 默认1,联想词2,搜索结果3
+                channels: config.channel.concat(service.getInitData().channels),
+                orderby: config.orderby,
                 channelId: '',
                 vid: '',
                 relatedData: [],
                 historyData: [],
-                resultData: []
+                resultData: [],
+                current_channel: '',
+                current_orderby: '',
+                total: 0,
+                pageNo: 1,
+                pageSize: 20,
+                loading: false,
+                noMore: false,
+                noData: false
             }
         },
         watch: {    
@@ -228,19 +246,17 @@
             doSearch(word) {   
                 this.curpage = 3 
                 this.word = word
-                service.searchData({
-                    keyword: word
-                },(data)=>{ 
-                    console.log(data.searchData)
-                    this.resultData = data.searchData.list
-                })
+                this.current_channel = ''
+                this.current_orderby = ''
+                this.pageNo = 1
+                this.filterData()
             },
             fuzzySearch() { 
                 var kw = this.word.trim()
                 if(kw){
                     this.curpage = 2
                     service.fuzzySearch(kw, (data)=>{  
-                        this.relatedData = data.fuzzySearch.map((item)=>{
+                        this.relatedData = data.data.map((item)=>{
                             return {    
                                 text: item,
                                 html: splitWord(kw, item)
@@ -249,16 +265,52 @@
                     })
                 }
             },
+            setParam(key, value) {
+                this[key] = value
+                this.pageNo = 1
+                this.filterData()
+            },
+            filterData() {  
+                this.loading = true
+                service.searchData({
+                    keyword: this.word.trim(),
+                    channelId: this.current_channel,
+                    orderby: this.current_orderby,
+                    pageSize: this.pageSize,
+                    pageNo: this.pageNo
+                },(data)=>{ 
+                    this.loading = false
+                    this.resultData = (this.pageNo > 1 ? this.resultData : []).concat(data.data.list)
+                    this.total = data.data.total
+                })
+            },
+            loadMore() {
+                if(this.loading){   
+                    return 
+                }
+                if(this.pageSize*this.pageNo >= this.total){    
+                    return 
+                }
+                
+                if(document.body.scrollTop+document.documentElement.offsetHeight >= document.body.scrollHeight-10){   
+                    this.pageNo++
+                    this.filterData()
+                }
+            },
             showDetailInfo(channelId, vid) {
                 this.$refs.detail.visible = true
                 this.channelId = channelId
                 this.vid = vid
             }
         },
-        created() { 
+        mounted() { 
             service.getSearchHistory((data)=>{  
-                this.historyData = data.getSearchHistory
+                this.historyData = data.data
             })
+            window.addEventListener('scroll',this.loadMore)
+        },
+        destroyed() {
+            window.removeEventListener('scroll',this.loadMore)
         }
     }
 </script>

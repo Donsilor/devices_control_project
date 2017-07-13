@@ -1,5 +1,7 @@
 <template>
+<div id="app">
     <router-view></router-view>
+</div>
 </template>
 
 <style lang="scss">
@@ -10,7 +12,7 @@
     a{  
         text-decoration: none;
     }
-    ul{ 
+    ul{
         list-style: none;
     }
     .clearfix:after{  
@@ -18,6 +20,16 @@
         display: block;
         height: 0;
         clear: both;
-        visibility: hidden;
+        visibility: hidden; 
     }
-</style>
+    body {
+        height: 100%;
+    }
+
+    #app {
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        height: 100%;
+    }
+</style> 

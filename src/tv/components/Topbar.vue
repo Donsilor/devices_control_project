@@ -20,12 +20,13 @@
         .left{
             position: absolute;
             top: 32px;
-            left: 24px;
+            left: 224px;
+            z-index:9999
         }
         .right{
             position: absolute;
             top: 32px;
-            right: 24px;
+            right: 224px;
         }
         .title{
             text-align: center;
@@ -50,7 +51,7 @@
                 background-image: url(../assets/icn_topbar_search_pressed.png);
             }
         }
-    }
+    } 
     .topbar-fixed{
         position: fixed;
         left: 0;
@@ -60,7 +61,7 @@
     }
 </style>
 
-<script>
+<script> 
     export default {
         props: ['title'],
         methods: {

@@ -5,27 +5,32 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
 
     window.tvInitData = mockData.getInitData()
 
-    HdIot.Util.dispatchEvent = function(data,callback){  
+    HdIot.Util.dispatchEvent = function(options){  
     //console.log(options)
+    var data = JSON.parse(options.data)
+    var callback = options.onListener
+    
+    setTimeout(()=>{
        switch(data.method) {    
             case 'getChannelData': 
-                callback(mockData.getChannelData())
+                callback(JSON.stringify(mockData.getChannelData()))
                 break;
             case 'searchData':
-                callback(mockData.searchData())
+                callback(JSON.stringify(mockData.searchData()))
                 break;
             case 'fuzzySearch': 
-                callback(mockData.fuzzySearch())
+                callback(JSON.stringify(mockData.fuzzySearch()))
                 break;
             case 'getSearchHistory': 
-                callback(mockData.getSearchHistory())
+                callback(JSON.stringify(mockData.getSearchHistory()))
                 break;
             case 'getDetaileData':
-                callback(mockData.getDetaileData())
+                callback(JSON.stringify(mockData.getDetaileData()))
                 break;
             case 'onClickEvent': 
-                console.log('onClickEvent: ',data.params)
+                console.log('onClickEvent: ',data.params.eventCode)
                 break;
        }
+    },1000)
     }
 }

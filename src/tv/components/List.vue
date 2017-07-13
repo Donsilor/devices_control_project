@@ -4,6 +4,7 @@
             <topbar :title="title"></topbar>
             <!-- 条件 -->
             <div class="filters">
+                <!-- 地区 -->
                 <div class="row">
                     <a href="#" 
                         v-for="item in region"
@@ -12,6 +13,7 @@
                         {{item.region}}
                     </a>
                 </div>
+                <!-- 分类 -->
                 <div class="row">
                     <a href="#" 
                         v-for="item in category" 
@@ -20,6 +22,7 @@
                         {{item.cate}}
                     </a>
                 </div>
+                <!-- 年份 -->
                 <div class="row">
                     <a href="#" 
                         v-for="item in year"
@@ -28,6 +31,7 @@
                         {{item.year}}
                     </a>
                 </div>
+                <!-- 排序 -->
                 <div class="row">
                     <a href="#" 
                         v-for="item in orderby"
@@ -124,11 +128,7 @@
 <script>
 
     import * as service from '../service'
-
-    const all_category = [{cate:'全部分类',cateId:''}]
-    const all_region = [{region:'全部地区',regionId:''}]
-    const all_year = [{year:'全部年份',yearrange:''}]
-    const all_orderby = [{text:'最新',orderId:''},{text:'最热',orderId:'2'}]
+    import config from '../config'
 
     export default {
         data() {
@@ -140,7 +140,7 @@
                 category: [],
                 region: [],
                 year: [],
-                orderby: all_orderby,
+                orderby: config.orderby,
                 current_category: '',
                 current_region: '',
                 current_year: '',
@@ -171,8 +171,8 @@
                     pageNo: this.pageNo
                 },(data)=>{ 
                     this.loading = false
-                    this.list = (this.pageNo > 1 ? this.list : []).concat(data.searchData.list)
-                    this.total = data.searchData.total
+                    this.list = (this.pageNo > 1 ? this.list : []).concat(data.data.list)
+                    this.total = data.data.total
                 })
             },
             loadMore() {
@@ -194,24 +194,22 @@
                 this.vid = vid
             }
         },
-        created() {
-            service.getChannelData(this.channelId,(data)=>{  
-                data = data.data
-                this.list = data.list
-                this.category = all_category.concat(data.category)
-                this.region = all_region.concat(data.region)
-                this.year = all_year.concat(data.year)
-                this.total = data.total
-            })
-        },
         mounted() {
+            service.getChannelData(this.channelId,(data)=>{ 
+                //data = data.data
+                this.list = data.data.list
+                this.total = data.data.total
+                this.category = config.category.concat(data.category)
+                this.region = config.region.concat(data.region)
+                this.year = config.year.concat(data.year)
+            }) 
             if(this.$route.query.showDetail === '1' && this.vid){   
                 this.showDetailInfo(this.channelId, this.vid)
             }
             window.addEventListener('scroll',this.loadMore)
         },
         destroyed() {
-            window.removeEventListener('scroll',this.loadMore)
+            window.removeEventListener('scroll',this.loadMore) 
         }
     }
 </script>

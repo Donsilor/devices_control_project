@@ -6,7 +6,6 @@ const DEVICE_TYPE = 'tv'
 
 function sendApp(options){
     options.data.deviceType = DEVICE_TYPE
-    console.log(options.data)
     HdSmart.Util.dispatchEvent(options)
 }
 
@@ -15,7 +14,8 @@ function sendApp(options){
  */
 
 export function getInitData(){  
-    return window.tvInitData
+    console.log(window.tvInitData)
+    return JSON.parse(window.tvInitData)
 }
 
 /**
@@ -25,7 +25,9 @@ export function getChannelData(channelId, callback){
     sendApp({   
         data: { 
             method: 'getChannelData',
-            params: channelId
+            params: {
+                channelId: channelId
+            }
         },
         onListener: callback
     })
@@ -64,7 +66,9 @@ export function fuzzySearch(word, callback){
     sendApp({   
         data: { 
             method: 'fuzzySearch',
-            params: word,
+            params: {
+                keyword: word
+            }
         },
         onListener: callback
     })
@@ -93,7 +97,9 @@ export function onClickEvent(eventName){
     sendApp({   
         data: { 
             method: 'onClickEvent',
-            params: eventName
+            params: {
+                eventCode: eventName
+            }
         }
     })
 }
