@@ -1,6 +1,6 @@
 <template>
     <div :class="classObj">
-        <div class="imgWrapper" @click="click">
+        <div class="imgWrapper"  v-finger:tap="tap"><!--@click="click"-->
             <img v-if="info.imgSrc" v-show="!classObj.active" :src="info.imgSrc" />
             <img v-if="info.imgActiveSrc" v-show="classObj.active" :src="info.imgActiveSrc" />
         </div>
@@ -14,13 +14,15 @@
         display: inline-block;
     }
     .imgWrapper{
-        border-radius: 100%;
+        /*border-radius: 100%;*/
         text-align: center;
         cursor: pointer;
+        border: none 0;
+        outline: none 0;
     }
-    .imgWrapper{
-        transition: background-color 0.5s linear;
-    }
+    /*.imgWrapper{*/
+        /*transition: background-color 0.5s linear;*/
+    /*}*/
     .imgWrapper img{
         vertical-align: middle;
         /*margin-top: 9px;*/
@@ -39,6 +41,11 @@
 </style>
 
 <script>
+    import Vue from 'vue';
+    import AlloyFinger from 'alloyfinger';
+    import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue';
+    Vue.use(AlloyFingerVue, { AlloyFinger });
+
     export default {
         props: [ 'info', 'curValue'],
         computed:{
@@ -53,8 +60,8 @@
             }
         },
         methods:{
-            click(){
-                this.$emit('click', this.info.type, this.info.value, this.info.tip);
+            tap(){
+                this.$emit('tap', this.info.type, this.info.value, this.info.tip);
 //                if(this.curValue !== this.info.value){
 //                    this.$emit('click', this.info.type, this.info.value);
 //                }
