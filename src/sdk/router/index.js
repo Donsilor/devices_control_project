@@ -45,6 +45,11 @@ export default new Router({
             name: 'control',
             component: Control
         },
+        // {
+        //     path: '/api/device/instruct',
+        //     name: 'instruct',
+        //     component: Instruct
+        // },
         {
             path: '/api/device/getSnapShot',
             name: 'getSnapShot',

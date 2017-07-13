@@ -30,7 +30,7 @@
 
 ### air_condition 空调
 ```
-    npm run dev:air_condition //开发
+    npm run dev:ac //开发
     npm run build:air_condition //编译
 ```
 
