@@ -5,41 +5,64 @@
             <!-- 条件 -->
             <div class="filters">
                 <!-- 地区 -->
-                <div class="row">
-                    <a href="#" 
-                        v-for="item in region"
-                        @click.prevent="setParam('current_region',item.regionId)"
-                        v-bind:class="{active:current_region==item.regionId}" >
-                        {{item.region}}
-                    </a>
-                </div>
+                <dl class="row">
+                    <dt>
+                        <a href="#" 
+                            @click.prevent="setParam('current_region','')"
+                            v-bind:class="{active:current_region==''}">全部分类</a>
+                    </dt>
+                    <dd>
+                        <a href="#" 
+                            v-for="item in region"
+                            @click.prevent="setParam('current_region',item.regionId)"
+                            v-bind:class="{active:current_region==item.regionId}" >
+                            {{item.region}}
+                        </a>
+                    </dd>
+                </dl>
                 <!-- 分类 -->
-                <div class="row">
-                    <a href="#" 
-                        v-for="item in category" 
-                        @click.prevent="setParam('current_category',item.cateId)"
-                        v-bind:class="{active:current_category==item.cateId}">
-                        {{item.cate}}
-                    </a>
-                </div>
+                <dl class="row">
+                    <dt>
+                        <a href="#" 
+                            @click.prevent="setParam('current_category','')"
+                            v-bind:class="{active:current_category==''}">全部分类</a>
+                    </dt>
+                    <dd>
+                        <a href="#" 
+                            v-for="item in category" 
+                            @click.prevent="setParam('current_category',item.cateId)"
+                            v-bind:class="{active:current_category==item.cateId}">
+                            {{item.cate}}
+                        </a>
+                    </dd>
+                </dl>
                 <!-- 年份 -->
-                <div class="row">
-                    <a href="#" 
-                        v-for="item in year"
-                        @click.prevent="setParam('current_year',item.yearrange)"
-                        v-bind:class="{active:current_year==item.yearrange}">
-                        {{item.year}}
-                    </a>
-                </div>
+                <dl class="row">
+                    <dt>
+                        <a href="#" 
+                            @click.prevent="setParam('current_year','')"
+                            v-bind:class="{active:current_year==''}">全部年份</a>
+                    </dt>
+                    <dd>
+                        <a href="#" 
+                            v-for="item in year"
+                            @click.prevent="setParam('current_year',item.yearrange)"
+                            v-bind:class="{active:current_year==item.yearrange}">
+                            {{item.year}}
+                        </a>
+                    </dd>
+                </dl>
                 <!-- 排序 -->
-                <div class="row">
-                    <a href="#" 
-                        v-for="item in orderby"
-                        @click.prevent="setParam('current_orderby',item.orderId)"
-                        v-bind:class="{active:current_orderby==item.orderId}">
-                        {{item.text}}
-                    </a>
-                </div>
+                <dl class="row">
+                    <dd>
+                        <a href="#" 
+                            v-for="item in orderby"
+                            @click.prevent="setParam('current_orderby',item.orderId)"
+                            v-bind:class="{active:current_orderby==item.orderId}">
+                            {{item.text}}
+                        </a>
+                    </dd>
+                </dl>
                 
             </div>
         </div>
@@ -77,13 +100,41 @@
         padding-top: 36px;
         border-bottom: 1px solid #dbdbdb;
         .row{   
-            margin-bottom: 24px;
+            overflow: hidden;
+            height: 66px;
+        }
+        dt{ 
+            float:left;
+        }
+        dd{ 
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            &::-webkit-scrollbar{  
+                width: 6px;  
+                height: 6px;  
+                background-color: #F5F5F5;  
+            }  
+            
+            &::-webkit-scrollbar-track{  
+                border-radius: 3px;  
+                background-color: #F5F5F5;  
+            }  
+            
+            &::-webkit-scrollbar-thumb{  
+                border-radius: 3px;   
+                background-color: #ccc;  
+            }  
         }
         a{  
-            margin-right: 38px;
+            float: left;
+            margin-right: 36px;
             color: #7f8082;
-            border-radius: 2px;
-            padding: 2px 12px;
+            border-radius: 3px;
+            padding: 0 12px;
+            height: 42px;
+            line-height: 42px;
+            white-space: nowrap;
             &.active{   
                 background: #13d5dc;
                 color: #fff;
@@ -128,7 +179,6 @@
 <script>
 
     import * as service from '../service'
-    import config from '../config'
 
     export default {
         data() {
@@ -140,11 +190,14 @@
                 category: [],
                 region: [],
                 year: [],
-                orderby: config.orderby,
+                orderby: [
+                    {text:'最新',orderId:'year'},
+                    {text:'最热',orderId:'iscore'}
+                ],
                 current_category: '',
                 current_region: '',
                 current_year: '',
-                current_orderby: '',
+                current_orderby: 'year',
                 total: 0,
                 pageNo: 1,
                 pageSize: 20,
@@ -199,9 +252,9 @@
                 //data = data.data
                 this.list = data.data.list
                 this.total = data.data.total
-                this.category = config.category.concat(data.category)
-                this.region = config.region.concat(data.region)
-                this.year = config.year.concat(data.year)
+                this.category = data.category
+                this.region = data.region
+                this.year = data.year
             }) 
             if(this.$route.query.showDetail === '1' && this.vid){   
                 this.showDetailInfo(this.channelId, this.vid)

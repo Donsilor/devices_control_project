@@ -18,7 +18,7 @@
 
         <div class="search_history" v-show="curpage===1">
             <div class="hd">
-                <a href="" class="del" @click="clearHistory"></a>
+                <a href="#" class="del" @click.prevent="clearHistory"></a>
                 搜索记录
             </div>
             <ul class="bd clearfix">
@@ -31,6 +31,11 @@
         <div class="search_result" v-show="curpage===3">
             <div class="hd clearfix">
                 <div class="tab">
+                    <a href="#"
+                        @click.prevent="setParam('current_channel','')"
+                        v-bind:class="{active:current_channel==''}">
+                        全部
+                    </a>
                     <a href="#" 
                         v-for="item in channels"
                         @click.prevent="setParam('current_channel',item.channelId)"
@@ -82,6 +87,10 @@
             background:#fff url(../assets/icn_topbar_search_pressed.png) no-repeat 25px center;
             background-size: 34px 34px;
             padding-left: 85px;
+            font-size: 30px;
+            &::-webkit-input-placeholder{
+                color: #c8cacc;
+            }
         }
         .del{   
             position: absolute;
@@ -193,7 +202,6 @@
 <script>
 
     import * as service from '../service'
-    import config from '../config'
     
     function splitWord(kw,input){   
         return input.replace(new RegExp('('+kw+')','g'),'<strong>$1</strong>')
@@ -204,15 +212,18 @@
             return {    
                 word: '',
                 curpage: 1, // 默认1,联想词2,搜索结果3
-                channels: config.channel.concat(service.getInitData().channels),
-                orderby: config.orderby,
+                channels: service.getInitData().channels,
+                orderby: [
+                    {text:'最新',orderId:'year'},
+                    {text:'最热',orderId:'iscore'}
+                ],
                 channelId: '',
                 vid: '',
                 relatedData: [],
                 historyData: [],
                 resultData: [],
                 current_channel: '',
-                current_orderby: '',
+                current_orderby: 'year',
                 total: 0,
                 pageNo: 1,
                 pageSize: 20,
@@ -247,7 +258,7 @@
                 this.curpage = 3 
                 this.word = word
                 this.current_channel = ''
-                this.current_orderby = ''
+                this.current_orderby = 'year'
                 this.pageNo = 1
                 this.filterData()
             },

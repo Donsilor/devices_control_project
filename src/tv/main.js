@@ -38,6 +38,7 @@ const router =  new Router({
 
 HdSmart.ready(() => { 
 
+  //设置触摸区域（好像不太管用）
   HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
 
   router.beforeEach((to,from,next) => {
