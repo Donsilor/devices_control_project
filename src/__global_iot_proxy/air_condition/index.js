@@ -13,7 +13,7 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
             options.onListener(JSON.stringify(mockData.set(options)));
         }, 600)
     };
-    setInterval(() => {
-        window.onDeviceChange(mockData.generateSnapShot())
-    }, 2000)
+    // setInterval(() => {
+    //     window.onDeviceChange(mockData.generateSnapShot())
+    // }, 2000)
 }
