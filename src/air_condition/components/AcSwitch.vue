@@ -1,8 +1,8 @@
 <template>
     <div class="timing-item">
-        <span class="timing-desc">开机时间</span>
-        <span :class="{'timing-time':true, 'invisible':!on}" @click="spanClick">{{ time }}</span>
-        <div :class="{'timing-switch': true, 'timer-on': on}" @click="toggle">
+        <span class="timing-desc">{{title}}</span>
+        <span :class="{'timing-time':true, 'invisible':!on}" v-finger:tap="spanClick">{{ time }}</span>
+        <div :class="{'timing-switch': true, 'timer-on': on}" v-finger:tap="toggle" v-finger:swipe="toggle">
             <div class="timing-switch-circle"></div>
         </div>
     </div>
@@ -30,6 +30,7 @@
         background: #c8cacc;
         /*vertical-align: middle;*/
         position: relative;
+        transition: background .5s;
     }
     .timing-switch-circle{
         position: absolute;
@@ -39,6 +40,7 @@
         left: 2px;
         top: 3px;
         background: #fff;
+        transition: left .5s
     }
     .timing-switch.timer-on{
         background: #46bcff;
@@ -50,6 +52,10 @@
 </style>
 
 <script>
+    import Vue from 'vue';
+    import AlloyFinger from 'alloyfinger';
+    import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue';
+    Vue.use(AlloyFingerVue, { AlloyFinger });
     export default{
         props:
             {

@@ -1,78 +1,97 @@
 <template>
     <div id="app" :class="appClassObj" @click="showMore=false;">
         <p class="title">{{ deviceName }}</p>
-        <div v-show="params.switch === 'on'">
-            <!--温度Start-->
-            <div class="temp">
-                <ac-button :info="minusBtn" @tap="setParam"></ac-button>
-                <div class="temp-show"><label class="temp-number">{{params.temperature}}</label><label class="temp-unit">℃</label></div>
-                <ac-button :info="plusBtn" @tap="setParam"></ac-button>
-            </div>
-            <!--温度End-->
-            <p class="tip">{{ tip }}</p>
-            <!--底部按钮Start-->
-            <div class="bottom">
-                <ac-button :info="buttonList.cool" :curValue="params[buttonList.cool.type]" @tap="setParam"></ac-button>
-                <ac-button :info="buttonList.heat" :curValue="params[buttonList.heat.type]" @tap="setParam"></ac-button>
-                <ac-button :info="buttonList.dehumidify" :curValue="params[buttonList.dehumidify.type]" @tap="setParam"></ac-button>
-                <ac-button :info="buttonList.on" v-show="params.switch === 'on'" @tap="toggle"></ac-button>
-                <ac-button :info="buttonList.low" :curValue="params[buttonList.low.type]" @tap="setParam"></ac-button>
-                <ac-button :info="buttonList.normal" :curValue="params[buttonList.normal.type]" @tap="setParam"></ac-button>
-                <ac-button :info="buttonList.high" :curValue="params[buttonList.high.type]" @tap="setParam"></ac-button>
-            </div>
-            <!--底部按钮End-->
-            <div class="more" v-show="!showMore" @click.stop="showMore=true;"></div>
-            <!--更多子菜单Start-->
-            <div class="subMenu" v-show="showMore" @click.stop="">
-                <devider :content="'模式'"></devider>
-                <div class="more-mode">
-                    <ac-button :info="buttonList.mode_auto" :curValue="params[buttonList.mode_auto.type]" @tap="setParam"></ac-button>
-                    <ac-button :info="buttonList.wind" :curValue="params[buttonList.wind.type]" @tap="setParam"></ac-button>
+        <transition name="fade-in">
+            <div v-show="params.switch === 'on'">
+                <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
+                    <defs>
+                        <linearGradient x1="0%" y1="0%" x2="0%" y2="100%" id="linearGradient">
+                            <stop stop-color="#3DD1FE" stop-opacity="1" offset="0%"></stop>
+                            <stop stop-color="#09C0FE" stop-opacity="1" offset="100%"></stop>
+                        </linearGradient>
+                    </defs>
+                    <path d="M0 420 L0 40 C400 -100 900 200 1920 20 L1920 420 Z" style="fill:url(#linearGradient);" />
+                </svg>
+                <!--温度Start-->
+                <div class="temp">
+                    <ac-button :info="minusBtn" @tap="setTemperature"></ac-button>
+                    <div class="temp-show"><label class="temp-number">{{ fakeTemp }}</label><label class="temp-unit">℃</label></div>
+                    <ac-button :info="plusBtn" @tap="setTemperature"></ac-button>
                 </div>
-                <devider :content="'摆风'"></devider>
-                <div class="more-wind-direction">
-                    <ac-button v-if="params.deviceSubCategory === 1" :info="lrBtn" @tap="toggle"></ac-button>
-                    <ac-button :info="udBtn" @tap="toggle"></ac-button>
+                <!--温度End-->
+                <p :class="{'tip':true, 'transparent': tip.length == 0}">{{ tip }}</p>
+                <!--底部按钮Start-->
+                <div class="bottom">
+                    <ac-button :info="buttonList.cool" :curValue="params[buttonList.cool.type]" @tap="setParam"></ac-button>
+                    <ac-button :info="buttonList.heat" :curValue="params[buttonList.heat.type]" @tap="setParam"></ac-button>
+                    <ac-button :info="buttonList.dehumidify" :curValue="params[buttonList.dehumidify.type]" @tap="setParam"></ac-button>
+                    <ac-button :info="buttonList.on" v-show="params.switch === 'on'" @tap="toggle"></ac-button>
+                    <ac-button :info="buttonList.low" :curValue="params[buttonList.low.type]" @tap="setParam"></ac-button>
+                    <ac-button :info="buttonList.normal" :curValue="params[buttonList.normal.type]" @tap="setParam"></ac-button>
+                    <ac-button :info="buttonList.high" :curValue="params[buttonList.high.type]" @tap="setParam"></ac-button>
                 </div>
-                <devider :content="'定时'"></devider>
-                <div class="more-timing">
-                    <!--<div class="timing-item">-->
-                        <!--<span class="timing-desc">开机时间</span>-->
-                        <!--<span :class="{'timing-time':true, 'invisible':!params.bootSwitch}" @click="bootTpVisible = params.bootSwitch">{{ params.bootTime }}</span>-->
-                        <!--<div :class="{'timing-switch': true, 'timer-on': params.bootSwitch}" @click="toggle('bootSwitch')">-->
+                <!--底部按钮End-->
+                <div class="more" v-show="!showMore" @click.stop="showMore=true;"></div>
+                <!--更多子菜单Start-->
+                <transition name="fade">
+                    <div class="subMenu" v-show="showMore" @click.stop="">
+                        <devider :content="'模式'"></devider>
+                        <div class="more-mode">
+                            <ac-button :info="buttonList.mode_auto" :curValue="params[buttonList.mode_auto.type]" @tap="setParam"></ac-button>
+                            <ac-button :info="buttonList.wind" :curValue="params[buttonList.wind.type]" @tap="setParam"></ac-button>
+                        </div>
+                        <devider :content="'摆风'"></devider>
+                        <div class="more-wind-direction">
+                            <ac-button v-if="params.deviceSubCategory === 1" :info="lrBtn" @tap="toggle"></ac-button>
+                            <ac-button :info="udBtn" @tap="toggle"></ac-button>
+                        </div>
+                        <devider :content="'定时'"></devider>
+                        <div class="more-timing">
+                            <!--<div class="timing-item">-->
+                            <!--<span class="timing-desc">开机时间</span>-->
+                            <!--<span :class="{'timing-time':true, 'invisible':!params.bootSwitch}" @click="bootTpVisible = params.bootSwitch">{{ params.bootTime }}</span>-->
+                            <!--<div :class="{'timing-switch': true, 'timer-on': params.bootSwitch}" @click="toggle('bootSwitch')">-->
                             <!--<div class="timing-switch-circle"></div>-->
-                        <!--</div>-->
-                        <!--&lt;!&ndash;@click="params.bootSwitch = !params.bootSwitch"&ndash;&gt;-->
-                    <!--</div>-->
-                    <!--<div class="timing-item">-->
-                    <!--<span class="timing-desc">关机时间</span>-->
-                    <!--<span :class="{'timing-time':true, 'invisible':!params.offSwitch}" @click="offTpVisible = params.offSwitch">{{ params.offTime }}</span>-->
-                    <!--<div :class="{'timing-switch': true, 'timer-on': params.offSwitch}" @click="toggle('offSwitch')">-->
-                    <!--<div class="timing-switch-circle"></div>-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"
-                            @change="bootTpVisible = params.bootSwitch" @toggle="toggle('bootSwitch')"></ac-switch>
-                    <ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"
-                               @change="offTpVisible = params.offSwitch" @toggle="toggle('offSwitch')"></ac-switch>
+                            <!--</div>-->
+                            <!--&lt;!&ndash;@click="params.bootSwitch = !params.bootSwitch"&ndash;&gt;-->
+                            <!--</div>-->
+                            <!--<div class="timing-item">-->
+                            <!--<span class="timing-desc">关机时间</span>-->
+                            <!--<span :class="{'timing-time':true, 'invisible':!params.offSwitch}" @click="offTpVisible = params.offSwitch">{{ params.offTime }}</span>-->
+                            <!--<div :class="{'timing-switch': true, 'timer-on': params.offSwitch}" @click="toggle('offSwitch')">-->
+                            <!--<div class="timing-switch-circle"></div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"
+                                       @change="bootTpVisible = params.bootSwitch" @toggle="toggle('bootSwitch')"></ac-switch>
+                            <ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"
+                                       @change="offTpVisible = params.offSwitch" @toggle="toggle('offSwitch')"></ac-switch>
+                        </div>
+                    </div>
+                </transition>
+                <!--更多子菜单End-->
+                <!--时间选择器Start-->
+                <transition name="fade">
+                    <time-picker v-show="bootTpVisible" :hour="bootHour" :minute="bootMinute" :title="'设置空调开机时间'"
+                                 @vchange="setBootTimePickerVisibility" @change="setBootTime"></time-picker>
+                </transition>
+                <transition name="fade">
+                    <time-picker v-show="offTpVisible" :hour="offHour" :minute="offMinute" :title="'设置空调关机时间'"
+                                 @vchange="setOffTimePickerVisibility" @change="setOffTime"></time-picker>
+                </transition>
+                <!--时间选择器End-->
+            </div>
+        </transition>
+        <transition name="fade-in">
+            <div v-show="params.switch !== 'on'">
+                <div v-if="params.deviceSubCategory === 0" class="hanging"></div>
+                <div v-if="params.deviceSubCategory === 1" class="package"></div>
+                <p class="tip">已关闭</p>
+                <div class="bottom">
+                    <ac-button v-show="params.switch === 'off'" :info="buttonList.off" @tap="toggle"></ac-button>
                 </div>
             </div>
-            <!--更多子菜单End-->
-            <!--时间选择器Start-->
-            <time-picker v-show="bootTpVisible" :hour="bootHour" :minute="bootMinute" :title="'设置空调开机时间'"
-                         @vchange="setBootTimePickerVisibility" @change="setBootTime"></time-picker>
-            <time-picker v-show="offTpVisible" :hour="offHour" :minute="offMinute" :title="'设置空调关机时间'"
-                         @vchange="setOffTimePickerVisibility" @change="setOffTime"></time-picker>
-            <!--时间选择器End-->
-        </div>
-        <div v-show="params.switch !== 'on'">
-            <div v-if="params.deviceSubCategory === 0" class="hanging"></div>
-            <div v-if="params.deviceSubCategory === 1" class="package"></div>
-            <p class="tip">已关闭</p>
-            <div class="bottom">
-                <ac-button v-show="params.switch === 'off'" :info="buttonList.off" @tap="toggle"></ac-button>
-            </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -97,8 +116,18 @@
         padding: 155px 0 180px 0;
         text-align: center;
     }
+    /*.main.on{*/
+        /*background: #0bc0fe url(assets/bg_on.png) no-repeat center bottom;*/
+    /*}*/
     .main.on{
-        background: #0bc0fe url(assets/bg_on.png) no-repeat center bottom;
+        background-color: #0bc0fe;
+    }
+    .bg{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: auto;
     }
     .main.off{
         background-color: #f2f2f2;
@@ -142,6 +171,11 @@
         min-height: 30px;
         font-size: 30px;
         margin: 24px 0 110px 0;
+        opacity: 1;
+        transition: opacity 1s ease;
+    }
+    .tip.transparent{
+        opacity: 0;
     }
     .off .tip{
         color: #c8cacc;
@@ -153,6 +187,7 @@
         margin: 0 240px;
         justify-content: space-around;
         align-items: center;
+        position: relative;
     }
 
     /*图片*/
@@ -180,6 +215,13 @@
     }
 
     /*子菜单*/
+    .fade-enter-active,.fade-in-enter-active, .fade-leave-active {
+        transition: opacity 0.5s linear;
+    }
+    .fade-enter, .fade-leave-to, .fade-in-enter, .fade-in-leave-to{
+        opacity: 0
+    }
+
     .subMenu{
         opacity: 0.95;
         background: #ffffff;
@@ -269,6 +311,7 @@
         ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
     const [ON, OFF] = ['on', 'off'];
     const NODE_ID = 'airconditioner.main.';
+    const SPAN = 500;
 
     //Button构造方法
     function Button(title, type, value, imgSrc, imgActiveSrc, tip) {
@@ -320,7 +363,10 @@
                 showMore: false,//更多菜单是否可见
                 bootTpVisible: false,//开机时间选择器是否可见
                 offTpVisible: false,//关机时间选择器是否可见
-                deviceName: ''//设备名
+                deviceName: '',//设备名
+                tempFlag: false,
+                tempTimer: null,
+                fakeTemp: null
             }
         },
         mounted: function () {
@@ -363,7 +409,8 @@
                     type: TEMPERATURE,
                     imgSrc: require('./assets/minus_normal.png'),
                     imgActiveSrc: require('./assets/minus_pressed.png'),
-                    value: this.params.temperature > MIN_TEMP ? this.params.temperature - 1 : this.params.temperature
+//                    value: this.params.temperature > MIN_TEMP ? this.params.temperature - 1 : this.params.temperature
+                    value: this.fakeTemp > MIN_TEMP ? this.fakeTemp - 1 : this.fakeTemp
                 }
             },
             plusBtn: function () {
@@ -372,7 +419,8 @@
                     type: TEMPERATURE,
                     imgSrc: require('./assets/plus_normal.png'),
                     imgActiveSrc: require('./assets/plus_pressed.png'),
-                    value: this.params.temperature < MAX_TEMP ? this.params.temperature + 1 : this.params.temperature
+                    value: this.fakeTemp < MAX_TEMP ? this.fakeTemp + 1 : this.fakeTemp
+//                    value: this.params.temperature < MAX_TEMP ? this.params.temperature + 1 : this.params.temperature
                 }
             },
             bootHour: function () {
@@ -388,10 +436,19 @@
                 return this.getMinute(this.params.offTime);
             }
         },
+        watch: {
+            tempFlag(val){
+                if(!val){
+//                    console.log('准备发送请求：' + this.fakeTemp);
+                    this.setParam(TEMPERATURE, this.fakeTemp, '温度设置成功');
+                }
+            }
+        },
         methods: {
             setState(attr){//设置空调状态
                 this.params.switch = attr.switch;
                 this.params.temperature = attr.temperature;
+                this.fakeTemp = attr.temperature;
                 this.params.mode = attr.mode;
                 this.params.speed = attr.speed;
                 this.params.wind_up_down = attr.wind_up_down;
@@ -471,6 +528,7 @@
 
                 let attr = {};
                 attr[type] = value;
+//                debugger
                 HdSmart.Device.instruct('set', NODE_ID + type, attr,
                     () => {
                         this.params[type] = value;
@@ -512,6 +570,22 @@
                     },
                     timerObj
                 );
+            },
+            setTemperature(type, value){
+                this.tempFlag = true;
+                this.fakeTemp = value;
+                if(this.tempTimer){
+                    clearTimeout(this.tempTimer);
+                }
+                this.tempTimer = setTimeout(() => { this.tempFlag = false; }, SPAN);
+//                if(!this.tempFlag){
+//                    console.log('啦啦啦');
+//                    this.setParam(TEMPERATURE, value, '');
+//                }
+//                if(this.tempTimer){
+//                    clearTimeout(this.tempTimer);
+//                }
+//                this.tempTimer = setTimeout(() => { this.setParam(TEMPERATURE, value, ''); }, SPAN);
             },
             getTimerObj(switchValue, time){
                 if(switchValue === true){//打开开关
