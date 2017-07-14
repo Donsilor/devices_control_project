@@ -8,6 +8,7 @@ import {log} from '../helper';
  * HdSmart.UI.showLoading();
  */
 export function showLoading() {
+    log('showLoading','','');
     HdIot.UI.showLoading({
         data: ''
     });

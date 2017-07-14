@@ -25,7 +25,7 @@ export default function (title, message, onSuccess, okText, cancelText) {
             cancelText: cancelText
         }),
         onListener: function () {
-            if(isFunction){
+            if(isFunction(onSuccess)){
                 onSuccess()
             }
         }

@@ -3,19 +3,19 @@
         <topbar class="topbar-fixed">
             <form class="search_bar" @submit.prevent="submit">
                 <div class="search_input">
-                    <input type="text" placeholder="输入片名、导演、演员搜索" v-model="word" @input="fuzzySearch">
+                    <input autofocus type="text" placeholder="输入片名、导演、演员搜索" v-model="word" @input="fuzzySearch">
                     <a href="#" class="del" v-show="this.word !== ''" @click.prevent="clearWord"></a>
                 </div>
                 <input type="submit" value="搜索" class="search_submit">
             </form>
         </topbar>
-
+        <!-- 搜索建议 -->
         <div class="search_suggest" v-show="curpage===2">
             <ul>
                 <li @click="doSearch(item.text)" v-for="item in relatedData" v-html="item.html"></li>
             </ul>
         </div>
-
+        <!-- 搜搜历史 -->
         <div class="search_history" v-show="curpage===1">
             <div class="hd">
                 <a href="#" class="del" @click.prevent="clearHistory"></a>
@@ -27,7 +27,7 @@
                 </li>
             </ul>
         </div>
-        
+        <!-- 搜索结果 -->
         <div class="search_result" v-show="curpage===3">
             <div class="hd clearfix">
                 <div class="tab">
@@ -58,8 +58,28 @@
                     <div class="name">{{item.title}}</div>
                 </li>
             </ul>
-        </div>
 
+            <!-- 加载更多 -->
+            <div class="loadmore">
+                <div class="spinner" v-show="loadState === 'LOADING'">
+                    <div class="rect1"></div>
+                    <div class="rect2"></div>
+                    <div class="rect3"></div>
+                    <div class="rect4"></div>
+                    <div class="rect5"></div>
+                    <div class="rect6"></div>
+                    <div class="rect7"></div>
+                    <div class="rect8"></div>
+                </div>
+                <p v-show="loadState === 'LOADED'">加载更多...</p>
+                <p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>
+            </div>
+            <!-- 没有数据 -->
+            <div class="nodata" v-show="loadState === 'NO_DATA'">
+                <i></i>
+                <p>暂无结果</p>
+            </div>
+        </div>
         <!-- 详情页 -->
         <detail :vid="vid" :channel-id="channelId" ref="detail"></detail>
     </div>
@@ -202,6 +222,7 @@
 <script>
 
     import * as service from '../service'
+    import _ from '../util'
     
     function splitWord(kw,input){   
         return input.replace(new RegExp('('+kw+')','g'),'<strong>$1</strong>')
@@ -226,10 +247,17 @@
                 current_orderby: 'year',
                 total: 0,
                 pageNo: 1,
-                pageSize: 20,
+                pageSize: 1,
+                //系统loading，初始化页面或pageNo=1
                 loading: false,
-                noMore: false,
-                noData: false
+                /**
+                    定义数据加载状态
+                    LOADING  分页加载中，显示 分页loading
+                    LOADED   分页加载成功，显示 加载更多...
+                    NO_DATA  没有数据，显示  暂无结果
+                    NO_MORE  全部加载完成，显示 已加载全部
+                 */
+                loadState: ''
             }
         },
         watch: {    
@@ -237,11 +265,19 @@
                 if(this.word === '' && this.curpage === 2){ 
                     this.curpage = 1
                 }
+            },
+            loading(val) {
+                if(val){ 
+                    HdSmart.UI.showLoading()
+                }else{    
+                    HdSmart.UI.hideLoading()
+                }
             }
         },
         methods: {  
             clearWord() {
                 this.word = ''
+                document.querySelectorAll('.search_input input')[0].focus()
             },
             clearHistory() {
                 HdSmart.UI.alert('清空记录', '确认要清空所有搜索记录？', ()=>{  
@@ -262,7 +298,7 @@
                 this.pageNo = 1
                 this.filterData()
             },
-            fuzzySearch() { 
+            fuzzySearch: _.debounce(function(){ 
                 var kw = this.word.trim()
                 if(kw){
                     this.curpage = 2
@@ -275,14 +311,18 @@
                         })
                     })
                 }
-            },
+            },300),
             setParam(key, value) {
                 this[key] = value
                 this.pageNo = 1
                 this.filterData()
             },
             filterData() {  
-                this.loading = true
+                if(this.pageNo === 1){  
+                    this.loading = true
+                }else{  
+                   this.loadState = 'LOADING' 
+                }
                 service.searchData({
                     keyword: this.word.trim(),
                     channelId: this.current_channel,
@@ -290,16 +330,27 @@
                     pageSize: this.pageSize,
                     pageNo: this.pageNo
                 },(data)=>{ 
-                    this.loading = false
+                    if(this.pageNo === 1){
+                        window.scrollTo(0,0)
+                        this.loading = false
+                    }
+                    this.loadState = 'LOADED'
                     this.resultData = (this.pageNo > 1 ? this.resultData : []).concat(data.data.list)
                     this.total = data.data.total
+                    if(this.total === 0){    
+                        this.loadState = 'NO_DATA'
+                    }
+                    if(this.pageSize*this.pageNo >= this.total){    
+                        this.loadState = 'NO_MORE' 
+                    }
                 })
             },
-            loadMore() {
-                if(this.loading){   
+            loadMore: _.debounce(function(){
+                
+                if(this.curpage !== 3){ 
                     return 
                 }
-                if(this.pageSize*this.pageNo >= this.total){    
+                if(this.loadState.indexOf('LOADED') < 0){   
                     return 
                 }
                 
@@ -307,7 +358,7 @@
                     this.pageNo++
                     this.filterData()
                 }
-            },
+            },300),
             showDetailInfo(channelId, vid) {
                 this.$refs.detail.visible = true
                 this.channelId = channelId
