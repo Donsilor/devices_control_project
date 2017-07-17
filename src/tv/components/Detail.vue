@@ -29,19 +29,30 @@
                     <span class="tip"><i class="arrow"></i>上次观看到第22集</span>
                 </div>
 
+                <!-- 描述 -->
                 <div class="desc">
-                    <div class="desc-cont" v-substrline="cur.desc"></div>
-
+                    <div class="desc-cont" v-bind:class="{
+                        'text-cut': isDescOverflow,
+                        'text-show': isDescShow
+                    }"><p>{{cur.desc}}</p>    
+                    </div>
+                    <a href="#" class="desc-toggle" 
+                        @click.prevent="isDescShow=!isDescShow" 
+                        v-show="isDescOverflow"
+                        v-bind:class="{'open':isDescShow}">
+                        {{isDescShow?'收起':'展开'}}<i></i>
+                    </a>
                 </div>
+                
             </div>
         </div>
         <div class="line"></div>
-        <div class="detail-playlist">
-            <div class="hd">52集全</div>
+        <div class="detail-playlist" v-show="cur.playlist[0].total > 1">
+            <div class="hd">{{cur.playlist[0].total}}</div>
             <ul class="bd">
-                <li class="active">
-                    1
-                    <span class="tag_new"></span>
+                <li class="active" v-for="item in cur.playlist[0].list" @click="play(item.link)">
+                    {{item.index}}
+                    <span class="tag_new" v-show="item.states"></span>
                 </li>
             </ul>
         </div>
@@ -60,23 +71,36 @@
         height: 100%;
         overflow-y: auto;
         z-index: 9;
-        background: rgba(0,0,0,.8);
         color: #fff;
+        background-color: rgba(0,0,0,0.9);
         display: none;
         &.show{ 
             display: block;
         }
     }
+    .page-detail:before{    
+        /*毛玻璃效果，不管用 - -
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        filter: blur(20px);
+        z-index: -1;
+        */
+    }
     .detail-hd{
         height: 156px;
+        position: relative;
         .back{  
             width: 36px;
             height: 36px;
             background-size: 100% 100%;
             background-repeat: norepeat;
-            float: left;
-            margin-top: 32px;
-            margin-left: 224px;
+            position: absolute;
+            top: 32px;
+            left: 224px;
             background-image: url(../assets/icn_topbar_arrowdown_w_normal.png);
             &:active{   
                 background-image: url(../assets/icn_topbar_arrowdown_w_pressed.png);
@@ -107,12 +131,13 @@
             padding-top: 36px;
             border-top: 1px solid rgba(255,255,255,0.3);
             color: rgba(255,255,255,.5);
+            position: relative;
         }
         .desc-cont{ 
             overflow: hidden;
-            height: 78px;
+            height: 117px;
         }
-        .text-hide{ 
+        .text-cut{ 
             height: auto;
             text-overflow: ellipsis;
             display: -webkit-box;
@@ -121,6 +146,25 @@
         }
         .text-show{ 
             display: block;
+        }
+        .desc-toggle{   
+            float: right;
+            color: #fff;
+            i{  
+                display: inline-block;
+                background: url(../assets/icn_arrow_down.png) no-repeat center center;
+                width: 24px;
+                height: 24px;
+                background-size: 24px 12px;
+                margin-left: 2px;
+                transform:rotate(0deg);
+                transition: transform .6s;
+            }
+            &.open{ 
+                i{  
+                    transform:rotate(180deg);
+                }
+            }
         }
     }
     .shortinfo{  
@@ -242,13 +286,17 @@
         data() {    
             return {
                 visible: false,
-                desc_open: false, 
-                cur: {}
+                cur: {  
+                    playlist: [{    
+                        list: []
+                    }]
+                },
+                isDescOverflow: false,
+                isDescShow: false
             }
         },
         watch: {    
-            visible(val) { 
-                toggleBoayScroll(val)
+            visible(val) {
                 if(val){   
                     this.getData()
                 }
@@ -261,29 +309,34 @@
                     vid: this.vid
                 },(data) => {   
                     this.cur = data.data
+                    console.log(data.data)
                 })
-            }
-        },  
-        directives: { 
-            substrline: {   
-                inserted(el,binding) {},
-                update(el,binding) {
-                    if(binding.oldValue !== binding.value){
-                        el.innerHTML = '<p>' + binding.value + '</p>'
-                        var wrapHeight = el.offsetHeight
-                        var textHeight = el.getElementsByTagName('p')[0].offsetHeight
-                        console.log(textHeight,wrapHeight)
+            },
+            play(link) {    
+                console.log(link)   
+            },
+            //对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
+            getDescLine() {
+                if(this.$el){
+                    this.isDescShow = false
+                    this.isDescOverflow = false
+                    this.$nextTick(()=>{
+                        let wrapHeight = this.$el.querySelectorAll('.desc-cont')[0].offsetHeight
+                        let textHeight = this.$el.querySelectorAll('.desc-cont p')[0].offsetHeight
+                        console.log(wrapHeight,textHeight)
                         if(textHeight > wrapHeight){    
-                            el.classList.add('text-hide')
+                            this.isDescOverflow = true
                         }else{  
-                            el.classList.remove('text-hide')
+                            this.isDescOverflow = false
                         }
-                    }
+                    })
                 }
             }
+        }, 
+        created() { 
+            this.$watch('cur.desc',this.getDescLine)
         },
         mounted() {
-            toggleBoayScroll(this.visible)
             if(this.visible){
                 this.getData()
             }

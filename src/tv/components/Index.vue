@@ -10,7 +10,7 @@
                             name: 'list',
                             query: {    
                                 channelId: item.channelId,
-                                channel: item.channel,
+                                channel: getChannelName(item.channelId),
                                 showDetail: '1',
                                 vid: item.vid
                             }
@@ -25,8 +25,8 @@
         </div>
         <div class="span2">
             <router-link to="/search" class="item item-search">搜索</router-link>
-            <a href="#" @click.prevent="openScreen" class="item item-tp">投屏</a>
-            <a href="#" @click.prevent="openControl" class="item item-ykq">遥控器</a>
+            <a href="#" @click.prevent="cmd('screenProjectionEvent')" class="item item-tp">投屏</a>
+            <a href="#" @click.prevent="cmd('remoteControlEvent')" class="item item-ykq">遥控器</a>
         </div>
         <div class="span3">
             <router-link 
@@ -125,13 +125,28 @@
             background-image: url(../assets/icn_tv_entertainment.png);
         }
     }
-    .swiper{    
-
-    }
-    .swiper img{
-        width: 100%;
-        height: 100%;
-        border-radius: 6px;
+    .swiper {
+        img{
+            width: 100%;
+            height: 100%;
+            border-radius: 6px;
+        }
+        .swiper-container-horizontal > .swiper-pagination-bullets{ 
+            width: auto;
+            left: auto;
+            right: 35px;
+            bottom: 23px;
+        }
+        .swiper-pagination-bullet{  
+            width: 23px;
+            height: 6px;
+            opacity: .5;
+            background: #fff;
+            border-radius:1.5px;
+        }
+        .swiper-pagination-bullet-active{  
+            background: #13d5dc
+        }
     }
 </style>
 
@@ -151,14 +166,16 @@
             }
         },
         methods: {
-            openScreen() {
-                service.onClickEvent('screenProjectionEvent')
+            cmd(name) {
+                service.onClickEvent(name)
             },
-            openControl() {
-                service.onClickEvent('remoteControlEvent')
+            // 根据栏目id取得栏目名称
+            getChannelName(channelId) {  
+                let result = this.channels.filter((item)=>{
+                    return item.channelId === channelId
+                })
+                return result[0].channel
             }
-        },
-        created() { 
         }
     }
 </script>

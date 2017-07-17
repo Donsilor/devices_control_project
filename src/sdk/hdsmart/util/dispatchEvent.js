@@ -25,12 +25,11 @@ import {isFunction, log} from '../helper';
  * })
  */
 export default function (options) {
-    log('dispatchEvent: ', options.data)
     HdIot.Util.dispatchEvent({
         data: JSON.stringify(options.data),
         onListener(data) {
-            if(options.onListener){  
-                console.log('dispatchEvent_callback_listener') 
+            log('dispatchEvent: ', options.data, data)
+            if(options.onListener){
                 options.onListener(JSON.parse(data))
             }
         }

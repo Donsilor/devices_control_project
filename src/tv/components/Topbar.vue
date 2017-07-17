@@ -63,7 +63,9 @@
 
 <script> 
     export default {
-        props: ['title'],
+        props: {
+            title: String
+        },
         methods: {
             goBack(){   
                 this.$router.back()

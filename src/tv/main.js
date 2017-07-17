@@ -2,18 +2,27 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
 
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+//import AlloyFinger from 'alloyfinger/alloy_finger'
+//import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue'
+
 import App from './App.vue'
 import Index from './components/Index.vue'
 import List from './components/List.vue'
 import Search from './components/Search.vue'
 import Detail from './components/Detail.vue'
 import Topbar from './components/Topbar.vue'
-import VueAwesomeSwiper from 'vue-awesome-swiper'
+
+Vue.use(Router)
+Vue.use(VueAwesomeSwiper)
+/*
+Vue.use(AlloyFingerVue, {
+    AlloyFinger
+});
+*/
 
 Vue.component('detail',Detail)
 Vue.component('topbar',Topbar)
-Vue.use(VueAwesomeSwiper)
-Vue.use(Router)
 
 const router =  new Router({
   routes: [
@@ -38,6 +47,7 @@ const router =  new Router({
 
 HdSmart.ready(() => { 
 
+  //设置触摸区域（好像不太管用）
   HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
 
   router.beforeEach((to,from,next) => {
