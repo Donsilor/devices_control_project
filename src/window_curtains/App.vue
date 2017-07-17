@@ -8,7 +8,7 @@
 </template>
 
 
-<style lang="scss">
+<style lang="less">
     body {
         margin: 0;
         height: 100%;

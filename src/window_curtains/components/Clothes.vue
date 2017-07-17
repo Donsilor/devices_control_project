@@ -4,7 +4,7 @@
         <div class="folding" :style="{opacity: opacity}"></div>
     </div>
 </template>
-<style scoped lang="scss">
+<style scoped lang="less">
     .box {
         height: 480px;
         position: absolute;

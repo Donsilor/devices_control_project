@@ -85,7 +85,7 @@
     </div>
 </template>
 
-<style lang="scss">
+<style lang="less">
     .page-search{
         padding-top: 96px;
     }

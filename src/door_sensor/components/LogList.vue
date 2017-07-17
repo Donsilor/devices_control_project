@@ -138,7 +138,7 @@
         }
     }
 </script>
-<style scoped lang="scss">
+<style scoped lang="less">
     .log-list {
         width: 100%;
         position: relative;

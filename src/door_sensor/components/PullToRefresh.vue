@@ -13,7 +13,7 @@
     </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
     .pull-to-refresh-wrapper {
         overflow: hidden;
         left: 0;

@@ -99,7 +99,7 @@
     </div>
 </template>
 
-<style lang="scss">
+<style lang="less">
     .page-list{
         padding-top: 400px;
     }

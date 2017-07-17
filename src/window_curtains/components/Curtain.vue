@@ -5,7 +5,7 @@
         <clothes class="right" :close_percentage="close_percentage" v-if="is_ready"></clothes>
     </div>
 </template>
-<style scoped lang="scss">
+<style scoped lang="less">
     .wrap {
         width: 1182px;
         height: 480px;

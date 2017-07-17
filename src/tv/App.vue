@@ -2,7 +2,7 @@
     <router-view></router-view>
 </template>
 
-<style lang="scss">
+<style lang="less">
     *{
         padding: 0;
         margin: 0; 

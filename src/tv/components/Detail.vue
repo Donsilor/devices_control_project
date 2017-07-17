@@ -59,7 +59,7 @@
     </div>
 </template>
 
-<style lang="scss">
+<style lang="less">
     .hidescroll,.hidescroll body{
         overflow: hidden;
     }

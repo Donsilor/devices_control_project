@@ -47,7 +47,7 @@
 </div>
 </template>
 
-<style lang="scss">
+<style lang="less">
     .page-index{    
         background: #f2f2f2; 
         width: 100%;

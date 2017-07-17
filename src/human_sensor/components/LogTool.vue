@@ -35,7 +35,7 @@
         }
     }
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
     .tool {
         position: fixed;
         right: 60px;

@@ -5,9 +5,9 @@
         <div class="right circle"></div>
     </div>
 </template>
-<style scoped lang="scss">
-    $size:18px;
-    $height:12px;
+<style scoped lang="less">
+    @size:18px;
+    @height:12px;
     .wrap {
         width: 1230px;
         position: relative;
@@ -15,21 +15,21 @@
     .line{
         opacity: 0.5;
         background: #ffffff;
-        height: $height;
+        height: @height;
     }
     .circle{
         position: absolute;
         background:#ffffff;
-        width:$size;
-        height:$size;
+        width:@size;
+        height:@size;
         border-radius:100%;
-        top: -($size - $height)/2;
+        top: -(@size - @height)/2;
     }
     .left{
-        left: -$size/2
+        left: -@size/2
     }
     .right{
-        right: -$size/2;
+        right: -@size/2;
     }
 </style>
 <script>

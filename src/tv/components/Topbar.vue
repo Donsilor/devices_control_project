@@ -11,7 +11,7 @@
     </div>
 </template>
 
-<style lang="scss">
+<style lang="less">
     .topbar{
         background: #f2f2f2;
         height: 95px;
