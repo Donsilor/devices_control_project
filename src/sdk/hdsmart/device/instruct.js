@@ -1,6 +1,9 @@
 /**
  * Created by lenovo on 2017/6/29.
  */
+/**
+ * Created by lenovo on 2017/6/29.
+ */
 import {guid, getDeviceUUID, getToken, log, isFunction} from '../helper';
 /**
  * 发送设备的控制命令
@@ -54,22 +57,22 @@ export default function (method, nodeId, attr, onSuccess, onFailure, timerObj = 
             }
             clearTimeout(timer);
 
-            data = JSON.parse(data);
             log('control', dataOptions, data);
+            data = JSON.parse(data);
 
-            // if (data.code == 504) {
-            //     onFailure(data);
-            // } else if (isFunction(onSuccess)) {
-            //     onSuccess()
-            // }
-            if (data.code == 200) {
-                if(isFunction((onSuccess))){
-                    onSuccess(data);
-                }
-            }
-            else{
+            if (typeof data.code === "number") {
                 onFailure(data);
+            } else if (isFunction(onSuccess)) {
+                onSuccess();
             }
+            // if (data.code == 200) {
+            //     if(isFunction((onSuccess))){
+            //         onSuccess(data);
+            //     }
+            // }
+            // else{
+            //     onFailure(data);
+            // }
 
             // if(isFunction((onSuccess))){
             //     onSuccess(data);

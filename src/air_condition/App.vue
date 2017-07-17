@@ -125,7 +125,7 @@
     .bg{
         position: absolute;
         left: 0;
-        bottom: 0;
+        bottom: 180px;
         width: 100%;
         height: auto;
     }
@@ -382,13 +382,14 @@
                     HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
                 });
 
-//                HdSmart.onDeviceListen((data) => {
-//                    try {
-//                        this.setState(data.result.attr);
-//                    }
-//                    catch (err) {
-//                    }
-//                })
+                HdSmart.onDeviceListen((data) => {
+                    try {
+                        console.log('report: ' + JSON.stringify(data));
+                        this.setState(data.result.attr);
+                    }
+                    catch (err) {
+                    }
+                })
             });
         },
         computed: {
@@ -531,12 +532,16 @@
 //                debugger
                 HdSmart.Device.instruct('set', NODE_ID + type, attr,
                     () => {
-                        this.params[type] = value;
+//                        this.params[type] = value;
                         this.setTip(tip);
                     },
-                    () => {
+                    (data) => {
                         //错误提示，未完待续。。。
+                        if(type === TEMPERATURE){//
+                            this.fakeTemp = this.params.temperature;
+                        }
                         this.setTip('设置失败');
+                        console.log('设置['+ type +']失败: ' + data.msg);
                     }
                 );
             },

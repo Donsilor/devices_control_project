@@ -3,12 +3,14 @@
         <header>{{title}}</header>
         <main>
             <div class="left" v-finger:swipe="swipeH">
+            <!--<div class="left">-->
                 <ul class="hour" ref="ulHour">
                     <li v-for="h in hourList" :class="{ selected: h === curHour }">{{ h }}</li>
                 </ul>
             </div>
             <div class="unit">时</div>
             <div class="right" v-finger:swipe="swipeM">
+            <!--<div class="right">-->
                 <ul class="minute" ref="ulMinute">
                     <li v-for="m in minuteList" :class="{ selected: m === curMinute }">{{ m }}</li>
                 </ul>
@@ -59,11 +61,14 @@
         display: inline-block;
         height: 270px;
         line-height: 90px;
+        /*overflow: scroll;*/
         overflow: hidden;
         width: 180px;
     }
     .hour, .minute{
         list-style: none;
+        /*overflow: scroll;*/
+        height: 270px;
     }
     .hour li, .minute li{
         border-bottom: 1px solid #dbdbdb;
@@ -118,6 +123,12 @@
             translateM(){
                 return  (1 - parseInt(this.curMinute)) * this.liHeight;
             }
+//            scrollH(){
+//                return  (1 - parseInt(this.curHour)) * this.liHeight;
+//            },
+//            scrollM(){
+//                return  (1 - parseInt(this.curMinute)) * this.liHeight;
+//            }
         },
         watch: {
             hour(val){

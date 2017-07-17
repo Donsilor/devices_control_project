@@ -26,12 +26,19 @@ export function noop() {
  */
 
 export function guid() {
-    let guid = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        let r = Math.random() * 10 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-    guid = guid.replace(/^0/, '1');
-    return guid;
+    // let id = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    //     let r = Math.random() * 10 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    //     return v.toString(16);
+    // });
+    // id = id.replace(/^0/, '1');
+    // return parseInt(id);
+    return getRandomInt(1, 10000);
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 /**

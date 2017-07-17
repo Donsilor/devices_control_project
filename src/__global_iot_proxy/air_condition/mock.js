@@ -6,7 +6,7 @@ import Mock from 'mockjs';
 let res = {
     "device_uuid": "4c52ed0b006f0d0001",
     "attr": {
-        "switch": 'on',
+        "switch": 'off',
         "temperature": 16,
         "mode": "cold",
         "speed": "low",
@@ -48,6 +48,8 @@ export function set(data){
     }
     return Mock.mock({
         code: 200
+        // code: 204,
+        // msg: 'test'
     })
 }
 
