@@ -15,7 +15,7 @@
         </div>
     </div>
 </template>
-<style scoped lang="scss">
+<style scoped lang="less">
     .wrap {
         width: 1182px;
         height: 468px;

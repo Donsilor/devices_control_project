@@ -44,7 +44,7 @@
         </div>
     </div>
 </template>
-<style lang="scss" scoped>
+<style lang="less" scoped>
     .calendar {
         width: 468px;
         height: 648px;

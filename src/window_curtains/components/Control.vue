@@ -16,7 +16,7 @@
         </div>
     </div>
 </template>
-<style lang="scss" scoped>
+<style lang="less" scoped>
     .button {
         width: 144px;
         height: 144px;

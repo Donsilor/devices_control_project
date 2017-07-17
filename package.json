@@ -5,7 +5,7 @@
   "author": "chenjiancai <chenjiancai1988@163.com>",
   "private": true,
   "scripts": {
-    "dev:window_curtains": "node build/dev-server.js --app=window_curtains --appName=窗帘 --port=8081",
+    "dev:window_curtains": "node build/dev-server.js  --app=window_curtains --appName=窗帘 --port=8081",
     "build:window_curtains": "node build/build.js --app=window_curtains --appName=窗帘",
     "dev:sdk": "node build/dev-server.js --app=sdk --appName=sdk",
     "build:sdk": "node build/build.js --app=sdk --appName=sdk",
@@ -61,6 +61,8 @@
     "inquirer": "^3.1.1",
     "ip": "^1.1.5",
     "jsonfile": "^3.0.1",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.5",
     "metalsmith": "^2.3.0",
     "minimist": "^1.2.0",
     "node-sass": "^4.5.2",

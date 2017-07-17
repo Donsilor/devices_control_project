@@ -16,7 +16,7 @@
         }
     }
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
     .log-title{
         background: #f2f2f2;
         width: 100%;
