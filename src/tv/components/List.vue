@@ -72,6 +72,7 @@
                 <img :src="item.pictureUrl" alt="">
                 <div class="name">{{item.title}}</div>
                 <span class="update">{{item.lastUpdateSet}}</span>
+                <span class="score">{{item.score}}</span>
             </li>
         </ul>
         <!-- 加载更多 -->
@@ -179,7 +180,23 @@
             top: 386px;
             background: rgba(0,0,0,.5);
             color: #fff;
-            padding: 0 12px;
+            line-height: 30px;
+            font-size:24px;
+            padding:0 12px;
+            border-radius:0 3px 3px 0;
+        }
+        .score{ 
+            position: absolute;
+            right: 0;
+            top: 27px;
+            background: #ffd53d;
+            width: 60px;
+            line-height: 30px;
+            border-radius:3px 0 0 3px;
+            font-size:24px;
+            text-align: center;
+            color:#fff;
+            opacity:0.9;
         }
         .name{  
             text-align: center;
@@ -339,8 +356,8 @@
                 if(this.loadState.indexOf('LOADED') < 0){   
                     return 
                 }
-                
-                if(document.body.scrollTop+document.documentElement.offsetHeight >= document.body.scrollHeight-10){   
+                var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
+                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-10){   
                     this.pageNo++
                     this.filterData()
                 }

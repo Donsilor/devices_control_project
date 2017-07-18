@@ -354,7 +354,8 @@
                     return 
                 }
                 
-                if(document.body.scrollTop+document.documentElement.offsetHeight >= document.body.scrollHeight-10){   
+                var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
+                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-10){   
                     this.pageNo++
                     this.filterData()
                 }

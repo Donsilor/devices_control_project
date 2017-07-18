@@ -12,6 +12,7 @@ import List from './components/List.vue'
 import Search from './components/Search.vue'
 import Detail from './components/Detail.vue'
 import Topbar from './components/Topbar.vue'
+//import Statusbar from './components/Statusbar.vue'
 
 Vue.use(Router)
 Vue.use(VueAwesomeSwiper)
@@ -21,8 +22,9 @@ Vue.use(AlloyFingerVue, {
 });
 */
 
-Vue.component('detail',Detail)
-Vue.component('topbar',Topbar)
+Vue.component('detail', Detail)
+Vue.component('topbar', Topbar)
+//Vue.component('statusbar', Statusbar)
 
 const router =  new Router({
   routes: [

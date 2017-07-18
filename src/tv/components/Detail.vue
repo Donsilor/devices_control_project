@@ -10,13 +10,14 @@
             </div>
             <div class="text">
                 <div class="shortinfo">
+                    <p>评分：<span>{{cur.score}}</span></p>
                     <p>年代：{{cur.year}}</p>
                     <p>类型：{{cur.cate}}</p>
                     <p>导演：{{cur.director}}</p>
                     <p>主演：{{cur.starring}}</p>
                 </div>
                 <!-- 未播放 -->
-                <div class="playstate playstate_unplay" v-show="true">
+                <div class="playstate playstate_unplay" v-show="false">
                     <a href="" class="btn"><i class="icon-play"></i>在电视上播放</a>
                 </div>
                 <!-- 正在播放 -->
@@ -24,7 +25,7 @@
                     <a href="" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
                 </div>
                 <!-- 继续播放 -->
-                <div class="playstate playstate_conplay" v-show="false">
+                <div class="playstate playstate_conplay" v-show="true">
                     <a href="#" class="btn"><i class="icon-time"></i>继续播放</a>
                     <span class="tip"><i class="arrow"></i>上次观看到第22集</span>
                 </div>
@@ -47,12 +48,22 @@
             </div>
         </div>
         <div class="line"></div>
-        <div class="detail-playlist" v-show="cur.playlist[0].total > 1">
+        <div class="detail-playlist" v-show="cur.playlist[0].total >= 1">
             <div class="hd">{{cur.playlist[0].total}}</div>
             <ul class="bd">
-                <li class="active" v-for="item in cur.playlist[0].list" @click="play(item.link)">
+                <li class="item-num" 
+                    v-for="item in cur.playlist[0].list" 
+                    v-bind:class="{'active':false}"
+                    @click="play(item.link)">
                     {{item.index}}
                     <span class="tag_new" v-show="item.states"></span>
+                </li>
+                <li class="item-haspic"
+                    v-for="item in cur.playlist[0].list" 
+                    @click="play(item.link)">
+                    <img :src="item.pictureUrl">
+                    <p>{{item.name}}</p>
+                    <span class="play"><i></i>当前播放</span>
                 </li>
             </ul>
         </div>
@@ -100,7 +111,7 @@
             background-repeat: norepeat;
             position: absolute;
             top: 32px;
-            left: 224px;
+            left: 124px;
             background-image: url(../assets/icn_topbar_arrowdown_w_normal.png);
             &:active{   
                 background-image: url(../assets/icn_topbar_arrowdown_w_pressed.png);
@@ -172,6 +183,9 @@
         p{  
             line-height: 54px;
         }
+        span{   
+            color: #ffd53d;
+        }
     }
     .playstate{ 
         height: 84px;
@@ -222,13 +236,20 @@
             height: 54px;
             border-radius: 6px;
             position: absolute;
+            margin-left: 50px;
+            margin-top: 15px;
             padding: 0 27px;
             line-height: 54px;
-            background: #000;
+            background: rgba(255,255,255,.1);
             .arrow{ 
                 position: absolute;
-                left:0;
-                top: 50%;
+                left:-15px;
+                top: 18px;
+                width: 0;
+                height: 0;
+                border-top: 10px solid transparent;
+                border-right: 15px solid rgba(255,255,255,.1);
+                border-bottom: 10px solid transparent;
             }
         }
     }
@@ -242,7 +263,7 @@
         }
         .bd{ 
             margin-left: 30px;
-            li{ 
+            li.item-num{ 
                 width: 120px;
                 height: 120px;
                 line-height: 120px;
@@ -257,6 +278,45 @@
                     background: #19c9cf url(../assets/icn_playing_white_s.png) no-repeat center center;
                     background-size: 36px 36px;
                     text-indent: -9999px;
+                }
+            }
+            li.item-haspic{    
+                position: relative;
+                width: 300px;
+                height: 306px;
+                float:left;
+                img{
+                    width: 300px;
+                    height: 168px;
+                    display: block;
+                    margin-bottom: 18px;
+                }
+                p{  
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                }
+                .play{  
+                    position: absolute;
+                    left: 42px;
+                    top: 54px;
+                    opacity:0.9;
+                    background:#13d5dc;
+                    border-radius:360px;
+                    width:216px;
+                    height:60px;
+                    text-align: center;
+                    line-height: 60px;
+                    i{  
+                        width: 36px;
+                        height: 36px;
+                        background: url(../assets/icn_playing_white_s.png) no-repeat;
+                        background-size: 100% 100%;
+                        display: inline-block;
+                        vertical-align: middle;
+                        margin-top: -4px;
+                    }
                 }
             }
             .tag_new{  

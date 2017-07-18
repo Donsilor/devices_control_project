@@ -52,6 +52,9 @@
         background: #f2f2f2; 
         width: 100%;
         height: 100%; 
+        position: fixed;
+        left: 0;
+        top: 0;
     }
     .grid{  
         left: 50%;

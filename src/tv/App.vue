@@ -20,9 +20,6 @@
         clear: both;
         visibility: hidden; 
     }
-    body,#app{
-        height: 100%;
-    }
     body,input{ 
         font-family: Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
