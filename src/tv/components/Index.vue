@@ -5,19 +5,9 @@
             <div class="swiper">
                 <swiper :options="swiperOption">
                     <swiper-slide v-for="item in homePageInfo" :key="item.vid">
-                    <router-link 
-                        :to="{  
-                            name: 'list',
-                            query: {    
-                                channelId: item.channelId,
-                                channel: getChannelName(item.channelId),
-                                showDetail: '1',
-                                vid: item.vid
-                            }
-                        }"
-                    > 
+                    <a href="#" @click.prevent="showDetailInfo(item.channelId,item.vid)"> 
                         <img :src="item.pictureUrl">
-                    </router-link>
+                    </a>
                     </swiper-slide>
                     <div class="swiper-pagination" slot="pagination"></div>
                 </swiper>
@@ -44,6 +34,9 @@
             >{{item.channel}}</router-link>
         </div>
     </div>
+
+    <!-- 详情页 -->
+    <detail :vid="vid" :channel-id="channelId" @onClose="onDetailClose" ref="detail"></detail>
 </div>
 </template>
 
@@ -160,6 +153,8 @@
     export default {
         data() {
             return {
+                channelId: '',
+                vid: '',
                 swiperOption: {
                     autoplay: 2000,
                     loop: true,
@@ -171,6 +166,15 @@
         methods: {
             cmd(name) {
                 service.onClickEvent(name)
+            },
+            showDetailInfo(channelId, vid) {
+                this.$refs.detail.visible = true
+                this.channelId = channelId
+                this.vid = vid
+                HdSmart.UI.toggleHeadAndFoot(false)
+            },
+            onDetailClose(){    
+                HdSmart.UI.toggleHeadAndFoot(true)
             },
             // 根据栏目id取得栏目名称
             getChannelName(channelId) {  

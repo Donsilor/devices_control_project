@@ -54,30 +54,18 @@ const router =  new Router({
 
 let is_ready = false
 
-window.onDeviceReady = function(callback){
-  if(!is_ready){  
-    is_ready = true
-    HdSmart.ready(callback)
-  }else{  
-    
-  }
-}
-
 HdSmart.ready(() => { 
   if(!is_ready){
-    console.log('我自己的ready')
     is_ready = true
     
     HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
     
     router.beforeEach((to,from,next) => {
-      console.log('router change',to)
       if(to.name === 'index'){  
         HdSmart.UI.toggleHeadAndFoot(true)
       }else{  
         HdSmart.UI.toggleHeadAndFoot(false)
       }
-      //setTime
       next()
     })
 
