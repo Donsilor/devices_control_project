@@ -54,7 +54,7 @@
             </div>
             <ul class="vlist clearfix">
                 <li class="vitem" v-for="item in resultData" @click="showDetailInfo(item.channelId,item.vid)">
-                    <img :src="item.pictureUrl" alt="">
+                    <img v-lazy="item.pictureUrl" alt="">
                     <div class="name">{{item.title}}</div>
                 </li>
             </ul>
@@ -247,7 +247,7 @@
                 current_orderby: 'year',
                 total: 0,
                 pageNo: 1,
-                pageSize: 1,
+                pageSize: 15,
                 //系统loading，初始化页面或pageNo=1
                 loading: false,
                 /**
@@ -311,7 +311,7 @@
                         })
                     })
                 }
-            },300),
+            },100),
             setParam(key, value) {
                 this[key] = value
                 this.pageNo = 1

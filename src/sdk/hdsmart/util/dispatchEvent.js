@@ -24,14 +24,22 @@ import {isFunction, log} from '../helper';
  *      }
  * })
  */
+
+
 export default function (options) {
-    HdIot.Util.dispatchEvent({
-        data: JSON.stringify(options.data),
-        onListener(data) {
-            log('dispatchEvent: ', options.data, data)
-            if(options.onListener){
-                options.onListener(JSON.parse(data))
+    //onDeviceReady(function(){        
+        HdIot.Util.dispatchEvent({
+            data: JSON.stringify(options.data),
+            onListener(data) {
+                log('dispatchEvent: callback ', data)
+                if(options.onListener){
+                    if(typeof data  === 'string'){  
+                        data = JSON.parse(data)
+                    }
+                    options.onListener(data)
+                }
             }
-        }
-    })
+        })
+   // })
+    
 }

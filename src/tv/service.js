@@ -103,3 +103,18 @@ export function onClickEvent(eventName){
         }
     })
 }
+
+/**
+ * 点播
+ */
+export function playVideo(link, title){    
+    sendApp({
+        data: {
+            method:'playVideo' ,
+            params: {
+                link: link,
+                title: title
+            }
+        }
+    })
+}

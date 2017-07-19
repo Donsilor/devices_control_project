@@ -1,5 +1,6 @@
 <template>
-    <div class="page-detail" :class="{show:visible}">
+<transition name="slideup">
+    <div class="page-detail" v-show="visible">
         <div class="detail-hd">
             <a href="#" class="back" @click.prevent="visible=false"></a>
             <div class="title">{{cur.title}}</div>
@@ -17,15 +18,15 @@
                     <p>主演：{{cur.starring}}</p>
                 </div>
                 <!-- 未播放 -->
-                <div class="playstate playstate_unplay" v-show="false">
-                    <a href="" class="btn"><i class="icon-play"></i>在电视上播放</a>
+                <div class="playstate playstate_unplay" v-show="true">
+                    <a href="#" class="btn" @click.prevent="play(cur.playlist[0].playparam,cur.title)"><i class="icon-play"></i>在电视上播放</a>
                 </div>
                 <!-- 正在播放 -->
                 <div class="playstate playstate_play" v-show="false">
-                    <a href="" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
+                    <a href="#" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
                 </div>
                 <!-- 继续播放 -->
-                <div class="playstate playstate_conplay" v-show="true">
+                <div class="playstate playstate_conplay" v-show="false">
                     <a href="#" class="btn"><i class="icon-time"></i>继续播放</a>
                     <span class="tip"><i class="arrow"></i>上次观看到第22集</span>
                 </div>
@@ -48,31 +49,43 @@
             </div>
         </div>
         <div class="line"></div>
-        <div class="detail-playlist" v-show="cur.playlist[0].total >= 1">
+        <div class="detail-playlist" v-show="cur.playlist[0].total > 1">
             <div class="hd">{{cur.playlist[0].total}}</div>
             <ul class="bd">
                 <li class="item-num" 
                     v-for="item in cur.playlist[0].list" 
                     v-bind:class="{'active':false}"
-                    @click="play(item.link)">
+                    @click="play(item.link,item.name)">
                     {{item.index}}
                     <span class="tag_new" v-show="item.states"></span>
                 </li>
-                <li class="item-haspic"
+                <!--<li class="item-haspic"
                     v-for="item in cur.playlist[0].list" 
                     @click="play(item.link)">
                     <img :src="item.pictureUrl">
                     <p>{{item.name}}</p>
                     <span class="play"><i></i>当前播放</span>
-                </li>
+                </li>-->
             </ul>
         </div>
     </div>
+</transition>
 </template>
 
 <style lang="less">
     .hidescroll,.hidescroll body{
         overflow: hidden;
+    }
+    .slideup-enter-active {
+        transition: all .3s ease;
+    }
+    .slideup-leave-active {
+        transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .slideup-enter, .slideup-leave-to
+    /* .slideup-leave-active for <2.1.8 */ {
+        transform: translateY(100%);
+        opacity: 0
     }
     .page-detail{   
         position: fixed;
@@ -84,7 +97,6 @@
         z-index: 9;
         color: #fff;
         background-color: rgba(0,0,0,0.9);
-        display: none;
         &.show{ 
             display: block;
         }
@@ -111,7 +123,7 @@
             background-repeat: norepeat;
             position: absolute;
             top: 32px;
-            left: 124px;
+            left: 24px;
             background-image: url(../assets/icn_topbar_arrowdown_w_normal.png);
             &:active{   
                 background-image: url(../assets/icn_topbar_arrowdown_w_pressed.png);
@@ -359,6 +371,9 @@
             visible(val) {
                 if(val){   
                     this.getData()
+                    this.$emit('onShow')
+                }else{
+                    this.$emit('onClose')
                 }
             }
         },
@@ -368,12 +383,11 @@
                     channelId: this.channelId,
                     vid: this.vid
                 },(data) => {   
-                    this.cur = data.data
-                    console.log(data.data)
+                    this.cur = Object.freeze(data.data)
                 })
             },
-            play(link) {    
-                console.log(link)   
+            play(link,title) {    
+                service.playVideo(link,title) 
             },
             //对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
             getDescLine() {
@@ -383,7 +397,7 @@
                     this.$nextTick(()=>{
                         let wrapHeight = this.$el.querySelectorAll('.desc-cont')[0].offsetHeight
                         let textHeight = this.$el.querySelectorAll('.desc-cont p')[0].offsetHeight
-                        console.log(wrapHeight,textHeight)
+
                         if(textHeight > wrapHeight){    
                             this.isDescOverflow = true
                         }else{  

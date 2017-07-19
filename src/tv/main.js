@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Vuex from 'vuex'
+//import Vuex from 'vuex'
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
+import VueLazyload from 'vue-lazyload'
 //import AlloyFinger from 'alloyfinger/alloy_finger'
 //import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue'
 
@@ -16,6 +17,11 @@ import Topbar from './components/Topbar.vue'
 
 Vue.use(Router)
 Vue.use(VueAwesomeSwiper)
+Vue.use(VueLazyload, {
+  preLoad: 1.3,
+  attempt: 1
+})
+
 /*
 Vue.use(AlloyFingerVue, {
     AlloyFinger
@@ -46,27 +52,30 @@ const router =  new Router({
   ]
 })
 
+let is_ready = false
 
 HdSmart.ready(() => { 
+  if(!is_ready){
+    is_ready = true
+    
+    HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
+    
+    router.beforeEach((to,from,next) => {
+      if(to.name === 'index'){  
+        HdSmart.UI.toggleHeadAndFoot(true)
+      }else{  
+        HdSmart.UI.toggleHeadAndFoot(false)
+      }
+      next()
+    })
 
-  //设置触摸区域（好像不太管用）
-  HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
-
-  router.beforeEach((to,from,next) => {
-    if(to.name === 'index'){  
-      HdSmart.UI.toggleHeadAndFoot(true)
-    }else{  
-      HdSmart.UI.toggleHeadAndFoot(false)
-    }
-    next()
-  })
-
-  new Vue({
-    el: '#app',
-    router,
-    template: '<App/>',
-    components: { App }
-  });
+    new Vue({
+      el: '#app',
+      router,
+      template: '<App />',
+      components: { App }
+    });
+  }
 
 })
 

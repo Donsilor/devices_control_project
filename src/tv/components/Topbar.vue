@@ -20,13 +20,13 @@
         .left{
             position: absolute;
             top: 32px;
-            left: 124px;
+            left: 24px;
             z-index:9999
         }
         .right{
             position: absolute;
             top: 32px;
-            right: 124px;
+            right: 24px;
         }
         .title{
             text-align: center;
