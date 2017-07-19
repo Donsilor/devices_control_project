@@ -60,23 +60,21 @@ export default function (method, nodeId, attr, onSuccess, onFailure, timerObj = 
             log('control', dataOptions, data);
             data = JSON.parse(data);
 
-            if (typeof data.code === "number") {
-                onFailure(data);
-            } else if (isFunction(onSuccess)) {
-                onSuccess();
-            }
-            // if (data.code == 200) {
-            //     if(isFunction((onSuccess))){
-            //         onSuccess(data);
-            //     }
-            // }
-            // else{
+            // if (typeof data.code === "number") {
             //     onFailure(data);
+            // } else if (isFunction(onSuccess)) {
+            //     onSuccess();
             // }
-
-            // if(isFunction((onSuccess))){
-            //     onSuccess(data);
-            // }
+            if (data.code == 200) {
+                if(isFunction((onSuccess))){
+                    onSuccess(data);
+                }
+            }
+            else{
+                if(isFunction(onFailure)){
+                    onFailure(data);
+                }
+            }
         }
     });
     return timer;

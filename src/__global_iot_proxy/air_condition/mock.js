@@ -6,6 +6,7 @@ import Mock from 'mockjs';
 let res = {
     "device_uuid": "4c52ed0b006f0d0001",
     "attr": {
+        "device_name": '挂式空调',
         "switchStatus": 'on',
         "temperature": 16,
         "mode": "cold",

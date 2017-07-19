@@ -1,8 +1,8 @@
 <template>
     <div id="app" :class="appClassObj" @click="showMore=false;">
-        <p class="title">{{ deviceName }}</p>
+        <p class="title">{{ params.device_name }}</p>
         <transition name="fade-in">
-            <div v-show="params.switchStatus === 'on'">
+            <div v-show="params.switch === 'on'">
                 <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
                     <defs>
                         <linearGradient x1="0%" y1="0%" x2="0%" y2="100%" id="linearGradient">
@@ -25,7 +25,7 @@
                     <ac-button :info="buttonList.cool" :curValue="params[buttonList.cool.type]" @tap="setParam"></ac-button>
                     <ac-button :info="buttonList.heat" :curValue="params[buttonList.heat.type]" @tap="setParam"></ac-button>
                     <ac-button :info="buttonList.dehumidify" :curValue="params[buttonList.dehumidify.type]" @tap="setParam"></ac-button>
-                    <ac-button :info="buttonList.on" v-show="params.switchStatus === 'on'" @tap="toggle"></ac-button>
+                    <ac-button :info="buttonList.on" v-show="params.switch === 'on'" @tap="toggle"></ac-button>
                     <ac-button :info="buttonList.low" :curValue="params[buttonList.low.type]" @tap="setParam"></ac-button>
                     <ac-button :info="buttonList.normal" :curValue="params[buttonList.normal.type]" @tap="setParam"></ac-button>
                     <ac-button :info="buttonList.high" :curValue="params[buttonList.high.type]" @tap="setParam"></ac-button>
@@ -68,12 +68,12 @@
             </div>
         </transition>
         <transition name="fade-in">
-            <div v-show="params.switchStatus !== 'on'">
+            <div v-show="params.switch !== 'on'">
                 <div v-if="params.deviceSubCategory === 0" class="hanging"></div>
                 <div v-if="params.deviceSubCategory === 1" class="package"></div>
                 <p class="tip">已关闭</p>
                 <div class="bottom">
-                    <ac-button v-show="params.switchStatus === 'off'" :info="buttonList.off" @tap="toggle"></ac-button>
+                    <ac-button v-show="params.switch === 'off'" :info="buttonList.off" @tap="toggle"></ac-button>
                 </div>
             </div>
         </transition>
@@ -185,7 +185,7 @@
         height: 144px;
     }
 
-    .switchStatus img{
+    .switch img{
         width: 204px;
         height: 204px;
     }
@@ -269,17 +269,17 @@
         animation: circle 1s linear infinite;
     }
 
-    .switchStatus.loading:before{
+    .switch.loading:before{
         top: 12px;
         left: 12px;
         width: 180px;
         height: 180px;
     }
-    .on .switchStatus.loading:before{
+    .on .switch.loading:before{
         background: url('./assets/buffering_power_white.png') no-repeat center;
         background-size: 100%;
     }
-    .off .switchStatus.loading:before{
+    .off .switch.loading:before{
         background: url('./assets/buffering_power_blue.png') no-repeat center;
         background-size: 100%;
     }
@@ -309,7 +309,7 @@
 
     const [MIN_TEMP, MAX_TEMP] = [16, 30];
     const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] =
-        ['switchStatus', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
+        ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
     const [ON, OFF] = ['on', 'off'];
     const NODE_ID = 'airconditioner.main.';
     const SPAN = 500;
@@ -346,8 +346,9 @@
                     off: new Button('', POWER, '', require('./assets/off_normal.png'), require('./assets/off_active.png'), '')
                 },
                 params: {
+                    device_name: '',//设备名称
                     deviceSubCategory: null,//空调类型，0：挂机，1：柜机
-                    switchStatus: '',//开关
+                    switch: '',//开关
                     temperature: null,//温度
                     mode: '',//模式
                     speed: '',//风速
@@ -364,7 +365,7 @@
                 showMore: false,//更多菜单是否可见
                 bootTpVisible: false,//开机时间选择器是否可见
                 offTpVisible: false,//关机时间选择器是否可见
-                deviceName: '',//设备名
+//                deviceName: '',//设备名
                 tempFlag: false,
                 tempTimer: null,
                 fakeTemp: null
@@ -372,7 +373,7 @@
         },
         mounted: function () {
 //            this.deviceName = getDeviceName();
-            this.deviceName = '挂式空调';
+//            this.deviceName = '挂式空调';
             HdSmart.ready(()=>{
                 HdSmart.Device.getSnapShot((data) => {
                     this.setState(data.attr);
@@ -396,7 +397,7 @@
         computed: {
             appClassObj: function () {
                 let obj = { main: true };
-                obj[this.params.switchStatus] = true;
+                obj[this.params.switch] = true;
                 return obj;
             },
             lrBtn: function () {
@@ -448,7 +449,8 @@
         },
         methods: {
             setState(attr){//设置空调状态
-                this.params.switchStatus = attr.switchStatus;
+                this.params.device_name = attr.device_name;
+                this.params.switch = attr.switchStatus;
                 this.params.temperature = attr.temperature;
                 this.fakeTemp = attr.temperature;
                 this.params.mode = attr.mode;
@@ -533,7 +535,7 @@
 //                debugger
                 HdSmart.Device.instruct('set', NODE_ID + type, attr,
                     () => {
-//                        this.params[type] = value;
+                        this.params[type] = value;
                         this.setTip(tip);
                     },
                     (data) => {
