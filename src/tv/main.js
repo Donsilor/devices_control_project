@@ -55,10 +55,9 @@ const router =  new Router({
 let is_ready = false
 
 HdSmart.ready(() => { 
+  HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
   if(!is_ready){
     is_ready = true
-    
-    HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
     
     router.beforeEach((to,from,next) => {
       if(to.name === 'index'){  

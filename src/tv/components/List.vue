@@ -4,18 +4,19 @@
             <topbar :title="title"></topbar>
             <!-- 条件 -->
             <div class="filters">
-                <!-- 地区 -->
+                <!-- 地区 --> 
                 <dl class="row">
                     <dt>
                         <a href="#" 
                             @click.prevent="setParam('current_region','')"
-                            v-bind:class="{active:current_region==''}">全部分类</a>
+                            :class="{active:current_region==''}">全部地区</a>
                     </dt>
                     <dd>
                         <a href="#" 
                             v-for="item in region"
+                            :key="item.regionId"
                             @click.prevent="setParam('current_region',item.regionId)"
-                            v-bind:class="{active:current_region==item.regionId}" >
+                            :class="{active:current_region==item.regionId}">
                             {{item.region}}
                         </a>
                     </dd>
@@ -25,13 +26,14 @@
                     <dt>
                         <a href="#" 
                             @click.prevent="setParam('current_category','')"
-                            v-bind:class="{active:current_category==''}">全部分类</a>
+                            :class="{active:current_category==''}">全部分类</a>
                     </dt>
                     <dd>
                         <a href="#" 
-                            v-for="item in category" 
+                            v-for="item in category"
+                            :key="item.cateId"
                             @click.prevent="setParam('current_category',item.cateId)"
-                            v-bind:class="{active:current_category==item.cateId}">
+                            :class="{active:current_category==item.cateId}">
                             {{item.cate}}
                         </a>
                     </dd>
@@ -41,13 +43,14 @@
                     <dt>
                         <a href="#" 
                             @click.prevent="setParam('current_year','')"
-                            v-bind:class="{active:current_year==''}">全部年份</a>
+                            :class="{active:current_year==''}">全部年份</a>
                     </dt>
                     <dd>
                         <a href="#" 
                             v-for="item in year"
+                            :key="item.yearrange"
                             @click.prevent="setParam('current_year',item.yearrange)"
-                            v-bind:class="{active:current_year==item.yearrange}">
+                            :class="{active:current_year==item.yearrange}">
                             {{item.year}}
                         </a>
                     </dd>
@@ -57,8 +60,9 @@
                     <dd>
                         <a href="#" 
                             v-for="item in orderby"
+                            :key="item.orderId"
                             @click.prevent="setParam('current_orderby',item.orderId)"
-                            v-bind:class="{active:current_orderby==item.orderId}">
+                            :class="{active:current_orderby==item.orderId}">
                             {{item.text}}
                         </a>
                     </dd>
@@ -67,11 +71,16 @@
             </div>
         </div>
         <!-- 列表 -->
-        <ul class="vlist list-m60 clearfix">
-            <li class="vitem" v-for="item in list" @click="showDetailInfo(item.channelId,item.vid)">
+        <ul class="vlist list-m60 clearfix" :class="['list-'+channelId]">
+            <li class="vitem" 
+                v-for="item in list" 
+                :key="item.vid" 
+                @click="showDetailInfo(item.channelId,item.vid)">
                 <img v-lazy="item.pictureUrl" alt="">
                 <div class="name">{{item.title}}</div>
-                <span class="update">{{item.lastUpdateSet}}</span>
+                <span class="update">
+                    {{item.lastUpdateSet===item.setCount?item.setCount+'集全':'更新至'+item.lastUpdateSet+'集'}}
+                </span>
                 <span class="score">{{item.score}}</span>
             </li>
         </ul>
@@ -126,12 +135,13 @@
         }
         dd{ 
             width: 100%;
-            overflow-x: scroll;
-            display: table-cell;
-            position: relative;
+            overflow-x: auto;
+            display: -webkit-box;
+            -webkit-box-orient: horizontal;
             padding-bottom: 8px;
         }
         a{  
+            display: block;
             margin-right: 36px;
             color: #7f8082;
             border-radius: 3px;
@@ -154,7 +164,7 @@
     .vitem{ 
         float: left;
         width: 300px; 
-        margin: 0 30px;
+        margin: 0 30px 30px;
         position: relative;
         img{
             width: 300px;
@@ -173,6 +183,7 @@
             font-size:24px;
             padding:0 12px;
             border-radius:0 3px 3px 0;
+            display:none;
         }
         .score{ 
             position: absolute;
@@ -186,6 +197,7 @@
             text-align: center;
             color:#fff;
             opacity:0.9;
+            display:none;
         }
         .name{  
             text-align: center;
@@ -193,7 +205,17 @@
             overflow: hidden;
             text-overflow: ellipsis;
             line-height: 2;
-            height: 96px;
+            height: 66px;
+        }
+    }
+    .list-001{
+        .score{ 
+            display: block;
+        }
+    }
+    .list-002,list-003,.list-004{   
+        .update{    
+            display: block;
         }
     }
     .loadmore{  
@@ -326,15 +348,18 @@
                     pageSize: this.pageSize,
                     pageNo: this.pageNo
                 },(data)=>{ 
+                    this.loading = false
+                    this.loadState = 'LOADED'
+                    if(data.code === 504){  
+                        return
+                    }
                     if(this.pageNo === 1){
                         window.scrollTo(0,0)
-                        this.loading = false
                     }
-                    this.loadState = 'LOADED'
                     if(data.data){  
                         data = data.data
                     }
-                    this.list = (this.pageNo > 1 ? this.list : []).concat(Object.freeze(data.list))
+                    this.list = Object.freeze((this.pageNo > 1 ? this.list : []).concat(data.list))
                     this.total = data.total
                     if(this.total === 0){    
                         this.loadState = 'NO_DATA'
@@ -349,7 +374,7 @@
                     return 
                 }
                 var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
-                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-10){   
+                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-20){   
                     this.pageNo++
                     this.filterData()
                 }
@@ -365,11 +390,14 @@
             service.getChannelData(this.channelId,(data)=>{ 
                 this.loading = false
                 this.loadState = 'LOADED'
+                if(data.code === 504){  
+                    return
+                }
                 this.list = Object.freeze(data.data.list)
-                this.total = data.data.total
                 this.category = Object.freeze(data.category)
                 this.region = Object.freeze(data.region)
                 this.year = Object.freeze(data.year)
+                this.total = data.data.total
             }) 
             if(this.$route.query.showDetail === '1' && this.vid){   
                 this.showDetailInfo(this.channelId, this.vid)

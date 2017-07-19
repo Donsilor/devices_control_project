@@ -33,13 +33,13 @@
                 <div class="tab">
                     <a href="#"
                         @click.prevent="setParam('current_channel','')"
-                        v-bind:class="{active:current_channel==''}">
+                        :class="{active:current_channel==''}">
                         全部
                     </a>
                     <a href="#" 
                         v-for="item in channels"
                         @click.prevent="setParam('current_channel',item.channelId)"
-                        v-bind:class="{active:current_channel==item.channelId}">
+                        :class="{active:current_channel==item.channelId}">
                         {{item.channel}}
                     </a>
                 </div>
@@ -47,13 +47,17 @@
                     <a href="#" 
                         v-for="item in orderby"
                         @click.prevent="setParam('current_orderby',item.orderId)"
-                        v-bind:class="{active:current_orderby==item.orderId}">
+                        :class="{active:current_orderby==item.orderId}">
                         {{item.text}}
                     </a>
                 </div>
             </div>
             <ul class="vlist clearfix">
-                <li class="vitem" v-for="item in resultData" @click="showDetailInfo(item.channelId,item.vid)">
+                <li 
+                    class="vitem" 
+                    v-for="item in resultData" 
+                    :key="item.vid"
+                    @click="showDetailInfo(item.channelId,item.vid)">
                     <img v-lazy="item.pictureUrl" alt="">
                     <div class="name">{{item.title}}</div>
                 </li>
@@ -329,12 +333,15 @@
                     orderby: this.current_orderby,
                     pageSize: this.pageSize,
                     pageNo: this.pageNo
-                },(data)=>{ 
-                    if(this.pageNo === 1){
-                        window.scrollTo(0,0)
-                        this.loading = false
-                    }
+                },(data)=>{
+                    this.loading = false
                     this.loadState = 'LOADED'
+                    if(data.code === 504){
+                        return 
+                    }
+                    if(this.pageNo === 1){
+                        window.scrollTo(0,0) 
+                    }
                     this.resultData = (this.pageNo > 1 ? this.resultData : []).concat(data.data.list)
                     this.total = data.data.total
                     if(this.total === 0){    
@@ -355,7 +362,7 @@
                 }
                 
                 var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
-                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-10){   
+                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-20){   
                     this.pageNo++
                     this.filterData()
                 }

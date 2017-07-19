@@ -1,10 +1,12 @@
 <template>
 <div class="page-index">
-    <div class="grid">
+    <div class="grid" v-once>
         <div class="span1">
             <div class="swiper">
                 <swiper :options="swiperOption">
-                    <swiper-slide v-for="item in homePageInfo" :key="item.vid">
+                    <swiper-slide 
+                        v-for="item in homePageInfo" 
+                        :key="item.vid">
                     <a href="#" @click.prevent="showDetailInfo(item.channelId,item.vid)"> 
                         <img :src="item.pictureUrl">
                     </a>
@@ -21,6 +23,7 @@
         <div class="span3">
             <router-link 
                 v-for="item in channels" 
+                :key="item.channelId"
                 :to="{ 
                     name: 'list',
                     query: {    
@@ -28,8 +31,7 @@
                         channel: item.channel
                     }
                 }" 
-                :key="item.channelId"
-                v-bind:class="['item-'+item.channelId]"
+                :class="['item-'+item.channelId]"
                 class="item"
             >{{item.channel}}</router-link>
         </div>
@@ -168,9 +170,9 @@
                 service.onClickEvent(name)
             },
             showDetailInfo(channelId, vid) {
-                this.$refs.detail.visible = true
                 this.channelId = channelId
                 this.vid = vid
+                this.$refs.detail.visible = true
                 HdSmart.UI.toggleHeadAndFoot(false)
             },
             onDetailClose(){    

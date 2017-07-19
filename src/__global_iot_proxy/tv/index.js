@@ -7,7 +7,6 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
 
     HdIot.Util.dispatchEvent = function(options){  
     //console.log(options)
-    console.log('mockdata')
     var data = JSON.parse(options.data)
     var callback = options.onListener
     
@@ -31,6 +30,9 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
             case 'onClickEvent': 
                 console.log('onClickEvent: ',data.params.eventCode)
                 break;
+            case 'playVideo':
+                console.log('playVideo', data.params)
+                break
        }
     },1000)
     }
