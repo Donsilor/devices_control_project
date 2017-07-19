@@ -2,7 +2,7 @@
     <div id="app" :class="appClassObj" @click="showMore=false;">
         <p class="title">{{ deviceName }}</p>
         <transition name="fade-in">
-            <div v-show="params.switch === 'on'">
+            <div v-show="params.switchStatus === 'on'">
                 <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
                     <defs>
                         <linearGradient x1="0%" y1="0%" x2="0%" y2="100%" id="linearGradient">
@@ -10,7 +10,7 @@
                             <stop stop-color="#09C0FE" stop-opacity="1" offset="100%"></stop>
                         </linearGradient>
                     </defs>
-                    <path d="M0 420 L0 40 C400 -100 900 200 1920 20 L1920 420 Z" style="fill:url(#linearGradient);" />
+                    <path d="M0 420 L0 40 C450 -100 900 300 1920 20 L1920 420 Z" style="fill:url(#linearGradient);" />
                 </svg>
                 <!--温度Start-->
                 <div class="temp">
@@ -25,7 +25,7 @@
                     <ac-button :info="buttonList.cool" :curValue="params[buttonList.cool.type]" @tap="setParam"></ac-button>
                     <ac-button :info="buttonList.heat" :curValue="params[buttonList.heat.type]" @tap="setParam"></ac-button>
                     <ac-button :info="buttonList.dehumidify" :curValue="params[buttonList.dehumidify.type]" @tap="setParam"></ac-button>
-                    <ac-button :info="buttonList.on" v-show="params.switch === 'on'" @tap="toggle"></ac-button>
+                    <ac-button :info="buttonList.on" v-show="params.switchStatus === 'on'" @tap="toggle"></ac-button>
                     <ac-button :info="buttonList.low" :curValue="params[buttonList.low.type]" @tap="setParam"></ac-button>
                     <ac-button :info="buttonList.normal" :curValue="params[buttonList.normal.type]" @tap="setParam"></ac-button>
                     <ac-button :info="buttonList.high" :curValue="params[buttonList.high.type]" @tap="setParam"></ac-button>
@@ -47,21 +47,6 @@
                         </div>
                         <devider :content="'定时'"></devider>
                         <div class="more-timing">
-                            <!--<div class="timing-item">-->
-                            <!--<span class="timing-desc">开机时间</span>-->
-                            <!--<span :class="{'timing-time':true, 'invisible':!params.bootSwitch}" @click="bootTpVisible = params.bootSwitch">{{ params.bootTime }}</span>-->
-                            <!--<div :class="{'timing-switch': true, 'timer-on': params.bootSwitch}" @click="toggle('bootSwitch')">-->
-                            <!--<div class="timing-switch-circle"></div>-->
-                            <!--</div>-->
-                            <!--&lt;!&ndash;@click="params.bootSwitch = !params.bootSwitch"&ndash;&gt;-->
-                            <!--</div>-->
-                            <!--<div class="timing-item">-->
-                            <!--<span class="timing-desc">关机时间</span>-->
-                            <!--<span :class="{'timing-time':true, 'invisible':!params.offSwitch}" @click="offTpVisible = params.offSwitch">{{ params.offTime }}</span>-->
-                            <!--<div :class="{'timing-switch': true, 'timer-on': params.offSwitch}" @click="toggle('offSwitch')">-->
-                            <!--<div class="timing-switch-circle"></div>-->
-                            <!--</div>-->
-                            <!--</div>-->
                             <ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"
                                        @change="bootTpVisible = params.bootSwitch" @toggle="toggle('bootSwitch')"></ac-switch>
                             <ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"
@@ -72,23 +57,23 @@
                 <!--更多子菜单End-->
                 <!--时间选择器Start-->
                 <transition name="fade">
-                    <time-picker v-show="bootTpVisible" :hour="bootHour" :minute="bootMinute" :title="'设置空调开机时间'"
+                    <time-picker v-show="bootTpVisible" :vis="bootTpVisible" :hour="bootHour" :minute="bootMinute" :title="'设置空调开机时间'"
                                  @vchange="setBootTimePickerVisibility" @change="setBootTime"></time-picker>
                 </transition>
                 <transition name="fade">
-                    <time-picker v-show="offTpVisible" :hour="offHour" :minute="offMinute" :title="'设置空调关机时间'"
+                    <time-picker v-show="offTpVisible" :vis="offTpVisible" :hour="offHour" :minute="offMinute" :title="'设置空调关机时间'"
                                  @vchange="setOffTimePickerVisibility" @change="setOffTime"></time-picker>
                 </transition>
                 <!--时间选择器End-->
             </div>
         </transition>
         <transition name="fade-in">
-            <div v-show="params.switch !== 'on'">
+            <div v-show="params.switchStatus !== 'on'">
                 <div v-if="params.deviceSubCategory === 0" class="hanging"></div>
                 <div v-if="params.deviceSubCategory === 1" class="package"></div>
                 <p class="tip">已关闭</p>
                 <div class="bottom">
-                    <ac-button v-show="params.switch === 'off'" :info="buttonList.off" @tap="toggle"></ac-button>
+                    <ac-button v-show="params.switchStatus === 'off'" :info="buttonList.off" @tap="toggle"></ac-button>
                 </div>
             </div>
         </transition>
@@ -106,6 +91,9 @@
     }
     html, body, .main{
         height: 100%;
+    }
+    ::-webkit-scrollbar{
+        opacity: 0;
     }
     .invisible{
         visibility: hidden;
@@ -173,6 +161,7 @@
         margin: 24px 0 110px 0;
         opacity: 1;
         transition: opacity 1s ease;
+        position: relative;
     }
     .tip.transparent{
         opacity: 0;
@@ -196,6 +185,11 @@
         height: 144px;
     }
 
+    .switchStatus img{
+        width: 204px;
+        height: 204px;
+    }
+
     .more, .subMenu{
         position: absolute;
         right: 60px;
@@ -206,6 +200,7 @@
         width: 96px;
         height: 96px;
         background: url(./assets/more_normal.png) no-repeat center;
+        background-size: 100%;
         outline: 0;
         cursor: pointer;
         border-radius: 100%;
@@ -258,44 +253,50 @@
         font-size: 30px;
         margin-top: 12px;
     }
-    /*.timing-item{*/
-        /*line-height: 84px;*/
-    /*}*/
-    /*.timing-time{*/
-        /*min-height: 84px;*/
-    /*}*/
-    /*.timing-desc, .timing-time, .timing-switch{*/
-        /*display: inline-block;*/
-        /*vertical-align: middle;*/
-    /*}*/
-    /*.timing-time{*/
-        /*width: 58px;*/
-        /*padding: 0 36px 0 80px;*/
-    /*}*/
-    /*.timing-switch{*/
-        /*width: 72px;*/
-        /*height: 48px;*/
-        /*border-radius: 24px;*/
-        /*background: #c8cacc;*/
-        /*!*vertical-align: middle;*!*/
-        /*position: relative;*/
-    /*}*/
-    /*.timing-switch-circle{*/
-        /*position: absolute;*/
-        /*width: 42px;*/
-        /*height: 42px;*/
-        /*border-radius: 100%;*/
-        /*left: 2px;*/
-        /*top: 3px;*/
-        /*background: #fff;*/
-    /*}*/
-    /*.timing-switch.timer-on{*/
-        /*background: #46bcff;*/
-    /*}*/
-    /*.timer-on .timing-switch-circle{*/
-        /*left: auto;*/
-        /*right: 2px;*/
-    /*}*/
+
+    .loading{
+        position: relative;
+    }
+    .loading:before{
+        content: '';
+        position: absolute;
+        top: 24px;
+        left: 24px;
+        width: 96px;
+        height: 96px;
+        background: url('./assets/buffering_mode_white.png') no-repeat center;
+        background-size: 100%;
+        animation: circle 1s linear infinite;
+    }
+
+    .switchStatus.loading:before{
+        top: 12px;
+        left: 12px;
+        width: 180px;
+        height: 180px;
+    }
+    .on .switchStatus.loading:before{
+        background: url('./assets/buffering_power_white.png') no-repeat center;
+        background-size: 100%;
+    }
+    .off .switchStatus.loading:before{
+        background: url('./assets/buffering_power_blue.png') no-repeat center;
+        background-size: 100%;
+    }
+
+    .subMenu .loading:before{
+        background: url('./assets/buffering_mode_blue.png') no-repeat center;
+        background-size: 100%;
+    }
+
+    @keyframes circle {
+        0%{
+            transform: rotate(0deg);
+        }
+        100%{
+            transform: rotate(360deg);
+        }
+    }
 </style>
 
 <script>
@@ -308,7 +309,7 @@
 
     const [MIN_TEMP, MAX_TEMP] = [16, 30];
     const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] =
-        ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
+        ['switchStatus', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
     const [ON, OFF] = ['on', 'off'];
     const NODE_ID = 'airconditioner.main.';
     const SPAN = 500;
@@ -346,7 +347,7 @@
                 },
                 params: {
                     deviceSubCategory: null,//空调类型，0：挂机，1：柜机
-                    switch: '',//开关
+                    switchStatus: '',//开关
                     temperature: null,//温度
                     mode: '',//模式
                     speed: '',//风速
@@ -395,7 +396,7 @@
         computed: {
             appClassObj: function () {
                 let obj = { main: true };
-                obj[this.params.switch] = true;
+                obj[this.params.switchStatus] = true;
                 return obj;
             },
             lrBtn: function () {
@@ -447,7 +448,7 @@
         },
         methods: {
             setState(attr){//设置空调状态
-                this.params.switch = attr.switch;
+                this.params.switchStatus = attr.switchStatus;
                 this.params.temperature = attr.temperature;
                 this.fakeTemp = attr.temperature;
                 this.params.mode = attr.mode;
