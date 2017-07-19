@@ -1,19 +1,21 @@
 <template>
-    <section @click.stop="" v-show="visible" class="select-panel">
+    <section @click.stop="" class="select-panel" :vis="vis"><!--v-show="visible" -->
         <header>{{title}}</header>
         <main>
-            <div class="left" v-finger:swipe="swipeH">
-            <!--<div class="left">-->
+            <div class="left">
                 <ul class="hour" ref="ulHour">
                     <li v-for="h in hourList" :class="{ selected: h === curHour }">{{ h }}</li>
                 </ul>
+                <hr class="line line-first">
+                <hr class="line line-second">
             </div>
             <div class="unit">时</div>
-            <div class="right" v-finger:swipe="swipeM">
-            <!--<div class="right">-->
+            <div class="right">
                 <ul class="minute" ref="ulMinute">
                     <li v-for="m in minuteList" :class="{ selected: m === curMinute }">{{ m }}</li>
                 </ul>
+                <hr class="line line-first">
+                <hr class="line line-second">
             </div>
             <div class="unit">分</div>
         </main>
@@ -46,6 +48,12 @@
         cursor: pointer;
         outline: none;
     }
+    .button-confirm {
+        background: #46bcff;
+        font-size:36px;
+        color: #ffffff;
+        border-color: #46bcff;
+    }
     header{
         box-shadow: inset 0 -1px 0 0 #dbdbdb;
         line-height: 84px;
@@ -62,16 +70,32 @@
         height: 270px;
         line-height: 90px;
         /*overflow: scroll;*/
-        overflow: hidden;
+        /*overflow: hidden;*/
+        overflow-y: hidden;
         width: 180px;
+        position: relative;
+    }
+    .line{
+        position: absolute;
+        border: none;
+        border-top: 1px solid #dbdbdb;
+        width: 100%;
+    }
+    .line-first{
+        top: 90px;
+    }
+    .line-second{
+        top: 180px;
     }
     .hour, .minute{
         list-style: none;
-        /*overflow: scroll;*/
+        /*overflow-y: scroll;*/
+        overflow-x: hidden;
         height: 270px;
+
     }
     .hour li, .minute li{
-        border-bottom: 1px solid #dbdbdb;
+        min-height: 90px;
     }
     li.selected{
         color: #46bcff;
@@ -81,6 +105,10 @@
         line-height: 270px;
         vertical-align: top;
         color: #75787a;
+        padding: 0 10px;
+    }
+    .unit:last-of-type{
+        padding-right: 0;
     }
 
     footer{
@@ -102,7 +130,7 @@
         name: 'time-picker',
         props:
             {
-                visible: Boolean,
+                vis: Boolean,
                 hour: String,
                 minute: String,
                 title: String
@@ -113,22 +141,18 @@
                 minuteList: [],
                 liHeight: 0,
                 curHour: '',
-                curMinute: ''
+                curMinute: '',
+                timeoutH: null,
+                timeoutM: null,
             }
         },
         computed: {
-            translateH(){
-                return  (1 - parseInt(this.curHour)) * this.liHeight;
+            scrollH(){
+                return this.liHeight * (this.hourList.indexOf(this.curHour) - 1);
             },
-            translateM(){
-                return  (1 - parseInt(this.curMinute)) * this.liHeight;
+            scrollM(){
+                return this.liHeight * (this.minuteList.indexOf(this.curMinute) - 1);
             }
-//            scrollH(){
-//                return  (1 - parseInt(this.curHour)) * this.liHeight;
-//            },
-//            scrollM(){
-//                return  (1 - parseInt(this.curMinute)) * this.liHeight;
-//            }
         },
         watch: {
             hour(val){
@@ -142,31 +166,76 @@
 //                    this.curMinute = val;
 //                }
                 this.curMinute = val;
+            },
+            vis(value){
+                if(value){
+                    if(!this.liHeight){
+                        this.liHeight = this.$refs.ulHour.childNodes[0].offsetHeight;
+                    }
+
+                    this.$refs.ulHour.scrollTop = this.scrollH;
+                    this.oldTopH = this.scrollH;
+                    this.$refs.ulMinute.scrollTop = this.scrollM;
+                    this.oldTopH = this.scrollM;
+                }
             }
         },
         mounted: function () {
             this.hourList = this.generateArray(0, 23, 2);
             this.minuteList = this.generateArray(0, 59, 2);
 //            console.log(this.hour + '--' + this.minute);
+
+            let that = this;
+            let liHeight = this.liHeight > 0 ? this.liHeight : 60;
+            function scrollSelectH() {
+                clearTimeout(that.timeoutH);
+
+                that.timeoutH = setTimeout(function () {
+                    let index = Math.round(that.$refs.ulHour.scrollTop / liHeight);
+                    that.$refs.ulHour.scrollTop = liHeight * index;
+                    that.curHour = that.hourList[index + 1];
+                }, 100);
+            }
+            function scrollSelectM() {
+                clearTimeout(that.timeoutM);
+
+                that.timeoutM = setTimeout(function () {
+                    let index = Math.round(that.$refs.ulMinute.scrollTop / liHeight);
+                    that.$refs.ulMinute.scrollTop = liHeight * index;
+                    that.curMinute = that.minuteList[index + 1];
+                }, 100);
+//                let newTop = that.$refs.ulMinute.scrollTop;
+//                if(that.oldTopM === newTop){
+//                    let t = newTop / liHeight;
+//                    if(t !== 0){
+//                        let index = Math.round(t);
+//                        that.$refs.ulMinute.scrollTop = liHeight * index;
+//                        that.oldTopM = liHeight * index;
+//                        that.curMinute = that.minuteList[index + 1];
+//                    }
+//                }
+//                else{
+//                    that.oldTopM = newTop;
+//                    that.timeoutM = setTimeout(scrollSelectM, 0);
+//                }
+            }
+
+            this.$refs.ulHour.onscroll = scrollSelectH;
+            this.$refs.ulMinute.onscroll = scrollSelectM;
         },
         updated: function () {
-//            this.liHeight = this.$refs.ulHour.childNodes[0].offsetHeight;
-            this.liHeight = 61;
-            this.setTranslateH();
-            this.setTranslateM();
-
             if(!this.curHour){
                 this.curHour = this.hour;
             }
             if(!this.curMinute){
                 this.curMinute = this.minute;
             }
-//            console.log(this.hour + '--' + this.minute);
         },
         methods:{
             generateArray: function (start, end, strLength) {
                 let arr = [];
 
+                arr.push('');
                 for(let i = start; i < end + 1; i++){
                     let s = i.toString();
                     if(s.length < strLength){
@@ -176,50 +245,22 @@
                         arr.push(s);
                     }
                 }
+                arr.push('');
 
                 return arr;
-            },
-            swipeH: function(evt) {
-                var direction = evt.direction.toLowerCase();
-                let index = this.hourList.indexOf(this.curHour);
-                if (direction === 'up' && (index + 1) < this.hourList.length ){
-                    this.curHour = this.hourList[index + 1];
-                }
-                else if(direction === 'down' && index > 0){
-                    this.curHour = this.hourList[index - 1];
-                }
-
-                this.setTranslateH();
-            },
-            swipeM: function(evt) {
-                var direction = evt.direction.toLowerCase();
-                let index = this.minuteList.indexOf(this.curMinute);
-                if (direction === 'up' && (index + 1) < this.minuteList.length){
-                    this.curMinute = this.minuteList[index + 1];
-                }
-                else if(direction === 'down' && index > 0){
-                    this.curMinute = this.minuteList[index - 1];
-                }
-
-                this.setTranslateM();
             },
             cancel: function (visible) {
                 this.curHour = this.hour;
                 this.curMinute = this.minute;
                 this.$emit('vchange', visible);
             },
-            setTranslateH: function () {
-                this.setTranslateY(this.$refs.ulHour, this.translateH);
-            },
-            setTranslateM: function () {
-                this.setTranslateY(this.$refs.ulMinute, this.translateM);
-            },
             setTime: function () {
                 this.$emit('change', this.curHour + ':' + this.curMinute);
-            },
-            setTranslateY: function (el, offset) {
-                el.style.transform = 'translateY('+ offset +'px)';
             }
+//            ,
+//            setTranslateY: function (el, offset) {
+//                el.style.transform = 'translateY('+ offset +'px)';
+//            }
         }
     }
 </script>
