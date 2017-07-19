@@ -69,7 +69,7 @@
         <!-- 列表 -->
         <ul class="vlist list-m60 clearfix">
             <li class="vitem" v-for="item in list" @click="showDetailInfo(item.channelId,item.vid)">
-                <img :src="item.pictureUrl" alt="">
+                <img v-lazy="item.pictureUrl" alt="">
                 <div class="name">{{item.title}}</div>
                 <span class="update">{{item.lastUpdateSet}}</span>
                 <span class="score">{{item.score}}</span>
@@ -119,32 +119,19 @@
         .row{   
             overflow: hidden;
             height: 66px;
+            display: flex;
+            width: 100%;
         }
         dt{ 
-            float:left;
         }
         dd{ 
-            display: flex;
-            overflow-x: auto;
+            width: 100%;
+            overflow-x: scroll;
+            display: table-cell;
+            position: relative;
             padding-bottom: 8px;
-            &::-webkit-scrollbar{  
-                width: 6px;  
-                height: 6px;  
-                background-color: #F5F5F5;  
-            }  
-            
-            &::-webkit-scrollbar-track{  
-                border-radius: 3px;  
-                background-color: #F5F5F5;  
-            }  
-            
-            &::-webkit-scrollbar-thumb{  
-                border-radius: 3px;   
-                background-color: #ccc;  
-            }  
         }
         a{  
-            float: left;
             margin-right: 36px;
             color: #7f8082;
             border-radius: 3px;
@@ -173,6 +160,8 @@
             width: 300px;
             height: 440px;
             display: block;
+            background:#ebebeb url(../assets/icn_tv_movie.png) no-repeat center center;
+            background-size: 120px 120px;
         }
         .update{    
             position: absolute;
@@ -284,17 +273,17 @@
                 category: [],
                 region: [],
                 year: [],
-                orderby: [
+                orderby: Object.freeze([
                     {text:'最新',orderId:'year'},
                     {text:'最热',orderId:'iscore'}
-                ],
+                ]),
                 current_category: '',
                 current_region: '',
                 current_year: '',
                 current_orderby: 'year',
                 total: 0,
                 pageNo: 1,
-                pageSize: 1,
+                pageSize: 15,
                 //系统loading，初始化页面或pageNo=1
                 loading: false,
                 /**
@@ -342,8 +331,11 @@
                         this.loading = false
                     }
                     this.loadState = 'LOADED'
-                    this.list = (this.pageNo > 1 ? this.list : []).concat(data.data.list)
-                    this.total = data.data.total
+                    if(data.data){  
+                        data = data.data
+                    }
+                    this.list = (this.pageNo > 1 ? this.list : []).concat(Object.freeze(data.list))
+                    this.total = data.total
                     if(this.total === 0){    
                         this.loadState = 'NO_DATA'
                     }
@@ -373,11 +365,11 @@
             service.getChannelData(this.channelId,(data)=>{ 
                 this.loading = false
                 this.loadState = 'LOADED'
-                this.list = data.data.list
+                this.list = Object.freeze(data.data.list)
                 this.total = data.data.total
-                this.category = data.category
-                this.region = data.region
-                this.year = data.year
+                this.category = Object.freeze(data.category)
+                this.region = Object.freeze(data.region)
+                this.year = Object.freeze(data.year)
             }) 
             if(this.$route.query.showDetail === '1' && this.vid){   
                 this.showDetailInfo(this.channelId, this.vid)

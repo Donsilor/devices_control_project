@@ -17,15 +17,15 @@
                     <p>主演：{{cur.starring}}</p>
                 </div>
                 <!-- 未播放 -->
-                <div class="playstate playstate_unplay" v-show="false">
-                    <a href="" class="btn"><i class="icon-play"></i>在电视上播放</a>
+                <div class="playstate playstate_unplay" v-show="true">
+                    <a href="#" class="btn"><i class="icon-play"></i>在电视上播放</a>
                 </div>
                 <!-- 正在播放 -->
                 <div class="playstate playstate_play" v-show="false">
-                    <a href="" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
+                    <a href="#" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
                 </div>
                 <!-- 继续播放 -->
-                <div class="playstate playstate_conplay" v-show="true">
+                <div class="playstate playstate_conplay" v-show="false">
                     <a href="#" class="btn"><i class="icon-time"></i>继续播放</a>
                     <span class="tip"><i class="arrow"></i>上次观看到第22集</span>
                 </div>
