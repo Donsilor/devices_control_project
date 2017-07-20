@@ -14,7 +14,6 @@ function sendApp(options){
  */
 
 export function getInitData(){  
-    console.log(window.tvInitData)
     return JSON.parse(window.tvInitData)
 }
 

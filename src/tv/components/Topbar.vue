@@ -3,6 +3,9 @@
         <div class="left"> 
             <a class="icon icon-arrow" @click="goBack"></a>
         </div>
+        <div class="left" style="left:24px;"> 
+            <a class="icon icon-arrow" @click="goBack"></a>
+        </div>
         <div class="right">
             <router-link to="/search" class="icon icon-search"></router-link>
         </div>
@@ -20,7 +23,7 @@
         .left{
             position: absolute;
             top: 32px;
-            left: 24px;
+            left: 124px;
             z-index:9999
         }
         .right{

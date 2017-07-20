@@ -7,7 +7,7 @@
         </div>
         <div class="detail-info clearfix">
             <div class="pic">
-                <img :src="cur.pictureUrl">
+                <img v-lazy="cur.pictureUrl">
             </div>
             <div class="text">
                 <div class="shortinfo">
@@ -18,12 +18,12 @@
                     <p>主演：{{cur.starring}}</p>
                 </div>
                 <!-- 未播放 -->
-                <div class="playstate playstate_unplay" v-show="true">
-                    <a href="#" class="btn" @click.prevent="play(cur.playlist[0].playparam,cur.title)"><i class="icon-play"></i>在电视上播放</a>
+                <div class="playstate playstate_unplay" v-if="playstate==='0'">
+                    <a href="#" class="btn" @click.prevent="play(cur.playlist[0].list[0].link,cur.title,'1')"><i class="icon-play"></i>在电视上播放</a>
                 </div>
                 <!-- 正在播放 -->
-                <div class="playstate playstate_play" v-show="false">
-                    <a href="#" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
+                <div class="playstate playstate_play" v-else>
+                    <a href="javascript:void(0)" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
                 </div>
                 <!-- 继续播放 -->
                 <div class="playstate playstate_conplay" v-show="false">
@@ -33,7 +33,7 @@
 
                 <!-- 描述 -->
                 <div class="desc">
-                    <div class="desc-cont" v-bind:class="{
+                    <div class="desc-cont" :class="{
                         'text-cut': isDescOverflow,
                         'text-show': isDescShow
                     }"><p>{{cur.desc}}</p>    
@@ -41,31 +41,35 @@
                     <a href="#" class="desc-toggle" 
                         @click.prevent="isDescShow=!isDescShow" 
                         v-show="isDescOverflow"
-                        v-bind:class="{'open':isDescShow}">
+                        :class="{'open':isDescShow}">
                         {{isDescShow?'收起':'展开'}}<i></i>
                     </a>
                 </div>
                 
             </div>
         </div>
-        <div class="line"></div>
+        
         <div class="detail-playlist" v-show="cur.playlist[0].total > 1">
             <div class="hd">{{cur.playlist[0].total}}</div>
-            <ul class="bd">
+            <ul class="bd" v-if="channelId==='004'">
+                <li class="item-haspic"
+                    v-for="item in cur.playlist[0].list" 
+                    :key="item.index"
+                    @click="play(item.link,item.name,item.index)">
+                    <img :src="item.pictureUrl">
+                    <p>{{item.name}}</p>
+                    <span class="play" v-show="playstate===item.index"><i></i>当前播放</span>
+                </li>
+            </ul>
+            <ul class="bd" v-else>
                 <li class="item-num" 
                     v-for="item in cur.playlist[0].list" 
-                    v-bind:class="{'active':false}"
-                    @click="play(item.link,item.name)">
+                    :key="item.index"
+                    :class="{'active': playstate===item.index}"
+                    @click="play(item.link,item.name,item.index)">
                     {{item.index}}
                     <span class="tag_new" v-show="item.states"></span>
                 </li>
-                <!--<li class="item-haspic"
-                    v-for="item in cur.playlist[0].list" 
-                    @click="play(item.link)">
-                    <img :src="item.pictureUrl">
-                    <p>{{item.name}}</p>
-                    <span class="play"><i></i>当前播放</span>
-                </li>-->
             </ul>
         </div>
     </div>
@@ -123,7 +127,7 @@
             background-repeat: norepeat;
             position: absolute;
             top: 32px;
-            left: 24px;
+            left: 124px;
             background-image: url(../assets/icn_topbar_arrowdown_w_normal.png);
             &:active{   
                 background-image: url(../assets/icn_topbar_arrowdown_w_pressed.png);
@@ -145,6 +149,8 @@
             img{
                 width: 100%;
                 height: 100%;
+                background:#ebebeb url(../assets/icn_tv_movie.png) no-repeat center center;
+                background-size: 120px 120px;
             }
         }
         .text{  
@@ -364,7 +370,8 @@
                     }]
                 },
                 isDescOverflow: false,
-                isDescShow: false
+                isDescShow: false,
+                playstate: '0' //播放状态，
             }
         },
         watch: {    
@@ -379,14 +386,19 @@
         },
         methods: {   
             getData() {
+                this.playstate = '0'
                 service.getDetaileData({    
                     channelId: this.channelId,
                     vid: this.vid
                 },(data) => {   
+                    if(data.code === 504){  
+                        return 
+                    }
                     this.cur = Object.freeze(data.data)
                 })
             },
-            play(link,title) {    
+            play(link,title,index) {    
+                this.playstate = index
                 service.playVideo(link,title) 
             },
             //对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
