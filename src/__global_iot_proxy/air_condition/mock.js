@@ -7,7 +7,7 @@ let res = {
     "device_uuid": "4c52ed0b006f0d0001",
     "attr": {
         "device_name": '挂式空调',
-        "switchStatus": 'on',
+        "switchStatus": 'off',
         "temperature": 16,
         "mode": "cold",
         "speed": "low",
@@ -15,7 +15,7 @@ let res = {
         "wind_left_right": "on",
         "manufactureId": "haier",
         "deviceCategory": "kfr_50lw",
-        "deviceSubCategory": 0,
+        "deviceSubCategory": 1,
         "timer": [
             {
                 "type": "air_switch_on",
@@ -48,7 +48,7 @@ export function set(data){
         res.attr[p] = attr[p];
     }
     return Mock.mock({
-        // code: 200
+        code: 200
         // code: 204,
         // msg: 'test'
     })

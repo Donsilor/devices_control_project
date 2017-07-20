@@ -19,23 +19,16 @@
         cursor: pointer;
         border: none 0;
         outline: none 0;
-    }
-    /*.imgWrapper{*/
-        /*transition: background-color 0.5s linear;*/
-    /*}*/
-    .imgWrapper img{
-        vertical-align: middle;
-        /*margin-top: 9px;*/
+        margin-bottom: 10px;
+        /*解决点击出现背景*/
+        -webkit-tap-highlight-color: transparent;
     }
 
-    /*温度*/
-    /*.temperature .imgWrapper{*/
-        /*width: 144px;*/
-        /*height: 144px;*/
-    /*}*/
+    .imgWrapper img{
+        vertical-align: middle;
+    }
+
     .temperature .imgWrapper img{
-        /*width: 144px;*/
-        /*height: 144px;*/
         margin-top: 0;
     }
 </style>
@@ -61,7 +54,7 @@
         },
         methods:{
             tap(){
-                this.$emit('tap', this.info.type, this.info.value, this.info.tip);
+                this.$emit('tap', this.info.type, this.info.value, this.info.tip, this.$el);
 //                if(this.curValue !== this.info.value){
 //                    this.$emit('click', this.info.type, this.info.value);
 //                }

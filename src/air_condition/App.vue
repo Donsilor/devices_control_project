@@ -1,16 +1,18 @@
 <template>
     <div id="app" :class="appClassObj" @click="showMore=false;">
         <p class="title">{{ params.device_name }}</p>
+        <p class="tip" v-show="params.switch === 'off'">已关闭</p>
         <transition name="fade-in">
             <div v-show="params.switch === 'on'">
                 <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
                     <defs>
-                        <linearGradient x1="0%" y1="0%" x2="0%" y2="100%" id="linearGradient">
-                            <stop stop-color="#3DD1FE" stop-opacity="1" offset="0%"></stop>
-                            <stop stop-color="#09C0FE" stop-opacity="1" offset="100%"></stop>
+                        <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509" y2="1.0971"><!--x1="0%" y1="0%" x2="0%" y2="100%"-->
+                            <stop  offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
+                            <stop  offset="1" style="stop-color:#FFFFFF; stop-opacity:0.3"/>
                         </linearGradient>
                     </defs>
-                    <path d="M0 420 L0 40 C450 -100 900 300 1920 20 L1920 420 Z" style="fill:url(#linearGradient);" />
+                    <!--<path d="M0 420 L0 40 C450 -100 900 300 1920 20 L1920 420 Z" style="fill:url(#linearGradient);" />-->
+                    <path d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z" style="fill:url(#lg1);" />
                 </svg>
                 <!--温度Start-->
                 <div class="temp">
@@ -47,6 +49,8 @@
                         </div>
                         <devider :content="'定时'"></devider>
                         <div class="more-timing">
+                            <!--<ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"></ac-switch>-->
+                            <!--<ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"></ac-switch>-->
                             <ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"
                                        @change="bootTpVisible = params.bootSwitch" @toggle="toggle('bootSwitch')"></ac-switch>
                             <ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"
@@ -71,10 +75,25 @@
             <div v-show="params.switch !== 'on'">
                 <div v-if="params.deviceSubCategory === 0" class="hanging"></div>
                 <div v-if="params.deviceSubCategory === 1" class="package"></div>
-                <p class="tip">已关闭</p>
+                <p class="tip"></p>
                 <div class="bottom">
+                    <ac-button :info="buttonList.cool"></ac-button>
+                    <ac-button :info="buttonList.heat"></ac-button>
+                    <ac-button :info="buttonList.dehumidify"></ac-button>
                     <ac-button v-show="params.switch === 'off'" :info="buttonList.off" @tap="toggle"></ac-button>
+                    <ac-button :info="buttonList.low"></ac-button>
+                    <ac-button :info="buttonList.normal"></ac-button>
+                    <ac-button :info="buttonList.high"></ac-button>
                 </div>
+                <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420" style="enable-background:new 0 0 1920 420;">
+                    <defs>
+                        <linearGradient id="lg2" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509" y2="1.0971"><!--x1="0%" y1="0%" x2="0%" y2="100%"-->
+                            <stop  offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
+                            <stop  offset="1" style="stop-color:#FFFFFF; stop-opacity:0.75"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z" style="fill:url(#lg2);" />
+                </svg>
             </div>
         </transition>
     </div>
@@ -120,6 +139,15 @@
     .main.off{
         background-color: #f2f2f2;
     }
+    /*.off .imgWrapper{*/
+        /*cursor: default;*/
+    /*}*/
+    .off .imgWrapper img{
+        filter: invert(30%);
+    }
+    .off .switch img{
+        filter: invert(0);
+    }
     .hanging, .package{
         height: 360px;
     }
@@ -128,6 +156,7 @@
     }
     .package{
         background: url(./assets/bg_off_package.png) no-repeat center;
+        background-size: 540px 360px;
     }
 
     .title{
@@ -136,6 +165,7 @@
     }
     .off .title{
         color: #75787a;
+        margin-bottom: 0;
     }
 
     /*温度*/
@@ -167,7 +197,8 @@
         opacity: 0;
     }
     .off .tip{
-        color: #c8cacc;
+        /*color: #c8cacc;*/
+        color: #46bcff;
         margin: 25px 0 37px 0;
     }
 
@@ -240,13 +271,18 @@
         margin-top: 30px;
     }
 
+    .bottom .btnName{
+        opacity: 0.5;
+    }
     /*选中样式*/
     .active .btnName{
         font-size: 30px;
+        opacity: 1;
     }
     .subMenu .active .btnName{
         font-size: 24px;
         color: #46bcff;
+        opacity: 1;
     }
 
     .more-timing{
@@ -254,16 +290,17 @@
         margin-top: 12px;
     }
 
+    /*loading样式*/
     .loading{
         position: relative;
     }
     .loading:before{
         content: '';
         position: absolute;
-        top: 24px;
-        left: 24px;
-        width: 96px;
-        height: 96px;
+        top: 0;
+        left: 0;
+        width: 144px;
+        height: 144px;
         background: url('./assets/buffering_mode_white.png') no-repeat center;
         background-size: 100%;
         animation: circle 1s linear infinite;
@@ -287,6 +324,10 @@
     .subMenu .loading:before{
         background: url('./assets/buffering_mode_blue.png') no-repeat center;
         background-size: 100%;
+        width: 96px;
+        height: 96px;
+        top: 24px;
+        left: 24px;
     }
 
     @keyframes circle {
@@ -312,7 +353,8 @@
         ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
     const [ON, OFF] = ['on', 'off'];
     const NODE_ID = 'airconditioner.main.';
-    const SPAN = 500;
+    const SPAN = 500;//连续设置时间判断间隔
+    const LOADING_DELAY = 300;//loading效果延迟
 
     //Button构造方法
     function Button(title, type, value, imgSrc, imgActiveSrc, tip) {
@@ -365,15 +407,13 @@
                 showMore: false,//更多菜单是否可见
                 bootTpVisible: false,//开机时间选择器是否可见
                 offTpVisible: false,//关机时间选择器是否可见
-//                deviceName: '',//设备名
                 tempFlag: false,
                 tempTimer: null,
-                fakeTemp: null
+                fakeTemp: null,
+                loadingTimer: null
             }
         },
         mounted: function () {
-//            this.deviceName = getDeviceName();
-//            this.deviceName = '挂式空调';
             HdSmart.ready(()=>{
                 HdSmart.Device.getSnapShot((data) => {
                     this.setState(data.attr);
@@ -459,6 +499,7 @@
                 this.params.wind_left_right = attr.wind_left_right;
                 this.params.deviceSubCategory = attr.deviceSubCategory;
 
+                //TODO: 830后做
                 let[onTimer, offTimer] = [null, null];
                 if(attr.timer instanceof Array){
                     onTimer = attr.timer.find((v) => { return v.type === 'air_switch_on' });
@@ -483,7 +524,7 @@
                     this.params.offTime = '';
                 }
             },
-            toggle(type){
+            toggle(type, value, tip, el){
                 let str = '';
                 let oldValue = this.params[type];
                 let newValue;
@@ -506,40 +547,45 @@
                 }
 
                 if(type === WIND_LEFT_RIGHT){
-                    this.setParam(type, newValue, '左右扫风' + str);
+                    this.setParam(type, newValue, '左右扫风' + str, el);
                 }
                 else if (type === WIND_UP_DOWN){
-                    this.setParam(type, newValue, '上下扫风' + str);
+                    this.setParam(type, newValue, '上下扫风' + str, el);
                 }
                 else if (type === BOOT_SWITCH){
-                    //this.setTip('开机时间' + str);
-//                    this.setParam(POWER, ON, '开机时间' + str, this.getTimerObj(BOOT_SWITCH, newValue, this.params.bootTime));
                     this.setTimer(BOOT_SWITCH, newValue, this.params.bootTime, '开机时间' + str);
                 }
                 else if (type === OFF_SWITCH){
-//                    this.setTip('关机时间' + str);
-//                    this.setParam(POWER, OFF, '关机时间' + str, this.getTimerObj(OFF_SWITCH, newValue, this.params.offTime));
                     this.setTimer(OFF_SWITCH, newValue, this.params.offTime, '关机时间' + str);
                 }
                 else {
-                    this.setParam(type, newValue);
+                    this.setParam(type, newValue, tip, el);
                 }
             },
-            setParam(type, value, tip){
+            setParam(type, value, tip, el){
                 if(this.params[type] === value){//如果参数值没有变化，直接返回
                     return;
+                }
+                if(el){
+                    this.loadingTimer = setTimeout(() => { el.classList.add('loading'); }, LOADING_DELAY);
                 }
 
                 let attr = {};
                 attr[type] = value;
-//                debugger
                 HdSmart.Device.instruct('set', NODE_ID + type, attr,
                     () => {
+                        clearTimeout(this.loadingTimer);
+                        if(el){
+                            el.classList.remove('loading');
+                        }
                         this.params[type] = value;
                         this.setTip(tip);
                     },
                     (data) => {
-                        //错误提示，未完待续。。。
+                        clearTimeout(this.loadingTimer);
+                        if(el){
+                            el.classList.remove('loading');
+                        }
                         if(type === TEMPERATURE){//
                             this.fakeTemp = this.params.temperature;
                         }
@@ -573,43 +619,27 @@
                         this.setTip(tip);
                     },
                     () => {
-                        //错误提示，未完待续。。。
                         this.setTip('设置失败');
                     },
                     timerObj
                 );
             },
             setTemperature(type, value){
+                //送风模式不能设置温度
+                if(this.params.mode === 'wind'){
+                    this.setTip('送风模式下不能设置温度');
+                    return;
+                }
+
                 this.tempFlag = true;
                 this.fakeTemp = value;
                 if(this.tempTimer){
                     clearTimeout(this.tempTimer);
                 }
                 this.tempTimer = setTimeout(() => { this.tempFlag = false; }, SPAN);
-//                if(!this.tempFlag){
-//                    console.log('啦啦啦');
-//                    this.setParam(TEMPERATURE, value, '');
-//                }
-//                if(this.tempTimer){
-//                    clearTimeout(this.tempTimer);
-//                }
-//                this.tempTimer = setTimeout(() => { this.setParam(TEMPERATURE, value, ''); }, SPAN);
             },
             getTimerObj(switchValue, time){
                 if(switchValue === true){//打开开关
-                    /*if(switchType === BOOT_SWITCH){
-                        //没有设置时间，或者时间没有改变，返回null
-//                        !time || this.params.bootTime === time
-                        return !time ? null : { operation: "add", time: time, periodic: 1 };
-                    }
-                    else if(switchType === OFF_SWITCH){
-                        //没有设置时间，或者时间没有改变，返回null
-                        return !time ? null : { operation: "add", time: time, periodic: 1 };
-                    }
-                    else{
-                        return null;
-                    }*/
-
                     return { operation: "add", time: time, periodic: 1 };
                 }
                 else{
