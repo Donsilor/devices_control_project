@@ -1,7 +1,8 @@
+<!-- 暂不开发 -->
 <template>
 <div class="statusbar" v-show="visible">
     <i></i> 正在播放 摔跤吧！爸爸！ 00:00:000/00:00:00
-</div>
+</div> 
 </template>
 
 <style lang="less">

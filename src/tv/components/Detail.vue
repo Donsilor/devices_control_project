@@ -407,8 +407,8 @@
                     this.isDescShow = false
                     this.isDescOverflow = false
                     this.$nextTick(()=>{
-                        let wrapHeight = this.$el.querySelectorAll('.desc-cont')[0].offsetHeight
-                        let textHeight = this.$el.querySelectorAll('.desc-cont p')[0].offsetHeight
+                        let wrapHeight = this.$el.querySelector('.desc-cont').offsetHeight
+                        let textHeight = this.$el.querySelector('.desc-cont p').offsetHeight
 
                         if(textHeight > wrapHeight){    
                             this.isDescOverflow = true

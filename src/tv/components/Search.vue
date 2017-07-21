@@ -4,7 +4,7 @@
             <form class="search_bar" @submit.prevent="submit">
                 <div class="search_input">
                     <input autofocus type="text" placeholder="输入片名、导演、演员搜索" v-model="word" @input="fuzzySearch">
-                    <a href="#" class="del" v-show="this.word !== ''" @click.prevent="clearWord"></a>
+                    <a href="#" class="del" v-show="this.word != ''" @click.prevent="clearWord"></a>
                 </div>
                 <input type="submit" value="搜索" class="search_submit">
             </form>
@@ -281,7 +281,7 @@
         methods: {  
             clearWord() {
                 this.word = ''
-                document.querySelectorAll('.search_input input')[0].focus()
+                this.$el.querySelector('.search_input input').focus()
             },
             clearHistory() {
                 HdSmart.UI.alert('清空记录', '确认要清空所有搜索记录？', ()=>{  
@@ -368,9 +368,9 @@
                 }
             },300),
             showDetailInfo(channelId, vid) {
-                this.$refs.detail.visible = true
                 this.channelId = channelId
                 this.vid = vid
+                this.$refs.detail.visible = true
             }
         },
         mounted() { 

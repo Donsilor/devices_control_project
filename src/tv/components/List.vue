@@ -310,6 +310,8 @@
                 loading: false,
                 /**
                     定义数据加载状态
+                    FIRST_LOADING
+                    FIRST_LOADED
                     LOADING  分页加载中，显示 分页loading
                     LOADED   分页加载成功，显示 加载更多...
                     NO_DATA  没有数据，显示  暂无结果
