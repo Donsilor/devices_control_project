@@ -58,7 +58,7 @@
                     v-for="item in resultData" 
                     :key="item.vid"
                     @click="showDetailInfo(item.channelId,item.vid)">
-                    <img v-lazy="item.pictureUrl" alt="">
+                    <img v-lazy="getThumbPic(item.pictureUrl)" alt="">
                     <div class="name">{{item.title}}</div>
                 </li>
             </ul>
@@ -346,8 +346,7 @@
                     this.total = data.data.total
                     if(this.total === 0){    
                         this.loadState = 'NO_DATA'
-                    }
-                    if(this.pageSize*this.pageNo >= this.total){    
+                    }else if(this.pageSize*this.pageNo >= this.total){    
                         this.loadState = 'NO_MORE' 
                     }
                 })
@@ -371,6 +370,9 @@
                 this.channelId = channelId
                 this.vid = vid
                 this.$refs.detail.visible = true
+            },
+            getThumbPic(pic) {  
+                return pic.replace('.jpg','_y.jpg')
             }
         },
         mounted() { 

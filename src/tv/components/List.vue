@@ -71,17 +71,17 @@
             </div>
         </div>
         <!-- 列表 -->
-        <ul class="vlist list-m60 clearfix" :class="['list-'+channelId]">
+        <ul class="vlist list-m60 clearfix">
             <li class="vitem" 
                 v-for="item in list" 
                 :key="item.vid" 
                 @click="showDetailInfo(item.channelId,item.vid)">
-                <img v-lazy="item.pictureUrl" alt="">
+                <img v-lazy="getThumbPic(item.pictureUrl)" alt="">
                 <div class="name">{{item.title}}</div>
                 <span class="update">
-                    {{item.lastUpdateSet===item.setCount?item.setCount+'集全':'更新至'+item.lastUpdateSet+'集'}}
+                    {{getUpdateSet(item.setCount,item.lastUpdateSet)}}
                 </span>
-                <span class="score">{{item.score}}</span>
+                <!-- <span class="score">{{item.score}}</span> -->
             </li>
         </ul>
         <!-- 加载更多 -->
@@ -132,13 +132,16 @@
             width: 100%;
         }
         dt{ 
+            width: 180px;
         }
         dd{ 
             width: 100%;
             overflow-x: auto;
             display: -webkit-box;
             -webkit-box-orient: horizontal;
-            padding-bottom: 8px;
+            &::-webkit-scrollbar {
+                display: none;
+            }
         }
         a{  
             display: block;
@@ -365,8 +368,7 @@
                     this.total = data.total
                     if(this.total === 0){    
                         this.loadState = 'NO_DATA'
-                    }
-                    if(this.pageSize*this.pageNo >= this.total){    
+                    }else if(this.pageSize*this.pageNo >= this.total){    
                         this.loadState = 'NO_MORE' 
                     }
                 })
@@ -385,6 +387,18 @@
                 this.$refs.detail.visible = true
                 this.channelId = channelId
                 this.vid = vid
+            },
+            getUpdateSet(count, last) {
+                if(last == ''){   
+                    return ''
+                }else if(last === count){   
+                    return count + '集全'
+                }else{  
+                    return '更新至' + last + '集'
+                }
+            },
+            getThumbPic(pic) {  
+                return pic.replace('.jpg','_y.jpg')
             }
         },
         mounted() {
