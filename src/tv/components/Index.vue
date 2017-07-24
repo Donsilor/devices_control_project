@@ -160,6 +160,7 @@
                 swiperOption: {
                     autoplay: 2000,
                     loop: true,
+                    autoplayDisableOnInteraction: false,
                     pagination: '.swiper-pagination'
                 },
                 ...service.getInitData()

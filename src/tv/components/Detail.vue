@@ -26,10 +26,12 @@
                     <a href="javascript:void(0)" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
                 </div>
                 <!-- 继续播放 -->
+                <!--
                 <div class="playstate playstate_conplay" v-show="false">
                     <a href="#" class="btn"><i class="icon-time"></i>继续播放</a>
                     <span class="tip"><i class="arrow"></i>上次观看到第22集</span>
                 </div>
+                -->
 
                 <!-- 描述 -->
                 <div class="desc">
@@ -50,7 +52,9 @@
         </div>
         
         <div class="detail-playlist" v-show="cur.playlist[0].total > 1">
-            <div class="hd">{{cur.playlist[0].total}}</div>
+            <div class="hd">
+                {{getUpdateSet(cur.playlist[0].total,cur.playlist[0].list.length)}}
+            </div>
             <ul class="bd" v-if="channelId==='004'">
                 <li class="item-haspic"
                     v-for="item in cur.playlist[0].list" 
@@ -68,7 +72,7 @@
                     :class="{'active': playstate===item.index}"
                     @click="play(item.link,item.name,item.index)">
                     {{item.index}}
-                    <span class="tag_new" v-show="item.states"></span>
+                    <!-- <span class="tag_new" v-show="item.states"></span> -->
                 </li>
             </ul>
         </div>
@@ -88,7 +92,7 @@
     }
     .slideup-enter, .slideup-leave-to
     /* .slideup-leave-active for <2.1.8 */ {
-        transform: translateY(100%);
+        transform: translate3d(0,100%,0);
         opacity: 0
     }
     .page-detail{   
@@ -106,28 +110,20 @@
         }
     }
     .page-detail:before{    
-        /*毛玻璃效果，不管用 - -
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        filter: blur(20px);
-        z-index: -1;
-        */
+
     }
     .detail-hd{
         height: 156px;
         position: relative;
         .back{  
-            width: 36px;
-            height: 36px;
-            background-size: 100% 100%;
-            background-repeat: norepeat;
+            width: 84px;
+            height: 96px;
+            background-size: 36px 36px;
+            background-repeat: no-repeat;
+            background-position: center center;
             position: absolute;
-            top: 32px;
-            left: 124px;
+            top: 0;
+            left: 0;
             background-image: url(../assets/icn_topbar_arrowdown_w_normal.png);
             &:active{   
                 background-image: url(../assets/icn_topbar_arrowdown_w_pressed.png);
@@ -371,6 +367,7 @@
                 },
                 isDescOverflow: false,
                 isDescShow: false,
+                loading: false,
                 playstate: '0' //播放状态，
             }
         },
@@ -382,15 +379,24 @@
                 }else{
                     this.$emit('onClose')
                 }
+            },
+            loading(val){   
+                if(val){ 
+                    HdSmart.UI.showLoading()
+                }else{    
+                    HdSmart.UI.hideLoading()
+                }
             }
         },
         methods: {   
             getData() {
                 this.playstate = '0'
+                this.loading = true
                 service.getDetaileData({    
                     channelId: this.channelId,
                     vid: this.vid
                 },(data) => {   
+                    this.loading = false
                     if(data.code === 504){  
                         return 
                     }
@@ -407,8 +413,8 @@
                     this.isDescShow = false
                     this.isDescOverflow = false
                     this.$nextTick(()=>{
-                        let wrapHeight = this.$el.querySelectorAll('.desc-cont')[0].offsetHeight
-                        let textHeight = this.$el.querySelectorAll('.desc-cont p')[0].offsetHeight
+                        let wrapHeight = this.$el.querySelector('.desc-cont').offsetHeight
+                        let textHeight = this.$el.querySelector('.desc-cont p').offsetHeight
 
                         if(textHeight > wrapHeight){    
                             this.isDescOverflow = true
@@ -416,6 +422,15 @@
                             this.isDescOverflow = false
                         }
                     })
+                }
+            },
+            getUpdateSet(count, last) {
+                if(last == ''){   
+                    return ''
+                }else if(last === count){   
+                    return count + '集全'
+                }else{  
+                    return '更新至' + last + '集'
                 }
             }
         }, 

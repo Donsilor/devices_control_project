@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 //import Vuex from 'vuex'
+import FastClick from 'fastclick'
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueLazyload from 'vue-lazyload'
@@ -55,10 +56,13 @@ const router =  new Router({
 let is_ready = false
 
 HdSmart.ready(() => { 
-  HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
+  //HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
   if(!is_ready){
+
     is_ready = true
     
+    FastClick.attach(document.body)
+
     router.beforeEach((to,from,next) => {
       if(to.name === 'index'){  
         HdSmart.UI.toggleHeadAndFoot(true)

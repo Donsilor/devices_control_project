@@ -4,7 +4,7 @@
             <form class="search_bar" @submit.prevent="submit">
                 <div class="search_input">
                     <input autofocus type="text" placeholder="输入片名、导演、演员搜索" v-model="word" @input="fuzzySearch">
-                    <a href="#" class="del" v-show="this.word !== ''" @click.prevent="clearWord"></a>
+                    <a href="#" class="del" v-show="this.word != ''" @click.prevent="clearWord"></a>
                 </div>
                 <input type="submit" value="搜索" class="search_submit">
             </form>
@@ -58,7 +58,7 @@
                     v-for="item in resultData" 
                     :key="item.vid"
                     @click="showDetailInfo(item.channelId,item.vid)">
-                    <img v-lazy="item.pictureUrl" alt="">
+                    <img v-lazy="getThumbPic(item.pictureUrl)" alt="">
                     <div class="name">{{item.title}}</div>
                 </li>
             </ul>
@@ -281,7 +281,7 @@
         methods: {  
             clearWord() {
                 this.word = ''
-                document.querySelectorAll('.search_input input')[0].focus()
+                this.$el.querySelector('.search_input input').focus()
             },
             clearHistory() {
                 HdSmart.UI.alert('清空记录', '确认要清空所有搜索记录？', ()=>{  
@@ -346,8 +346,7 @@
                     this.total = data.data.total
                     if(this.total === 0){    
                         this.loadState = 'NO_DATA'
-                    }
-                    if(this.pageSize*this.pageNo >= this.total){    
+                    }else if(this.pageSize*this.pageNo >= this.total){    
                         this.loadState = 'NO_MORE' 
                     }
                 })
@@ -368,9 +367,12 @@
                 }
             },300),
             showDetailInfo(channelId, vid) {
-                this.$refs.detail.visible = true
                 this.channelId = channelId
                 this.vid = vid
+                this.$refs.detail.visible = true
+            },
+            getThumbPic(pic) {  
+                return pic.replace('.jpg','_y.jpg')
             }
         },
         mounted() { 

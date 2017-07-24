@@ -3,9 +3,6 @@
         <div class="left"> 
             <a class="icon icon-arrow" @click="goBack"></a>
         </div>
-        <div class="left" style="left:24px;"> 
-            <a class="icon icon-arrow" @click="goBack"></a>
-        </div>
         <div class="right">
             <router-link to="/search" class="icon icon-search"></router-link>
         </div>
@@ -22,25 +19,25 @@
         position: relative;
         .left{
             position: absolute;
-            top: 32px;
-            left: 124px;
-            z-index:9999
+            top: 0;
+            left: 0;
         }
         .right{
             position: absolute;
-            top: 32px;
-            right: 24px;
+            top: 0;
+            right: 0;
         }
         .title{
             text-align: center;
             line-height: 95px;
         }
         .icon{  
-            width: 36px;
-            height: 36px;
+            width: 84px;
+            height: 96px;
             display: inline-block;
             background-repeat: no-repeat;
-            background-size: 100% 100%;
+            background-size: 36px 36px;
+            background-position: center center;
         }
         .icon-arrow{
             background-image: url(../assets/icn_topbar_back_normal.png);
