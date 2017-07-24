@@ -34,6 +34,12 @@
     npm run build:air_condition //编译
 ```
 
+### tv 电视
+```
+    npm run dev:tv //开发
+    npm run build:tv //编译
+```
+
 ### history
 ### 2017.7.6
 添加新的命令npm run add <appName> 用于添加新的设备工程
