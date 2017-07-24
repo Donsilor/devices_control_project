@@ -124,6 +124,7 @@
     import Vue from 'vue';
     import AlloyFinger from 'alloyfinger';
     import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue';
+//    import iScroll from 'iscroll';
     Vue.use(AlloyFingerVue, { AlloyFinger });
 
     export default{
@@ -156,15 +157,9 @@
         },
         watch: {
             hour(val){
-//                if(!this.curHour){
-//                    this.curHour = val;
-//                }
                 this.curHour = val;
             },
             minute(val){
-//                if(!this.curMinute){
-//                    this.curMinute = val;
-//                }
                 this.curMinute = val;
             },
             vis(value){
@@ -183,7 +178,12 @@
         mounted: function () {
             this.hourList = this.generateArray(0, 23, 2);
             this.minuteList = this.generateArray(0, 59, 2);
-//            console.log(this.hour + '--' + this.minute);
+
+//            var lScroll = new iScroll('.left');
+//            lScroll.on('scrollEnd', function () {
+//                debugger
+//                alert('scrollEnd' + this.y);
+//            });
 
             let that = this;
             let liHeight = this.liHeight > 0 ? this.liHeight : 60;
