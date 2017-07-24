@@ -40,13 +40,19 @@
     Vue.use(AlloyFingerVue, { AlloyFinger });
 
     export default {
+        data: function () {
+            return{
+                processing: false
+            }
+        },
         props: [ 'info', 'curValue'],
         computed:{
             classObj(){
                 var obj = {
                     'button': true,
 //                    'active': this.info.value === this.curValue
-                    'active': this.info.value === 'on' || (this.info.value === this.curValue)
+                    'active': this.info.value === 'on' || (this.info.value === this.curValue),
+                    'disabled': this.info.disabled
                 };
                 obj[this.info.type] = true;
                 return obj;
@@ -54,6 +60,14 @@
         },
         methods:{
             tap(){
+                if(this.processing){
+                    return;
+                }
+                this.processing = true;
+                setTimeout(()=> {
+                    this.processing = false;
+                }, 500);
+
                 this.$emit('tap', this.info.type, this.info.value, this.info.tip, this.$el);
 //                if(this.curValue !== this.info.value){
 //                    this.$emit('click', this.info.type, this.info.value);

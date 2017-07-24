@@ -35,7 +35,7 @@
                 <!--底部按钮End-->
                 <div class="more" v-show="!showMore" @click.stop="showMore=true;"></div>
                 <!--更多子菜单Start-->
-                <transition name="fade">
+                <transition name="fade-in">
                     <div class="subMenu" v-show="showMore" @click.stop="">
                         <devider :content="'模式'"></devider>
                         <div class="more-mode">
@@ -76,6 +76,15 @@
                 <div v-if="params.deviceSubCategory === 0" class="hanging"></div>
                 <div v-if="params.deviceSubCategory === 1" class="package"></div>
                 <p class="tip"></p>
+                <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
+                    <defs>
+                        <linearGradient id="lg2" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509" y2="1.0971"><!--x1="0%" y1="0%" x2="0%" y2="100%"-->
+                            <stop  offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
+                            <stop  offset="1" style="stop-color:#FFFFFF; stop-opacity:0.75"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z" style="fill:url(#lg2);" />
+                </svg>
                 <div class="bottom">
                     <ac-button :info="buttonList.cool"></ac-button>
                     <ac-button :info="buttonList.heat"></ac-button>
@@ -85,15 +94,6 @@
                     <ac-button :info="buttonList.normal"></ac-button>
                     <ac-button :info="buttonList.high"></ac-button>
                 </div>
-                <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420" style="enable-background:new 0 0 1920 420;">
-                    <defs>
-                        <linearGradient id="lg2" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509" y2="1.0971"><!--x1="0%" y1="0%" x2="0%" y2="100%"-->
-                            <stop  offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
-                            <stop  offset="1" style="stop-color:#FFFFFF; stop-opacity:0.75"/>
-                        </linearGradient>
-                    </defs>
-                    <path d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z" style="fill:url(#lg2);" />
-                </svg>
             </div>
         </transition>
     </div>
@@ -185,6 +185,7 @@
         font-size: 72px;
     }
 
+    /*提示*/
     .tip{
         min-height: 30px;
         font-size: 30px;
@@ -274,6 +275,9 @@
     .bottom .btnName{
         opacity: 0.5;
     }
+    .off .btnName{
+        opacity: 0;
+    }
     /*选中样式*/
     .active .btnName{
         font-size: 30px;
@@ -328,6 +332,10 @@
         height: 96px;
         top: 24px;
         left: 24px;
+    }
+
+    .disabled img{
+        filter: invert(12%);
     }
 
     @keyframes circle {
@@ -451,9 +459,12 @@
                     //降低温度
                     type: TEMPERATURE,
                     imgSrc: require('./assets/minus_normal.png'),
+//                    imgSrc: require('./assets/minus_diabled.png'),
                     imgActiveSrc: require('./assets/minus_pressed.png'),
 //                    value: this.params.temperature > MIN_TEMP ? this.params.temperature - 1 : this.params.temperature
-                    value: this.fakeTemp > MIN_TEMP ? this.fakeTemp - 1 : this.fakeTemp
+                    value: this.fakeTemp > MIN_TEMP ? this.fakeTemp - 1 : this.fakeTemp,
+                    //送风模式下不能设置温度
+                    disabled: this.params.mode === 'wind'
                 }
             },
             plusBtn: function () {
@@ -462,8 +473,10 @@
                     type: TEMPERATURE,
                     imgSrc: require('./assets/plus_normal.png'),
                     imgActiveSrc: require('./assets/plus_pressed.png'),
-                    value: this.fakeTemp < MAX_TEMP ? this.fakeTemp + 1 : this.fakeTemp
+                    value: this.fakeTemp < MAX_TEMP ? this.fakeTemp + 1 : this.fakeTemp,
 //                    value: this.params.temperature < MAX_TEMP ? this.params.temperature + 1 : this.params.temperature
+                    //送风模式下不能设置温度
+                    disabled: this.params.mode === 'wind'
                 }
             },
             bootHour: function () {
@@ -489,7 +502,9 @@
         },
         methods: {
             setState(attr){//设置空调状态
-                this.params.device_name = attr.device_name;
+                if(!this.params.device_name){
+                    this.params.device_name = attr.device_name;
+                }
                 this.params.switch = attr.switchStatus;
                 this.params.temperature = attr.temperature;
                 this.fakeTemp = attr.temperature;
@@ -497,7 +512,9 @@
                 this.params.speed = attr.speed;
                 this.params.wind_up_down = attr.wind_up_down;
                 this.params.wind_left_right = attr.wind_left_right;
-                this.params.deviceSubCategory = attr.deviceSubCategory;
+                if(this.params.deviceSubCategory == null){
+                    this.params.deviceSubCategory = attr.deviceSubCategory;
+                }
 
                 //TODO: 830后做
                 let[onTimer, offTimer] = [null, null];
