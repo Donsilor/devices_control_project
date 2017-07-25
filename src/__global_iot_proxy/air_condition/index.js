@@ -11,9 +11,9 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
     HdIot.Device.control = function (options) {
         setTimeout(function () {
             options.onListener(JSON.stringify(mockData.set(options)));
-        }, 2000)
+        }, 1000)
     };
     // setInterval(() => {
     //     window.onDeviceChange(mockData.generateSnapShot())
-    // }, 2000)
+    // }, 500)
 }

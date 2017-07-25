@@ -57,6 +57,7 @@ export default function (method, nodeId, attr, onSuccess, onFailure, timerObj = 
             }
             clearTimeout(timer);
 
+            // alert(data);
             log('control', dataOptions, data);
             data = JSON.parse(data);
 
@@ -65,6 +66,7 @@ export default function (method, nodeId, attr, onSuccess, onFailure, timerObj = 
             // } else if (isFunction(onSuccess)) {
             //     onSuccess();
             // }
+
             if (data.code == 200) {
                 if(isFunction((onSuccess))){
                     onSuccess(data);
