@@ -26,6 +26,7 @@ export function onDeviceListen(onDeviceChangeCallback) {
 export function runDeviceListenCallback(data) {
     log('onDeviceListen', '', data);
     callbacks.forEach((callback) => {
+        // alert('onDeviceListen---' +  JSON.stringify(data));
         callback(data);
     });
 }

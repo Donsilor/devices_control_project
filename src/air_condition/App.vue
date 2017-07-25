@@ -2,100 +2,115 @@
     <div id="app" :class="appClassObj" @click="showMore=false;">
         <p class="title">{{ params.device_name }}</p>
         <p class="tip" v-show="params.switch === 'off'">已关闭</p>
-        <transition name="fade-in">
-            <div v-show="params.switch === 'on'">
-                <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
-                    <defs>
-                        <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509" y2="1.0971"><!--x1="0%" y1="0%" x2="0%" y2="100%"-->
-                            <stop  offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
-                            <stop  offset="1" style="stop-color:#FFFFFF; stop-opacity:0.3"/>
-                        </linearGradient>
-                    </defs>
-                    <!--<path d="M0 420 L0 40 C450 -100 900 300 1920 20 L1920 420 Z" style="fill:url(#linearGradient);" />-->
-                    <path d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z" style="fill:url(#lg1);" />
-                </svg>
-                <!--温度Start-->
-                <div class="temp">
-                    <ac-button :info="minusBtn" @tap="setTemperature"></ac-button>
-                    <div class="temp-show"><label class="temp-number">{{ fakeTemp }}</label><label class="temp-unit">℃</label></div>
-                    <ac-button :info="plusBtn" @tap="setTemperature"></ac-button>
-                </div>
-                <!--温度End-->
-                <p :class="{'tip':true, 'transparent': tip.length == 0}">{{ tip }}</p>
-                <!--底部按钮Start-->
-                <div class="bottom">
-                    <ac-button :info="buttonList.cool" :curValue="params[buttonList.cool.type]" @tap="setParam"></ac-button>
-                    <ac-button :info="buttonList.heat" :curValue="params[buttonList.heat.type]" @tap="setParam"></ac-button>
-                    <ac-button :info="buttonList.dehumidify" :curValue="params[buttonList.dehumidify.type]" @tap="setParam"></ac-button>
-                    <ac-button :info="buttonList.on" v-show="params.switch === 'on'" @tap="toggle"></ac-button>
-                    <ac-button :info="buttonList.low" :curValue="params[buttonList.low.type]" @tap="setParam"></ac-button>
-                    <ac-button :info="buttonList.normal" :curValue="params[buttonList.normal.type]" @tap="setParam"></ac-button>
-                    <ac-button :info="buttonList.high" :curValue="params[buttonList.high.type]" @tap="setParam"></ac-button>
-                </div>
-                <!--底部按钮End-->
-                <div class="more" v-show="!showMore" @click.stop="showMore=true;"></div>
-                <!--更多子菜单Start-->
-                <transition name="fade-in">
-                    <div class="subMenu" v-show="showMore" @click.stop="">
-                        <devider :content="'模式'"></devider>
-                        <div class="more-mode">
-                            <ac-button :info="buttonList.mode_auto" :curValue="params[buttonList.mode_auto.type]" @tap="setParam"></ac-button>
-                            <ac-button :info="buttonList.wind" :curValue="params[buttonList.wind.type]" @tap="setParam"></ac-button>
-                        </div>
-                        <devider :content="'摆风'"></devider>
-                        <div class="more-wind-direction">
-                            <ac-button v-if="params.deviceSubCategory === 1" :info="lrBtn" @tap="toggle"></ac-button>
-                            <ac-button :info="udBtn" @tap="toggle"></ac-button>
-                        </div>
-                        <devider :content="'定时'"></devider>
-                        <div class="more-timing">
-                            <!--<ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"></ac-switch>-->
-                            <!--<ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"></ac-switch>-->
-                            <ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"
-                                       @change="bootTpVisible = params.bootSwitch" @toggle="toggle('bootSwitch')"></ac-switch>
-                            <ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"
-                                       @change="offTpVisible = params.offSwitch" @toggle="toggle('offSwitch')"></ac-switch>
-                        </div>
+        <!--<transition name="fade-in">-->
+        <div v-show="params.switch === 'on'">
+            <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
+                <defs>
+                    <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509"
+                                    y2="1.0971"><!--x1="0%" y1="0%" x2="0%" y2="100%"-->
+                        <stop offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
+                        <stop offset="1" style="stop-color:#FFFFFF; stop-opacity:0.3"/>
+                    </linearGradient>
+                </defs>
+                <!--<path d="M0 420 L0 40 C450 -100 900 300 1920 20 L1920 420 Z" style="fill:url(#linearGradient);" />-->
+                <path
+                    d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z"
+                    style="fill:url(#lg1);"/>
+            </svg>
+            <!--温度Start-->
+            <div class="temp">
+                <ac-button :info="minusBtn" @tap="setTemperature"></ac-button>
+                <div class="temp-show"><label class="temp-number">{{ fakeTemp }}</label><label
+                    class="temp-unit">℃</label></div>
+                <ac-button :info="plusBtn" @tap="setTemperature"></ac-button>
+            </div>
+            <!--温度End-->
+            <p :class="{'tip':true, 'transparent': tip.length == 0}">{{ tip }}</p>
+            <!--底部按钮Start-->
+            <div class="bottom">
+                <ac-button :info="buttonList.cool" :curValue="params[buttonList.cool.type]" @tap="setParam"></ac-button>
+                <ac-button :info="buttonList.heat" :curValue="params[buttonList.heat.type]" @tap="setParam"></ac-button>
+                <ac-button :info="buttonList.dehumidify" :curValue="params[buttonList.dehumidify.type]"
+                           @tap="setParam"></ac-button>
+                <ac-button :info="buttonList.on" v-show="params.switch === 'on'" @tap="toggle"></ac-button>
+                <ac-button :info="buttonList.low" :curValue="params[buttonList.low.type]" @tap="setParam"></ac-button>
+                <ac-button :info="buttonList.normal" :curValue="params[buttonList.normal.type]"
+                           @tap="setParam"></ac-button>
+                <ac-button :info="buttonList.high" :curValue="params[buttonList.high.type]" @tap="setParam"></ac-button>
+            </div>
+            <!--底部按钮End-->
+            <div class="more" v-show="!showMore" @click.stop="showMore=true;"></div>
+            <!--更多子菜单Start-->
+            <transition name="fade-in">
+                <div class="subMenu" v-show="showMore" @click.stop="">
+                    <devider :content="'模式'"></devider>
+                    <div class="more-mode">
+                        <ac-button :info="buttonList.mode_auto" :curValue="params[buttonList.mode_auto.type]"
+                                   @tap="setParam"></ac-button>
+                        <ac-button :info="buttonList.wind" :curValue="params[buttonList.wind.type]"
+                                   @tap="setParam"></ac-button>
                     </div>
-                </transition>
-                <!--更多子菜单End-->
-                <!--时间选择器Start-->
-                <transition name="fade">
-                    <time-picker v-show="bootTpVisible" :vis="bootTpVisible" :hour="bootHour" :minute="bootMinute" :title="'设置空调开机时间'"
-                                 @vchange="setBootTimePickerVisibility" @change="setBootTime"></time-picker>
-                </transition>
-                <transition name="fade">
-                    <time-picker v-show="offTpVisible" :vis="offTpVisible" :hour="offHour" :minute="offMinute" :title="'设置空调关机时间'"
-                                 @vchange="setOffTimePickerVisibility" @change="setOffTime"></time-picker>
-                </transition>
-                <!--时间选择器End-->
-            </div>
-        </transition>
-        <transition name="fade-in">
-            <div v-show="params.switch !== 'on'">
-                <div v-if="params.deviceSubCategory === 0" class="hanging"></div>
-                <div v-if="params.deviceSubCategory === 1" class="package"></div>
-                <p class="tip"></p>
-                <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
-                    <defs>
-                        <linearGradient id="lg2" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509" y2="1.0971"><!--x1="0%" y1="0%" x2="0%" y2="100%"-->
-                            <stop  offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
-                            <stop  offset="1" style="stop-color:#FFFFFF; stop-opacity:0.75"/>
-                        </linearGradient>
-                    </defs>
-                    <path d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z" style="fill:url(#lg2);" />
-                </svg>
-                <div class="bottom">
-                    <ac-button :info="buttonList.cool"></ac-button>
-                    <ac-button :info="buttonList.heat"></ac-button>
-                    <ac-button :info="buttonList.dehumidify"></ac-button>
-                    <ac-button v-show="params.switch === 'off'" :info="buttonList.off" @tap="toggle"></ac-button>
-                    <ac-button :info="buttonList.low"></ac-button>
-                    <ac-button :info="buttonList.normal"></ac-button>
-                    <ac-button :info="buttonList.high"></ac-button>
+                    <devider :content="'摆风'"></devider>
+                    <div class="more-wind-direction">
+                        <ac-button v-if="params.deviceSubCategory === 1" :info="lrBtn" @tap="toggle"></ac-button>
+                        <ac-button :info="udBtn" @tap="toggle"></ac-button>
+                    </div>
+                    <devider :content="'定时'"></devider>
+                    <div class="more-timing">
+                        <!--<ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"></ac-switch>-->
+                        <!--<ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"></ac-switch>-->
+                        <ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"
+                                   @change="bootTpVisible = params.bootSwitch"
+                                   @toggle="toggle('bootSwitch')"></ac-switch>
+                        <ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"
+                                   @change="offTpVisible = params.offSwitch" @toggle="toggle('offSwitch')"></ac-switch>
+                    </div>
                 </div>
+            </transition>
+            <!--更多子菜单End-->
+            <!--时间选择器Start-->
+            <transition name="fade">
+                <time-picker v-show="bootTpVisible" :vis="bootTpVisible" :hour="bootHour" :minute="bootMinute"
+                             :title="'设置空调开机时间'"
+                             @vchange="setBootTimePickerVisibility" @change="setBootTime"></time-picker>
+            </transition>
+            <transition name="fade">
+                <time-picker v-show="offTpVisible" :vis="offTpVisible" :hour="offHour" :minute="offMinute"
+                             :title="'设置空调关机时间'"
+                             @vchange="setOffTimePickerVisibility" @change="setOffTime"></time-picker>
+            </transition>
+            <!--时间选择器End-->
+        </div>
+        <!--</transition>-->
+        <!--<transition name="fade-in">-->
+        <div v-show="params.switch !== 'on'">
+            <div v-if="params.deviceSubCategory === 0" class="hanging"></div>
+            <div v-if="params.deviceSubCategory === 1" class="package"></div>
+            <p class="tip"></p>
+            <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
+                <defs>
+                    <linearGradient id="lg2" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509"
+                                    y2="1.0971"><!--x1="0%" y1="0%" x2="0%" y2="100%"-->
+                        <stop offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
+                        <stop offset="1" style="stop-color:#FFFFFF; stop-opacity:0.75"/>
+                    </linearGradient>
+                </defs>
+                <path
+                    d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z"
+                    style="fill:url(#lg2);"/>
+            </svg>
+            <div class="bottom">
+                <ac-button :info="buttonList.cool"></ac-button>
+                <ac-button :info="buttonList.heat"></ac-button>
+                <ac-button :info="buttonList.dehumidify"></ac-button>
+                <ac-button v-show="params.switch === 'off'" :info="buttonList.off" @tap="toggle"></ac-button>
+                <ac-button :info="buttonList.low"></ac-button>
+                <ac-button :info="buttonList.normal"></ac-button>
+                <ac-button :info="buttonList.high"></ac-button>
             </div>
-        </transition>
+        </div>
+        <!--</transition>-->
+        <!--<div class=""></div>-->
     </div>
 </template>
 
@@ -104,89 +119,105 @@
         margin: 0;
         padding: 0;
     }
-    body{
+
+    body {
         font: 24px/1 'NotoSansHans-Regular';
         color: #FFF;
     }
-    html, body, .main{
+
+    html, body, .main {
         height: 100%;
     }
-    ::-webkit-scrollbar{
+
+    ::-webkit-scrollbar {
         opacity: 0;
     }
-    .invisible{
+
+    .invisible {
         visibility: hidden;
     }
 
-    .main{
+    .main {
         box-sizing: border-box;
         padding: 155px 0 180px 0;
         text-align: center;
     }
+
     /*.main.on{*/
-        /*background: #0bc0fe url(assets/bg_on.png) no-repeat center bottom;*/
+    /*background: #0bc0fe url(assets/bg_on.png) no-repeat center bottom;*/
     /*}*/
-    .main.on{
+    .main.on {
         background-color: #0bc0fe;
     }
-    .bg{
+
+    .bg {
         position: absolute;
         left: 0;
         bottom: 180px;
         width: 100%;
         height: auto;
     }
-    .main.off{
+
+    .main.off {
         background-color: #f2f2f2;
     }
+
     /*.off .imgWrapper{*/
-        /*cursor: default;*/
+    /*cursor: default;*/
     /*}*/
-    .off .imgWrapper img{
+    .off .imgWrapper img {
         filter: invert(30%);
     }
-    .off .switch img{
+
+    .off .switch img {
         filter: invert(0);
     }
-    .hanging, .package{
+
+    .hanging, .package {
         height: 360px;
     }
-    .hanging{
+
+    .hanging {
         background: url(./assets/bg_off_hanging.png) no-repeat center;
     }
-    .package{
+
+    .package {
         background: url(./assets/bg_off_package.png) no-repeat center;
         background-size: 540px 360px;
     }
 
-    .title{
+    .title {
         font-size: 30px;
         margin-bottom: 78px;
     }
-    .off .title{
+
+    .off .title {
         color: #75787a;
         margin-bottom: 0;
     }
 
     /*温度*/
-    .temp{
+    .temp {
         display: flex;
         justify-content: center;
         align-items: center;
     }
-    .temp-show{
+
+    .temp-show {
         margin: 0 216px 0 240px;
     }
-    .temp-number{
+
+    .temp-number {
         font-size: 240px;
         font-family: RobotoCondensed-Regular;
     }
-    .temp-unit{
+
+    .temp-unit {
         font-size: 72px;
     }
 
     /*提示*/
-    .tip{
+    .tip {
         min-height: 30px;
         font-size: 30px;
         margin: 24px 0 110px 0;
@@ -194,16 +225,18 @@
         transition: opacity 1s ease;
         position: relative;
     }
-    .tip.transparent{
+
+    .tip.transparent {
         opacity: 0;
     }
-    .off .tip{
+
+    .off .tip {
         /*color: #c8cacc;*/
         color: #46bcff;
         margin: 25px 0 37px 0;
     }
 
-    .bottom{
+    .bottom {
         display: flex;
         margin: 0 240px;
         justify-content: space-around;
@@ -212,23 +245,24 @@
     }
 
     /*图片*/
-    .temp img, .bottom img{
+    .temp img, .bottom img {
         width: 144px;
         height: 144px;
     }
 
-    .switch img{
+    .switch img {
         width: 204px;
         height: 204px;
     }
 
-    .more, .subMenu{
+    .more, .subMenu {
         position: absolute;
         right: 60px;
         top: 131px;
     }
+
     /*更多*/
-    .more{
+    .more {
         width: 96px;
         height: 96px;
         background: url(./assets/more_normal.png) no-repeat center;
@@ -237,22 +271,24 @@
         cursor: pointer;
         border-radius: 100%;
     }
-    .more:hover{
+
+    .more:hover {
         background-image: url(./assets/more_active.png);
     }
 
     /*子菜单*/
-    .fade-enter-active,.fade-in-enter-active, .fade-leave-active {
+    .fade-enter-active, .fade-in-enter-active, .fade-leave-active {
         transition: opacity 0.5s linear;
     }
-    .fade-enter, .fade-leave-to, .fade-in-enter, .fade-in-leave-to{
+
+    .fade-enter, .fade-leave-to, .fade-in-enter, .fade-in-leave-to {
         opacity: 0
     }
 
-    .subMenu{
+    .subMenu {
         opacity: 0.95;
         background: #ffffff;
-        box-shadow: 0 3px 12px 0 rgba(0,0,0,0.10);
+        box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.10);
         box-sizing: border-box;
         border-radius: 6px;
         padding: 0 24px;
@@ -261,44 +297,51 @@
         color: #75787a;
         font-size: 24px;
     }
-    .subMenu .imgWrapper{
+
+    .subMenu .imgWrapper {
         margin: 25px 24px 10px 24px;
     }
-    .subMenu img{
+
+    .subMenu img {
         width: 96px;
         height: 96px;
     }
-    .subMenu .devider{
+
+    .subMenu .devider {
         margin-top: 30px;
     }
 
-    .bottom .btnName{
+    .bottom .btnName {
         opacity: 0.5;
     }
-    .off .btnName{
+
+    .off .btnName {
         opacity: 0;
     }
+
     /*选中样式*/
-    .active .btnName{
+    .on .active .btnName {
         font-size: 30px;
         opacity: 1;
     }
-    .subMenu .active .btnName{
+
+    .subMenu .active .btnName {
         font-size: 24px;
         color: #46bcff;
         opacity: 1;
     }
 
-    .more-timing{
+    .more-timing {
         font-size: 30px;
         margin-top: 12px;
     }
 
     /*loading样式*/
-    .loading{
+    .loading {
         position: relative;
     }
-    .loading:before{
+
+    .loading:before {
         content: '';
         position: absolute;
         top: 0;
@@ -307,25 +350,28 @@
         height: 144px;
         background: url('./assets/buffering_mode_white.png') no-repeat center;
         background-size: 100%;
-        animation: circle 1s linear infinite;
+        /*transform: translate3d(0,0,0);*/
+        /*animation: circle 1s linear infinite;*/
     }
 
-    .switch.loading:before{
+    .switch.loading:before {
         top: 12px;
         left: 12px;
         width: 180px;
         height: 180px;
     }
-    .on .switch.loading:before{
+
+    .on .switch.loading:before {
         background: url('./assets/buffering_power_white.png') no-repeat center;
         background-size: 100%;
     }
-    .off .switch.loading:before{
+
+    .off .switch.loading:before {
         background: url('./assets/buffering_power_blue.png') no-repeat center;
         background-size: 100%;
     }
 
-    .subMenu .loading:before{
+    .subMenu .loading:before {
         background: url('./assets/buffering_mode_blue.png') no-repeat center;
         background-size: 100%;
         width: 96px;
@@ -334,15 +380,15 @@
         left: 24px;
     }
 
-    .disabled img{
+    .disabled img {
         filter: invert(12%);
     }
 
     @keyframes circle {
-        0%{
+        0% {
             transform: rotate(0deg);
         }
-        100%{
+        100% {
             transform: rotate(360deg);
         }
     }
@@ -354,15 +400,20 @@
     import TimePicker from './components/TimePicker.vue';
     import AcSwitch from './components/AcSwitch.vue';
 
-    import { getDeviceName } from '../sdk/hdsmart/helper';
+    import {getDeviceName} from '../sdk/hdsmart/helper';
 
     const [MIN_TEMP, MAX_TEMP] = [16, 30];
     const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] =
         ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
     const [ON, OFF] = ['on', 'off'];
     const NODE_ID = 'airconditioner.main.';
-    const SPAN = 500;//连续设置时间判断间隔
-    const LOADING_DELAY = 300;//loading效果延迟
+    //连续设置时间判断间隔
+    const SPAN = 500;
+    //loading效果延迟
+    //    const LOADING_DELAY = 300;
+    const LOADING_DELAY = 300;
+    //loading class
+    const LOADING_CLASS = 'loading';
 
     //Button构造方法
     function Button(title, type, value, imgSrc, imgActiveSrc, tip) {
@@ -375,7 +426,7 @@
     }
 
     export default {
-        components: { AcButton, Devider, TimePicker, AcSwitch },
+        components: {AcButton, Devider, TimePicker, AcSwitch},
         data() {
             return {
                 buttonList: {
@@ -387,7 +438,7 @@
                     wind: new Button('送风', MODE, 'wind', require('./assets/wind_normal.png'), require('./assets/wind_active.png'), '送风模式切换成功'),
 
                     //风速
-                    low: new  Button('低风', SPEED, 'low', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
+                    low: new Button('低风', SPEED, 'low', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
                     normal: new Button('中风', SPEED, 'normal', require('./assets/medium_normal.png'), require('./assets/medium_active.png'), '中风切换成功'),
                     high: new Button('高风', SPEED, 'high', require('./assets/high_normal.png'), require('./assets/high_active.png'), '高风切换成功'),
 
@@ -418,11 +469,13 @@
                 tempFlag: false,
                 tempTimer: null,
                 fakeTemp: null,
-                loadingTimer: null
+                loadingTimer: null,
+                loadingElement: null,
+                complete: false
             }
         },
         mounted: function () {
-            HdSmart.ready(()=>{
+            HdSmart.ready(() => {
                 HdSmart.Device.getSnapShot((data) => {
                     this.setState(data.attr);
                     HdSmart.UI.hideLoading();
@@ -433,18 +486,14 @@
                 });
 
                 HdSmart.onDeviceListen((data) => {
-                    try {
-                        console.log('report: ' + JSON.stringify(data));
-                        this.setState(data.result.attr);
-                    }
-                    catch (err) {
-                    }
+                    console.log('report: ' + JSON.stringify(data));
+                    this.setState(data.result.attr);
                 })
             });
         },
         computed: {
             appClassObj: function () {
-                let obj = { main: true };
+                let obj = {main: true};
                 obj[this.params.switch] = true;
                 return obj;
             },
@@ -494,7 +543,7 @@
         },
         watch: {
             tempFlag(val){
-                if(!val){
+                if (!val) {
 //                    console.log('准备发送请求：' + this.fakeTemp);
                     this.setParam(TEMPERATURE, this.fakeTemp, '温度设置成功');
                 }
@@ -502,7 +551,12 @@
         },
         methods: {
             setState(attr){//设置空调状态
-                if(!this.params.device_name){
+                if (!attr) {
+//                    alert('attr---' + undefined)
+                    return;
+                }
+
+                if (!this.params.device_name) {
                     this.params.device_name = attr.device_name;
                 }
                 this.params.switch = attr.switchStatus;
@@ -512,67 +566,67 @@
                 this.params.speed = attr.speed;
                 this.params.wind_up_down = attr.wind_up_down;
                 this.params.wind_left_right = attr.wind_left_right;
-                if(this.params.deviceSubCategory == null){
+                if (this.params.deviceSubCategory == null) {
                     this.params.deviceSubCategory = attr.deviceSubCategory;
                 }
 
                 //TODO: 830后做
-                let[onTimer, offTimer] = [null, null];
-                if(attr.timer instanceof Array){
-                    onTimer = attr.timer.find((v) => { return v.type === 'air_switch_on' });
-                    offTimer = attr.timer.find((v) => { return v.type === 'air_switch_off' });
-                }
+                /*let[onTimer, offTimer] = [null, null];
+                 if(attr.timer instanceof Array){
+                 onTimer = attr.timer.find((v) => { return v.type === 'air_switch_on' });
+                 offTimer = attr.timer.find((v) => { return v.type === 'air_switch_off' });
+                 }
 
-                if(onTimer){
-                    this.params.bootSwitch = ( onTimer.status === 1);
-                    this.params.bootTime = onTimer.time;
-                }
-                else{
-                    this.params.bootSwitch = false;
-                    this.params.bootTime = '';
-                }
+                 if(onTimer){
+                 this.params.bootSwitch = ( onTimer.status === 1);
+                 this.params.bootTime = onTimer.time;
+                 }
+                 else{
+                 this.params.bootSwitch = false;
+                 this.params.bootTime = '';
+                 }
 
-                if(offTimer){
-                    this.params.offSwitch = ( offTimer.status === 1);
-                    this.params.offTime = offTimer.time;
-                }
-                else{
-                    this.params.offSwitch = false;
-                    this.params.offTime = '';
-                }
+                 if(offTimer){
+                 this.params.offSwitch = ( offTimer.status === 1);
+                 this.params.offTime = offTimer.time;
+                 }
+                 else{
+                 this.params.offSwitch = false;
+                 this.params.offTime = '';
+                 }*/
             },
             toggle(type, value, tip, el){
                 let str = '';
                 let oldValue = this.params[type];
                 let newValue;
 
-                if(oldValue === ON){
+                if (oldValue === ON) {
                     newValue = OFF;
                     str = '已关闭';
                 }
-                else if(oldValue === OFF){
+                else if (oldValue === OFF) {
                     newValue = ON;
                     str = '已启动';
                 }
-                else if(oldValue === true){
+                else if (oldValue === true) {
                     str = '已关闭';
                     newValue = false;
                 }
-                else if (oldValue === false){
+                else if (oldValue === false) {
                     str = '已启动';
                     newValue = true;
                 }
 
-                if(type === WIND_LEFT_RIGHT){
+                if (type === WIND_LEFT_RIGHT) {
                     this.setParam(type, newValue, '左右扫风' + str, el);
                 }
-                else if (type === WIND_UP_DOWN){
+                else if (type === WIND_UP_DOWN) {
                     this.setParam(type, newValue, '上下扫风' + str, el);
                 }
-                else if (type === BOOT_SWITCH){
+                else if (type === BOOT_SWITCH) {
                     this.setTimer(BOOT_SWITCH, newValue, this.params.bootTime, '开机时间' + str);
                 }
-                else if (type === OFF_SWITCH){
+                else if (type === OFF_SWITCH) {
                     this.setTimer(OFF_SWITCH, newValue, this.params.offTime, '关机时间' + str);
                 }
                 else {
@@ -580,40 +634,62 @@
                 }
             },
             setParam(type, value, tip, el){
-                if(this.params[type] === value){//如果参数值没有变化，直接返回
+                let that = this;
+                if (that.params[type] === value) {//如果参数值没有变化，直接返回
                     return;
                 }
-                if(el){
-                    this.loadingTimer = setTimeout(() => { el.classList.add('loading'); }, LOADING_DELAY);
+
+                this.complete = false;
+                if (el) {
+                    that.loadingTimer = setTimeout(() => {
+                        removeLoading();
+                        if(that.complete){
+                            return;
+                        }
+//                        alert('setTimer');
+                        that.loadingElement = el;
+                        that.loadingElement.classList.add(LOADING_CLASS);
+//                        alert(that.complete + '---' + document.querySelector('.loading'));
+                    }, LOADING_DELAY);
                 }
 
                 let attr = {};
                 attr[type] = value;
+
                 HdSmart.Device.instruct('set', NODE_ID + type, attr,
                     () => {
-                        clearTimeout(this.loadingTimer);
-                        if(el){
-                            el.classList.remove('loading');
-                        }
-                        this.params[type] = value;
-                        this.setTip(tip);
+                        this.complete = true;
+                        removeLoading();
+
+                        that.params[type] = value;
+                        that.setTip(tip);
                     },
                     (data) => {
-                        clearTimeout(this.loadingTimer);
-                        if(el){
-                            el.classList.remove('loading');
+                        this.complete = true;
+                        removeLoading();
+
+                        if (type === TEMPERATURE) {//
+                            that.fakeTemp = that.params.temperature;
                         }
-                        if(type === TEMPERATURE){//
-                            this.fakeTemp = this.params.temperature;
-                        }
-                        this.setTip('设置失败');
-                        console.log('设置['+ type +']失败: ' + data.msg);
+                        that.setTip('设置失败');
+//                        alert('控制失败：' + JSON.stringify(that.params));
+//                        console.log('设置['+ type +']失败: ' + data);
                     }
                 );
+
+                //移除loading
+                function removeLoading() {
+                    clearTimeout(that.loadingTimer);
+
+                    if (that.loadingElement) {
+                        that.loadingElement.classList.remove(LOADING_CLASS);
+                        that.loadingElement = null;
+                    }
+                }
             },
             setTimer(switchType, switchValue, time, tip){
                 //没有设置时间，不发送指令
-                if(!time){
+                if (!time) {
                     this.params[switchType] = switchValue;
                     this.setTip(tip);
                     return;
@@ -627,10 +703,10 @@
                 HdSmart.Device.instruct('set', NODE_ID + POWER, attr,
                     () => {
                         this.params[switchType] = switchValue;
-                        if(switchType === BOOT_SWITCH){
+                        if (switchType === BOOT_SWITCH) {
                             this.params.bootTime = time;
                         }
-                        else if (switchType === OFF_SWITCH){
+                        else if (switchType === OFF_SWITCH) {
                             this.params.offTime = time;
                         }
                         this.setTip(tip);
@@ -643,24 +719,26 @@
             },
             setTemperature(type, value){
                 //送风模式不能设置温度
-                if(this.params.mode === 'wind'){
+                if (this.params.mode === 'wind') {
                     this.setTip('送风模式下不能设置温度');
                     return;
                 }
 
                 this.tempFlag = true;
                 this.fakeTemp = value;
-                if(this.tempTimer){
+                if (this.tempTimer) {
                     clearTimeout(this.tempTimer);
                 }
-                this.tempTimer = setTimeout(() => { this.tempFlag = false; }, SPAN);
+                this.tempTimer = setTimeout(() => {
+                    this.tempFlag = false;
+                }, SPAN);
             },
             getTimerObj(switchValue, time){
-                if(switchValue === true){//打开开关
-                    return { operation: "add", time: time, periodic: 1 };
+                if (switchValue === true) {//打开开关
+                    return {operation: "add", time: time, periodic: 1};
                 }
-                else{
-                    return { operation: "delete" };
+                else {
+                    return {operation: "delete"};
                 }
             },
             setBootTimePickerVisibility(visible){
@@ -671,29 +749,31 @@
             },
             setBootTime(value){
 //                this.setParam('bootTime', value);
-                if(value !== this.params.bootTime){
+                if (value !== this.params.bootTime) {
                     this.setTimer(BOOT_SWITCH, true, value, '开机时间设置成功');
                 }
                 this.bootTpVisible = false;
             },
             setOffTime(value){
 //                this.setParam('offTime', value);
-                if(value !== this.params.offTime){
+                if (value !== this.params.offTime) {
                     this.setTimer(OFF_SWITCH, true, value, '关机时间设置成功');
                 }
                 this.offTpVisible = false;
             },
             setTip(tip){
                 this.tip = tip || '';
-                if(this.tipTimer){
+                if (this.tipTimer) {
                     clearTimeout(this.tipTimer);
                 }
-                this.tipTimer = setTimeout(() => { this.tip = ''; }, 3000);
+                this.tipTimer = setTimeout(() => {
+                    this.tip = '';
+                }, 3000);
             },
             getHour(str){
                 var arr = str.split(':');
                 var s = '';
-                if(arr.length > 0){
+                if (arr.length > 0) {
                     s = arr[0].trim();
                 }
 
@@ -703,7 +783,7 @@
                 var arr = str.split(':');
                 var s = '';
 
-                if(arr.length > 1){
+                if (arr.length > 1) {
                     s = arr[1].trim();
                 }
 
