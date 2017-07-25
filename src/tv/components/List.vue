@@ -86,7 +86,7 @@
         </ul>
         <!-- 加载更多 -->
         <div class="loadmore">
-            <div class="spinner" v-show="loadState === 'LOADING'">
+            <!--<div class="spinner" v-show="loadState === 'LOADING'">
                 <div class="rect1"></div>
                 <div class="rect2"></div>
                 <div class="rect3"></div>
@@ -95,7 +95,8 @@
                 <div class="rect6"></div>
                 <div class="rect7"></div>
                 <div class="rect8"></div>
-            </div>
+            </div>-->
+            <p v-show="loadState === 'LOADING'">正在加载中...</p>
             <p v-show="loadState === 'LOADED'">加载更多...</p>
             <p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>
         </div>
