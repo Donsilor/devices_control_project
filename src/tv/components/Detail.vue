@@ -2,7 +2,7 @@
 <transition name="slideup">
     <div class="page-detail" v-show="visible">
         <div class="detail-hd">
-            <a href="#" class="back" @click.prevent="visible=false"></a>
+            <span class="back" @click="close"></span>
             <div class="title">{{cur.title}}</div>
         </div>
         <div class="detail-info clearfix">
@@ -88,7 +88,7 @@
         transition: all .3s ease;
     }
     .slideup-leave-active {
-        transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+        transition: all .3s ease;
     }
     .slideup-enter, .slideup-leave-to
     /* .slideup-leave-active for <2.1.8 */ {
@@ -360,11 +360,11 @@
         data() {    
             return {
                 visible: false,
-                cur: {  
+                cur: Object.freeze({  
                     playlist: [{    
                         list: []
                     }]
-                },
+                }),
                 isDescOverflow: false,
                 isDescShow: false,
                 loading: false,
@@ -377,6 +377,12 @@
                     this.getData()
                     this.$emit('onShow')
                 }else{
+                    this.playstate = '0'
+                    this.cur = Object.freeze({  
+                        playlist: [{    
+                            list: []
+                        }]
+                    })
                     this.$emit('onClose')
                 }
             },
@@ -390,7 +396,6 @@
         },
         methods: {   
             getData() {
-                this.playstate = '0'
                 this.loading = true
                 service.getDetaileData({    
                     channelId: this.channelId,
@@ -432,6 +437,9 @@
                 }else{  
                     return '更新至' + last + '集'
                 }
+            },
+            close() {   
+                this.visible = false
             }
         }, 
         created() { 

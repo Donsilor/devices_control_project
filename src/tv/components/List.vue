@@ -132,7 +132,11 @@
             width: 100%;
         }
         dt{ 
-            width: 180px;
+            width: 210px;
+            a{
+                margin-right: 0;
+                display:inline-block;
+            }
         }
         dd{ 
             width: 100%;
@@ -151,7 +155,7 @@
             padding: 0 12px;
             height: 42px;
             line-height: 42px;
-            white-space: nowrap;
+            /*white-space: nowrap;*/
             &.active{   
                 background: #13d5dc;
                 color: #fff;
