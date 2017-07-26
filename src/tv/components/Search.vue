@@ -3,7 +3,7 @@
         <topbar class="topbar-fixed">
             <form class="search_bar" @submit.prevent="submit">
                 <div class="search_input">
-                    <input autofocus type="text" placeholder="输入片名、导演、演员搜索" v-model="word" @input="fuzzySearch">
+                    <input type="text" placeholder="输入片名、导演、演员搜索" v-model="word" @input="fuzzySearch">
                     <a href="#" class="del" v-show="this.word != ''" @click.prevent="clearWord"></a>
                 </div>
                 <input type="submit" value="搜索" class="search_submit">
@@ -65,6 +65,7 @@
 
             <!-- 加载更多 -->
             <div class="loadmore">
+                <!--
                 <div class="spinner" v-show="loadState === 'LOADING'">
                     <div class="rect1"></div>
                     <div class="rect2"></div>
@@ -75,6 +76,8 @@
                     <div class="rect7"></div>
                     <div class="rect8"></div>
                 </div>
+                -->
+                <p v-show="loadState === 'LOADING'">正在加载中...</p>
                 <p v-show="loadState === 'LOADED'">加载更多...</p>
                 <p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>
             </div>
@@ -239,6 +242,7 @@
                 curpage: 1, // 默认1,联想词2,搜索结果3
                 channels: service.getInitData().channels,
                 orderby: [
+                    {text:'相关',orderId:''},
                     {text:'最新',orderId:'year'},
                     {text:'最热',orderId:'iscore'}
                 ],
@@ -248,7 +252,7 @@
                 historyData: [],
                 resultData: [],
                 current_channel: '',
-                current_orderby: 'year',
+                current_orderby: '', 
                 total: 0,
                 pageNo: 1,
                 pageSize: 15,
@@ -299,7 +303,7 @@
                 this.curpage = 3 
                 this.word = word
                 this.current_channel = ''
-                this.current_orderby = 'year'
+                this.current_orderby = ''
                 this.pageNo = 1
                 this.filterData()
             },
@@ -380,6 +384,7 @@
             service.getSearchHistory((data)=>{  
                 this.historyData = data.data
             })
+            this.$el.querySelector('.search_input input').focus()
             window.addEventListener('scroll',this.loadMore)
         },
         destroyed() {

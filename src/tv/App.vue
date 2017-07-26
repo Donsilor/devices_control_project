@@ -7,7 +7,10 @@
 <style lang="less">
     *{
         padding: 0;
-        margin: 0; 
+        margin: 0;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        user-select: none;
     }
     a{  
         text-decoration: none;

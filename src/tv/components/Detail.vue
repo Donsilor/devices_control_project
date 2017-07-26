@@ -1,5 +1,5 @@
 <template>
-<transition name="slideup">
+<!-- <transition name="slideup"> -->
     <div class="page-detail" v-show="visible">
         <div class="detail-hd">
             <span class="back" @click="close"></span>
@@ -7,7 +7,7 @@
         </div>
         <div class="detail-info clearfix">
             <div class="pic">
-                <img v-lazy="cur.pictureUrl">
+                <img :src="cur.pictureUrl">
             </div>
             <div class="text">
                 <div class="shortinfo">
@@ -77,7 +77,7 @@
             </ul>
         </div>
     </div>
-</transition>
+<!-- </transition> -->
 </template>
 
 <style lang="less">
@@ -142,10 +142,11 @@
             height: 630px;
             float: left;
             margin-left: 30px;
+            border:1px solid rgba(255,255,255,.3);
             img{
                 width: 100%;
                 height: 100%;
-                background:#ebebeb url(../assets/icn_tv_movie.png) no-repeat center center;
+                background: url(../assets/icn_tv_movie.png) no-repeat center center;
                 background-size: 120px 120px;
             }
         }
@@ -378,7 +379,7 @@
                     this.$emit('onShow')
                 }else{
                     this.playstate = '0'
-                    this.cur = Object.freeze({  
+                    this.cur = Object.freeze({
                         playlist: [{    
                             list: []
                         }]
