@@ -14,7 +14,7 @@
         display: inline-block;
     }
     .imgWrapper{
-        /*border-radius: 100%;*/
+        border-radius: 100%;
         text-align: center;
         cursor: pointer;
         border: none 0;
@@ -60,14 +60,18 @@
         },
         methods:{
             tap(){
-                if(this.processing){
-                    return;
+                //TODO:温度特殊处理，需优化
+                if(this.info.type != 'temperature'){
+                    if(this.processing){
+                        return;
+                    }
+                    this.processing = true;
+                    setTimeout(()=> {
+                        this.processing = false;
+                    }, 500);
                 }
-                this.processing = true;
-                setTimeout(()=> {
-                    this.processing = false;
-                }, 500);
 
+                this.$el.classList.add('pressed');
                 this.$emit('tap', this.info.type, this.info.value, this.info.tip, this.$el);
 //                if(this.curValue !== this.info.value){
 //                    this.$emit('click', this.info.type, this.info.value);

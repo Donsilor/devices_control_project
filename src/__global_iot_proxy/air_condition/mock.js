@@ -7,7 +7,7 @@ let res = {
     "device_uuid": "4c52ed0b006f0d0001",
     "attr": {
         "device_name": '挂式空调',
-        "switchStatus": 'off',
+        "switchStatus": 'on',
         "temperature": 16,
         "mode": "cold",
         "speed": "low",
@@ -36,7 +36,7 @@ let res = {
 export function generateSnapShot() {
     return Mock.mock({
         method: 'report',
-        code: 200,
+        // code: 200,
         result: res
     })
 

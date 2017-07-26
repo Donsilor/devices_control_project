@@ -55,16 +55,15 @@
                         <ac-button v-if="params.deviceSubCategory === 1" :info="lrBtn" @tap="toggle"></ac-button>
                         <ac-button :info="udBtn" @tap="toggle"></ac-button>
                     </div>
-                    <devider :content="'定时'"></devider>
-                    <div class="more-timing">
-                        <!--<ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"></ac-switch>-->
-                        <!--<ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"></ac-switch>-->
-                        <ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"
-                                   @change="bootTpVisible = params.bootSwitch"
-                                   @toggle="toggle('bootSwitch')"></ac-switch>
-                        <ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"
-                                   @change="offTpVisible = params.offSwitch" @toggle="toggle('offSwitch')"></ac-switch>
-                    </div>
+                    <!--TODO:830以后做-->
+                    <!--<devider :content="'定时'"></devider>-->
+                    <!--<div class="more-timing">-->
+                        <!--<ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"-->
+                                   <!--@change="bootTpVisible = params.bootSwitch"-->
+                                   <!--@toggle="toggle('bootSwitch')"></ac-switch>-->
+                        <!--<ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"-->
+                                   <!--@change="offTpVisible = params.offSwitch" @toggle="toggle('offSwitch')"></ac-switch>-->
+                    <!--</div>-->
                 </div>
             </transition>
             <!--更多子菜单End-->
@@ -84,9 +83,7 @@
         <!--</transition>-->
         <!--<transition name="fade-in">-->
         <div v-show="params.switch !== 'on'">
-            <div v-if="params.deviceSubCategory === 0" class="hanging"></div>
-            <div v-if="params.deviceSubCategory === 1" class="package"></div>
-            <p class="tip"></p>
+            <!--<p class="tip"></p>-->
             <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
                 <defs>
                     <linearGradient id="lg2" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509"
@@ -99,6 +96,8 @@
                     d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z"
                     style="fill:url(#lg2);"/>
             </svg>
+            <div v-if="params.deviceSubCategory === 0" class="hanging"></div>
+            <div v-if="params.deviceSubCategory === 1" class="package"></div>
             <div class="bottom">
                 <ac-button :info="buttonList.cool"></ac-button>
                 <ac-button :info="buttonList.heat"></ac-button>
@@ -110,7 +109,7 @@
             </div>
         </div>
         <!--</transition>-->
-        <!--<div class=""></div>-->
+        <div class="pageTip" v-show="initErr">无法加载设备状态，请尝试下拉<label>刷新</label></div>
     </div>
 </template>
 
@@ -175,6 +174,7 @@
 
     .hanging, .package {
         height: 360px;
+        margin-bottom: 45px;
     }
 
     .hanging {
@@ -233,7 +233,8 @@
     .off .tip {
         /*color: #c8cacc;*/
         color: #46bcff;
-        margin: 25px 0 37px 0;
+        margin: 24px 0;
+        /*margin: 25px 0 37px 0;*/
     }
 
     .bottom {
@@ -340,7 +341,6 @@
     .loading {
         position: relative;
     }
-
     .loading:before {
         content: '';
         position: absolute;
@@ -348,37 +348,55 @@
         left: 0;
         width: 144px;
         height: 144px;
-        background: url('./assets/buffering_mode_white.png') no-repeat center;
+        background: url('./assets/buffering_mode_white.gif') no-repeat center;
         background-size: 100%;
         /*transform: translate3d(0,0,0);*/
         /*animation: circle 1s linear infinite;*/
     }
-
     .switch.loading:before {
         top: 12px;
         left: 12px;
         width: 180px;
         height: 180px;
     }
-
     .on .switch.loading:before {
-        background: url('./assets/buffering_power_white.png') no-repeat center;
+        background: url('./assets/buffering_power_white.gif') no-repeat center;
         background-size: 100%;
     }
-
     .off .switch.loading:before {
-        background: url('./assets/buffering_power_blue.png') no-repeat center;
+        background: url('./assets/buffering_power_blue.gif') no-repeat center;
         background-size: 100%;
     }
-
     .subMenu .loading:before {
-        background: url('./assets/buffering_mode_blue.png') no-repeat center;
+        background: url('./assets/buffering_mode_blue.gif') no-repeat center;
         background-size: 100%;
         width: 96px;
         height: 96px;
         top: 24px;
         left: 24px;
     }
+
+    /*按钮点击样式Start*/
+    .pressed img{
+        filter: opacity(0.67);
+    }
+    .subMenu .pressed img{
+        filter: opacity(0.5);
+    }
+    .pressed.switch img{
+        filter: opacity(1);
+    }
+    .pressed.switch .imgWrapper{
+        border-radius: 100%;
+        border: 1px solid transparent;
+    }
+    .on .pressed.switch .imgWrapper{
+        background-color: rgba(255,255,255,0.5)
+    }
+    .off .pressed.switch .imgWrapper{
+        background-color: rgba(70,188,255,0.5);
+    }
+    /*按钮点击样式End*/
 
     .disabled img {
         filter: invert(12%);
@@ -391,6 +409,27 @@
         100% {
             transform: rotate(360deg);
         }
+    }
+
+    .pageTip{
+        opacity:0.8;
+        background: #333;
+        width:100%;
+        line-height:84px;
+        position: absolute;
+        top: 155px;
+        left: 0;
+        font-size: 30px;
+    }
+    .pageTip:before{
+        content: '';
+        display: inline-block;
+        width: 34px;
+        height: 84px;
+        margin-right: 10px;
+        vertical-align: middle;
+        background: url(./assets/icn_notice_white.png) no-repeat center;
+        background-size: 100%;
     }
 </style>
 
@@ -414,6 +453,8 @@
     const LOADING_DELAY = 300;
     //loading class
     const LOADING_CLASS = 'loading';
+    //pressed class
+    const PRESSED_CLASS = 'pressed';
 
     //Button构造方法
     function Button(title, type, value, imgSrc, imgActiveSrc, tip) {
@@ -447,31 +488,50 @@
                     off: new Button('', POWER, '', require('./assets/off_normal.png'), require('./assets/off_active.png'), '')
                 },
                 params: {
-                    device_name: '',//设备名称
-                    deviceSubCategory: null,//空调类型，0：挂机，1：柜机
-                    switch: '',//开关
-                    temperature: null,//温度
-                    mode: '',//模式
-                    speed: '',//风速
-                    wind_up_down: '',//上下扫风
-                    wind_left_right: '',//左右扫风
+                    //设备名称
+                    device_name: '',
+                    //空调类型，0：挂机，1：柜机
+                    deviceSubCategory: null,
+                    //开关
+                    switch: '',
+                    //温度
+                    temperature: null,
+                    //模式
+                    mode: '',
+                    //风速
+                    speed: '',
+                    //上下扫风
+                    wind_up_down: '',
+                    //左右扫风
+                    wind_left_right: '',
 //                        sleep: false,//睡眠模式
                     bootSwitch: false,
                     offSwitch: false,
-                    bootTime: '',//开机时间
-                    offTime: ''//关机时间
+                    //开机时间
+                    bootTime: '',
+                    //关机时间
+                    offTime: ''
                 },
-                tip: '',//提示，3秒后隐藏
-                tipTimer: '',//提示计时器
-                showMore: false,//更多菜单是否可见
-                bootTpVisible: false,//开机时间选择器是否可见
-                offTpVisible: false,//关机时间选择器是否可见
+                //提示，3秒后隐藏
+                tip: '',
+                //提示计时器
+                tipTimer: '',
+                //更多菜单是否可见
+                showMore: false,
+                //开机时间选择器是否可见
+                bootTpVisible: false,
+                //关机时间选择器是否可见
+                offTpVisible: false,
                 tempFlag: false,
                 tempTimer: null,
                 fakeTemp: null,
                 loadingTimer: null,
                 loadingElement: null,
-                complete: false
+                complete: false,
+                //当前点击的按钮
+                curButton: null,
+                //页面初始化失败
+                initErr: false
             }
         },
         mounted: function () {
@@ -480,7 +540,14 @@
                     this.setState(data.attr);
                     HdSmart.UI.hideLoading();
                     HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
+//                    this.initErr = true;
+//                    this.params.switch = OFF;
+//                    this.params.device_name = '空调';
+//                    this.params.deviceSubCategory = 0;
+//                    HdSmart.UI.hideLoading();
+//                    HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
                 }, () => {
+                    this.initErr = true;
                     HdSmart.UI.hideLoading();
                     HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
                 });
@@ -508,9 +575,7 @@
                     //降低温度
                     type: TEMPERATURE,
                     imgSrc: require('./assets/minus_normal.png'),
-//                    imgSrc: require('./assets/minus_diabled.png'),
                     imgActiveSrc: require('./assets/minus_pressed.png'),
-//                    value: this.params.temperature > MIN_TEMP ? this.params.temperature - 1 : this.params.temperature
                     value: this.fakeTemp > MIN_TEMP ? this.fakeTemp - 1 : this.fakeTemp,
                     //送风模式下不能设置温度
                     disabled: this.params.mode === 'wind'
@@ -545,11 +610,12 @@
             tempFlag(val){
                 if (!val) {
 //                    console.log('准备发送请求：' + this.fakeTemp);
-                    this.setParam(TEMPERATURE, this.fakeTemp, '温度设置成功');
+                    this.setParam(TEMPERATURE, this.fakeTemp, '温度设置成功', this.curButton);
                 }
             }
         },
         methods: {
+            //设置全量状态
             setState(attr){//设置空调状态
                 if (!attr) {
 //                    alert('attr---' + undefined)
@@ -635,7 +701,12 @@
             },
             setParam(type, value, tip, el){
                 let that = this;
+                that.curButton = el;
                 if (that.params[type] === value) {//如果参数值没有变化，直接返回
+                    that.removePressedClass(that.curButton);
+                    if(type == TEMPERATURE){
+                        that.setTip('可设置温度范围为16-30℃');
+                    }
                     return;
                 }
 
@@ -648,6 +719,7 @@
                         }
 //                        alert('setTimer');
                         that.loadingElement = el;
+                        that.removePressedClass(that.loadingElement);
                         that.loadingElement.classList.add(LOADING_CLASS);
 //                        alert(that.complete + '---' + document.querySelector('.loading'));
                     }, LOADING_DELAY);
@@ -658,15 +730,19 @@
 
                 HdSmart.Device.instruct('set', NODE_ID + type, attr,
                     () => {
-                        this.complete = true;
+                        that.complete = true;
                         removeLoading();
+//                        that.curButton.classList.remove(PRESSED_CLASS);
+                        that.removePressedClass(that.curButton);
 
                         that.params[type] = value;
                         that.setTip(tip);
                     },
                     (data) => {
-                        this.complete = true;
+                        that.complete = true;
                         removeLoading();
+                        that.removePressedClass(that.curButton);
+//                        that.curButton.classList.remove(PRESSED_CLASS);
 
                         if (type === TEMPERATURE) {//
                             that.fakeTemp = that.params.temperature;
@@ -717,10 +793,13 @@
                     timerObj
                 );
             },
-            setTemperature(type, value){
+            setTemperature(type, value, tip, el){
+                this.curButton = el;
+
                 //送风模式不能设置温度
                 if (this.params.mode === 'wind') {
                     this.setTip('送风模式下不能设置温度');
+                    this.removePressedClass(this.curButton);
                     return;
                 }
 
@@ -788,6 +867,11 @@
                 }
 
                 return s.length > 0 ? s : '30';
+            },
+            removePressedClass(el){
+                if(el){
+                    el.classList.remove(PRESSED_CLASS);
+                }
             }
         }
     }
