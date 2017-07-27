@@ -7,7 +7,7 @@
         </div>
         <div class="detail-info clearfix">
             <div class="pic">
-                <img :src="cur.pictureUrl">
+                <img v-lazy="cur.pictureUrl">
             </div>
             <div class="text">
                 <div class="shortinfo">
@@ -142,12 +142,18 @@
             height: 630px;
             float: left;
             margin-left: 30px;
-            border:1px solid rgba(255,255,255,.3);
             img{
                 width: 100%;
                 height: 100%;
                 background: url(../assets/icn_tv_movie.png) no-repeat center center;
                 background-size: 120px 120px;
+                opacity: .3;
+                border:1px solid #fff;
+                box-sizing: border-box;
+            }
+            [lazy="loaded"]{   
+                opacity: 1;
+                border: 0;
             }
         }
         .text{  

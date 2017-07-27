@@ -79,7 +79,7 @@
                 -->
                 <p v-show="loadState === 'LOADING'">正在加载中...</p>
                 <p v-show="loadState === 'LOADED'">加载更多...</p>
-                <p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>
+                <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
             </div>
             <!-- 没有数据 -->
             <div class="nodata" v-show="loadState === 'NO_DATA'">
@@ -256,8 +256,6 @@
                 total: 0,
                 pageNo: 1,
                 pageSize: 15,
-                //系统loading，初始化页面或pageNo=1
-                loading: false,
                 /**
                     定义数据加载状态
                     LOADING  分页加载中，显示 分页loading
@@ -274,12 +272,19 @@
                     this.curpage = 1
                 }
             },
-            loading(val) {
-                if(val){ 
-                    HdSmart.UI.showLoading()
-                }else{    
-                    HdSmart.UI.hideLoading()
+            loadState(val) {
+                if(this.isFirstLoad){
+                    if(val === 'LOADING'){ 
+                        HdSmart.UI.showLoading()
+                    }else if(val === 'LOADED'){    
+                        HdSmart.UI.hideLoading()
+                    }
                 }
+            }
+        },
+        computed: { 
+            isFirstLoad() { 
+                return this.pageNo === 1 ? true : false
             }
         },
         methods: {  
@@ -327,11 +332,7 @@
                 this.filterData()
             },
             filterData() {  
-                if(this.pageNo === 1){  
-                    this.loading = true
-                }else{  
-                   this.loadState = 'LOADING' 
-                }
+                this.loadState = 'LOADING' 
                 service.searchData({
                     keyword: this.word.trim(),
                     channelId: this.current_channel,
@@ -339,16 +340,18 @@
                     pageSize: this.pageSize,
                     pageNo: this.pageNo
                 },(data)=>{
-                    this.loading = false
                     this.loadState = 'LOADED'
-                    if(data.code === 504){
-                        return 
+                    if(data.code === 504){  
+                        return
                     }
-                    if(this.pageNo === 1){
-                        window.scrollTo(0,0) 
+                    if(this.isFirstLoad){
+                        window.scrollTo(0,0)
                     }
-                    this.resultData = (this.pageNo > 1 ? this.resultData : []).concat(data.data.list)
-                    this.total = data.data.total
+                    if(data.data){  
+                        data = data.data
+                    }
+                    this.resultData = Object.freeze((this.isFirstLoad ? [] : this.resultData).concat(data.list))
+                    this.total = data.total
                     if(this.total === 0){    
                         this.loadState = 'NO_DATA'
                     }else if(this.pageSize*this.pageNo >= this.total){    
@@ -361,12 +364,16 @@
                 if(this.curpage !== 3){ 
                     return 
                 }
-                if(this.loadState.indexOf('LOADED') < 0){   
-                    return 
-                }
                 
                 var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
                 if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-20){   
+                    if(this.loadState === 'LOADING' || this.loadState === 'NO_DATA'){   
+                        return 
+                    }
+                    if(this.loadState === 'NO_MORE'){   
+                        HdSmart.UI.toast('已加载全部')
+                        return 
+                    }
                     this.pageNo++
                     this.filterData()
                 }
