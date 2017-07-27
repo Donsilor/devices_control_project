@@ -1,15 +1,14 @@
 <template>
     <div class="wrap" :class="{visible:is_ready}">
         <div class="bg"
-             :style="{transform:'translate3d(-50%,-'+translateX+'px,0)',opacity:bg_opacity,transitionDuration:time+'ms'}"
-             ref="c_bg"></div>
-        {{times}}
-        <div class="box left" :style="{transform:'scale3d('+percent+',1,1)',transitionDuration:time+'ms'}">
+             :style="{transform:'translate3d(-50%,-'+moveX+'px,0)',opacity:bg_opacity,transitionDuration:time+'ms'}"></div>
+        <div class="box left" :style="{transform:'scale3d('+scaleRate+',1,1)',transitionDuration:time+'ms'}"
+             ref="leftBox">
             <div class="clothes"></div>
             <div class="folding" :style="{opacity: opacity,transitionDuration:time+'ms'}"></div>
         </div>
 
-        <div class="box right" :style="{transform:'scale3d('+percent+',1,1)',transitionDuration:time+'ms'}">
+        <div class="box right" :style="{transform:'scale3d('+scaleRate+',1,1)',transitionDuration:time+'ms'}">
             <div class="clothes"></div>
             <div class="folding" :style="{opacity: opacity,transitionDuration:time+'ms'}"></div>
         </div>
@@ -81,53 +80,44 @@
     }
 </style>
 <script>
-    let BGMOVEDISTANCE = 24;
-    let TOTALCLOSETIME = 5000;
+    const BGMOVEDISTANCE = 24;
     export default {
         props: {
-            close_percentage: Number,
-            is_ready: Boolean,
+            open_percentage: Number,
+            is_ready: Boolean
         },
         computed: {
-            translateX (){
-                return BGMOVEDISTANCE - BGMOVEDISTANCE * this.close_percentage / 100
+            //背景图移动的距离
+            moveX (){
+                return BGMOVEDISTANCE * this.open_percentage / 100
             },
+            //云背景的透明度
             bg_opacity (){
-                return 1 - 0.7 * this.close_percentage / 100;
+                return 0.7 + 0.3 * this.open_percentage / 100;
             },
-            percent (){
-                return 0.2 + 0.8 * this.close_percentage / 100;
+            //窗帘缩放的比例
+            scaleRate (){
+                return 1 - 0.8 * this.open_percentage / 100;
             },
+            //窗帘黑色背景图的透明度
             opacity (){
-                return 1 - 0.9 * this.close_percentage / 100;
-            }
+                return 0.1 + 0.9 * this.open_percentage / 100;
+            },
+            //每次open_percentage变更后，到达指定位置所需的时间
+
         },
         data (){
             return {
-                resourceBottom: 0,
-                time: 0,
+                //左边窗帘的长度
+                width: 0,
+                //是否第一次渲染，是的话时间为0
                 firstRender: true,
-                times: []
+//                time: 0
             }
         },
         mounted (){
-            let rect = this.$refs.c_bg.getBoundingClientRect();
-            this.resourceBottom = rect.bottom;
-        },
-        watch: {
-            close_percentage (){
-                if (this.$refs.c_bg) {
-                    let rect = this.$refs.c_bg.getBoundingClientRect();
-                    //计算要从当前位置移动到this.translateX需要的实际时间
-                    if(this.firstRender){
-                        this.time = 0;
-                        this.firstRender = false;
-                    }else{
-                        this.time = Math.abs((BGMOVEDISTANCE - this.translateX + this.resourceBottom - rect.bottom) * TOTALCLOSETIME / BGMOVEDISTANCE);
-                    }
-                }
-                this.times.push(this.close_percentage);
-            }
+            let rect = this.$refs.leftBox.getBoundingClientRect();
+            this.width = rect.width;
         }
     }
 </script>

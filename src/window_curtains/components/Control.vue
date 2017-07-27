@@ -1,10 +1,18 @@
 <template>
     <div class="control-container">
         <div class="box tap-box">
-            <div class="tap" v-finger:touch-start="onGo(0)" :class="{active:target_percentage === 0 }">0%</div>
-            <div class="tap" v-finger:touch-start="onGo(50)" :class="{active:target_percentage === 50 }">50%</div>
-            <div class="tap" v-finger:touch-start="onGo(80)" :class="{active:target_percentage === 80 }">80%</div>
-            <div class="tap" v-finger:touch-start="onGo(100)" :class="{active:target_percentage === 100 }">100%</div>
+            <div class="tap" v-finger:touch-start="onGo(20)"
+                 :class="{active:target_percentage === 20  && show_active_btn}">20%
+            </div>
+            <div class="tap" v-finger:touch-start="onGo(50)"
+                 :class="{active:target_percentage === 50 && show_active_btn}">50%
+            </div>
+            <div class="tap" v-finger:touch-start="onGo(80)"
+                 :class="{active:target_percentage === 80 && show_active_btn}">80%
+            </div>
+            <div class="tap" v-finger:touch-start="onGo(100)"
+                 :class="{active:target_percentage === 100 && show_active_btn}">100%
+            </div>
         </div>
         <div class="box button-box">
             <div class="on button" v-finger:touch-start="onOpenTouchStart"
@@ -109,8 +117,9 @@
 <script>
     export default {
         props: {
-            close_percentage: Number,
-            is_ready: Boolean
+            open_percentage: Number,
+            is_ready: Boolean,
+            show_active_btn: Boolean
         },
         data (){
             return {
@@ -144,7 +153,7 @@
             },
             onCloseTouchStart(){
                 if (!this.is_ready) return false;
-                if (this.loading_type != 'off') {
+                if (this.loading_type !== 'off') {
                     this.stopLoading();
                     this.delayLoading(() => {
                         this.loading_type = 'off';
@@ -156,7 +165,7 @@
             },
             onPauseTouchStart(){
                 if (!this.is_ready) return false;
-                if (this.loading_type != 'pause') {
+                if (this.loading_type !== 'pause') {
                     this.stopLoading();
                     this.delayLoading(() => {
                         this.loading_type = 'pause';
@@ -168,6 +177,7 @@
             },
             onGo (target_percentage){
                 return () => {
+                    if (!this.is_ready) return false;
                     this.stopLoading();
                     this.target_percentage = target_percentage;
                     this.$emit('onGoPercentage', target_percentage);
