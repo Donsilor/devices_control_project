@@ -27,10 +27,12 @@ import {isFunction, log} from '../helper';
 
 
 export default function (options) {
-    //onDeviceReady(function(){        
+    //onDeviceReady(function(){       
+        console.log('传入参数：', options.data) 
         HdIot.Util.dispatchEvent({
             data: JSON.stringify(options.data),
             onListener(data) {
+                console.log('返回数据：', typeof data, data)
                 if(options.onListener){
                     if(typeof data  === 'string'){  
                         data = JSON.parse(data)

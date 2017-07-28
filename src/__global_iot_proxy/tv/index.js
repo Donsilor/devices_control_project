@@ -32,6 +32,7 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
                 break;
             case 'playVideo':
                 console.log('playVideo', data.params)
+                callback('{}')
                 break
        }
     },1000)
