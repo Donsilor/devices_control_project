@@ -1,8 +1,9 @@
 <template>
     <div class="devider">
-        <div class="devider-line"></div>
+        <!--<div class="devider-line"></div>-->
+        <!--<span class="devider-content">{{content}}</span>-->
+        <!--<div class="devider-line"></div>-->
         <span class="devider-content">{{content}}</span>
-        <div class="devider-line"></div>
     </div>
 </template>
 

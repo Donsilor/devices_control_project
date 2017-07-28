@@ -19,7 +19,7 @@
         cursor: pointer;
         border: none 0;
         outline: none 0;
-        margin-bottom: 10px;
+        /*margin-bottom: 10px;*/
         /*解决点击出现背景*/
         -webkit-tap-highlight-color: transparent;
     }
@@ -42,7 +42,8 @@
     export default {
         data: function () {
             return{
-                processing: false
+                processing: false,
+                processingTimer: null
             }
         },
         props: [ 'info', 'curValue'],
@@ -50,7 +51,6 @@
             classObj(){
                 var obj = {
                     'button': true,
-//                    'active': this.info.value === this.curValue
                     'active': this.info.value === 'on' || (this.info.value === this.curValue),
                     'disabled': this.info.disabled
                 };
@@ -65,10 +65,12 @@
                     if(this.processing){
                         return;
                     }
+
                     this.processing = true;
-                    setTimeout(()=> {
+                    clearTimeout(this.processingTimer);
+                    this.processingTimer = setTimeout( ()=> {
                         this.processing = false;
-                    }, 500);
+                    }, 300);
                 }
 
                 this.$el.classList.add('pressed');

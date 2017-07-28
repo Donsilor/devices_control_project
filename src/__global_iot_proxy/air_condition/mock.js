@@ -36,8 +36,9 @@ let res = {
 export function generateSnapShot() {
     return Mock.mock({
         method: 'report',
-        // code: 200,
+        code: 200,
         result: res
+        // result: null
     })
 
 }

@@ -109,7 +109,8 @@
             </div>
         </div>
         <!--</transition>-->
-        <div class="pageTip" v-show="initErr">无法加载设备状态，请尝试下拉<label>刷新</label></div>
+        <div class="pageTip" v-show="initErr">无法加载设备状态，请尝试下拉刷新</div>
+        <!--<label class="refresh" ref="refresh">刷新</label>-->
     </div>
 </template>
 
@@ -161,9 +162,10 @@
         background-color: #f2f2f2;
     }
 
-    /*.off .imgWrapper{*/
-    /*cursor: default;*/
-    /*}*/
+    .bottom .imgWrapper{
+        margin-bottom: 10px;
+    }
+
     .off .imgWrapper img {
         filter: invert(30%);
     }
@@ -293,23 +295,28 @@
         box-sizing: border-box;
         border-radius: 6px;
         padding: 0 24px;
-        width: 456px;
-        height: 660px;
+        /*width: 456px;*/
+        /*height: 660px;*/
+        width: 408px;
+        height: 558px;
         color: #75787a;
         font-size: 24px;
     }
 
     .subMenu .imgWrapper {
-        margin: 25px 24px 10px 24px;
+        margin: 0 24px 18px 24px;
     }
 
     .subMenu img {
-        width: 96px;
-        height: 96px;
+        /*width: 96px;*/
+        /*height: 96px;*/
+        width: 120px;
+        height: 120px;
     }
 
     .subMenu .devider {
-        margin-top: 30px;
+        /*margin-top: 30px;*/
+        margin: 30px 0;
     }
 
     .bottom .btnName {
@@ -368,11 +375,11 @@
         background-size: 100%;
     }
     .subMenu .loading:before {
-        background: url('./assets/buffering_mode_blue.gif') no-repeat center;
+        background: url('./assets/buffering_submenu_blue.gif') no-repeat center;
         background-size: 100%;
-        width: 96px;
-        height: 96px;
-        top: 24px;
+        width: 120px;
+        height: 120px;
+        top: 0;
         left: 24px;
     }
 
@@ -380,8 +387,11 @@
     .pressed img{
         filter: opacity(0.67);
     }
-    .subMenu .pressed img{
-        filter: opacity(0.5);
+    /*.subMenu .pressed img{*/
+        /*filter: opacity(0.5);*/
+    /*}*/
+    .subMenu .pressed .imgWrapper{
+        background: rgba(0,0,0,0.1);
     }
     .pressed.switch img{
         filter: opacity(1);
@@ -431,6 +441,12 @@
         background: url(./assets/icn_notice_white.png) no-repeat center;
         background-size: 100%;
     }
+
+    /*刷新*/
+    /*.refresh{*/
+        /*cursor: pointer;*/
+        /*color: #46bcff;*/
+    /*}*/
 </style>
 
 <script>
@@ -447,7 +463,7 @@
     const [ON, OFF] = ['on', 'off'];
     const NODE_ID = 'airconditioner.main.';
     //连续设置时间判断间隔
-    const SPAN = 500;
+    const SPAN = 300;
     //loading效果延迟
     //    const LOADING_DELAY = 300;
     const LOADING_DELAY = 300;
@@ -475,8 +491,10 @@
                     cool: new Button('制冷', MODE, 'cold', require('./assets/cool_normal.png'), require('./assets/cool_active.png'), '制冷模式切换成功'),
                     heat: new Button('制热', MODE, 'heat', require('./assets/heat_normal.png'), require('./assets/heat_active.png'), '制热模式切换成功'),
                     dehumidify: new Button('除湿', MODE, 'dehumidify', require('./assets/dehumidify_normal.png'), require('./assets/dehumidify_active.png'), '除湿模式切换成功'),
-                    mode_auto: new Button('智能', MODE, 'auto', require('./assets/auto_normal.png'), require('./assets/auto_active.png'), '智能模式切换成功'),
-                    wind: new Button('送风', MODE, 'wind', require('./assets/wind_normal.png'), require('./assets/wind_active.png'), '送风模式切换成功'),
+//                    mode_auto: new Button('智能', MODE, 'auto', require('./assets/auto_normal.png'), require('./assets/auto_active.png'), '智能模式切换成功'),
+//                    wind: new Button('送风', MODE, 'wind', require('./assets/wind_normal.png'), require('./assets/wind_active.png'), '送风模式切换成功'),
+                    mode_auto: new Button('智能', MODE, 'auto', require('./assets/mode_auto_normal.png'), require('./assets/mode_auto_active.png'), '智能模式切换成功'),
+                    wind: new Button('送风', MODE, 'wind', require('./assets/mode_air_normal.png'), require('./assets/mode_air_active.png'), '送风模式切换成功'),
 
                     //风速
                     low: new Button('低风', SPEED, 'low', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
@@ -534,30 +552,6 @@
                 initErr: false
             }
         },
-        mounted: function () {
-            HdSmart.ready(() => {
-                HdSmart.Device.getSnapShot((data) => {
-                    this.setState(data.attr);
-                    HdSmart.UI.hideLoading();
-                    HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
-//                    this.initErr = true;
-//                    this.params.switch = OFF;
-//                    this.params.device_name = '空调';
-//                    this.params.deviceSubCategory = 0;
-//                    HdSmart.UI.hideLoading();
-//                    HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
-                }, () => {
-                    this.initErr = true;
-                    HdSmart.UI.hideLoading();
-                    HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
-                });
-
-                HdSmart.onDeviceListen((data) => {
-                    console.log('report: ' + JSON.stringify(data));
-                    this.setState(data.result.attr);
-                })
-            });
-        },
         computed: {
             appClassObj: function () {
                 let obj = {main: true};
@@ -565,10 +559,12 @@
                 return obj;
             },
             lrBtn: function () {
-                return new Button('左右', WIND_LEFT_RIGHT, this.params.wind_left_right, require('./assets/left_right_normal.png'), require('./assets/left_right_active.png'));
+//                return new Button('左右', WIND_LEFT_RIGHT, this.params.wind_left_right, require('./assets/left_right_normal.png'), require('./assets/left_right_active.png'));
+                return new Button('左右', WIND_LEFT_RIGHT, this.params.wind_left_right, require('./assets/horizontal_normal.png'), require('./assets/horizontal_active.png'));
             },
             udBtn: function () {
-                return new Button('上下', WIND_UP_DOWN, this.params.wind_up_down, require('./assets/up_down_normal.png'), require('./assets/up_down_active.png'));
+//                return new Button('上下', WIND_UP_DOWN, this.params.wind_up_down, require('./assets/up_down_normal.png'), require('./assets/up_down_active.png'));
+                return new Button('上下', WIND_UP_DOWN, this.params.wind_up_down, require('./assets/vertical_normal.png'), require('./assets/vertical_active.png'));
             },
             minusBtn: function () {
                 return {
@@ -576,7 +572,8 @@
                     type: TEMPERATURE,
                     imgSrc: require('./assets/minus_normal.png'),
                     imgActiveSrc: require('./assets/minus_pressed.png'),
-                    value: this.fakeTemp > MIN_TEMP ? this.fakeTemp - 1 : this.fakeTemp,
+//                    value: this.fakeTemp > MIN_TEMP ? this.fakeTemp - 1 : this.fakeTemp,
+                    value: this.fakeTemp - 1,
                     //送风模式下不能设置温度
                     disabled: this.params.mode === 'wind'
                 }
@@ -587,7 +584,8 @@
                     type: TEMPERATURE,
                     imgSrc: require('./assets/plus_normal.png'),
                     imgActiveSrc: require('./assets/plus_pressed.png'),
-                    value: this.fakeTemp < MAX_TEMP ? this.fakeTemp + 1 : this.fakeTemp,
+                    value: this.fakeTemp + 1,
+//                    value: this.fakeTemp < MAX_TEMP ? this.fakeTemp + 1 : this.fakeTemp,
 //                    value: this.params.temperature < MAX_TEMP ? this.params.temperature + 1 : this.params.temperature
                     //送风模式下不能设置温度
                     disabled: this.params.mode === 'wind'
@@ -614,13 +612,61 @@
                 }
             }
         },
+        mounted: function () {
+            let that = this;
+            HdSmart.ready(() => {
+                that.init();
+
+                //监听设备状态report
+                HdSmart.onDeviceListen((data) => {
+                    console.log('report: ' + JSON.stringify(data));
+                    if(data.result){
+                        that.setState(data.result.attr);
+                    }
+                })
+            });
+
+
+//            that.$refs.refresh.onclick = () => {
+//                that.init();
+//            }
+        },
         methods: {
+            //初始化
+            init(){
+                HdSmart.Device.getSnapShot(
+                    (data) => {
+//                        alert(JSON.stringify(data));
+                        this.initErr = false;
+                        this.setState(data.attr);
+                        setWebView();
+                    },
+                    () => {
+                        this.initErr = true;
+
+                        //初始化失败，默认关机、柜机
+                        this.params.switch = OFF;
+                        this.params.device_name = '空调';
+                        this.params.deviceSubCategory = 0;
+
+                        //获取状态失败，可以下拉刷新
+                        HdSmart.UI.hideLoading();
+//                        setWebView();
+                    });
+
+                function setWebView(){
+                    HdSmart.UI.hideLoading();
+                    HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
+                }
+            },
             //设置全量状态
             setState(attr){//设置空调状态
                 if (!attr) {
 //                    alert('attr---' + undefined)
                     return;
                 }
+
+                this.initErr = false;
 
                 if (!this.params.device_name) {
                     this.params.device_name = attr.device_name;
@@ -701,13 +747,23 @@
             },
             setParam(type, value, tip, el){
                 let that = this;
+
+                //初始化失败，则按钮不能操作
+                if(that.initErr){
+                    that.removePressedClass(el);
+                    return;
+                }
+
                 that.curButton = el;
                 if (that.params[type] === value) {//如果参数值没有变化，直接返回
                     that.removePressedClass(that.curButton);
-                    if(type == TEMPERATURE){
-                        that.setTip('可设置温度范围为16-30℃');
+//                    if(type == TEMPERATURE){
+//                        that.setTip('可设置温度范围为16-30℃');
+//                    }
+                    if(type !== TEMPERATURE){
+                        return;
                     }
-                    return;
+//                    return;
                 }
 
                 this.complete = false;
@@ -799,6 +855,11 @@
                 //送风模式不能设置温度
                 if (this.params.mode === 'wind') {
                     this.setTip('送风模式下不能设置温度');
+                    this.removePressedClass(this.curButton);
+                    return;
+                }
+                //限制温度范围16-30℃
+                if(value < MIN_TEMP || value > MAX_TEMP){
                     this.removePressedClass(this.curButton);
                     return;
                 }
