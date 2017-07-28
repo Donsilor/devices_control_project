@@ -18,11 +18,14 @@
                     <p>主演：{{cur.starring}}</p>
                 </div>
                 <!-- 未播放 -->
-                <div class="playstate playstate_unplay" v-if="playstate==='0'">
-                    <a href="#" class="btn" @click.prevent="play(cur.playlist[0].list[0].link,cur.title,'1')"><i class="icon-play"></i>在电视上播放</a>
+                <div class="playstate playstate_unplay" v-show="playstate===0">
+                    <a href="#" class="btn" @click.prevent="play(cur.playlist[0].list[0])"><i class="icon-play"></i>在电视上播放</a>
+                </div>
+                <div class="playstate playstate_play" v-show="playstate===1">
+                    <a href="javascript:void(0)" class="btn btn-outline">正在投屏...</a>
                 </div>
                 <!-- 正在播放 -->
-                <div class="playstate playstate_play" v-else>
+                <div class="playstate playstate_play" v-show="playstate===2">
                     <a href="javascript:void(0)" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
                 </div>
                 <!-- 继续播放 -->
@@ -59,18 +62,18 @@
                 <li class="item-haspic"
                     v-for="item in cur.playlist[0].list" 
                     :key="item.index"
-                    @click="play(item.link,item.name,item.index)">
+                    @click="play(item)">
                     <img :src="item.pictureUrl">
                     <p>{{item.name}}</p>
-                    <span class="play" v-show="playstate===item.index"><i></i>当前播放</span>
+                    <span class="play" v-show="item.playstate===2"><i></i>当前播放</span>
                 </li>
             </ul>
             <ul class="bd" v-else>
                 <li class="item-num" 
                     v-for="item in cur.playlist[0].list" 
                     :key="item.index"
-                    :class="{'active': playstate===item.index}"
-                    @click="play(item.link,item.name,item.index)">
+                    :class="{'active':item.playstate===2}"
+                    @click="play(item)">
                     {{item.index}}
                     <!-- <span class="tag_new" v-show="item.states"></span> -->
                 </li>
@@ -374,8 +377,7 @@
                 }),
                 isDescOverflow: false,
                 isDescShow: false,
-                loading: false,
-                playstate: '0' //播放状态，
+                loading: false
             }
         },
         watch: {    
@@ -384,7 +386,6 @@
                     this.getData()
                     this.$emit('onShow')
                 }else{
-                    this.playstate = '0'
                     this.cur = Object.freeze({
                         playlist: [{    
                             list: []
@@ -401,6 +402,16 @@
                 }
             }
         },
+        computed: { 
+            //0不播放，1投屏中，2正在播放
+            activeItem() {
+                var list = this.cur.playlist[0].list.filter(item=>item.playstate)
+                return list.length ? list[0] : null
+            },
+            playstate() { 
+                return this.activeItem ? this.activeItem.playstate : 0
+            }
+        },
         methods: {   
             getData() {
                 this.loading = true
@@ -412,12 +423,22 @@
                     if(data.code === 504){  
                         return 
                     }
-                    this.cur = Object.freeze(data.data)
+                    this.cur = data.data
+                    //this.playlist = data.data.playlist[0].list)
                 })
             },
-            play(link,title,index) {    
-                this.playstate = index
-                service.playVideo(link,title) 
+            play(clickItem) {
+                if(this.activeItem){    
+                    this.$set(this.activeItem,'playstate',1)
+                }
+                this.$set(clickItem,'playstate',1)
+                service.playVideo(clickItem.link,clickItem.name,(data)=>{  
+                    if(data.code === 504){
+                        this.$set(clickItem,'playstate',0)
+                    }else{
+                        this.$set(clickItem,'playstate',2)
+                    }
+                }) 
             },
             //对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
             getDescLine() {

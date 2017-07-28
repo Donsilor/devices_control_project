@@ -106,7 +106,7 @@ export function onClickEvent(eventName){
 /**
  * 点播
  */
-export function playVideo(link, title){    
+export function playVideo(link, title, callback){    
     sendApp({
         data: {
             method:'playVideo' ,
@@ -114,6 +114,7 @@ export function playVideo(link, title){
                 link: link,
                 title: title
             }
-        }
+        },
+        onListener: callback
     })
 }
