@@ -333,7 +333,7 @@ export function getChannelData() {
     }
   ],
   "data": {
-    "total": 8000,
+    "total": 20,
     "pageNo": 1,
     "pageSize": 10,
     "list": [
@@ -571,11 +571,19 @@ export function getDetaileData() {
                 {
                     "sourceId": "9",
                     "playparam": "tenvideo2://?action=7&video_id=&video_name=特殊关系&cover_id=asbi8alnlba8sni",
-                    "total": 1,
+                    "total": 2,
                     "list": [
                         {
                             "index": "1",
                             "name": "特殊关系",
+                            "pictureUrl": "http://puui.qpic.cn/qqvideo_ori/0/x0022jyxl0p_228_128/0",
+                            "duration": "01:28:30",
+                            "states": "1",
+                            "link": "tenvideo2://?action=7&video_id=x0022jyxl0p&video_name=特殊关系&cover_id=asbi8alnlba8sni"
+                        },
+                          {
+                            "index": "2",
+                            "name": "特殊关系2",
                             "pictureUrl": "http://puui.qpic.cn/qqvideo_ori/0/x0022jyxl0p_228_128/0",
                             "duration": "01:28:30",
                             "states": "1",
@@ -592,7 +600,7 @@ export function getDetaileData() {
 export function searchData() {
     return {
         "data": {
-            "total": 50,
+            "total": 10,
             "pageNo": 1,
             "pageSize": 20,
             "list": [
