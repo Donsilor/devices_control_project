@@ -103,7 +103,7 @@
         display: none;
     }
     .search_bar{
-        padding: 12px 0 0 84px;
+        padding: 12px 0 0 100px;
         display: flex;
     }
     .search_input{
@@ -137,7 +137,7 @@
         }
     }
     .search_submit{ 
-        width: 108px;
+        width: 150px;
         font-size: 30px;
         appearance: none;
         border: none;
@@ -362,6 +362,10 @@
                     this.loadState = 'LOADED'
                     if(data.code === 504){  
                         return
+                    }
+                    if(data.errorcode !== 0){   
+                        HdSmart.UI.toast(data.errormsg)
+                        return 
                     }
                     if(this.isFirstLoad){
                         window.scrollTo(0,0)

@@ -122,7 +122,7 @@
         height: 156px;
         position: relative;
         .back{  
-            width: 84px;
+            width: 100px;
             height: 96px;
             background-size: 36px 36px;
             background-repeat: no-repeat;
@@ -429,7 +429,11 @@
                 },(data) => {   
                     this.loading = false
                     //错误返回
-                    if(data.code === 504){  
+                    if(data.code === 504){
+                        return 
+                    }
+                    if(data.errorcode !== 0){   
+                        HdSmart.UI.toast(data.errormsg)
                         return 
                     }
                     this.cur = data.data

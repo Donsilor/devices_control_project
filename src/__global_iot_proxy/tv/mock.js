@@ -72,6 +72,7 @@ export function getInitData() {
 
 export function getChannelData() {
     return {
+    "errorcode": 0,
   "action": "getChannelData",
   "channelId": "001",
   "category": [
@@ -554,6 +555,7 @@ export function getChannelData() {
 
 export function getDetaileData() {
     return {
+        "errorcode": 0,
         "data": {
             "title": "特殊关系",
             "pictureUrl": "http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/a/asbi8alnlba8sni.jpg",
@@ -599,6 +601,7 @@ export function getDetaileData() {
 
 export function searchData() {
     return {
+      "errorcode": 0,
         "data": {
             "total": 10,
             "pageNo": 1,

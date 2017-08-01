@@ -378,6 +378,10 @@
                     if(data.code === 504){  
                         return
                     }
+                    if(data.errorcode !== 0){   
+                        HdSmart.UI.toast(data.errormsg)
+                        return 
+                    }
                     if(this.isFirstLoad){
                         window.scrollTo(0,0)
                     }

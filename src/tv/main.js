@@ -68,7 +68,9 @@ HdSmart.ready(() => {
 
     router.beforeEach((to,from,next) => {
       if(to.name === 'index'){  
-        HdSmart.UI.toggleHeadAndFoot(true)
+        setTimeout(()=>{
+          HdSmart.UI.toggleHeadAndFoot(true)
+        },300)
       }else{  
         HdSmart.UI.toggleHeadAndFoot(false)
       }

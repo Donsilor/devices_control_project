@@ -35,7 +35,7 @@
             line-height: 95px;
         }
         .icon{  
-            width: 84px;
+            width: 100px;
             height: 96px;
             display: inline-block;
             background-repeat: no-repeat;
