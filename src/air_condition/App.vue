@@ -1,8 +1,9 @@
 <template>
-    <div id="app" :class="appClassObj" @click="showMore=false;">
-        <p class="title">{{ params.device_name }}</p>
+    <div id="app" :class="appClassObj" @click="screenClick">
+        <p class="title" v-show="!initErr">{{ params.device_name }}</p>
         <p class="tip" v-show="params.switch === 'off'">已关闭</p>
         <!--<transition name="fade-in">-->
+        <!--开机界面-->
         <div v-show="params.switch === 'on'">
             <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
                 <defs>
@@ -82,7 +83,8 @@
         </div>
         <!--</transition>-->
         <!--<transition name="fade-in">-->
-        <div v-show="params.switch !== 'on'">
+        <!--关机界面-->
+        <div v-show="params.switch === 'off'">
             <!--<p class="tip"></p>-->
             <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
                 <defs>
@@ -109,8 +111,10 @@
             </div>
         </div>
         <!--</transition>-->
-        <div class="pageTip" v-show="initErr">无法加载设备状态，请尝试下拉刷新</div>
-        <!--<label class="refresh" ref="refresh">刷新</label>-->
+        <div v-show="initErr">
+            <img src='./assets/init_err.png' />
+            <p class="tip">加载失败，请点击屏幕刷新</p>
+        </div>
     </div>
 </template>
 
@@ -133,10 +137,6 @@
         opacity: 0;
     }
 
-    .invisible {
-        visibility: hidden;
-    }
-
     .main {
         box-sizing: border-box;
         padding: 155px 0 180px 0;
@@ -148,6 +148,14 @@
     /*}*/
     .main.on {
         background-color: #0bc0fe;
+    }
+    .main.err{
+        padding-top: 264px;
+        background: #f2f2f2;
+    }
+    .err img{
+        width: 360px;
+        height: 360px;
     }
 
     .bg {
@@ -238,6 +246,10 @@
         margin: 24px 0;
         /*margin: 25px 0 37px 0;*/
     }
+    .err .tip{
+        margin-top: 36px;
+        color: #c8cacc;
+    }
 
     .bottom {
         display: flex;
@@ -261,7 +273,7 @@
     .more, .subMenu {
         position: absolute;
         right: 60px;
-        top: 131px;
+        top: 132px;
     }
 
     /*更多*/
@@ -269,10 +281,14 @@
         width: 96px;
         height: 96px;
         background: url(./assets/more_normal.png) no-repeat center;
-        background-size: 100%;
+        background-size: 96px 96px;
         outline: 0;
         cursor: pointer;
         border-radius: 100%;
+        /*扩展点击范围*/
+        padding: 24px;
+        top: 108px;
+        right: 36px;
     }
 
     .more:hover {
@@ -421,7 +437,7 @@
         }
     }
 
-    .pageTip{
+    /*.pageTip{
         opacity:0.8;
         background: #333;
         width:100%;
@@ -440,7 +456,7 @@
         vertical-align: middle;
         background: url(./assets/icn_notice_white.png) no-repeat center;
         background-size: 100%;
-    }
+    }*/
 
     /*刷新*/
     /*.refresh{*/
@@ -556,6 +572,7 @@
             appClassObj: function () {
                 let obj = {main: true};
                 obj[this.params.switch] = true;
+                obj['err'] = this.initErr;
                 return obj;
             },
             lrBtn: function () {
@@ -621,7 +638,13 @@
                 HdSmart.onDeviceListen((data) => {
                     console.log('report: ' + JSON.stringify(data));
                     if(data.result){
-                        that.setState(data.result.attr);
+                        if(this.initErr){
+                            //初始化失败之后的第一次report，重新获取快照
+                            that.init();
+                        }
+                        else{
+                            that.setState(data.result.attr);
+                        }
                     }
                 })
             });
@@ -643,15 +666,7 @@
                     },
                     () => {
                         this.initErr = true;
-
-                        //初始化失败，默认关机、柜机
-                        this.params.switch = OFF;
-                        this.params.device_name = '空调';
-                        this.params.deviceSubCategory = 0;
-
-                        //获取状态失败，可以下拉刷新
-                        HdSmart.UI.hideLoading();
-//                        setWebView();
+                        setWebView();
                     });
 
                 function setWebView(){
@@ -668,9 +683,13 @@
 
                 this.initErr = false;
 
-                if (!this.params.device_name) {
+                if(attr.device_name != undefined){
                     this.params.device_name = attr.device_name;
                 }
+                if (attr.deviceSubCategory != undefined) {
+                    this.params.deviceSubCategory = attr.deviceSubCategory;
+                }
+
                 this.params.switch = attr.switchStatus;
                 this.params.temperature = attr.temperature;
                 this.fakeTemp = attr.temperature;
@@ -678,9 +697,6 @@
                 this.params.speed = attr.speed;
                 this.params.wind_up_down = attr.wind_up_down;
                 this.params.wind_left_right = attr.wind_left_right;
-                if (this.params.deviceSubCategory == null) {
-                    this.params.deviceSubCategory = attr.deviceSubCategory;
-                }
 
                 //TODO: 830后做
                 /*let[onTimer, offTimer] = [null, null];
@@ -757,16 +773,12 @@
                 that.curButton = el;
                 if (that.params[type] === value) {//如果参数值没有变化，直接返回
                     that.removePressedClass(that.curButton);
-//                    if(type == TEMPERATURE){
-//                        that.setTip('可设置温度范围为16-30℃');
-//                    }
                     if(type !== TEMPERATURE){
                         return;
                     }
-//                    return;
                 }
 
-                this.complete = false;
+                that.complete = false;
                 if (el) {
                     that.loadingTimer = setTimeout(() => {
                         removeLoading();
@@ -932,6 +944,15 @@
             removePressedClass(el){
                 if(el){
                     el.classList.remove(PRESSED_CLASS);
+                }
+            },
+            screenClick(){
+                if(this.initErr) { //初始化失败，点击屏幕，重新获取数据
+                    HdSmart.UI.showLoading();
+                    this.init();
+                }
+                else{//其他情况，点击屏幕，隐藏子菜单
+                    this.showMore = false;
                 }
             }
         }

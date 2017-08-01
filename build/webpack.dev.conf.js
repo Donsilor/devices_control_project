@@ -32,7 +32,6 @@ module.exports = merge(baseWebpackConfig, {
         new webpack.NoEmitOnErrorsPlugin(),
         // https://github.com/ampedandwired/html-webpack-plugin
         new HtmlWebpackPlugin({
-            title: 'test',
             filename: 'index.html',
             template: 'index.html',
             title: appName,

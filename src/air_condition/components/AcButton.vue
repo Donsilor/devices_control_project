@@ -1,6 +1,7 @@
 <template>
     <div :class="classObj">
-        <div class="imgWrapper"  v-finger:tap="tap">
+        <div class="imgWrapper"  @click="tap">
+        <!--<div class="imgWrapper"  v-finger:tap="tap">-->
             <img v-if="info.imgSrc" v-show="!classObj.active" :src="info.imgSrc" />
             <img v-if="info.imgActiveSrc" v-show="classObj.active" :src="info.imgActiveSrc" />
         </div>
