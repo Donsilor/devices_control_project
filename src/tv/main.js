@@ -1,3 +1,11 @@
+/**
+   * TODO: 
+   * 1、播放记录 playRecords （3种场景需要记录：1点播，2自动播放，3遥控器播放），记录格式暂定如下：
+   * [{vid:"",index:1,playing:false}]
+   * 2、播放状态 playStateChange
+   * 3、动画，webview性能问题，暂取消
+   */
+
 import Vue from 'vue'
 import Router from 'vue-router'
 //import Vuex from 'vuex'
@@ -5,8 +13,6 @@ import FastClick from 'fastclick'
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueLazyload from 'vue-lazyload'
-//import AlloyFinger from 'alloyfinger/alloy_finger'
-//import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue'
 
 import App from './App.vue'
 import Index from './components/Index.vue'
@@ -22,12 +28,6 @@ Vue.use(VueLazyload, {
   preLoad: 1.3,
   attempt: 1
 })
-
-/*
-Vue.use(AlloyFingerVue, {
-    AlloyFinger
-});
-*/
 
 Vue.component('detail', Detail)
 Vue.component('topbar', Topbar)
@@ -52,20 +52,25 @@ const router =  new Router({
     }
   ]
 })
-
+//hack: app多次执行ready
 let is_ready = false
 
+//app jsbridge ready
 HdSmart.ready(() => { 
   //HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
+  
   if(!is_ready){
 
     is_ready = true
     
+    //解决300ms延迟问题
     FastClick.attach(document.body)
 
     router.beforeEach((to,from,next) => {
       if(to.name === 'index'){  
-        HdSmart.UI.toggleHeadAndFoot(true)
+        setTimeout(()=>{
+          HdSmart.UI.toggleHeadAndFoot(true)
+        },300)
       }else{  
         HdSmart.UI.toggleHeadAndFoot(false)
       }

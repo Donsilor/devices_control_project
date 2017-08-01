@@ -72,6 +72,7 @@ export function getInitData() {
 
 export function getChannelData() {
     return {
+    "errorcode": 0,
   "action": "getChannelData",
   "channelId": "001",
   "category": [
@@ -333,7 +334,7 @@ export function getChannelData() {
     }
   ],
   "data": {
-    "total": 8000,
+    "total": 20,
     "pageNo": 1,
     "pageSize": 10,
     "list": [
@@ -554,6 +555,7 @@ export function getChannelData() {
 
 export function getDetaileData() {
     return {
+        "errorcode": 0,
         "data": {
             "title": "特殊关系",
             "pictureUrl": "http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/a/asbi8alnlba8sni.jpg",
@@ -571,11 +573,19 @@ export function getDetaileData() {
                 {
                     "sourceId": "9",
                     "playparam": "tenvideo2://?action=7&video_id=&video_name=特殊关系&cover_id=asbi8alnlba8sni",
-                    "total": 1,
+                    "total": 2,
                     "list": [
                         {
                             "index": "1",
                             "name": "特殊关系",
+                            "pictureUrl": "http://puui.qpic.cn/qqvideo_ori/0/x0022jyxl0p_228_128/0",
+                            "duration": "01:28:30",
+                            "states": "1",
+                            "link": "tenvideo2://?action=7&video_id=x0022jyxl0p&video_name=特殊关系&cover_id=asbi8alnlba8sni"
+                        },
+                          {
+                            "index": "2",
+                            "name": "特殊关系2",
                             "pictureUrl": "http://puui.qpic.cn/qqvideo_ori/0/x0022jyxl0p_228_128/0",
                             "duration": "01:28:30",
                             "states": "1",
@@ -591,8 +601,9 @@ export function getDetaileData() {
 
 export function searchData() {
     return {
+      "errorcode": 0,
         "data": {
-            "total": 50,
+            "total": 10,
             "pageNo": 1,
             "pageSize": 20,
             "list": [

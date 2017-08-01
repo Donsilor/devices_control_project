@@ -1,3 +1,6 @@
+<!--
+    搜索页面
+-->
 <template>
     <div class="page-search">
         <topbar class="topbar-fixed">
@@ -12,7 +15,7 @@
         <!-- 搜索建议 -->
         <div class="search_suggest" v-show="curpage===2">
             <ul>
-                <li @click="doSearch(item.text)" v-for="item in relatedData" v-html="item.html"></li>
+                <li @click="doSearch(item.text)" v-for="item in suggestData" v-html="item.html"></li>
             </ul>
         </div>
         <!-- 搜搜历史 -->
@@ -100,7 +103,7 @@
         display: none;
     }
     .search_bar{
-        padding: 12px 0 0 84px;
+        padding: 12px 0 0 100px;
         display: flex;
     }
     .search_input{
@@ -134,7 +137,7 @@
         }
     }
     .search_submit{ 
-        width: 108px;
+        width: 150px;
         font-size: 30px;
         appearance: none;
         border: none;
@@ -231,6 +234,7 @@
     import * as service from '../service'
     import _ from '../util'
     
+    //关键字加粗
     function splitWord(kw,input){   
         return input.replace(new RegExp('('+kw+')','g'),'<strong>$1</strong>')
     }
@@ -239,8 +243,11 @@
         data(){
             return {    
                 word: '',
-                curpage: 1, // 默认1,联想词2,搜索结果3
+                //当前视图：1默认,2联想词,3搜索结果
+                curpage: 1,
+                //栏目，目前无法根据搜索结果过滤，显示全部
                 channels: service.getInitData().channels,
+                //排序
                 orderby: [
                     {text:'相关',orderId:''},
                     {text:'最新',orderId:'year'},
@@ -248,16 +255,24 @@
                 ],
                 channelId: '',
                 vid: '',
-                relatedData: [],
+                //搜索建议，模糊查找
+                suggestData: [],
+                //搜索历史
                 historyData: [],
+                //搜索结果
                 resultData: [],
+                //当前栏目
                 current_channel: '',
-                current_orderby: '', 
+                //当前排序
+                current_orderby: '',
+                //总条数 
                 total: 0,
+                //当前页码
                 pageNo: 1,
+                //分页数
                 pageSize: 15,
                 /**
-                    定义数据加载状态
+                    加载状态
                     LOADING  分页加载中，显示 分页loading
                     LOADED   分页加载成功，显示 加载更多...
                     NO_DATA  没有数据，显示  暂无结果
@@ -287,17 +302,20 @@
                 return this.pageNo === 1 ? true : false
             }
         },
-        methods: {  
+        methods: { 
+            //删除搜索词 
             clearWord() {
                 this.word = ''
                 this.$el.querySelector('.search_input input').focus()
             },
+            //清空搜索历史
             clearHistory() {
                 HdSmart.UI.alert('清空记录', '确认要清空所有搜索记录？', ()=>{  
                     service.onClickEvent('clearSearchHistory')
                     this.historyData = []
                 }, '清空', '取消')
             },
+            //提交
             submit() {
                 var kw = this.word.trim()
                 if(kw){
@@ -312,12 +330,13 @@
                 this.pageNo = 1
                 this.filterData()
             },
+            //模糊查询
             fuzzySearch: _.debounce(function(){ 
                 var kw = this.word.trim()
                 if(kw){
                     this.curpage = 2
                     service.fuzzySearch(kw, (data)=>{  
-                        this.relatedData = data.data.map((item)=>{
+                        this.suggestData = data.data.map((item)=>{
                             return {    
                                 text: item,
                                 html: splitWord(kw, item)
@@ -344,6 +363,10 @@
                     if(data.code === 504){  
                         return
                     }
+                    if(data.errorcode !== 0){   
+                        HdSmart.UI.toast(data.errormsg)
+                        return 
+                    }
                     if(this.isFirstLoad){
                         window.scrollTo(0,0)
                     }
@@ -356,6 +379,7 @@
                         this.loadState = 'NO_DATA'
                     }else if(this.pageSize*this.pageNo >= this.total){    
                         this.loadState = 'NO_MORE' 
+                        HdSmart.UI.toast('已加载全部')
                     }
                 })
             },
@@ -391,7 +415,9 @@
             service.getSearchHistory((data)=>{  
                 this.historyData = data.data
             })
-            this.$el.querySelector('.search_input input').focus()
+            setTimeout(()=>{
+                this.$el.querySelector('.search_input input').focus()
+            },300)
             window.addEventListener('scroll',this.loadMore)
         },
         destroyed() {

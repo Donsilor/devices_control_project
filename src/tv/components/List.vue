@@ -1,3 +1,6 @@
+<!--
+    列表页,query:{title:"",channelId:""}
+-->
 <template>
     <div class="page-list">
         <div class="fixedtop">
@@ -297,24 +300,36 @@
             return {    
                 title: this.$route.query.channel,
                 channelId: this.$route.query.channelId,
-                vid: this.$route.query.vid,
+                vid: '',
+                //列表数据
                 list: [],
+                //分类
                 category: [],
+                //地区
                 region: [],
+                //年份
                 year: [],
+                //排序
                 orderby: Object.freeze([
-                    {text:'最新',orderId:'year'},
-                    {text:'最热',orderId:'iscore'}
+                    {text:'最新', orderId:'year'},
+                    {text:'最热', orderId:'iscore'}
                 ]),
+                //当前分类，默认全部
                 current_category: '',
+                //当前地区，默认全部
                 current_region: '',
+                //当前年份，默认全部
                 current_year: '',
+                //当前年份，默认全部
                 current_orderby: 'year',
+                //总条数
                 total: 0,
+                //当前页码
                 pageNo: 1,
+                //分页数
                 pageSize: 15,
                 /**
-                    定义数据加载状态
+                    加载状态
                     LOADING  分页加载中，显示 分页loading
                     LOADED   分页加载成功，显示 加载更多...
                     NO_DATA  没有数据，显示  暂无结果
@@ -324,6 +339,7 @@
             }
         },
         watch: {
+            //如果首次加载，则调用app loading
             loadState(val) {
                 if(this.isFirstLoad){
                     if(val === 'LOADING'){ 
@@ -335,11 +351,13 @@
             }
         },
         computed: { 
+            //是否首次加载
             isFirstLoad() { 
                 return this.pageNo === 1 ? true : false
             }
         },
         methods: {
+            //参数筛选
             setParam(key, value) {    
                 this[key] = value
                 this.pageNo = 1
@@ -360,6 +378,10 @@
                     if(data.code === 504){  
                         return
                     }
+                    if(data.errorcode !== 0){   
+                        HdSmart.UI.toast(data.errormsg)
+                        return 
+                    }
                     if(this.isFirstLoad){
                         window.scrollTo(0,0)
                     }
@@ -369,9 +391,12 @@
                     this.list = Object.freeze((this.isFirstLoad ? [] : this.list).concat(data.list))
                     this.total = data.total
                     if(this.total === 0){    
+                        //没有数据
                         this.loadState = 'NO_DATA'
                     }else if(this.pageSize*this.pageNo >= this.total){    
-                        this.loadState = 'NO_MORE' 
+                        //加载完全部
+                        this.loadState = 'NO_MORE'
+                        HdSmart.UI.toast('已加载全部')
                     }
                 })
             },
@@ -403,6 +428,7 @@
                     return '更新至' + last + '集'
                 }
             },
+            //换成小图地址
             getThumbPic(pic) {  
                 return pic.replace('.jpg','_y.jpg')
             }
@@ -420,11 +446,6 @@
                 this.list = Object.freeze(data.data.list)
                 this.total = data.data.total
             }) 
-            /*
-            if(this.$route.query.showDetail === '1' && this.vid){   
-                this.showDetailInfo(this.channelId, this.vid)
-            }
-            */
             window.addEventListener('scroll',this.loadMore)
         },
         destroyed() {

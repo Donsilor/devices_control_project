@@ -1,3 +1,6 @@
+<!--
+    详情页
+-->
 <template>
 <!-- <transition name="slideup"> -->
     <div class="page-detail" v-show="visible">
@@ -119,7 +122,7 @@
         height: 156px;
         position: relative;
         .back{  
-            width: 84px;
+            width: 100px;
             height: 96px;
             background-size: 36px 36px;
             background-repeat: no-repeat;
@@ -308,6 +311,7 @@
                 position: relative;
                 width: 300px;
                 height: 306px;
+                margin-right: 60px;
                 float:left;
                 img{
                     width: 300px;
@@ -320,6 +324,7 @@
                     display: -webkit-box;
                     -webkit-line-clamp: 2;
                     -webkit-box-orient: vertical;
+                    overflow: hidden;
                 }
                 .play{  
                     position: absolute;
@@ -369,13 +374,16 @@
         props: ['channelId','vid'],
         data() {    
             return {
+                //是否显示
                 visible: false,
-                cur: Object.freeze({  
+                cur: {  
                     playlist: [{    
                         list: []
                     }]
-                }),
+                },
+                //描述是否超出行数
                 isDescOverflow: false,
+                //描述展开按钮状态
                 isDescShow: false,
                 loading: false
             }
@@ -386,11 +394,11 @@
                     this.getData()
                     this.$emit('onShow')
                 }else{
-                    this.cur = Object.freeze({
+                    this.cur = {
                         playlist: [{    
                             list: []
                         }]
-                    })
+                    }
                     this.$emit('onClose')
                 }
             },
@@ -403,11 +411,11 @@
             }
         },
         computed: { 
-            //0不播放，1投屏中，2正在播放
+            //当前播放集数
             activeItem() {
-                var list = this.cur.playlist[0].list.filter(item=>item.playstate)
-                return list.length ? list[0] : null
+                return this.cur.playlist[0].list.find(item=>item.playstate)
             },
+            //播放状态：0不播放，1投屏中，2正在播放
             playstate() { 
                 return this.activeItem ? this.activeItem.playstate : 0
             }
@@ -420,27 +428,42 @@
                     vid: this.vid
                 },(data) => {   
                     this.loading = false
-                    if(data.code === 504){  
+                    //错误返回
+                    if(data.code === 504){
+                        return 
+                    }
+                    if(data.errorcode !== 0){   
+                        HdSmart.UI.toast(data.errormsg)
                         return 
                     }
                     this.cur = data.data
-                    //this.playlist = data.data.playlist[0].list)
                 })
             },
+            //点播：播放状态如playstate
             play(clickItem) {
-                if(this.activeItem){    
-                    this.$set(this.activeItem,'playstate',1)
+                //如果'点击'正在播放，返回
+                if(clickItem.playstate){
+                    return 
                 }
+                //取消当前播放状态
+                if(this.activeItem){    
+                    this.$set(this.activeItem,'playstate',0)
+                }
+                //设置'点击'状态为loading
                 this.$set(clickItem,'playstate',1)
+                //发起点播
                 service.playVideo(clickItem.link,clickItem.name,(data)=>{  
-                    if(data.code === 504){
+                    if(data.code === 504){ 
+                        //点播失败
                         this.$set(clickItem,'playstate',0)
-                    }else{
+                        HdSmart.UI.toast('投屏失败，请重试')
+                    }else{ 
+                        //点播成功
                         this.$set(clickItem,'playstate',2)
                     }
                 }) 
             },
-            //对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
+            //描述按行截取：对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
             getDescLine() {
                 if(this.$el){
                     this.isDescShow = false
@@ -472,11 +495,6 @@
         }, 
         created() { 
             this.$watch('cur.desc',this.getDescLine)
-        },
-        mounted() {
-            if(this.visible){
-                this.getData()
-            }
         }
     }
 </script>

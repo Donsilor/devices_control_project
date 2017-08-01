@@ -1,3 +1,6 @@
+<!--
+    首页
+-->
 <template>
 <div class="page-index">
     <div class="grid" v-once>
@@ -163,6 +166,7 @@
                     autoplayDisableOnInteraction: false,
                     pagination: '.swiper-pagination'
                 },
+                //初始化数据，由app首次加载注入
                 ...service.getInitData()
             }
         },
@@ -178,13 +182,6 @@
             },
             onDetailClose(){    
                 HdSmart.UI.toggleHeadAndFoot(true)
-            },
-            // 根据栏目id取得栏目名称
-            getChannelName(channelId) {  
-                let result = this.channels.filter((item)=>{
-                    return item.channelId === channelId
-                })
-                return result[0].channel
             }
         }
     }
