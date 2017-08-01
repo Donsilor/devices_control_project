@@ -18,6 +18,7 @@
                     d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z"
                     style="fill:url(#lg1);"/>
             </svg>
+
             <!--温度Start-->
             <div class="temp">
                 <ac-button :info="minusBtn" @tap="setTemperature"></ac-button>
@@ -26,7 +27,9 @@
                 <ac-button :info="plusBtn" @tap="setTemperature"></ac-button>
             </div>
             <!--温度End-->
+
             <p :class="{'tip':true, 'transparent': tip.length == 0}">{{ tip }}</p>
+
             <!--底部按钮Start-->
             <div class="bottom">
                 <ac-button :info="buttonList.cool" :curValue="params[buttonList.cool.type]" @tap="setParam"></ac-button>
@@ -40,6 +43,7 @@
                 <ac-button :info="buttonList.high" :curValue="params[buttonList.high.type]" @tap="setParam"></ac-button>
             </div>
             <!--底部按钮End-->
+
             <div class="more" v-show="!showMore" @click.stop="showMore=true;"></div>
             <!--更多子菜单Start-->
             <transition name="fade-in">
@@ -68,6 +72,7 @@
                 </div>
             </transition>
             <!--更多子菜单End-->
+
             <!--时间选择器Start-->
             <transition name="fade">
                 <time-picker v-show="bootTpVisible" :vis="bootTpVisible" :hour="bootHour" :minute="bootMinute"
@@ -83,6 +88,7 @@
         </div>
         <!--</transition>-->
         <!--<transition name="fade-in">-->
+
         <!--关机界面-->
         <div v-show="params.switch === 'off'">
             <!--<p class="tip"></p>-->
@@ -111,6 +117,8 @@
             </div>
         </div>
         <!--</transition>-->
+
+        <!--初始化失败界面-->
         <div v-show="initErr">
             <img src='./assets/init_err.png' />
             <p class="tip">加载失败，请点击屏幕刷新</p>
@@ -128,36 +136,29 @@
         font: 24px/1 'NotoSansHans-Regular';
         color: #FFF;
     }
-
     html, body, .main {
         height: 100%;
     }
-
     ::-webkit-scrollbar {
         opacity: 0;
     }
 
+    /*main样式*/
     .main {
         box-sizing: border-box;
         padding: 155px 0 180px 0;
         text-align: center;
     }
-
-    /*.main.on{*/
-    /*background: #0bc0fe url(assets/bg_on.png) no-repeat center bottom;*/
-    /*}*/
     .main.on {
         background-color: #0bc0fe;
+    }
+    .main.off {
+        background-color: #f2f2f2;
     }
     .main.err{
         padding-top: 264px;
         background: #f2f2f2;
     }
-    .err img{
-        width: 360px;
-        height: 360px;
-    }
-
     .bg {
         position: absolute;
         left: 0;
@@ -166,41 +167,35 @@
         height: auto;
     }
 
-    .main.off {
-        background-color: #f2f2f2;
+    /*bottom样式*/
+    .bottom {
+        display: flex;
+        margin: 0 240px;
+        justify-content: space-around;
+        align-items: center;
+        position: relative;
     }
-
     .bottom .imgWrapper{
         margin-bottom: 10px;
-    }
-
-    .off .imgWrapper img {
-        filter: invert(30%);
-    }
-
-    .off .switch img {
-        filter: invert(0);
     }
 
     .hanging, .package {
         height: 360px;
         margin-bottom: 45px;
     }
-
     .hanging {
         background: url(./assets/bg_off_hanging.png) no-repeat center;
     }
-
     .package {
         background: url(./assets/bg_off_package.png) no-repeat center;
         background-size: 540px 360px;
     }
 
+    /*title样式*/
     .title {
         font-size: 30px;
         margin-bottom: 78px;
     }
-
     .off .title {
         color: #75787a;
         margin-bottom: 0;
@@ -212,16 +207,13 @@
         justify-content: center;
         align-items: center;
     }
-
     .temp-show {
         margin: 0 216px 0 240px;
     }
-
     .temp-number {
         font-size: 240px;
         font-family: RobotoCondensed-Regular;
     }
-
     .temp-unit {
         font-size: 72px;
     }
@@ -235,11 +227,9 @@
         transition: opacity 1s ease;
         position: relative;
     }
-
     .tip.transparent {
         opacity: 0;
     }
-
     .off .tip {
         /*color: #c8cacc;*/
         color: #46bcff;
@@ -251,32 +241,32 @@
         color: #c8cacc;
     }
 
-    .bottom {
-        display: flex;
-        margin: 0 240px;
-        justify-content: space-around;
-        align-items: center;
-        position: relative;
-    }
-
     /*图片*/
     .temp img, .bottom img {
         width: 144px;
         height: 144px;
     }
-
     .switch img {
         width: 204px;
         height: 204px;
     }
+    .off .imgWrapper img {
+        filter: invert(30%);
+    }
+    .off .switch img {
+        filter: invert(0);
+    }
+    .err img{
+        width: 360px;
+        height: 360px;
+    }
 
+    /*更多*/
     .more, .subMenu {
         position: absolute;
         right: 60px;
         top: 132px;
     }
-
-    /*更多*/
     .more {
         width: 96px;
         height: 96px;
@@ -290,20 +280,19 @@
         top: 108px;
         right: 36px;
     }
-
     .more:hover {
         background-image: url(./assets/more_active.png);
     }
 
-    /*子菜单*/
+    /*动画样式*/
     .fade-enter-active, .fade-in-enter-active, .fade-leave-active {
         transition: opacity 0.5s linear;
     }
-
     .fade-enter, .fade-leave-to, .fade-in-enter, .fade-in-leave-to {
         opacity: 0
     }
 
+    /*子菜单*/
     .subMenu {
         opacity: 0.95;
         background: #ffffff;
@@ -318,46 +307,39 @@
         color: #75787a;
         font-size: 24px;
     }
-
     .subMenu .imgWrapper {
         margin: 0 24px 18px 24px;
     }
-
     .subMenu img {
         /*width: 96px;*/
         /*height: 96px;*/
         width: 120px;
         height: 120px;
     }
-
     .subMenu .devider {
         /*margin-top: 30px;*/
         margin: 30px 0;
     }
+    .more-timing {
+        font-size: 30px;
+        margin-top: 12px;
+    }
 
+    /*按钮底部文字样式*/
     .bottom .btnName {
         opacity: 0.5;
     }
-
     .off .btnName {
         opacity: 0;
     }
-
-    /*选中样式*/
     .on .active .btnName {
         font-size: 30px;
         opacity: 1;
     }
-
     .subMenu .active .btnName {
         font-size: 24px;
         color: #46bcff;
         opacity: 1;
-    }
-
-    .more-timing {
-        font-size: 30px;
-        margin-top: 12px;
     }
 
     /*loading样式*/
@@ -399,13 +381,10 @@
         left: 24px;
     }
 
-    /*按钮点击样式Start*/
+    /*按钮点击样式*/
     .pressed img{
         filter: opacity(0.67);
     }
-    /*.subMenu .pressed img{*/
-        /*filter: opacity(0.5);*/
-    /*}*/
     .subMenu .pressed .imgWrapper{
         background: rgba(0,0,0,0.1);
     }
@@ -422,19 +401,10 @@
     .off .pressed.switch .imgWrapper{
         background-color: rgba(70,188,255,0.5);
     }
-    /*按钮点击样式End*/
 
+    /*disabled样式*/
     .disabled img {
         filter: invert(12%);
-    }
-
-    @keyframes circle {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
     }
 
     /*.pageTip{
@@ -457,7 +427,6 @@
         background: url(./assets/icn_notice_white.png) no-repeat center;
         background-size: 100%;
     }*/
-
     /*刷新*/
     /*.refresh{*/
         /*cursor: pointer;*/
@@ -481,12 +450,13 @@
     //连续设置时间判断间隔
     const SPAN = 300;
     //loading效果延迟
-    //    const LOADING_DELAY = 300;
     const LOADING_DELAY = 300;
     //loading class
     const LOADING_CLASS = 'loading';
     //pressed class
     const PRESSED_CLASS = 'pressed';
+    //提示持续时间--3s
+    const TIP_DURATION = 3000;
 
     //Button构造方法
     function Button(title, type, value, imgSrc, imgActiveSrc, tip) {
@@ -603,7 +573,6 @@
                     imgActiveSrc: require('./assets/plus_pressed.png'),
                     value: this.fakeTemp + 1,
 //                    value: this.fakeTemp < MAX_TEMP ? this.fakeTemp + 1 : this.fakeTemp,
-//                    value: this.params.temperature < MAX_TEMP ? this.params.temperature + 1 : this.params.temperature
                     //送风模式下不能设置温度
                     disabled: this.params.mode === 'wind'
                 }
@@ -648,19 +617,13 @@
                     }
                 })
             });
-
-
-//            that.$refs.refresh.onclick = () => {
-//                that.init();
-//            }
         },
         methods: {
-            //初始化
+            //初始化，获取设备快照
             init(){
                 HdSmart.Device.getSnapShot(
                     (data) => {
 //                        alert(JSON.stringify(data));
-                        this.initErr = false;
                         this.setState(data.attr);
                         setWebView();
                     },
@@ -771,64 +734,77 @@
                 }
 
                 that.curButton = el;
-                if (that.params[type] === value) {//如果参数值没有变化，直接返回
+                //如果参数值没有变化，直接返回(设置温度除外)
+                if (that.params[type] === value) {
                     that.removePressedClass(that.curButton);
                     if(type !== TEMPERATURE){
                         return;
                     }
                 }
 
-                that.complete = false;
+                that.addLoading(el);
+                /*that.complete = false;
                 if (el) {
                     that.loadingTimer = setTimeout(() => {
-                        removeLoading();
                         if(that.complete){
                             return;
                         }
 //                        alert('setTimer');
+                        that.removeLoading();
                         that.loadingElement = el;
                         that.removePressedClass(that.loadingElement);
                         that.loadingElement.classList.add(LOADING_CLASS);
 //                        alert(that.complete + '---' + document.querySelector('.loading'));
                     }, LOADING_DELAY);
-                }
+                }*/
 
                 let attr = {};
                 attr[type] = value;
-
+                //发送指令
                 HdSmart.Device.instruct('set', NODE_ID + type, attr,
                     () => {
-                        that.complete = true;
-                        removeLoading();
-//                        that.curButton.classList.remove(PRESSED_CLASS);
+//                        that.complete = true;
+                        that.removeLoading();
                         that.removePressedClass(that.curButton);
 
                         that.params[type] = value;
                         that.setTip(tip);
                     },
                     (data) => {
-                        that.complete = true;
-                        removeLoading();
+//                        that.complete = true;
+                        that.removeLoading();
                         that.removePressedClass(that.curButton);
-//                        that.curButton.classList.remove(PRESSED_CLASS);
 
                         if (type === TEMPERATURE) {//
                             that.fakeTemp = that.params.temperature;
                         }
                         that.setTip('设置失败');
 //                        alert('控制失败：' + JSON.stringify(that.params));
-//                        console.log('设置['+ type +']失败: ' + data);
                     }
                 );
+            },
+            //添加loading效果
+            addLoading(el){
+                if (!el) {
+                    return;
+                }
 
-                //移除loading
-                function removeLoading() {
-                    clearTimeout(that.loadingTimer);
+                this.loadingTimer = setTimeout(() => {
+                    this.removeLoading();
 
-                    if (that.loadingElement) {
-                        that.loadingElement.classList.remove(LOADING_CLASS);
-                        that.loadingElement = null;
-                    }
+                    this.loadingElement = el;
+                    this.removePressedClass(this.loadingElement);
+                    this.loadingElement.classList.add(LOADING_CLASS);
+//                        alert(this.complete + '---' + document.querySelector('.loading'));
+                }, LOADING_DELAY);
+            },
+            //移除按钮loading
+            removeLoading(){
+                clearTimeout(this.loadingTimer);
+
+                if (this.loadingElement) {
+                    this.loadingElement.classList.remove(LOADING_CLASS);
+                    this.loadingElement = null;
                 }
             },
             setTimer(switchType, switchValue, time, tip){
@@ -878,9 +854,8 @@
 
                 this.tempFlag = true;
                 this.fakeTemp = value;
-                if (this.tempTimer) {
-                    clearTimeout(this.tempTimer);
-                }
+                //设置timer
+                clearTimeout(this.tempTimer);
                 this.tempTimer = setTimeout(() => {
                     this.tempFlag = false;
                 }, SPAN);
@@ -913,15 +888,6 @@
                 }
                 this.offTpVisible = false;
             },
-            setTip(tip){
-                this.tip = tip || '';
-                if (this.tipTimer) {
-                    clearTimeout(this.tipTimer);
-                }
-                this.tipTimer = setTimeout(() => {
-                    this.tip = '';
-                }, 3000);
-            },
             getHour(str){
                 var arr = str.split(':');
                 var s = '';
@@ -940,6 +906,13 @@
                 }
 
                 return s.length > 0 ? s : '30';
+            },
+            setTip(tip){
+                this.tip = tip || '';
+                clearTimeout(this.tipTimer);
+                this.tipTimer = setTimeout(() => {
+                    this.tip = '';
+                }, TIP_DURATION);
             },
             removePressedClass(el){
                 if(el){
