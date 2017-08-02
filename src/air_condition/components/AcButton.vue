@@ -2,8 +2,8 @@
     <div :class="classObj">
         <div class="imgWrapper"  @click="tap">
         <!--<div class="imgWrapper"  v-finger:tap="tap">-->
-            <img v-if="info.imgSrc" v-show="!classObj.active" :src="info.imgSrc" />
-            <img v-if="info.imgActiveSrc" v-show="classObj.active" :src="info.imgActiveSrc" />
+            <img v-if="info.imgSrc" :src="info.imgSrc" class="img-normal" /><!--v-show="!classObj.active"-->
+            <img v-if="info.imgActiveSrc" :src="info.imgActiveSrc" class="img-active" /><!--v-show="classObj.active"-->
         </div>
         <span class="btnName" v-if="info.title">{{info.title}}</span>
     </div>
@@ -31,6 +31,19 @@
 
     .temperature .imgWrapper img{
         margin-top: 0;
+    }
+
+    .img-normal{
+        display: inline-block;
+    }
+    .img-active{
+        display: none;
+    }
+    .active .img-normal{
+        display: none;
+    }
+    .active .img-active{
+        display: inline-block;
     }
 </style>
 

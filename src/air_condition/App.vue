@@ -2,7 +2,7 @@
     <div id="app" :class="appClassObj" @click="screenClick">
         <p class="title" v-show="!initErr">{{ params.device_name }}</p>
         <p class="tip" v-show="params.switch === 'off'">已关闭</p>
-        <!--<transition name="fade-in">-->
+
         <!--开机界面-->
         <div v-show="params.switch === 'on'">
             <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
@@ -86,8 +86,6 @@
             </transition>
             <!--时间选择器End-->
         </div>
-        <!--</transition>-->
-        <!--<transition name="fade-in">-->
 
         <!--关机界面-->
         <div v-show="params.switch === 'off'">
@@ -116,7 +114,6 @@
                 <ac-button :info="buttonList.high"></ac-button>
             </div>
         </div>
-        <!--</transition>-->
 
         <!--初始化失败界面-->
         <div v-show="initErr">
@@ -224,7 +221,7 @@
         font-size: 30px;
         margin: 24px 0 110px 0;
         opacity: 1;
-        transition: opacity 1s ease;
+        transition: opacity 1s linear;
         position: relative;
     }
     .tip.transparent {
@@ -284,13 +281,13 @@
         background-image: url(./assets/more_active.png);
     }
 
-    /*动画样式*/
-    .fade-enter-active, .fade-in-enter-active, .fade-leave-active {
-        transition: opacity 0.5s linear;
-    }
-    .fade-enter, .fade-leave-to, .fade-in-enter, .fade-in-leave-to {
-        opacity: 0
-    }
+    /*!*动画样式*!*/
+    /*.fade-enter-active, .fade-in-enter-active, .fade-leave-active {*/
+        /*transition: opacity 0.5s linear;*/
+    /*}*/
+    /*.fade-enter, .fade-leave-to, .fade-in-enter, .fade-in-leave-to {*/
+        /*opacity: 0*/
+    /*}*/
 
     /*子菜单*/
     .subMenu {
@@ -328,6 +325,8 @@
     /*按钮底部文字样式*/
     .bottom .btnName {
         opacity: 0.5;
+        line-height: 30px;
+        display: inline-block;
     }
     .off .btnName {
         opacity: 0;
@@ -391,15 +390,21 @@
     .pressed.switch img{
         filter: opacity(1);
     }
-    .pressed.switch .imgWrapper{
-        border-radius: 100%;
-        border: 1px solid transparent;
-    }
-    .on .pressed.switch .imgWrapper{
+    /*.pressed.switch .imgWrapper{*/
+        /*border-radius: 100%;*/
+        /*border: 1px solid transparent;*/
+    /*}*/
+    .on .pressed.switch .imgWrapper, .temp .pressed .imgWrapper{
         background-color: rgba(255,255,255,0.5)
     }
     .off .pressed.switch .imgWrapper{
         background-color: rgba(70,188,255,0.5);
+    }
+    .off .pressed.switch .img-normal{
+        display: none;
+    }
+    .off .pressed.switch .img-active{
+        display: inline-block;
     }
 
     /*disabled样式*/
