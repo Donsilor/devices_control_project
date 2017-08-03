@@ -657,6 +657,7 @@
 
                 this.initErr = false;
 
+                this.params.switch = attr.switchStatus;
                 if(attr.device_name != undefined){
                     this.params.device_name = attr.device_name;
                 }
@@ -664,7 +665,6 @@
                     this.params.deviceSubCategory = attr.deviceSubCategory;
                 }
 
-                this.params.switch = attr.switchStatus;
                 this.params.temperature = attr.temperature;
                 this.fakeTemp = attr.temperature;
                 this.params.mode = attr.mode;
