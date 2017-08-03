@@ -28,7 +28,7 @@
         left: 0;
         right: 0;
         top: 0;
-        bottom: 170px;;
+        bottom: 180px;;
     }
 
     .navigator {
@@ -37,6 +37,12 @@
 
     .curtain {
         margin: 4px auto 24px auto;
+    }
+
+    @media all and (max-height: 799px) {
+        .curtain {
+            margin-bottom: 12px !important;
+        }
     }
 
     .tip {
@@ -54,7 +60,7 @@
 <script>
     export default {
         name: 'app',
-        data (){
+        data() {
             return {
                 //用于确定数据是否加载完成，加载完成后渲染动态的UI
                 is_ready: false,
@@ -77,10 +83,12 @@
                 //是否显示中部按钮提示
                 show: false,
                 //是否显示选中的百分比(因为80会返回78就停止了，所以需要一个额外的参数来控制）
-                show_active_btn: false
+                show_active_btn: false,
+                //临时处理窗帘变动没有上传的问题
+                cbFunc: null,
             }
         },
-        mounted (){
+        mounted() {
             HdSmart.ready(() => {
                 //获取快照
                 HdSmart.Device.getSnapShot((data) => {
@@ -100,6 +108,11 @@
             });
 
             HdSmart.onDeviceListen((data) => {
+                if(this.cbFunc){
+                    //等硬件修复了需要干掉
+                    this.cbFunc();
+                    this.cbFunc = null;
+                }
                 try {
                     this.open_percentage = data.result.attribute.close_percentage;
                     this.animateToTargetPercentage(this.open_percentage);
@@ -111,7 +124,7 @@
             this.getAniFramePercentage();
         },
         methods: {
-            getAniFramePercentage (){
+            getAniFramePercentage() {
                 //取第10次的值来作为raq的间隔时间。todo 这样取值其实有问题
                 let counter = 10;
                 let reqId = null;
@@ -138,18 +151,8 @@
                 };
                 fun();
             },
-            onOpen(onFinishCallback){
-                this.clearTargetTip();
-                HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
-                    mode: 'on'
-                }, (data) => {
-                    onFinishCallback();
-                }, () => {
-                    onFinishCallback();
-                });
-            },
 
-            animateToTargetPercentage(percent, quite){
+            animateToTargetPercentage(percent, quite) {
                 //初次上电会导致返回报错
                 if (percent === 255) {
                     return false
@@ -194,9 +197,23 @@
                     this.raf_id = window.requestAnimationFrame(rafFunc)
                 }
             },
-
-            onClose(onFinishCallback){
+            onOpen(onFinishCallback) {
                 this.clearTargetTip();
+                //等硬件修复了需要干掉
+                this.cbFunc = onFinishCallback;
+                HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
+                    mode: 'on'
+                }, (data) => {
+                    onFinishCallback();
+                }, () => {
+                    onFinishCallback();
+                });
+            },
+
+            onClose(onFinishCallback) {
+                this.clearTargetTip();
+                //等硬件修复了需要干掉
+                this.cbFunc = onFinishCallback;
                 HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
                     mode: 'off'
                 }, () => {
@@ -205,7 +222,9 @@
                     onFinishCallback();
                 });
             },
-            onPause(onFinishCallback){
+            onPause(onFinishCallback) {
+                //等硬件修复了需要干掉
+                this.cbFunc = onFinishCallback;
                 HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
                     mode: 'pause'
                 }, () => {
@@ -214,7 +233,7 @@
                     onFinishCallback();
                 });
             },
-            onGoPercentage (percentage){
+            onGoPercentage(percentage) {
                 clearTimeout(this.timer);
                 this.tip = `幅度调至${percentage}%`;
                 this.show = true;
@@ -228,11 +247,11 @@
                 }, () => {
                 });
             },
-            clearTargetTip  (){
+            clearTargetTip() {
                 this.show = false;
                 this.show_active_btn = false;
             },
-            changeRafPercent (){
+            changeRafPercent() {
                 //watch里做会导致死循环
                 if (this.raf_time && this.total_time) {
                     //2.22 = 100(百分比)*100(raf间隔)/4500(总动画时间)

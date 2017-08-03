@@ -87,6 +87,11 @@
                 <!-- <span class="score">{{item.score}}</span> -->
             </li>
         </ul>
+        <!-- 没有数据 -->
+        <div class="nodata" v-show="loadState === 'NO_DATA'">
+            <i></i>
+            <p>暂无结果</p>
+        </div>
         <!-- 加载更多 -->
         <div class="loadmore">
             <!--<div class="spinner" v-show="loadState === 'LOADING'">
@@ -102,11 +107,6 @@
             <p v-show="loadState === 'LOADING'">正在加载中...</p>
             <p v-show="loadState === 'LOADED'">加载更多...</p>
             <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
-        </div>
-        <!-- 没有数据 -->
-        <div class="nodata" v-show="loadState === 'NO_DATA'">
-            <i></i>
-            <p>暂无结果</p>
         </div>
         <!-- 详情页 -->
         <detail :vid="vid" :channel-id="channelId" ref="detail"></detail>
@@ -376,9 +376,10 @@
                 },(data)=>{ 
                     this.loadState = 'LOADED'
                     if(data.code === 504){  
+                        HdSmart.UI.toast('网络异常，请稍后重试。')
                         return
                     }
-                    if(data.errorcode !== 0){   
+                    if(data.errorcode != "0"){   
                         HdSmart.UI.toast(data.errormsg)
                         return 
                     }
@@ -387,6 +388,9 @@
                     }
                     if(data.data){  
                         data = data.data
+                    }
+                    if(data.list == ""){   
+                        data.list = []
                     }
                     this.list = Object.freeze((this.isFirstLoad ? [] : this.list).concat(data.list))
                     this.total = data.total
@@ -438,6 +442,7 @@
             service.getChannelData(this.channelId,(data)=>{ 
                 this.loadState = 'LOADED'
                 if(data.code === 504){  
+                    HdSmart.UI.toast('网络错误，请稍后重试。')
                     return
                 }
                 this.category = Object.freeze(data.category)

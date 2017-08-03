@@ -72,7 +72,7 @@ export function getInitData() {
 
 export function getChannelData() {
     return {
-    "errorcode": 0,
+    "errorcode": "0",
   "action": "getChannelData",
   "channelId": "001",
   "category": [
@@ -555,53 +555,45 @@ export function getChannelData() {
 
 export function getDetaileData() {
     return {
-        "errorcode": 0,
-        "data": {
-            "title": "特殊关系",
-            "pictureUrl": "http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/a/asbi8alnlba8sni.jpg",
-            "starring": "麦克·辛 Michael Sheen 丹尼斯·奎德 Dennis Quaid 霍普·戴维斯 海伦·麦克洛瑞 Helen McCrory 马克·巴泽利",
-            "director": "理查德·隆克瑞恩",
-            "region": "英国",
-            "year": "2010",
-            "desc": "《特殊关系》讲述了1997年至2000年期间，当时的英国首相托尼·布莱尔与当时的美国总统比尔·克林顿之间的“亲密联系”，同时电影还将重点展现克林顿与白宫实习生莱温斯基在1995年到1997年期间的“不正当关系”，以及此事被曝光后是如何险些令克林顿下台的。",
-            "cate": "剧情",
-            "score": "6.79",
-            "quality": "蓝光",
-            "language": "英语",
-            "duration": "01:28:30",
-            "playlist": [
-                {
-                    "sourceId": "9",
-                    "playparam": "tenvideo2://?action=7&video_id=&video_name=特殊关系&cover_id=asbi8alnlba8sni",
-                    "total": 2,
-                    "list": [
-                        {
-                            "index": "1",
-                            "name": "特殊关系",
-                            "pictureUrl": "http://puui.qpic.cn/qqvideo_ori/0/x0022jyxl0p_228_128/0",
-                            "duration": "01:28:30",
-                            "states": "1",
-                            "link": "tenvideo2://?action=7&video_id=x0022jyxl0p&video_name=特殊关系&cover_id=asbi8alnlba8sni"
-                        },
-                          {
-                            "index": "2",
-                            "name": "特殊关系2",
-                            "pictureUrl": "http://puui.qpic.cn/qqvideo_ori/0/x0022jyxl0p_228_128/0",
-                            "duration": "01:28:30",
-                            "states": "1",
-                            "link": "tenvideo2://?action=7&video_id=x0022jyxl0p&video_name=特殊关系&cover_id=asbi8alnlba8sni"
-                        }
-                    ]
-                }
-            ]
-        }
-
-    }
+  "errorcode": "0",
+  "errormsg": "success",
+  "data": {
+    "title": "五个寂寞的心",
+    "pictureUrl": "http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/d/dsjvcs7m3q1eqyn.jpg",
+    "starring": "施念慈 梁碧芝 谭卫兰 黄婉婷",
+    "director": "陈果",
+    "region": "香港",
+    "year": "1992",
+    "desc": "五个天真活泼的少女，各怀著一颗寂寞而又悸动的心，在这个平淡的暑假里，她们遇到了许多兴奋，荒唐，离奇又冒险的事情……                                                           欣欣、小诗、麦姬、南生和东东是5个要好的朋友，一同读书，各人在成长路上各有心事。在暑假期间大家一同到东东在海边小镇的别墅度假,欣欣是个胆子大的女孩,有次在黑夜误闯海边小店的后院,而认识憨憨的阿伟，萌生爱意。东东因哥哥阿Joe认识了混血儿女友而烦恼，一心想拆散他们，弄出不少笑话,南生个性像男孩子,常常呵护东东,其实心里暗恋东东,麦姬是个大家公认的大花痴,常常换男朋友,小诗最大的乐趣就是喜欢拿著摄影机拍下所有的新鲜事物....当五个女孩正享受快乐的暑假时,海边却有不良份子从事走私运货,小诗无意间拍到他们的走私过程,就因为这样而发生意想不到的惊奇冒险....                                                           陈果继“大闹广昌隆”之指导第二部电影,这次以少女心为主题,炎炎夏日暑假必看的青春喜剧电影^O^",
+    "cate": "爱情",
+    "score": "7.87",
+    "quality": "高清",
+    "language": "普通话",
+    "duration": "01:28:03",
+    "playlist": [
+      {
+        "sourceId": "9",
+        "playparam": "tenvideo2://?action=7&video_id=&video_name=五个寂寞的心&cover_id=dsjvcs7m3q1eqyn",
+        "total": 1,
+        "list": [
+          {
+            "index": "1",
+            "name": "五个寂寞的心",
+            "pictureUrl": "http://puui.qpic.cn/qqvideo_ori/0/c00179y14u7_228_128/0",
+            "duration": "01:28:03",
+            "states": "1",
+            "link": "tenvideo2://?action=7&video_id=c00179y14u7&video_name=五个寂寞的心&cover_id=dsjvcs7m3q1eqyn"
+          }
+        ]
+      }
+    ]
+  }
+}
 }
 
 export function searchData() {
     return {
-      "errorcode": 0,
+      "errorcode": "0",
         "data": {
             "total": 10,
             "pageNo": 1,
