@@ -14,23 +14,30 @@
             </div>
             <div class="text">
                 <div class="shortinfo">
-                    <p>评分：<span>{{cur.score}}</span></p>
-                    <p>年代：{{cur.year}}</p>
-                    <p>类型：{{cur.cate}}</p>
-                    <p>导演：{{cur.director}}</p>
-                    <p>主演：{{cur.starring}}</p>
+                    <p v-show="cur.score">评分：<span>{{cur.score}}</span></p>
+                    <p v-show="cur.year">年代：{{cur.year}}</p>
+                    <p v-show="cur.cate">类型：{{cur.cate}}</p>
+                    <p v-show="cur.director">导演：{{cur.director}}</p>
+                    <p v-show="cur.starring">主演：{{cur.starring}}</p>
+                </div>
+                <div class="playstate playstate_unplay">
+                    <a href="#" class="btn" @click.prevent="play(cur.playlist[0].list[0])"><i class="icon-play"></i>在电视上播放</a>
                 </div>
                 <!-- 未播放 -->
+                <!--
                 <div class="playstate playstate_unplay" v-show="playstate===0">
                     <a href="#" class="btn" @click.prevent="play(cur.playlist[0].list[0])"><i class="icon-play"></i>在电视上播放</a>
                 </div>
                 <div class="playstate playstate_play" v-show="playstate===1">
                     <a href="javascript:void(0)" class="btn btn-outline">正在投屏...</a>
                 </div>
+                -->
                 <!-- 正在播放 -->
+                <!--
                 <div class="playstate playstate_play" v-show="playstate===2">
                     <a href="javascript:void(0)" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
                 </div>
+                -->
                 <!-- 继续播放 -->
                 <!--
                 <div class="playstate playstate_conplay" v-show="false">
@@ -44,7 +51,7 @@
                     <div class="desc-cont" :class="{
                         'text-cut': isDescOverflow,
                         'text-show': isDescShow
-                    }"><p>{{cur.desc}}</p>    
+                    }"><p v-html="cur.desc"></p>    
                     </div>
                     <a href="#" class="desc-toggle" 
                         @click.prevent="isDescShow=!isDescShow" 
@@ -68,14 +75,13 @@
                     @click="play(item)">
                     <img :src="item.pictureUrl">
                     <p>{{item.name}}</p>
-                    <span class="play" v-show="item.playstate===2"><i></i>当前播放</span>
+                    <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
                 </li>
             </ul>
             <ul class="bd" v-else>
                 <li class="item-num" 
                     v-for="item in cur.playlist[0].list" 
                     :key="item.index"
-                    :class="{'active':item.playstate===2}"
                     @click="play(item)">
                     {{item.index}}
                     <!-- <span class="tag_new" v-show="item.states"></span> -->
@@ -412,13 +418,17 @@
         },
         computed: { 
             //当前播放集数
-            activeItem() {
-                return this.cur.playlist[0].list.find(item=>item.playstate)
-            },
-            //播放状态：0不播放，1投屏中，2正在播放
-            playstate() { 
-                return this.activeItem ? this.activeItem.playstate : 0
-            }
+            // activeItem() {
+            //     if(this.cur.playlist){
+            //         return this.cur.playlist[0].list.find(item=>item.playstate)
+            //     }else{  
+            //         return null
+            //     }
+            // },
+            // //播放状态：0不播放，1投屏中，2正在播放
+            // playstate() { 
+            //     return this.activeItem ? this.activeItem.playstate : 0
+            // }
         },
         methods: {   
             getData() {
@@ -430,9 +440,10 @@
                     this.loading = false
                     //错误返回
                     if(data.code === 504){
+                        HdSmart.UI.toast('网络异常，请稍后重试。')
                         return 
                     }
-                    if(data.errorcode !== 0){   
+                    if(data.errorcode != "0"){   
                         HdSmart.UI.toast(data.errormsg)
                         return 
                     }
@@ -441,27 +452,29 @@
             },
             //点播：播放状态如playstate
             play(clickItem) {
-                //如果'点击'正在播放，返回
-                if(clickItem.playstate){
-                    return 
-                }
-                //取消当前播放状态
-                if(this.activeItem){    
-                    this.$set(this.activeItem,'playstate',0)
-                }
-                //设置'点击'状态为loading
-                this.$set(clickItem,'playstate',1)
-                //发起点播
-                service.playVideo(clickItem.link,clickItem.name,(data)=>{  
-                    if(data.code === 504){ 
-                        //点播失败
-                        this.$set(clickItem,'playstate',0)
-                        HdSmart.UI.toast('投屏失败，请重试')
-                    }else{ 
-                        //点播成功
-                        this.$set(clickItem,'playstate',2)
-                    }
-                }) 
+                if(!clickItem) return
+                service.playVideo(clickItem.link,clickItem.name,(data)=>{})
+                // //如果'点击'正在播放，返回
+                // if(!clickItem || clickItem.playstate){
+                //     return 
+                // }
+                // //取消当前播放状态
+                // if(this.activeItem){    
+                //     this.$set(this.activeItem,'playstate',0)
+                // }
+                // //设置'点击'状态为loading
+                // this.$set(clickItem,'playstate',1)
+                // //发起点播
+                // service.playVideo(clickItem.link,clickItem.name,(data)=>{  
+                //     if(data.code === 504){ 
+                //         //点播失败
+                //         this.$set(clickItem,'playstate',0)
+                //         HdSmart.UI.toast('投屏失败，请重试')
+                //     }else{ 
+                //         //点播成功
+                //         this.$set(clickItem,'playstate',2)
+                //     }
+                // }) 
             },
             //描述按行截取：对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
             getDescLine() {

@@ -27,20 +27,32 @@ import {isFunction, log} from '../helper';
 
 
 export default function (options) {
-    //onDeviceReady(function(){       
-        console.log('传入参数：', options.data) 
+
         HdIot.Util.dispatchEvent({
             data: JSON.stringify(options.data),
             onListener(data) {
-                console.log('返回数据：', typeof data, data)
                 if(options.onListener){
-                    if(typeof data  === 'string'){  
-                        data = JSON.parse(data)
+                    if(typeof data === 'string'){  
+                        /* data = data.replace(/\s/g,'').replace(/"desc":"(.*?)",/g,function(a,b){
+                            return '"desc":"'+ b.replace(/"/g,'“') +'",'
+                        }) */
+                        //HACK: app返回json数据有问题，没找到解决方案
+                        if(options.data.method === 'getDetaileData'){
+                            data = data.replace(/"desc"\s?:\s?"([\s\S+]*?)",/g, function(a,b){ 
+                                var str = b.replace(/\s+/g,'<br/>').replace(/"/g,'“')
+                                return `"desc": "${str}",`
+                            })
+                        }
+                        try{
+                            data = JSON.parse(data)
+                        }catch(e){  
+                            data = {code:504}
+                            HdSmart.UI.toast('json解析错误')
+                        }
                     }
                     options.onListener(data)
                 }
             }
         })
-   // })
     
 }
