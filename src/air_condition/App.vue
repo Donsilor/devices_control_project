@@ -1,10 +1,10 @@
 <template>
     <div id="app" :class="appClassObj" @click="screenClick">
         <p class="title" v-show="!initErr">{{ params.device_name }}</p>
-        <p class="tip" v-show="params.switch === 'off'">已关闭</p>
+        <p class="tip" v-show="(!initErr) && params.switch === 'off'">已关闭</p>
 
         <!--开机界面-->
-        <div v-show="params.switch === 'on'">
+        <div v-show="(!initErr) && params.switch === 'on'">
             <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
                 <defs>
                     <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509"
@@ -88,7 +88,7 @@
         </div>
 
         <!--关机界面-->
-        <div v-show="params.switch === 'off'">
+        <div v-show="(!initErr) && params.switch === 'off'">
             <!--<p class="tip"></p>-->
             <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
                 <defs>
@@ -455,7 +455,7 @@
     //连续设置时间判断间隔
     const SPAN = 300;
     //loading效果延迟
-    const LOADING_DELAY = 300;
+    const LOADING_DELAY = 600;
     //loading class
     const LOADING_CLASS = 'loading';
     //pressed class
@@ -843,6 +843,9 @@
                 );
             },
             setTemperature(type, value, tip, el){
+                if(this.curButton && this.curButton != el){
+                    this.removePressedClass(this.curButton);
+                }
                 this.curButton = el;
 
                 //送风模式不能设置温度
