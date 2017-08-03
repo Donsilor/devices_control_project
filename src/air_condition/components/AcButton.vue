@@ -1,7 +1,7 @@
 <template>
     <div :class="classObj">
         <div class="imgWrapper"  @click="tap">
-        <!--<div class="imgWrapper"  v-finger:tap="tap">-->
+        <!--<div class="imgWrapper"  v-finger:touch-start="tap">-->
             <img v-if="info.imgSrc" :src="info.imgSrc" class="img-normal" /><!--v-show="!classObj.active"-->
             <img v-if="info.imgActiveSrc" :src="info.imgActiveSrc" class="img-active" /><!--v-show="classObj.active"-->
         </div>
