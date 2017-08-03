@@ -540,7 +540,9 @@
                 //当前点击的按钮
                 curButton: null,
                 //页面初始化失败
-                initErr: false
+                initErr: false,
+                //获取快照是否完成
+                initComplete: false
             }
         },
         computed: {
@@ -617,7 +619,9 @@
                             that.init();
                         }
                         else{
-                            that.setState(data.result.attr);
+                            if(this.initComplete){
+                                that.setState(data.result.attr);
+                            }
                         }
                     }
                 })
@@ -631,10 +635,12 @@
 //                        alert(JSON.stringify(data));
                         this.setState(data.attr);
                         setWebView();
+                        this.initComplete = true;
                     },
                     () => {
                         this.initErr = true;
                         setWebView();
+                        this.initComplete = true;
                     });
 
                 function setWebView(){
@@ -731,6 +737,7 @@
             },
             setParam(type, value, tip, el){
                 let that = this;
+                that.addPressedClass(el);
 
                 //初始化失败，则按钮不能操作
                 if(that.initErr){
@@ -794,8 +801,9 @@
                     return;
                 }
 
+                this.removeLoading();
                 this.loadingTimer = setTimeout(() => {
-                    this.removeLoading();
+//                    this.removeLoading();
 
                     this.loadingElement = el;
                     this.removePressedClass(this.loadingElement);
@@ -843,10 +851,11 @@
                 );
             },
             setTemperature(type, value, tip, el){
-                if(this.curButton && this.curButton != el){
-                    this.removePressedClass(this.curButton);
-                }
-                this.curButton = el;
+//                if(this.curButton && this.curButton != el){
+//                    this.removePressedClass(this.curButton);
+//                }
+//                this.curButton = el;
+                this.addPressedClass(el);
 
                 //送风模式不能设置温度
                 if (this.params.mode === 'wind') {
@@ -921,6 +930,13 @@
                 this.tipTimer = setTimeout(() => {
                     this.tip = '';
                 }, TIP_DURATION);
+            },
+            addPressedClass(el){
+                if(el && this.curButton != el){
+                    this.removePressedClass(this.curButton);
+                    this.curButton = el;
+                    el.classList.add(PRESSED_CLASS);
+                }
             },
             removePressedClass(el){
                 if(el){

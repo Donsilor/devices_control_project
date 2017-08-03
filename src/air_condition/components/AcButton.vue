@@ -87,7 +87,7 @@
                     }, 300);
                 }
 
-                this.$el.classList.add('pressed');
+//                this.$el.classList.add('pressed');
                 this.$emit('tap', this.info.type, this.info.value, this.info.tip, this.$el);
 //                if(this.curValue !== this.info.value){
 //                    this.$emit('click', this.info.type, this.info.value);
