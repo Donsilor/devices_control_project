@@ -1,16 +1,16 @@
 <template>
     <div class="wrap" :class="{visible:is_ready}">
         <div class="bg"
-             :style="{transform:'translate3d(-50%,-'+moveX+'px,0)',opacity:bg_opacity,transitionDuration:time+'ms'}"></div>
-        <div class="box left" :style="{transform:'scale3d('+scaleRate+',1,1)',transitionDuration:time+'ms'}"
+             :style="{transform:'translate3d(-50%,-'+moveX+'px,0)',opacity:bg_opacity}"></div>
+        <div class="box left" :style="{transform:'scale3d('+scaleRate+',1,1)'}"
              ref="leftBox">
             <div class="clothes"></div>
-            <div class="folding" :style="{opacity: opacity,transitionDuration:time+'ms'}"></div>
+            <div class="folding" :style="{opacity: opacity}"></div>
         </div>
 
-        <div class="box right" :style="{transform:'scale3d('+scaleRate+',1,1)',transitionDuration:time+'ms'}">
+        <div class="box right" :style="{transform:'scale3d('+scaleRate+',1,1)'}">
             <div class="clothes"></div>
-            <div class="folding" :style="{opacity: opacity,transitionDuration:time+'ms'}"></div>
+            <div class="folding" :style="{opacity: opacity}"></div>
         </div>
     </div>
 </template>
@@ -28,15 +28,13 @@
 
     .bg {
         background: url('../assets/img_curtain_view.png') center center no-repeat;
-        width: 954px;
-        height: 348px;
+        width: 1140px;
+        height: 408px;
         background-size: 100% 100%;
         position: absolute;
         bottom: 0;
         left: 50%;
         transform: translate3d(-50%, 0, 0);
-        transition-property: transform, opacity;
-        transition-timing-function: linear;
     }
 
     .left {
@@ -57,8 +55,6 @@
         height: 468px;
         position: absolute;
         width: 588px;
-        transition-property: transform;
-        transition-timing-function: linear;
     }
 
     .clothes {
@@ -75,8 +71,6 @@
         background-size: 100% 100%;
         position: absolute;
         top: 0;
-        transition-property: opacity;
-        transition-timing-function: linear;
     }
 </style>
 <script>
@@ -102,8 +96,7 @@
             //窗帘黑色背景图的透明度
             opacity (){
                 return 0.1 + 0.9 * this.open_percentage / 100;
-            },
-            //每次open_percentage变更后，到达指定位置所需的时间
+            }
 
         },
         data (){
@@ -112,7 +105,6 @@
                 width: 0,
                 //是否第一次渲染，是的话时间为0
                 firstRender: true,
-//                time: 0
             }
         },
         mounted (){
