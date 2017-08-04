@@ -25,33 +25,46 @@ import {isFunction, log} from '../helper';
  * })
  */
 
+const ERROR_504 = '网络异常，请稍后重试'
+const ERROR_JSONSTR = 'JSON解析错误'
 
-export default function (options) {
+
+function hack_detail_json(jsonstr) {
+    return jsonstr.replace(/"desc"\s?:\s?"([\s\S+]*?)",/g, function(a,b){ 
+        var str = b.replace(/\s+/g,'<br/>').replace(/"/g,'“')
+        return `"desc": "${str}",`
+    })
+}
+
+export default function (params, callback) {
 
         HdIot.Util.dispatchEvent({
-            data: JSON.stringify(options.data),
+            data: JSON.stringify(params),
             onListener(data) {
-                if(options.onListener){
-                    if(typeof data === 'string'){  
-                        /* data = data.replace(/\s/g,'').replace(/"desc":"(.*?)",/g,function(a,b){
-                            return '"desc":"'+ b.replace(/"/g,'“') +'",'
-                        }) */
-                        //HACK: app返回json数据有问题，没找到解决方案
-                        if(options.data.method === 'getDetaileData'){
-                            data = data.replace(/"desc"\s?:\s?"([\s\S+]*?)",/g, function(a,b){ 
-                                var str = b.replace(/\s+/g,'<br/>').replace(/"/g,'“')
-                                return `"desc": "${str}",`
-                            })
-                        }
-                        try{
-                            data = JSON.parse(data)
-                        }catch(e){  
-                            data = {code:504}
-                            HdSmart.UI.toast('json解析错误')
+
+                var error = null
+
+                if(typeof data === 'string'){   
+                    //HACK: app返回json数据有问题，没找到解决方案
+                    if(params.method === 'getDetaileData'){   
+                        data = hack_detail_json(data)
+                    }
+                    try{
+                        data = JSON.parse(data)
+                    }catch(e){  
+                        error = {   
+                            errormsg: ERROR_JSONSTR
                         }
                     }
-                    options.onListener(data)
                 }
+
+                if(data.code === 504){  
+                    error = {   
+                        errormsg: ERROR_504
+                    }
+                }
+
+                callback && callback(error, data)
             }
         })
     

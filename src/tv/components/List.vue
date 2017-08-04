@@ -104,8 +104,8 @@
                 <div class="rect7"></div>
                 <div class="rect8"></div>
             </div>-->
-            <p v-show="loadState === 'LOADING'">正在加载中...</p>
-            <p v-show="loadState === 'LOADED'">加载更多...</p>
+            <p v-show="!isFirstLoad && loadState === 'LOADING'">正在加载中...</p>
+            <p v-show="!isFirstLoad && loadState === 'LOADED'">加载更多...</p>
             <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
         </div>
         <!-- 详情页 -->
@@ -230,8 +230,8 @@
     }
     .loadmore{  
         text-align: center;
-        padding: 30px 0;
-        height: 50px;
+        /*padding: 30px 0;*/
+        height: 60px;
         color:#75787a;
         font-size: 24px;
         .finish{
@@ -373,16 +373,9 @@
                     orderby: this.current_orderby,
                     pageSize: this.pageSize,
                     pageNo: this.pageNo
-                },(data)=>{ 
+                },(err, data)=>{ 
                     this.loadState = 'LOADED'
-                    if(data.code === 504){  
-                        HdSmart.UI.toast('网络异常，请稍后重试。')
-                        return
-                    }
-                    if(data.errorcode != "0"){   
-                        HdSmart.UI.toast(data.errormsg)
-                        return 
-                    }
+                    if(err) return 
                     if(this.isFirstLoad){
                         window.scrollTo(0,0)
                     }
@@ -401,12 +394,14 @@
                         //加载完全部
                         this.loadState = 'NO_MORE'
                         HdSmart.UI.toast('已加载全部')
+                    }else{  
+                        this.pageNo++
                     }
                 })
             },
             loadMore: _.debounce(function(){
                 var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
-                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-20){   
+                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-15){   
                     if(this.loadState === 'LOADING' || this.loadState === 'NO_DATA'){   
                         return 
                     }
@@ -414,7 +409,7 @@
                         HdSmart.UI.toast('已加载全部')
                         return 
                     }
-                    this.pageNo++
+                    //this.pageNo++
                     this.filterData()
                 }
             },300),
@@ -439,17 +434,15 @@
         },
         mounted() {
             this.loadState = 'LOADING'
-            service.getChannelData(this.channelId,(data)=>{ 
+            service.getChannelData(this.channelId,(err, data)=>{ 
                 this.loadState = 'LOADED'
-                if(data.code === 504){  
-                    HdSmart.UI.toast('网络错误，请稍后重试。')
-                    return
-                }
+                if(err) return 
                 this.category = Object.freeze(data.category)
                 this.region = Object.freeze(data.region)
                 this.year = Object.freeze(data.year)
                 this.list = Object.freeze(data.data.list)
                 this.total = data.data.total
+                this.pageNo++
             }) 
             window.addEventListener('scroll',this.loadMore)
         },

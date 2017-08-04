@@ -8,7 +8,7 @@
             <span class="back" @click="close"></span>
             <div class="title">{{cur.title}}</div>
         </div>
-        <div class="detail-info clearfix">
+        <div class="detail-info clearfix" v-show="cur.title">
             <div class="pic">
                 <img v-lazy="cur.pictureUrl">
             </div>
@@ -117,12 +117,6 @@
         z-index: 9;
         color: #fff;
         background-color: rgba(0,0,0,0.9);
-        &.show{ 
-            display: block;
-        }
-    }
-    .page-detail:before{    
-
     }
     .detail-hd{
         height: 156px;
@@ -159,7 +153,7 @@
                 height: 100%;
                 background: url(../assets/icn_tv_movie.png) no-repeat center center;
                 background-size: 120px 120px;
-                opacity: .3;
+                opacity: .5;
                 border:1px solid #fff;
                 box-sizing: border-box;
             }
@@ -418,17 +412,17 @@
         },
         computed: { 
             //当前播放集数
-            // activeItem() {
-            //     if(this.cur.playlist){
-            //         return this.cur.playlist[0].list.find(item=>item.playstate)
-            //     }else{  
-            //         return null
-            //     }
-            // },
-            // //播放状态：0不播放，1投屏中，2正在播放
-            // playstate() { 
-            //     return this.activeItem ? this.activeItem.playstate : 0
-            // }
+            /* activeItem() {
+                if(this.cur.playlist){
+                    return this.cur.playlist[0].list.find(item=>item.playstate)
+                }else{  
+                    return null
+                }
+            },
+            //播放状态：0不播放，1投屏中，2正在播放
+            playstate() { 
+                return this.activeItem ? this.activeItem.playstate : 0
+            } */
         },
         methods: {   
             getData() {
@@ -436,45 +430,37 @@
                 service.getDetaileData({    
                     channelId: this.channelId,
                     vid: this.vid
-                },(data) => {   
+                },(err, data) => {   
                     this.loading = false
-                    //错误返回
-                    if(data.code === 504){
-                        HdSmart.UI.toast('网络异常，请稍后重试。')
-                        return 
-                    }
-                    if(data.errorcode != "0"){   
-                        HdSmart.UI.toast(data.errormsg)
-                        return 
-                    }
+                    if(err) return 
                     this.cur = data.data
                 })
             },
             //点播：播放状态如playstate
             play(clickItem) {
                 if(!clickItem) return
-                service.playVideo(clickItem.link,clickItem.name,(data)=>{})
-                // //如果'点击'正在播放，返回
-                // if(!clickItem || clickItem.playstate){
-                //     return 
-                // }
-                // //取消当前播放状态
-                // if(this.activeItem){    
-                //     this.$set(this.activeItem,'playstate',0)
-                // }
-                // //设置'点击'状态为loading
-                // this.$set(clickItem,'playstate',1)
-                // //发起点播
-                // service.playVideo(clickItem.link,clickItem.name,(data)=>{  
-                //     if(data.code === 504){ 
-                //         //点播失败
-                //         this.$set(clickItem,'playstate',0)
-                //         HdSmart.UI.toast('投屏失败，请重试')
-                //     }else{ 
-                //         //点播成功
-                //         this.$set(clickItem,'playstate',2)
-                //     }
-                // }) 
+                service.playVideo(clickItem.link,clickItem.name)
+                /* //如果'点击'正在播放，返回
+                if(!clickItem || clickItem.playstate){
+                    return 
+                }
+                //取消当前播放状态
+                if(this.activeItem){    
+                    this.$set(this.activeItem,'playstate',0)
+                }
+                //设置'点击'状态为loading
+                this.$set(clickItem,'playstate',1)
+                //发起点播
+                service.playVideo(clickItem.link,clickItem.name,(data)=>{  
+                    if(data.code === 504){ 
+                        //点播失败
+                        this.$set(clickItem,'playstate',0)
+                        HdSmart.UI.toast('投屏失败，请重试')
+                    }else{ 
+                        //点播成功
+                        this.$set(clickItem,'playstate',2)
+                    }
+                })  */
             },
             //描述按行截取：对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
             getDescLine() {

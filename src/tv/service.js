@@ -2,11 +2,24 @@
  * 服务类
  */
 
-const DEVICE_TYPE = 'tv'
+const deviceType = 'tv'
 
-function sendApp(options){
-    options.data.deviceType = DEVICE_TYPE
-    HdSmart.Util.dispatchEvent(options)
+function sendApp(method, params, callback){
+    HdSmart.Util.dispatchEvent({
+        method,
+        deviceType,
+        params,
+    }, function(error, data){
+        if(data.errorcode && data.errorcode != '0'){
+            error = {
+                errormsg: data.errormsg
+            }
+        }
+        if(error){   
+            HdSmart.UI.toast(error.errormsg)
+        }
+        callback && callback(error, data)
+    })
 }
 
 /**
@@ -21,69 +34,35 @@ export function getInitData(){
  * 获取channel所有数据接口
  */
 export function getChannelData(channelId, callback){   
-    sendApp({   
-        data: { 
-            method: 'getChannelData',
-            params: {
-                channelId: channelId
-            }
-        },
-        onListener: callback
-    })
+    sendApp('getChannelData', {channelId}, callback)
 }
 
 /**
  * 取得视频详情
  */
 export function getDetaileData(params, callback){   
-    sendApp({   
-        data: { 
-            method: 'getDetaileData',
-            params: params
-        },
-        onListener: callback
-    })
+    sendApp('getDetaileData', params, callback)
 }
 
 /**
  * 搜索结果
  */
 export function searchData(params, callback){   
-    sendApp({
-        data: { 
-            method: 'searchData',
-            params: params
-        },
-        onListener: callback
-    })
+    sendApp('searchData', params, callback)
 }
 
 /**
  * 模糊（联想）查询
  */
-export function fuzzySearch(word, callback){  
-    sendApp({   
-        data: { 
-            method: 'fuzzySearch',
-            params: {
-                keyword: word
-            }
-        },
-        onListener: callback
-    })
+export function fuzzySearch(keyword, callback){  
+    sendApp('fuzzySearch', {keyword}, callback)
 }
 
 /**
  * 搜索历史记录
  */
 export function getSearchHistory(callback){ 
-    sendApp({   
-        data: { 
-            method: 'getSearchHistory',
-            params: ''
-        },
-        onListener: callback
-    })
+    sendApp('getSearchHistory', '', callback)
 }
 
 /**
@@ -92,29 +71,13 @@ export function getSearchHistory(callback){
  * 遥控器 remoteControlEvent
  * 清除搜索历史记录 clearSearchHistory
  */
-export function onClickEvent(eventName){ 
-    sendApp({   
-        data: { 
-            method: 'onClickEvent',
-            params: {
-                eventCode: eventName
-            }
-        }
-    })
+export function onClickEvent(eventCode){ 
+    sendApp('onClickEvent', {eventCode})
 }
 
 /**
  * 点播
  */
-export function playVideo(link, title, callback){    
-    sendApp({
-        data: {
-            method:'playVideo' ,
-            params: {
-                link: link,
-                title: title
-            }
-        },
-        onListener: callback
-    })
+export function playVideo(link, title){    
+    sendApp('playVideo', {link,title})
 }
