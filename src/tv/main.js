@@ -73,7 +73,7 @@ HdSmart.ready(() => {
     FastClick.attach(document.body)
 
     router.beforeEach((to,from,next) => {
-      if(to.name === 'index'){  
+      if(to.name === 'index' || to.name === 'error'){  
         setTimeout(()=>{
           HdSmart.UI.toggleHeadAndFoot(true)
         },300)
