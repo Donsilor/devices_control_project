@@ -340,7 +340,7 @@ export function getChannelData() {
     "list": [
       {
         "title": "不期而遇",
-        "pictureUrl": "http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/q/qqp3ehjrxmy2syz.jpg",
+        "pictureUrl": "http://i.gtimg.cn/qqlive/images/newcolumn/v1//t/t66zqv.jpg",
         "starring": "张亮 张雨绮",
         "director": "陈卓",
         "region": "内地",
@@ -601,7 +601,7 @@ export function searchData() {
             "list": [
       {
         "title": "不期而遇",
-        "pictureUrl": "http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/q/qqp3ehjrxmy2syz.jpg",
+        "pictureUrl": "http://i.gtimg.cn/qqlive/images/newcolumn/v1//t/t66zqv.jpg",
         "starring": "张亮 张雨绮",
         "director": "陈卓",
         "region": "内地",

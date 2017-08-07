@@ -5,21 +5,23 @@
 const deviceType = 'tv'
 
 function sendApp(method, params, callback){
-    HdSmart.Util.dispatchEvent({
-        method,
-        deviceType,
-        params,
-    }, function(error, data){
-        if(data.errorcode && data.errorcode != '0'){
-            error = {
-                errormsg: data.errormsg
+    setTimeout(()=>{
+        HdSmart.Util.dispatchEvent({
+            method,
+            deviceType,
+            params,
+        }, function(error, data){
+            if(data.errorcode && data.errorcode != '0'){
+                error = {
+                    errormsg: data.errormsg
+                }
             }
-        }
-        if(error){   
-            HdSmart.UI.toast(error.errormsg)
-        }
-        callback && callback(error, data)
-    })
+            if(error){   
+                HdSmart.UI.toast(error.errormsg)
+            }
+            callback && callback(error, data)
+        })
+    }, 100);
 }
 
 /**

@@ -20,6 +20,7 @@ import List from './components/List.vue'
 import Search from './components/Search.vue'
 import Detail from './components/Detail.vue'
 import Topbar from './components/Topbar.vue'
+import ErrorView from './components/Error.vue'
 //import Statusbar from './components/Statusbar.vue'
 
 Vue.use(Router)
@@ -49,6 +50,11 @@ const router =  new Router({
       path: '/search',
       name: 'search',
       component: Search
+    },
+    { 
+      path: '/error',
+      name: 'error',
+      component: ErrorView
     }
   ]
 })
@@ -83,6 +89,7 @@ HdSmart.ready(() => {
       template: '<App />',
       components: { App }
     });
+
   }
 
 })

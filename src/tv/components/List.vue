@@ -3,7 +3,16 @@
 -->
 <template>
     <div class="page-list">
-        <div class="fixedtop">
+
+        <!-- 错误提示 -->
+        <div class="error-page" v-if="error" @click="reload">
+            <div class="error-tip">
+                <img src='../assets/init_err.png' />
+                <p>加载失败，请点击屏幕刷新</p>
+            </div>
+        </div>
+
+        <div class="fixedtop" v-if="!error">
             <topbar :title="title"></topbar>
             <!-- 条件 -->
             <div class="filters">
@@ -79,7 +88,7 @@
                 v-for="item in list" 
                 :key="item.vid" 
                 @click="showDetailInfo(item.channelId,item.vid)">
-                <img v-lazy="getThumbPic(item.pictureUrl)" alt="">
+                <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
                 <div class="name">{{item.title}}</div>
                 <span class="update">
                     {{getUpdateSet(item.setCount,item.lastUpdateSet)}}
@@ -335,7 +344,8 @@
                     NO_DATA  没有数据，显示  暂无结果
                     NO_MORE  全部加载完成，显示 已加载全部
                  */
-                loadState: ''
+                loadState: '',
+                error: false
             }
         },
         watch: {
@@ -430,21 +440,36 @@
             //换成小图地址
             getThumbPic(pic) {  
                 return pic.replace('.jpg','_y.jpg')
+            },
+            reload() {  
+                if(this.error){ 
+                    this.error = false
+                    this.onPageInit()
+                }
+            },
+            onPageInit() {
+                this.loadState = 'LOADING'
+                service.getChannelData(this.channelId,(err, data)=>{
+                    this.loadState = 'LOADED'
+                    if(err){    
+                        this.error = true
+                        return 
+                    }
+                    this.category = Object.freeze(data.category)
+                    this.region = Object.freeze(data.region)
+                    this.year = Object.freeze(data.year)
+                    this.list = Object.freeze(data.data.list)
+                    this.total = data.data.total
+                    this.$nextTick(()=>{this.pageNo++})
+                    window.addEventListener('scroll',this.loadMore)
+                })
             }
         },
         mounted() {
-            this.loadState = 'LOADING'
-            service.getChannelData(this.channelId,(err, data)=>{ 
-                this.loadState = 'LOADED'
-                if(err) return 
-                this.category = Object.freeze(data.category)
-                this.region = Object.freeze(data.region)
-                this.year = Object.freeze(data.year)
-                this.list = Object.freeze(data.data.list)
-                this.total = data.data.total
-                this.$nextTick(()=>{this.pageNo++})
-            }) 
-            window.addEventListener('scroll',this.loadMore)
+            this.onPageInit()
+            this.$Lazyload.$on('error',function({el, src}){
+                el.src = el.dataset.src1
+            })
         },
         destroyed() {
             window.removeEventListener('scroll',this.loadMore) 

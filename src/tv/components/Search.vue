@@ -61,7 +61,7 @@
                     v-for="item in resultData" 
                     :key="item.vid"
                     @click="showDetailInfo(item.channelId,item.vid)">
-                    <img v-lazy="getThumbPic(item.pictureUrl)" alt="">
+                    <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
                     <div class="name">{{item.title}}</div>
                 </li>
             </ul>
@@ -419,6 +419,9 @@
                 this.$el.querySelector('.search_input input').focus()
             },300)
             window.addEventListener('scroll',this.loadMore)
+            this.$Lazyload.$on('error',function({el, src}){
+                el.src = el.dataset.src1
+            })
         },
         destroyed() {
             window.removeEventListener('scroll',this.loadMore)
