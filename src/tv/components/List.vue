@@ -395,7 +395,7 @@
                         this.loadState = 'NO_MORE'
                         HdSmart.UI.toast('已加载全部')
                     }else{  
-                        this.pageNo++
+                        this.$nextTick(()=>{this.pageNo++})
                     }
                 })
             },
@@ -442,7 +442,7 @@
                 this.year = Object.freeze(data.year)
                 this.list = Object.freeze(data.data.list)
                 this.total = data.data.total
-                this.pageNo++
+                this.$nextTick(()=>{this.pageNo++})
             }) 
             window.addEventListener('scroll',this.loadMore)
         },

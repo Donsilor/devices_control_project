@@ -378,7 +378,7 @@
                         this.loadState = 'NO_MORE' 
                         HdSmart.UI.toast('已加载全部')
                     }else{  
-                        this.pageNo++
+                        this.$nextTick(()=>{this.pageNo++})
                     }
                 })
             },
