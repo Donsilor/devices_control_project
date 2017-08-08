@@ -10,9 +10,11 @@
                     <swiper-slide 
                         v-for="item in homePageInfo" 
                         :key="item.vid">
-                    <a href="#" @click.prevent="showDetailInfo(item.channelId,item.vid)"> 
-                        <img :src="item.pictureUrl">
-                    </a>
+                        <a href="#" 
+                            class="swiper-lazy"
+                            :data-background="item.pictureUrl"
+                            @click.prevent="showDetailInfo(item.channelId,item.vid)"> 
+                        </a>
                     </swiper-slide>
                     <div class="swiper-pagination" slot="pagination"></div>
                 </swiper>
@@ -127,10 +129,22 @@
         }
     }
     .swiper {
+        border-radius: 6px;
+        overflow: hidden;
+        .swiper-slide{  
+            width: 1020px;
+            height: 500px;
+            background: url(../assets/img_default_recommend.png) no-repeat;
+            background-size: 100%;
+        } 
+        a{
+            display: block;
+            width: 1020px;
+            height: 500px;
+            background-size: 100%;
+        }
         img{
             width: 100%;
-            height: 100%;
-            border-radius: 6px;
         }
         .swiper-container-horizontal > .swiper-pagination-bullets{ 
             width: auto;
@@ -164,7 +178,8 @@
                     autoplay: 2000,
                     loop: true,
                     autoplayDisableOnInteraction: false,
-                    pagination: '.swiper-pagination'
+                    pagination: '.swiper-pagination',
+                    lazyLoading: true
                 },
                 //初始化数据，由app首次加载注入
                 ...service.getInitData()

@@ -370,16 +370,18 @@
                     if(data.list == ""){   
                         data.list = []
                     }
-                    this.resultData = Object.freeze((this.isFirstLoad ? [] : this.resultData).concat(data.list))
                     this.total = data.total
-                    if(this.total === 0){    
-                        this.loadState = 'NO_DATA'
-                    }else if(this.pageSize*this.pageNo >= this.total){    
-                        this.loadState = 'NO_MORE' 
-                        HdSmart.UI.toast('已加载全部')
-                    }else{  
-                        this.$nextTick(()=>{this.pageNo++})
-                    }
+                    this.resultData = Object.freeze((this.isFirstLoad ? [] : this.resultData).concat(data.list))
+                    this.$nextTick(()=>{
+                        if(this.total === 0){    
+                            this.loadState = 'NO_DATA'
+                        }else if(this.pageSize*this.pageNo >= this.total){    
+                            this.loadState = 'NO_MORE' 
+                            HdSmart.UI.toast('已加载全部')
+                        }else{  
+                            this.pageNo++
+                        }
+                    })
                 })
             },
             loadMore: _.debounce(function(){
@@ -419,8 +421,12 @@
                 this.$el.querySelector('.search_input input').focus()
             },300)
             window.addEventListener('scroll',this.loadMore)
-            this.$Lazyload.$on('error',function({el, src}){
+            this.$Lazyload.$on('error',function({el, src, loading}){
                 el.src = el.dataset.src1
+                el.onerror = function(){
+                    el.src = loading
+                    el.onerror = null
+                }
             })
         },
         destroyed() {
