@@ -120,6 +120,10 @@
             &::-webkit-input-placeholder{
                 color: #c8cacc;
             }
+            &:focus{    
+                border: 1px solid #13d5dc;
+                outline: none;
+            }
         }
         .del{   
             position: absolute;
@@ -277,7 +281,8 @@
                     NO_DATA  没有数据，显示  暂无结果
                     NO_MORE  全部加载完成，显示 已加载全部
                  */
-                loadState: ''
+                loadState: '',
+                isFirstLoad: true
             }
         },
         watch: {    
@@ -294,11 +299,6 @@
                         HdSmart.UI.hideLoading()
                     }
                 }
-            }
-        },
-        computed: { 
-            isFirstLoad() { 
-                return this.pageNo === 1 ? true : false
             }
         },
         methods: { 
@@ -326,8 +326,7 @@
                 this.word = word
                 this.current_channel = ''
                 this.current_orderby = ''
-                this.pageNo = 1
-                this.filterData()
+                this.filterData(1)
             },
             //模糊查询
             fuzzySearch: _.debounce(function(){ 
@@ -347,39 +346,40 @@
             },100),
             setParam(key, value) {
                 this[key] = value
-                this.pageNo = 1
-                this.filterData()
+                this.filterData(1)
             },
-            filterData() {  
+            filterData(page) {  
+                if(page === 1) this.isFirstLoad = true
                 this.loadState = 'LOADING' 
                 service.searchData({
                     keyword: this.word.trim(),
                     channelId: this.current_channel,
                     orderby: this.current_orderby,
                     pageSize: this.pageSize,
-                    pageNo: this.pageNo
+                    pageNo: page
                 },(err, data)=>{
                     this.loadState = 'LOADED'
                     if(err) return
-                    if(this.isFirstLoad){
-                        window.scrollTo(0,0)
-                    }
+                    
                     if(data.data){  
                         data = data.data
                     }
                     if(data.list == ""){   
                         data.list = []
                     }
-                    this.total = data.total
-                    this.resultData = Object.freeze((this.isFirstLoad ? [] : this.resultData).concat(data.list))
                     this.$nextTick(()=>{
+                        this.resultData = Object.freeze((page === 1 ? [] : this.resultData).concat(data.list))
+                        this.total = data.total
+                        this.pageNo = page
+                        if(this.isFirstLoad){
+                            this.isFirstLoad = false
+                            window.scrollTo(0,0)
+                        }
                         if(this.total === 0){    
                             this.loadState = 'NO_DATA'
                         }else if(this.pageSize*this.pageNo >= this.total){    
                             this.loadState = 'NO_MORE' 
                             HdSmart.UI.toast('已加载全部')
-                        }else{  
-                            this.pageNo++
                         }
                     })
                 })
@@ -399,8 +399,7 @@
                         HdSmart.UI.toast('已加载全部')
                         return 
                     }
-                    //this.pageNo++
-                    this.filterData()
+                    this.filterData(this.pageNo + 1)
                 }
             },300),
             showDetailInfo(channelId, vid) {

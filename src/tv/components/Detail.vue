@@ -51,7 +51,8 @@
                     <div class="desc-cont" :class="{
                         'text-cut': isDescOverflow,
                         'text-show': isDescShow
-                    }"><p v-html="cur.desc"></p>    
+                    }">
+                        <div class="desc-cont-p" v-html="toHTML(cur.desc)"></div>    
                     </div>
                     <a href="#" class="desc-toggle" 
                         @click.prevent="isDescShow=!isDescShow" 
@@ -78,7 +79,7 @@
                     <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
                 </li>
             </ul>
-            <ul class="bd" v-else>
+            <ul class="bd bd-num" v-else>
                 <li class="item-num" 
                     v-for="item in cur.playlist[0].list" 
                     :key="item.index"
@@ -93,8 +94,22 @@
 </template>
 
 <style lang="less">
-    .hidescroll,.hidescroll body{
-        overflow: hidden;
+    .hidescroll{
+        overflow: visible !important;
+        width: auto;
+    }
+    .hidescroll body{
+        overflow: hidden !important;
+    }
+    .hidescroll .page-detail{   
+        overflow: auto;
+        overflow-y: scroll;
+    }
+    .hidescroll body > div > div,.hidescroll body > div > ul{ 
+        filter: blur(10px);
+    }
+    .hidescroll body > div > .page-detail{  
+        filter: none;
     }
     .slideup-enter-active {
         transition: all .3s ease;
@@ -116,7 +131,7 @@
         overflow-y: auto;
         z-index: 9;
         color: #fff;
-        background-color: rgba(0,0,0,0.9);
+        background: rgba(47,49,51,.95);
     }
     .detail-hd{
         height: 156px;
@@ -154,12 +169,9 @@
                 background: url(../assets/icn_tv_movie.png) no-repeat center center;
                 background-size: 120px 120px;
                 opacity: .5;
-                border:1px solid #fff;
-                box-sizing: border-box;
             }
             [lazy="loaded"]{   
                 opacity: 1;
-                border: 0;
             }
         }
         .text{  
@@ -174,6 +186,9 @@
         .desc-cont{ 
             overflow: hidden;
             height: 117px;
+        }
+        .desc-cont-p p{ 
+            text-indent: 2em;
         }
         .text-cut{ 
             height: auto;
@@ -288,75 +303,74 @@
         .hd{    
             margin-bottom: 30px;
         }
-        .bd{ 
-            margin-left: 30px;
-            li.item-num{ 
-                width: 120px;
-                height: 120px;
-                line-height: 120px;
-                text-align: center;
-                float: left;
-                position: relative;
-                background: #5b5b5b;
-                border-radius: 5px;
-                margin-right: 24px;
-                margin-bottom: 24px;
-                &.active{   
-                    background: #19c9cf url(../assets/icn_playing_white_s.png) no-repeat center center;
-                    background-size: 36px 36px;
-                    text-indent: -9999px;
-                }
+        .bd-num{    
+            padding-left: 18px;
+        }
+        li.item-num{ 
+            width: 120px;
+            height: 120px;
+            line-height: 120px;
+            text-align: center;
+            float: left;
+            position: relative;
+            background: #5b5b5b;
+            border-radius: 5px;
+            margin:0 12px 24px;
+            &.active{   
+                background: #19c9cf url(../assets/icn_playing_white_s.png) no-repeat center center;
+                background-size: 36px 36px;
+                text-indent: -9999px;
             }
-            li.item-haspic{    
-                position: relative;
+        }
+        li.item-haspic{    
+            position: relative;
+            width: 300px;
+            height: 306px;
+            margin:0 30px;
+            float:left;
+            img{
                 width: 300px;
-                height: 306px;
-                margin-right: 60px;
-                float:left;
-                img{
-                    width: 300px;
-                    height: 168px;
-                    display: block;
-                    margin-bottom: 18px;
-                }
-                p{  
-                    text-overflow: ellipsis;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                }
-                .play{  
-                    position: absolute;
-                    left: 42px;
-                    top: 54px;
-                    opacity:0.9;
-                    background:#13d5dc;
-                    border-radius:360px;
-                    width:216px;
-                    height:60px;
-                    text-align: center;
-                    line-height: 60px;
-                    i{  
-                        width: 36px;
-                        height: 36px;
-                        background: url(../assets/icn_playing_white_s.png) no-repeat;
-                        background-size: 100% 100%;
-                        display: inline-block;
-                        vertical-align: middle;
-                        margin-top: -4px;
-                    }
-                }
+                height: 168px;
+                display: block;
+                margin-bottom: 18px;
             }
-            .tag_new{  
-                width: 72px;
-                height: 72px;
-                background: url(../assets/tag_tv_new.png) no-repeat;
-                background-size: 100%;
+            p{  
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .play{  
                 position: absolute;
-                right: 0;
-                top: 0;
+                left: 42px;
+                top: 54px;
+                opacity:0.9;
+                background:#13d5dc;
+                border-radius:360px;
+                width:216px;
+                height:60px;
+                text-align: center;
+                line-height: 60px;
+                i{  
+                    width: 36px;
+                    height: 36px;
+                    background: url(../assets/icn_playing_white_s.png) no-repeat;
+                    background-size: 100% 100%;
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin-top: -4px;
+                }
             }
+        }
+        .tag_new{  
+            width: 72px;
+            height: 72px;
+            background: url(../assets/tag_tv_new.png) no-repeat;
+            background-size: 100%;
+            position: absolute;
+            right: 0;
+            top: 0;
         }
     }
 </style>
@@ -367,7 +381,7 @@
 
     //隐藏body滚动条
     function toggleBoayScroll(val){  
-        //document.documentElement.className = val ? 'hidescroll' : ''
+        document.documentElement.className = val ? 'hidescroll' : ''
     }
 
     export default {
@@ -401,6 +415,7 @@
                     }
                     this.$emit('onClose')
                 }
+                toggleBoayScroll(val)
             },
             loading(val){   
                 if(val){ 
@@ -469,7 +484,7 @@
                     this.isDescOverflow = false
                     this.$nextTick(()=>{
                         let wrapHeight = this.$el.querySelector('.desc-cont').offsetHeight
-                        let textHeight = this.$el.querySelector('.desc-cont p').offsetHeight
+                        let textHeight = this.$el.querySelector('.desc-cont-p').offsetHeight
 
                         if(textHeight > wrapHeight){    
                             this.isDescOverflow = true
@@ -490,6 +505,12 @@
             },
             close() {   
                 this.visible = false
+            },
+            toHTML(str) {  
+                if(!str) return ''
+                return str.split('\n').map(item=>{
+                    return '\u3000\u3000' + item
+                }).join('<br>')
             }
         }, 
         created() { 

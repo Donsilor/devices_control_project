@@ -31,7 +31,7 @@ const ERROR_JSONSTR = 'JSON解析错误'
 
 function hack_detail_json(jsonstr) {
     return jsonstr.replace(/"desc"\s?:\s?"([\s\S+]*?)",/g, function(a,b){ 
-        var str = b.replace(/\s+/g,'<br/>').replace(/"/g,'“')
+        var str = b.replace(/\s{2,}/g,'\\n').replace(/"/g,'“')
         return `"desc": "${str}",`
     })
 }

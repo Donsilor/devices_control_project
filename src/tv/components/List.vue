@@ -83,7 +83,7 @@
             </div>
         </div>
         <!-- 列表 -->
-        <ul class="vlist list-m60 clearfix">
+        <ul class="vlist list-m60 clearfix" :class="['list-'+channelId]">
             <li class="vitem" 
                 v-for="item in list" 
                 :key="item.vid" 
@@ -93,7 +93,7 @@
                 <span class="update">
                     {{getUpdateSet(item.setCount,item.lastUpdateSet)}}
                 </span>
-                <!-- <span class="score">{{item.score}}</span> -->
+                <span class="score">{{item.score}}</span>
             </li>
         </ul>
         <!-- 没有数据 -->
@@ -227,12 +227,13 @@
             height: 66px;
         }
     }
+    /* 根据栏目控制样式显示 */
     .list-001{
         .score{ 
             display: block;
         }
     }
-    .list-002,list-003,.list-004{   
+    .list-002,.list-003,.list-004{   
         .update{    
             display: block;
         }
@@ -345,7 +346,8 @@
                     NO_MORE  全部加载完成，显示 已加载全部
                  */
                 loadState: '',
-                error: false
+                error: false,
+                isFirstLoad: true
             }
         },
         watch: {
@@ -360,20 +362,15 @@
                 }
             }
         },
-        computed: { 
-            //是否首次加载
-            isFirstLoad() { 
-                return this.pageNo === 1 ? true : false
-            }
-        },
         methods: {
             //参数筛选
             setParam(key, value) {    
                 this[key] = value
-                this.pageNo = 1
-                this.filterData()
+                this.isFirstLoad = true
+                this.filterData(1)
             },
-            filterData() {   
+            filterData(page) {   
+                if(page === 1) this.isFirstLoad = true
                 this.loadState = 'LOADING' 
                 service.searchData({
                     channelId: this.channelId,
@@ -382,22 +379,25 @@
                     year: this.current_year,
                     orderby: this.current_orderby,
                     pageSize: this.pageSize,
-                    pageNo: this.pageNo
+                    pageNo: page
                 },(err, data)=>{ 
                     this.loadState = 'LOADED'
                     if(err) return 
-                    if(this.isFirstLoad){
-                        window.scrollTo(0,0)
-                    }
-                    if(data.data){  
+
+                    if(data.data){
                         data = data.data
                     }
                     if(data.list == ""){   
                         data.list = []
                     }
-                    this.total = data.total
-                    this.list = Object.freeze((this.isFirstLoad ? [] : this.list).concat(data.list))
                     this.$nextTick(()=>{
+                        this.list = Object.freeze((page === 1 ? [] : this.list).concat(data.list))
+                        this.total = data.total
+                        this.pageNo = page
+                        if(this.isFirstLoad){   
+                            this.isFirstLoad = false
+                            window.scrollTo(0,0)
+                        }
                         if(this.total === 0){    
                             //没有数据
                             this.loadState = 'NO_DATA'
@@ -405,8 +405,6 @@
                             //加载完全部
                             this.loadState = 'NO_MORE'
                             HdSmart.UI.toast('已加载全部')
-                        }else{  
-                            this.pageNo++
                         }
                     })
                 })
@@ -421,8 +419,7 @@
                         HdSmart.UI.toast('已加载全部')
                         return 
                     }
-                    //this.pageNo++
-                    this.filterData()
+                    this.filterData(this.pageNo + 1)
                 }
             },300),
             showDetailInfo(channelId, vid) {
@@ -462,8 +459,7 @@
                     this.year = Object.freeze(data.year)
                     this.list = Object.freeze(data.data.list)
                     this.total = data.data.total
-                    this.$nextTick(()=>{this.pageNo++})
-                    window.addEventListener('scroll',this.loadMore)
+                    this.$nextTick(()=>{this.isFirstLoad = false})
                 })
             }
         },
@@ -476,6 +472,7 @@
                     el.onerror = null
                 }
             })
+            window.addEventListener('scroll',this.loadMore)
         },
         destroyed() {
             window.removeEventListener('scroll',this.loadMore) 
