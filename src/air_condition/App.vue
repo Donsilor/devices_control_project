@@ -116,7 +116,7 @@
         </div>
 
         <!--初始化失败界面-->
-        <div v-show="initErr">
+        <div v-if="initErr">
             <img src='./assets/init_err.png' />
             <p class="tip">加载失败，请点击屏幕刷新</p>
         </div>
@@ -605,7 +605,8 @@
                 }
             }
         },
-        mounted: function () {
+//        mounted: function () {
+        created: function () {
             let that = this;
             HdSmart.ready(() => {
                 that.init();
