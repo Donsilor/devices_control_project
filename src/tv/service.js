@@ -42,8 +42,10 @@ export function getChannelData(channelId, callback){
 /**
  * 取得视频详情
  */
-export function getDetaileData(params, callback){   
-    sendApp('getDetaileData', params, callback)
+export function getDetaileData(params, callback){ 
+    setTimeout(()=>{    
+        sendApp('getDetaileData', params, callback)
+    }, 100);
 }
 
 /**

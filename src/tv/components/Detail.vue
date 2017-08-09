@@ -505,7 +505,6 @@
             },
             close() {   
                 this.visible = false
-                this.$router.go(-1)
             },
             toHTML(str) {  
                 if(!str) return ''
@@ -516,12 +515,16 @@
         }, 
         created() { 
             this.$watch('cur.desc',this.getDescLine)
+            //详情页添加history change
             this.$on('onShow',()=>{ 
                 var query = {
                     ...this.$route.query,
                     detail: this.channelId + '_' + this.vid
                 }
                 this.$router.push({query})
+            })
+            this.$on('onClose',()=>{    
+                this.$router.go(-1)
             })
             this.$watch('$route.query.detail',(newVal, oldVal)=>{ 
                 if(oldVal && newVal === undefined && this.visible){ 

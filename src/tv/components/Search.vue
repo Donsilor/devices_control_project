@@ -391,7 +391,7 @@
                 }
                 
                 var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
-                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-15){   
+                if(scrollTop > 0 && (scrollTop+window.innerHeight >= document.documentElement.scrollHeight-15)){   
                     if(this.loadState === 'LOADING' || this.loadState === 'NO_DATA'){   
                         return 
                     }
