@@ -340,7 +340,7 @@ export function getChannelData() {
     "list": [
       {
         "title": "不期而遇",
-        "pictureUrl": "http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/q/qqp3ehjrxmy2syz.jpg",
+        "pictureUrl": "http://i.gtimg.cn/qqlive/images/newcolumn/v1//t/t66zqv.jpg",
         "starring": "张亮 张雨绮",
         "director": "陈卓",
         "region": "内地",
@@ -351,8 +351,8 @@ export function getChannelData() {
         "cate": "喜剧",
         "duration": "00:01:06",
         "sourceId": "9",
-        "setCount": "",
-        "lastUpdateSet": "",
+        "setCount": "9",
+        "lastUpdateSet": "8",
         "site": "2017-03-01 03:00:00",
         "ispay": "1",
         "states": "1",
@@ -372,8 +372,8 @@ export function getChannelData() {
         "cate": "悬疑",
         "duration": "01:08:48",
         "sourceId": "9",
-        "setCount": "",
-        "lastUpdateSet": "",
+        "setCount": "11",
+        "lastUpdateSet": "11",
         "site": "2017-03-01 03:00:00",
         "ispay": "5",
         "states": "1",
@@ -595,13 +595,13 @@ export function searchData() {
     return {
       "errorcode": "0",
         "data": {
-            "total": 10,
+            "total": 31,
             "pageNo": 1,
             "pageSize": 20,
             "list": [
       {
         "title": "不期而遇",
-        "pictureUrl": "http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/q/qqp3ehjrxmy2syz.jpg",
+        "pictureUrl": "http://i.gtimg.cn/qqlive/images/newcolumn/v1//t/t66zqv.jpg",
         "starring": "张亮 张雨绮",
         "director": "陈卓",
         "region": "内地",

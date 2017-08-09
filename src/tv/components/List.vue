@@ -3,7 +3,16 @@
 -->
 <template>
     <div class="page-list">
-        <div class="fixedtop">
+
+        <!-- 错误提示 -->
+        <div class="error-page" v-if="error" @click="reload">
+            <div class="error-tip">
+                <img src='../assets/init_err.png' />
+                <p>加载失败，请点击屏幕刷新</p>
+            </div>
+        </div>
+
+        <div class="fixedtop" v-if="!error">
             <topbar :title="title"></topbar>
             <!-- 条件 -->
             <div class="filters">
@@ -74,17 +83,17 @@
             </div>
         </div>
         <!-- 列表 -->
-        <ul class="vlist list-m60 clearfix">
+        <ul class="vlist list-m60 clearfix" :class="['list-'+channelId]">
             <li class="vitem" 
                 v-for="item in list" 
                 :key="item.vid" 
                 @click="showDetailInfo(item.channelId,item.vid)">
-                <img v-lazy="getThumbPic(item.pictureUrl)" alt="">
+                <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
                 <div class="name">{{item.title}}</div>
                 <span class="update">
                     {{getUpdateSet(item.setCount,item.lastUpdateSet)}}
                 </span>
-                <!-- <span class="score">{{item.score}}</span> -->
+                <span class="score">{{item.score}}</span>
             </li>
         </ul>
         <!-- 没有数据 -->
@@ -104,8 +113,8 @@
                 <div class="rect7"></div>
                 <div class="rect8"></div>
             </div>-->
-            <p v-show="loadState === 'LOADING'">正在加载中...</p>
-            <p v-show="loadState === 'LOADED'">加载更多...</p>
+            <p v-show="!isFirstLoad && loadState === 'LOADING'">正在加载中...</p>
+            <p v-show="!isFirstLoad && loadState === 'LOADED'">加载更多...</p>
             <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
         </div>
         <!-- 详情页 -->
@@ -218,20 +227,21 @@
             height: 66px;
         }
     }
+    /* 根据栏目控制样式显示 */
     .list-001{
         .score{ 
             display: block;
         }
     }
-    .list-002,list-003,.list-004{   
+    .list-002,.list-003,.list-004{   
         .update{    
             display: block;
         }
     }
     .loadmore{  
         text-align: center;
-        padding: 30px 0;
-        height: 50px;
+        /*padding: 30px 0;*/
+        height: 60px;
         color:#75787a;
         font-size: 24px;
         .finish{
@@ -335,7 +345,9 @@
                     NO_DATA  没有数据，显示  暂无结果
                     NO_MORE  全部加载完成，显示 已加载全部
                  */
-                loadState: ''
+                loadState: '',
+                error: false,
+                isFirstLoad: true
             }
         },
         watch: {
@@ -350,20 +362,15 @@
                 }
             }
         },
-        computed: { 
-            //是否首次加载
-            isFirstLoad() { 
-                return this.pageNo === 1 ? true : false
-            }
-        },
         methods: {
             //参数筛选
             setParam(key, value) {    
                 this[key] = value
-                this.pageNo = 1
-                this.filterData()
+                this.isFirstLoad = true
+                this.filterData(1)
             },
-            filterData() {   
+            filterData(page) {   
+                if(page === 1) this.isFirstLoad = true
                 this.loadState = 'LOADING' 
                 service.searchData({
                     channelId: this.channelId,
@@ -372,41 +379,39 @@
                     year: this.current_year,
                     orderby: this.current_orderby,
                     pageSize: this.pageSize,
-                    pageNo: this.pageNo
-                },(data)=>{ 
+                    pageNo: page
+                },(err, data)=>{ 
                     this.loadState = 'LOADED'
-                    if(data.code === 504){  
-                        HdSmart.UI.toast('网络异常，请稍后重试。')
-                        return
-                    }
-                    if(data.errorcode != "0"){   
-                        HdSmart.UI.toast(data.errormsg)
-                        return 
-                    }
-                    if(this.isFirstLoad){
-                        window.scrollTo(0,0)
-                    }
-                    if(data.data){  
+                    if(err) return 
+
+                    if(data.data){
                         data = data.data
                     }
                     if(data.list == ""){   
                         data.list = []
                     }
-                    this.list = Object.freeze((this.isFirstLoad ? [] : this.list).concat(data.list))
-                    this.total = data.total
-                    if(this.total === 0){    
-                        //没有数据
-                        this.loadState = 'NO_DATA'
-                    }else if(this.pageSize*this.pageNo >= this.total){    
-                        //加载完全部
-                        this.loadState = 'NO_MORE'
-                        HdSmart.UI.toast('已加载全部')
-                    }
+                    this.$nextTick(()=>{
+                        this.list = Object.freeze((page === 1 ? [] : this.list).concat(data.list))
+                        this.total = data.total
+                        this.pageNo = page
+                        if(this.isFirstLoad){   
+                            this.isFirstLoad = false
+                            window.scrollTo(0,0)
+                        }
+                        if(this.total === 0){    
+                            //没有数据
+                            this.loadState = 'NO_DATA'
+                        }else if(this.pageSize*this.pageNo >= this.total){    
+                            //加载完全部
+                            this.loadState = 'NO_MORE'
+                            HdSmart.UI.toast('已加载全部')
+                        }
+                    })
                 })
             },
             loadMore: _.debounce(function(){
                 var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
-                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-20){   
+                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-15){   
                     if(this.loadState === 'LOADING' || this.loadState === 'NO_DATA'){   
                         return 
                     }
@@ -414,8 +419,7 @@
                         HdSmart.UI.toast('已加载全部')
                         return 
                     }
-                    this.pageNo++
-                    this.filterData()
+                    this.filterData(this.pageNo + 1)
                 }
             },300),
             showDetailInfo(channelId, vid) {
@@ -435,22 +439,39 @@
             //换成小图地址
             getThumbPic(pic) {  
                 return pic.replace('.jpg','_y.jpg')
+            },
+            reload() {  
+                if(this.error){ 
+                    this.error = false
+                    this.onPageInit()
+                }
+            },
+            onPageInit() {
+                this.loadState = 'LOADING'
+                service.getChannelData(this.channelId,(err, data)=>{
+                    this.loadState = 'LOADED'
+                    if(err){    
+                        this.error = true
+                        return 
+                    }
+                    this.category = Object.freeze(data.category)
+                    this.region = Object.freeze(data.region)
+                    this.year = Object.freeze(data.year)
+                    this.list = Object.freeze(data.data.list)
+                    this.total = data.data.total
+                    this.$nextTick(()=>{this.isFirstLoad = false})
+                })
             }
         },
         mounted() {
-            this.loadState = 'LOADING'
-            service.getChannelData(this.channelId,(data)=>{ 
-                this.loadState = 'LOADED'
-                if(data.code === 504){  
-                    HdSmart.UI.toast('网络错误，请稍后重试。')
-                    return
+            this.onPageInit()
+            this.$Lazyload.$on('error',function({el, src, loading}){
+                el.src = el.dataset.src1
+                el.onerror = function(){
+                    el.src = loading
+                    el.onerror = null
                 }
-                this.category = Object.freeze(data.category)
-                this.region = Object.freeze(data.region)
-                this.year = Object.freeze(data.year)
-                this.list = Object.freeze(data.data.list)
-                this.total = data.data.total
-            }) 
+            })
             window.addEventListener('scroll',this.loadMore)
         },
         destroyed() {

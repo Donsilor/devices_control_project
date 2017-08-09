@@ -29,7 +29,7 @@
         overflow-x: hidden;
     }
     body,input{ 
-        font-family: Helvetica, Arial, sans-serif;
+        font-family: NotoSansHans-Medium;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }

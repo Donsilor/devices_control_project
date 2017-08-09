@@ -10,9 +10,11 @@
                     <swiper-slide 
                         v-for="item in homePageInfo" 
                         :key="item.vid">
-                    <a href="#" @click.prevent="showDetailInfo(item.channelId,item.vid)"> 
-                        <img :src="item.pictureUrl">
-                    </a>
+                        <a href="#"
+                            :style="{backgroundImage:'url('+item.pictureUrl+')'}"
+                            @click.prevent="showDetailInfo(item.channelId,item.vid)"> 
+                            <span class="title">{{item.title}}</span>
+                        </a>
                     </swiper-slide>
                     <div class="swiper-pagination" slot="pagination"></div>
                 </swiper>
@@ -64,6 +66,8 @@
             float: left;
             width: 1020px;
             height: 500px;
+            border-radius: 6px;
+            overflow: hidden;
         }
         .span2{ 
             float: right;
@@ -127,10 +131,31 @@
         }
     }
     .swiper {
+        .swiper-slide{  
+            width: 1020px;
+            height: 500px;
+            background: url(../assets/img_default_recommend.png) no-repeat;
+            background-size: 100%;
+        } 
+        a{
+            display: block;
+            width: 1020px;
+            height: 500px;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            border-radius: 6px;
+            overflow: hidden;
+        }
         img{
             width: 100%;
-            height: 100%;
-            border-radius: 6px;
+        }
+        .title{ 
+            position: absolute;
+            left: 36px;
+            bottom: 40px;
+            color: #fff;
+            font-size: 36px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,.3);
         }
         .swiper-container-horizontal > .swiper-pagination-bullets{ 
             width: auto;
@@ -143,7 +168,7 @@
             height: 6px;
             opacity: .5;
             background: #fff;
-            border-radius:1.5px;
+            border-radius: 1.5px;
         }
         .swiper-pagination-bullet-active{  
             background: #13d5dc
@@ -164,7 +189,8 @@
                     autoplay: 2000,
                     loop: true,
                     autoplayDisableOnInteraction: false,
-                    pagination: '.swiper-pagination'
+                    pagination: '.swiper-pagination',
+                    //lazyLoading: true
                 },
                 //初始化数据，由app首次加载注入
                 ...service.getInitData()

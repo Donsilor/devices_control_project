@@ -61,7 +61,7 @@
                     v-for="item in resultData" 
                     :key="item.vid"
                     @click="showDetailInfo(item.channelId,item.vid)">
-                    <img v-lazy="getThumbPic(item.pictureUrl)" alt="">
+                    <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
                     <div class="name">{{item.title}}</div>
                 </li>
             </ul>
@@ -84,8 +84,8 @@
                     <div class="rect8"></div>
                 </div>
                 -->
-                <p v-show="loadState === 'LOADING'">正在加载中...</p>
-                <p v-show="loadState === 'LOADED'">加载更多...</p>
+                <p v-show="!isFirstLoad && loadState === 'LOADING'">正在加载中...</p>
+                <p v-show="!isFirstLoad && loadState === 'LOADED'">加载更多...</p>
                 <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
             </div>
         </div>
@@ -119,6 +119,10 @@
             font-size: 30px;
             &::-webkit-input-placeholder{
                 color: #c8cacc;
+            }
+            &:focus{    
+                border: 1px solid #13d5dc;
+                outline: none;
             }
         }
         .del{   
@@ -277,7 +281,8 @@
                     NO_DATA  没有数据，显示  暂无结果
                     NO_MORE  全部加载完成，显示 已加载全部
                  */
-                loadState: ''
+                loadState: '',
+                isFirstLoad: true
             }
         },
         watch: {    
@@ -294,11 +299,6 @@
                         HdSmart.UI.hideLoading()
                     }
                 }
-            }
-        },
-        computed: { 
-            isFirstLoad() { 
-                return this.pageNo === 1 ? true : false
             }
         },
         methods: { 
@@ -326,15 +326,15 @@
                 this.word = word
                 this.current_channel = ''
                 this.current_orderby = ''
-                this.pageNo = 1
-                this.filterData()
+                this.filterData(1)
             },
             //模糊查询
             fuzzySearch: _.debounce(function(){ 
                 var kw = this.word.trim()
                 if(kw){
                     this.curpage = 2
-                    service.fuzzySearch(kw, (data)=>{  
+                    service.fuzzySearch(kw, (err, data)=>{  
+                        if(err) return 
                         this.suggestData = data.data.map((item)=>{
                             return {    
                                 text: item,
@@ -346,44 +346,42 @@
             },100),
             setParam(key, value) {
                 this[key] = value
-                this.pageNo = 1
-                this.filterData()
+                this.filterData(1)
             },
-            filterData() {  
+            filterData(page) {  
+                if(page === 1) this.isFirstLoad = true
                 this.loadState = 'LOADING' 
                 service.searchData({
                     keyword: this.word.trim(),
                     channelId: this.current_channel,
                     orderby: this.current_orderby,
                     pageSize: this.pageSize,
-                    pageNo: this.pageNo
-                },(data)=>{
+                    pageNo: page
+                },(err, data)=>{
                     this.loadState = 'LOADED'
-                    if(data.code === 504){  
-                        HdSmart.UI.toast('网络异常，请稍后重试。')
-                        return
-                    }
-                    if(data.errorcode != "0"){   
-                        HdSmart.UI.toast(data.errormsg)
-                        return 
-                    }
-                    if(this.isFirstLoad){
-                        window.scrollTo(0,0)
-                    }
+                    if(err) return
+                    
                     if(data.data){  
                         data = data.data
                     }
                     if(data.list == ""){   
                         data.list = []
                     }
-                    this.resultData = Object.freeze((this.isFirstLoad ? [] : this.resultData).concat(data.list))
-                    this.total = data.total
-                    if(this.total === 0){    
-                        this.loadState = 'NO_DATA'
-                    }else if(this.pageSize*this.pageNo >= this.total){    
-                        this.loadState = 'NO_MORE' 
-                        HdSmart.UI.toast('已加载全部')
-                    }
+                    this.$nextTick(()=>{
+                        this.resultData = Object.freeze((page === 1 ? [] : this.resultData).concat(data.list))
+                        this.total = data.total
+                        this.pageNo = page
+                        if(this.isFirstLoad){
+                            this.isFirstLoad = false
+                            window.scrollTo(0,0)
+                        }
+                        if(this.total === 0){    
+                            this.loadState = 'NO_DATA'
+                        }else if(this.pageSize*this.pageNo >= this.total){    
+                            this.loadState = 'NO_MORE' 
+                            HdSmart.UI.toast('已加载全部')
+                        }
+                    })
                 })
             },
             loadMore: _.debounce(function(){
@@ -393,7 +391,7 @@
                 }
                 
                 var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
-                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-20){   
+                if(scrollTop+window.innerHeight >= document.documentElement.scrollHeight-15){   
                     if(this.loadState === 'LOADING' || this.loadState === 'NO_DATA'){   
                         return 
                     }
@@ -401,8 +399,7 @@
                         HdSmart.UI.toast('已加载全部')
                         return 
                     }
-                    this.pageNo++
-                    this.filterData()
+                    this.filterData(this.pageNo + 1)
                 }
             },300),
             showDetailInfo(channelId, vid) {
@@ -415,13 +412,21 @@
             }
         },
         mounted() { 
-            service.getSearchHistory((data)=>{  
+            service.getSearchHistory((err, data)=>{  
+                if(err) return 
                 this.historyData = data.data
             })
             setTimeout(()=>{
                 this.$el.querySelector('.search_input input').focus()
             },300)
             window.addEventListener('scroll',this.loadMore)
+            this.$Lazyload.$on('error',function({el, src, loading}){
+                el.src = el.dataset.src1
+                el.onerror = function(){
+                    el.src = loading
+                    el.onerror = null
+                }
+            })
         },
         destroyed() {
             window.removeEventListener('scroll',this.loadMore)
