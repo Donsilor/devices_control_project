@@ -60,6 +60,7 @@ const router =  new Router({
 })
 //hack: app多次执行ready
 let is_ready = false
+let current_page = 'index'
 
 //app jsbridge ready
 HdSmart.ready(() => { 
@@ -73,12 +74,15 @@ HdSmart.ready(() => {
     FastClick.attach(document.body)
 
     router.beforeEach((to,from,next) => {
-      if(to.name === 'index' || to.name === 'error'){  
-        setTimeout(()=>{
-          HdSmart.UI.toggleHeadAndFoot(true)
-        },300)
-      }else{  
-        HdSmart.UI.toggleHeadAndFoot(false)
+      if(current_page !== to.name){
+        if(to.name === 'index' || to.name === 'error'){  
+          setTimeout(()=>{
+            HdSmart.UI.toggleHeadAndFoot(true)
+          },300)
+        }else{  
+          HdSmart.UI.toggleHeadAndFoot(false)
+        }
+        current_page = to.name
       }
       next()
     })

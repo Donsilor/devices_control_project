@@ -5,23 +5,21 @@
 const deviceType = 'tv'
 
 function sendApp(method, params, callback){
-    setTimeout(()=>{
-        HdSmart.Util.dispatchEvent({
-            method,
-            deviceType,
-            params,
-        }, function(error, data){
-            if(data.errorcode && data.errorcode != '0'){
-                error = {
-                    errormsg: data.errormsg
-                }
+    HdSmart.Util.dispatchEvent({
+        method,
+        deviceType,
+        params,
+    }, function(error, data){
+        if(data.errorcode && data.errorcode != '0'){
+            error = {
+                errormsg: data.errormsg
             }
-            if(error){   
-                HdSmart.UI.toast(error.errormsg)
-            }
-            callback && callback(error, data)
-        })
-    }, 100);
+        }
+        if(error){   
+            HdSmart.UI.toast(error.errormsg)
+        }
+        callback && callback(error, data)
+    })
 }
 
 /**
@@ -35,8 +33,10 @@ export function getInitData(){
 /**
  * 获取channel所有数据接口
  */
-export function getChannelData(channelId, callback){   
-    sendApp('getChannelData', {channelId}, callback)
+export function getChannelData(channelId, callback){  
+    setTimeout(()=>{ 
+        sendApp('getChannelData', {channelId}, callback)
+    }, 100);
 }
 
 /**
@@ -49,7 +49,7 @@ export function getDetaileData(params, callback){
 /**
  * 搜索结果
  */
-export function searchData(params, callback){   
+export function searchData(params, callback){ 
     sendApp('searchData', params, callback)
 }
 
@@ -64,7 +64,9 @@ export function fuzzySearch(keyword, callback){
  * 搜索历史记录
  */
 export function getSearchHistory(callback){ 
-    sendApp('getSearchHistory', '', callback)
+    setTimeout(()=>{  
+        sendApp('getSearchHistory', '', callback)
+    }, 100);
 }
 
 /**

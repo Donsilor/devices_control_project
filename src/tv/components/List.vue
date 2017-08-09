@@ -366,7 +366,6 @@
             //参数筛选
             setParam(key, value) {    
                 this[key] = value
-                this.isFirstLoad = true
                 this.filterData(1)
             },
             filterData(page) {   
@@ -404,7 +403,7 @@
                         }else if(this.pageSize*this.pageNo >= this.total){    
                             //加载完全部
                             this.loadState = 'NO_MORE'
-                            HdSmart.UI.toast('已加载全部')
+                            //HdSmart.UI.toast('已加载全部')
                         }
                     })
                 })

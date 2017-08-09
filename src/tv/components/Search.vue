@@ -379,7 +379,7 @@
                             this.loadState = 'NO_DATA'
                         }else if(this.pageSize*this.pageNo >= this.total){    
                             this.loadState = 'NO_MORE' 
-                            HdSmart.UI.toast('已加载全部')
+                            //HdSmart.UI.toast('已加载全部')
                         }
                     })
                 })
