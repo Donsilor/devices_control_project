@@ -14,11 +14,11 @@
             </div>
             <div class="text">
                 <div class="shortinfo">
-                    <p v-show="cur.score">评分：<span>{{cur.score}}</span></p>
-                    <p v-show="cur.year">年代：{{cur.year}}</p>
-                    <p v-show="cur.cate">类型：{{cur.cate}}</p>
-                    <p v-show="cur.director">导演：{{cur.director}}</p>
-                    <p v-show="cur.starring">主演：{{cur.starring}}</p>
+                    <p v-show="isNotNull(cur.score)">评分：<span>{{cur.score}}</span></p>
+                    <p v-show="isNotNull(cur.year)">年代：{{cur.year}}</p>
+                    <p v-show="isNotNull(cur.cate)">类型：{{cur.cate}}</p>
+                    <p v-show="isNotNull(cur.director)">导演：{{cur.director}}</p>
+                    <p v-show="isNotNull(cur.starring)">主演：{{cur.starring}}</p>
                 </div>
                 <div class="playstate playstate_unplay">
                     <a href="#" class="btn" @click.prevent="play(cur.playlist[0].list[0])"><i class="icon-play"></i>在电视上播放</a>
@@ -505,12 +505,16 @@
             },
             close() {   
                 this.visible = false
+                this.$router.go(-1)
             },
             toHTML(str) {  
                 if(!str) return ''
                 return str.split('\n').map(item=>{
                     return '\u3000\u3000' + item
                 }).join('<br>')
+            },
+            isNotNull(str) {   
+                return str && str != 'null'
             }
         }, 
         created() { 
@@ -524,7 +528,7 @@
                 this.$router.push({query})
             })
             this.$on('onClose',()=>{    
-                this.$router.go(-1)
+                
             })
             this.$watch('$route.query.detail',(newVal, oldVal)=>{ 
                 if(oldVal && newVal === undefined && this.visible){ 

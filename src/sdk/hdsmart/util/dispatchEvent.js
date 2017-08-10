@@ -37,17 +37,17 @@ function hack_detail_json(jsonstr) {
 }
 
 export default function (params, callback) {
-
         HdIot.Util.dispatchEvent({
             data: JSON.stringify(params),
             onListener(data) {
-
                 var error = null
-
                 if(typeof data === 'string'){   
                     //HACK: app返回json数据有问题，没找到解决方案
-                    if(params.method === 'getDetaileData'){   
-                        data = hack_detail_json(data)
+                    if(params.method === 'getDetaileData'){
+                        data = data.replace(/\n/g,'\\n');
+                        data = data.replace(/desc":"(.*?)",/,function(match,desc){
+                            return `desc":"${desc.replace(/"/g,'\\"')}",`;
+                        });
                     }
                     try{
                         data = JSON.parse(data)
