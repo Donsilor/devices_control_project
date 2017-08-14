@@ -108,7 +108,7 @@
             });
 
             HdSmart.onDeviceListen((data) => {
-                if(this.cbFunc){
+                if (this.cbFunc) {
                     //等硬件修复了需要干掉
                     this.cbFunc();
                     this.cbFunc = null;
@@ -125,19 +125,24 @@
         },
         methods: {
             getAniFramePercentage() {
-                //取第10次的值来作为raq的间隔时间。todo 这样取值其实有问题
-                let counter = 10;
+                //取第20次的平均值来作为raq的间隔时间。
+                let counter = 20;
+                let init_counter = counter;
                 let reqId = null;
                 let vm = this;
+                let total = [];
                 let fun = function (lastTime) {
                     if (!lastTime) {
                         lastTime = +new Date();
                     } else {
                         let moment = +new Date();
                         counter = counter - 1;
+                        total.push(moment - lastTime);
                         if (counter === 0) {
                             //间隔时间
-                            vm.raf_time = moment - lastTime;
+                            vm.raf_time = total.reduce((pre, next) => {
+                                return pre + next
+                            }) / init_counter;
                             //更新每帧百分比
                             vm.changeRafPercent();
                             return;
@@ -178,7 +183,9 @@
                             nextTargetPercentage = percent;
                         } else if (direction === 'open' && nextTargetPercentage > percent) {
                             nextTargetPercentage = percent;
-                        } else if (nextTargetPercentage === percent) {
+                        }
+
+                        if (nextTargetPercentage === percent) {
                             this.target_percentage = nextTargetPercentage;
                             window.cancelAnimationFrame(this.raf_id);
                             return false;
@@ -252,11 +259,8 @@
                 this.show_active_btn = false;
             },
             changeRafPercent() {
-                //watch里做会导致死循环
                 if (this.raf_time && this.total_time) {
-                    //2.22 = 100(百分比)*100(raf间隔)/4500(总动画时间)
-                    //但实际上需要更快的速度，来解决因延时500ms上报的问题。
-                    this.raf_percent = 3.9;//this.raf_time * 100 / this.total_time;
+                    this.raf_percent = this.raf_time * 100 / this.total_time;
                 }
             }
         }

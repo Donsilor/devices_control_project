@@ -1,4 +1,5 @@
 import {log, covertToNumber} from '../helper';
+//todo 如果产品确定不需要下拉刷新的功能，可以去除此api
 /**
  * 允许webView 点击使用js来进行touch事件的区域
  * @function setWebViewTouchRect

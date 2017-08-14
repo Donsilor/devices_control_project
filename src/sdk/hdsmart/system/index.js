@@ -1,3 +1,4 @@
+//todo 需要确定是页面先加载还是HdIot先注入来确定100ms的延迟在app端是否需要。
 import {
     ready,
     beforeReady,

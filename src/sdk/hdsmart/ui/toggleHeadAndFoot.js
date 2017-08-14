@@ -9,7 +9,7 @@ import {log} from '../helper';
  * HdSmart.UI.toggleHeadAndFoot(true);
  * HdSmart.UI.toggleHeadAndFoot(false);
  */
-
+//todo 需要跟产品和ui确定是否做成配置的形式。
 export default function (isDisplayed) {
     HdIot.UI.toggleHeadAndFoot({
         data: JSON.stringify({

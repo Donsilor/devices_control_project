@@ -8,7 +8,6 @@ import {log} from '../helper';
  * @example
  * HdSmart.UI.toast('我要显示toast信息')
  */
-
 export default function (message, duration) {
     duration = duration || 3000;
     let dataOptions = JSON.stringify({
