@@ -26,6 +26,7 @@ import {guid, getDeviceUUID, getToken, log, isFunction} from '../helper';
  * },3000);
  *
  */
+//todo 等硬件接口统一以后需要与control合并，并将相应的api进行更改
 export default function (method, nodeId, attr, onSuccess, onFailure, timerObj = null, timeout) {
     // construct request data
     let dataOptions = JSON.stringify({

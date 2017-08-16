@@ -25,6 +25,8 @@ import {isFunction, log} from '../helper';
  * })
  */
 
+//todo 需要确定返回的code的enum列表
+
 const ERROR_504 = '网络异常，请稍后重试'
 const ERROR_JSONSTR = 'JSON解析错误'
 
