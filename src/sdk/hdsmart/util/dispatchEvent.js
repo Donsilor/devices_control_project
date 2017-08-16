@@ -43,12 +43,12 @@ export default function (params, callback) {
                 var error = null
                 if(typeof data === 'string'){   
                     //HACK: app返回json数据有问题，没找到解决方案
-                    if(params.method === 'getDetaileData'){
+                    //if(params.method === 'getDetaileData'){
                         data = data.replace(/\n/g,'\\n');
-                        data = data.replace(/desc":"(.*?)",/,function(match,desc){
-                            return `desc":"${desc.replace(/"/g,'\\"')}",`;
+                        data = data.replace(/:"(.*?)",/,function(match,desc){
+                            return `:"${desc.replace(/"/g,'\\"')}",`;
                         });
-                    }
+                    //}
                     try{
                         data = JSON.parse(data)
                     }catch(e){  
