@@ -447,7 +447,9 @@
 
     import {getDeviceName} from '../sdk/hdsmart/helper';
 
-    const [MIN_TEMP, MAX_TEMP] = [16, 30];
+    //TODO:暂时将最高温度限制为29
+//    const [MIN_TEMP, MAX_TEMP] = [16, 30];
+    const [MIN_TEMP, MAX_TEMP] = [16, 29];
     const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] =
         ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
     const [ON, OFF] = ['on', 'off'];
