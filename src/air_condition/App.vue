@@ -447,7 +447,9 @@
 
     import {getDeviceName} from '../sdk/hdsmart/helper';
 
-    const [MIN_TEMP, MAX_TEMP] = [16, 30];
+    //TODO:暂时将最高温度限制为29
+//    const [MIN_TEMP, MAX_TEMP] = [16, 30];
+    const [MIN_TEMP, MAX_TEMP] = [16, 29];
     const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] =
         ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
     const [ON, OFF] = ['on', 'off'];
@@ -658,20 +660,31 @@
 
                 this.initErr = false;
 
-                this.params.switch = attr.switchStatus;
+                if(attr.switchStatus != undefined){
+                    this.params.switch = attr.switchStatus;
+                }
                 if(attr.device_name != undefined){
                     this.params.device_name = attr.device_name;
                 }
                 if (attr.deviceSubCategory != undefined) {
                     this.params.deviceSubCategory = attr.deviceSubCategory;
                 }
-
-                this.params.temperature = attr.temperature;
-                this.fakeTemp = attr.temperature;
-                this.params.mode = attr.mode;
-                this.params.speed = attr.speed;
-                this.params.wind_up_down = attr.wind_up_down;
-                this.params.wind_left_right = attr.wind_left_right;
+                if(attr.temperature != undefined){
+                    this.params.temperature = attr.temperature;
+                    this.fakeTemp = attr.temperature;
+                }
+                if(attr.mode != undefined){
+                    this.params.mode = attr.mode;
+                }
+                if(attr.speed != undefined){
+                    this.params.speed = attr.speed;
+                }
+                if(attr.wind_up_down != undefined){
+                    this.params.wind_up_down = attr.wind_up_down;
+                }
+                if(attr.wind_left_right != undefined){
+                    this.params.wind_left_right = attr.wind_left_right;
+                }
 
                 //TODO: 830后做
                 /*let[onTimer, offTimer] = [null, null];
