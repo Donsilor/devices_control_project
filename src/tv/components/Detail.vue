@@ -8,6 +8,7 @@
             <span class="back" @click="close"></span>
             <div class="title">{{cur.title}}</div>
         </div>
+        <div class="detail-bd">
         <div class="detail-info clearfix" v-show="cur.title">
             <div class="pic">
                 <img v-lazy="cur.pictureUrl">
@@ -89,6 +90,7 @@
                 </li>
             </ul>
         </div>
+        </div>
     </div>
 <!-- </transition> -->
 </template>
@@ -102,8 +104,8 @@
         overflow: hidden !important;
     }
     .hidescroll .page-detail{   
-        overflow: auto;
-        overflow-y: scroll;
+        /*overflow: auto;
+        overflow-y: scroll;*/
     }
     .hidescroll body > div > div,.hidescroll body > div > ul{ 
         filter: blur(10px);
@@ -128,14 +130,19 @@
         top: 0;
         width: 100%;
         height: 100%;
-        overflow-y: auto;
+        overflow-y: hidden;
         z-index: 9;
         color: #fff;
         background: rgba(47,49,51,.95);
+        display: flex;
+        flex-direction: column;
     }
     .detail-hd{
-        height: 156px;
-        position: relative;
+        height: 96px;
+        /*position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;*/
         .back{  
             width: 100px;
             height: 96px;
@@ -154,6 +161,11 @@
             text-align: center;
             line-height: 90px;
         }
+    }
+    .detail-bd{ 
+        height: 100%;
+        padding-top: 60px;
+        overflow-y: auto;
     }
     .detail-info{
         margin: 0 60px 35px;
@@ -210,8 +222,8 @@
                 height: 24px;
                 background-size: 24px 12px;
                 margin-left: 2px;
-                transform:rotate(0deg);
-                transition: transform .6s;
+                transform: rotate(0deg);
+                /*transition: transform .6s;*/
             }
             &.open{ 
                 i{  
@@ -313,9 +325,12 @@
             text-align: center;
             float: left;
             position: relative;
-            background: #5b5b5b;
+            background:rgba(255,255,255,.2);
             border-radius: 5px;
             margin:0 12px 24px;
+            &:active{   
+                background:rgba(19,213,220,.75);
+            }
             &.active{   
                 background: #19c9cf url(../assets/icn_playing_white_s.png) no-repeat center center;
                 background-size: 36px 36px;
@@ -447,7 +462,10 @@
                     vid: this.vid
                 },(err, data) => {   
                     this.loading = false
-                    if(err) return 
+                    if(err){
+                        this.close()
+                        return 
+                    }
                     this.cur = data.data
                 })
             },

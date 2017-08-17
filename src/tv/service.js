@@ -15,7 +15,7 @@ function sendApp(method, params, callback){
                 errormsg: data.errormsg
             }
         }
-        if(error){   
+        if(error && method !== 'fuzzySearch'){   
             HdSmart.UI.toast(error.errormsg)
         }
         callback && callback(error, data)
@@ -36,7 +36,7 @@ export function getInitData(){
 export function getChannelData(channelId, callback){  
     setTimeout(()=>{ 
         sendApp('getChannelData', {channelId}, callback)
-    }, 100);
+    }, 150);
 }
 
 /**
@@ -45,7 +45,7 @@ export function getChannelData(channelId, callback){
 export function getDetaileData(params, callback){ 
     setTimeout(()=>{    
         sendApp('getDetaileData', params, callback)
-    }, 100);
+    }, 150);
 }
 
 /**
@@ -68,7 +68,7 @@ export function fuzzySearch(keyword, callback){
 export function getSearchHistory(callback){ 
     setTimeout(()=>{  
         sendApp('getSearchHistory', '', callback)
-    }, 100);
+    }, 150);
 }
 
 /**
