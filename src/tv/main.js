@@ -34,6 +34,9 @@ Vue.component('detail', Detail)
 Vue.component('topbar', Topbar)
 //Vue.component('statusbar', Statusbar)
 
+//强制关闭3d
+window.Swiper.prototype.support.transforms3d = false
+
 const router =  new Router({
   routes: [
     {

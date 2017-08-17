@@ -30,14 +30,6 @@ import {isFunction, log} from '../helper';
 const ERROR_504 = '网络异常，请稍后重试'
 const ERROR_JSONSTR = 'JSON解析错误'
 
-
-function hack_detail_json(jsonstr) {
-    return jsonstr.replace(/"desc"\s?:\s?"([\s\S+]*?)",/g, function(a,b){ 
-        var str = b.replace(/\s{2,}/g,'\\n').replace(/"/g,'“')
-        return `"desc": "${str}",`
-    })
-}
-
 export default function (params, callback) {
         HdIot.Util.dispatchEvent({
             data: JSON.stringify(params),
@@ -45,17 +37,19 @@ export default function (params, callback) {
                 var error = null
                 if(typeof data === 'string'){   
                     //HACK: app返回json数据有问题，没找到解决方案
-                    //if(params.method === 'getDetaileData'){
-                        data = data.replace(/\n/g,'\\n');
-                        data = data.replace(/:"(.*?)",/,function(match,desc){
-                            return `:"${desc.replace(/"/g,'\\"')}",`;
-                        });
-                    //}
                     try{
                         data = JSON.parse(data)
                     }catch(e){  
-                        error = {   
-                            errormsg: ERROR_JSONSTR
+                        try{
+                            data = data.replace(/\n/g,'\\n');
+                            data = data.replace(/:"([^{[]*?)("[,}])/g,function(match,v,q){
+                                return ':"' + v.replace(/"/g,'\\"') + q;
+                            });
+                            data = JSON.parse(data)
+                        }catch(e){
+                            error = {   
+                                errormsg: ERROR_JSONSTR
+                            }
                         }
                     }
                 }

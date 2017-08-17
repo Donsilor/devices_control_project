@@ -254,7 +254,7 @@
                 orderby: [
                     {text:'相关',orderId:''},
                     {text:'最新',orderId:'year'},
-                    {text:'最热',orderId:'iscore'}
+                    {text:'好评',orderId:'iscore'}
                 ],
                 channelId: '',
                 vid: '',

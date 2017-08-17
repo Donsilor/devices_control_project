@@ -322,7 +322,7 @@
                 //排序
                 orderby: Object.freeze([
                     {text:'最新', orderId:'year'},
-                    {text:'最热', orderId:'iscore'}
+                    {text:'好评', orderId:'iscore'}
                 ]),
                 //当前分类，默认全部
                 current_category: '',
@@ -337,7 +337,7 @@
                 //当前页码
                 pageNo: 1,
                 //分页数
-                pageSize: 15,
+                pageSize: 20,
                 /**
                     加载状态
                     LOADING  分页加载中，显示 分页loading
@@ -427,7 +427,7 @@
                 this.vid = vid
             },
             getUpdateSet(count, last) {
-                if(last == ''){   
+                if(!count || !last || count == '0' || last == '0'){   
                     return ''
                 }else if(last === count){   
                     return count + '集全'

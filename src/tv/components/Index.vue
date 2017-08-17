@@ -6,7 +6,7 @@
     <div class="grid" v-once>
         <div class="span1">
             <div class="swiper">
-                <swiper :options="swiperOption">
+                <swiper :options="swiperOption" ref="swiper">
                     <swiper-slide 
                         v-for="item in homePageInfo" 
                         :key="item.vid">
@@ -174,6 +174,13 @@
             background: #13d5dc
         }
     }
+    /* 强制关闭3d */
+    .swiper-container-android .swiper-slide, .swiper-wrapper{   
+        transform: translate(0, 0);
+    }
+    .swiper-pagination{
+        transform: translate(0, 0);
+    }
 </style>
 
 <script>
@@ -205,9 +212,11 @@
                 this.vid = vid
                 this.$refs.detail.visible = true
                 HdSmart.UI.toggleHeadAndFoot(false)
+                this.$refs.swiper.swiper.stopAutoplay()
             },
             onDetailClose(){    
                 HdSmart.UI.toggleHeadAndFoot(true)
+                this.$refs.swiper.swiper.startAutoplay()
             }
         }
     }

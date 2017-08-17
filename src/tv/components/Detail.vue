@@ -70,7 +70,7 @@
             <div class="hd">
                 {{getUpdateSet(cur.playlist[0].total,cur.playlist[0].list.length)}}
             </div>
-            <ul class="bd" v-if="channelId==='004'">
+            <ul class="bd" v-if="channelId==='001' || channelId==='004'">
                 <li class="item-haspic"
                     v-for="item in cur.playlist[0].list" 
                     :key="item.index"
@@ -166,6 +166,7 @@
         height: 100%;
         padding-top: 60px;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
     .detail-info{
         margin: 0 60px 35px;
@@ -414,7 +415,8 @@
                 isDescOverflow: false,
                 //描述展开按钮状态
                 isDescShow: false,
-                loading: false
+                loading: false,
+                history: false
             }
         },
         watch: {    
@@ -428,6 +430,7 @@
                             list: []
                         }]
                     }
+                    this.history = false
                     this.$emit('onClose')
                 }
                 toggleBoayScroll(val)
@@ -439,20 +442,6 @@
                     HdSmart.UI.hideLoading()
                 }
             }
-        },
-        computed: {             
-            //当前播放集数
-            /* activeItem() {
-                if(this.cur.playlist){
-                    return this.cur.playlist[0].list.find(item=>item.playstate)
-                }else{  
-                    return null
-                }
-            },
-            //播放状态：0不播放，1投屏中，2正在播放
-            playstate() { 
-                return this.activeItem ? this.activeItem.playstate : 0
-            } */
         },
         methods: {   
             getData() {
@@ -467,33 +456,16 @@
                         return 
                     }
                     this.cur = data.data
+                    this.setHistory()
                 })
             },
             //点播：播放状态如playstate
             play(clickItem) {
-                if(!clickItem) return
-                service.playVideo(clickItem.link,clickItem.name)
-                /* //如果'点击'正在播放，返回
-                if(!clickItem || clickItem.playstate){
-                    return 
+                if(clickItem){
+                    service.playVideo(clickItem.link,clickItem.name)
+                }else{  
+                    HdSmart.UI.toast('暂无片源')
                 }
-                //取消当前播放状态
-                if(this.activeItem){    
-                    this.$set(this.activeItem,'playstate',0)
-                }
-                //设置'点击'状态为loading
-                this.$set(clickItem,'playstate',1)
-                //发起点播
-                service.playVideo(clickItem.link,clickItem.name,(data)=>{  
-                    if(data.code === 504){ 
-                        //点播失败
-                        this.$set(clickItem,'playstate',0)
-                        HdSmart.UI.toast('投屏失败，请重试')
-                    }else{ 
-                        //点播成功
-                        this.$set(clickItem,'playstate',2)
-                    }
-                })  */
             },
             //描述按行截取：对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
             getDescLine() {
@@ -513,7 +485,7 @@
                 }
             },
             getUpdateSet(count, last) {
-                if(last == ''){   
+                if(!count || !last || count == '0' || last == '0'){     
                     return ''
                 }else if(last === count){   
                     return count + '集全'
@@ -522,8 +494,12 @@
                 }
             },
             close() {   
-                this.visible = false
-                this.$router.go(-1)
+                if(this.visible){
+                    if(this.history){
+                        this.$router.go(-1)
+                    }
+                    this.visible = false
+                }
             },
             toHTML(str) {  
                 if(!str) return ''
@@ -533,21 +509,19 @@
             },
             isNotNull(str) {   
                 return str && str != 'null'
-            }
-        }, 
-        created() { 
-            this.$watch('cur.desc',this.getDescLine)
-            //详情页添加history change
-            this.$on('onShow',()=>{ 
+            },
+            setHistory() {  
+                this.history = true
                 var query = {
                     ...this.$route.query,
                     detail: this.channelId + '_' + this.vid
                 }
                 this.$router.push({query})
-            })
-            this.$on('onClose',()=>{    
-                
-            })
+            }
+        }, 
+        created() { 
+            this.$watch('cur.desc',this.getDescLine)
+            //详情页添加history change
             this.$watch('$route.query.detail',(newVal, oldVal)=>{ 
                 if(oldVal && newVal === undefined && this.visible){ 
                     this.visible = false

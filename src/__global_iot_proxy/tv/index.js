@@ -13,7 +13,7 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
     setTimeout(()=>{
        switch(data.method) {    
             case 'getChannelData': 
-                callback(JSON.stringify(mockData.getChannelData()))
+                callback(mockData.getChannelData())
                 break;
             case 'searchData':
                 callback(JSON.stringify(mockData.searchData()))
@@ -25,7 +25,7 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
                 callback(JSON.stringify(mockData.getSearchHistory()))
                 break;
             case 'getDetaileData':
-                callback(JSON.stringify(mockData.getDetaileData()))
+                callback(mockData.getDetaileData())
                 break;
             case 'onClickEvent': 
                 console.log('onClickEvent: ',data.params.eventCode)
@@ -35,6 +35,6 @@ if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
                 callback('{}')
                 break
        }
-    },1000)
+    },300)
     }
 }
