@@ -75,7 +75,7 @@
                     v-for="item in cur.playlist[0].list" 
                     :key="item.index"
                     @click="play(item)">
-                    <img :src="item.pictureUrl">
+                    <img v-lazy="item.pictureUrl">
                     <p>{{item.name}}</p>
                     <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
                 </li>
@@ -108,10 +108,10 @@
         overflow-y: scroll;*/
     }
     .hidescroll body > div > div,.hidescroll body > div > ul{ 
-        filter: blur(10px);
+        //filter: blur(10px);
     }
     .hidescroll body > div > .page-detail{  
-        filter: none;
+        //filter: none;
     }
     .slideup-enter-active {
         transition: all .3s ease;
@@ -133,7 +133,7 @@
         overflow-y: hidden;
         z-index: 9;
         color: #fff;
-        background: rgba(47,49,51,.95);
+        background: rgba(47,49,51,1);
         display: flex;
         flex-direction: column;
     }
@@ -455,7 +455,7 @@
                         this.close()
                         return 
                     }
-                    this.cur = data.data
+                    this.cur = Object.freeze(data.data)
                     this.setHistory()
                 })
             },
