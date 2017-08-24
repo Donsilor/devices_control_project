@@ -52,6 +52,8 @@ export default function (params, callback) {
                             }
                         }
                     }
+                }else if(typeof data === 'undefined'){ 
+                    data = {}
                 }
 
                 if(data.code === 504){  

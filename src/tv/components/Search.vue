@@ -319,6 +319,7 @@
                 var kw = this.word.trim()
                 if(kw){
                     this.doSearch(kw)
+                    this.$el.querySelector('.search_input input').blur()
                 }
             },
             doSearch(word) {   
@@ -418,7 +419,7 @@
             })
             setTimeout(()=>{
                 this.$el.querySelector('.search_input input').focus()
-            },300)
+            },800)
             window.addEventListener('scroll',this.loadMore)
             this.$Lazyload.$on('error',function({el, src, loading}){
                 el.src = el.dataset.src1
