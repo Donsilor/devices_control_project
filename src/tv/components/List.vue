@@ -189,7 +189,9 @@
             width: 300px;
             height: 440px;
             display: block;
-            background:#ebebeb url(../assets/icn_tv_movie.png) no-repeat center center;
+            background-color: #ebebeb;
+            background-repeat: no-repeat;
+            background-position: center center;
             background-size: 120px 120px;
         }
         .update{    
@@ -232,10 +234,32 @@
         .score{ 
             display: block;
         }
+        img{    
+            background-image: url(../assets/icn_tv_movie.png)
+        }
     }
-    .list-002,.list-003,.list-004{   
+    .list-002{ 
         .update{    
             display: block;
+        } 
+        img{    
+            background-image: url(../assets/icn_tv_tvshow.png)
+        }
+    }
+    .list-003{ 
+        .update{    
+            display: block;
+        } 
+        img{    
+            background-image: url(../assets/icn_tv_comic.png)
+        }
+    }
+    .list-004{ 
+        .update{    
+            display: block;
+        } 
+        img{    
+            background-image: url(../assets/icn_tv_entertainment.png)
         }
     }
     .loadmore{  

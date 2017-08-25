@@ -11,7 +11,7 @@
         <div class="detail-bd">
         <div class="detail-info clearfix" v-show="cur.title">
             <div class="pic">
-                <img v-lazy="cur.pictureUrl">
+                <img v-lazy="cur.pictureUrl" :class="['pic-'+channelId]">
             </div>
             <div class="text">
                 <div class="shortinfo">
@@ -179,9 +179,23 @@
             img{
                 width: 100%;
                 height: 100%;
-                background: url(../assets/icn_tv_movie.png) no-repeat center center;
+                background-color: #525456;
+                background-repeat: no-repeat;
+                background-position: center center;
                 background-size: 120px 120px;
                 opacity: .5;
+                &.pic-001{  
+                  background-image: url(../assets/icn_tv_movie.png)  
+                }
+                &.pic-002{  
+                  background-image: url(../assets/icn_tv_tvshow.png)  
+                }
+                &.pic-003{  
+                  background-image: url(../assets/icn_tv_comic.png)  
+                }
+                &.pic-004{  
+                  background-image: url(../assets/icn_tv_entertainment.png)  
+                }
             }
             [lazy="loaded"]{   
                 opacity: 1;
@@ -191,17 +205,15 @@
             margin-left: 516px;
         }
         .desc{  
-            padding-top: 36px;
+            padding-top: 30px;
             border-top: 1px solid rgba(255,255,255,0.3);
             color: rgba(255,255,255,.5);
             position: relative;
         }
         .desc-cont{ 
             overflow: hidden;
-            height: 117px;
-        }
-        .desc-cont-p p{ 
-            text-indent: 2em;
+            height: 126px;
+            line-height: 1.4;
         }
         .text-cut{ 
             height: auto;
@@ -213,7 +225,7 @@
         .text-show{ 
             display: block;
         }
-        .desc-toggle{   
+        .desc-toggle{
             float: right;
             color: #fff;
             i{  

@@ -49,7 +49,8 @@
 
 <style lang="less">
     .page-index{    
-        background: #f2f2f2; 
+        background:#f2f2f2;
+        background-image:linear-gradient(0deg, rgba(200,202,204,0.00) 50%, #c8cacc 100%);
         width: 100%;
         height: 100%; 
         position: fixed;
@@ -61,6 +62,7 @@
         top: 50%;
         position: absolute;
         transform: translate(-50%,-50%);
+        margin-top: -60px;
         width: 1364px;
         .span1{
             float: left;
@@ -82,6 +84,7 @@
                 line-height: 160px;
                 background-color: #fff;
                 color:#75787a;
+                font-size: 36px;
             }
         }
         .span3{ 
@@ -94,7 +97,7 @@
             width: 332px;
             height: 180px;
             line-height: 180px;
-            border-radius:6px;
+            border-radius: 6px;
             background-size: 72px 72px;
             background-position: 36px center;
             background-repeat: no-repeat;
@@ -148,14 +151,20 @@
         }
         img{
             width: 100%;
+            border-radius: 6px;
         }
         .title{ 
             position: absolute;
-            left: 36px;
-            bottom: 40px;
+            left: 0;
+            bottom: 0;
             color: #fff;
             font-size: 36px;
-            text-shadow: 1px 1px 1px rgba(0,0,0,.3);
+            height: 240px;
+            width: 100%;
+            padding-top: 162px;
+            padding-left: 36px;
+            background-image:linear-gradient(-180deg, rgba(47,49,51,0.00) 0%, #2f3133 100%);
+            box-sizing: border-box;
         }
         .swiper-container-horizontal > .swiper-pagination-bullets{ 
             width: auto;
@@ -174,13 +183,15 @@
             background: #13d5dc
         }
     }
-    /* 强制关闭3d */
+    /* 强制关闭3d(详情页改成不透明了) */
+    /*
     .swiper-container-android .swiper-slide, .swiper-wrapper{   
         transform: translate(0, 0);
     }
     .swiper-pagination{
         transform: translate(0, 0);
     }
+    */
 </style>
 
 <script>

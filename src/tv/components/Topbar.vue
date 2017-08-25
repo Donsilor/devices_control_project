@@ -33,6 +33,7 @@
         .title{
             text-align: center;
             line-height: 95px;
+            font-size: 36px;
         }
         .icon{  
             width: 100px;

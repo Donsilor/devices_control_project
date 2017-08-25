@@ -34,8 +34,8 @@ Vue.component('detail', Detail)
 Vue.component('topbar', Topbar)
 //Vue.component('statusbar', Statusbar)
 
-//强制关闭3d
-window.Swiper.prototype.support.transforms3d = false
+//强制关闭3d(详情页改成不透明了)
+//window.Swiper.prototype.support.transforms3d = false
 
 const router =  new Router({
   routes: [

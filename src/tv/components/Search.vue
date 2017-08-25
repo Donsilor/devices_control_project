@@ -121,7 +121,7 @@
                 color: #c8cacc;
             }
             &:focus{    
-                border: 1px solid #13d5dc;
+                /*border: 1px solid #13d5dc;*/
                 outline: none;
             }
         }
@@ -145,6 +145,7 @@
         appearance: none;
         border: none;
         background: none;
+        outline: none;
     }
     .search_history{    
         margin: 0 60px;
@@ -179,13 +180,14 @@
         }
     }
     .search_suggest{    
-        padding:0 48px;
+        padding-left:48px;
         li{ 
             height: 120px;
             line-height: 120px;
             border-bottom: 1px solid #dbdbdb;
             strong{ 
                 color: #13d5dc;
+                font-weight: normal;
             }
             &:last-child{   
                 border-bottom: 0;
