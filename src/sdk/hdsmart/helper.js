@@ -67,7 +67,15 @@ export function getDeviceName() {
 }
 
 /**
- * 打赢api日志
+ * 获取设备类型
+ * @returns {}
+* */
+export function getDeviceCategory() {
+    return window.device_category_id;
+}
+
+/**
+ * 打印api日志
  * @param apiName {string} 调用的api名
  * @param data {string} 传入值
  * @param result {string | object} 返回值

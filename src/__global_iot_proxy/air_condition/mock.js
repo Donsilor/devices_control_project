@@ -3,19 +3,21 @@
  */
 import Mock from 'mockjs';
 
+window.device_name = '柜式空调';
+window.device_category_id = 1;
 let res = {
     "device_uuid": "4c52ed0b006f0d0001",
-    "attr": {
-        "device_name": '挂式空调',
+    "attribute": {
+        // "device_name": '挂式空调',
         "switchStatus": 'on',
         "temperature": 16,
         "mode": "cold",
         "speed": "low",
         "wind_up_down": "off",
         "wind_left_right": "on",
-        "manufactureId": "haier",
-        "deviceCategory": "kfr_50lw",
-        "deviceSubCategory": 1,
+        // "manufactureId": "haier",
+        // "deviceCategory": "kfr_50lw",
+        // "deviceSubCategory": 1,
         "timer": [
             {
                 "type": "air_switch_on",
@@ -36,7 +38,6 @@ let res = {
 export function generateSnapShot() {
     return Mock.mock({
         method: 'report',
-        code: 200,
         result: res
         // result: null
     })
@@ -48,10 +49,7 @@ export function set(data){
     for(var p in attr){
         res.attr[p] = attr[p];
     }
-    return Mock.mock({
-        code: 200
-        // code: 204,
-        // msg: 'test'
-    })
+
+    return Mock.mock({ code: 0 });
 }
 
