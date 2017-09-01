@@ -14,8 +14,9 @@
 
         <div class="fixedtop" v-if="!error">
             <topbar :title="title"></topbar>
+            <a class="filters-toggle" href="javascript:void(0)" @click="toggleFilter()">筛选</a>      
             <!-- 条件 -->
-            <div class="filters">
+            <div class="filters" v-show="filterVisible">
                 <!-- 地区 --> 
                 <dl class="row">
                     <dt>
@@ -79,9 +80,12 @@
                         </a>
                     </dd>
                 </dl>
-                
+                <div class="toggle">
+                    <a href="javascript:void(0)" @click="toggleFilter()">收起</a>
+                </div>
             </div>
         </div>
+        <div class="filters-placeholder" v-if="!filterToggleClicked"></div>
         <!-- 列表 -->
         <ul class="vlist list-m60 clearfix" :class="['list-'+channelId]">
             <li class="vitem" 
@@ -124,20 +128,44 @@
 
 <style lang="less">
     .page-list{
-        padding-top: 400px;
+        padding-top: 100px; //400
+    }
+    .page-list .topbar .right{
+        right: 85px;
     }
     .fixedtop{  
         position: fixed;
         left: 0;
         top: 0;
         width: 100%;
-        background: #fff;
         z-index: 2;
     }
+    .filters-toggle{    
+        position: absolute;
+        right: 0 ;
+        top: 0;
+        line-height: 95px;
+        width: 84px;
+        color: #2f3133;
+        font-size: 30px;
+    }
+    .filters-placeholder{   
+        height: 380px;
+    }
     .filters{
-        margin: 0 60px; 
-        padding-top: 36px;
-        border-bottom: 1px solid #dbdbdb;
+        padding: 36px 60px 0;
+        background: rgba(255,255,255,.98);
+        box-shadow:inset 0 -1px 0 0 #dbdbdb;
+        .toggle{    
+            text-align: center;
+            a{  
+               background: url(../assets/icn_arrow_up.png) no-repeat center right;
+               background-size: 24px 12px;
+               color: #75787a;
+               display: inline-block;
+               padding: 20px 30px;
+            }
+        }
         .row{   
             overflow: hidden;
             height: 66px;
@@ -160,7 +188,7 @@
                 display: none;
             }
         }
-        a{  
+        .row a{  
             display: block;
             margin-right: 36px;
             color: #7f8082;
@@ -371,7 +399,9 @@
                  */
                 loadState: '',
                 error: false,
-                isFirstLoad: true
+                isFirstLoad: true,
+                filterVisible: true,
+                filterToggleClicked: false
             }
         },
         watch: {
@@ -387,6 +417,12 @@
             }
         },
         methods: {
+            toggleFilter() {    
+                this.filterVisible = !this.filterVisible
+                if(!this.filterToggleClicked){  
+                    this.filterToggleClicked = true
+                }
+            },
             //参数筛选
             setParam(key, value) {    
                 this[key] = value

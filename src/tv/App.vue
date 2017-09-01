@@ -27,6 +27,7 @@
     }
     body{   
         overflow-x: hidden;
+        background: #fafafa;
     }
     body,input{ 
         font-family: NotoSansHans-Medium;
@@ -42,5 +43,8 @@
     .slide-fade-enter, .slide-fade-leave-to
     /* .slide-fade-leave-active for <2.1.8 */ {
         transform: translate3d(100%,0,0);
+    }
+    .page-list,.page-search,.detail-bd{   
+        padding-bottom: 170px;
     }
 </style> 
