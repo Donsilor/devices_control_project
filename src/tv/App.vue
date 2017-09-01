@@ -44,7 +44,10 @@
     /* .slide-fade-leave-active for <2.1.8 */ {
         transform: translate3d(100%,0,0);
     }
-    .page-list,.page-search,.detail-bd{   
+    .page-list,.page-search{   
         padding-bottom: 170px;
+    }
+    .detail-bd{ 
+        padding-bottom: 360px;
     }
 </style> 
