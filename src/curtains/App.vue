@@ -58,6 +58,7 @@
     }
 </style>
 <script>
+    const [METHOD, CMD_SWITCH, CMD_RANGE] = ['dm_set_zigbee_curtain', 'setOnoff', 'setLevel'];
     export default {
         name: 'app',
         data() {
@@ -65,6 +66,7 @@
                 //用于确定数据是否加载完成，加载完成后渲染动态的UI
                 is_ready: false,
                 //当前窗帘打开的幅度，请注意,硬件不修改属性依旧使用close_percentage
+                //830修改为open_percentage by whx
                 open_percentage: 0,
                 //目标幅度，用于动画
                 target_percentage: 0,
@@ -94,7 +96,8 @@
                 HdSmart.Device.getSnapShot((data) => {
                     //4500为当前窗帘动画的总时间为hard code，后续版本需要从服务端获取
                     this.total_time = 4500;
-                    this.open_percentage = data.attribute.close_percentage;
+                    this.open_percentage = data.attribute.open_percentage;
+//                    this.open_percentage = data.attribute.close_percentage;
                     //更新每帧百分比
                     this.changeRafPercent();
                     this.animateToTargetPercentage(this.open_percentage, true);
@@ -114,7 +117,8 @@
                     this.cbFunc = null;
                 }
                 try {
-                    this.open_percentage = data.result.attribute.close_percentage;
+                    this.open_percentage = data.result.attribute.open_percentage;
+//                    this.open_percentage = data.result.attribute.close_percentage;
                     this.animateToTargetPercentage(this.open_percentage);
                 } catch (error) {
 
@@ -208,7 +212,7 @@
                 this.clearTargetTip();
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
-                HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
+                HdSmart.Device.control(METHOD, CMD_SWITCH, {
                     mode: 'on'
                 }, (data) => {
                     onFinishCallback();
@@ -221,7 +225,7 @@
                 this.clearTargetTip();
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
-                HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
+                HdSmart.Device.control(METHOD, CMD_SWITCH, {
                     mode: 'off'
                 }, () => {
                     onFinishCallback();
@@ -232,7 +236,7 @@
             onPause(onFinishCallback) {
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
-                HdSmart.Device.control('setZigbeeCurtain', 'setOnoff', {
+                HdSmart.Device.control(METHOD, CMD_SWITCH, {
                     mode: 'pause'
                 }, () => {
                     onFinishCallback();
@@ -248,8 +252,9 @@
                 this.timer = setTimeout(() => {
                     this.show = false;
                 }, 2000);
-                HdSmart.Device.control('setZigbeeCurtain', 'setLevel', {
-                    close_percentage: percentage
+                HdSmart.Device.control(METHOD, CMD_RANGE, {
+                    open_percentage: percentage
+//                    close_percentage: percentage
                 }, () => {
                 }, () => {
                 });

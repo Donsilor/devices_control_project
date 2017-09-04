@@ -66,14 +66,10 @@ export default function (method, nodeId, attr, onSuccess, onFailure, timerObj = 
             data = JSON.parse(data);
 
             if (data.code == SUCCESS_CODE) {
-                if(isFunction((onSuccess))){
-                    onSuccess(data);
-                }
+                isFunction((onSuccess)) && onSuccess(data);
             }
             else{
-                if(isFunction(onFailure)){
-                    onFailure(data);
-                }
+                isFunction(onFailure) && onFailure(data);
             }
         }
     });

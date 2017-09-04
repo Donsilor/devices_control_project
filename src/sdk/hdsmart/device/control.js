@@ -23,31 +23,37 @@ export default function (method, command, attribute, onSuccess, onFailure, timeo
     let dataOptions = JSON.stringify({
         method: method,
         req_id: guid(),
+        timestamp: Date.now(),
         params: {
             device_uuid: getDeviceUUID(),
             cmd: command,
             attribute: attribute
         }
     });
+
+    // 设置timer
     let isTimeout = false;
     let timer = setTimeout(() => {
         isTimeout = true;
         log('control', '', {result: "超时"});
         onFailure();
     }, timeout || 8000);
+
     HdIot.Device.control({
         data: dataOptions,
         onListener: function (data) {
             if (isTimeout) {
                 return false;
             }
+
             clearTimeout(timer);
             data = JSON.parse(data);
             log('control', dataOptions, data);
-            if (data.code == 504) {
-                onFailure(data);
-            } else if (isFunction(onSuccess)) {
-                onSuccess()
+
+            if (data.code === 0) {
+                isFunction(onSuccess) && onSuccess(data);
+            } else{
+                isFunction(onFailure) && onFailure(data);
             }
         }
     });
