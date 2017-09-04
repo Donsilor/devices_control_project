@@ -12,13 +12,14 @@
             </div>
         </div>
 
+        <div class="filters-placeholder" v-show="filterVisible"></div>
+
         <div class="fixedtop" v-if="!error">
             <topbar :title="title"></topbar>
-            <a class="filters-toggle" href="javascript:void(0)" @click="toggleFilter()">筛选</a>      
             <!-- 条件 -->
-            <div class="filters" v-show="filterVisible">
+            <div class="filters">
                 <!-- 地区 --> 
-                <dl class="row">
+                <dl class="row" v-show="filterVisible">
                     <dt>
                         <a href="#" 
                             @click.prevent="setParam('current_region','')"
@@ -52,7 +53,7 @@
                     </dd>
                 </dl>
                 <!-- 年份 -->
-                <dl class="row">
+                <dl class="row" v-show="filterVisible">
                     <dt>
                         <a href="#" 
                             @click.prevent="setParam('current_year','')"
@@ -69,7 +70,7 @@
                     </dd>
                 </dl>
                 <!-- 排序 -->
-                <dl class="row">
+                <dl class="row" v-show="filterVisible">
                     <dd>
                         <a href="#" 
                             v-for="item in orderby"
@@ -80,12 +81,11 @@
                         </a>
                     </dd>
                 </dl>
-                <div class="toggle">
-                    <a href="javascript:void(0)" @click="toggleFilter()">收起</a>
-                </div>
+                <a href="#" class="toggle" :class="{active:filterVisible}" @click.prevent="toggleFilter()">
+                    {{filterVisible?'收起':'展开'}}<i></i>
+                </a>
             </div>
         </div>
-        <div class="filters-placeholder" v-if="!filterToggleClicked"></div>
         <!-- 列表 -->
         <ul class="vlist list-m60 clearfix" :class="['list-'+channelId]">
             <li class="vitem" 
@@ -128,10 +128,7 @@
 
 <style lang="less">
     .page-list{
-        padding-top: 100px; //400
-    }
-    .page-list .topbar .right{
-        right: 85px;
+        padding-top: 200px; //400
     }
     .fixedtop{  
         position: fixed;
@@ -140,30 +137,33 @@
         width: 100%;
         z-index: 2;
     }
-    .filters-toggle{    
-        position: absolute;
-        right: 0 ;
-        top: 0;
-        line-height: 95px;
-        width: 84px;
-        color: #2f3133;
-        font-size: 30px;
-    }
     .filters-placeholder{   
-        height: 380px;
+        height: 198px;
     }
     .filters{
         padding: 36px 60px 0;
         background: rgba(255,255,255,.98);
         box-shadow:inset 0 -1px 0 0 #dbdbdb;
+        position: relative;
         .toggle{    
-            text-align: center;
-            a{  
+            position: absolute;
+            right: 0px;
+            bottom: 4px;
+            line-height: 42px;
+            color: #75787a;
+            padding: 20px;
+            font-size: 30px;
+            i{  
                background: url(../assets/icn_arrow_up.png) no-repeat center right;
                background-size: 24px 12px;
-               color: #75787a;
                display: inline-block;
-               padding: 20px 30px;
+               width: 24px;
+               height: 22px;
+               margin-left: 2px;
+               transform: rotate(180deg);
+            }
+            &.active i{   
+                transform: rotate(0deg);
             }
         }
         .row{   
@@ -400,8 +400,8 @@
                 loadState: '',
                 error: false,
                 isFirstLoad: true,
-                filterVisible: true,
-                filterToggleClicked: false
+                filterVisible: false,
+                //filterToggleClicked: false
             }
         },
         watch: {
@@ -419,9 +419,9 @@
         methods: {
             toggleFilter() {    
                 this.filterVisible = !this.filterVisible
-                if(!this.filterToggleClicked){  
-                    this.filterToggleClicked = true
-                }
+                // var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
+                // scrollTop += this.filterVisible ? 132 : -132
+                // window.scrollTo(0, scrollTop)
             },
             //参数筛选
             setParam(key, value) {    

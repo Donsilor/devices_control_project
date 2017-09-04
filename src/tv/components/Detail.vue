@@ -84,8 +84,7 @@
                 <li class="item-num" 
                     v-for="item in cur.playlist[0].list" 
                     :key="item.index"
-                    @click="play(item)">
-                    {{item.index}}
+                    @click="play(item)">{{item.index}}
                     <!-- <span class="tag_new" v-show="item.states"></span> -->
                 </li>
             </ul>

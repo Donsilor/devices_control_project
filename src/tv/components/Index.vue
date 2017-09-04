@@ -42,6 +42,12 @@
         </div>
     </div>
 
+    <div class="control">
+        <a href="#" class="home" @click.prevent="cmd('rcHome')"></a>
+        <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>
+        <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
+        <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
+    </div>
     <!-- 详情页 -->
     <detail :vid="vid" :channel-id="channelId" @onClose="onDetailClose" ref="detail"></detail>
 </div>
@@ -154,6 +160,7 @@
             border-radius: 6px;
         }
         .title{ 
+            border-radius:0 0 6px 6px;
             position: absolute;
             left: 0;
             bottom: 0;
@@ -192,6 +199,63 @@
         transform: translate(0, 0);
     }
     */
+    .control {
+        position: absolute;
+        right: 70px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 700px;
+        margin-top: -60px;
+        a{  
+            display: block;
+            width: 144px;
+            height: 144px;
+            background-size: 100% 100%;
+            background-color: #fff;
+            border-radius: 144px;
+        }
+        .home{  
+            background-image: url(../assets/btn_remote_home_normal.png);
+            &:active{   
+                background-image: url(../assets/btn_remote_home_pressed.png);
+            }
+        }
+        .back{  
+            background-image: url(../assets/btn_remote_back_normal.png);
+            &:active{   
+                background-image: url(../assets/btn_remote_back_pressed.png);
+            }
+        }
+        .volup{ 
+            background-image: url(../assets/btn_remote_volumeup_normal.png);
+            &:active{   
+                background-image: url(../assets/btn_remote_volumeup_pressed.png);
+            }
+        }
+        .voldown{   
+            background-image: url(../assets/btn_remote_volumedown_normal.png);
+            &:active{   
+                background-image: url(../assets/btn_remote_volumedown_pressed.png);
+            }
+        }
+        .shut{  
+            background-image: url(../assets/btn_remote_power_normal.png);
+            &:active{   
+                background-image: url(../assets/btn_remote_power_pressed.png);
+            }
+        }
+    }
+
+    .grid{  
+        margin-left: -90px;
+    }
+    .control{
+        margin-right: 90px;
+    }
+
 </style>
 
 <script>

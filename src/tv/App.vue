@@ -1,7 +1,7 @@
 <template>
-<transition name="slide-fade">
+<!-- <transition name="slide-fade"> -->
     <router-view></router-view>
-</transition>
+<!-- </transition> -->
 </template>
 
 <style lang="less">
@@ -45,7 +45,7 @@
         transform: translate3d(100%,0,0);
     }
     .page-list,.page-search{   
-        padding-bottom: 170px;
+        padding-bottom: 180px;
     }
     .detail-bd{ 
         padding-bottom: 360px;

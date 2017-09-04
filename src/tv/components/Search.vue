@@ -421,7 +421,7 @@
             })
             setTimeout(()=>{
                 this.$el.querySelector('.search_input input').focus()
-            },800)
+            },500)
             window.addEventListener('scroll',this.loadMore)
             this.$Lazyload.$on('error',function({el, src, loading}){
                 el.src = el.dataset.src1
