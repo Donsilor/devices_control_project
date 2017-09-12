@@ -34,6 +34,7 @@ export default function (method, nodeId, attr, onSuccess, onFailure, timerObj = 
         req_id: guid(),
         token: getToken(),
         nodeid: nodeId,
+        timestamp: Date.now(),
         params: {
             device_uuid: getDeviceUUID(),
             timer: timerObj,
