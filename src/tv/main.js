@@ -79,9 +79,7 @@ HdSmart.ready(() => {
     router.beforeEach((to,from,next) => {
       if(current_page !== to.name){
         if(to.name === 'index' || to.name === 'error'){  
-          setTimeout(()=>{
-            HdSmart.UI.toggleHeadAndFoot(true)
-          },300)
+          HdSmart.UI.toggleHeadAndFoot(true)
         }else{  
           HdSmart.UI.toggleHeadAndFoot(false)
         }
