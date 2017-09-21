@@ -1,5 +1,5 @@
 /**
-   * TODO: 
+   * TODO:
    * 1、播放记录 playRecords （3种场景需要记录：1点播，2自动播放，3遥控器播放），记录格式暂定如下：
    * [{vid:"",index:1,playing:false}]
    * 2、播放状态 playStateChange
@@ -54,7 +54,7 @@ const router =  new Router({
       name: 'search',
       component: Search
     },
-    { 
+    {
       path: '/error',
       name: 'error',
       component: ErrorView
@@ -64,23 +64,29 @@ const router =  new Router({
 //hack: app多次执行ready
 let is_ready = false
 let current_page = 'index'
+let thaf_timer
 
 //app jsbridge ready
-HdSmart.ready(() => { 
+HdSmart.ready(() => {
   //HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
-  
+
   if(!is_ready){
 
     is_ready = true
-    
+
     //解决300ms延迟问题
     FastClick.attach(document.body)
 
     router.beforeEach((to,from,next) => {
       if(current_page !== to.name){
-        if(to.name === 'index' || to.name === 'error'){  
-          HdSmart.UI.toggleHeadAndFoot(true)
-        }else{  
+        if(thaf_timer){
+            clearTimeout(thaf_timer)
+        }
+        if(to.name === 'index' || to.name === 'error'){
+          thaf_timer = setTimeout(()=>{
+            HdSmart.UI.toggleHeadAndFoot(true)
+          },200)
+        }else{
           HdSmart.UI.toggleHeadAndFoot(false)
         }
         current_page = to.name

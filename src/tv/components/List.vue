@@ -14,19 +14,19 @@
 
         <div class="filters-placeholder" v-show="filterVisible"></div>
 
-        <div class="fixedtop" v-if="!error">
+        <div class="fixedtop">
             <topbar :title="title"></topbar>
             <!-- 条件 -->
-            <div class="filters">
-                <!-- 地区 --> 
+            <div class="filters" v-if="!error">
+                <!-- 地区 -->
                 <dl class="row" v-show="filterVisible">
                     <dt>
-                        <a href="#" 
+                        <a href="#"
                             @click.prevent="setParam('current_region','')"
                             :class="{active:current_region==''}">全部地区</a>
                     </dt>
                     <dd>
-                        <a href="#" 
+                        <a href="#"
                             v-for="item in region"
                             :key="item.regionId"
                             @click.prevent="setParam('current_region',item.regionId)"
@@ -38,12 +38,12 @@
                 <!-- 分类 -->
                 <dl class="row">
                     <dt>
-                        <a href="#" 
+                        <a href="#"
                             @click.prevent="setParam('current_category','')"
                             :class="{active:current_category==''}">全部分类</a>
                     </dt>
                     <dd>
-                        <a href="#" 
+                        <a href="#"
                             v-for="item in category"
                             :key="item.cateId"
                             @click.prevent="setParam('current_category',item.cateId)"
@@ -55,12 +55,12 @@
                 <!-- 年份 -->
                 <dl class="row" v-show="filterVisible">
                     <dt>
-                        <a href="#" 
+                        <a href="#"
                             @click.prevent="setParam('current_year','')"
                             :class="{active:current_year==''}">全部年份</a>
                     </dt>
                     <dd>
-                        <a href="#" 
+                        <a href="#"
                             v-for="item in year"
                             :key="item.yearrange"
                             @click.prevent="setParam('current_year',item.yearrange)"
@@ -72,7 +72,7 @@
                 <!-- 排序 -->
                 <dl class="row" v-show="filterVisible">
                     <dd>
-                        <a href="#" 
+                        <a href="#"
                             v-for="item in orderby"
                             :key="item.orderId"
                             @click.prevent="setParam('current_orderby',item.orderId)"
@@ -88,9 +88,9 @@
         </div>
         <!-- 列表 -->
         <ul class="vlist list-m60 clearfix" :class="['list-'+channelId]">
-            <li class="vitem" 
-                v-for="item in list" 
-                :key="item.vid" 
+            <li class="vitem"
+                v-for="item in list"
+                :key="item.vid"
                 @click="showDetailInfo(item.channelId,item.vid)">
                 <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
                 <div class="name">{{item.title}}</div>
@@ -130,14 +130,14 @@
     .page-list{
         padding-top: 200px; //400
     }
-    .fixedtop{  
+    .fixedtop{
         position: fixed;
         left: 0;
         top: 0;
         width: 100%;
         z-index: 2;
     }
-    .filters-placeholder{   
+    .filters-placeholder{
         height: 198px;
     }
     .filters{
@@ -145,7 +145,7 @@
         background: rgba(255,255,255,.98);
         box-shadow:inset 0 -1px 0 0 #dbdbdb;
         position: relative;
-        .toggle{    
+        .toggle{
             position: absolute;
             right: 0px;
             bottom: 4px;
@@ -153,7 +153,7 @@
             color: #75787a;
             padding: 20px;
             font-size: 30px;
-            i{  
+            i{
                background: url(../assets/icn_arrow_up.png) no-repeat center right;
                background-size: 24px 12px;
                display: inline-block;
@@ -162,24 +162,24 @@
                margin-left: 2px;
                transform: rotate(180deg);
             }
-            &.active i{   
+            &.active i{
                 transform: rotate(0deg);
             }
         }
-        .row{   
+        .row{
             overflow: hidden;
             height: 66px;
             display: flex;
             width: 100%;
         }
-        dt{ 
+        dt{
             width: 210px;
             a{
                 margin-right: 0;
                 display:inline-block;
             }
         }
-        dd{ 
+        dd{
             width: 100%;
             overflow-x: auto;
             display: -webkit-box;
@@ -188,7 +188,7 @@
                 display: none;
             }
         }
-        .row a{  
+        .row a{
             display: block;
             margin-right: 36px;
             color: #7f8082;
@@ -196,21 +196,21 @@
             padding: 0 12px;
             height: 42px;
             line-height: 42px;
-            &.active{   
+            &.active{
                 background: #13d5dc;
                 color: #fff;
             }
         }
     }
-    .list-m60{  
+    .list-m60{
         margin: 0 60px;
     }
-    .vlist{ 
+    .vlist{
         padding-top: 36px;
     }
-    .vitem{ 
+    .vitem{
         float: left;
-        width: 300px; 
+        width: 300px;
         margin: 0 30px 30px;
         position: relative;
         img{
@@ -222,9 +222,9 @@
             background-position: center center;
             background-size: 120px 120px;
         }
-        .update{    
+        .update{
             position: absolute;
-            left: 0; 
+            left: 0;
             top: 386px;
             background: rgba(0,0,0,.5);
             color: #fff;
@@ -234,7 +234,7 @@
             border-radius:0 3px 3px 0;
             display:none;
         }
-        .score{ 
+        .score{
             position: absolute;
             right: 0;
             top: 27px;
@@ -248,7 +248,7 @@
             opacity:0.9;
             display:none;
         }
-        .name{  
+        .name{
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
@@ -259,45 +259,45 @@
     }
     /* 根据栏目控制样式显示 */
     .list-001{
-        .score{ 
+        .score{
             display: block;
         }
-        img{    
+        img{
             background-image: url(../assets/icn_tv_movie.png)
         }
     }
-    .list-002{ 
-        .update{    
+    .list-002{
+        .update{
             display: block;
-        } 
-        img{    
+        }
+        img{
             background-image: url(../assets/icn_tv_tvshow.png)
         }
     }
-    .list-003{ 
-        .update{    
+    .list-003{
+        .update{
             display: block;
-        } 
-        img{    
+        }
+        img{
             background-image: url(../assets/icn_tv_comic.png)
         }
     }
-    .list-004{ 
-        .update{    
+    .list-004{
+        .update{
             display: block;
-        } 
-        img{    
+        }
+        img{
             background-image: url(../assets/icn_tv_entertainment.png)
         }
     }
-    .loadmore{  
+    .loadmore{
         text-align: center;
         /*padding: 30px 0;*/
         height: 60px;
         color:#75787a;
         font-size: 24px;
         .finish{
-            color:#c8cacc; 
+            color:#c8cacc;
         }
     }
     .spinner > div {
@@ -337,11 +337,11 @@
         }
     }
 
-    .nodata{    
+    .nodata{
         text-align: center;
         color: #c8cacc;
         padding-top: 126px;
-        i{  
+        i{
             width: 360px;
             height: 360px;
             background: url(../assets/img_noresult.png) no-repeat;
@@ -359,7 +359,7 @@
 
     export default {
         data() {
-            return {    
+            return {
                 title: this.$route.query.channel,
                 channelId: this.$route.query.channelId,
                 vid: '',
@@ -408,29 +408,29 @@
             //如果首次加载，则调用app loading
             loadState(val) {
                 if(this.isFirstLoad){
-                    if(val === 'LOADING'){ 
+                    if(val === 'LOADING'){
                         HdSmart.UI.showLoading()
-                    }else if(val === 'LOADED'){    
+                    }else if(val === 'LOADED'){
                         HdSmart.UI.hideLoading()
                     }
                 }
             }
         },
         methods: {
-            toggleFilter() {    
+            toggleFilter() {
                 this.filterVisible = !this.filterVisible
                 // var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
                 // scrollTop += this.filterVisible ? 132 : -132
                 // window.scrollTo(0, scrollTop)
             },
             //参数筛选
-            setParam(key, value) {    
+            setParam(key, value) {
                 this[key] = value
                 this.filterData(1)
             },
-            filterData(page) {   
+            filterData(page) {
                 if(page === 1) this.isFirstLoad = true
-                this.loadState = 'LOADING' 
+                this.loadState = 'LOADING'
                 service.searchData({
                     channelId: this.channelId,
                     category: this.current_category,
@@ -439,28 +439,28 @@
                     orderby: this.current_orderby,
                     pageSize: this.pageSize,
                     pageNo: page
-                },(err, data)=>{ 
+                },(err, data)=>{
                     this.loadState = 'LOADED'
-                    if(err) return 
+                    if(err) return
 
                     if(data.data){
                         data = data.data
                     }
-                    if(data.list == ""){   
+                    if(data.list == ""){
                         data.list = []
                     }
                     this.$nextTick(()=>{
                         this.list = Object.freeze((page === 1 ? [] : this.list).concat(data.list))
                         this.total = data.total
                         this.pageNo = page
-                        if(this.isFirstLoad){   
+                        if(this.isFirstLoad){
                             this.isFirstLoad = false
                             window.scrollTo(0,0)
                         }
-                        if(this.total === 0){    
+                        if(this.total === 0){
                             //没有数据
                             this.loadState = 'NO_DATA'
-                        }else if(this.pageSize*this.pageNo >= this.total){    
+                        }else if(this.pageSize*this.pageNo >= this.total){
                             //加载完全部
                             this.loadState = 'NO_MORE'
                             //HdSmart.UI.toast('已加载全部')
@@ -470,13 +470,13 @@
             },
             loadMore: _.debounce(function(){
                 var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
-                if(scrollTop > 0 && (scrollTop+window.innerHeight >= document.documentElement.scrollHeight-15)){   
-                    if(this.loadState === 'LOADING' || this.loadState === 'NO_DATA'){   
-                        return 
+                if(scrollTop > 0 && (scrollTop+window.innerHeight >= document.documentElement.scrollHeight-15)){
+                    if(this.loadState === 'LOADING' || this.loadState === 'NO_DATA'){
+                        return
                     }
-                    if(this.loadState === 'NO_MORE'){   
+                    if(this.loadState === 'NO_MORE'){
                         HdSmart.UI.toast('已加载全部')
-                        return 
+                        return
                     }
                     this.filterData(this.pageNo + 1)
                 }
@@ -487,20 +487,20 @@
                 this.vid = vid
             },
             getUpdateSet(count, last) {
-                if(!count || !last || count == '0' || last == '0'){   
+                if(!count || !last || count == '0' || last == '0'){
                     return ''
-                }else if(last === count){   
+                }else if(last === count){
                     return count + '集全'
-                }else{  
+                }else{
                     return '更新至' + last + '集'
                 }
             },
             //换成小图地址
-            getThumbPic(pic) {  
+            getThumbPic(pic) {
                 return pic.replace('.jpg','_y.jpg')
             },
-            reload() {  
-                if(this.error){ 
+            reload() {
+                if(this.error){
                     this.error = false
                     this.onPageInit()
                 }
@@ -509,9 +509,9 @@
                 this.loadState = 'LOADING'
                 service.getChannelData(this.channelId,(err, data)=>{
                     this.loadState = 'LOADED'
-                    if(err){    
+                    if(err){
                         this.error = true
-                        return 
+                        return
                     }
                     this.category = Object.freeze(data.category)
                     this.region = Object.freeze(data.region)
@@ -534,7 +534,7 @@
             window.addEventListener('scroll',this.loadMore)
         },
         destroyed() {
-            window.removeEventListener('scroll',this.loadMore) 
+            window.removeEventListener('scroll',this.loadMore)
         }
     }
 </script>
