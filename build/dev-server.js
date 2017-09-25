@@ -14,7 +14,6 @@ var webpackConfig = require('./webpack.dev.conf')
 var util = require('./util');
 var ip = require('ip');
 var os = require('os');
-var timeout = require('connect-timeout');
 // default port where dev server listens for incoming traffic
 var port = util.getCommandPort() || process.env.PORT || config.dev.port
 // automatically open browser, if not set will be false
@@ -62,17 +61,13 @@ app.use(devMiddleware)
 // compilation error display
 app.use(hotMiddleware)
 
-app.use(timeout(0));
-app.use(function (req, res, next) {
-    if (!req.timeout) next();
-})
 // serve pure static assets
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
-app.use(staticPath, express.static(path.join(__dirname, './static')))
+app.use(staticPath, express.static('./static'))
 
 // let localIp = ip.address() || '0.0.0.0';
 var localIp = '0.0.0.0';
-if (os.platform() == 'win32') {
+if(os.platform() == 'win32'){
     localIp = ip.address();
 }
 var uri = 'http://' + localIp + ':' + port + '?env=desktop';

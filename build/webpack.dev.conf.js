@@ -22,7 +22,7 @@ module.exports = merge(baseWebpackConfig, {
         rules: utils.styleLoaders({sourceMap: config.dev.cssSourceMap})
     },
     // cheap-module-eval-source-map is faster for development
-    // devtool: '#cheap-module-eval-source-map',
+    devtool: '#cheap-module-eval-source-map',
     plugins: [
         new webpack.DefinePlugin({
             'process.env': config.dev.env
@@ -32,7 +32,6 @@ module.exports = merge(baseWebpackConfig, {
         new webpack.NoEmitOnErrorsPlugin(),
         // https://github.com/ampedandwired/html-webpack-plugin
         new HtmlWebpackPlugin({
-            title: 'test',
             filename: 'index.html',
             template: 'index.html',
             title: appName,

@@ -13,6 +13,8 @@ import {isFunction,log} from '../helper';
  * });
  */
 
+//todo network change listen
+
 export default function (onSuccess) {
     HdIot.Util.getNetworkType({
         data: '',

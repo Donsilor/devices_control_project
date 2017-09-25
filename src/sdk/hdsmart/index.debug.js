@@ -1,11 +1,9 @@
 import './index';
-import moment from 'moment';
 
 let counter = 0;
 window.apiLog = function (apiName, data, result) {
     counter = counter + 1;
-    const now = moment().format('HH:mm:ss SSSS');
-    console.log(`<<<---[${now}]${counter}：${apiName} log begin---`)
+    console.log(`<<<---${counter}.api：${apiName} log begin---`)
     console.warn(`传入值：${data === '' ? '空' : data }`);
     if (result) {
         let resultStr;
@@ -22,5 +20,5 @@ window.apiLog = function (apiName, data, result) {
     } else {
         console.warn('返回值:', '无')
     }
-    console.log(`---${counter}：${apiName} log end--->>>`)
+    console.log(`---${counter}.api：${apiName} log end--->>>`)
 };

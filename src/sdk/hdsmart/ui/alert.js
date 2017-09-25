@@ -1,4 +1,5 @@
 import {isFunction} from '../helper';
+//todo 相当于js的confirm  可能还需要alert 和 prompt
 /**
  * 调用源生弹出框
  * @function alert
@@ -25,7 +26,7 @@ export default function (title, message, onSuccess, okText, cancelText) {
             cancelText: cancelText
         }),
         onListener: function () {
-            if(isFunction){
+            if(isFunction(onSuccess)){
                 onSuccess()
             }
         }

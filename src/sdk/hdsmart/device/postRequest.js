@@ -33,7 +33,7 @@ import {guid, getDeviceUUID, log, isFunction} from '../helper';
  * @example
  * //获取指定月份的有日志的日期
  * //使用设备：人体传感器，门窗传感器
- * HdSmart.Device.getDeviceMonthHistory(year,month，
+ * HdSmart.Device.postRequest('getDeviceMonthHistory',year,month，
  *      function(data){
  *          //data为获取历史成功由设备端返回的数据
  *      }

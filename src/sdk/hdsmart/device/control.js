@@ -19,14 +19,14 @@ import {guid, getDeviceUUID, log, isFunction} from '../helper';
  * },3000);
  *
  */
-export default function (method, command, attributes, onSuccess, onFailure, timeout) {
+export default function (method, command, attribute, onSuccess, onFailure, timeout) {
     let dataOptions = JSON.stringify({
         method: method,
         req_id: guid(),
         params: {
             device_uuid: getDeviceUUID(),
             cmd: command,
-            attribute: attributes
+            attribute: attribute
         }
     });
     let isTimeout = false;

@@ -30,8 +30,14 @@
 
 ### air_condition 空调
 ```
-    npm run dev:air_condition //开发
+    npm run dev:ac //开发
     npm run build:air_condition //编译
+```
+
+### tv 电视
+```
+    npm run dev:tv //开发
+    npm run build:tv //编译
 ```
 
 ### history

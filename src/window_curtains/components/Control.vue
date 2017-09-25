@@ -41,6 +41,13 @@
         width: 100%;
     }
 
+
+    @media all and (max-height: 799px) {
+        .button-box {
+            margin-top: 15px !important;
+        }
+    }
+
     .button-box {
         margin-top: 36px;
     }
@@ -137,7 +144,7 @@
             delayLoading  (callback){
                 this.timer = setTimeout(() => {
                     callback()
-                }, 500);
+                }, 300);
             },
             onOpenTouchStart (){
                 if (!this.is_ready) return false;

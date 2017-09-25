@@ -9,6 +9,9 @@ import {log} from '../helper';
  * @example
  * HdSmart.Util.sendNotification('消息标题','消息体');
  */
+
+
+//todo  app应进行设备低电量警告，设备损毁的数据解析和处理。
 export default function (title, message) {
     let dataOptions = JSON.stringify({
         title: title,

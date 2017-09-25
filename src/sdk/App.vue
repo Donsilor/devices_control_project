@@ -1,5 +1,8 @@
 <template>
+
     <div id="app">
+    <br>
+    <br><br>
         <div class="js_status is_ready" v-if="is_ready">JavaScript准备好了</div>
         <div class="js_status is_un_ready" v-if="!is_ready">JavaScript还没准备好</div>
         <router-view></router-view>
