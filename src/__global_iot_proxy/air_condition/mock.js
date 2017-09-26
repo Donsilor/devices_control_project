@@ -36,7 +36,7 @@ let res = {
 export function generateSnapShot() {
     return Mock.mock({
         method: 'report',
-        code: 200,
+        code: 0,
         result: res
         // result: null
     })
@@ -49,7 +49,7 @@ export function set(data){
         res.attr[p] = attr[p];
     }
     return Mock.mock({
-        code: 200
+        code: 0
         // code: 204,
         // msg: 'test'
     })

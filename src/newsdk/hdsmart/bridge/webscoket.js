@@ -6,10 +6,7 @@ import {
     trigger,
 } from '../event'
 
-import {
-    apiList,
-    tipMsg,
-} from '../constant'
+import { apiList } from '../constant'
 
 const noop = ()=>{}
 
@@ -22,7 +19,6 @@ const bridge = {
     init (e) {
         this.socket = io('http://localhost')
         this.socket.on('connect', ()=>{
-            console.log('websocket is connect')
             this.isConnect = true
             if(!this.isReady){
                 onDeviceJsReady()
@@ -39,16 +35,14 @@ const bridge = {
             console.error('websocket is disconnect')
             return
         }
-        console.log(`%c ws.${method} called success :`, 'background:#aaa;color:green', data)
+
         this.socket.emit(method, data, (response)=>{
-            console.log(`ws.${method} callback :`, response)
             callback(response)
         })
     },
 
     registerHandler (method, callback) {
         this.socket.on(method, (data)=>{
-            console.log(`%c${method} from app:`, 'background:#aaa;color:yellow', data)
             callback(data)
         })
     },

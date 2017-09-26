@@ -4,10 +4,7 @@ import {
     trigger,
 } from '../event'
 
-import {
-    apiList,
-    tipMsg,
-} from '../constant'
+import { apiList } from '../constant'
 
 const noop = ()=>{}
 
@@ -22,12 +19,8 @@ const bridge = {
             console.error('window.HdIot is not exist')
             return
         }
-        if(!method){
-            console.error('method is require')
-            return
-        }
+
         try{
-            console.log(`%cHdIot.${method} called success :`, 'background:#aaa;color:green', data)
             const fn = method.split('.').reduce((fn, method)=>{
                 return fn[method]
             }, HdIot)
@@ -35,17 +28,9 @@ const bridge = {
             fn({
                 data: JSON.stringify(data),
                 onListener(response) {
-                    console.log(`HdIot.${method} callback :`)
                     if(autoParseResponse){
-                        try{
-                            let json = JSON.parse(response)
-                            console.log(json)
-                            callback(json)
-                        }catch(e){
-                            console.error(`json parse error`)
-                        }
+                        callback(JSON.parse(response))
                     }else{
-                        console.log(response)
                         callback(response)
                     }
                 }
@@ -56,10 +41,7 @@ const bridge = {
     },
 
     registerHandler (method, callback){
-        on(method, (data)=>{
-            console.log(`%c${method} from app:`, 'background:#aaa;color:yellow', data)
-            callback(data)
-        })
+        on(method, callback)
     }
 }
 
