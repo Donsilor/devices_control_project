@@ -3,10 +3,10 @@
     npm run dev:sdk //开发
     npm run build:sdk //编译
 ```
-### window_curtains 窗帘
+### curtains 窗帘
 ```
-    npm run dev:window_curtains //开发
-    npm run build:window_curtains //编译
+    npm run dev:curtains //开发
+    npm run build:curtains //编译
 ```
 
 ### door_sensor 门窗传感器

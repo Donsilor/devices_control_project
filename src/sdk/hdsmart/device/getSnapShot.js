@@ -19,7 +19,7 @@ export default function (onSuccess, onFailure) {
         onListener: function (data) {
             log('getSnapShot', '', data);
             data = JSON.parse(data);
-            if (data.result) {
+            if (data.code === 0) {
                 if (isFunction(onSuccess)) {
                     onSuccess(data.result, data.timestamp || data.result.timestamp);
                 }

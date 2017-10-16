@@ -5,7 +5,7 @@ export function generateSnapShot() {
         method: 'report',
         result: {
             attribute: {
-                'close_percentage|1-100': 1,
+                'open_percentage|1-100': 1,
             }
         }
     })

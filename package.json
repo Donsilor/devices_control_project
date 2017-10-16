@@ -7,8 +7,8 @@
   "scripts": {
     "dev:tv": "node build/dev-server.js --app=tv --appName=电视",
     "build:tv": "node build/build.js --app=tv --appName=电视",
-    "dev:window_curtains": "node build/dev-server.js --app=window_curtains --appName=窗帘 --port=8081",
-    "build:window_curtains": "node build/build.js --app=window_curtains --appName=窗帘",
+    "dev:curtains": "node build/dev-server.js --app=curtains --appName=窗帘 --port=8081",
+    "build:curtains": "node build/build.js --app=curtains --appName=窗帘",
     "dev:sdk": "node build/dev-server.js --app=sdk --appName=sdk",
     "build:sdk": "node build/build.js --app=sdk --appName=sdk",
     "dev:door_sensor": "node build/dev-server.js --app=door_sensor --appName=门窗传感器",

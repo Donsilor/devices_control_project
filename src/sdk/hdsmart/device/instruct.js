@@ -26,7 +26,7 @@ import {guid, getDeviceUUID, getToken, log, isFunction} from '../helper';
  * },3000);
  *
  */
-//todo 等硬件接口统一以后需要与control合并，并将相应的api进行更改
+//TODO:等硬件接口统一以后需要与control合并，并将相应的api进行更改
 export default function (method, nodeId, attr, onSuccess, onFailure, timerObj = null, timeout) {
     // construct request data
     let dataOptions = JSON.stringify({
@@ -34,13 +34,16 @@ export default function (method, nodeId, attr, onSuccess, onFailure, timerObj = 
         req_id: guid(),
         token: getToken(),
         nodeid: nodeId,
+        timestamp: Date.now(),
         params: {
             device_uuid: getDeviceUUID(),
             timer: timerObj,
-            attr: attr
+            attribute: attr
         }
     });
-    // debugger
+
+    //处理成功code
+    const SUCCESS_CODE = 0;
 
     // set timer
     let isTimeout = false;
@@ -50,6 +53,7 @@ export default function (method, nodeId, attr, onSuccess, onFailure, timerObj = 
         onFailure();
     }, timeout || 8000);
 
+    console.log('>>>开始调用HdIot.Device.control：' + HdIot.Device.control);
     HdIot.Device.control({
         data: dataOptions,
         onListener: function (data) {
@@ -62,21 +66,11 @@ export default function (method, nodeId, attr, onSuccess, onFailure, timerObj = 
             log('control', dataOptions, data);
             data = JSON.parse(data);
 
-            // if (typeof data.code === "number") {
-            //     onFailure(data);
-            // } else if (isFunction(onSuccess)) {
-            //     onSuccess();
-            // }
-
-            if (data.code == 200) {
-                if(isFunction((onSuccess))){
-                    onSuccess(data);
-                }
+            if (data.code == SUCCESS_CODE) {
+                isFunction((onSuccess)) && onSuccess(data);
             }
             else{
-                if(isFunction(onFailure)){
-                    onFailure(data);
-                }
+                isFunction(onFailure) && onFailure(data);
             }
         }
     });

@@ -1,7 +1,6 @@
 <template>
     <div :class="classObj">
         <div class="imgWrapper"  @click="tap">
-        <!--<div class="imgWrapper"  v-finger:touch-start="tap">-->
             <img v-if="info.imgSrc" :src="info.imgSrc" class="img-normal" /><!--v-show="!classObj.active"-->
             <img v-if="info.imgActiveSrc" :src="info.imgActiveSrc" class="img-active" /><!--v-show="classObj.active"-->
         </div>
@@ -48,11 +47,6 @@
 </style>
 
 <script>
-    import Vue from 'vue';
-    import AlloyFinger from 'alloyfinger';
-    import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue';
-    Vue.use(AlloyFingerVue, { AlloyFinger });
-
     export default {
         data: function () {
             return{
@@ -60,6 +54,16 @@
                 processingTimer: null
             }
         },
+        /**
+         * info属性说明
+         * title: 按钮title，底部文字
+         * type: 控制的属性类型
+         * value: 控制的属性值
+         * imgSrc: 正常状态图片src
+         * imgActiveSrc: 激活状态图片src
+         * tip: 控制成功提示文字
+         * continuousClick: 是否允许连续点击
+         * */
         props: [ 'info', 'curValue'],
         computed:{
             classObj(){
@@ -74,8 +78,8 @@
         },
         methods:{
             tap(){
-                //TODO:温度特殊处理，需优化
-                if(this.info.type != 'temperature'){
+                //不允许连续点击，添加timer及tag判断
+                if(!this.info.continuousClick){
                     if(this.processing){
                         return;
                     }
@@ -87,11 +91,7 @@
                     }, 300);
                 }
 
-//                this.$el.classList.add('pressed');
                 this.$emit('tap', this.info.type, this.info.value, this.info.tip, this.$el);
-//                if(this.curValue !== this.info.value){
-//                    this.$emit('click', this.info.type, this.info.value);
-//                }
             }
         }
     }
