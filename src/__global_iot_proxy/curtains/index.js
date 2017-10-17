@@ -1,17 +1,17 @@
-import '../sdk/index';
+import on from '../../../sdk/app';
+import {apiList} from '../../../sdk/src/constant'
 import * as mockData from './mock';
-if (window.HdIot && location.search.indexOf('env=desktop') != -1) {
-    HdIot.Device.getSnapShot = function (options) {
-        options.onListener(JSON.stringify(mockData.generateSnapShot()));
-    };
-    HdIot.Device.control = function (options) {
-        setTimeout(function () {
-            options.onListener(JSON.stringify({
-                result: options.data
-            }));
-        }, 600)
-    };
-    // setInterval(() => {
-    //     window.onDeviceChange(mockData.generateSnapShot())
-    // }, 2000)
+
+if (location.search.indexOf('env=desktop') != -1) {
+
+    on(apiList.device_getsnapshot, function(data, done){
+        done(mockData.generateSnapShot())
+    })
+
+    on(apiList.device_control, function(data, done){
+        done({
+            result: data
+        })
+    })
+
 }

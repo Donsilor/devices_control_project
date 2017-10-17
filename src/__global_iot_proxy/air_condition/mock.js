@@ -46,7 +46,7 @@ export function generateSnapShot() {
 }
 
 export function set(data){
-    let attr = JSON.parse(data.data).params.attr;
+    let attr = data.params.attr;
     for(var p in attr){
         res.attr[p] = attr[p];
     }

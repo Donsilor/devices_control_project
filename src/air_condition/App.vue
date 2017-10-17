@@ -129,7 +129,7 @@
     //    import TimePicker from './components/TimePicker.vue';
     import AcSwitch from './components/AcSwitch.vue';
 
-    import {getDeviceName, getDeviceCategory} from '../sdk/hdsmart/helper';
+    import {getDeviceName, getDeviceCategory} from '../../sdk/src/helper.js';
 
     const [MIN_TEMP, MAX_TEMP] = [16, 30];
     const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] =
