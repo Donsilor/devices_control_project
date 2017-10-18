@@ -246,9 +246,10 @@ api.Device = {
         const dataOptions = {
             method: method,
             req_id: guid(),
-            params: Object.assign(params, {
+            params: {
+                ...params,
                 device_uuid: getDeviceUUID()
-            })
+            }
         }
 
         bridge.send(apiList.device_postrequest, dataOptions, (data)=>{

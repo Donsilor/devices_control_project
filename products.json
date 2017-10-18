@@ -1,0 +1,28 @@
+{
+    "tv": {
+        "src": "tv",
+        "name": "电视",
+        "mobileSrc": "tv_m",
+        "mock": "tv"
+    },
+    "curtains": {
+        "src": "curtains",
+        "name": "窗帘"
+    },
+    "air_condition": {
+        "src": "air_condition",
+        "name": "空调"
+    },
+    "door_sensor": {
+        "src": "door_sensor",
+        "name": "门窗传感器"
+    },
+    "human_sensor": {
+        "src": "human_sensor",
+        "name": "人体传感器"
+    },
+    "humiture": {
+        "src": "humiture",
+        "name": "温湿度传感器"
+    }
+}
