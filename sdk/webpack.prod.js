@@ -8,20 +8,20 @@ function resolve(dir) {
 }
 
 module.exports = {
-    entry: __dirname + '/src/index.js',
+    entry: resolve('sdk/src/index.js'),
     output: {
-        path: __dirname + '/dist',
+        path: resolve('sdk/dist'),
         filename: 'hdsmart.js',
-        //library: libraryName,
-        //libraryTarget: 'umd',
-        //umdNamedDefine: true
+        // library: libraryName,
+        // libraryTarget: 'umd',
+        // umdNamedDefine: true
     },
     module: {
         loaders: [
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                include: [resolve('sdk')]
+                include: [resolve('sdk/src')]
              }
         ]
     }

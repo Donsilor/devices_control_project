@@ -1,17 +1,16 @@
+import ready from './core/ready'
+import onDeviceListen from './core/onDeviceListen'
+import Device from './core/Device'
+import UI from './core/UI'
+import Util from './core/Util'
 
-import api from './core/api'
-import AndroidBridge from './bridge/android'
-import IOSBridge from './bridge/ios'
+import * as helper from './helper'
 
-const ua = navigator.userAgent
-const isAndroid = /android/i.test(ua)
-const isIOS = /iphone|ipad/i.test(ua)
-
-let bridge = AndroidBridge
-if(isIOS){
-    bridge = IOSBridge
+window.HdSmart = {
+    ready,
+    onDeviceListen,
+    Device,
+    UI,
+    Util,
+    helper
 }
-
-api.init(bridge)
-
-window.HdSmart = api

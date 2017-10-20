@@ -21,7 +21,7 @@ export const apiList = {
 }
 
 export const tipMsg = {
-    timeout: 'time out',
-    e504: 'internet error',
-    jsonerr: 'json parse error',
+    timeout: '请求超时',
+    e504: '网络错误',
+    jsonerr: 'JSON解析错误',
 }
