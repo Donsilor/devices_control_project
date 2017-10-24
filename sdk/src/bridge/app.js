@@ -15,7 +15,7 @@ const androidCall = (method, data = '', callback = noop, autoParseResponse = tru
             return fn[method]
         }, HdIot)
 
-        fn({
+        let options = {
             data: JSON.stringify(data),
             onListener(response) {
                 if(autoParseResponse){
@@ -24,7 +24,13 @@ const androidCall = (method, data = '', callback = noop, autoParseResponse = tru
                     callback(response)
                 }
             }
-        })
+        }
+
+        if(method === 'UI.toast'){
+            options = JSON.stringify({data})
+        }
+
+        fn(options)
     }catch(e){
         console.error(`HdIot.${method} error :`, e)
     }

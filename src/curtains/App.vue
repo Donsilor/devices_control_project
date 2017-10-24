@@ -212,37 +212,77 @@
                 this.clearTargetTip();
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
-                HdSmart.Device.control(METHOD, CMD_SWITCH, {
+
+                /* HdSmart.Device.control(METHOD, CMD_SWITCH, {
                     mode: 'on'
                 }, (data) => {
                     onFinishCallback();
                 }, () => {
                     onFinishCallback();
-                });
+                }); */
+                HdSmart.Device.control({
+                    method: METHOD,
+                    params: {
+                        cmd: CMD_SWITCH,
+                        attribute: {
+                            mode: 'on'
+                        }
+                    }
+                }, (data) => {
+                    onFinishCallback();
+                }, () => {
+                    onFinishCallback();
+                })
             },
 
             onClose(onFinishCallback) {
                 this.clearTargetTip();
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
-                HdSmart.Device.control(METHOD, CMD_SWITCH, {
+                /* HdSmart.Device.control(METHOD, CMD_SWITCH, {
                     mode: 'off'
                 }, () => {
                     onFinishCallback();
                 }, () => {
                     onFinishCallback();
-                });
+                }); */
+                HdSmart.Device.control({
+                    method: METHOD,
+                    params: {
+                        cmd: CMD_SWITCH,
+                        attribute: {
+                            mode: 'off'
+                        }
+                    }
+                }, (data) => {
+                    onFinishCallback();
+                }, () => {
+                    onFinishCallback();
+                })
             },
             onPause(onFinishCallback) {
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
-                HdSmart.Device.control(METHOD, CMD_SWITCH, {
+                /* HdSmart.Device.control(METHOD, CMD_SWITCH, {
                     mode: 'pause'
                 }, () => {
                     onFinishCallback();
                 }, () => {
                     onFinishCallback();
-                });
+                }); */
+                HdSmart.Device.control({
+                    method: METHOD,
+                    params: {
+                        cmd: CMD_SWITCH,
+                        attribute: {
+                            mode: 'pause'
+                        }
+                    }
+                }, (data) => {
+                    onFinishCallback();
+                }, () => {
+                    onFinishCallback();
+                })
             },
             onGoPercentage(percentage) {
                 clearTimeout(this.timer);
@@ -252,12 +292,22 @@
                 this.timer = setTimeout(() => {
                     this.show = false;
                 }, 2000);
-                HdSmart.Device.control(METHOD, CMD_RANGE, {
+                /* HdSmart.Device.control(METHOD, CMD_RANGE, {
                     open_percentage: percentage
-//                    close_percentage: percentage
                 }, () => {
                 }, () => {
-                });
+                }); */
+                HdSmart.Device.control({
+                    method: METHOD,
+                    params: {
+                        cmd: CMD_RANGE,
+                        attribute: {
+                            open_percentage: percentage
+                        }
+                    }
+                },
+                () => { },
+                () => { })
             },
             clearTargetTip() {
                 this.show = false;

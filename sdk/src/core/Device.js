@@ -23,24 +23,25 @@ export default {
      * },3000);
      *
      */
-    control (method, command, attribute, onSuccess, onFailure, timeout = 8000){
-        const dataOptions = {
-            method: method,
+    control (options = {}, onSuccess, onFailure){
+        const dataOptions = Object.assign({
             req_id: guid(),
             timestamp: Date.now(),
-            params: {
-                device_uuid: getDeviceUUID(),
-                cmd: command,
-                attribute: attribute
-            }
+            params: {}
+        }, options)
+
+        if(options.nodeid){
+            dataOptions.token = getToken()
         }
+
+        dataOptions.params.device_uuid = getDeviceUUID()
 
         // 设置timer
         let isTimeout = false
         let timer = setTimeout(() => {
             isTimeout = true
             onFailure()
-        }, timeout)
+        }, 8000)
 
         bridge.send(apiList.device_control, dataOptions, (data)=>{
             if (isTimeout) {
@@ -49,66 +50,19 @@ export default {
 
             clearTimeout(timer)
 
-            if (data.code === 0) {
-                onSuccess(data)
-            } else{
-                onFailure(data)
-            }
-        })
-    },
-    /**
-     * 发送设备的控制命令
-     * @function instruct
-     * @memberOf module:Device
-     * @param {string} method 方法名
-     * @param {string} nodeId 节点ID
-     * @param {object} attr 属性
-     * @param {function} onSuccess 成功回调函数
-     * @param {function} onFailure 失败回调函数
-     *  @param {object} timerObj 定时器
-     * @param {number} timeout=8000 超时时间
-     *
-     * @return {number} 返回定时器id
-     * @example
-     * HdSmart.Device.instruct('method','nodeId',attr,function(data){
-     *      //data为控制成功后设备返回的状态
-     * },function(error){
-     *      //控制失败
-     * },3000);
-     *
-     */
-    instruct(method, nodeId, attr, onSuccess, onFailure, timerObj = null, timeout = 8000) {
-        const dataOptions = {
-            method: method,
-            req_id: guid(),
-            token: getToken(),
-            nodeid: nodeId,
-            timestamp: Date.now(),
-            params: {
-                device_uuid: getDeviceUUID(),
-                timer: timerObj,
-                attribute: attr
-            }
-        }
-
-        // set timer
-        let isTimeout = false
-        let timer = setTimeout(() => {
-            isTimeout = true
-            onFailure()
-        }, timeout)
-
-        bridge.send(apiList.device_control, dataOptions, (data) => {
-            if (isTimeout) {
-                return false
-            }
-
-            clearTimeout(timer)
-
-            if (data.code === 0){
-                onSuccess(data)
+            //空调
+            if(options.nodeid){
+                if (data.code === 0) {
+                    onSuccess(data)
+                } else{
+                    onFailure(data)
+                }
             }else{
-                onFailure(data)
+                if (data.code === 504) {
+                    onFailure(data)
+                } else {
+                    onSuccess(data)
+                }
             }
         })
     },

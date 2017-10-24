@@ -445,7 +445,14 @@
                 let attr = {};
                 attr[type] = value;
                 //发送指令
-                HdSmart.Device.instruct('dm_set', NODE_ID + type, attr,
+                HdSmart.Device.control({
+                    method: 'dm_set',
+                    nodeid: NODE_ID + type,
+                    params: {
+                        attr: attr
+                    }
+                },
+                //HdSmart.Device.instruct('dm_set', NODE_ID + type, attr,
                     () => {
                         that.removeLoading();
                         that.removePressedClass(that.curButton);
@@ -502,7 +509,14 @@
                 let attr = {};
                 attr[POWER] = switchType === BOOT_SWITCH ? ON : OFF;
 
-                HdSmart.Device.instruct('set', NODE_ID + POWER, attr,
+                HdSmart.Device.control({
+                    method: 'set',
+                    nodeid: NODE_ID + POWER,
+                    params: {
+                        attr: attr
+                    }
+                },
+                //HdSmart.Device.instruct('set', NODE_ID + POWER, attr,
                     () => {
                         this.params[switchType] = switchValue;
                         if (switchType === BOOT_SWITCH) {
