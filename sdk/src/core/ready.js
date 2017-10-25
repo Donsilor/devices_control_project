@@ -2,9 +2,11 @@ import bridge from '../bridge/app'
 import {on, off, trigger} from '../event'
 import {apiList} from '../constant'
 
-window.onDeviceJsReady = function(data){
-    trigger(apiList.ready, data)
-    bridge.isReady = true
+window.onDeviceJsReady = function(){
+    if(!bridge.isReady){
+        trigger(apiList.ready)
+        bridge.isReady = true
+    }
 }
 
 /**

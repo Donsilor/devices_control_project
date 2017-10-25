@@ -1,4 +1,21 @@
 <!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><title>电视</title><style>html {
             font-size: 20px;
             height: 100%;
-        }</style><link href=./app.a0694988dbf174e6213928cccf18b7ed.css rel=stylesheet></head><body><div id=app></div><script type=text/javascript src=./js/sdk.5c5a11624288c40ae698.js></script><script type=text/javascript src=./js/app.b94a4b30a44a383a26db.js></script></body></html>
+        }</style><script>(function () {
+        var set = function () {
+          //px2rem的rootValue=30
+          //移动端，设计稿750
+          //PAD版，设计稿1920
+          var rem = 20
+          var clientWidth = document.documentElement.clientWidth || window.innerWidth;
+
+          if(clientWidth <= 800){
+            rem = Math.floor(clientWidth / 375 * 15);
+          }else if(clientWidth <= 1280){
+            rem = Math.floor(clientWidth / 1280 * 20);
+          }
+          document.querySelector('html').style.fontSize = rem + 'px';
+        }
+        set();
+        window.addEventListener('resize', set);
+      }());</script><link href=./app.7d6cd97c0310b8ab87c2846a2da66c0a.css rel=stylesheet></head><body><div id=app></div><script type=text/javascript src=./js/sdk.433a9b383c2ec671084b.js></script><script type=text/javascript src=./js/app.b4952f4dab89afdbfe7b.js></script></body></html>

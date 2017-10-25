@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HdSmart API(debug)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="lbox_close wxapi_form">
+        <br>
+        <ul>
+            <li><strong>token: </strong><span id="token"></span></li>
+            <li><strong>device_uuid: </strong><span id="device_uuid"></span></li>
+            <li><strong>device_name: </strong><span id="device_name"></span></li>
+            <li><strong>device_category_id: </strong><span id="device_category_id"></span></li>
+        </ul>
+        <h3>Device</h3>
+        <span class="desc">设备监听（onDeviceListen）</span><br>
+        <textarea id="raw" disabled style="width:100%;height: 150px;"></textarea>
+        <span class="desc">获取设备快照</span>
+        <button class="btn btn_primary" id="getSnapShot">getSnapShot</button>
+        <span class="desc">发送指令控制设备</span><br>
+        <input type="radio" id="newplat" name="pf"><label for="newplat">新平台（空调）</label>
+        <input type="radio" id="oldplat" name="pf"><label for="oldplat">老平台（窗帘）</label>
+        <textarea id="code" style="width:100%;height: 150px;"></textarea>
+        <button class="btn btn_primary" id="control">control</button>
+
+    </div>
+
+<script src="../dist/hdsmart.debug.js"></script>
+<script>
+
+    var $ = function(selector){
+        return document.querySelector(selector)
+    }
+
+    HdSmart.ready(function(){
+
+        // $('#token').innerHTML = HdSmart.helper.getToken()
+        // $('#device_uuid').innerHTML = HdSmart.helper.getDeviceUUID()
+        // $('#device_name').innerHTML = HdSmart.helper.getDeviceName()
+        // $('#device_category_id').innerHTML = HdSmart.helper.getDeviceCategory()
+
+        HdSmart.onDeviceListen(function(data){
+            $('#raw').value = JSON.stringify(data, null, 2)
+        })
+        //Device
+        $('#getSnapShot').onclick = function(){
+            HdSmart.Device.getSnapShot(function(data){
+                alert(JSON.stringify(data))
+            })
+        }
+        $('#oldplat').onclick = function(){
+            $('#code').value = JSON.stringify({
+                method: 'dm_set_zigbee_curtain',
+                params: {
+                    cmd: 'setOnoff',
+                    attribute: {
+                        mode: 'on'
+                    }
+                }
+            }, null, 2)
+        }
+        $('#newplat').onclick = function(){
+            $('#code').value = JSON.stringify({
+                method: 'dm_set',
+                nodeid: 'airconditioner.main.temperature',
+                params: {
+                    timer: null,
+                    attribute: {
+                        temperature: 25
+                    }
+                }
+            }, null, 2)
+        }
+        $('#control').onclick = function(){
+            HdSmart.Device.control(JSON.parse($('#code').value), function(data){
+                alert(JSON.stringify(data))
+            },function(){
+                alert('控制失败')
+            })
+        }
+
+    })
+</script>
+</body>
+</html>
