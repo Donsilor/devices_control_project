@@ -16,7 +16,9 @@ export default {
             if(index === names.length-1){
                 fn[method] = function(options){
                     var next = function(response){
-                        options.onListener(JSON.stringify(response))
+                        setTimeout(()=>{
+                            options.onListener(JSON.stringify(response))
+                        },1000)
                     }
                     callback(JSON.parse(options.data), next)
                 }

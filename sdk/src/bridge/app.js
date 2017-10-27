@@ -40,6 +40,7 @@ const iOSCall = (method, data = '', callback = noop) => {
     if(!window.JSBridgeEventHandler) {
         throw new Error('JSBridgeEventHandler is not exist')
     }
+    method = method.replace(/\w+\./,'')
     console.log(`iOS call : ${method}`, data)
     JSBridgeEventHandler.callNativeFunction(method, data, callback)
 }

@@ -48,7 +48,7 @@ export function generateSnapShot() {
 export function set(data){
     let attr = data.params.attr;
     for(var p in attr){
-        res.attr[p] = attr[p];
+        //res.attr[p] = attr[p];
     }
     return Mock.mock({
         code: 0

@@ -19,13 +19,14 @@ export default {
         }
     },
     $on(method, callback){
+        method = method.replace(/\w+\./,'')
         on(method, function(params){
             var callbackName = params.callbackName
             var next = function(response){
                 if(callbackName){
                     setTimeout(()=>{
                         trigger(callbackName, response)
-                    },200)
+                    },1000)
                 }
             }
             callback(params, next)

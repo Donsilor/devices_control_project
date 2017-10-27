@@ -1,9 +1,7 @@
 {
     "tv": {
         "src": "tv",
-        "name": "电视",
-        "mobileSrc": "tv_m",
-        "mock": "tv"
+        "name": "电视"
     },
     "curtains": {
         "src": "curtains",
@@ -11,7 +9,9 @@
     },
     "air_condition": {
         "src": "air_condition",
-        "name": "空调"
+        "name": "空调",
+        "mobileSrc": "air_condition_m",
+        "mock": "air_condition"
     },
     "door_sensor": {
         "src": "door_sensor",
