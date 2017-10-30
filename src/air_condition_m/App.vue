@@ -23,8 +23,6 @@ import PageError from './components/PageError.vue'
 const DefaultSpin = require('./assets/buffering_power_white.gif')
 const BlueSpin = require('./assets/buffering_power_blue.gif')
 
-
-
 export default {
     components: {
         'page-on': PageOn,
