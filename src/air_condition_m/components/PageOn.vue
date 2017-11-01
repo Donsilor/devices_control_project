@@ -65,7 +65,17 @@ const SPEED = ['low', 'normal', 'high']
 const [MIN_TEMP,MAX_TEMP] = [16,30]
 let tempDelay
 export default {
-    props: ['control','device','ac'],
+    props: {
+        control: {
+            type: Function
+        },
+        device: {
+            type: Object
+        },
+        ac: {
+            type: Object
+        }
+    },
     data() {
         return {
             temperature: this.ac.temperature,

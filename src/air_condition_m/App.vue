@@ -56,14 +56,17 @@ export default {
                 return
             }
             this.removeSpin()
-            this.spinner = document.createElement('img')
-            this.spinner.style.width = '100%'
-            this.spinner.style.height = '100%'
-            this.spinner.src = style==='blue' ? BlueSpin : DefaultSpin
-            this.loadingEl = ele
-            this.loadingEl.appendChild(this.spinner)
+            this.loadingDelay = setTimeout(()=>{
+                this.spinner = document.createElement('img')
+                this.spinner.style.width = '100%'
+                this.spinner.style.height = '100%'
+                this.spinner.src = style==='blue' ? BlueSpin : DefaultSpin
+                this.loadingEl = ele
+                this.loadingEl.appendChild(this.spinner)
+            }, 600)
         },
         removeSpin() {
+            clearTimeout(this.loadingDelay)
             if(this.spinner){
                 this.loadingEl.removeChild(this.spinner)
                 this.spinner = null
@@ -144,6 +147,7 @@ body{
 }
 a{
     outline: none;
+    -webkit-tap-highlight-color:transparent;
 }
 body,.wrap,.wrap-off,.wrap-on,.wrap-error{
     height: 100%;

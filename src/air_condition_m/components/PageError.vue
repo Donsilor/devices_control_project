@@ -7,6 +7,16 @@
   </div>
 </template>
 
+<script>
+export default {
+    props: {
+        reload: {
+            type: Function
+        }
+    }
+}
+</script>
+
 <style lang="less" scoped>
 .wrap-error{
     position: relative;
@@ -30,11 +40,3 @@
     }
 }
 </style>
-
-
-<script>
-export default {
-    props: ['reload']
-}
-</script>
-

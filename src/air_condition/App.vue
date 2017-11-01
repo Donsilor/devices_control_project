@@ -449,7 +449,7 @@
                     method: 'dm_set',
                     nodeid: NODE_ID + type,
                     params: {
-                        attr: attr
+                        attribute: attr
                     }
                 },
                 //HdSmart.Device.instruct('dm_set', NODE_ID + type, attr,
@@ -513,7 +513,7 @@
                     method: 'set',
                     nodeid: NODE_ID + POWER,
                     params: {
-                        attr: attr
+                        attribute: attr
                     }
                 },
                 //HdSmart.Device.instruct('set', NODE_ID + POWER, attr,

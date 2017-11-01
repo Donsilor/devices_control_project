@@ -18,7 +18,14 @@
 
 <script>
 export default {
-    props: ['control','device'],
+    props: {
+        control: {
+            type: Function
+        },
+        device: {
+            type: Object
+        }
+    },
     methods: {
         setOn(event) {
             this.control('switch', 'on', event.target)
