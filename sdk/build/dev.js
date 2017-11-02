@@ -36,4 +36,4 @@ function createConfig(entry, outputName){
     }
 }
 
-module.exports = createConfig('src/index.js', 'hdsmart.js')
+module.exports = createConfig('src/debug.js', 'hdsmart.debug.js')

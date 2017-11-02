@@ -5,9 +5,10 @@
   "author": "chenjiancai <chenjiancai1988@163.com>",
   "private": true,
   "scripts": {
-    "dev": "node build/server.js",
-    "build": "webpack -p --config build/app.js",
-    "watch": ""
+    "start": "node build/server.js",
+    "dev": "webpack --config build/dev.js --watch",
+    "build:debug": "webpack --config build/dev.js -p",
+    "build": "webpack --config build/app.js -p"
   },
   "dependencies": {
     "express": "^4.16.2",
