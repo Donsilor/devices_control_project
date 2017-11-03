@@ -15,7 +15,7 @@
     <a href="#" class="btn-minus" @click.prevent="setTemperature(-1, $event)"></a>
     <a href="#" class="btn-add" @click.prevent="setTemperature(1, $event)"></a>
 
-    <a href="#" class="btn-off" @click.prevent="setOff($event)" v-show="!toggle"></a>
+    <a href="#" class="btn-off" @click.prevent="setOff($event)" :class="{'btn-off-toggle':toggle}"></a>
 
     <div class="btns">
         <a href="#" class="btn-toggle" :class="{'btn-toggle-more':toggle}"  @click.prevent="showMore()"></a>
@@ -32,26 +32,28 @@
                 <a href="#" class="btn-dehumidify" :class="{on:ac.mode==='dehumidify'}" @click.prevent="setMode('dehumidify', $event)"></a>
                 除湿
             </li>
-            <li class="on">
+            <li :class="{'on':ac.speed==='low'||ac.speed==='normal'||ac.speed==='high'}">
                 <a href="#" class="btn-speed" :class="{'btn-s1':ac.speed==='low','btn-s2':ac.speed==='normal','btn-s3':ac.speed==='high'}" @click.prevent="setSpeed($event)"></a>
                 <span v-show="ac.speed==='low'">低</span>
                 <span v-show="ac.speed==='normal'">中</span>
                 <span v-show="ac.speed==='high'">高</span>
-                <span v-show="ac.speed==='auto'">自动</span>
+                <span v-show="ac.speed!=='low'&&ac.speed!=='normal'&&ac.speed!=='high'">风速</span>
             </li>
-            <li v-show="toggle" :class="{on:ac.mode==='auto'}">
+        </ul>
+        <ul class="btns-ul" :class="{'btns-ul-toggle':toggle}">
+            <li :class="{on:ac.mode==='auto'}">
                 <a href="#" class="btn-auto" :class="{on:ac.mode==='auto'}" @click.prevent="setMode('auto', $event)"></a>
                 智能
             </li>
-            <li v-show="toggle" :class="{on:ac.mode==='wind'}">
+            <li :class="{on:ac.mode==='wind'}">
                 <a href="#" class="btn-wind" :class="{on:ac.mode==='wind'}" @click.prevent="setMode('wind', $event)"></a>
                 送风
             </li>
-            <li v-show="toggle" :class="{on:ac.wind_up_down==='on'}">
+            <li :class="{on:ac.wind_up_down==='on'}">
                 <a href="#" class="btn-vertical" :class="{on:ac.wind_up_down==='on'}" @click.prevent="setWind('wind_up_down', $event)"></a>
                 上下
             </li>
-            <li v-show="toggle" :class="{on:ac.wind_left_right==='on'}">
+            <li :class="{on:ac.wind_left_right==='on'}">
                 <a href="#" class="btn-horizontal" :class="{on:ac.wind_left_right==='on'}" @click.prevent="setWind('wind_left_right', $event)"></a>
                 左右
             </li>
@@ -202,25 +204,40 @@ export default {
     left: 50%;
     width: 144px;
     height: 144px;
-    transform: translateX(-50%);
+    margin-left: -72px;
     background-size: 100% 100%;
     background-repeat: no-repeat;
     top: 600px;
     background-image: url(../assets/btn_aircon_poweroff_normal@2x.png);
+    transition: all 1s;
     &:active {
         background-image: url(../assets/btn_aircon_poweroff_pressed@2x.png);
     }
+    &-toggle{
+        transform: scale(0.2);
+        opacity: 0;
+    }
 }
 .btns{
-    // display: flex;
-    // justify-content: space-around;
-    // align-items: center;
     position: absolute;
     left: 50%;
-    bottom: 116px;
+    bottom: 100px;
     width: 750px;
     transform: translateX(-50%);
     padding: 0 35px;
+    .btns-ul{
+        height:0px;
+        opacity: 0;
+        transition: all 1s;
+        overflow: hidden;
+        &-toggle{
+            height: 200px;
+            opacity: 1;
+        }
+    }
+    ul{
+        clear: both;
+    }
     li{
         float: left;
         margin: 0 25px;
@@ -243,12 +260,16 @@ export default {
 .btn-toggle{
     position: absolute;
     left: 50%;
-    transform: translate(-50%,-66px);
+    // transform: translate(-50%,-66px);
     width: 40px !important;
     height: 40px !important;
+    margin-top: -66px;
+    margin-left: -20px;
+    transition: transform 1s;
     background-image: url(../assets/btn_unfold@2x.png);
     &-more{
-        background-image: url(../assets/btn_collapse@2x.png);
+        // background-image: url(../assets/btn_collapse@2x.png);
+        transform: rotate(180deg)
     }
 }
 .btn-cold{
@@ -276,6 +297,12 @@ export default {
     }
     &.on{
         background-image: url(../assets/btn_aircon_dry_active@2x.png);
+    }
+}
+.btn-speed{
+    background-image: url(../assets/btn_airvolume_auto_normal@2x.png);
+    &:active{
+        background-image: url(../assets/btn_airvolume_auto_pressed@2x.png);
     }
 }
 .btn-s1{

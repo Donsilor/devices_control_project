@@ -31,7 +31,7 @@ export default {
         }, options)
 
         if(options.nodeid){
-            dataOptions.token = getToken()
+            //dataOptions.token = getToken()
         }
 
         dataOptions.params.device_uuid = getDeviceUUID()

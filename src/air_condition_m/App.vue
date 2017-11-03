@@ -39,15 +39,8 @@ export default {
                 'speed': '', //low,normal,high,auto
                 'wind_up_down': '', //on,off
                 'wind_left_right': '', //on,off
-            }
-        }
-    },
-    computed: {
-        device() {
-            return {
-                name: window.device_name,
-                category_id: window.device_category_id
-            }
+            },
+            device: {}
         }
     },
     methods: {
@@ -109,6 +102,10 @@ export default {
         },
         init() {
             HdSmart.ready(()=>{
+                this.device = {
+                    name: window.device_name,
+                    category_id: window.device_category_id
+                }
                 HdSmart.UI.showLoading()
                 HdSmart.Device.getSnapShot((res)=>{
                     HdSmart.UI.hideLoading()
@@ -149,8 +146,12 @@ a{
     outline: none;
     -webkit-tap-highlight-color:transparent;
 }
-body,.wrap,.wrap-off,.wrap-on,.wrap-error{
+.wrap-off,.wrap-on,.wrap-error{
     height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 </style>
 
