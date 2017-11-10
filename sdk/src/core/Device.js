@@ -35,6 +35,7 @@ export default {
         }
 
         dataOptions.params.device_uuid = getDeviceUUID()
+        dataOptions.params.user_id = window.user_id
 
         // 设置timer
         let isTimeout = false
