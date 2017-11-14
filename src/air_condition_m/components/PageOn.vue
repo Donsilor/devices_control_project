@@ -65,7 +65,7 @@
 <script>
 const SPEED = ['low', 'normal', 'high']
 const [MIN_TEMP,MAX_TEMP] = [16,30]
-let tempDelay
+let tempDelay,tempFlag
 export default {
     props: {
         control: {
@@ -85,6 +85,11 @@ export default {
         }
     },
     methods: {
+        syncTemp() {
+            if(tempFlag){
+                this.temperature = this.ac.temperature
+            }
+        },
         setOff(event) {
             this.control('switch', 'off', event.target)
         },
@@ -100,7 +105,9 @@ export default {
             }
             this.temperature += val
             clearTimeout(tempDelay)
+            tempFlag = false
             tempDelay = setTimeout(()=>{
+                tempFlag = true
                 this.control('temperature', this.temperature, event.target, (data)=>{},()=>{
                     this.temperature = this.ac.temperature
                 })
@@ -214,7 +221,7 @@ export default {
         background-image: url(../assets/btn_aircon_poweroff_pressed@2x.png);
     }
     &-toggle{
-        transform: scale(0.2);
+        transform: scale(0);
         opacity: 0;
     }
 }
@@ -261,12 +268,14 @@ export default {
     position: absolute;
     left: 50%;
     // transform: translate(-50%,-66px);
-    width: 40px !important;
-    height: 40px !important;
-    margin-top: -66px;
-    margin-left: -20px;
+    width: 60px !important;
+    height: 60px !important;
+    margin-top: -80px;
+    margin-left: -30px;
     transition: transform 1s;
     background-image: url(../assets/btn_unfold@2x.png);
+    background-size: 40px 40px !important;
+    background-position: center center;
     &-more{
         // background-image: url(../assets/btn_collapse@2x.png);
         transform: rotate(180deg)

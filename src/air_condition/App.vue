@@ -305,7 +305,11 @@
                         }
                         else{
                             if(this.initComplete){
-                                that.setState(data.result.attribute);
+                                if(data.method === 'dm_set'){
+                                    if(data.code !==0) that.init()
+                                }else{
+                                    that.setState(data.result.attribute);
+                                }
                             }
                         }
                     }

@@ -4,7 +4,8 @@
         v-if="status==='SUCCESS' && ac.switchStatus==='on'"
         :control="controlDevice"
         :device="device"
-        :ac="ac" />
+        :ac="ac"
+        ref="airon" />
     <page-off
         v-if="status==='SUCCESS' && ac.switchStatus==='off'"
         :control="controlDevice"
@@ -102,28 +103,42 @@ export default {
         },
         init() {
             HdSmart.ready(()=>{
+                HdSmart.UI.showLoading()
                 this.device = {
                     name: window.device_name,
                     category_id: window.device_category_id
                 }
-                HdSmart.UI.showLoading()
-                HdSmart.Device.getSnapShot((res)=>{
-                    HdSmart.UI.hideLoading()
-                    this.status = 'SUCCESS'
-                    this.setAttr(res.attribute)
-                },()=>{
-                    HdSmart.UI.hideLoading()
-                    this.status = 'ERROR'
-                })
+                this.getSnapShot()
+            })
+        },
+        getSnapShot() {
+            HdSmart.Device.getSnapShot((res)=>{
+                HdSmart.UI.hideLoading()
+                this.status = 'SUCCESS'
+                this.setAttr(res.attribute)
+            },()=>{
+                HdSmart.UI.hideLoading()
+                this.status = 'ERROR'
             })
         }
     },
     created() {
         HdSmart.onDeviceListen((res)=>{
-            if(this.status === 'ERROR'){
-                this.status = 'SUCCESS'
+            switch (res.method) {
+                case 'dr_report_dev_status':
+                    if(this.status === 'ERROR'){
+                        this.status = 'SUCCESS'
+                    }
+                    this.setAttr(res.result.attribute)
+                    this.$refs.airon.syncTemp()
+                    break
+                case 'dm_set':
+                    if(res.code !== 0){
+                        this.getSnapShot()
+                    }
+                    break
+                default: break
             }
-            this.setAttr(res.result.attribute)
         })
         this.init()
     }
