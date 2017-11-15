@@ -65,7 +65,7 @@
 <script>
 const SPEED = ['low', 'normal', 'high']
 const [MIN_TEMP,MAX_TEMP] = [16,30]
-let tempDelay,tempFlag
+let tempDelay, tempFlag = true
 export default {
     props: {
         control: {

@@ -125,19 +125,18 @@ export default {
     created() {
         HdSmart.onDeviceListen((res)=>{
             switch (res.method) {
-                case 'dr_report_dev_status':
+                case 'dm_set':
+                    if(res.code !== 0){
+                        this.getSnapShot()
+                    }
+                    break
+                default:
                     if(this.status === 'ERROR'){
                         this.status = 'SUCCESS'
                     }
                     this.setAttr(res.result.attribute)
                     this.$refs.airon.syncTemp()
                     break
-                case 'dm_set':
-                    if(res.code !== 0){
-                        this.getSnapShot()
-                    }
-                    break
-                default: break
             }
         })
         this.init()

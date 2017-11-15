@@ -19,7 +19,6 @@ export default {
 
 <style lang="less" scoped>
 .wrap-error{
-    position: relative;
     background:#f2f2f2;
 }
 .error-tip{

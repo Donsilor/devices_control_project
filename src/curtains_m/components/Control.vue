@@ -176,12 +176,12 @@
                 }
             },
             onGo (target_percentage){
-                return () => {
+                //return () => {
                     if (!this.is_ready) return false;
                     this.stopLoading();
                     this.target_percentage = target_percentage;
                     this.$emit('onGoPercentage', target_percentage);
-                }
+                //}
             }
         }
     }
