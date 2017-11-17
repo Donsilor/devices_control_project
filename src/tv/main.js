@@ -22,6 +22,7 @@ import Detail from './components/Detail.vue'
 import Topbar from './components/Topbar.vue'
 import ErrorView from './components/Error.vue'
 //import Statusbar from './components/Statusbar.vue'
+import watermark from '../../lib/watermark'
 
 Vue.use(Router)
 Vue.use(VueAwesomeSwiper)
@@ -100,6 +101,10 @@ HdSmart.ready(() => {
       template: '<App />',
       components: { App }
     });
+
+    watermark()
+    watermark({el:'.page-index2'})
+    watermark({el:'.page-detail'})
 
   }
 

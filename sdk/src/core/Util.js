@@ -33,6 +33,12 @@ export default {
                 }
             }
 
+            if(data.code === 505){
+                error = {
+                    errormsg: tipMsg.e505
+                }
+            }
+
             callback && callback(error, data)
 
         }, false)

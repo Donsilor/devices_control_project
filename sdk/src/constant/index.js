@@ -23,5 +23,6 @@ export const apiList = {
 export const tipMsg = {
     timeout: '请求超时',
     e504: '网络错误',
+    e505: '设备离线',
     jsonerr: 'JSON解析错误',
 }

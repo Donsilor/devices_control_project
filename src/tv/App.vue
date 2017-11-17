@@ -12,27 +12,28 @@
         -webkit-user-select: none;
         user-select: none;
     }
-    a{  
+    a{
         text-decoration: none;
     }
     ul{
         list-style: none;
     }
-    .clearfix:after{  
+    .clearfix:after{
         content: ".";
         display: block;
         height: 0;
         clear: both;
-        visibility: hidden; 
+        visibility: hidden;
     }
-    html{   
-        padding-bottom: 2px;  
+    html{
+        padding-bottom: 2px;
     }
-    body{   
+    body{
         overflow-x: hidden;
         background: #fafafa;
+        height: 100%;
     }
-    body,input{ 
+    body,input{
         font-family: NotoSansHans-Medium;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -47,10 +48,10 @@
     /* .slide-fade-leave-active for <2.1.8 */ {
         transform: translate3d(100%,0,0);
     }
-    .page-list,.page-search{   
+    .page-list,.page-search{
         padding-bottom: 180px;
     }
-    .detail-bd{ 
+    .detail-bd{
         padding-bottom: 360px;
     }
-</style> 
+</style>

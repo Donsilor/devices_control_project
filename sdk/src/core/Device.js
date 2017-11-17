@@ -84,7 +84,7 @@ export default {
     getSnapShot (onSuccess, onFailure){
         bridge.send(apiList.device_getsnapshot, '', (data) => {
             if (data.code === 0){
-                onSuccess(data.result, data.timestamp || data.result.timestamp)
+                onSuccess(data.result)
             } else {
                 onFailure(data)
             }

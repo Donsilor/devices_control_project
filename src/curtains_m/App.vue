@@ -88,15 +88,17 @@
             HdSmart.ready(() => {
                 //获取快照
                 HdSmart.Device.getSnapShot((data) => {
-                    //4500为当前窗帘动画的总时间为hard code，后续版本需要从服务端获取
-                    this.total_time = 4500;
-                    this.open_percentage = data.attribute.open_percentage;
-//                    this.open_percentage = data.attribute.close_percentage;
-                    //更新每帧百分比
-                    this.changeRafPercent();
-                    this.animateToTargetPercentage(this.open_percentage, true);
-                    this.is_ready = true;
-                    HdSmart.UI.hideLoading();
+                    if(data && data.attribute){
+                        //4500为当前窗帘动画的总时间为hard code，后续版本需要从服务端获取
+                        this.total_time = 4500;
+                        this.open_percentage = data.attribute.open_percentage;
+    //                    this.open_percentage = data.attribute.close_percentage;
+                        //更新每帧百分比
+                        this.changeRafPercent();
+                        this.animateToTargetPercentage(this.open_percentage, true);
+                        this.is_ready = true;
+                        HdSmart.UI.hideLoading();
+                    }
                 }, () => {
                     this.is_ready = true;
                     HdSmart.UI.hideLoading();

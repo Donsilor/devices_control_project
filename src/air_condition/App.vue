@@ -131,6 +131,8 @@
 
     import {getDeviceName, getDeviceCategory} from '../../sdk/src/helper.js';
 
+    //import watermark from '../../lib/watermark'
+
     const [MIN_TEMP, MAX_TEMP] = [16, 30];
     const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] =
         ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
@@ -291,27 +293,19 @@
         created: function () {
             let that = this;
             HdSmart.ready(() => {
+
+                //watermark({el:'#app'})
+
                 that.deviceName = getDeviceName();
                 that.deviceCategory = getDeviceCategory();
                 that.init();
 
                 //监听设备状态report
                 HdSmart.onDeviceListen((data) => {
-                    console.log('report: ' + JSON.stringify(data));
-                    if(data.result){
-                        if(this.initErr){
-                            //初始化失败之后的第一次report，重新获取快照
-                            that.init();
-                        }
-                        else{
-                            if(this.initComplete){
-                                if(data.method === 'dm_set'){
-                                    if(data.code !==0) that.init()
-                                }else{
-                                    that.setState(data.result.attribute);
-                                }
-                            }
-                        }
+                    if(data.method === 'dm_set'){
+                        if(data.code !==0) that.init()
+                    }else{
+                        that.onSuccess(data.result)
                     }
                 })
             });
@@ -319,22 +313,31 @@
         methods: {
             //初始化，获取设备快照
             init(){
-                HdSmart.Device.getSnapShot(
-                    (data) => {
-                        this.setState(data.attribute);
-                        setWebView();
-                        this.initComplete = true;
-                    },
-                    () => {
-                        this.initErr = true;
-                        setWebView();
-                        this.initComplete = true;
-                    });
+                HdSmart.Device.getSnapShot((data) => {
+                    setWebView();
+                    this.onSuccess(data)
+                },() => {
+                    setWebView();
+                    this.onError()
+                });
 
                 function setWebView(){
                     HdSmart.UI.hideLoading();
-                    HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
                 }
+            },
+            onSuccess(data) {
+                if(data && data.attribute){
+                    //设备故障
+                    if(data.attribute.operation === 'abnormal'){
+                        this.onError()
+                    }else{
+                        this.initErr = false;
+                        this.setState(data.attribute);
+                    }
+                }
+            },
+            onError() {
+                this.initErr = true;
             },
             //设置全量状态
             setState(attr){//设置空调状态
@@ -342,8 +345,6 @@
 //                    alert('attr---' + undefined)
                     return;
                 }
-
-                this.initErr = false;
 
                 if(attr.switchStatus != undefined){
                     this.params.switch = attr.switchStatus;

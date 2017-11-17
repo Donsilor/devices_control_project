@@ -2,17 +2,17 @@
     首页
 -->
 <template>
-<div class="page-index">
+<div class="page-index"><div class="page-index2">
     <div class="grid" v-once>
         <div class="span1">
             <div class="swiper">
                 <swiper :options="swiperOption" ref="swiper">
-                    <swiper-slide 
-                        v-for="item in homePageInfo" 
+                    <swiper-slide
+                        v-for="item in homePageInfo"
                         :key="item.vid">
                         <a href="#"
                             :style="{backgroundImage:'url('+item.pictureUrl+')'}"
-                            @click.prevent="showDetailInfo(item.channelId,item.vid)"> 
+                            @click.prevent="showDetailInfo(item.channelId,item.vid)">
                             <span class="title">{{item.title}}</span>
                         </a>
                     </swiper-slide>
@@ -26,16 +26,16 @@
             <a href="#" @click.prevent="cmd('remoteControlEvent')" class="item item-ykq">遥控器</a>
         </div>
         <div class="span3">
-            <router-link 
-                v-for="item in channels" 
+            <router-link
+                v-for="item in channels"
                 :key="item.channelId"
-                :to="{ 
+                :to="{
                     name: 'list',
-                    query: {    
+                    query: {
                         channelId: item.channelId,
                         channel: item.channel
                     }
-                }" 
+                }"
                 :class="['item-'+item.channelId]"
                 class="item"
             >{{item.channel}}</router-link>
@@ -50,20 +50,27 @@
     </div>
     <!-- 详情页 -->
     <detail :vid="vid" :channel-id="channelId" @onClose="onDetailClose" ref="detail"></detail>
-</div>
+</div></div>
 </template>
 
 <style lang="less">
-    .page-index{    
+    .page-index{
         background:#f2f2f2;
         background-image:linear-gradient(0deg, rgba(200,202,204,0.00) 50%, #c8cacc 100%);
         width: 100%;
-        height: 100%; 
+        height: 100%;
         position: fixed;
         left: 0;
         top: 0;
     }
-    .grid{  
+    .page-index2{
+        position: absolute;
+        left: 0;
+        top:0;
+        width: 100%;
+        height: 100%;
+    }
+    .grid{
         left: 50%;
         top: 50%;
         position: absolute;
@@ -77,14 +84,14 @@
             border-radius: 6px;
             overflow: hidden;
         }
-        .span2{ 
+        .span2{
             float: right;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             width: 332px;
             height: 500px;
-            .item{  
+            .item{
                 width: 332px;
                 height: 160px;
                 line-height: 160px;
@@ -93,7 +100,7 @@
                 font-size: 36px;
             }
         }
-        .span3{ 
+        .span3{
             clear: left;
             padding-top: 12px;
             display: flex;
@@ -113,13 +120,13 @@
             padding-right: 48px;
             color:#fff;
         }
-        .item-search{   
+        .item-search{
             background-image: url(../assets/icn_tv_search.png);
         }
-        .item-tp{   
+        .item-tp{
             background-image: url(../assets/icn_tv_sync.png);
         }
-        .item-ykq{  
+        .item-ykq{
             background-image: url(../assets/icn_tv_remote.png);
         }
         .item-001{
@@ -140,12 +147,12 @@
         }
     }
     .swiper {
-        .swiper-slide{  
+        .swiper-slide{
             width: 1020px;
             height: 500px;
             background: url(../assets/img_default_recommend.png) no-repeat;
             background-size: 100%;
-        } 
+        }
         a{
             display: block;
             width: 1020px;
@@ -159,7 +166,7 @@
             width: 100%;
             border-radius: 6px;
         }
-        .title{ 
+        .title{
             border-radius:0 0 6px 6px;
             position: absolute;
             left: 0;
@@ -173,26 +180,26 @@
             background-image:linear-gradient(-180deg, rgba(47,49,51,0.00) 0%, #2f3133 100%);
             box-sizing: border-box;
         }
-        .swiper-container-horizontal > .swiper-pagination-bullets{ 
+        .swiper-container-horizontal > .swiper-pagination-bullets{
             width: auto;
             left: auto;
             right: 35px;
             bottom: 23px;
         }
-        .swiper-pagination-bullet{  
+        .swiper-pagination-bullet{
             width: 23px;
             height: 6px;
             opacity: .5;
             background: #fff;
             border-radius: 1.5px;
         }
-        .swiper-pagination-bullet-active{  
+        .swiper-pagination-bullet-active{
             background: #13d5dc
         }
     }
     /* 强制关闭3d(详情页改成不透明了) */
     /*
-    .swiper-container-android .swiper-slide, .swiper-wrapper{   
+    .swiper-container-android .swiper-slide, .swiper-wrapper{
         transform: translate(0, 0);
     }
     .swiper-pagination{
@@ -209,7 +216,7 @@
         justify-content: space-between;
         height: 700px;
         margin-top: -60px;
-        a{  
+        a{
             display: block;
             width: 144px;
             height: 144px;
@@ -217,39 +224,39 @@
             background-color: #fff;
             border-radius: 144px;
         }
-        .home{  
+        .home{
             background-image: url(../assets/btn_remote_home_normal.png);
-            &:active{   
+            &:active{
                 background-image: url(../assets/btn_remote_home_pressed.png);
             }
         }
-        .back{  
+        .back{
             background-image: url(../assets/btn_remote_back_normal.png);
-            &:active{   
+            &:active{
                 background-image: url(../assets/btn_remote_back_pressed.png);
             }
         }
-        .volup{ 
+        .volup{
             background-image: url(../assets/btn_remote_volumeup_normal.png);
-            &:active{   
+            &:active{
                 background-image: url(../assets/btn_remote_volumeup_pressed.png);
             }
         }
-        .voldown{   
+        .voldown{
             background-image: url(../assets/btn_remote_volumedown_normal.png);
-            &:active{   
+            &:active{
                 background-image: url(../assets/btn_remote_volumedown_pressed.png);
             }
         }
-        .shut{  
+        .shut{
             background-image: url(../assets/btn_remote_power_normal.png);
-            &:active{   
+            &:active{
                 background-image: url(../assets/btn_remote_power_pressed.png);
             }
         }
     }
 
-    .grid{  
+    .grid{
         margin-left: -90px;
     }
     .control{
@@ -289,7 +296,7 @@
                 HdSmart.UI.toggleHeadAndFoot(false)
                 this.$refs.swiper.swiper.stopAutoplay()
             },
-            onDetailClose(){    
+            onDetailClose(){
                 HdSmart.UI.toggleHeadAndFoot(true)
                 this.$refs.swiper.swiper.startAutoplay()
             }

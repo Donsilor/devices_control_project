@@ -85,6 +85,7 @@ export default {
         }
     },
     methods: {
+        //同步
         syncTemp() {
             if(tempFlag){
                 this.temperature = this.ac.temperature
@@ -109,7 +110,7 @@ export default {
             tempDelay = setTimeout(()=>{
                 tempFlag = true
                 this.control('temperature', this.temperature, event.target, (data)=>{},()=>{
-                    this.temperature = this.ac.temperature
+                    this.syncTemp()
                 })
             },300)
         },

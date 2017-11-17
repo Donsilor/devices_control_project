@@ -114,12 +114,27 @@ export default {
         getSnapShot() {
             HdSmart.Device.getSnapShot((res)=>{
                 HdSmart.UI.hideLoading()
-                this.status = 'SUCCESS'
-                this.setAttr(res.attribute)
+                this.onSuccess(res)
             },()=>{
                 HdSmart.UI.hideLoading()
-                this.status = 'ERROR'
+                this.onError()
             })
+        },
+        onSuccess(data) {
+            if(data && data.attribute){
+                if(data.attribute.operation === 'abnormal'){
+                    this.onError()
+                }else{
+                    this.status = 'SUCCESS'
+                    this.setAttr(data.attribute)
+                    this.$nextTick(()=>{
+                        this.$refs.airon.syncTemp()
+                    })
+                }
+            }
+        },
+        onError() {
+            this.status = 'ERROR'
         }
     },
     created() {
@@ -131,11 +146,7 @@ export default {
                     }
                     break
                 default:
-                    if(this.status === 'ERROR'){
-                        this.status = 'SUCCESS'
-                    }
-                    this.setAttr(res.result.attribute)
-                    this.$refs.airon.syncTemp()
+                    this.onSuccess(res.result)
                     break
             }
         })

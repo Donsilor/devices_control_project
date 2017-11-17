@@ -20,10 +20,10 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        background-image: linear-gradient(-180deg, #2499ff 0%, #13d5dc 100%);
     }
 
     #app {
-        background-image: linear-gradient(-180deg, #2499ff 0%, #13d5dc 100%);
         position: absolute;
         left: 0;
         right: 0;
@@ -58,7 +58,10 @@
     }
 </style>
 <script>
+    //import watermark from '../../lib/watermark'
+
     const [METHOD, CMD_SWITCH, CMD_RANGE] = ['dm_set_zigbee_curtain', 'setOnoff', 'setLevel'];
+
     export default {
         name: 'app',
         data() {
@@ -92,17 +95,19 @@
         },
         mounted() {
             HdSmart.ready(() => {
+                //watermark({el:'#app'})
                 //获取快照
                 HdSmart.Device.getSnapShot((data) => {
-                    //4500为当前窗帘动画的总时间为hard code，后续版本需要从服务端获取
-                    this.total_time = 4500;
-                    this.open_percentage = data.attribute.open_percentage;
-//                    this.open_percentage = data.attribute.close_percentage;
-                    //更新每帧百分比
-                    this.changeRafPercent();
-                    this.animateToTargetPercentage(this.open_percentage, true);
-                    this.is_ready = true;
-                    HdSmart.UI.hideLoading();
+                    if(data && data.attribute){
+                        //4500为当前窗帘动画的总时间为hard code，后续版本需要从服务端获取
+                        this.total_time = 4500;
+                        this.open_percentage = data.attribute.open_percentage;
+                        //更新每帧百分比
+                        this.changeRafPercent();
+                        this.animateToTargetPercentage(this.open_percentage, true);
+                        this.is_ready = true;
+                        HdSmart.UI.hideLoading();
+                    }
                 }, () => {
                     this.is_ready = true;
                     HdSmart.UI.hideLoading();
