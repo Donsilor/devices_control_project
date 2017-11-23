@@ -131,7 +131,7 @@
 
     import {getDeviceName, getDeviceCategory} from '../../sdk/src/helper.js';
 
-    //import watermark from '../../lib/watermark'
+    import watermark from '../../lib/watermark'
 
     const [MIN_TEMP, MAX_TEMP] = [16, 30];
     const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] =
@@ -294,10 +294,10 @@
             let that = this;
             HdSmart.ready(() => {
 
-                //watermark({el:'#app'})
+                if(process.env.w){
+                    watermark({el:'#app'})
+                }
 
-                that.deviceName = getDeviceName();
-                that.deviceCategory = getDeviceCategory();
                 that.init();
 
                 //监听设备状态report
@@ -333,6 +333,10 @@
                     }else{
                         this.initErr = false;
                         this.setState(data.attribute);
+                        if(!this.deviceName){
+                            this.deviceName = data.device_name;
+                            this.deviceCategory = data.attribute.deviceSubCategory;
+                        }
                     }
                 }
             },

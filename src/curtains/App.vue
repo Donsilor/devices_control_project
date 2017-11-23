@@ -58,7 +58,7 @@
     }
 </style>
 <script>
-    //import watermark from '../../lib/watermark'
+    import watermark from '../../lib/watermark'
 
     const [METHOD, CMD_SWITCH, CMD_RANGE] = ['dm_set_zigbee_curtain', 'setOnoff', 'setLevel'];
 
@@ -94,7 +94,9 @@
         },
         mounted() {
             HdSmart.ready(() => {
-                //watermark({el:'#app'})
+                if(process.env.w){
+                    watermark({el:'#app'})
+                }
                 //获取快照
                 HdSmart.Device.getSnapShot((data) => {
                     HdSmart.UI.hideLoading();

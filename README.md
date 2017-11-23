@@ -1,43 +1,13 @@
-### sdk js-sdk
+### 编译说明
 ```
-    npm run dev:sdk //开发
-    npm run build:sdk //编译
-```
-### curtains 窗帘
-```
-    npm run dev:curtains //开发
-    npm run build:curtains //编译
-```
+npm run dev 产品名 参数
+npm run build 产品名 参数
 
-### door_sensor 门窗传感器
-```
-    npm run dev:door_sensor //开发
-    npm run build:door_sensor //编译
-```
+产品名在products.json配置
 
-
-### human_sensor 人体传感器
-```
-    npm run dev:human_sensor //开发
-    npm run build:human_sensor //编译
-```
-
-### humiture 温湿度传感器
-```
-    npm run dev:humiture //开发
-    npm run build:humiture //编译
-```
-
-### air_condition 空调
-```
-    npm run dev:ac //开发
-    npm run build:air_condition //编译
-```
-
-### tv 电视
-```
-    npm run dev:tv //开发
-    npm run build:tv //编译
+参数列表
+-m 移动端页面
+-w 添加水印
 ```
 
 ### history

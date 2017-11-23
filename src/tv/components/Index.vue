@@ -3,10 +3,13 @@
 -->
 <template>
 <div class="page-index"><div class="page-index2">
-    <div class="grid" v-once>
+    <div class="grid">
         <div class="span1">
             <div class="swiper">
-                <swiper :options="swiperOption" ref="swiper">
+                <div v-if="homePageInfo.length === 0" @click="pageInit">
+                    <img src="../assets/img_default_recommend.png">
+                </div>
+                <swiper v-if="homePageInfo.length > 0" :options="swiperOption" ref="swiper">
                     <swiper-slide
                         v-for="item in homePageInfo"
                         :key="item.vid">
@@ -281,7 +284,7 @@
                     pagination: '.swiper-pagination',
                     //lazyLoading: true
                 },
-                //初始化数据，由app首次加载注入
+                homePageInfo: [],
                 ...service.getInitData()
             }
         },
@@ -289,17 +292,25 @@
             cmd(name) {
                 service.onClickEvent(name)
             },
-            showDetailInfo(channelId, vid) {
+            showDetailInfo (channelId, vid) {
                 this.channelId = channelId
                 this.vid = vid
                 this.$refs.detail.visible = true
                 HdSmart.UI.toggleHeadAndFoot(false)
                 this.$refs.swiper.swiper.stopAutoplay()
             },
-            onDetailClose(){
+            onDetailClose() {
                 HdSmart.UI.toggleHeadAndFoot(true)
                 this.$refs.swiper.swiper.startAutoplay()
+            },
+            pageInit() {
+                service.getHomePageInfo(data=>{
+                    this.homePageInfo = Object.freeze(data)
+                })
             }
+        },
+        mounted () {
+            this.pageInit()
         }
     }
 </script>

@@ -104,10 +104,6 @@ export default {
         init() {
             HdSmart.ready(()=>{
                 HdSmart.UI.showLoading()
-                this.device = {
-                    name: window.device_name,
-                    category_id: window.device_category_id
-                }
                 this.getSnapShot()
             })
         },
@@ -130,6 +126,12 @@ export default {
                     this.$nextTick(()=>{
                         this.$refs.airon.syncTemp()
                     })
+                    if(!this.device.name){
+                        this.device = {
+                            name: data.device_name,
+                            category_id: data.attribute.deviceSubCategory
+                        }
+                    }
                 }
             }
         },

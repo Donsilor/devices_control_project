@@ -34,7 +34,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     plugins: [
         // http://vuejs.github.io/vue-loader/en/workflow/production.html
         new webpack.DefinePlugin({
-            'process.env': env
+            'process.env': merge(util.getBuildArgs(),config.dev.env)
         }),
         new UglifyJSPlugin(),
         // extract css into its own file

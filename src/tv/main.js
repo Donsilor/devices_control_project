@@ -1,11 +1,3 @@
-/**
-   * TODO:
-   * 1、播放记录 playRecords （3种场景需要记录：1点播，2自动播放，3遥控器播放），记录格式暂定如下：
-   * [{vid:"",index:1,playing:false}]
-   * 2、播放状态 playStateChange
-   * 3、动画，webview性能问题，暂取消
-   */
-
 import Vue from 'vue'
 import Router from 'vue-router'
 //import Vuex from 'vuex'
@@ -102,9 +94,11 @@ HdSmart.ready(() => {
       components: { App }
     });
 
-    watermark()
-    watermark({el:'.page-index2'})
-    watermark({el:'.page-detail'})
+    if(process.env.w){
+        watermark()
+        watermark({el:'.page-index2'})
+        watermark({el:'.page-detail'})
+    }
 
   }
 
