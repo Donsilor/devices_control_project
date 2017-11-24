@@ -97,7 +97,10 @@
                 <span class="update">
                     {{getUpdateSet(item.setCount,item.lastUpdateSet)}}
                 </span>
-                <span class="score">{{item.score}}</span>
+                <div class="label">
+                    <!-- <span class="isvip" v-if="item.ispay !== '1'">VIP</span> -->
+                    <span class="score">{{item.score}}</span>
+                </div>
             </li>
         </ul>
         <!-- 没有数据 -->
@@ -234,10 +237,24 @@
             border-radius:0 3px 3px 0;
             display:none;
         }
-        .score{
+        .label{
             position: absolute;
             right: 0;
             top: 27px;
+        }
+        .isvip{
+            background: #f26161;
+            width: 60px;
+            line-height: 30px;
+            border-radius:3px 0 0 3px;
+            font-size:24px;
+            text-align: center;
+            color:#fff;
+            opacity:0.9;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .score{
             background: #ffd53d;
             width: 60px;
             line-height: 30px;

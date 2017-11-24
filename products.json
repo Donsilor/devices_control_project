@@ -9,6 +9,11 @@
         "mobileSrc": "curtains_m",
         "mock": "curtains"
     },
+    "curtains2": {
+        "src": "curtains2",
+        "name": "窗帘2",
+        "mock": "curtains"
+    },
     "air_condition": {
         "src": "air_condition",
         "name": "空调",

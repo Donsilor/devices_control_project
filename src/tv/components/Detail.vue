@@ -22,7 +22,7 @@
                     <p v-show="isNotNull(cur.starring)">主演：{{cur.starring}}</p>
                 </div>
                 <div class="playstate playstate_unplay">
-                    <a href="#" class="btn" @click.prevent="play(cur.playlist[0].list[0])"><i class="icon-play"></i>在电视上播放</a>
+                    <a href="#" class="btn" @click.prevent="play(cur.playlist2.list[0])"><i class="icon-play"></i>在电视上播放</a>
                 </div>
                 <!-- 未播放 -->
                 <!--
@@ -53,26 +53,27 @@
                         'text-cut': isDescOverflow,
                         'text-show': isDescShow
                     }">
-                        <div class="desc-cont-p" v-html="toHTML(cur.desc)"></div>    
+                        <div class="desc-cont-p" v-html="toHTML(cur.desc)"></div>
                     </div>
-                    <a href="#" class="desc-toggle" 
-                        @click.prevent="isDescShow=!isDescShow" 
+                    <a href="#" class="desc-toggle"
+                        @click.prevent="isDescShow=!isDescShow"
                         v-show="isDescOverflow"
                         :class="{'open':isDescShow}">
                         {{isDescShow?'收起':'展开'}}<i></i>
                     </a>
                 </div>
-                
+
             </div>
         </div>
-        
-        <div class="detail-playlist" v-show="cur.playlist[0].total > 1">
+
+        <div class="detail-playlist" v-show="cur.playlist2.total > 1">
+            <template  v-if="channelId==='001' || channelId==='004'">
             <div class="hd">
-                {{getUpdateSet(cur.playlist[0].total,cur.playlist[0].list.length)}}
+                {{getUpdateSet(cur.playlist2.total,cur.playlist2.list.length)}}
             </div>
-            <ul class="bd" v-if="channelId==='001' || channelId==='004'">
+            <ul class="bd">
                 <li class="item-haspic"
-                    v-for="item in cur.playlist[0].list" 
+                    v-for="item in cur.playlist2.list"
                     :key="item.index"
                     @click="play(item)">
                     <img v-lazy="item.pictureUrl">
@@ -80,14 +81,32 @@
                     <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
                 </li>
             </ul>
-            <ul class="bd bd-num" v-else>
-                <li class="item-num" 
-                    v-for="item in cur.playlist[0].list" 
+            <br clear="both" >
+            <div class="hd" v-if="cur.playlist2.list2.length">相关视频</div>
+            <ul class="bd">
+                <li class="item-haspic"
+                    v-for="item in cur.playlist2.list2"
+                    :key="item.index"
+                    @click="play(item)">
+                    <img v-lazy="item.pictureUrl">
+                    <p>{{item.name}}</p>
+                    <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
+                </li>
+            </ul>
+            </template>
+            <template v-else>
+            <div class="hd">
+                {{getUpdateSet(cur.playlist2.total, cur.playlist2.list.length)}}
+            </div>
+            <ul class="bd bd-num">
+                <li class="item-num"
+                    v-for="item in cur.playlist2.list"
                     :key="item.index"
                     @click="play(item)">{{item.index}}
                     <!-- <span class="tag_new" v-show="item.states"></span> -->
                 </li>
             </ul>
+            </template>
         </div>
         </div>
     </div>
@@ -102,14 +121,14 @@
     .hidescroll body{
         overflow: hidden !important;
     }
-    .hidescroll .page-detail{   
+    .hidescroll .page-detail{
         /*overflow: auto;
         overflow-y: scroll;*/
     }
-    .hidescroll body > div > div,.hidescroll body > div > ul{ 
+    .hidescroll body > div > div,.hidescroll body > div > ul{
         //filter: blur(10px);
     }
-    .hidescroll body > div > .page-detail{  
+    .hidescroll body > div > .page-detail{
         //filter: none;
     }
     .slideup-enter-active {
@@ -123,7 +142,7 @@
         transform: translate3d(0,100%,0);
         opacity: 0
     }
-    .page-detail{   
+    .page-detail{
         position: fixed;
         left: 0;
         top: 0;
@@ -142,7 +161,7 @@
         left: 0;
         top: 0;
         width: 100%;*/
-        .back{  
+        .back{
             width: 100px;
             height: 96px;
             background-size: 36px 36px;
@@ -152,16 +171,16 @@
             top: 0;
             left: 0;
             background-image: url(../assets/icn_topbar_arrowdown_w_normal.png);
-            &:active{   
+            &:active{
                 background-image: url(../assets/icn_topbar_arrowdown_w_pressed.png);
             }
         }
-        .title{ 
+        .title{
             text-align: center;
             line-height: 90px;
         }
     }
-    .detail-bd{ 
+    .detail-bd{
         height: 100%;
         padding-top: 60px;
         overflow-y: auto;
@@ -170,7 +189,7 @@
     .detail-info{
         margin: 0 60px 35px;
         overflow: hidden;
-        .pic{   
+        .pic{
             width: 450px;
             height: 630px;
             float: left;
@@ -183,51 +202,51 @@
                 background-position: center center;
                 background-size: 120px 120px;
                 opacity: .5;
-                &.pic-001{  
-                  background-image: url(../assets/icn_tv_movie.png)  
+                &.pic-001{
+                  background-image: url(../assets/icn_tv_movie.png)
                 }
-                &.pic-002{  
-                  background-image: url(../assets/icn_tv_tvshow.png)  
+                &.pic-002{
+                  background-image: url(../assets/icn_tv_tvshow.png)
                 }
-                &.pic-003{  
-                  background-image: url(../assets/icn_tv_comic.png)  
+                &.pic-003{
+                  background-image: url(../assets/icn_tv_comic.png)
                 }
-                &.pic-004{  
-                  background-image: url(../assets/icn_tv_entertainment.png)  
+                &.pic-004{
+                  background-image: url(../assets/icn_tv_entertainment.png)
                 }
             }
-            [lazy="loaded"]{   
+            [lazy="loaded"]{
                 opacity: 1;
             }
         }
-        .text{  
+        .text{
             margin-left: 516px;
         }
-        .desc{  
+        .desc{
             padding-top: 30px;
             border-top: 1px solid rgba(255,255,255,0.3);
             color: rgba(255,255,255,.5);
             position: relative;
         }
-        .desc-cont{ 
+        .desc-cont{
             overflow: hidden;
             height: 126px;
             line-height: 1.4;
         }
-        .text-cut{ 
+        .text-cut{
             height: auto;
             text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
         }
-        .text-show{ 
+        .text-show{
             display: block;
         }
         .desc-toggle{
             float: right;
             color: #fff;
-            i{  
+            i{
                 display: inline-block;
                 background: url(../assets/icn_arrow_down.png) no-repeat center center;
                 width: 24px;
@@ -237,26 +256,26 @@
                 transform: rotate(0deg);
                 /*transition: transform .6s;*/
             }
-            &.open{ 
-                i{  
+            &.open{
+                i{
                     transform:rotate(180deg);
                 }
             }
         }
     }
-    .shortinfo{  
-        margin-bottom: 48px; 
-        p{  
+    .shortinfo{
+        margin-bottom: 48px;
+        p{
             line-height: 54px;
         }
-        span{   
+        span{
             color: #ffd53d;
         }
     }
-    .playstate{ 
+    .playstate{
         height: 84px;
         margin-bottom: 48px;
-        .btn{   
+        .btn{
             background:#13d5dc;
             border-radius:6px;
             height:84px;
@@ -265,7 +284,7 @@
             display: inline-block;
             color: #fff;
             font-size: 36px;
-            i{  
+            i{
                 display: inline-block;
                 background-size: 100% 100%;
                 background-repeat: no-repeat;
@@ -273,17 +292,17 @@
                 margin-top: -2px;
                 vertical-align: middle;
             }
-            .icon-play{ 
+            .icon-play{
                 width: 36px;
                 height: 36px;
                 background-image: url(../assets/icn_play_white_s.png);
             }
-            .icon-time{ 
+            .icon-time{
                 width: 34px;
                 height: 34px;
                 background-image: url(../assets/icn_history_white_s.png);
             }
-            .icon-playing{  
+            .icon-playing{
                 width: 36px;
                 height: 36px;
                 display: inline-block;
@@ -293,12 +312,12 @@
                 background-size: 100% 100%;
             }
         }
-        .btn-outline{   
+        .btn-outline{
             color: #13d5dc;
             background: none;
             padding-left: 0;
         }
-        .tip{   
+        .tip{
             height: 54px;
             border-radius: 6px;
             position: absolute;
@@ -307,7 +326,7 @@
             padding: 0 27px;
             line-height: 54px;
             background: rgba(255,255,255,.1);
-            .arrow{ 
+            .arrow{
                 position: absolute;
                 left:-15px;
                 top: 18px;
@@ -320,17 +339,17 @@
         }
     }
 
-    .detail-playlist{  
+    .detail-playlist{
          margin: 0 60px;
-         border-top: 1px solid #6e6f6f; 
+         border-top: 1px solid #6e6f6f;
          padding-top: 30px;
-        .hd{    
+        .hd{
             margin-bottom: 30px;
         }
-        .bd-num{    
+        .bd-num{
             padding-left: 18px;
         }
-        li.item-num{ 
+        li.item-num{
             width: 120px;
             height: 120px;
             line-height: 120px;
@@ -340,16 +359,16 @@
             background:rgba(255,255,255,.2);
             border-radius: 5px;
             margin:0 12px 24px;
-            &:active{   
+            &:active{
                 background:rgba(19,213,220,.75);
             }
-            &.active{   
+            &.active{
                 background: #19c9cf url(../assets/icn_playing_white_s.png) no-repeat center center;
                 background-size: 36px 36px;
                 text-indent: -9999px;
             }
         }
-        li.item-haspic{    
+        li.item-haspic{
             position: relative;
             width: 300px;
             height: 306px;
@@ -361,14 +380,14 @@
                 display: block;
                 margin-bottom: 18px;
             }
-            p{  
+            p{
                 text-overflow: ellipsis;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
                 overflow: hidden;
             }
-            .play{  
+            .play{
                 position: absolute;
                 left: 42px;
                 top: 54px;
@@ -379,7 +398,7 @@
                 height:60px;
                 text-align: center;
                 line-height: 60px;
-                i{  
+                i{
                     width: 36px;
                     height: 36px;
                     background: url(../assets/icn_playing_white_s.png) no-repeat;
@@ -390,7 +409,7 @@
                 }
             }
         }
-        .tag_new{  
+        .tag_new{
             width: 72px;
             height: 72px;
             background: url(../assets/tag_tv_new.png) no-repeat;
@@ -407,20 +426,24 @@
     import * as service from '../service'
 
     //隐藏body滚动条
-    function toggleBoayScroll(val){  
+    function toggleBoayScroll(val){
         document.documentElement.className = val ? 'hidescroll' : ''
     }
 
     export default {
         props: ['channelId','vid'],
-        data() {    
+        data() {
             return {
                 //是否显示
                 visible: false,
-                cur: {  
-                    playlist: [{    
+                cur: {
+                    playlist: [{
                         list: []
-                    }]
+                    }],
+                    playlist2: {
+                        list: [],
+                        list2: []
+                    }
                 },
                 //描述是否超出行数
                 isDescOverflow: false,
@@ -430,43 +453,53 @@
                 history: false
             }
         },
-        watch: {    
+        watch: {
             visible(val) {
-                if(val){   
+                if(val){
                     this.getData()
                     this.$emit('onShow')
                 }else{
                     this.cur = {
-                        playlist: [{    
+                        playlist: [{
                             list: []
-                        }]
+                        }],
+                        playlist2: {
+                            list: [],
+                            list2: []
+                        }
                     }
                     this.history = false
                     this.$emit('onClose')
                 }
                 toggleBoayScroll(val)
             },
-            loading(val){   
-                if(val){ 
+            loading(val){
+                if(val){
                     HdSmart.UI.showLoading()
-                }else{    
+                }else{
                     HdSmart.UI.hideLoading()
                 }
             }
         },
-        methods: {   
+        methods: {
             getData() {
                 this.loading = true
-                service.getDetaileData({    
+                service.getDetaileData({
                     channelId: this.channelId,
                     vid: this.vid
-                },(err, data) => {   
+                },(err, data) => {
                     this.loading = false
                     if(err){
                         this.close()
-                        return 
+                        return
                     }
-                    this.cur = Object.freeze(data.data)
+                    var temp = data.data
+                    var playlist = temp.playlist[0]
+                    temp.playlist2 = {}
+                    temp.playlist2.total = playlist.total
+                    temp.playlist2.list = playlist.list.filter(item=>item.states=='1')
+                    temp.playlist2.list2 = playlist.list.filter(item=>item.states!='1')
+                    this.cur = Object.freeze(temp)
                     this.setHistory()
                 })
             },
@@ -474,7 +507,7 @@
             play(clickItem) {
                 if(clickItem){
                     service.playVideo(clickItem.link,clickItem.name)
-                }else{  
+                }else{
                     HdSmart.UI.toast('暂无片源')
                 }
             },
@@ -487,24 +520,24 @@
                         let wrapHeight = this.$el.querySelector('.desc-cont').offsetHeight
                         let textHeight = this.$el.querySelector('.desc-cont-p').offsetHeight
 
-                        if(textHeight > wrapHeight){    
+                        if(textHeight > wrapHeight){
                             this.isDescOverflow = true
-                        }else{  
+                        }else{
                             this.isDescOverflow = false
                         }
                     })
                 }
             },
             getUpdateSet(count, last) {
-                if(!count || !last || count == '0' || last == '0'){     
+                if(!count || !last || count == '0' || last == '0'){
                     return ''
-                }else if(last === count){   
+                }else if(last === count){
                     return count + '集全'
-                }else{  
+                }else{
                     return '更新至' + last + '集'
                 }
             },
-            close() {   
+            close() {
                 if(this.visible){
                     if(this.history){
                         this.$router.go(-1)
@@ -512,16 +545,16 @@
                     this.visible = false
                 }
             },
-            toHTML(str) {  
+            toHTML(str) {
                 if(!str) return ''
                 return str.split('\n').map(item=>{
                     return '\u3000\u3000' + item
                 }).join('<br>')
             },
-            isNotNull(str) {   
+            isNotNull(str) {
                 return str && str != 'null'
             },
-            setHistory() {  
+            setHistory() {
                 this.history = true
                 var query = {
                     ...this.$route.query,
@@ -529,12 +562,12 @@
                 }
                 this.$router.push({query})
             }
-        }, 
-        created() { 
+        },
+        created() {
             this.$watch('cur.desc',this.getDescLine)
             //详情页添加history change
-            this.$watch('$route.query.detail',(newVal, oldVal)=>{ 
-                if(oldVal && newVal === undefined && this.visible){ 
+            this.$watch('$route.query.detail',(newVal, oldVal)=>{
+                if(oldVal && newVal === undefined && this.visible){
                     this.visible = false
                 }
             })
