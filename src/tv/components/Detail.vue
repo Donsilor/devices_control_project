@@ -142,8 +142,10 @@
         height: 100%;
         overflow-y: hidden;
         z-index: 9;
-        color: #fff;
-        background: rgba(47,49,51,1);
+        //color: #fff;
+        //background: rgba(47,49,51,1);
+        color:#75787a;
+        background:#fafafa;
         display: flex;
         flex-direction: column;
     }
@@ -162,14 +164,15 @@
             position: absolute;
             top: 0;
             left: 0;
-            background-image: url(../assets/icn_topbar_arrowdown_w_normal.png);
+            background-image: url(../assets/icn_topbar_arrowdown_normal.png);
             &:active{
-                background-image: url(../assets/icn_topbar_arrowdown_w_pressed.png);
+                background-image: url(../assets/icn_topbar_arrowdown_pressed.png);
             }
         }
         .title{
             text-align: center;
             line-height: 90px;
+            color:#2f3133;
         }
     }
     .detail-bd{
@@ -216,8 +219,8 @@
         }
         .desc{
             padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.3);
-            color: rgba(255,255,255,.5);
+            border-top: 1px solid #dbdbdb;;
+            color:#c8cacc;
             position: relative;
         }
         .desc-cont{
@@ -333,7 +336,7 @@
 
     .detail-playlist{
          margin: 0 60px;
-         border-top: 1px solid #6e6f6f;
+         border-top: 1px solid #dbdbdb;
          padding-top: 30px;
         .hd{
             margin-bottom: 30px;
@@ -348,11 +351,14 @@
             text-align: center;
             float: left;
             position: relative;
-            background:rgba(255,255,255,.2);
+            // background:rgba(255,255,255,.2);
+            background: #fff;
+            border: 1px solid #dbdbdb;
             border-radius: 5px;
             margin:0 12px 24px;
             &:active{
-                background:rgba(19,213,220,.75);
+                background: #ebebeb;
+                // background:rgba(19,213,220,.75);
             }
             &.active{
                 background: #19c9cf url(../assets/icn_playing_white_s.png) no-repeat center center;
