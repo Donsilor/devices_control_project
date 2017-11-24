@@ -94,11 +94,11 @@ HdSmart.ready(() => {
       components: { App }
     });
 
-    if(process.env.w){
+    //if(window.user_name && window.phone){
         watermark()
         watermark({el:'.page-index2'})
-        watermark({el:'.page-detail'})
-    }
+        watermark({el:'.page-detail',color:'#666'})
+    //}
 
   }
 

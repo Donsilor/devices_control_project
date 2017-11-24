@@ -100,7 +100,7 @@
         },
         mounted() {
             HdSmart.ready(() => {
-                if(process.env.w){
+                if(window.user_name && window.phone){
                     watermark({el:'#app'})
                 }
                 //获取快照

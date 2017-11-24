@@ -4,9 +4,9 @@
         <navigator class="navigator" v-once></navigator>
         <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"
                  :total_time="total_time"></curtain>
-        <control class="control" :open_percentage="target_percentage" v-on:onOpen="onOpen"
+        <control class="control" v-on:onOpen="onOpen"
                  v-on:onPause="onPause" v-on:onClose="onClose" :is_ready="is_ready"
-                 @onGoPercentage="onGoPercentage" :show_active_btn="show_active_btn"></control>
+                 @onGoPercentage="onGoPercentage"></control>
     </div>
 </template>
 
@@ -86,16 +86,15 @@
                 timer: null,
                 //是否显示中部按钮提示
                 show: false,
-                //是否显示选中的百分比(因为80会返回78就停止了，所以需要一个额外的参数来控制）
-                show_active_btn: false,
                 //临时处理窗帘变动没有上传的问题
                 cbFunc: null,
             }
         },
         mounted() {
             HdSmart.ready(() => {
-                if(process.env.w){
+                if(window.user_name && window.phone){
                     watermark({el:'#app'})
+                    this.raf_time = 150
                 }
                 //获取快照
                 HdSmart.Device.getSnapShot((data) => {
@@ -327,7 +326,7 @@
                 clearTimeout(this.timer);
                 this.tip = `幅度调至${percentage}%`;
                 this.show = true;
-                this.show_active_btn = true;
+                // this.show_active_btn = true;
                 this.timer = setTimeout(() => {
                     this.show = false;
                 }, 2000);
@@ -350,14 +349,17 @@
             },
             clearTargetTip() {
                 this.show = false;
-                this.show_active_btn = false;
+                // this.show_active_btn = false;
             },
             changeRafPercent() {
                 if (this.raf_time && this.total_time) {
                     this.raf_percent = this.raf_time * 100 / this.total_time;
                 }
+                console.log('raf_time: ', this.raf_time)
+                console.log('raf_percent:', this.raf_percent)
             },
             getTotalTime(data) {
+                console.log(data.result.updated_at," = ", data.result.attribute.open_percentage)
                 if(this.isGetTotalTime){
                     return
                 }
@@ -379,17 +381,15 @@
                     if(prev.result.attribute.open_percentage !== data.result.attribute.open_percentage){
                         this.reportArray.push(data)
                         var speed = (data.result.attribute.open_percentage - prev.result.attribute.open_percentage)/(data.result.updated_at - prev.result.updated_at)
-                        this.total_time = Math.abs(100/speed)
+                        this.total_time = Math.abs(100/speed) - 500
                         this.changeRafPercent()
                         this.isGetTotalTime = true
                         console.log('total : ', this.total_time)
-                        console.log(this.reportArray)
                     }
                 }
                 this.reportTimer = setTimeout(()=>{
                     this.reportArray = []
                 },1500)
-                console.log(data.result.updated_at," = ", data.result.attribute.open_percentage)
             }
         }
     }

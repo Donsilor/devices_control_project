@@ -294,7 +294,7 @@
             let that = this;
             HdSmart.ready(() => {
 
-                if(process.env.w){
+                if(window.user_name && window.phone){
                     watermark({el:'#app'})
                 }
 

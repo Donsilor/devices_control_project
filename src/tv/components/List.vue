@@ -98,7 +98,7 @@
                     {{getUpdateSet(item.setCount,item.lastUpdateSet)}}
                 </span>
                 <div class="label">
-                    <!-- <span class="isvip" v-if="item.ispay !== '1'">VIP</span> -->
+                    <span class="isvip" v-if="item.ispay !== '1'">VIP</span>
                     <span class="score">{{item.score}}</span>
                 </div>
             </li>

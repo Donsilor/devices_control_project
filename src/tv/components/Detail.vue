@@ -66,12 +66,11 @@
             </div>
         </div>
 
-        <div class="detail-playlist" v-show="cur.playlist2.total > 1">
-            <template  v-if="channelId==='001' || channelId==='004'">
-            <div class="hd">
-                {{getUpdateSet(cur.playlist2.total,cur.playlist2.list.length)}}
+        <div class="detail-playlist">
+            <div class="hd" v-if="cur.playlist2.list.length">
+                {{channelId==='001' ? '正片' : getUpdateSet()}}
             </div>
-            <ul class="bd">
+            <ul class="bd"  v-if="channelId==='001' || channelId==='004'">
                 <li class="item-haspic"
                     v-for="item in cur.playlist2.list"
                     :key="item.index"
@@ -81,8 +80,15 @@
                     <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
                 </li>
             </ul>
-            <br clear="both" >
-            <div class="hd" v-if="cur.playlist2.list2.length">相关视频</div>
+            <ul class="bd bd-num" v-else>
+                <li class="item-num"
+                    v-for="item in cur.playlist2.list"
+                    :key="item.index"
+                    @click="play(item)">{{item.index}}
+                    <!-- <span class="tag_new" v-show="item.states"></span> -->
+                </li>
+            </ul>
+            <div class="hd" style="clear:both" v-if="cur.playlist2.list2.length">相关视频</div>
             <ul class="bd">
                 <li class="item-haspic"
                     v-for="item in cur.playlist2.list2"
@@ -93,20 +99,6 @@
                     <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
                 </li>
             </ul>
-            </template>
-            <template v-else>
-            <div class="hd">
-                {{getUpdateSet(cur.playlist2.total, cur.playlist2.list.length)}}
-            </div>
-            <ul class="bd bd-num">
-                <li class="item-num"
-                    v-for="item in cur.playlist2.list"
-                    :key="item.index"
-                    @click="play(item)">{{item.index}}
-                    <!-- <span class="tag_new" v-show="item.states"></span> -->
-                </li>
-            </ul>
-            </template>
         </div>
         </div>
     </div>
@@ -493,6 +485,7 @@
                         this.close()
                         return
                     }
+                    console.log(data.data)
                     var temp = data.data
                     var playlist = temp.playlist[0]
                     temp.playlist2 = {}
@@ -505,10 +498,11 @@
             },
             //点播：播放状态如playstate
             play(clickItem) {
+                if(!clickItem){
+                    clickItem = this.cur.playlist2.list[0] || this.cur.playlist2.list2[0]
+                }
                 if(clickItem){
                     service.playVideo(clickItem.link,clickItem.name)
-                }else{
-                    HdSmart.UI.toast('暂无片源')
                 }
             },
             //描述按行截取：对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
@@ -528,7 +522,9 @@
                     })
                 }
             },
-            getUpdateSet(count, last) {
+            getUpdateSet() {
+                var count = this.cur.playlist2.total + 1//-this.cur.playlist2.list2.length
+                var last = this.cur.playlist2.list.length
                 if(!count || !last || count == '0' || last == '0'){
                     return ''
                 }else if(last === count){

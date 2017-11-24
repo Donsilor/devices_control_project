@@ -1,18 +1,10 @@
 <template>
     <div class="control-container">
         <div class="box tap-box">
-            <div class="tap" v-finger:touch-start="onGo(20)"
-                 :class="{active:target_percentage === 20  && show_active_btn}">20%
-            </div>
-            <div class="tap" v-finger:touch-start="onGo(50)"
-                 :class="{active:target_percentage === 50 && show_active_btn}">50%
-            </div>
-            <div class="tap" v-finger:touch-start="onGo(80)"
-                 :class="{active:target_percentage === 80 && show_active_btn}">80%
-            </div>
-            <div class="tap" v-finger:touch-start="onGo(100)"
-                 :class="{active:target_percentage === 100 && show_active_btn}">100%
-            </div>
+            <div class="tap" v-finger:touch-start="onGo(20)">20%</div>
+            <div class="tap" v-finger:touch-start="onGo(50)">50%</div>
+            <div class="tap" v-finger:touch-start="onGo(80)">80%</div>
+            <div class="tap" v-finger:touch-start="onGo(100)">100%</div>
         </div>
         <div class="box button-box">
             <div class="on button" v-finger:touch-start="onOpenTouchStart"
@@ -114,7 +106,7 @@
         margin: 0 24px;
     }
 
-    .tap.active {
+    .tap:active {
         background: #ffffff;
         border-radius: 27px;
         color: #46bcff;
@@ -124,20 +116,16 @@
 <script>
     export default {
         props: {
-            open_percentage: Number,
-            is_ready: Boolean,
-            show_active_btn: Boolean
+            is_ready: Boolean
         },
         data (){
             return {
                 loading_type: '',
-                timer: null,
-                target_percentage: ''
+                timer: null
             }
         },
         methods: {
             stopLoading (){
-                this.target_percentage = '';
                 this.loading_type = '';
                 clearTimeout(this.timer);
             },
@@ -186,7 +174,7 @@
                 return () => {
                     if (!this.is_ready) return false;
                     this.stopLoading();
-                    this.target_percentage = target_percentage;
+                    //this.target_percentage = target_percentage;
                     this.$emit('onGoPercentage', target_percentage);
                 }
             }

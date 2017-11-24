@@ -2,13 +2,14 @@
 ```
 npm run dev 产品名 参数
 npm run build 产品名 参数
+```
 
 产品名在products.json配置
 
 参数列表
--m 移动端页面
--w 添加水印
-```
+- `-m` 移动端页面
+- ~~`-w` 添加水印~~
+改为判断app注入变量(`user_name`和`phone`)
 
 ### history
 ### 2017.7.6
