@@ -12,14 +12,19 @@
         <span class="unit">℃</span>
     </div>
 
+    <transition name="fade">
+    <div class="tip" v-show="tipVisible">{{tip}}</div>
+    </transition>
+
     <a href="#" class="btn-minus" @click.prevent="setTemperature(-1, $event)"></a>
     <a href="#" class="btn-add" @click.prevent="setTemperature(1, $event)"></a>
 
-    <a href="#" class="btn-off" @click.prevent="setOff($event)" :class="{'btn-off-toggle':toggle}"></a>
+    <a href="#" class="btn-off" @click.prevent="setOff($event)"></a>
 
-    <div class="btns">
-        <a href="#" class="btn-toggle" :class="{'btn-toggle-more':toggle}"  @click.prevent="showMore()"></a>
-        <ul>
+    <a href="#" class="btn-toggle" :class="{'btn-toggle-more':toggle}"  @click.prevent="showMore()"></a>
+
+    <div class="btns-hold">
+        <ul class="btns">
             <li :class="{on:ac.mode==='cold'}">
                 <a href="#" class="btn-cold" :class="{on:ac.mode==='cold'}" @click.prevent="setMode('cold', $event)"></a>
                 制冷
@@ -40,7 +45,14 @@
                 <span v-show="ac.speed!=='low'&&ac.speed!=='normal'&&ac.speed!=='high'">风速</span>
             </li>
         </ul>
-        <ul class="btns-ul" :class="{'btns-ul-toggle':toggle}">
+
+    </div>
+
+    <div class="mask" v-show="toggle" @click="showMore()"></div>
+
+    <div class="btns-more" v-show="toggle">
+        <p>模式</p>
+        <ul class="btns">
             <li :class="{on:ac.mode==='auto'}">
                 <a href="#" class="btn-auto" :class="{on:ac.mode==='auto'}" @click.prevent="setMode('auto', $event)"></a>
                 智能
@@ -49,6 +61,9 @@
                 <a href="#" class="btn-wind" :class="{on:ac.mode==='wind'}" @click.prevent="setMode('wind', $event)"></a>
                 送风
             </li>
+        </ul>
+        <p>摆风</p>
+        <ul class="btns">
             <li :class="{on:ac.wind_up_down==='on'}">
                 <a href="#" class="btn-vertical" :class="{on:ac.wind_up_down==='on'}" @click.prevent="setWind('wind_up_down', $event)"></a>
                 上下
@@ -59,13 +74,33 @@
             </li>
         </ul>
     </div>
+
 </div>
 </template>
 
 <script>
+const tips = {
+    fail: '设置失败',
+    temperature: '温度设置成功',
+    speed_low: '低风切换成功',
+    speed_normal: '中风切换成功',
+    speed_high: '高风切换成功',
+    speed_auto: '自动风速切换成功',
+    mode_cold: '制冷模式切换成功',
+    mode_auto: '智能模式切换成功',
+    mode_heat: '制热模式切换成功',
+    mode_dehumidify: '除湿模式切换成功',
+    mode_wind: '送风模式切换成功',
+    wind_up_down_on: '上下扫风已启动',
+    wind_up_down_off: '上下扫风已关闭',
+    wind_left_right_on: '左右扫风已启动',
+    wind_left_right_off: '左右扫风已关闭',
+    err_temp1: '送风模式下不能设置温度',
+}
 const SPEED = ['low', 'normal', 'high']
 const [MIN_TEMP,MAX_TEMP] = [16,30]
 let tempDelay, tempFlag = true
+
 export default {
     props: {
         control: {
@@ -81,7 +116,9 @@ export default {
     data() {
         return {
             temperature: this.ac.temperature,
-            toggle: false
+            toggle: false,
+            tipVisible: false,
+            tip: '',
         }
     },
     methods: {
@@ -92,7 +129,13 @@ export default {
             }
         },
         setOff(event) {
-            this.control('switch', 'off', event.target)
+            this.control(
+                'switch',
+                'off',
+                event.target,
+                ()=>{},
+                this.onSetError()
+            )
         },
         setTemperature(val, event) {
             if((val > 0 && this.temperature === MAX_TEMP) || (val < 0 && this.temperature === MIN_TEMP)){
@@ -102,6 +145,7 @@ export default {
                 return
             }
             if(this.ac.mode === 'wind'){
+                this.showTip(tips.err_temp1)
                 return
             }
             this.temperature += val
@@ -109,30 +153,76 @@ export default {
             tempFlag = false
             tempDelay = setTimeout(()=>{
                 tempFlag = true
-                this.control('temperature', this.temperature, event.target, (data)=>{},()=>{
-                    this.syncTemp()
-                })
+                this.control(
+                    'temperature',
+                    this.temperature,
+                    event.target,
+                    this.onSetSuccess(tips.temperature),
+                    this.onSetError(true)
+                )
             },300)
         },
         setSpeed(event) {
             var index = SPEED.indexOf(this.ac.speed)
             var next = index === SPEED.length-1 ? 0 : index+1
-            if(this.checkCmd('speed',SPEED[next])){
+            var speed = SPEED[next]
+            if(this.checkCmd('speed', speed)){
                 return
             }
-            this.control('speed', SPEED[next], event.target)
+            this.control(
+                'speed',
+                speed,
+                event.target,
+                this.onSetSuccess(tips['speed_'+speed]),
+                this.onSetError()
+            )
         },
         setMode(mode, event) {
             if(this.checkCmd('mode',mode)){
                 return
             }
-            this.control('mode', mode, event.target)
+            this.control(
+                'mode',
+                mode,
+                event.target,
+                this.onSetSuccess(tips['mode_'+mode]),
+                this.onSetError()
+            )
         },
         setWind(attr, event) {
-            this.control(attr, this.ac[attr]==='on' ? 'off' : 'on', event.target)
+            var val = this.ac[attr]==='on' ? 'off' : 'on'
+            this.control(
+                attr,
+                val,
+                event.target,
+                this.onSetSuccess(tips[attr+'_'+val]),
+                this.onSetError()
+            )
         },
         showMore() {
             this.toggle = !this.toggle
+        },
+        showTip(text) {
+            if(!text) return
+            this.tip = text
+            this.tipVisible = true
+            clearTimeout(this.tipDelay);
+            this.tipDelay = setTimeout(()=>{
+                this.tipVisible = false
+            },3000)
+        },
+        onSetSuccess(text) {
+            return ()=>{
+                this.showTip(text)
+            }
+        },
+        onSetError(isTemp) {
+            return ()=>{
+                this.showTip(tips.fail)
+                if(isTemp){
+                    this.syncTemp()
+                }
+            }
         },
         checkCmd(attr, val) {
             var ac = JSON.parse(JSON.stringify(this.ac))
@@ -215,7 +305,8 @@ export default {
     margin-left: -72px;
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    top: 600px;
+    // top: 600px;
+    bottom: 132px;
     background-image: url(../assets/btn_aircon_poweroff_normal@2x.png);
     transition: all 1s;
     &:active {
@@ -226,28 +317,25 @@ export default {
         opacity: 0;
     }
 }
-.btns{
+.btn-toggle{
     position: absolute;
-    left: 50%;
-    bottom: 100px;
-    width: 750px;
-    transform: translateX(-50%);
-    padding: 0 35px;
-    .btns-ul{
-        height:0px;
-        opacity: 0;
-        transition: all 1s;
-        overflow: hidden;
-        &-toggle{
-            height: 200px;
-            opacity: 1;
-        }
+    right: 32px;
+    top: 176px;
+    width: 96px;
+    height: 96px;
+    background-image: url(../assets/btn_aircon_more_normal@2x.png);
+    background-size: 100% 100%;
+    background-position: center center;
+    &:active{
+        background-image: url(../assets/btn_aircon_more_pressed@2x.png);
     }
-    ul{
-        clear: both;
-    }
+}
+.btns{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     li{
-        float: left;
+        // float: left;
         margin: 0 25px;
         text-align: center;
         width: 120px;
@@ -265,22 +353,40 @@ export default {
         margin-bottom: 20px;
     }
 }
-.btn-toggle{
+.btns-hold{
     position: absolute;
     left: 50%;
-    // transform: translate(-50%,-66px);
-    width: 60px !important;
-    height: 60px !important;
-    margin-top: -80px;
-    margin-left: -30px;
-    transition: transform 1s;
-    background-image: url(../assets/btn_unfold@2x.png);
-    background-size: 40px 40px !important;
-    background-position: center center;
-    &-more{
-        // background-image: url(../assets/btn_collapse@2x.png);
-        transform: rotate(180deg)
+    bottom: 308px;
+    width: 750px;
+    transform: translateX(-50%);
+    padding: 0 35px;
+}
+.btns-more{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background: #fff;
+    border-radius:8px;
+    width:480px;
+    color:#75787a;
+    p{
+        text-align: center;
+        font-size:28px;
+        padding: 24px 0;
+        color:#c8cacc;
     }
+    .on{
+       color:#46bcff;
+    }
+}
+.mask{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.5);
 }
 .btn-cold{
     background-image: url(../assets/btn_aircon_cool_normal@2x.png);
@@ -369,5 +475,19 @@ export default {
     &.on{
         background-image: url(../assets/btn_aircon_horizontal_active@2x.png);
     }
+}
+.tip{
+    position: absolute;
+    left: 0;
+    top: 600px;
+    width: 100%;
+    text-align: center;
+    color:#fff;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0
 }
 </style>

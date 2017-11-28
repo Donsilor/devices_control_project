@@ -73,7 +73,9 @@ export default {
             var style = 'default'
             if(attr==='switch' && val==='on'){
                 style = 'blue'
-            }else if((attr==='wind_up_down'||attr==='wind_left_right') && val==='off'){
+            }else if((attr==='wind_up_down'||attr==='wind_left_right') && val==='on'){
+                style = 'blue'
+            }else if(attr==='mode' && (val==='auto' || val==='wind')){
                 style = 'blue'
             }
             this.showSpin(target, style)

@@ -7,8 +7,10 @@ window.device_name = '柜式空调';
 window.device_category_id = 1;
 let res = {
     "device_uuid": "4c52ed0b006f0d0001",
+    "device_name": "挂式空调",
     "attribute": {
         // "device_name": '挂式空调',
+        "deviceSubCategory": 1,
         "switchStatus": 'on',
         "temperature": 16,
         "mode": "cold",

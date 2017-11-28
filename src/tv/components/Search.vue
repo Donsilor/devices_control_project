@@ -39,7 +39,7 @@
                         :class="{active:current_channel==''}">
                         全部
                     </a>
-                    <a href="#" 
+                    <a href="#"
                         v-for="item in channels"
                         @click.prevent="setParam('current_channel',item.channelId)"
                         :class="{active:current_channel==item.channelId}">
@@ -47,7 +47,7 @@
                     </a>
                 </div>
                 <div class="sorts">
-                    <a href="#" 
+                    <a href="#"
                         v-for="item in orderby"
                         @click.prevent="setParam('current_orderby',item.orderId)"
                         :class="{active:current_orderby==item.orderId}">
@@ -56,9 +56,9 @@
                 </div>
             </div>
             <ul class="vlist clearfix">
-                <li 
-                    class="vitem" 
-                    v-for="item in resultData" 
+                <li
+                    class="vitem"
+                    v-for="item in resultData"
                     :key="item.vid"
                     @click="showDetailInfo(item.channelId,item.vid)">
                     <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
@@ -108,7 +108,7 @@
     .search_input{
         position: relative;
         width: 100%;
-        input{  
+        input{
             border:1px solid #dbdbdb;
             height: 70px;
             width: 100%;
@@ -120,12 +120,12 @@
             &::-webkit-input-placeholder{
                 color: #c8cacc;
             }
-            &:focus{    
+            &:focus{
                 /*border: 1px solid #13d5dc;*/
                 outline: none;
             }
         }
-        .del{   
+        .del{
             position: absolute;
             width: 48px;
             height: 48px;
@@ -134,12 +134,12 @@
             background-repeat: no-repeat;
             background-size: 100% 100%;
             background-image: url(../assets/btn_input_delete_normal.png);
-            &:active{   
-               background-image: url(../assets/btn_input_delete_pressed.png); 
+            &:active{
+               background-image: url(../assets/btn_input_delete_pressed.png);
             }
         }
     }
-    .search_submit{ 
+    .search_submit{
         width: 150px;
         font-size: 30px;
         appearance: none;
@@ -147,14 +147,14 @@
         background: none;
         outline: none;
     }
-    .search_history{    
+    .search_history{
         margin: 0 60px;
-        .hd{    
+        .hd{
             color: #75787a;
             padding: 48px 0 24px;
             border-bottom: 1px solid #dbdbdb;
             margin-bottom: 24px;
-            .del{   
+            .del{
                 float: right;
                 margin-right: 15px;
                 width: 42px;
@@ -162,13 +162,13 @@
                 background-repeat: no-repeat;
                 background-size: 100% 100%;
                 background-image: url(../assets/btn_clear_normal.png);
-                &:active{   
-                  background-image: url(../assets/btn_clear_pressed.png);  
+                &:active{
+                  background-image: url(../assets/btn_clear_pressed.png);
                 }
             }
         }
-        .bd{    
-            li{  
+        .bd{
+            li{
                 width: 324px;
                 height: 84px;
                 line-height: 84px;
@@ -179,35 +179,35 @@
             }
         }
     }
-    .search_suggest{    
+    .search_suggest{
         padding-left:48px;
-        li{ 
+        li{
             height: 120px;
             line-height: 120px;
             border-bottom: 1px solid #dbdbdb;
-            strong{ 
+            strong{
                 color: #13d5dc;
                 font-weight: normal;
             }
-            &:last-child{   
+            &:last-child{
                 border-bottom: 0;
             }
         }
         border-bottom: 1px solid #dbdbdb;
     }
-    .search_result{ 
+    .search_result{
         margin: 0 60px;
-        .hd{    
+        .hd{
             border-bottom: 1px solid #dbdbdb;
         }
-        .tab{   
+        .tab{
             float: left;
-            a{  
+            a{
                 float: left;
                 padding: 42px 12px 30px;
                 margin-right: 36px;
                 color: #75787a;
-                &.active{   
+                &.active{
                    color: #13d5dc;
                    border-bottom: 3px solid #13d5dc;
                 }
@@ -216,7 +216,7 @@
         .sorts{
             float: right;
             margin-top: 36px;
-            a{  
+            a{
                 float: left;
                 width: 84px;
                 height: 42px;
@@ -225,7 +225,7 @@
                 border-radius: 3px;
                 margin-left: 36px;
                 color: #75787a;
-                &.active{   
+                &.active{
                     color: #fff;
                     background: #13d5dc;
                 }
@@ -238,15 +238,15 @@
 
     import * as service from '../service'
     import _ from '../util'
-    
+
     //关键字加粗
-    function splitWord(kw,input){   
+    function splitWord(kw,input){
         return input.replace(new RegExp('('+kw+')','g'),'<strong>$1</strong>')
     }
 
-    export default {   
+    export default {
         data(){
-            return {    
+            return {
                 word: '',
                 //当前视图：1默认,2联想词,3搜索结果
                 curpage: 1,
@@ -270,7 +270,7 @@
                 current_channel: '',
                 //当前排序
                 current_orderby: '',
-                //总条数 
+                //总条数
                 total: 0,
                 //当前页码
                 pageNo: 1,
@@ -287,31 +287,32 @@
                 isFirstLoad: true
             }
         },
-        watch: {    
-            word() { 
-                if(this.word === '' && this.curpage === 2){ 
+        watch: {
+            word() {
+                // if(this.word === '' && this.curpage === 2){
+                if(this.word === ''){
                     this.curpage = 1
                 }
             },
             loadState(val) {
                 if(this.isFirstLoad){
-                    if(val === 'LOADING'){ 
+                    if(val === 'LOADING'){
                         HdSmart.UI.showLoading()
-                    }else if(val === 'LOADED'){    
+                    }else if(val === 'LOADED'){
                         HdSmart.UI.hideLoading()
                     }
                 }
             }
         },
-        methods: { 
-            //删除搜索词 
+        methods: {
+            //删除搜索词
             clearWord() {
                 this.word = ''
                 this.$el.querySelector('.search_input input').focus()
             },
             //清空搜索历史
             clearHistory() {
-                HdSmart.UI.alert('清空记录', '确认要清空所有搜索记录？', ()=>{  
+                HdSmart.UI.alert('清空记录', '确认要清空所有搜索记录？', ()=>{
                     service.onClickEvent('clearSearchHistory')
                     this.historyData = []
                 }, '清空', '取消')
@@ -324,22 +325,22 @@
                     this.$el.querySelector('.search_input input').blur()
                 }
             },
-            doSearch(word) {   
-                this.curpage = 3 
+            doSearch(word) {
+                this.curpage = 3
                 this.word = word
                 this.current_channel = ''
                 this.current_orderby = ''
                 this.filterData(1)
             },
             //模糊查询
-            fuzzySearch: _.debounce(function(){ 
+            fuzzySearch: _.debounce(function(){
                 var kw = this.word.trim()
                 if(kw){
                     this.curpage = 2
-                    service.fuzzySearch(kw, (err, data)=>{  
-                        if(err) return 
+                    service.fuzzySearch(kw, (err, data)=>{
+                        if(err) return
                         this.suggestData = data.data.map((item)=>{
-                            return {    
+                            return {
                                 text: item,
                                 html: splitWord(kw, item)
                             }
@@ -351,9 +352,9 @@
                 this[key] = value
                 this.filterData(1)
             },
-            filterData(page) {  
+            filterData(page) {
                 if(page === 1) this.isFirstLoad = true
-                this.loadState = 'LOADING' 
+                this.loadState = 'LOADING'
                 service.searchData({
                     keyword: this.word.trim(),
                     channelId: this.current_channel,
@@ -363,11 +364,11 @@
                 },(err, data)=>{
                     this.loadState = 'LOADED'
                     if(err) return
-                    
-                    if(data.data){  
+
+                    if(data.data){
                         data = data.data
                     }
-                    if(data.list == ""){   
+                    if(data.list == ""){
                         data.list = []
                     }
                     this.$nextTick(()=>{
@@ -378,29 +379,29 @@
                             this.isFirstLoad = false
                             window.scrollTo(0,0)
                         }
-                        if(this.total === 0){    
+                        if(this.total === 0){
                             this.loadState = 'NO_DATA'
-                        }else if(this.pageSize*this.pageNo >= this.total){    
-                            this.loadState = 'NO_MORE' 
+                        }else if(this.pageSize*this.pageNo >= this.total){
+                            this.loadState = 'NO_MORE'
                             //HdSmart.UI.toast('已加载全部')
                         }
                     })
                 })
             },
             loadMore: _.debounce(function(){
-                
-                if(this.curpage !== 3){ 
-                    return 
+
+                if(this.curpage !== 3){
+                    return
                 }
-                
+
                 var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
-                if(scrollTop > 0 && (scrollTop+window.innerHeight >= document.documentElement.scrollHeight-15)){   
-                    if(this.loadState === 'LOADING' || this.loadState === 'NO_DATA'){   
-                        return 
+                if(scrollTop > 0 && (scrollTop+window.innerHeight >= document.documentElement.scrollHeight-15)){
+                    if(this.loadState === 'LOADING' || this.loadState === 'NO_DATA'){
+                        return
                     }
-                    if(this.loadState === 'NO_MORE'){   
+                    if(this.loadState === 'NO_MORE'){
                         HdSmart.UI.toast('已加载全部')
-                        return 
+                        return
                     }
                     this.filterData(this.pageNo + 1)
                 }
@@ -410,13 +411,13 @@
                 this.vid = vid
                 this.$refs.detail.visible = true
             },
-            getThumbPic(pic) {  
+            getThumbPic(pic) {
                 return pic.replace('.jpg','_y.jpg')
             }
         },
-        mounted() { 
-            service.getSearchHistory((err, data)=>{  
-                if(err) return 
+        mounted() {
+            service.getSearchHistory((err, data)=>{
+                if(err) return
                 this.historyData = data.data
             })
             setTimeout(()=>{
