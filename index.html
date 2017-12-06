@@ -21,9 +21,9 @@
           var clientWidth = document.documentElement.clientWidth || window.innerWidth;
 
           if(clientWidth <= 800){
-            rem = Math.floor(clientWidth / 375 * 15);
+            rem = clientWidth / 750 * 30;
           }else if(clientWidth <= 1280){
-            rem = Math.floor(clientWidth / 1280 * 20);
+            rem = clientWidth / 1920 * 30;
           }
           document.querySelector('html').style.fontSize = rem + 'px';
         }
