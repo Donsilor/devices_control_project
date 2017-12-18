@@ -60,7 +60,8 @@
 <script>
     import watermark from '../../lib/watermark'
 
-    const [METHOD, CMD_SWITCH, CMD_RANGE] = ['dm_set_zigbee_curtain', 'setOnoff', 'setLevel'];
+    // const [METHOD, CMD_SWITCH, CMD_RANGE] = ['dm_set_zigbee_curtain', 'setOnoff', 'setLevel'];
+    const [METHOD, CMD_SWITCH, CMD_RANGE] = ['dm_set', 'setOnoff', 'setLevel'];
 
     export default {
         name: 'app',
@@ -251,19 +252,14 @@
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
 
-                /* HdSmart.Device.control(METHOD, CMD_SWITCH, {
-                    mode: 'on'
-                }, (data) => {
-                    onFinishCallback();
-                }, () => {
-                    onFinishCallback();
-                }); */
                 HdSmart.Device.control({
                     method: METHOD,
+                    nodeid: 'curtain.main.switch',
                     params: {
-                        cmd: CMD_SWITCH,
+                        // cmd: CMD_SWITCH,
                         attribute: {
-                            mode: 'on'
+                            // mode: 'on'
+                            switch: 'on'
                         }
                     }
                 }, (data) => {
@@ -277,19 +273,15 @@
                 this.clearTargetTip();
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
-                /* HdSmart.Device.control(METHOD, CMD_SWITCH, {
-                    mode: 'off'
-                }, () => {
-                    onFinishCallback();
-                }, () => {
-                    onFinishCallback();
-                }); */
+
                 HdSmart.Device.control({
                     method: METHOD,
+                    nodeid: 'curtain.main.switch',
                     params: {
-                        cmd: CMD_SWITCH,
+                        // cmd: CMD_SWITCH,
                         attribute: {
-                            mode: 'off'
+                            // mode: 'off'
+                            switch: 'off'
                         }
                     }
                 }, (data) => {
@@ -301,19 +293,15 @@
             onPause(onFinishCallback) {
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
-                /* HdSmart.Device.control(METHOD, CMD_SWITCH, {
-                    mode: 'pause'
-                }, () => {
-                    onFinishCallback();
-                }, () => {
-                    onFinishCallback();
-                }); */
+
                 HdSmart.Device.control({
                     method: METHOD,
+                    nodeid: 'curtain.main.switch',
                     params: {
-                        cmd: CMD_SWITCH,
+                        // cmd: CMD_SWITCH,
                         attribute: {
-                            mode: 'pause'
+                            // mode: 'pause'
+                            switch: 'pause'
                         }
                     }
                 }, (data) => {
@@ -330,15 +318,12 @@
                 this.timer = setTimeout(() => {
                     this.show = false;
                 }, 2000);
-                /* HdSmart.Device.control(METHOD, CMD_RANGE, {
-                    open_percentage: percentage
-                }, () => {
-                }, () => {
-                }); */
+
                 HdSmart.Device.control({
                     method: METHOD,
+                    nodeid: 'curtain.main.open_percentage',
                     params: {
-                        cmd: CMD_RANGE,
+                        // cmd: CMD_RANGE,
                         attribute: {
                             open_percentage: percentage
                         }

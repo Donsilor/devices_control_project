@@ -82,9 +82,9 @@
             </ul>
             <ul class="bd bd-num" v-else>
                 <li class="item-num"
-                    v-for="item in cur.playlist2.list"
+                    v-for="(item, num) in cur.playlist2.list"
                     :key="item.index"
-                    @click="play(item)">{{item.index}}
+                    @click="play(item)">{{item.index=='0' ? num+1 : item.index}}
                     <!-- <span class="tag_new" v-show="item.states"></span> -->
                 </li>
             </ul>

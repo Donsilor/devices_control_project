@@ -65,8 +65,8 @@ HdSmart.ready(() => {
 
     is_ready = true
 
-    //解决300ms延迟问题
-    FastClick.attach(document.body)
+    //解决300ms延迟问题,iOS下报错了
+    // FastClick.attach(document.body)
 
     router.beforeEach((to,from,next) => {
       if(current_page !== to.name){

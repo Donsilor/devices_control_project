@@ -71,7 +71,7 @@
                 //每帧运动的百分比
                 raf_percent: .5,
                 //每帧间隔时间
-                raf_time: 85,
+                raf_time: 16,
                 //动画总时间，应该从服务器端获取
                 total_time: 4000,
                 //提示显示
@@ -81,10 +81,12 @@
                 //是否显示选中的百分比(因为80会返回78就停止了，所以需要一个额外的参数来控制）
                 // show_active_btn: false,
                 //临时处理窗帘变动没有上传的问题
-                cbFunc: null,
+                cbFunc: null
             }
         },
         mounted() {
+            //计算间隔帧数
+            // this.getAniFramePercentage();
             HdSmart.ready(() => {
                 //获取快照
                 HdSmart.Device.getSnapShot((data) => {
@@ -119,42 +121,11 @@
 
                 }
             });
-            //计算间隔帧数
-            //this.getAniFramePercentage();
+
         },
         methods: {
             //测RAF性能使用（受双向同步，动画的影响），第一次开发手动运行
             getAniFramePercentage() {
-                /*
-                let counter = 20;
-                let init_counter = counter;
-                let reqId = null;
-                let vm = this;
-                let total = [];
-                let fun = function (lastTime) {
-                    if (!lastTime) {
-                        lastTime = +new Date();
-                    } else {
-                        let moment = +new Date();
-                        counter = counter - 1;
-                        total.push(moment - lastTime);
-                        if (counter === 0) {
-                            //间隔时间
-                            vm.raf_time = total.reduce((pre, next) => {
-                                return pre + next
-                            }) / init_counter;
-                            //更新每帧百分比
-                            vm.changeRafPercent();
-                            return;
-                        } else {
-                            lastTime = moment;
-                        }
-                    }
-                    reqId = requestAnimationFrame(function () {
-                        fun(lastTime);
-                    })
-                };
-                */
                 var start = Date.now()
                 var end
                 var count = 100
@@ -171,15 +142,18 @@
                         time_array.push(end-start)
                     }
                     start = Date.now()
-                    vm.target_percentage = count--;
+
+                    vm.target_percentage = count--
                     timer = window.requestAnimationFrame(fun)
                 }
 
                 function onEnd(){
+                    time_array = time_array.splice(10)
                     var total = time_array.reduce(function(a,b){
                         return a + b
                     })
                     vm.raf_time = total/time_array.length
+                    console.log(vm.raf_time)
                     vm.changeRafPercent();
                     window.cancelAnimationFrame(timer)
                 }
@@ -241,13 +215,6 @@
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
 
-                /* HdSmart.Device.control(METHOD, CMD_SWITCH, {
-                    mode: 'on'
-                }, (data) => {
-                    onFinishCallback();
-                }, () => {
-                    onFinishCallback();
-                }); */
                 HdSmart.Device.control({
                     method: METHOD,
                     params: {
@@ -267,13 +234,7 @@
                 this.clearTargetTip();
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
-                /* HdSmart.Device.control(METHOD, CMD_SWITCH, {
-                    mode: 'off'
-                }, () => {
-                    onFinishCallback();
-                }, () => {
-                    onFinishCallback();
-                }); */
+
                 HdSmart.Device.control({
                     method: METHOD,
                     params: {
@@ -291,13 +252,7 @@
             onPause(onFinishCallback) {
                 //等硬件修复了需要干掉
                 this.cbFunc = onFinishCallback;
-                /* HdSmart.Device.control(METHOD, CMD_SWITCH, {
-                    mode: 'pause'
-                }, () => {
-                    onFinishCallback();
-                }, () => {
-                    onFinishCallback();
-                }); */
+
                 HdSmart.Device.control({
                     method: METHOD,
                     params: {
@@ -320,11 +275,7 @@
                 this.timer = setTimeout(() => {
                     this.show = false;
                 }, 2000);
-                /* HdSmart.Device.control(METHOD, CMD_RANGE, {
-                    open_percentage: percentage
-                }, () => {
-                }, () => {
-                }); */
+
                 HdSmart.Device.control({
                     method: METHOD,
                     params: {
@@ -347,6 +298,7 @@
                 }
             },
             getTotalTime(data) {
+                console.log(data.result.updated_at," = ", data.result.attribute.open_percentage)
                 if(this.isGetTotalTime){
                     return
                 }
@@ -378,7 +330,6 @@
                 this.reportTimer = setTimeout(()=>{
                     this.reportArray = []
                 },1500)
-                console.log(data.result.updated_at," = ", data.result.attribute.open_percentage)
             }
         }
     }
