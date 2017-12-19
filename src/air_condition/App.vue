@@ -126,10 +126,7 @@
 <script>
     import AcButton from './components/AcButton.vue';
     import Devider from './components/Devider.vue';
-    //    import TimePicker from './components/TimePicker.vue';
     import AcSwitch from './components/AcSwitch.vue';
-
-    import {getDeviceName, getDeviceCategory} from '../../sdk/src/helper.js';
 
     import watermark from '../../lib/watermark'
 

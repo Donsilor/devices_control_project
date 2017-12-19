@@ -10,11 +10,13 @@ var util = require('./util');
 function resolve(dir) {
     return path.join(__dirname, '..', dir)
 }
+
 var isProduction = process.env.NODE_ENV === 'production';
 var app = util.getCommandApp();
+
 module.exports = {
     entry: {
-        sdk: ['./sdk/src/index.js'],
+        sdk: './lib/sdk/src',
         app: [`./src/${app}/main.js`]
     },
     output: {
@@ -28,6 +30,8 @@ module.exports = {
         extensions: ['.js', '.vue', '.json'],
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
+            '@': resolve('./src'),
+            '~': resolve('./')
         }
     },
     module: {
@@ -40,7 +44,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                include: [resolve('src'), resolve('test'), resolve('sdk'), resolve('lib'),]
+                exclude: /node_modules/
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

@@ -16,7 +16,7 @@ var app = util.getCommandApp();
 var appName = util.getCommandAppName();
 var mock = util.getAppConfig().mock || app
 
-baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/${mock}/index.js`;
+baseWebpackConfig.entry['after_iot'] = `${__dirname}/../mock/${mock}/index.js`;
 
 module.exports = merge(baseWebpackConfig, {
     module: {

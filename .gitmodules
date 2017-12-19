@@ -1,0 +1,3 @@
+[submodule "lib/sdk"]
+	path = lib/sdk
+	url = ssh://git@gitlab.egtest.cn:10022/web/hdsmart-sdk.git
