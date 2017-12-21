@@ -330,10 +330,10 @@
                     }else{
                         this.initErr = false;
                         this.setState(data.attribute);
-                        if(!this.deviceName){
-                            this.deviceName = data.device_name;
-                            this.deviceCategory = data.attribute.deviceSubCategory;
-                        }
+                        // if(!this.deviceName){
+                        this.deviceName = data.device_name;
+                        this.deviceCategory = data.attribute.deviceSubCategory;
+                        // }
                     }
                 }
             },

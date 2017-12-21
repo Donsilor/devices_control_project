@@ -128,12 +128,12 @@ export default {
                     this.$nextTick(()=>{
                         this.$refs.airon.syncTemp()
                     })
-                    if(!this.device.name){
-                        this.device = {
-                            name: data.device_name,
-                            category_id: data.attribute.deviceSubCategory
-                        }
+                    // if(!this.device.name){
+                    this.device = {
+                        name: data.device_name,
+                        category_id: data.attribute.deviceSubCategory
                     }
+                    // }
                 }
             }
         },

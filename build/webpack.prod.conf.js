@@ -34,12 +34,12 @@ var webpackConfig = merge(baseWebpackConfig, {
     plugins: [
         // http://vuejs.github.io/vue-loader/en/workflow/production.html
         new webpack.DefinePlugin({
-            'process.env': merge(util.getBuildArgs(),config.dev.env)
+            'process.env': merge(util.getBuildArgs(),config.build.env)
         }),
         new UglifyJSPlugin(),
         // extract css into its own file
         new ExtractTextPlugin({
-            filename: 'css/[name].[contenthash].css'
+            filename: '[name].[contenthash].css'
         }),
         // Compress extracted CSS. We are using this plugin so that possible
         // duplicated CSS from different components can be deduped.
@@ -75,24 +75,31 @@ var webpackConfig = merge(baseWebpackConfig, {
         ])
     ]
 })
-//
-// if (config.build.productionGzip) {
-//     var CompressionWebpackPlugin = require('compression-webpack-plugin')
-//
-//     webpackConfig.plugins.push(
-//         new CompressionWebpackPlugin({
-//             asset: '[path].gz[query]',
-//             algorithm: 'gzip',
-//             test: new RegExp(
-//                 '\\.(' +
-//                 config.build.productionGzipExtensions.join('|') +
-//                 ')$'
-//             ),
-//             threshold: 10240,
-//             minRatio: 0.8
-//         })
-//     )
-// }
+
+if (config.build.productionGzip) {
+    // var CompressionWebpackPlugin = require('compression-webpack-plugin')
+
+    // webpackConfig.plugins.push(
+    //     new CompressionWebpackPlugin({
+    //         asset: '[path].gz[query]',
+    //         algorithm: 'gzip',
+    //         test: new RegExp(
+    //             '\\.(' +
+    //             config.build.productionGzipExtensions.join('|') +
+    //             ')$'
+    //         ),
+    //         threshold: 10240,
+    //         minRatio: 0.8
+    //     })
+    // )
+    var ZipPlugin = require('zip-webpack-plugin')
+    webpackConfig.plugins.push(
+        new ZipPlugin({
+        path:path.join(__dirname,'../dist'),
+        filename: app + '.zip'
+        })
+    )
+}
 //
 // if (config.build.bundleAnalyzerReport) {
 //     var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
