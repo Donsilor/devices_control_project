@@ -92,16 +92,6 @@
     .hidescroll body{
         overflow: hidden !important;
     }
-    .hidescroll .page-detail{
-        /*overflow: auto;
-        overflow-y: scroll;*/
-    }
-    .hidescroll body > div > div,.hidescroll body > div > ul{
-        //filter: blur(10px);
-    }
-    .hidescroll body > div > .page-detail{
-        //filter: none;
-    }
     .slideup-enter-active {
         transition: all .3s ease;
     }
@@ -428,7 +418,7 @@
 </style>
 
 <script>
-
+    import { mapState, mapActions } from 'vuex'
     import * as service from '../service'
 
     //隐藏body滚动条
@@ -437,11 +427,11 @@
     }
 
     export default {
-        props: ['channelId','vid'],
+        // props: ['channelId','vid'],
         data() {
             return {
                 //是否显示
-                visible: false,
+                // visible: false,
                 cur: {
                     playlist: [{
                         list: []
@@ -460,11 +450,18 @@
                 isShowAll: false
             }
         },
+        computed: {
+            ...mapState({
+                visible: state => state.detailVisible,
+                channelId: state => state.activeDetail.channelId,
+                vid: state => state.activeDetail.vid,
+                ispay: state => state.activeDetail.ispay
+            }),
+        },
         watch: {
             visible(val) {
                 if(val){
                     this.getData()
-                    this.$emit('onShow')
                 }else{
                     this.cur = {
                         playlist: [{
@@ -476,7 +473,6 @@
                         }
                     }
                     this.history = false
-                    this.$emit('onClose')
                 }
                 toggleBoayScroll(val)
             },
@@ -489,6 +485,9 @@
             }
         },
         methods: {
+            ...mapActions([
+                'hideDetail'
+            ]),
             getData() {
                 this.loading = true
                 service.getDetaileData({
@@ -500,7 +499,7 @@
                         this.close()
                         return
                     }
-                    console.log(data.data)
+
                     var temp = data.data
                     var playlist = temp.playlist[0]
                     temp.playlist2 = {}
@@ -553,7 +552,7 @@
                     if(this.history){
                         this.$router.go(-1)
                     }
-                    this.visible = false
+                    this.hideDetail()
                 }
             },
             toHTML(str) {
@@ -582,7 +581,7 @@
             //详情页添加history change
             this.$watch('$route.query.detail',(newVal, oldVal)=>{
                 if(oldVal && newVal === undefined && this.visible){
-                    this.visible = false
+                    this.hideDetail()
                 }
             })
         }

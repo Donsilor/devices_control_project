@@ -1,6 +1,9 @@
 <template>
 <!-- <transition name="slide-fade"> -->
+<div id="app">
     <router-view></router-view>
+    <detail></detail>
+</div>
 <!-- </transition> -->
 </template>
 

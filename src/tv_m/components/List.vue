@@ -91,14 +91,14 @@
             <li class="vitem"
                 v-for="item in list"
                 :key="item.vid"
-                @click="showDetailInfo(item.channelId,item.vid)">
+                @click="showDetailInfo(item)">
                 <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
                 <div class="name">{{item.title}}</div>
                 <span class="update">
                     {{getUpdateSet(item.setCount,item.lastUpdateSet)}}
                 </span>
                 <div class="label">
-                    <span class="isvip" v-if="item.ispay !== '1'">VIP</span>
+                    <span class="isvip" v-if="item.ispay && item.ispay !== '1'">收费</span>
                     <span class="score">{{item.score}}</span>
                 </div>
             </li>
@@ -114,8 +114,6 @@
             <p v-show="!isFirstLoad && loadState === 'LOADED'">加载更多...</p>
             <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
         </div>
-        <!-- 详情页 -->
-        <detail :vid="vid" :channel-id="channelId" ref="detail"></detail>
     </div>
 </template>
 
@@ -199,9 +197,10 @@
         width: 320px;
         margin: 0 15px;
         position: relative;
+
         img{
             width: 320px;
-            // height: 470px;
+            height: 470px;
             display: block;
             background-color: #ebebeb;
             background-repeat: no-repeat;
@@ -360,7 +359,7 @@
             margin: 0 11px;
             img{
                 width: 216px;
-                // height: 317px;
+                height: 317px;
             }
         }
     }
@@ -495,10 +494,8 @@
                     this.filterData(this.pageNo + 1)
                 }
             },300),
-            showDetailInfo(channelId, vid) {
-                this.$refs.detail.visible = true
-                this.channelId = channelId
-                this.vid = vid
+            showDetailInfo(item) {
+                this.$store.dispatch('showDetail', item)
             },
             getUpdateSet(count, last) {
                 if(!count || !last || count == '0' || last == '0'){

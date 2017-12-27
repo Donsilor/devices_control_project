@@ -60,9 +60,12 @@
                     class="vitem"
                     v-for="item in resultData"
                     :key="item.vid"
-                    @click="showDetailInfo(item.channelId,item.vid)">
+                    @click="showDetailInfo(item)">
                     <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
                     <div class="name">{{item.title}}</div>
+                    <div class="label">
+                        <span class="isvip" v-if="item.ispay && item.ispay !== '1'">付费</span>
+                    </div>
                 </li>
             </ul>
             <!-- 没有数据 -->
@@ -89,8 +92,6 @@
                 <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
             </div>
         </div>
-        <!-- 详情页 -->
-        <detail :vid="vid" :channel-id="channelId" ref="detail"></detail>
     </div>
 </template>
 
@@ -408,10 +409,8 @@
                     this.filterData(this.pageNo + 1)
                 }
             },300),
-            showDetailInfo(channelId, vid) {
-                this.channelId = channelId
-                this.vid = vid
-                this.$refs.detail.visible = true
+            showDetailInfo(item) {
+                this.$store.dispatch('showDetail', item)
             },
             getThumbPic(pic) {
                 return pic.replace('.jpg','_y.jpg')

@@ -15,7 +15,7 @@
                         :key="item.vid">
                         <a href="#"
                             :style="{backgroundImage:'url('+item.pictureUrl+')'}"
-                            @click.prevent="showDetailInfo(item.channelId,item.vid)">
+                            @click.prevent="showDetailInfo(item)">
                             <span class="title">{{item.title}}</span>
                         </a>
                     </swiper-slide>
@@ -51,8 +51,6 @@
         <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
         <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
     </div>
-    <!-- 详情页 -->
-    <detail :vid="vid" :channel-id="channelId" @onClose="onDetailClose" ref="detail"></detail>
 </div></div>
 </template>
 
@@ -271,6 +269,7 @@
 <script>
 
     import * as service from '../service'
+    let infoCache = []
 
     export default {
         data() {
@@ -288,29 +287,42 @@
                 ...service.getInitData()
             }
         },
+        computed: {
+            detailVisible(){
+                return this.$store.state.detailVisible
+            }
+        },
+        watch: {
+           detailVisible(visible) {
+               if(visible){
+                    HdSmart.UI.toggleHeadAndFoot(false)
+                    this.$refs.swiper.swiper.stopAutoplay()
+               }else{
+                    HdSmart.UI.toggleHeadAndFoot(true)
+                    this.$refs.swiper.swiper.startAutoplay()
+               }
+           }
+        },
         methods: {
             cmd(name) {
                 service.onClickEvent(name)
             },
-            showDetailInfo (channelId, vid) {
-                this.channelId = channelId
-                this.vid = vid
-                this.$refs.detail.visible = true
-                HdSmart.UI.toggleHeadAndFoot(false)
-                this.$refs.swiper.swiper.stopAutoplay()
-            },
-            onDetailClose() {
-                HdSmart.UI.toggleHeadAndFoot(true)
-                this.$refs.swiper.swiper.startAutoplay()
+            showDetailInfo (item) {
+                this.$store.dispatch('showDetail', item)
             },
             pageInit() {
                 service.getHomePageInfo(data=>{
-                    this.homePageInfo = Object.freeze(data)
+                    infoCache = data
+                    this.homePageInfo = infoCache
                 })
             }
         },
         mounted () {
-            this.pageInit()
+            if(!infoCache.length){
+                this.pageInit()
+            }else{
+                this.homePageInfo = infoCache
+            }
         }
     }
 </script>

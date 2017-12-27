@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-//import Vuex from 'vuex'
+import Vuex from 'vuex'
 import FastClick from 'fastclick'
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
@@ -16,6 +16,7 @@ import ErrorView from './components/Error.vue'
 //import Statusbar from './components/Statusbar.vue'
 import watermark from '../../lib/watermark'
 
+Vue.use(Vuex)
 Vue.use(Router)
 Vue.use(VueAwesomeSwiper)
 Vue.use(VueLazyload, {
@@ -29,6 +30,28 @@ Vue.component('topbar', Topbar)
 
 //强制关闭3d(详情页改成不透明了)
 //window.Swiper.prototype.support.transforms3d = false
+
+const store = new Vuex.Store({
+    state: {
+        detailVisible: false,
+        activeDetail: {}
+    },
+    mutations: {
+        showDetail(state, payload) {
+            state.detailVisible = true
+            state.activeDetail = payload
+        },
+        hideDetail(state) {
+            state.detailVisible = false
+        }
+    },
+    actions: {
+        showDetail({ commit }, item) {
+            commit('showDetail', item)
+        },
+        hideDetail: ({ commit }) => commit('hideDetail'),
+    }
+})
 
 const router =  new Router({
   routes: [
@@ -89,6 +112,7 @@ HdSmart.ready(() => {
 
     new Vue({
       el: '#app',
+      store,
       router,
       template: '<App />',
       components: { App }

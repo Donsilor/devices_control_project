@@ -6,7 +6,10 @@
     <div class="page-detail" v-show="visible">
         <div class="detail-hd">
             <span class="back" @click="close"></span>
-            <div class="title">{{cur.title}}</div>
+            <div class="title" v-show="cur.title">
+                {{cur.title}}
+                <span class="isvip" v-show="ispay && ispay !== '1'">付费</span>
+            </div>
         </div>
         <div class="detail-bd">
         <div class="detail-info clearfix" v-show="cur.title">
@@ -107,32 +110,11 @@
 
 <style lang="less">
     .hidescroll{
-        overflow: visible !important;
-        width: auto;
+        // overflow: visible !important;
+        // width: auto;
     }
     .hidescroll body{
         overflow: hidden !important;
-    }
-    .hidescroll .page-detail{
-        /*overflow: auto;
-        overflow-y: scroll;*/
-    }
-    .hidescroll body > div > div,.hidescroll body > div > ul{
-        //filter: blur(10px);
-    }
-    .hidescroll body > div > .page-detail{
-        //filter: none;
-    }
-    .slideup-enter-active {
-        transition: all .3s ease;
-    }
-    .slideup-leave-active {
-        transition: all .3s ease;
-    }
-    .slideup-enter, .slideup-leave-to
-    /* .slideup-leave-active for <2.1.8 */ {
-        transform: translate3d(0,100%,0);
-        opacity: 0
     }
     .page-detail{
         position: fixed;
@@ -155,6 +137,17 @@
         left: 0;
         top: 0;
         width: 100%;*/
+        .isvip{
+            background: #f26161;
+            width: 60px;
+            line-height: 30px;
+            border-radius:3px;
+            font-size:24px;
+            text-align: center;
+            color:#fff;
+            opacity:0.9;
+            display: inline-block;
+        }
         .back{
             width: 100px;
             height: 96px;
@@ -420,7 +413,7 @@
 </style>
 
 <script>
-
+    import { mapState, mapActions } from 'vuex'
     import * as service from '../service'
 
     //隐藏body滚动条
@@ -429,11 +422,11 @@
     }
 
     export default {
-        props: ['channelId','vid'],
+        // props: ['channelId','vid'],
         data() {
             return {
                 //是否显示
-                visible: false,
+                // visible: false,
                 cur: {
                     playlist: [{
                         list: []
@@ -451,11 +444,19 @@
                 history: false
             }
         },
+        computed: {
+            ...mapState({
+                visible: state => state.detailVisible,
+                channelId: state => state.activeDetail.channelId,
+                vid: state => state.activeDetail.vid,
+                ispay: state => state.activeDetail.ispay
+            }),
+        },
         watch: {
             visible(val) {
                 if(val){
                     this.getData()
-                    this.$emit('onShow')
+                    // this.$emit('onShow')
                 }else{
                     this.cur = {
                         playlist: [{
@@ -467,7 +468,7 @@
                         }
                     }
                     this.history = false
-                    this.$emit('onClose')
+                    // this.$emit('onClose')
                 }
                 toggleBoayScroll(val)
             },
@@ -480,6 +481,9 @@
             }
         },
         methods: {
+            ...mapActions([
+                'hideDetail'
+            ]),
             getData() {
                 this.loading = true
                 service.getDetaileData({
@@ -491,13 +495,13 @@
                         this.close()
                         return
                     }
-                    console.log(data.data)
+
                     var temp = data.data
                     var playlist = temp.playlist[0]
                     temp.playlist2 = {}
                     temp.playlist2.total = playlist.total
-                    temp.playlist2.list = playlist.list.filter(item=>item.states=='1')
-                    temp.playlist2.list2 = playlist.list.filter(item=>item.states!='1')
+                    temp.playlist2.list = playlist.list.filter(item => item.states == '1')
+                    temp.playlist2.list2 = playlist.list.filter(item => item.states != '1')
                     this.cur = Object.freeze(temp)
                     this.setHistory()
                 })
@@ -544,7 +548,7 @@
                     if(this.history){
                         this.$router.go(-1)
                     }
-                    this.visible = false
+                    this.hideDetail()
                 }
             },
             toHTML(str) {
@@ -570,7 +574,8 @@
             //详情页添加history change
             this.$watch('$route.query.detail',(newVal, oldVal)=>{
                 if(oldVal && newVal === undefined && this.visible){
-                    this.visible = false
+                    this.hideDetail()
+                    // this.visible = false
                 }
             })
         }

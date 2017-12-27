@@ -1,7 +1,8 @@
 <template>
-<!-- <transition name="slide-fade"> -->
+<div id="app">
     <router-view></router-view>
-<!-- </transition> -->
+    <detail></detail>
+</div>
 </template>
 
 <style lang="less">
