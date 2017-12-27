@@ -300,7 +300,7 @@
                 //监听设备状态report
                 HdSmart.onDeviceListen((data) => {
                     if(data.method === 'dm_set'){
-                        if(data.code !==0) that.init()
+                        if(data.code !== 0) that.init()
                     }else{
                         that.onSuccess(data.result)
                     }
@@ -516,7 +516,7 @@
                 attr[POWER] = switchType === BOOT_SWITCH ? ON : OFF;
 
                 HdSmart.Device.control({
-                    method: 'set',
+                    method: 'dm_set',
                     nodeid: NODE_ID + POWER,
                     params: {
                         attribute: attr
@@ -535,8 +535,7 @@
                     },
                     () => {
                         this.setTip('设置失败');
-                    },
-                    timerObj
+                    }
                 );
             },
             setTemperature(type, value, tip, el){

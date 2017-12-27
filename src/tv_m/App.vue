@@ -9,8 +9,8 @@
         padding: 0;
         margin: 0;
         -webkit-tap-highlight-color: transparent;
-        -webkit-user-select: none;
-        user-select: none;
+        // -webkit-user-select: none;
+        // user-select: none;
         box-sizing: border-box;
     }
     a{

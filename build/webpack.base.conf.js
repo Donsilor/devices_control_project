@@ -16,7 +16,7 @@ var app = util.getCommandApp();
 
 module.exports = {
     entry: {
-        sdk: './lib/sdk/src',
+        sdk: './lib/hdsmart.js',
         app: [`./src/${app}/main.js`]
     },
     output: {

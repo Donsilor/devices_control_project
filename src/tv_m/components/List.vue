@@ -201,7 +201,7 @@
         position: relative;
         img{
             width: 320px;
-            height: 470px;
+            // height: 470px;
             display: block;
             background-color: #ebebeb;
             background-repeat: no-repeat;
@@ -360,7 +360,7 @@
             margin: 0 11px;
             img{
                 width: 216px;
-                height: 317px;
+                // height: 317px;
             }
         }
     }
