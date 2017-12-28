@@ -52,7 +52,7 @@
     }
 </style>
 <script>
-    const [METHOD, CMD_SWITCH, CMD_RANGE] = ['dm_set_zigbee_curtain', 'setOnoff', 'setLevel'];
+    const [METHOD, CMD_SWITCH, CMD_RANGE] = ['dm_set', 'setOnoff', 'setLevel'];
 
     export default {
         name: 'app',
@@ -217,10 +217,10 @@
 
                 HdSmart.Device.control({
                     method: METHOD,
+                    nodeid: 'curtain.main.switch',
                     params: {
-                        cmd: CMD_SWITCH,
                         attribute: {
-                            mode: 'on'
+                            switch: 'on'
                         }
                     }
                 }, (data) => {
@@ -237,10 +237,12 @@
 
                 HdSmart.Device.control({
                     method: METHOD,
+                    nodeid: 'curtain.main.switch',
                     params: {
-                        cmd: CMD_SWITCH,
+                        // cmd: CMD_SWITCH,
                         attribute: {
-                            mode: 'off'
+                            // mode: 'off'
+                            switch: 'off'
                         }
                     }
                 }, (data) => {
@@ -255,10 +257,12 @@
 
                 HdSmart.Device.control({
                     method: METHOD,
+                    nodeid: 'curtain.main.switch',
                     params: {
-                        cmd: CMD_SWITCH,
+                        // cmd: CMD_SWITCH,
                         attribute: {
-                            mode: 'pause'
+                            // mode: 'pause'
+                            switch: 'pause'
                         }
                     }
                 }, (data) => {
@@ -278,8 +282,9 @@
 
                 HdSmart.Device.control({
                     method: METHOD,
+                    nodeid: 'curtain.main.open_percentage',
                     params: {
-                        cmd: CMD_RANGE,
+                        // cmd: CMD_RANGE,
                         attribute: {
                             open_percentage: percentage
                         }

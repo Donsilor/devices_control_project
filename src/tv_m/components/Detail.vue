@@ -137,6 +137,11 @@
             line-height: 90px;
             color:#2f3133;
             font-size: 36px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 75%;
+            margin: 0 auto;
         }
     }
     .detail-bd{

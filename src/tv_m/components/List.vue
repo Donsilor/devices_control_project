@@ -202,6 +202,7 @@
             width: 320px;
             height: 470px;
             display: block;
+            object-fit: cover;
             background-color: #ebebeb;
             background-repeat: no-repeat;
             background-position: center center;

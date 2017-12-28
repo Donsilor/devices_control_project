@@ -41,7 +41,7 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
-    .page-list,.page-search{
+    .page-index,.page-list,.page-search{
         padding-bottom: 120px;
     }
     .detail-bd{
