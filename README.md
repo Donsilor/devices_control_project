@@ -1,3 +1,8 @@
+### 下载SDK
+```
+git submodule update --init --recursive
+```
+
 ### 编译说明
 ```
 npm run dev 产品名 参数
