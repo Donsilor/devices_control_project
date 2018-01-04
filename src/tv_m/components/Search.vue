@@ -118,6 +118,7 @@
             background:#fff url(../assets/icn_topbar_search_pressed@2x.png) no-repeat 20px center;
             background-size: 36px 36px;
             padding-left: 68px;
+            padding-right: 64px;
             font-size: 32px;
             &::-webkit-input-placeholder{
                 color: #c8cacc;

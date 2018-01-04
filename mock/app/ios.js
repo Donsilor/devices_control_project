@@ -26,7 +26,7 @@ export default {
                 if(callbackName){
                     setTimeout(()=>{
                         trigger(callbackName, response)
-                    },1000)
+                    },500)
                 }
             }
             callback(params, next)
