@@ -84,7 +84,7 @@
         }
         .item{
             display: block;
-            width: 250px;
+            width: 33.33%;
             height: 250px;
             border-left: 1px solid #dbdbdb;
             border-top: 1px solid #dbdbdb;

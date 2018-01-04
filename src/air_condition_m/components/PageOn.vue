@@ -96,6 +96,8 @@ const tips = {
     wind_left_right_on: '左右扫风已启动',
     wind_left_right_off: '左右扫风已关闭',
     err_temp1: '送风模式下不能设置温度',
+    err_temp2: '温度已调至最高',
+    err_temp3: '温度已调至最低'
 }
 const SPEED = ['low', 'normal', 'high']
 const [MIN_TEMP,MAX_TEMP] = [16,30]
@@ -138,7 +140,12 @@ export default {
             )
         },
         setTemperature(val, event) {
-            if((val > 0 && this.temperature === MAX_TEMP) || (val < 0 && this.temperature === MIN_TEMP)){
+            if(val > 0 && this.temperature === MAX_TEMP){
+                this.showTip(tips.err_temp2)
+                return
+            }
+            if(val < 0 && this.temperature === MIN_TEMP){
+                this.showTip(tips.err_temp3)
                 return
             }
             if(this.checkCmd('temperature',this.temperature+val)){

@@ -33,5 +33,60 @@
     "humiture": {
         "src": "humiture",
         "name": "温湿度传感器"
+    },
+    "tcl_clothes_hanger": {
+        "src": "tcl_clothes_hanger",
+        "name": "晾衣架",
+        "mock": "clothes_hanger"
+    },
+    "tcl_air_cleaner": {
+        "src": "tcl_air_cleaner",
+        "name": "空气净化器",
+        "mock": "air_cleaner"
+    },
+    "tcl_washer": {
+        "src": "tcl_washer",
+        "name": "洗衣机",
+        "mock": "washer"
+    },
+    "tcl_water_cleaner": {
+        "src": "tcl_water_cleaner",
+        "name": "净水器",
+        "mock": "water_cleaner"
+    },
+    "suning_air_cleaner": {
+        "src": "suning_air_cleaner",
+        "name": "空气净化器",
+        "mock": "suning_air_cleaner"
+    },
+    "suning_air_condition": {
+        "src": "suning_air_condition",
+        "name": "空调",
+        "mock": "air_condition"
+    },
+    "suning_cleaning_robot": {
+        "src": "suning_cleaning_robot",
+        "name": "扫地机器人",
+        "mock": "suning_cleaning_robot"
+    },
+    "suning_oven": {
+        "src": "suning_oven",
+        "name": "烤箱",
+        "mock": "suning_oven"
+    },
+    "suning_washer": {
+        "src": "suning_washer",
+        "name": "洗衣机",
+        "mock": "suning_washer"
+    },
+    "suning_water_cleaner": {
+        "src": "suning_water_cleaner",
+        "name": "净水器",
+        "mock": "suning_water_cleaner"
+    },
+    "suning_water_heater": {
+        "src": "suning_water_heater",
+        "name": "热水器",
+        "mock": "suning_water_heater"
     }
 }

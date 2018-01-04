@@ -188,6 +188,8 @@
         }
         .text{
             margin-left: 344px;
+            height: 470px;
+            position: relative;
         }
         .desc{
             clear: both;
@@ -244,17 +246,17 @@
     .playstate{
         position: absolute;
         bottom: 0;
-        width: 342px;
+        width: 100%;
         height: 84px;
         .btn{
             background:#13d5dc;
             border-radius:6px;
             height:84px;
             line-height: 84px;
-            padding: 0 36px;
-            display: inline-block;
+            display: block;
             color: #fff;
             font-size: 36px;
+            text-align: center;
             i{
                 display: inline-block;
                 background-size: 100% 100%;
