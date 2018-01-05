@@ -11,9 +11,13 @@
 <style scoped>
     .timing-item{
         line-height: 84px;
+        margin-top: 20px;
     }
     .timing-time{
         min-height: 84px;
+    }
+    .timing-desc{
+        font-size: 24px;
     }
     .timing-desc, .timing-time, .timing-switch{
         display: inline-block;
@@ -21,7 +25,7 @@
     }
     .timing-time{
         width: 58px;
-        padding: 0 36px 0 80px;
+        padding: 0 36px 0 30px;
     }
     .timing-switch{
         width: 72px;

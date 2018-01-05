@@ -47,16 +47,23 @@
 
             <div class="more" v-show="!showMore" @click.stop="showMore=true;"></div>
             <!--更多子菜单Start-->
+            <div class="overlay" v-show="showMore"></div>
             <transition name="fade-in">
                 <div class="subMenu" v-show="showMore" @click.stop="">
+                    <div class="subHeader">
+                        更多
+                        <span class="sub-close" @click.stop="showMore=false;"></span>
+                    </div>
                     <devider :content="'模式'"></devider>
                     <div class="more-mode">
                         <ac-button :info="buttonList.mode_auto" :curValue="params[buttonList.mode_auto.type]"
                                    @tap="setParam"></ac-button>
                         <ac-button :info="buttonList.wind" :curValue="params[buttonList.wind.type]"
                                    @tap="setParam"></ac-button>
+                        <ac-button :info="buttonList.sleep" :curValue="params[buttonList.sleep.type]"
+                                   @tap="setParam"></ac-button>
                     </div>
-                    <devider :content="'摆风'"></devider>
+                    <devider :content="'摆风'" style="margin-top: 30px;"></devider>
                     <div class="more-wind-direction">
                         <ac-button v-if="deviceCategory === 1" :info="lrBtn" @tap="toggle"></ac-button>
                         <ac-button :info="udBtn" @tap="toggle"></ac-button>
@@ -64,11 +71,8 @@
                     <!--TODO:830以后做-->
                     <!--<devider :content="'定时'"></devider>-->
                     <!--<div class="more-timing">-->
-                    <!--<ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"-->
-                    <!--@change="bootTpVisible = params.bootSwitch"-->
-                    <!--@toggle="toggle('bootSwitch')"></ac-switch>-->
-                    <!--<ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"-->
-                    <!--@change="offTpVisible = params.offSwitch" @toggle="toggle('offSwitch')"></ac-switch>-->
+                    <!--<ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch" @change="bootTpVisible = params.bootSwitch" @toggle="toggle('bootSwitch')"></ac-switch>-->
+                    <!--<ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch" @change="offTpVisible = params.offSwitch" @toggle="toggle('offSwitch')"></ac-switch>-->
                     <!--</div>-->
                 </div>
             </transition>
@@ -169,10 +173,13 @@
 //                    wind: new Button('送风', MODE, 'wind', require('./assets/wind_normal.png'), require('./assets/wind_active.png'), '送风模式切换成功'),
                     mode_auto: new Button('智能', MODE, 'auto', require('./assets/mode_auto_normal.png'), require('./assets/mode_auto_active.png'), '智能模式切换成功'),
                     wind: new Button('送风', MODE, 'wind', require('./assets/mode_air_normal.png'), require('./assets/mode_air_active.png'), '送风模式切换成功'),
+                    sleep: new Button('静眠', MODE, 'sleep', require('./assets/sleep_normal.png'), require('./assets/sleep_active.png'), '静眠模式切换成功'),
 
                     //风速
                     low: new Button('低风', SPEED, 'low', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
+                    overlow: new Button('低风', SPEED, 'low', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
                     normal: new Button('中风', SPEED, 'normal', require('./assets/medium_normal.png'), require('./assets/medium_active.png'), '中风切换成功'),
+                    overnormal: new Button('中风', SPEED, 'normal', require('./assets/medium_normal.png'), require('./assets/medium_active.png'), '中风切换成功'),
                     high: new Button('高风', SPEED, 'high', require('./assets/high_normal.png'), require('./assets/high_active.png'), '高风切换成功'),
 
                     //电源开关
@@ -808,9 +815,34 @@
         width: 360px;
         height: 360px;
     }
-
+    .subMenu {
+        position: absolute;
+        right: 50%;
+        top: 132px;
+        margin-right: -303px;
+        z-index: 2;
+    }
+    .subHeader{
+        height: 84px;
+        line-height: 84px;
+        font-size:30px;
+        color:#76787a;
+        text-align: center;
+        box-shadow:inset 0 -1px 0 0 #dbdbdb;
+    }
+    .subHeader .sub-close{
+        width: 31px;
+        height: 31px;
+        display: inline-block;
+        position: absolute;
+        top: 26px;
+        right: 26px;
+        background: url("./assets/close.png") no-repeat;
+        background-size:contain;
+        cursor: pointer;
+    }
     /*更多*/
-    .more, .subMenu {
+    .more {
         position: absolute;
         right: 60px;
         top: 132px;
@@ -839,7 +871,18 @@
     /*.fade-enter, .fade-leave-to, .fade-in-enter, .fade-in-leave-to {*/
     /*opacity: 0*/
     /*}*/
-
+    /*遮罩层*/
+    .overlay{
+        width:100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,.5);
+        z-index:1;
+        position: fixed;
+    }
     /*子菜单*/
     .subMenu {
         opacity: 0.95;
@@ -847,26 +890,24 @@
         box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.10);
         box-sizing: border-box;
         border-radius: 6px;
-        padding: 0 24px;
-        /*width: 456px;*/
-        /*height: 660px;*/
-        width: 408px;
-        height: 558px;
+        padding: 0 0px;
+        width: 648px;
+        height: 668px;
         color: #75787a;
         font-size: 24px;
     }
     .subMenu .imgWrapper {
-        margin: 0 24px 18px 24px;
+        margin: 0 19px 18px 19px;
     }
     .subMenu img {
         /*width: 96px;*/
         /*height: 96px;*/
-        width: 120px;
-        height: 120px;
+        width: 144px;
+        height: 144px;
     }
     .subMenu .devider {
         /*margin-top: 30px;*/
-        margin: 30px 0;
+        margin: 25px 0;
     }
     .more-timing {
         font-size: 30px;

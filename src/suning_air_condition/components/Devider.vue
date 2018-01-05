@@ -11,7 +11,7 @@
     .devider {
         line-height: 24px;
         font-size: 24px;
-        color: #dbdbdb;
+        color:#c8cacc;
     }
     .devider-line{
         box-shadow: inset 0 -1px 0 0 #dbdbdb;
