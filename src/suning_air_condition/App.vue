@@ -38,9 +38,12 @@
                 <ac-button :info="buttonList.dehumidify" :curValue="params[buttonList.dehumidify.type]"
                            @tap="setParam"></ac-button>
                 <ac-button :info="buttonList.on" v-show="params.switch === 'on'" @tap="toggle"></ac-button>
-                <ac-button :info="buttonList.low" :curValue="params[buttonList.low.type]" @tap="setParam"></ac-button>
+                <ac-button :info="buttonList.low" :curValue="params[buttonList.low.type]" @tap="setParam" v-if="params[buttonList.low.type]!='overlow'"></ac-button>
+                <ac-button :info="buttonList.overlow" :curValue="params[buttonList.overlow.type]" @tap="setParam" v-if="params[buttonList.overlow.type]=='overlow'"></ac-button>
                 <ac-button :info="buttonList.normal" :curValue="params[buttonList.normal.type]"
-                           @tap="setParam"></ac-button>
+                           @tap="setParam" v-if="params[buttonList.normal.type]!='overnormal'"></ac-button>
+                <ac-button :info="buttonList.overnormal" :curValue="params[buttonList.overnormal.type]"
+                           @tap="setParam" v-if="params[buttonList.overnormal.type]=='overnormal'"></ac-button>
                 <ac-button :info="buttonList.high" :curValue="params[buttonList.high.type]" @tap="setParam"></ac-button>
             </div>
             <!--底部按钮End-->
@@ -60,8 +63,7 @@
                                    @tap="setParam"></ac-button>
                         <ac-button :info="buttonList.wind" :curValue="params[buttonList.wind.type]"
                                    @tap="setParam"></ac-button>
-                        <ac-button :info="buttonList.sleep" :curValue="params[buttonList.sleep.type]"
-                                   @tap="setParam"></ac-button>
+                        <ac-button :info="sleepMode" @tap="toggle"></ac-button>
                     </div>
                     <devider :content="'摆风'" style="margin-top: 30px;"></devider>
                     <div class="more-wind-direction">
@@ -135,8 +137,8 @@
     import watermark from '../../lib/watermark'
 
     const [MIN_TEMP, MAX_TEMP] = [16, 30];
-    const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] =
-        ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
+    const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH,SLEEP_MODE] =
+        ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch','sleep_mode'];
     const [ON, OFF] = ['on', 'off'];
     const NODE_ID = 'airconditioner.main.';
     //连续设置时间判断间隔
@@ -173,13 +175,11 @@
 //                    wind: new Button('送风', MODE, 'wind', require('./assets/wind_normal.png'), require('./assets/wind_active.png'), '送风模式切换成功'),
                     mode_auto: new Button('智能', MODE, 'auto', require('./assets/mode_auto_normal.png'), require('./assets/mode_auto_active.png'), '智能模式切换成功'),
                     wind: new Button('送风', MODE, 'wind', require('./assets/mode_air_normal.png'), require('./assets/mode_air_active.png'), '送风模式切换成功'),
-                    sleep: new Button('静眠', MODE, 'sleep', require('./assets/sleep_normal.png'), require('./assets/sleep_active.png'), '静眠模式切换成功'),
-
                     //风速
                     low: new Button('低风', SPEED, 'low', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
-                    overlow: new Button('低风', SPEED, 'low', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
+                    overlow: new Button('低风', SPEED, 'overlow', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
                     normal: new Button('中风', SPEED, 'normal', require('./assets/medium_normal.png'), require('./assets/medium_active.png'), '中风切换成功'),
-                    overnormal: new Button('中风', SPEED, 'normal', require('./assets/medium_normal.png'), require('./assets/medium_active.png'), '中风切换成功'),
+                    overnormal: new Button('中风', SPEED, 'overnormal', require('./assets/medium_normal.png'), require('./assets/medium_active.png'), '中风切换成功'),
                     high: new Button('高风', SPEED, 'high', require('./assets/high_normal.png'), require('./assets/high_active.png'), '高风切换成功'),
 
                     //电源开关
@@ -209,7 +209,8 @@
                     //开机时间
                     bootTime: '',
                     //关机时间
-                    offTime: ''
+                    offTime: '',
+                    sleep_mode: ''
                 },
                 //提示，3秒后隐藏
                 tip: '',
@@ -240,6 +241,9 @@
                 obj[this.params.switch] = true;
                 obj['err'] = this.initErr;
                 return obj;
+            },
+            sleepMode() {
+                return new Button('静眠', SLEEP_MODE, this.params.sleep_mode, require('./assets/sleep_normal.png'), require('./assets/sleep_active.png'))
             },
             lrBtn: function () {
                 return new Button('左右', WIND_LEFT_RIGHT, this.params.wind_left_right, require('./assets/horizontal_normal.png'), require('./assets/horizontal_active.png'));
@@ -380,6 +384,10 @@
                     this.params.wind_left_right = attr.wind_left_right;
                 }
 
+                if(attr.sleep_mode != undefined){
+                    this.params.sleep_mode = attr.sleep_mode
+                }
+
                 //TODO: 830后做
                 /*let[onTimer, offTimer] = [null, null];
                  if(attr.timer instanceof Array){
@@ -417,12 +425,12 @@
                     str = '';
                 }
 
-
                 switch (type){
                     case WIND_LEFT_RIGHT: this.setParam(type, newValue, '左右扫风' + str, el); break;
                     case WIND_UP_DOWN: this.setParam(type, newValue, '上下扫风' + str, el); break;
                     case BOOT_SWITCH: this.setTimer(BOOT_SWITCH, newValue, this.params.bootTime, '开机时间' + str); break;
                     case OFF_SWITCH: this.setTimer(OFF_SWITCH, newValue, this.params.offTime, '关机时间' + str); break;
+                    case SLEEP_MODE: this.setParam(type, newValue, '静眠模式' + str, el); break;
                     default: this.setParam(type, newValue, tip, el); break;
                 }
             },
@@ -802,8 +810,8 @@
         height: 144px;
     }
     .switch img {
-        width: 204px;
-        height: 204px;
+        width: 192px;
+        height: 192px;
     }
     .off .imgWrapper img {
         filter: invert(30%);
@@ -819,7 +827,7 @@
         position: absolute;
         right: 50%;
         top: 132px;
-        margin-right: -303px;
+        margin-right: -324px;
         z-index: 2;
     }
     .subHeader{
@@ -950,10 +958,10 @@
         /*animation: circle 1s linear infinite;*/
     }
     .switch.loading:before {
-        top: 12px;
-        left: 12px;
-        width: 180px;
-        height: 180px;
+        top: 0px;
+        left: 0px;
+        width: 192px;
+        height: 192px;
     }
     .on .switch.loading:before {
         background: url('./assets/buffering_power_white.gif') no-repeat center;
@@ -966,10 +974,10 @@
     .subMenu .loading:before {
         background: url('./assets/buffering_submenu_blue.gif') no-repeat center;
         background-size: 100%;
-        width: 120px;
-        height: 120px;
+        width: 144px;
+        height: 144px;
         top: 0;
-        left: 24px;
+        left: 19px;
     }
 
     /*按钮点击样式*/
