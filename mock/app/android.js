@@ -18,7 +18,7 @@ export default {
                     var next = function(response){
                         setTimeout(()=>{
                             options.onListener(JSON.stringify(response))
-                        },1000)
+                        },500)
                     }
                     callback(JSON.parse(options.data), next)
                 }
