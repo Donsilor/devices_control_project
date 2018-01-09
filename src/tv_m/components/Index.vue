@@ -4,6 +4,8 @@
 <template>
 <div class="page-index">
 
+    <div class="page-header"></div>
+    <div class="page-body">
     <router-link to="/search" class="search">输入片名、导演、演员搜索</router-link>
 
     <div class="swiper">
@@ -52,13 +54,28 @@
             <a href="#" @click.prevent="cmd('remoteControlEvent')" class="item item-ykq">遥控器</a>
         </div>
     </div>
+    </div>
 </div>
 </template>
 
 <style lang="less">
     .page-index{
         background:#fafafa;
-        padding-top: 88px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+    }
+    .page-header{
+        height: 88px;
+    }
+    .page-body{
+        height: 100%;
+        padding-bottom: 120px;
+        overflow-y: auto;
     }
     .search{
         background:#ffffff  url(../assets/icn_topbar_search_pressed@2x.png) no-repeat 25px center;
