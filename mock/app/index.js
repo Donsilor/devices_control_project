@@ -16,12 +16,20 @@ if(isIOS){
     $on = androidCore.$on
 }
 
-for(var key in apiList){
-    $on(apiList[key],()=>{})
-}
+if (location.search.indexOf('env=desktop') != -1) {
 
-setTimeout(()=>{
-    onDeviceJsReady()
-},200)
+    for(var key in apiList){
+        $on(apiList[key],()=>{})
+    }
+
+    $on(apiList.ui_alert, function(data, done){
+        alert(data.message)
+        done({})
+    })
+
+    setTimeout(()=>{
+        onDeviceJsReady()
+    },200)
+}
 
 export default $on

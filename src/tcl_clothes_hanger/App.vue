@@ -9,13 +9,13 @@
 
         <div class="tip">
             <p>
-                <span v-show="!tip2 && tip">{{tip}}</span>
-                <span v-show="tip2">{{tip2}}</span>&nbsp;
+                <span v-show="tip">{{tip}}</span>
+                <span v-show="!tip && tip2">{{tip2}}</span>&nbsp;
             </p>
-            <p v-show="drying == 'on'">烘干 将于{{drying_remain}}分钟后结束</p>
-            <p v-show="air_drying == 'on'">风干 将于{{air_drying_remain}}分钟后结束</p>
+            <p v-show="drying == 'on'">正在烘干 将于{{drying_remain}}分钟后结束</p>
+            <p v-show="air_drying == 'on'">正在风干 将于{{air_drying_remain}}分钟后结束</p>
             <!-- <p v-show="(drying == 'on' || air_drying == 'on') && sterilization == 'on'">杀菌 将于{{timeleft}}分钟后开始</p> -->
-            <p v-show="sterilization == 'on'">杀菌 将于{{sterilization_remain}}分钟后结束</p>
+            <p v-show="sterilization == 'on'">正在杀菌 将于{{sterilization_remain}}分钟后结束</p>
         </div>
 
         <div class="entity">
@@ -95,7 +95,7 @@ a{
     width: 100%;
 }
 .bg{
-    background: #21A4FE;
+    background-image: linear-gradient(-180deg, #2499ff 0%, #13d5dc 100%);
 }
 .cloud{
     background: url(./assets/img_clould.png) repeat-x left 180px;
@@ -610,22 +610,22 @@ export default {
                 return
             }
 
-            var tip = ''
-            if(attrs.air_drying == 'on' || attrs.drying == 'on' || attrs.sterilization == 'on'){
-                tip = '正在'
-                if(attrs.air_drying == 'on'){
-                    tip += '风干'
-                }
-                if(attrs.drying == 'on'){
-                    tip += '烘干'
-                }
-                if(attrs.sterilization == 'on'){
-                    tip += '杀菌'
-                }
-                this.showTip(tip)
-            }else{
-                this.showTip('')
-            }
+            // var tip = ''
+            // if(attrs.air_drying == 'on' || attrs.drying == 'on' || attrs.sterilization == 'on'){
+            //     tip = '正在'
+            //     if(attrs.air_drying == 'on'){
+            //         tip += '风干'
+            //     }
+            //     if(attrs.drying == 'on'){
+            //         tip += '烘干'
+            //     }
+            //     if(attrs.sterilization == 'on'){
+            //         tip += '杀菌'
+            //     }
+            //     this.showTip(tip)
+            // }else{
+            //     this.showTip('')
+            // }
         },
         onSuccess(result) {
 
