@@ -68,6 +68,7 @@
         flex-direction: column;
         height: 100%;
         width: 100%;
+        overflow-x: hidden;
     }
     .page-header{
         height: 88px;
