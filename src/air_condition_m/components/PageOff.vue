@@ -81,7 +81,7 @@ export default {
     position: absolute;
     left: 50%;
     // top: 600px;
-    bottom: 132px;
+    bottom: 252px;
     width: 144px;
     height: 144px;
     transform: translateX(-50%);

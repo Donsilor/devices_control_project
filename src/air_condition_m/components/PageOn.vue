@@ -313,7 +313,7 @@ export default {
     background-size: 100% 100%;
     background-repeat: no-repeat;
     // top: 600px;
-    bottom: 132px;
+    bottom: 252px;
     background-image: url(../assets/btn_aircon_poweroff_normal@2x.png);
     transition: all 1s;
     &:active {
@@ -347,6 +347,7 @@ export default {
         text-align: center;
         width: 120px;
         height: 200px;
+        font-size: 28px;
         &.on{
             font-weight: bold;
         }
@@ -363,7 +364,7 @@ export default {
 .btns-hold{
     position: absolute;
     left: 50%;
-    bottom: 308px;
+    bottom: 428px;
     width: 750px;
     transform: translateX(-50%);
     padding: 0 35px;
@@ -490,6 +491,7 @@ export default {
     width: 100%;
     text-align: center;
     color:#fff;
+    font-size: 28px;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s
