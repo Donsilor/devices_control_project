@@ -44,6 +44,11 @@
         "name": "空气净化器",
         "mock": "air_cleaner"
     },
+    "tcl_air_condition": {
+        "src": "tcl_air_condition",
+        "name": "TCL空调",
+        "mock": "air_condition"
+    },
     "tcl_washer": {
         "src": "tcl_washer",
         "name": "洗衣机",
