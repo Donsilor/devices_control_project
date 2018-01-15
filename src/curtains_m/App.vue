@@ -3,7 +3,7 @@
         <div class="tip" v-if="show && tip">{{tip}}</div>
         <navigator class="navigator" v-once></navigator>
         <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"
-                 :total_time="total_time"></curtain>
+                 :total_time="total_time" :test="test"></curtain>
         <control class="control" v-on:onOpen="onOpen"
                  v-on:onPause="onPause" v-on:onClose="onClose" :is_ready="is_ready"
                  @onGoPercentage="onGoPercentage"></control>
@@ -81,12 +81,11 @@
                 //是否显示选中的百分比(因为80会返回78就停止了，所以需要一个额外的参数来控制）
                 // show_active_btn: false,
                 //临时处理窗帘变动没有上传的问题
-                cbFunc: null
+                cbFunc: null,
+                test: 0
             }
         },
         mounted() {
-            //计算间隔帧数
-            // this.getAniFramePercentage();
             HdSmart.ready(() => {
                 //获取快照
                 HdSmart.Device.getSnapShot((data) => {
@@ -97,11 +96,12 @@
                         this.open_percentage = data.attribute.open_percentage;
                         this.animateToTargetPercentage(this.open_percentage, true);
                     }
+                    //计算间隔帧数
+                    this.getAniFramePercentage();
                 }, () => {
                     this.is_ready = true;
                     HdSmart.UI.hideLoading();
                 });
-                HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
             });
 
             var isFirstLoad = true
@@ -128,7 +128,7 @@
             getAniFramePercentage() {
                 var start = Date.now()
                 var end
-                var count = 100
+                var count = 10
                 var time_array = []
                 var timer
                 var vm = this
@@ -138,17 +138,15 @@
                         return
                     }
                     end = Date.now()
-                    if(end-start>0){
+                    if(end-start > 16){
                         time_array.push(end-start)
                     }
                     start = Date.now()
-
-                    vm.target_percentage = count--
+                    vm.test = count--;
                     timer = window.requestAnimationFrame(fun)
                 }
 
                 function onEnd(){
-                    time_array = time_array.splice(10)
                     var total = time_array.reduce(function(a,b){
                         return a + b
                     })

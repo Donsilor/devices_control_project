@@ -3,7 +3,7 @@
         <div class="tip" v-if="show && tip">{{tip}}</div>
         <navigator class="navigator" v-once></navigator>
         <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"
-                 :total_time="total_time"></curtain>
+                 :total_time="total_time" :test="test"></curtain>
         <control class="control" v-on:onOpen="onOpen"
                  v-on:onPause="onPause" v-on:onClose="onClose" :is_ready="is_ready"
                  @onGoPercentage="onGoPercentage"></control>
@@ -80,15 +80,16 @@
                 //每帧运动的百分比
                 raf_percent: .5,
                 //每帧间隔时间
-                raf_time: 85,
+                raf_time: 80, //85
                 //动画总时间，应该从服务器端获取
-                total_time: 4000,
+                total_time: 6000,
                 //提示显示
                 timer: null,
                 //是否显示中部按钮提示
                 show: false,
                 //临时处理窗帘变动没有上传的问题
                 cbFunc: null,
+                test: 0
             }
         },
         mounted() {
@@ -106,11 +107,12 @@
                         this.open_percentage = data.attribute.open_percentage;
                         this.animateToTargetPercentage(this.open_percentage, true);
                     }
+                    //计算间隔帧数
+                    this.getAniFramePercentage();
                 }, () => {
                     this.is_ready = true;
                     HdSmart.UI.hideLoading();
                 });
-                HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
             });
 
             var isFirstLoad = true
@@ -130,45 +132,13 @@
 
                 }
             });
-            //计算间隔帧数
-            //this.getAniFramePercentage();
         },
         methods: {
             //测RAF性能使用（受双向同步，动画的影响），第一次开发手动运行
             getAniFramePercentage() {
-                /*
-                let counter = 20;
-                let init_counter = counter;
-                let reqId = null;
-                let vm = this;
-                let total = [];
-                let fun = function (lastTime) {
-                    if (!lastTime) {
-                        lastTime = +new Date();
-                    } else {
-                        let moment = +new Date();
-                        counter = counter - 1;
-                        total.push(moment - lastTime);
-                        if (counter === 0) {
-                            //间隔时间
-                            vm.raf_time = total.reduce((pre, next) => {
-                                return pre + next
-                            }) / init_counter;
-                            //更新每帧百分比
-                            vm.changeRafPercent();
-                            return;
-                        } else {
-                            lastTime = moment;
-                        }
-                    }
-                    reqId = requestAnimationFrame(function () {
-                        fun(lastTime);
-                    })
-                };
-                */
                 var start = Date.now()
                 var end
-                var count = 100
+                var count = 10
                 var time_array = []
                 var timer
                 var vm = this
@@ -178,11 +148,11 @@
                         return
                     }
                     end = Date.now()
-                    if(end-start>0){
+                    if(end-start > 16){
                         time_array.push(end-start)
                     }
                     start = Date.now()
-                    vm.target_percentage = count--;
+                    vm.test = count--;
                     timer = window.requestAnimationFrame(fun)
                 }
 
@@ -191,6 +161,7 @@
                         return a + b
                     })
                     vm.raf_time = total/time_array.length
+                    console.log(vm.raf_time)
                     vm.changeRafPercent();
                     window.cancelAnimationFrame(timer)
                 }
@@ -340,11 +311,8 @@
                 if (this.raf_time && this.total_time) {
                     this.raf_percent = this.raf_time * 100 / this.total_time;
                 }
-                console.log('raf_time: ', this.raf_time)
-                console.log('raf_percent:', this.raf_percent)
             },
             getTotalTime(data) {
-                console.log(data.result.updated_at," = ", data.result.attribute.open_percentage)
                 if(this.isGetTotalTime){
                     return
                 }
@@ -366,10 +334,9 @@
                     if(prev.result.attribute.open_percentage !== data.result.attribute.open_percentage){
                         this.reportArray.push(data)
                         var speed = (data.result.attribute.open_percentage - prev.result.attribute.open_percentage)/(data.result.updated_at - prev.result.updated_at)
-                        this.total_time = Math.abs(100/speed) - 500
+                        this.total_time = Math.abs(100/speed)
                         this.changeRafPercent()
                         this.isGetTotalTime = true
-                        console.log('total : ', this.total_time)
                     }
                 }
                 this.reportTimer = setTimeout(()=>{

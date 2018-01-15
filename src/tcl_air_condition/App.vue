@@ -356,7 +356,7 @@
 //                if (attr.deviceSubCategory != undefined) {
 //                    this.params.deviceSubCategory = attr.deviceSubCategory;
 //                }
-                if(attr.temperature != undefined){
+                if(attr.temperature != undefined && !this.tempFlag){
                     this.params.temperature = attr.temperature;
                     this.fakeTemp = attr.temperature;
                 }
@@ -375,6 +375,12 @@
 
                 if(this.params.mode == 'auto' || this.params.mode == 'dehumidify'){
                     this.params.speed = 'auto'
+                }
+
+                if(this.params.mode == 'wind' && attr.env_temperature){
+                    this.fakeTemp = attr.env_temperature
+                }else if(this.params.mode == 'dehumidify'){
+                    this.fakeTemp = 23
                 }
 
                 //TODO: 830后做
@@ -479,7 +485,7 @@
                         that.removeLoading();
                         that.removePressedClass(that.curButton);
 
-                        if (type === TEMPERATURE) {
+                        if (type === TEMPERATURE && !this.tempFlag) {
                             that.fakeTemp = that.params.temperature;
                         }
                         that.setTip('设置失败');

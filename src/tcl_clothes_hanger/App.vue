@@ -399,7 +399,7 @@ const tips = {
 }
 
 const duration = 28000
-const radio = (document.documentElement.clientWidth || window.innerWidth) / 1920 * 30
+const radio = (document.documentElement.clientWidth || window.innerWidth) / 1920 * 75
 
 function getToggle(val) {
     return val === 'on' ? 'off' : 'on'
