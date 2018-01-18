@@ -148,12 +148,20 @@
 
     //Button构造方法
     function Button(title, type, value, imgSrc, imgActiveSrc, tip) {
-        this.title = title;
-        this.type = type;
-        this.value = value;
-        this.imgSrc = imgSrc;
-        this.imgActiveSrc = imgActiveSrc;
-        this.tip = tip;
+        // this.title = title;
+        // this.type = type;
+        // this.value = value;
+        // this.imgSrc = imgSrc;
+        // this.imgActiveSrc = imgActiveSrc;
+        // this.tip = tip;
+        return {
+            title,
+            type,
+            value,
+            imgSrc,
+            imgActiveSrc,
+            tip
+        }
     }
 
     export default {
@@ -162,22 +170,22 @@
             return {
                 buttonList: {
                     //模式
-                    cool: new Button('制冷', MODE, 'cold', require('./assets/cool_normal.png'), require('./assets/cool_active.png'), '制冷模式切换成功'),
-                    heat: new Button('制热', MODE, 'heat', require('./assets/heat_normal.png'), require('./assets/heat_active.png'), '制热模式切换成功'),
-                    dehumidify: new Button('除湿', MODE, 'dehumidify', require('./assets/dehumidify_normal.png'), require('./assets/dehumidify_active.png'), '除湿模式切换成功'),
-//                    mode_auto: new Button('智能', MODE, 'auto', require('./assets/auto_normal.png'), require('./assets/auto_active.png'), '智能模式切换成功'),
-//                    wind: new Button('送风', MODE, 'wind', require('./assets/wind_normal.png'), require('./assets/wind_active.png'), '送风模式切换成功'),
-                    mode_auto: new Button('智能', MODE, 'auto', require('./assets/mode_auto_normal.png'), require('./assets/mode_auto_active.png'), '智能模式切换成功'),
-                    wind: new Button('送风', MODE, 'wind', require('./assets/mode_air_normal.png'), require('./assets/mode_air_active.png'), '送风模式切换成功'),
+                    cool: Button('制冷', MODE, 'cold', require('./assets/cool_normal.png'), require('./assets/cool_active.png'), '制冷模式切换成功'),
+                    heat: Button('制热', MODE, 'heat', require('./assets/heat_normal.png'), require('./assets/heat_active.png'), '制热模式切换成功'),
+                    dehumidify: Button('除湿', MODE, 'dehumidify', require('./assets/dehumidify_normal.png'), require('./assets/dehumidify_active.png'), '除湿模式切换成功'),
+//                    mode_auto: Button('智能', MODE, 'auto', require('./assets/auto_normal.png'), require('./assets/auto_active.png'), '智能模式切换成功'),
+//                    wind: Button('送风', MODE, 'wind', require('./assets/wind_normal.png'), require('./assets/wind_active.png'), '送风模式切换成功'),
+                    mode_auto: Button('智能', MODE, 'auto', require('./assets/mode_auto_normal.png'), require('./assets/mode_auto_active.png'), '智能模式切换成功'),
+                    wind: Button('送风', MODE, 'wind', require('./assets/mode_air_normal.png'), require('./assets/mode_air_active.png'), '送风模式切换成功'),
 
                     //风速
-                    low: new Button('低风', SPEED, 'low', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
-                    normal: new Button('中风', SPEED, 'normal', require('./assets/medium_normal.png'), require('./assets/medium_active.png'), '中风切换成功'),
-                    high: new Button('高风', SPEED, 'high', require('./assets/high_normal.png'), require('./assets/high_active.png'), '高风切换成功'),
+                    low: Button('低风', SPEED, 'low', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
+                    normal: Button('中风', SPEED, 'normal', require('./assets/medium_normal.png'), require('./assets/medium_active.png'), '中风切换成功'),
+                    high: Button('高风', SPEED, 'high', require('./assets/high_normal.png'), require('./assets/high_active.png'), '高风切换成功'),
 
                     //电源开关
-                    on: new Button('', POWER, '', require('./assets/on_normal.png'), require('./assets/on_active.png'), ''),
-                    off: new Button('', POWER, '', require('./assets/off_normal.png'), require('./assets/off_active.png'), '')
+                    on: Button('', POWER, '', require('./assets/on_normal.png'), require('./assets/on_active.png'), ''),
+                    off: Button('', POWER, '', require('./assets/off_normal.png'), require('./assets/off_active.png'), '')
                 },
                 //设备名称
                 deviceName: '',
@@ -235,10 +243,10 @@
                 return obj;
             },
             lrBtn: function () {
-                return new Button('左右', WIND_LEFT_RIGHT, this.params.wind_left_right, require('./assets/horizontal_normal.png'), require('./assets/horizontal_active.png'));
+                return Button('左右', WIND_LEFT_RIGHT, this.params.wind_left_right, require('./assets/horizontal_normal.png'), require('./assets/horizontal_active.png'));
             },
             udBtn: function () {
-                return new Button('上下', WIND_UP_DOWN, this.params.wind_up_down, require('./assets/vertical_normal.png'), require('./assets/vertical_active.png'));
+                return Button('上下', WIND_UP_DOWN, this.params.wind_up_down, require('./assets/vertical_normal.png'), require('./assets/vertical_active.png'));
             },
             minusBtn: function () {
                 return {
@@ -330,10 +338,11 @@
                     }else{
                         this.initErr = false;
                         this.setState(data.attribute);
-                        // if(!this.deviceName){
-                        this.deviceName = data.device_name;
-                        this.deviceCategory = data.attribute.deviceSubCategory;
-                        // }
+
+                        if(data.device_name){
+                            this.deviceName = data.device_name;
+                            this.deviceCategory = data.attribute.deviceSubCategory;
+                        }
                     }
                 }
             },
@@ -350,12 +359,7 @@
                 if(attr.switchStatus != undefined){
                     this.params.switch = attr.switchStatus;
                 }
-//                if(attr.device_name != undefined){
-//                    this.params.device_name = attr.device_name;
-//                }
-//                if (attr.deviceSubCategory != undefined) {
-//                    this.params.deviceSubCategory = attr.deviceSubCategory;
-//                }
+
                 if(attr.temperature != undefined && !this.tempFlag){
                     this.params.temperature = attr.temperature;
                     this.fakeTemp = attr.temperature;
@@ -383,30 +387,6 @@
                     this.fakeTemp = 23
                 }
 
-                //TODO: 830后做
-                /*let[onTimer, offTimer] = [null, null];
-                 if(attr.timer instanceof Array){
-                 onTimer = attr.timer.find((v) => { return v.type === 'air_switch_on' });
-                 offTimer = attr.timer.find((v) => { return v.type === 'air_switch_off' });
-                 }
-
-                 if(onTimer){
-                 this.params.bootSwitch = ( onTimer.status === 1);
-                 this.params.bootTime = onTimer.time;
-                 }
-                 else{
-                 this.params.bootSwitch = false;
-                 this.params.bootTime = '';
-                 }
-
-                 if(offTimer){
-                 this.params.offSwitch = ( offTimer.status === 1);
-                 this.params.offTime = offTimer.time;
-                 }
-                 else{
-                 this.params.offSwitch = false;
-                 this.params.offTime = '';
-                 }*/
             },
             toggle(type, value, tip, el){
                 let str = '';
@@ -446,16 +426,21 @@
                 }
 
                 //判断是否为重置命令
-                if(that.isResetCommand(type, value)){
-                    that.removePressedClass(that.curButton);
-                    //如果当前设置的是温度，需要改回去
-                    if (type === TEMPERATURE) {
-                        that.fakeTemp = that.params.temperature;
-                    }
-                    return;
-                }
+                // if(that.isResetCommand(type, value)){
+                //     that.removePressedClass(that.curButton);
+                //     //如果当前设置的是温度，需要改回去
+                //     if (type === TEMPERATURE) {
+                //         that.fakeTemp = that.params.temperature;
+                //     }
+                //     return;
+                // }
 
                 if(type == 'speed' && (that.params.mode == 'auto' || that.params.mode == 'dehumidify')){
+                    var mode = '智能'
+                    if(that.params.mode == 'dehumidify'){
+                        mode = '除湿'
+                    }
+                    that.setTip(`${mode}模式下不可设置风速`);
                     that.removePressedClass(that.curButton);
                     return;
                 }
@@ -578,15 +563,23 @@
                 }
                 //限制温度范围16-30℃
                 if(value < MIN_TEMP){
-                    this.setTip('温度已调至最低')
                     this.removePressedClass(this.curButton);
-                    return;
+                    if(this.params.temperature == MIN_TEMP){
+                        this.setTip('温度已调至最低')
+                        return
+                    }else{
+                        value = MIN_TEMP
+                    }
                 }
 
                 if(value > MAX_TEMP){
-                    this.setTip('温度已调至最高')
                     this.removePressedClass(this.curButton);
-                    return;
+                    if(this.params.temperature == MAX_TEMP){
+                        this.setTip('温度已调至最高')
+                        return
+                    }else{
+                        value = MAX_TEMP
+                    }
                 }
 
                 this.tempFlag = true;
@@ -857,14 +850,6 @@
         background-image: url(./assets/more_active.png);
     }
 
-    /*!*动画样式*!*/
-    /*.fade-enter-active, .fade-in-enter-active, .fade-leave-active {*/
-    /*transition: opacity 0.5s linear;*/
-    /*}*/
-    /*.fade-enter, .fade-leave-to, .fade-in-enter, .fade-in-leave-to {*/
-    /*opacity: 0*/
-    /*}*/
-
     /*子菜单*/
     .subMenu {
         opacity: 0.95;
@@ -966,10 +951,6 @@
     .pressed.switch img{
         filter: opacity(1);
     }
-    /*.pressed.switch .imgWrapper{*/
-    /*border-radius: 100%;*/
-    /*border: 1px solid transparent;*/
-    /*}*/
     .on .pressed.switch .imgWrapper, .temp .pressed .imgWrapper{
         background-color: rgba(255,255,255,0.5)
     }
@@ -988,29 +969,4 @@
         filter: invert(12%);
     }
 
-    /*.pageTip{
-        opacity:0.8;
-        background: #333;
-        width:100%;
-        line-height:84px;
-        position: absolute;
-        top: 155px;
-        left: 0;
-        font-size: 30px;
-    }
-    .pageTip:before{
-        content: '';
-        display: inline-block;
-        width: 34px;
-        height: 84px;
-        margin-right: 10px;
-        vertical-align: middle;
-        background: url(./assets/icn_notice_white.png) no-repeat center;
-        background-size: 100%;
-    }*/
-    /*刷新*/
-    /*.refresh{*/
-    /*cursor: pointer;*/
-    /*color: #46bcff;*/
-    /*}*/
 </style>

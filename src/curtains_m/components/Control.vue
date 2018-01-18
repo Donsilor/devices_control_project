@@ -7,12 +7,12 @@
             <div class="tap" @click="onGo(100)">100%</div>
         </div>
         <div class="box button-box">
-            <div class="on button" @click="onOpenTouchStart"
-                 :class="[loading_type=='on' ? 'loading':'normal']"></div>
-            <div class="pause button" @click="onPauseTouchStart"
-                 :class="[loading_type=='pause' ? 'loading':'normal']"></div>
             <div class="off button" @click="onCloseTouchStart"
                  :class="[loading_type=='off' ? 'loading':'normal']"></div>
+            <div class="pause button" @click="onPauseTouchStart"
+                 :class="[loading_type=='pause' ? 'loading':'normal']"></div>
+            <div class="on button" @click="onOpenTouchStart"
+                 :class="[loading_type=='on' ? 'loading':'normal']"></div>
         </div>
     </div>
 </template>

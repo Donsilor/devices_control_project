@@ -4,10 +4,10 @@
 import Mock from 'mockjs';
 
 let res = {
-    switch: 'on',
-    child_lock_switch: 'off',
-    negative_ion_switch: 'off',
-    control: 'auto',
+    switch_status: 'on',
+    child_lock_switch_status: 'off',
+    negative_ion_switch_status: 'off',
+    control_status: 'auto',
     speed: 'low',
     air_filter_result: {
         "air_quality": ["high"],

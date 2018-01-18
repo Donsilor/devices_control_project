@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-    <div class="page-on" v-if="status == 'success' && model.switch == 'on'">
+    <div class="page-on" v-if="status == 'success' && model.switch_status == 'on'">
         <div class="name">{{device_name}}</div>
         <div class="tip">
             <p v-show="tip">{{tip}}</p>
@@ -25,13 +25,16 @@
             <a href="" class="btn-on" @click.prevent="setSwitch('off')">
                 <i></i> 开关
             </a>
-            <a href="" class="btn-sleep" :class="{active:model.control == 'sleep'}" @click.prevent="setControl('sleep')">
+            <a href="" class="btn-sleep" :class="{active:model.control_status == 'sleep'}" @click.prevent="setControl('sleep')">
                 <i></i> 睡眠
             </a>
-            <a href="" class="btn-auto active" @click.prevent="speedModalVisible = true" v-if="model.control == 'auto'">
+            <!-- <a href="" class="btn-sleep"  @click.prevent="setControl('manual')">
+                <i></i> 手动
+            </a> -->
+            <a href="" class="btn-auto active" @click.prevent="speedModalVisible = true" v-if="model.control_status == 'auto'">
                 <i></i> 自动
             </a>
-            <a href="" :class="speedCss" @click.prevent="speedModalVisible = true" v-else-if="model.control == 'manual'">
+            <a href="" :class="speedCss" @click.prevent="speedModalVisible = true" v-else-if="model.control_status == 'manual'">
                 <i></i> {{speedText}}
             </a>
             <a href="" class="btn-speed" @click.prevent="speedModalVisible = true" v-else>
@@ -41,22 +44,22 @@
 
         <modal title="风档" v-model="speedModalVisible">
             <div class="btns btns-speed">
-                <a href="" class="btn1-speed1" :class="{active:model.control == 'manual' && model.speed == 'low'}" @click.prevent="setSpeed('low')">
+                <a href="" class="btn1-speed1" :class="{active:model.control_status == 'manual' && model.speed == 'low'}" @click.prevent="setSpeed('low')">
                     <i></i> 低速
                 </a>
-                <a href="" class="btn1-speed2" :class="{active:model.control == 'manual' && model.speed == 'middle'}" @click.prevent="setSpeed('middle')">
+                <a href="" class="btn1-speed2" :class="{active:model.control_status == 'manual' && model.speed == 'middle'}" @click.prevent="setSpeed('middle')">
                     <i></i> 中低速
                 </a>
-                <a href="" class="btn1-speed3" :class="{active:model.control == 'manual' && model.speed == 'high'}" @click.prevent="setSpeed('high')">
+                <a href="" class="btn1-speed3" :class="{active:model.control_status == 'manual' && model.speed == 'high'}" @click.prevent="setSpeed('high')">
                     <i></i> 中速
                 </a>
-                <a href="" class="btn1-speed4" :class="{active:model.control == 'manual' && model.speed == 'very_high'}" @click.prevent="setSpeed('very_high')">
+                <a href="" class="btn1-speed4" :class="{active:model.control_status == 'manual' && model.speed == 'very_high'}" @click.prevent="setSpeed('very_high')">
                     <i></i> 中高速
                 </a>
-                <a href="" class="btn1-speed5" :class="{active:model.control == 'manual' && model.speed == 'super_high'}" @click.prevent="setSpeed('super_high')">
+                <a href="" class="btn1-speed5" :class="{active:model.control_status == 'manual' && model.speed == 'super_high'}" @click.prevent="setSpeed('super_high')">
                     <i></i> 高速
                 </a>
-                <a href="" class="btn1-auto" :class="{active: model.control == 'auto'}" @click.prevent="setControl('auto')">
+                <a href="" class="btn1-auto" :class="{active: model.control_status == 'auto'}" @click.prevent="setControl('auto')">
                     <i></i> 自动
                 </a>
             </div>
@@ -64,10 +67,10 @@
 
         <modal title="更多" v-model="moreModalVisible">
             <div class="btns btns-more">
-                <a href="" class="btn-ni" :class="{active:model.negative_ion_switch == 'on'}" @click.prevent="setNegativeIon">
+                <a href="" class="btn-ni" :class="{active:model.negative_ion_switch_status == 'on'}" @click.prevent="setNegativeIon">
                     <i></i> 负离子
                 </a>
-                <a href="" class="btn-cl" :class="{active:model.child_lock_switch == 'on'}" @click.prevent="setChildLock">
+                <a href="" class="btn-cl" :class="{active:model.child_lock_switch_status == 'on'}" @click.prevent="setChildLock">
                     <i></i> 童锁
                 </a>
             </div>
@@ -75,7 +78,7 @@
 
     </div>
 
-    <div class="page-off" v-if="status == 'success' && model.switch == 'off'">
+    <div class="page-off" v-if="status == 'success' && model.switch_status == 'off'">
         <div class="name">{{device_name}}</div>
         <div class="tip">已关闭</div>
         <div class="air_cleaner"></div>
@@ -577,15 +580,9 @@ export default {
             moreModalVisible: false,
             device_name: '空气净化器',
             model: {},
-            prevControl: '',
             tip: '',
             remain_tip: '',
             pm25: ''
-        }
-    },
-    watch: {
-        'model.control': function(newval, oldval){
-            this.prevControl = oldval
         }
     },
     computed: {
@@ -626,6 +623,7 @@ export default {
             }
             fn(() => {
                 HdSmart.Device.control({
+                    method: 'dm_set',
                     nodeid: `air_filter.main.${attr}`,
                     params: {
                         attribute: {
@@ -650,14 +648,28 @@ export default {
             this.controlDevice('control', val)
         },
         setSpeed(val) {
-            this.controlDevice('speed', val)
+            // if(this.model.control_status != 'manual'){
+            //     this.setControl('manual')
+            //     setTimeout(()=>{
+            //         this.controlDevice('speed', val)
+            //     },1000)
+            // }else{
+                this.controlDevice('speed', val)
+            // }
         },
         setNegativeIon() {
-            var val = getToggle(this.model.negative_ion_switch)
-            this.controlDevice('negative_ion_switch', val)
+            var val = getToggle(this.model.negative_ion_switch_status)
+            // if(this.model.control_status != 'manual' && val == 'on'){
+            //     this.setControl('manual')
+            //     setTimeout(()=>{
+            //         this.controlDevice('negative_ion_switch', val)
+            //     },1000)
+            // }else{
+                this.controlDevice('negative_ion_switch', val)
+            // }
         },
         setChildLock() {
-            var val = getToggle(this.model.child_lock_switch)
+            var val = getToggle(this.model.child_lock_switch_status)
             this.controlDevice('child_lock_switch', val)
         },
         getSnapShot(cb) {
@@ -670,8 +682,11 @@ export default {
             })
         },
         onSuccess(data) {
+            if(!data) return
             this.status = 'success'
-            this.device_name = data.device_name
+            if(data.device_name){
+                this.device_name = data.device_name
+            }
             this.model = data.attribute
 
             if(this.model.filter_time_remaining <=0){
@@ -681,20 +696,16 @@ export default {
             }
 
             var pm25 = this.model.air_filter_result.PM25
-            // this.pm25 = pm25.length == 2 ? pm25[1] : pm25[0]
-            if(pm25 < 0){
-                pm25 = 0
-            }
-            this.pm25 = pm25
+            this.pm25 = pm25.length == 2 ? pm25[1] : pm25[0]
         },
         onError() {
             this.status = 'error'
         },
         confirm(done) {
-            if(this.model.child_lock_switch == 'on'){
-                HdSmart.UI.alert('解除童锁', '解除童锁后才能控制此设备，是否解除？', () => {
+            if(this.model.child_lock_switch_status == 'on'){
+                if(confirm('解除童锁后才能控制此设备，是否解除？')){
                     this.setChildLock()
-                })
+                }
             }else{
                 done()
             }
