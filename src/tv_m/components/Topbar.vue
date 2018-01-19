@@ -2,7 +2,7 @@
     导航条
 -->
 <template>
-    <div class="topbar">
+    <div class="topbar" :style="{marginTop:isIOS?'22px':0}">
         <div class="left">
             <a class="icon icon-arrow" @click="goBack"></a>
         </div>
@@ -69,6 +69,11 @@
     export default {
         props: {
             title: String
+        },
+        data() {
+            return {
+                isIOS: /iphone|ipad/i.test(navigator.userAgent),
+            }
         },
         methods: {
             goBack(){

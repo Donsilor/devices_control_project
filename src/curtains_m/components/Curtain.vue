@@ -1,25 +1,27 @@
 <template>
     <div class="wrap" :class="{visible:is_ready}">
-        <div class="bg"
-             :style="{transform:'translate3d(-50%,-'+moveX+'px,0)',opacity:bg_opacity}"></div>
-        <div class="box left" :style="{transform:'scale3d('+scaleRate+',1,1)'}"
-             ref="leftBox">
-            <div class="clothes"></div>
-            <div class="folding" :style="{opacity: opacity}"></div>
+        <div class="bg" :style="{transform:'translate3d(-50%,-'+moveX+'px,0)',opacity:bg_opacity}"></div>
+        <div class="box left" ref="leftBox">
+            <div class="clothes" :style="{width:width}">
+                <div class="folding" :style="{opacity: opacity}"></div>
+            </div>
         </div>
 
-        <div class="box right" :style="{transform:'scale3d('+scaleRate+',1,1)'}">
-            <div class="clothes"></div>
-            <div class="folding" :style="{opacity: opacity}"></div>
+        <div class="box right" ref="rightBox">
+            <div class="clothes" :style="{width:width}">
+                <div class="folding" :style="{opacity: opacity}"></div>
+            </div>
         </div>
     </div>
 </template>
+
 <style scoped lang="less">
     .wrap {
         width: 622px;
         height: 400px;
         position: relative;
         visibility: hidden;
+        overflow: hidden;
     }
 
     .wrap.visible {
@@ -69,16 +71,28 @@
         width: 100%;
         height: 100%;
         background-size: 100% 100%;
-        position: absolute;
-        top: 0;
+        // position: absolute;
+        // top: 0;
+    }
+    .left > div{
+        left: 0;
+    }
+    .right > div{
+        right: 0;
+        float: right;
+    }
+    .test{
+        height: 1px;
+        background: none;
     }
 </style>
 <script>
-    const BGMOVEDISTANCE = 24;
+ const BGMOVEDISTANCE = 24;
     export default {
         props: {
             open_percentage: Number,
-            is_ready: Boolean
+            is_ready: Boolean,
+            test: Number
         },
         computed: {
             //背景图移动的距离
@@ -89,27 +103,16 @@
             bg_opacity (){
                 return 0.7 + 0.3 * this.open_percentage / 100;
             },
-            //窗帘缩放的比例
-            scaleRate (){
-                return 1 - 0.8 * this.open_percentage / 100;
-            },
             //窗帘黑色背景图的透明度
             opacity (){
                 return 0.1 + 0.9 * this.open_percentage / 100;
+            },
+            width (){
+                return (100 - 0.8 * this.open_percentage) + '%'
+            },
+            w1 (){
+                return (100 - 0.8 * this.test) + '%'
             }
-
-        },
-        data (){
-            return {
-                //左边窗帘的长度
-                width: 0,
-                //是否第一次渲染，是的话时间为0
-                firstRender: true,
-            }
-        },
-        mounted (){
-            let rect = this.$refs.leftBox.getBoundingClientRect();
-            this.width = rect.width;
         }
     }
 </script>

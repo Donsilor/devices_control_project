@@ -126,14 +126,17 @@ export default {
                     this.status = 'SUCCESS'
                     this.setAttr(data.attribute)
                     this.$nextTick(()=>{
-                        this.$refs.airon.syncTemp()
+                        try{
+                            this.$refs.airon.syncTemp()
+                        }catch(e){}
                     })
-                    // if(!this.device.name){
-                    this.device = {
-                        name: data.device_name,
-                        category_id: data.attribute.deviceSubCategory
+
+                    if(data.device_name){
+                        this.device.name = data.device_name
                     }
-                    // }
+                    if(data.attribute.deviceSubCategory != undefined){
+                        this.device.category_id = data.attribute.deviceSubCategory
+                    }
                 }
             }
         },

@@ -9,13 +9,13 @@
 
         <div class="tip">
             <p>
-                <span v-show="!tip2 && tip">{{tip}}</span>
-                <span v-show="tip2">{{tip2}}</span>&nbsp;
+                <span v-show="tip">{{tip}}</span>
+                <span v-show="!tip && tip2">{{tip2}}</span>&nbsp;
             </p>
-            <p v-show="drying == 'on'">烘干 将于{{timeleft}}分钟后结束</p>
-            <p v-show="air_drying == 'on'">风干 将于{{timeleft}}分钟后结束</p>
-            <p v-show="(drying == 'on' || air_drying == 'on') && sterilization == 'on'">杀菌 将于{{timeleft}}分钟后开始</p>
-            <p v-show="(drying == 'off' && air_drying == 'off') && sterilization == 'on'">杀菌 将于{{timeleft}}分钟后结束</p>
+            <p v-show="drying == 'on'">正在烘干 将于{{drying_remain}}分钟后结束</p>
+            <p v-show="air_drying == 'on'">正在风干 将于{{air_drying_remain}}分钟后结束</p>
+            <!-- <p v-show="(drying == 'on' || air_drying == 'on') && sterilization == 'on'">杀菌 将于{{timeleft}}分钟后开始</p> -->
+            <p v-show="sterilization == 'on'">正在杀菌 将于{{sterilization_remain}}分钟后结束</p>
         </div>
 
         <div class="entity">
@@ -95,7 +95,7 @@ a{
     width: 100%;
 }
 .bg{
-    background: #21A4FE;
+    background-image: linear-gradient(-180deg, #2499ff 0%, #13d5dc 100%);
 }
 .cloud{
     background: url(./assets/img_clould.png) repeat-x left 180px;
@@ -137,7 +137,8 @@ a{
         height: 240px;
         min-height: 60px;
         max-height: 240px;
-        transition: height 5s;
+        transition-property: height;
+        transition-duration: 28s;
         margin: -30px auto 0;
         background: url(./assets/group_down02.png) no-repeat;
         background-size: 100% 100%;
@@ -383,23 +384,26 @@ const tips = {
     moving_down: '正在下降',
     moved_down: '已下降至底部',
     move_pause: '已暂停',
-    wind_drying: '正在风干',
+    // wind_drying: '正在风干',
     // wind_drying_finish: '风干 将于{time}分钟后结束',
     wind_dryed: '风干已完成',
     wind_dry_cancle: '风干已取消',
-    bake_drying: '正在烘干',
+    // bake_drying: '正在烘干',
     // bake_drying_finish: '烘干 将于{time}分钟后结束',
     bake_dryed: '烘干已完成',
     bake_dry_cancle: '烘干已取消',
     // sterilize_will: '杀菌 将于{time}分钟后开始',
     // sterilize_finish: '杀菌 将于{time}分钟后结束',
-    sterilizing: '正在杀菌',
+    // sterilizing: '正在杀菌',
     sterilized: '杀菌已完成',
     sterilize_cancle: '杀菌已取消'
 }
 
-const duration = 5000
-const radio = (document.documentElement.clientWidth || window.innerWidth) / 1920 * 30
+const duration = 28000
+const start_pos = 0.8
+const end_pos = 3.2
+const ch_height = 2.4
+const radio = (document.documentElement.clientWidth || window.innerWidth) / 1920 * 75
 
 function getToggle(val) {
     return val === 'on' ? 'off' : 'on'
@@ -409,14 +413,14 @@ function setDuration(el, dir) {
     var percentage
     var height = el.style.height
     if(height.indexOf('px') >= 0){
-        height = parseInt(height)/radio
+        height = (height.replace('px','')*1)/radio
     }else{
-        height = parseInt(height)
+        height = height.replace('rem','')*1
     }
     if(dir == 'up'){
-        percentage = (height-2)/6*duration
+        percentage = (height-start_pos)/ch_height*duration
     }else{
-        percentage = (8-height)/6*duration
+        percentage = (end_pos-height)/ch_height*duration
     }
     el.style.transitionDuration = percentage + 'ms'
 }
@@ -425,23 +429,30 @@ function setPosition(el, pos){
     if(!el) return
     switch (pos){
         case 'top':
-            el.style.height = '2rem'
-            el.style.transitionDuration = duration + 'ms'
+            el.style.height = start_pos+'01rem'
+            el.style.transitionDuration = '1000ms'
             break;
         case 'up':
-            el.style.height = '2rem'
+            el.style.height = start_pos+'rem'
             break;
         case 'bottom':
-            el.style.height = '8rem'
-            el.style.transitionDuration = duration + 'ms'
+            el.style.height = end_pos+'01rem'
+            el.style.transitionDuration = '1000ms'
             break;
         case 'down':
-            el.style.height = '8rem'
+            el.style.height = end_pos+'rem'
             break;
         case 'pause':
             var computedStyle = document.defaultView.getComputedStyle( el, null )
             el.style.height = computedStyle.getPropertyValue( "height" )
             break;
+    }
+    if(!el.init){
+        el.init = true
+        if(pos == 'pause'){
+            el.style.height = '2rem'
+        }
+        el.style.transitionDuration = '0ms'
     }
 }
 
@@ -461,11 +472,6 @@ export default {
             drying_remain: 0,
             air_drying_remain: 0,
             sterilization_remain: 0
-        }
-    },
-    watch: {
-        status(val){
-            // setPosition(this.$refs.ani, val)
         }
     },
     methods: {
@@ -507,6 +513,9 @@ export default {
         },
         setUp() {
             if(this.status == 'top' || this.status == 'up'){
+                if(this.status == 'top'){
+                    this.showTip2('已上升至顶部', true)
+                }
                 return
             }
             setDuration(this.$refs.ani, 'up')
@@ -514,43 +523,46 @@ export default {
         },
         setDown() {
             if(this.status == 'bottom' || this.status == 'down'){
+                if(this.status == 'bottom'){
+                    this.showTip2('已下降至底部', true)
+                }
                 return
             }
             setDuration(this.$refs.ani, 'down')
             this.controlDevice('control', 'down')
         },
         setPause() {
-            if(this.status == 'pause'){
+            if(this.status == 'pause' || this.status == 'top' || this.status == 'bottom'){
                 return
             }
             this.controlDevice('control', 'pause')
         },
         setLight() {
             var val = getToggle(this.light)
-            this.controlDevice('light', val)
+            this.controlDevice('light', val, () => {
+                this.light = val
+            })
         },
         setWind() {
             var val = getToggle(this.air_drying)
             this.controlDevice('air_drying', val, () => {
-                if(val == 'off'){
-                    this.showTip(tips.wind_dry_cancle, true)
-                }
+                this.air_drying = val
             })
         },
         setBake() {
             var val = getToggle(this.drying)
             this.controlDevice('drying', val, () => {
-                if(val == 'off'){
-                    this.showTip(tips.bake_dry_cancle, true)
-                }
+                this.drying = val
             })
         },
         setSterilize() {
             var val = getToggle(this.sterilization)
+            if(val == 'on' && this.status != 'top'){
+                this.showTip2('未上升至顶部', true)
+                return
+            }
             this.controlDevice('sterilization', val, () => {
-                if(val == 'off'){
-                    this.showTip(tips.sterilize_cancle, true)
-                }
+                this.sterilization = val
             })
         },
         setMoveTip(attrs) {
@@ -576,56 +588,50 @@ export default {
             }
         },
         setModeTip(attrs) {
-            if(attrs.air_drying == 'on'){
-                this.showTip(tips.wind_drying)
-                return
-            }
-            if(attrs.air_drying == 'off' && this.air_drying == 'on' && attrs.air_drying_remain == 0){
-                // if(this.timeleft > 0){
-                //     this.showTip(tips.wind_dry_cancle, true)
-                // }else{
-                //     this.showTip(tips.wind_dryed, true)
-                // }
-                this.showTip(tips.wind_dryed, true)
-                return
-            }
 
-            if(attrs.drying == 'on'){
-                this.showTip(tips.bake_drying)
-                return
-            }
-            if(attrs.drying == 'off' && this.drying == 'on' && attrs.drying_remain == 0){
-                // if(this.timeleft > 0){
-                //     this.showTip(tips.bake_dry_cancle, true)
-                // }else{
-                //     this.showTip(tips.bake_dryed, true)
-                // }
-                this.showTip(tips.bake_dryed, true)
-                return
-            }
-
-            if(attrs.sterilization == 'on'){
-                this.showTip(tips.sterilizing)
-                return
-            }
-            if(attrs.sterilization == 'off' && this.sterilization == 'on' && attrs.sterilization_remain == 0){
-                // if(this.timeleft > 0){
-                //     this.showTip(tips.sterilize_cancle, true)
-                // }else{
-                //     this.showTip(tips.sterilized, true)
-                // }
-                this.showTip(tips.sterilized, true)
-                return
-            }
-        },
-        timeout() {
-            clearInterval(this.timer)
-            this.timer = setInterval(()=>{
-                this.timeleft --
-                if(this.timeleft <= 0){
-                    clearInterval(this.timer)
+            if(attrs.air_drying == 'off' && this.air_drying == 'on'){
+                if(attrs.air_drying_remain == 0 && this.air_drying_remain == 1){
+                    this.showTip(tips.wind_dryed, true)
+                }else{
+                    this.showTip(tips.wind_dry_cancle, true)
                 }
-            },1000 * 60)
+                return
+            }
+
+            if(attrs.drying == 'off' && this.drying == 'on'){
+                if(attrs.drying_remain == 0 && this.drying_remain == 1){
+                    this.showTip(tips.bake_dryed, true)
+                }else{
+                    this.showTip(tips.bake_dry_cancle, true)
+                }
+                return
+            }
+
+            if(attrs.sterilization == 'off' && this.sterilization == 'on'){
+                if(attrs.sterilization_remain == 0 && this.sterilization_remain == 1){
+                    this.showTip(tips.sterilized, true)
+                }else{
+                    this.showTip(tips.sterilize_cancle, true)
+                }
+                return
+            }
+
+            // var tip = ''
+            // if(attrs.air_drying == 'on' || attrs.drying == 'on' || attrs.sterilization == 'on'){
+            //     tip = '正在'
+            //     if(attrs.air_drying == 'on'){
+            //         tip += '风干'
+            //     }
+            //     if(attrs.drying == 'on'){
+            //         tip += '烘干'
+            //     }
+            //     if(attrs.sterilization == 'on'){
+            //         tip += '杀菌'
+            //     }
+            //     this.showTip(tip)
+            // }else{
+            //     this.showTip('')
+            // }
         },
         onSuccess(result) {
 
@@ -634,7 +640,10 @@ export default {
             this.setModeTip(attrs)
             this.setMoveTip(attrs)
 
-            this.device_name = result.device_name
+            if(result.device_name){
+                this.device_name = result.device_name
+            }
+
             this.light = attrs.light
             this.air_drying = attrs.air_drying
             this.drying = attrs.drying
@@ -644,31 +653,19 @@ export default {
             this.air_drying_remain = attrs.air_drying_remain
             this.sterilization_remain = attrs.sterilization_remain
 
-            if(this.drying == 'on'){
-                this.timeleft = attrs.drying_remain
-            }else if(this.air_drying == 'on'){
-                this.timeleft = attrs.air_drying_remain
-            }else if(this.sterilization == 'on'){
-                this.timeleft = attrs.sterilization_remain
-            }
-
-            // this.timeout()
-
             setPosition(this.$refs.ani, attrs.status)
         },
         getSnapShot(cb) {
             HdSmart.Device.getSnapShot((data) => {
                 this.onSuccess(data)
                 cb && cb()
-            })
+            },()=>{})
         }
     },
     created() {
         HdSmart.ready(() => {
-            HdSmart.UI.showLoading()
-            this.getSnapShot(() => {
-                HdSmart.UI.hideLoading()
-            })
+            HdSmart.UI.hideLoading()
+            this.getSnapShot()
         })
 
         HdSmart.onDeviceListen((data) => {

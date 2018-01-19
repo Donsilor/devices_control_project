@@ -6,37 +6,31 @@ import Mock from 'mockjs';
 window.device_name = '柜式空调';
 window.device_category_id = 1;
 let res = {
-    "device_uuid": "4c52ed0b006f0d0001",
+    "device_uuid": "0000d01ea101000000003876ca400578",
+    "user_id": 1012,
+    "device_id": 62082850489720,
+    "family_id": 1013,
+    "room_id": 1,
+    "device_category_id": 1,
+    "created_at": 1516349498,
+    "updated_at": 1516349498,
     "device_name": "挂式空调",
+    "default_device_name": "挂式空调",
     "attribute": {
-        // "device_name": '挂式空调',
-        "deviceSubCategory": 1,
-        "switchStatus": 'on',
-        "temperature": 16,
-        "mode": "cold",
-        "sleep_mode": 'on',
-        "speed": "overlow",
-        "wind_up_down": "off",
-        "wind_left_right": "on",
-        // "manufactureId": "haier",
-        // "deviceCategory": "kfr_50lw",
-        // "deviceSubCategory": 1,
-        "timer": [
-            {
-                "type": "air_switch_on",
-                "status": 1,
-                "time": "18:30",
-                "periodic": 1
-            },
-            {
-                "type": "air_switch_off",
-                "status": 0,
-                "time": "",
-                "periodic": 1
-            }
-        ]
+      "switchStatus": "off",
+      "temperature": 16,
+      "env_temperature": 24,
+      "mode": "auto",
+      "speed": "auto",
+      "wind_up_down": "off",
+      "wind_left_right": "off",
+      "deviceModel": "KFRd-26GW/FE22BpA",
+      "manufactureId": "tcl",
+      "deviceCategory": "airconditioner.new",
+      "deviceSubCategory": 0,
+      "connectivity": "online"
     }
-};
+  }
 
 export function generateSnapShot() {
     return Mock.mock({
@@ -49,14 +43,16 @@ export function generateSnapShot() {
 }
 
 export function set(data){
-    let attr = data.params.attr;
-    for(var p in attr){
-        //res.attr[p] = attr[p];
+    var attr = data.params.attribute
+    if(attr.switch){
+        res.attribute.switchStatus = attr.switch
+    }else if(attr.temperature){
+        res.attribute.temperature = 23
+    }else{
+        res.attribute = Object.assign({}, res.attribute, attr)
     }
     return Mock.mock({
         code: 0
-        // code: 204,
-        // msg: 'test'
     })
 }
 

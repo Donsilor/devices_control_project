@@ -7,12 +7,12 @@
             <div class="tap" v-finger:touch-start="onGo(100)">100%</div>
         </div>
         <div class="box button-box">
-            <div class="on button" v-finger:touch-start="onOpenTouchStart"
-                 :class="[loading_type=='on' ? 'loading':'normal']"></div>
-            <div class="pause button" v-finger:touch-start="onPauseTouchStart"
-                 :class="[loading_type=='pause' ? 'loading':'normal']"></div>
             <div class="off button" v-finger:touch-start="onCloseTouchStart"
                  :class="[loading_type=='off' ? 'loading':'normal']"></div>
+            <div class="pause button" v-finger:touch-start="onPauseTouchStart"
+                 :class="[loading_type=='pause' ? 'loading':'normal']"></div>
+            <div class="on button" v-finger:touch-start="onOpenTouchStart"
+                 :class="[loading_type=='on' ? 'loading':'normal']"></div>
         </div>
     </div>
 </template>

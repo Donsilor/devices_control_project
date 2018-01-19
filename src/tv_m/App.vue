@@ -2,6 +2,7 @@
 <div id="app">
     <router-view></router-view>
     <detail></detail>
+    <offline-mask v-if="isNotHome" />
 </div>
 </template>
 
@@ -10,8 +11,6 @@
         padding: 0;
         margin: 0;
         -webkit-tap-highlight-color: transparent;
-        // -webkit-user-select: none;
-        // user-select: none;
         box-sizing: border-box;
     }
     a{
@@ -41,10 +40,20 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
-    .page-index,.page-list,.page-search{
+    .page-list,.page-search{
         padding-bottom: 120px;
     }
     .detail-bd{
         padding-bottom: 300px;
     }
 </style>
+
+<script>
+export default {
+  computed: {
+      isNotHome() {
+          return this.$route.path != '/'
+      }
+  }
+}
+</script>

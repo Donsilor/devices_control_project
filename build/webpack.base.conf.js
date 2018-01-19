@@ -70,7 +70,7 @@ module.exports = {
                 postcss: [autoprefixer({
                     remove: false
                 }), pxtorem({
-                    rootValue: 30,
+                    rootValue: 75, //30
                     unitPrecision: 3,
                     propList: ['*', '!border', '!border-radius'],
                     minPixelValue: 3,

@@ -1,5 +1,5 @@
 <template>
-<div class="wrap-on">
+<div class="wrap-on" :class="{isios:isIOS}">
 
     <div class="bg"></div>
 
@@ -68,7 +68,7 @@
                 <a href="#" class="btn-vertical" :class="{on:ac.wind_up_down==='on'}" @click.prevent="setWind('wind_up_down', $event)"></a>
                 上下
             </li>
-            <li :class="{on:ac.wind_left_right==='on'}">
+            <li :class="{on:ac.wind_left_right==='on'}" v-if="device.category_id === 1">
                 <a href="#" class="btn-horizontal" :class="{on:ac.wind_left_right==='on'}" @click.prevent="setWind('wind_left_right', $event)"></a>
                 左右
             </li>
@@ -117,6 +117,7 @@ export default {
     },
     data() {
         return {
+            isIOS: /iphone|ipad/i.test(navigator.userAgent),
             temperature: this.ac.temperature,
             toggle: false,
             tipVisible: false,
@@ -313,7 +314,7 @@ export default {
     background-size: 100% 100%;
     background-repeat: no-repeat;
     // top: 600px;
-    bottom: 132px;
+    bottom: 252px;
     background-image: url(../assets/btn_aircon_poweroff_normal@2x.png);
     transition: all 1s;
     &:active {
@@ -347,6 +348,7 @@ export default {
         text-align: center;
         width: 120px;
         height: 200px;
+        font-size: 28px;
         &.on{
             font-weight: bold;
         }
@@ -363,7 +365,7 @@ export default {
 .btns-hold{
     position: absolute;
     left: 50%;
-    bottom: 308px;
+    bottom: 428px;
     width: 750px;
     transform: translateX(-50%);
     padding: 0 35px;
@@ -490,11 +492,18 @@ export default {
     width: 100%;
     text-align: center;
     color:#fff;
+    font-size: 28px;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s
 }
 .fade-enter, .fade-leave-to{
   opacity: 0
+}
+.isios .btns-hold{
+    bottom: 328px;
+}
+.isios .btn-off{
+    bottom: 140px;
 }
 </style>

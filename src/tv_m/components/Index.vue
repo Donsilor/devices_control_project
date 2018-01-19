@@ -3,7 +3,8 @@
 -->
 <template>
 <div class="page-index">
-
+    <div class="page-header" v-if="!isIOS"></div>
+    <div class="page-body">
     <router-link to="/search" class="search">输入片名、导演、演员搜索</router-link>
 
     <div class="swiper">
@@ -25,7 +26,7 @@
     </div>
 
     <div class="control">
-        <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
+        <a href="#" class="shut" :class="{spec:!$store.state.online && !$store.state.detailVisible}" @click.prevent="cmd('rcPower')"></a>
         <a href="#" class="home" @click.prevent="cmd('rcHome')"></a>
         <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
         <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>
@@ -52,13 +53,30 @@
             <a href="#" @click.prevent="cmd('remoteControlEvent')" class="item item-ykq">遥控器</a>
         </div>
     </div>
+    </div>
+    <offline-mask />
 </div>
 </template>
 
 <style lang="less">
     .page-index{
         background:#fafafa;
-        padding-top: 88px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        overflow-x: hidden;
+    }
+    .page-header{
+        height: 88px;
+    }
+    .page-body{
+        height: 100%;
+        padding-bottom: 120px;
+        overflow-y: auto;
     }
     .search{
         background:#ffffff  url(../assets/icn_topbar_search_pressed@2x.png) no-repeat 25px center;
@@ -202,6 +220,10 @@
             }
         }
         .shut{
+            &.spec{
+                position: relative;
+                z-index: 9999;
+            }
             background-image: url(../assets/btn_TV_power_normal@2x.png);
             &:active{
                 background-image: url(../assets/btn_TV_power_pressed@2x.png);
@@ -218,6 +240,7 @@
     export default {
         data() {
             return {
+                isIOS: /iphone|ipad/i.test(navigator.userAgent),
                 channelId: '',
                 vid: '',
                 swiperOption: {

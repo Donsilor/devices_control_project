@@ -23,6 +23,9 @@
         position: absolute;
         transform: translate(-50%,-50%);
     }
+    .error-tip img{
+        width: 360px;
+    }
     .error-tip p{
         min-height: 30px;
         font-size: 30px;

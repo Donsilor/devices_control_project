@@ -13,6 +13,7 @@ import Search from './components/Search.vue'
 import Detail from './components/Detail.vue'
 import Topbar from './components/Topbar.vue'
 import ErrorView from './components/Error.vue'
+import OfflineMask from './components/OfflineMask.vue'
 //import Statusbar from './components/Statusbar.vue'
 Vue.use(Vuex)
 Vue.use(Router)
@@ -24,6 +25,7 @@ Vue.use(VueLazyload, {
 
 Vue.component('detail', Detail)
 Vue.component('topbar', Topbar)
+Vue.component('offline-mask', OfflineMask)
 //Vue.component('statusbar', Statusbar)
 
 //强制关闭3d(详情页改成不透明了)
@@ -31,6 +33,7 @@ Vue.component('topbar', Topbar)
 
 const store = new Vuex.Store({
     state: {
+        online: true,
         detailVisible: false,
         activeDetail: {}
     },
@@ -41,6 +44,9 @@ const store = new Vuex.Store({
         },
         hideDetail(state) {
             state.detailVisible = false
+        },
+        setOnline(state, payload) {
+            state.online = payload
         }
     },
     actions: {
@@ -48,6 +54,9 @@ const store = new Vuex.Store({
             commit('showDetail', item)
         },
         hideDetail: ({ commit }) => commit('hideDetail'),
+        setOnline({ commit }, onlineStr) {
+            commit('setOnline', onlineStr=='online' ? true : false)
+        }
     }
 })
 
@@ -81,6 +90,12 @@ let current_page = 'index'
 let thaf_timer
 
 //app jsbridge ready
+HdSmart.onDeviceListen(function(data){
+    if(data && data.result){
+        store.dispatch('setOnline', data.result.attribute.connectivity)
+    }
+})
+
 HdSmart.ready(() => {
   //HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
 
