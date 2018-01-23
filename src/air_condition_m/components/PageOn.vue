@@ -68,7 +68,7 @@
                 <a href="#" class="btn-vertical" :class="{on:ac.wind_up_down==='on'}" @click.prevent="setWind('wind_up_down', $event)"></a>
                 上下
             </li>
-            <li :class="{on:ac.wind_left_right==='on'}">
+            <li :class="{on:ac.wind_left_right==='on'}" v-if="deviceCategory === 1">
                 <a href="#" class="btn-horizontal" :class="{on:ac.wind_left_right==='on'}" @click.prevent="setWind('wind_left_right', $event)"></a>
                 左右
             </li>

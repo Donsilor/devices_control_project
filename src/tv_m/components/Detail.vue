@@ -20,7 +20,7 @@
                         <p v-show="isNotNull(cur.year)">年代：{{cur.year}}</p>
                         <p v-show="isNotNull(cur.cate)">类型：{{cur.cate}}</p>
                         <p v-show="isNotNull(cur.director)">导演：{{cur.director}}</p>
-                        <p v-show="isNotNull(cur.starring)">主演：{{cur.starring}}</p>
+                        <p v-show="isNotNull(cur.starring)" class="text_s">主演：{{cur.starring}}</p>
                     </div>
                     <div class="playstate playstate_unplay">
                         <a href="#" class="btn" @click.prevent="play(cur.playlist2.list[0])"><i class="icon-play"></i>在电视上播放</a>
@@ -241,6 +241,13 @@
         }
         span{
             color: #ffd53d;
+        }
+        .text_s{
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
     }
     .playstate{

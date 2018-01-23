@@ -138,7 +138,7 @@
     //连续设置时间判断间隔
     const SPAN = 300;
     //loading效果延迟
-    const LOADING_DELAY = 600;
+    const LOADING_DELAY = 800;
     //loading class
     const LOADING_CLASS = 'loading';
     //pressed class
@@ -338,9 +338,10 @@
                     }else{
                         this.initErr = false;
                         this.setState(data.attribute);
-
                         if(data.device_name){
                             this.deviceName = data.device_name;
+                        }
+                        if(data.attribute.deviceSubCategory != undefined){
                             this.deviceCategory = data.attribute.deviceSubCategory;
                         }
                     }
@@ -435,12 +436,8 @@
                 //     return;
                 // }
 
-                if(type == 'speed' && (that.params.mode == 'auto' || that.params.mode == 'dehumidify')){
-                    var mode = '智能'
-                    if(that.params.mode == 'dehumidify'){
-                        mode = '除湿'
-                    }
-                    that.setTip(`${mode}模式下不可设置风速`);
+                if(type == 'speed' && that.params.mode == 'dehumidify'){
+                    that.setTip('除湿模式下不可设置风速');
                     that.removePressedClass(that.curButton);
                     return;
                 }

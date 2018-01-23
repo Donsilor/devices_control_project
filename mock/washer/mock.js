@@ -5,11 +5,12 @@ import Mock from 'mockjs';
 
 let res = {
     control: '',
-    status: '',
+    'switch': 'on',
+    status: 'halt',
     child_lock_switch: 'off',
     auto_detergent_switch: '',
     add_laundry_switch: '',
-    mode: ''
+    mode: 'mix'
 }
 
 export function generateSnapShot() {
@@ -26,6 +27,9 @@ export function generateSnapShot() {
 
 export function set(data){
     var attr = data.params.attribute
+    if(attr.control){
+        attr.status = attr.control
+    }
     res = Object.assign({}, res, attr)
     return Mock.mock({
         code: 0

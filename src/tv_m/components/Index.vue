@@ -4,7 +4,7 @@
 <template>
 <div class="page-index">
 
-    <div class="page-header"></div>
+    <div class="page-header" v-if="!isIOS"></div>
     <div class="page-body">
     <router-link to="/search" class="search">输入片名、导演、演员搜索</router-link>
 
@@ -236,6 +236,7 @@
     export default {
         data() {
             return {
+                isIOS: /iphone|ipad/i.test(navigator.userAgent),
                 channelId: '',
                 vid: '',
                 swiperOption: {
