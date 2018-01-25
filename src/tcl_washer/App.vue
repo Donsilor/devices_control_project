@@ -10,7 +10,7 @@
                 <div class="wave wave2"></div>
                 <div class="title">{{current_mode_text}}模式</div>
                 <div class="sub_title">洗衣时间</div>
-                <div class="timeleft">1<small>时</small>30<small>分</small></div>
+                <div class="timeleft" v-html="use_time"></div>
             </div>
         </div>
         <div class="circle active" v-show="model.status=='start'">
@@ -19,7 +19,7 @@
                 <div class="wave wave2"></div>
                 <div class="title">{{current_mode_text}}模式</div>
                 <div class="sub_title">剩余总时间</div>
-                <div class="timeleft">1<small>时</small>30<small>分</small></div>
+                <div class="timeleft" v-html="left_time"></div>
                 <div class="status">{{model.operation}}</div>
             </div>
         </div>
@@ -129,10 +129,12 @@
                                 <div class="sb-btn" @click="confirmChildLock">111</div>
                             </div>
                         </div>
-                        <div class="bd" v-show="confirmChildLockVisible">
+                        <div class="bd childlock_confirm" v-show="confirmChildLockVisible">
                             关闭童锁后，所有按键可正常使用。确定关闭？
-                            <a href="" class="" @click.prevent="confirmChildLockVisible = false">取消</a>
-                            <a href="" class="" @click.prevent="submitChildLock">关闭</a>
+                            <div class="right">
+                                <a href="" class="cancle" @click.prevent="confirmChildLockVisible = false">取消</a>
+                                <a href="" class="submit" @click.prevent="submitChildLock">关闭</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -458,6 +460,30 @@ a{
     a{
         width:240px;
         height:84px;
+        border-radius:6px;
+        display: block;
+        line-height: 84px;
+        margin: 0 12px;
+        font-size:36px;
+        box-sizing: border-box;
+    }
+    .cancle{
+        background:#ffffff;
+        border:1px solid #76787a;
+        color:#76787a;
+    }
+    .submit{
+        background:#46bcff;
+        color:#ffffff;
+    }
+}
+.childlock_confirm{
+    .right{
+        float: right;
+    }
+    a{
+        width:178px;
+        height:68px;
         border-radius:6px;
         display: block;
         line-height: 84px;
@@ -954,6 +980,17 @@ function getToggle(val) {
     return val === 'on' ? 'off' : 'on'
 }
 
+function formatTime(time) {
+    var hour = Math.floor(time / 60)
+    var minute = time % 60
+    var result = ''
+    if(hour > 0){
+        result += `${hour}<small>时</small>`
+    }
+    result += `${minute}<small>分</small>`
+    return result
+}
+
 export default {
     components: {
         Modal,
@@ -987,7 +1024,7 @@ export default {
             temperature_options: [],
             drying_options: [],
             detergent_options: [],
-            current_mode_text: ''
+            current_mode_text: '',
         }
     },
     computed: {
@@ -1010,6 +1047,12 @@ export default {
                 className: 'slot1'
             }]
         },
+        use_time() {
+            return formatTime(this.model.time_use)
+        },
+        left_time() {
+            return formatTime(this.model.time_left)
+        }
     },
     watch: {
         'model.mode'() {
@@ -1130,7 +1173,9 @@ export default {
         },
         onSuccess(data) {
             this.status = 'success'
-            this.device_name = data.device_name
+            if(data.device_name){
+                this.device_name = data.device_name
+            }
             this.model = data.attribute
             this.childLockSwitch = this.model.child_lock_switch == 'on' ? true : false
         },

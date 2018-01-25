@@ -10,7 +10,9 @@ let res = {
     child_lock_switch: 'off',
     auto_detergent_switch: '',
     add_laundry_switch: '',
-    mode: 'mix'
+    mode: 'mix',
+    time_use: '100',
+    time_left: '80'
 }
 
 export function generateSnapShot() {

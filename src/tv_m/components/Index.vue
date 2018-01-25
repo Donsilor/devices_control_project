@@ -3,7 +3,6 @@
 -->
 <template>
 <div class="page-index">
-
     <div class="page-header" v-if="!isIOS"></div>
     <div class="page-body">
     <router-link to="/search" class="search">输入片名、导演、演员搜索</router-link>
@@ -27,7 +26,7 @@
     </div>
 
     <div class="control">
-        <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
+        <a href="#" class="shut" :class="{spec:!$store.state.online && !$store.state.detailVisible}" @click.prevent="cmd('rcPower')"></a>
         <a href="#" class="home" @click.prevent="cmd('rcHome')"></a>
         <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
         <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>
@@ -55,6 +54,7 @@
         </div>
     </div>
     </div>
+    <offline-mask />
 </div>
 </template>
 
@@ -220,6 +220,10 @@
             }
         }
         .shut{
+            &.spec{
+                position: relative;
+                z-index: 9999;
+            }
             background-image: url(../assets/btn_TV_power_normal@2x.png);
             &:active{
                 background-image: url(../assets/btn_TV_power_pressed@2x.png);

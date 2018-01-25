@@ -634,7 +634,10 @@ export default {
             this.setModeTip(attrs)
             this.setMoveTip(attrs)
 
-            this.device_name = result.device_name
+            if(result.device_name){
+                this.device_name = result.device_name
+            }
+
             this.light = attrs.light
             this.air_drying = attrs.air_drying
             this.drying = attrs.drying
@@ -655,10 +658,8 @@ export default {
     },
     created() {
         HdSmart.ready(() => {
-            HdSmart.UI.showLoading()
-            this.getSnapShot(() => {
-                HdSmart.UI.hideLoading()
-            })
+            HdSmart.UI.hideLoading()
+            this.getSnapShot()
         })
 
         HdSmart.onDeviceListen((data) => {
