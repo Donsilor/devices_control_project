@@ -1,5 +1,5 @@
 <template>
-<div class="wrap-off">
+<div class="wrap-off" :class="{isios:isIOS}">
 
     <div class="bg"></div>
 
@@ -24,6 +24,11 @@ export default {
         },
         device: {
             type: Object
+        }
+    },
+    data() {
+        return {
+            isIOS: /iphone|ipad/i.test(navigator.userAgent),
         }
     },
     methods: {
@@ -91,5 +96,8 @@ export default {
     &:active{
         background-image: url(../assets/btn_aircon_poweron_pressed@2x.png);
     }
+}
+.isios .btn-on{
+    bottom: 140px;
 }
 </style>

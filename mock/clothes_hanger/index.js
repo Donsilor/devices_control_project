@@ -20,13 +20,13 @@ if (location.search.indexOf('env=desktop') != -1) {
             if(data.params.attribute.control == 'up'){
                 setTimeout(function(){
                     ret.result.attribute.status = 'top'
-                    // onDeviceChange(ret)
+                    onDeviceChange(ret)
                 },3000)
             }
             if(data.params.attribute.control == 'down'){
                 setTimeout(function(){
                     ret.result.attribute.status = 'bottom'
-                    // onDeviceChange(ret)
+                    onDeviceChange(ret)
                 },3000)
             }
         },1000)

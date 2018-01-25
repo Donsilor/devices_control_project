@@ -43,14 +43,16 @@ export function generateSnapShot() {
 }
 
 export function set(data){
-    let attr = data.params.attr;
-    for(var p in attr){
-        //res.attr[p] = attr[p];
+    var attr = data.params.attribute
+    if(attr.switch){
+        res.attribute.switchStatus = attr.switch
+    }else if(attr.temperature){
+        res.attribute.temperature = 23
+    }else{
+        res.attribute = Object.assign({}, res.attribute, attr)
     }
     return Mock.mock({
         code: 0
-        // code: 204,
-        // msg: 'test'
     })
 }
 

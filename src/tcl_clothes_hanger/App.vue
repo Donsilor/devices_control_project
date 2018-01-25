@@ -137,7 +137,8 @@ a{
         height: 240px;
         min-height: 60px;
         max-height: 240px;
-        transition: height 5s;
+        transition-property: height;
+        transition-duration: 28s;
         margin: -30px auto 0;
         background: url(./assets/group_down02.png) no-repeat;
         background-size: 100% 100%;
@@ -399,6 +400,9 @@ const tips = {
 }
 
 const duration = 28000
+const start_pos = 0.8
+const end_pos = 3.2
+const ch_height = 2.4
 const radio = (document.documentElement.clientWidth || window.innerWidth) / 1920 * 75
 
 function getToggle(val) {
@@ -409,14 +413,14 @@ function setDuration(el, dir) {
     var percentage
     var height = el.style.height
     if(height.indexOf('px') >= 0){
-        height = parseInt(height)/radio
+        height = (height.replace('px','')*1)/radio
     }else{
-        height = parseInt(height)
+        height = height.replace('rem','')*1
     }
     if(dir == 'up'){
-        percentage = (height-2)/6*duration
+        percentage = (height-start_pos)/ch_height*duration
     }else{
-        percentage = (8-height)/6*duration
+        percentage = (end_pos-height)/ch_height*duration
     }
     el.style.transitionDuration = percentage + 'ms'
 }
@@ -425,18 +429,18 @@ function setPosition(el, pos){
     if(!el) return
     switch (pos){
         case 'top':
-            el.style.height = '2rem'
-            el.style.transitionDuration = '0ms'
+            el.style.height = start_pos+'01rem'
+            el.style.transitionDuration = '1000ms'
             break;
         case 'up':
-            el.style.height = '2rem'
+            el.style.height = start_pos+'rem'
             break;
         case 'bottom':
-            el.style.height = '8rem'
-            el.style.transitionDuration = '0ms'
+            el.style.height = end_pos+'01rem'
+            el.style.transitionDuration = '1000ms'
             break;
         case 'down':
-            el.style.height = '8rem'
+            el.style.height = end_pos+'rem'
             break;
         case 'pause':
             var computedStyle = document.defaultView.getComputedStyle( el, null )
@@ -446,7 +450,7 @@ function setPosition(el, pos){
     if(!el.init){
         el.init = true
         if(pos == 'pause'){
-            el.style.height = '5rem'
+            el.style.height = '2rem'
         }
         el.style.transitionDuration = '0ms'
     }
@@ -509,6 +513,9 @@ export default {
         },
         setUp() {
             if(this.status == 'top' || this.status == 'up'){
+                if(this.status == 'top'){
+                    this.showTip2('已上升至顶部', true)
+                }
                 return
             }
             setDuration(this.$refs.ani, 'up')
@@ -516,6 +523,9 @@ export default {
         },
         setDown() {
             if(this.status == 'bottom' || this.status == 'down'){
+                if(this.status == 'bottom'){
+                    this.showTip2('已下降至底部', true)
+                }
                 return
             }
             setDuration(this.$refs.ani, 'down')
@@ -529,22 +539,20 @@ export default {
         },
         setLight() {
             var val = getToggle(this.light)
-            this.controlDevice('light', val)
+            this.controlDevice('light', val, () => {
+                this.light = val
+            })
         },
         setWind() {
             var val = getToggle(this.air_drying)
             this.controlDevice('air_drying', val, () => {
-                // if(val == 'off'){
-                //     this.showTip(tips.wind_dry_cancle, true)
-                // }
+                this.air_drying = val
             })
         },
         setBake() {
             var val = getToggle(this.drying)
             this.controlDevice('drying', val, () => {
-                // if(val == 'off'){
-                //     this.showTip(tips.bake_dry_cancle, true)
-                // }
+                this.drying = val
             })
         },
         setSterilize() {
@@ -554,9 +562,7 @@ export default {
                 return
             }
             this.controlDevice('sterilization', val, () => {
-                // if(val == 'off'){
-                //     this.showTip(tips.sterilize_cancle, true)
-                // }
+                this.sterilization = val
             })
         },
         setMoveTip(attrs) {

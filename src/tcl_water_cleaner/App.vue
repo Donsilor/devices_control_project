@@ -3,7 +3,7 @@
     <div class="water_wave ww1"></div>
     <div class="water_wave ww2"></div>
     <div class="water_wave ww3"></div>
-    <div class="page-on">
+    <div class="page-on" v-if="0">
         <div class="name">{{device_name}}</div>
         <div class="tip">
             <p v-show="tip">{{tip}}</p>
@@ -31,17 +31,106 @@
         <a class="view">1个滤芯已过期，点击查看详情</a>
     </div>
 
-    <div class="page-sec"></div>
+    <div class="page-sec" v-if="1">
+        <div class="topbar">
+            <div class="left"><a href="" class="arrow" @click="back"></a></div>
+            <div class="title">滤芯详情</div>
+        </div>
+        <div class="lx_title">滤芯预计剩余使用时间</div>
+        <div class="lx_wrap">
+            <div class="lx_item">
+                <div class="item-name">滤芯1<i></i></div>
+                <div class="item-left">剩300天</div>
+            </div>
+            <div class="lx_item">
+                <div class="item-name">滤芯1<i></i></div>
+                <div class="item-left">剩300天</div>
+            </div>
+            <div class="lx_item">
+                <div class="item-name">滤芯1<i></i></div>
+                <div class="item-left">剩300天</div>
+            </div>
+            <div class="lx_item">
+                <div class="item-name">滤芯1<i></i></div>
+                <div class="item-left">剩300天</div>
+            </div>
+            <div class="lx_item active">
+                <div class="item-name">滤芯1<i></i></div>
+                <div class="item-left">剩0天</div>
+            </div>
+        </div>
+        <div class="lx_msg">实际剩余寿命受使用习惯及当地水质影响，可点击滤芯查看详情</div>
+    </div>
+
+    <modal title="TDS简介" class="modal-w" v-model="tdsModalVisible">
+        <div class="tds">
+            <p>
+                对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果，
+                数值越低代表过滤效果越好。但对于含有致病菌、悬浮物等有害物质的水源，TDS并不适用。
+            </p>
+            <img src="./assets/waterpurifier_img_tdsppm.png"/>
+        </div>
+    </modal>
+
+    <modal title="净水器滤芯到期" v-model="timeoutModalVisible">
+        <div class="alarm">
+            <div class="alert">净水器滤芯2已到期</div>
+            <div class="text">
+                <p>前置活性炭寿命已到期，请更换以保证饮水质量！</p>
+                <p>请在更换滤芯后重置寿命</p>
+            </div>
+
+            <div class="btn">
+                <a href="#">查看详情</a>
+                <a href="#">我知道了</a>
+            </div>
+        </div>
+    </modal>
+
+    <modal title="漏水警报" v-model="alarmModalVisible">
+        <div class="alarm">
+            <div class="alert">检测净水器到漏水！</div>
+            <div class="text">
+                <p>请先排查管道、台盆、机器，确定漏水位置；</p>
+                <p>非机器漏水，请擦干报警器并将净水器断电重启；</p>
+                <p>若净水器漏水，请及时关闭电源和水源。</p>
+            </div>
+            <div class="btn">
+                <a href="">我知道了</a>
+            </div>
+        </div>
+    </modal>
+
+    <modal title="滤芯状态" v-model="statusModalVisible">
+        <div class="lx_status">
+            <div class="">滤芯2</div>
+            <div class="">PP棉</div>
+            <circle-pie :value="20">
+                <p class="">预计剩余寿命</p>
+                <p class="">100天</p>
+                <p class="">剩余80%</p>
+            </circle-pie>
+            <div class="btn">
+                <a href="">重置剩余时间</a>
+                <a href="">确定重置</a>
+            </div>
+
+            <div class="tip">更换滤芯后请重置剩余时间</div>
+        </div>
+    </modal>
+
 </div>
 </template>
 
-<style lang="less" scoped>
+<style lang="less">
 *{
     padding: 0;
     margin: 0;
 }
 body{
     -webkit-tap-highlight-color: transparent;
+    color:#fff;
+    font-size: 30px;
 }
 a{
     text-decoration: none;
@@ -227,62 +316,182 @@ a{
 }
 
 .wash{
-position: absolute;
-right: 60px;
-top: 132px;
-border:1px solid #ffffff;
-border-radius:53px;
-width:207px;
-height:56px;
-overflow: hidden;
-a{
-    i{
-        background: url(./assets/waterpurifier_icon_wash_normal.png) no-repeat;
-        background-size: 100% 100%;
-        width: 30px;
-        height: 30px;
-        display: inline-block;
-        vertical-align: middle;
+    position: absolute;
+    right: 60px;
+    top: 132px;
+    border:1px solid #ffffff;
+    border-radius:53px;
+    width:207px;
+    height:56px;
+    overflow: hidden;
+    a{
+        i{
+            background: url(./assets/waterpurifier_icon_wash_normal.png) no-repeat;
+            background-size: 100% 100%;
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        display: block;
+        font-size:24px;
+        color:#ffffff;
+        line-height: 56px;
+        text-align: center;
+        background:rgba(255,255,255,0.20);
     }
-    display: block;
-    font-size:24px;
-    color:#ffffff;
-    line-height: 56px;
-    text-align: center;
-    background:rgba(255,255,255,0.20);
-}
-.progress{
-    height: 57px;
-    width: 0;
-    background: url(./assets/waterpurifier_img_wash.png) no-repeat;
-    background-size: 207px 100%;
-    transition: width 30s;
-}
+    .progress{
+        height: 57px;
+        width: 0;
+        background: url(./assets/waterpurifier_img_wash.png) no-repeat;
+        background-size: 207px 100%;
+        transition: width 30s;
+    }
 }
 .view{
-position: absolute;
-left: 50%;
-top: 824px;
-transform: translate(-50%,0);
-background:rgba(255,255,255,0.20);
-border:1px solid #ffffff;
-border-radius:39px;
-width:398px;
-height:58px;
-font-size:24px;
-color:#ffffff;
-text-align: center;
-line-height: 58px;
+    position: absolute;
+    left: 50%;
+    top: 824px;
+    transform: translate(-50%,0);
+    background:rgba(255,255,255,0.20);
+    border:1px solid #ffffff;
+    border-radius:39px;
+    width:398px;
+    height:58px;
+    font-size:24px;
+    color:#ffffff;
+    text-align: center;
+    line-height: 58px;
+}
+.topbar{
+    position: relative;
+    .left{
+        position: absolute;
+    }
+    .title{
+        text-align: center;
+        font-size:36px;
+        color:#2f3133;
+        line-height: 96px;
+    }
+    .arrow{
+            width: 100px;
+            height: 96px;
+            display: inline-block;
+            background-repeat: no-repeat;
+            background-size: 36px 36px;
+            background-position: center center;
+            background-image: url(./assets/icn_topbar_back_normal.png);
+            &:active{
+                background-image: url(./assets/icn_topbar_back_pressed.png);
+            }
+        }
+}
+.lx_title{
+    position: absolute;
+    left: 0;
+    top: 288px;
+    width:100%;
+    text-align: center;
+    font-size:36px;
+    color:#ffffff;
+}
+.lx_wrap{
+    position: absolute;
+    left: 8%;
+    top: 400px;
+    width: 84%;
+    display: flex;
+    justify-content: space-between;
+}
+.lx_item{
+    width: 302px;
+    height: 302px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url(./assets/waterpurifier_btn_filter_normal.png);
+    &:active{
+        background-image: url(./assets/waterpurifier_btn_filter_pressed.png);
+    }
+    &.active{
+        background-image: url(./assets/waterpurifier_btn_expiredfilter_normal.png);
+        &:active{
+            background-image: url(./assets/waterpurifier_btn_expiredfilter_pressed.png);
+        }
+        .item-name{
+            color: rgba(74,144,226,.5);
+            i{
+                background-image: url(./assets/waterpurifier_icon_nexttwo_normal.png)
+            }
+        }
+        .item-left{
+            color:#4a90e2;
+        }
+    }
+    .item-name{
+        margin-top: 100px;
+        text-align: center;
+        font-size:30px;
+        color:rgba(255,255,255,0.5);
+        margin-bottom: 10px;
+        i{
+            width: 22px;
+            height: 22px;
+            display: inline-block;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-image: url(./assets/waterpurifier_icon_nextone_normal.png);
+        }
+    }
+    .item-left{
+        text-align: center;
+        font-size:36px;
+    }
+}
+.lx_msg{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 832px;
+    text-align: center;
+    font-size:30px;
+    color:#ffffff;
+}
+//弹窗
+.modal{
+    color:#76787a;
+}
+.modal-w .modal{
+    width:1300px;
+}
+.tds{
+    padding: 0 46px;
+    text-align: left;
+    line-height: 1.6;
+    p{margin-bottom: 30px}
+    img{width: 100%}
 }
 </style>
 
 
 <script>
+
+import Modal from './components/Modal.vue'
+import CirclePie from './components/CirclePie.vue'
+
 export default {
+    components: {
+        Modal,
+        CirclePie
+    },
     data() {
         return {
             device_name: '智能净水器',
-            tip: '过滤前水质：422 TDS'
+            tip: '过滤前水质：422 TDS',
+            tdsModalVisible: false,
+            timeoutModalVisible: false,
+            alarmModalVisible: false,
+            statusModalVisible: true
         }
     },
     computed: {
@@ -294,6 +503,14 @@ export default {
         }
     },
     methods: {
+        controlDevice() {
+
+        },
+        back() {
+
+        }
+    },
+    created() {
 
     }
 }

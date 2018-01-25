@@ -1,9 +1,9 @@
 <template>
     <div id="app">
+        <div>={{raf_percent}}</div>
         <div class="tip" v-if="show && tip">{{tip}}</div>
         <navigator class="navigator" v-once></navigator>
-        <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"
-                 :total_time="total_time" :test="test"></curtain>
+        <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"></curtain>
         <control class="control" v-on:onOpen="onOpen"
                  v-on:onPause="onPause" v-on:onClose="onClose" :is_ready="is_ready"
                  @onGoPercentage="onGoPercentage"></control>
@@ -78,11 +78,9 @@
                 //帧数动画id，用于取消
                 raf_id: 0,
                 //每帧运动的百分比
-                raf_percent: .5,
+                raf_percent: 1,
                 //每帧间隔时间
-                raf_time: 80, //85
-                //动画总时间，应该从服务器端获取
-                total_time: 6000,
+                raf_time: 20, //85
                 //提示显示
                 timer: null,
                 //是否显示中部按钮提示
@@ -96,19 +94,16 @@
             HdSmart.ready(() => {
                 if(window.user_name && window.phone){
                     watermark({el:'#app'})
-                    this.raf_time = 150
+                    // this.raf_time = 150
                 }
                 //获取快照
                 HdSmart.Device.getSnapShot((data) => {
                     HdSmart.UI.hideLoading();
                     this.is_ready = true;
-                    this.changeRafPercent();
                     if(data && data.attribute){
                         this.open_percentage = data.attribute.open_percentage;
                         this.animateToTargetPercentage(this.open_percentage, true);
                     }
-                    //计算间隔帧数
-                    this.getAniFramePercentage();
                 }, () => {
                     this.is_ready = true;
                     HdSmart.UI.hideLoading();
@@ -118,15 +113,13 @@
             var isFirstLoad = true
 
             HdSmart.onDeviceListen((data) => {
-                this.getTotalTime(data)
                 if (this.cbFunc) {
                     //等硬件修复了需要干掉
                     this.cbFunc();
                     this.cbFunc = null;
                 }
                 try {
-                    this.open_percentage = data.result.attribute.open_percentage;
-                    this.animateToTargetPercentage(this.open_percentage, isFirstLoad);
+                    this.animateToTargetPercentage(data.result.attribute.open_percentage, isFirstLoad);
                     isFirstLoad = false
                 } catch (error) {
 
@@ -134,40 +127,6 @@
             });
         },
         methods: {
-            //测RAF性能使用（受双向同步，动画的影响），第一次开发手动运行
-            getAniFramePercentage() {
-                var start = Date.now()
-                var end
-                var count = 10
-                var time_array = []
-                var timer
-                var vm = this
-                function fun(){
-                    if(count === 0){
-                        onEnd()
-                        return
-                    }
-                    end = Date.now()
-                    if(end-start > 16){
-                        time_array.push(end-start)
-                    }
-                    start = Date.now()
-                    vm.test = count--;
-                    timer = window.requestAnimationFrame(fun)
-                }
-
-                function onEnd(){
-                    var total = time_array.reduce(function(a,b){
-                        return a + b
-                    })
-                    vm.raf_time = total/time_array.length
-                    console.log(vm.raf_time)
-                    vm.changeRafPercent();
-                    window.cancelAnimationFrame(timer)
-                }
-
-                fun()
-            },
 
             animateToTargetPercentage(percent, quite) {
                 //初次上电会导致返回报错
@@ -178,6 +137,12 @@
                 if (quite) {
                     this.target_percentage = percent;
                 } else {
+                    if(this.target_percentage != this.open_percentage){
+                        this.target_percentage = this.open_percentage
+                    }
+                    this.open_percentage = percent
+                    this.raf_percent = Math.abs(this.open_percentage - this.target_percentage) / 500 * this.raf_time
+                    var start = Date.now()
                     let rafFunc = () => {
 
                         //下一帧数的幅度
@@ -185,11 +150,14 @@
                         //当前的方向
                         let direction = '';
                         //当前幅度小于预计移动的幅度，说明正在关闭
+                        var end = Date.now()
+                        var p = (end-start)/this.raf_time
+                        start = end
                         if (nextTargetPercentage > percent) {
-                            nextTargetPercentage -= this.raf_percent;
+                            nextTargetPercentage -= this.raf_percent * p;
                             direction = 'close';
                         } else if (nextTargetPercentage < percent) {
-                            nextTargetPercentage += this.raf_percent;
+                            nextTargetPercentage += this.raf_percent * p;
                             direction = 'open';
                         }
                         if (direction === 'close' && nextTargetPercentage < percent) {
@@ -214,7 +182,6 @@
                         this.target_percentage = nextTargetPercentage;
                         this.raf_id = window.requestAnimationFrame(rafFunc)
                     };
-                    //this.raf_id = window.requestAnimationFrame(rafFunc)
                     rafFunc()
                 }
             },
@@ -227,9 +194,7 @@
                     method: METHOD,
                     nodeid: 'curtain.main.switch',
                     params: {
-                        // cmd: CMD_SWITCH,
                         attribute: {
-                            // mode: 'on'
                             switch: 'on'
                         }
                     }
@@ -249,9 +214,7 @@
                     method: METHOD,
                     nodeid: 'curtain.main.switch',
                     params: {
-                        // cmd: CMD_SWITCH,
                         attribute: {
-                            // mode: 'off'
                             switch: 'off'
                         }
                     }
@@ -269,9 +232,7 @@
                     method: METHOD,
                     nodeid: 'curtain.main.switch',
                     params: {
-                        // cmd: CMD_SWITCH,
                         attribute: {
-                            // mode: 'pause'
                             switch: 'pause'
                         }
                     }
@@ -285,7 +246,7 @@
                 clearTimeout(this.timer);
                 this.tip = `幅度调至${percentage}%`;
                 this.show = true;
-                // this.show_active_btn = true;
+
                 this.timer = setTimeout(() => {
                     this.show = false;
                 }, 2000);
@@ -294,7 +255,6 @@
                     method: METHOD,
                     nodeid: 'curtain.main.open_percentage',
                     params: {
-                        // cmd: CMD_RANGE,
                         attribute: {
                             open_percentage: percentage
                         }
@@ -305,43 +265,6 @@
             },
             clearTargetTip() {
                 this.show = false;
-                // this.show_active_btn = false;
-            },
-            changeRafPercent() {
-                if (this.raf_time && this.total_time) {
-                    this.raf_percent = this.raf_time * 100 / this.total_time;
-                }
-            },
-            getTotalTime(data) {
-                if(this.isGetTotalTime){
-                    return
-                }
-                if(data.result.attribute.open_percentage===0 || data.result.attribute.open_percentage===100){
-                    return
-                }
-                if(('' + data.result.updated_at).length === 10){
-                    data.result.updated_at = Date.now()
-                }
-                this.reportTimer && clearTimeout(this.reportTimer)
-                if(!this.reportArray){
-                    this.reportArray = []
-                }
-                var len = this.reportArray.length
-                if(len === 0){
-                    this.reportArray.push(data)
-                }else{
-                    var prev = this.reportArray[len-1]
-                    if(prev.result.attribute.open_percentage !== data.result.attribute.open_percentage){
-                        this.reportArray.push(data)
-                        var speed = (data.result.attribute.open_percentage - prev.result.attribute.open_percentage)/(data.result.updated_at - prev.result.updated_at)
-                        this.total_time = Math.abs(100/speed)
-                        this.changeRafPercent()
-                        this.isGetTotalTime = true
-                    }
-                }
-                this.reportTimer = setTimeout(()=>{
-                    this.reportArray = []
-                },1500)
             }
         }
     }

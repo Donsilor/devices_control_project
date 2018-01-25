@@ -12,6 +12,10 @@ if (location.search.indexOf('env=desktop') != -1) {
 
     on(apiList.device_control, function(data, done){
         done(mockData.set(data))
+        setTimeout(function(){
+            onDeviceChange(mockData.generateSnapShot())
+        },1000)
     })
+
 
 }

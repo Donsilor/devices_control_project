@@ -11,8 +11,6 @@
             <div class="clothes" :style="{width:width}">
                 <div class="folding" :style="{opacity: opacity}"></div>
             </div>
-            <!-- 做校准用 -->
-            <div class="clothes test" :style="{width:w1}"></div>
         </div>
     </div>
 </template>

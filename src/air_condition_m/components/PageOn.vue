@@ -1,5 +1,5 @@
 <template>
-<div class="wrap-on">
+<div class="wrap-on" :class="{isios:isIOS}">
 
     <div class="bg"></div>
 
@@ -68,7 +68,7 @@
                 <a href="#" class="btn-vertical" :class="{on:ac.wind_up_down==='on'}" @click.prevent="setWind('wind_up_down', $event)"></a>
                 上下
             </li>
-            <li :class="{on:ac.wind_left_right==='on'}" v-if="deviceCategory === 1">
+            <li :class="{on:ac.wind_left_right==='on'}" v-if="device.category_id === 1">
                 <a href="#" class="btn-horizontal" :class="{on:ac.wind_left_right==='on'}" @click.prevent="setWind('wind_left_right', $event)"></a>
                 左右
             </li>
@@ -117,6 +117,7 @@ export default {
     },
     data() {
         return {
+            isIOS: /iphone|ipad/i.test(navigator.userAgent),
             temperature: this.ac.temperature,
             toggle: false,
             tipVisible: false,
@@ -498,5 +499,11 @@ export default {
 }
 .fade-enter, .fade-leave-to{
   opacity: 0
+}
+.isios .btns-hold{
+    bottom: 328px;
+}
+.isios .btn-off{
+    bottom: 140px;
 }
 </style>
