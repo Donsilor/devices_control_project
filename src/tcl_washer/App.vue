@@ -4,29 +4,29 @@
         <div class="name">{{device_name}}</div>
         <div class="fault" v-if="0">E15故障</div>
         <a href="" class="btn btn-more" @click.prevent="moreModalVisible = true"><i></i></a>
-        <div class="circle" v-show="model.status=='halt'">
+        <!-- 待机 -->
+        <div class="circle" v-show="model.status=='standby'">
             <div class="inner">
-                <div class="wave wave1"></div>
-                <div class="wave wave2"></div>
                 <div class="title">{{current_mode_text}}模式</div>
                 <div class="sub_title">洗衣时间</div>
-                <div class="timeleft" v-html="use_time"></div>
+                <div class="timeleft" v-html="time_left"></div>
             </div>
         </div>
-        <div class="circle active" v-show="model.status=='start'">
+        <!-- 运行中 -->
+        <div class="circle active" v-show="model.status!='standby'">
             <div class="inner">
                 <div class="wave wave1"></div>
                 <div class="wave wave2"></div>
                 <div class="title">{{current_mode_text}}模式</div>
                 <div class="sub_title">剩余总时间</div>
-                <div class="timeleft" v-html="left_time"></div>
-                <div class="status">{{model.operation}}</div>
+                <div class="timeleft" v-html="time_left"></div>
+                <div class="status">{{operation_text}}</div>
             </div>
         </div>
         <div class="btns btns-fn">
             <a href="" class="btn btn-on" @click.prevent="setSwitch('off')"><i></i>关机</a>
             <a href="" class="btn btn-start" v-show="model.status=='halt'" @click.prevent="setControl('start')"><i></i>启动</a>
-            <a href="" class="btn btn-pause" v-show="model.status=='start'" @click.prevent="setControl('halt')"><i></i>暂停</a>
+            <a href="" class="btn btn-pause" v-show="model.status=='run'" @click.prevent="setControl('halt')"><i></i>暂停</a>
             <a href="" class="btn btn-mode" @click.prevent="modeModalVisible = true"><i></i>模式选择</a>
             <a href="" class="btn btn-reserve" @click.prevent="reserveModalVisible = true"><i></i>预约洗衣</a>
         </div>
@@ -121,15 +121,15 @@
                                 :class="{selected:current_drying.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
-                    <div class="selectbox active">
+                    <div class="selectbox">
                         <div class="hd">
                             <div class="left">童锁</div>
                             <div class="right sb-wrap">
                                 <switch-button :value="childLockSwitch" :sync="true" />
-                                <div class="sb-btn" @click="confirmChildLock">111</div>
+                                <div class="sb-btn" @click="confirmChildLock"></div>
                             </div>
                         </div>
-                        <div class="bd childlock_confirm" v-show="confirmChildLockVisible">
+                        <div class="bd1 childlock_confirm" v-show="confirmChildLockVisible">
                             关闭童锁后，所有按键可正常使用。确定关闭？
                             <div class="right">
                                 <a href="" class="cancle" @click.prevent="confirmChildLockVisible = false">取消</a>
@@ -412,6 +412,12 @@ a{
             }
         }
     }
+    .bd1{
+        overflow: hidden;
+        padding:31px 92px;
+        background:#fafafa;
+        text-align: left;
+    }
     &.active{
         .hd{
             .arrow{
@@ -478,6 +484,7 @@ a{
     }
 }
 .childlock_confirm{
+    line-height: 68px;
     .right{
         float: right;
     }
@@ -485,11 +492,12 @@ a{
         width:178px;
         height:68px;
         border-radius:6px;
-        display: block;
-        line-height: 84px;
-        margin: 0 12px;
+        display: inline-block;
+        line-height: 68px;
+        margin-left:12px;
         font-size:36px;
         box-sizing: border-box;
+        text-align: center;
     }
     .cancle{
         background:#ffffff;
@@ -975,6 +983,14 @@ const DETERGENT_OPTIONS = [
     {value: 'condensed', text: '浓缩'},
     {value: 'non_auto', text: '非自动'}
 ]
+const OPERATION_OPTIONS = {
+    reserve: '预约等待',
+    'pre-wash': '预洗',
+    wash: '主洗',
+    rinse: '漂洗',
+    spin: '脱水',
+    drying: '烘干'
+}
 
 function getToggle(val) {
     return val === 'on' ? 'off' : 'on'
@@ -1047,11 +1063,11 @@ export default {
                 className: 'slot1'
             }]
         },
-        use_time() {
-            return formatTime(this.model.time_use)
-        },
-        left_time() {
+        time_left() {
             return formatTime(this.model.time_left)
+        },
+        operation_text() {
+            return OPERATION_OPTIONS[this.model.operation]
         }
     },
     watch: {

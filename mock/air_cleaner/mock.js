@@ -4,19 +4,29 @@
 import Mock from 'mockjs';
 
 let res = {
-    switch_status: 'on',
-    child_lock_switch_status: 'off',
-    negative_ion_switch_status: 'off',
-    control_status: 'auto',
-    speed: 'low',
-    air_filter_result: {
-        "air_quality": ["high"],
-        "PM25|0-300": 1
+    "air_filter_result": {
+      "air_quality": [
+        "very_high"
+      ],
+      "PM25": [
+        4
+      ]
     },
-    filter_time_remaining: '120',
-    temperature: 30,
-    humidity: 60
-}
+    "switch_status": "on",
+    "child_lock_switch_status": "off",
+    "negative_ion_switch_status": "off",
+    "speed": "low",
+    "control_status": "manual",
+    "filter_time_used": "2114",
+    "filter_time_remaining": "46",
+    "temperature": "0",
+    "humidity": "0",
+    "deviceModel": "KJ505F-A1",
+    "manufactureId": "tcl",
+    "deviceCategory": "air_filter.main",
+    "deviceSubCategory": 0,
+    "connectivity": "online"
+  }
 
 export function generateSnapShot() {
     return Mock.mock({

@@ -18,8 +18,8 @@
             <div class="pic">PM 2.5</div>
         </div>
         <div class="attrs">
-            <span v-if="model.temperature">温度：{{model.temperature}}℃</span>
-            <span v-if="model.humidity">湿度：{{model.humidity}}</span>
+            <span v-if="model.temperature && model.temperature!='0'">温度：{{model.temperature}}℃</span>
+            <span v-if="model.humidity && model.humidity!='0'">湿度：{{model.humidity}}</span>
         </div>
         <div class="btns btns-fn">
             <a href="" class="btn-on" @click.prevent="setSwitch('off')">
@@ -31,33 +31,21 @@
             <!-- <a href="" class="btn-sleep"  @click.prevent="setControl('manual')">
                 <i></i> 手动
             </a> -->
-            <a href="" class="btn-auto active" @click.prevent="speedModalVisible = true" v-if="model.control_status == 'auto'">
+            <a href="" class="btn-auto active" @click.prevent="showSpeedModal" v-if="model.control_status == 'auto'">
                 <i></i> 自动
             </a>
-            <a href="" :class="speedCss" @click.prevent="speedModalVisible = true" v-else-if="model.control_status == 'manual'">
+            <a href="" :class="speedCss" @click.prevent="showSpeedModal" v-else-if="model.control_status == 'manual'">
                 <i></i> {{speedText}}
             </a>
-            <a href="" class="btn-speed" @click.prevent="speedModalVisible = true" v-else>
+            <a href="" class="btn-speed" @click.prevent="showSpeedModal" v-else>
                 <i></i> 风档
             </a>
         </div>
 
         <modal title="风档" v-model="speedModalVisible">
             <div class="btns btns-speed">
-                <a href="" class="btn1-speed1" :class="{active:model.control_status == 'manual' && model.speed == 'low'}" @click.prevent="setSpeed('low')">
-                    <i></i> 低速
-                </a>
-                <a href="" class="btn1-speed2" :class="{active:model.control_status == 'manual' && model.speed == 'middle'}" @click.prevent="setSpeed('middle')">
-                    <i></i> 中低速
-                </a>
-                <a href="" class="btn1-speed3" :class="{active:model.control_status == 'manual' && model.speed == 'high'}" @click.prevent="setSpeed('high')">
-                    <i></i> 中速
-                </a>
-                <a href="" class="btn1-speed4" :class="{active:model.control_status == 'manual' && model.speed == 'very_high'}" @click.prevent="setSpeed('very_high')">
-                    <i></i> 中高速
-                </a>
-                <a href="" class="btn1-speed5" :class="{active:model.control_status == 'manual' && model.speed == 'super_high'}" @click.prevent="setSpeed('super_high')">
-                    <i></i> 高速
+                <a href="" v-for="item in speedItems" :key="item.value" :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]" @click.prevent="setSpeed(item.value)">
+                    <i></i> {{item.text}}
                 </a>
                 <a href="" class="btn1-auto" :class="{active: model.control_status == 'auto'}" @click.prevent="setControl('auto')">
                     <i></i> 自动
@@ -487,6 +475,8 @@ a{
 }
 .btns-speed{
     flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 0 20px;
     a{
         margin: 0 18px 0;
         color:#76787a;
@@ -530,28 +520,24 @@ a{
 import Modal from './components/Modal.vue'
 import ErrorTip from './components/ErrorTip.vue'
 
-const SPEEDS = {
-    'low': {
-        index: '1',
-        text: '低速'
-    },
-    'middle': {
-        index: '2',
-        text: '中低速'
-    },
-    'high': {
-        index: '3',
-        text: '中速'
-    },
-    'very_high': {
-        index: '4',
-        text: '中高速'
-    },
-    'super_high': {
-        index: '5',
-        text: '高速'
-    }
-}
+const SPEED_TEXT1 = [
+    {text: '低速', className: '1', value: 'low'},
+    {text: '中低速', className: '2', value: 'middle'},
+    {text: '中速', className: '3', value: 'high'},
+    {text: '中高速', className: '4', value: 'very_high'},
+    {text: '高速', className: '5', value: 'super_high'}
+]
+const SPEED_TEXT2 = [
+    {text: '一档', className: '1', value: 'low'},
+    {text: '二档', className: '2', value: 'middle'},
+    {text: '三档', className: '3', value: 'high'},
+    {text: '四档', className: '4', value: 'very_high'}
+]
+const SPEED_TEXT3 = [
+    {text: '低速', className: '1', value: 'low'},
+    {text: '中速', className: '3', value: 'middle'},
+    {text: '高速', className: '5', value: 'high'}
+]
 
 const PM25_VAL = [0, 35, 75, 115, 150, 250]
 const PM25_ANGLE = [-136, -84, -28, 28, 84, 136]
@@ -582,15 +568,25 @@ export default {
             model: {},
             tip: '',
             remain_tip: '',
-            pm25: ''
+            pm25: '',
+            speedItems: SPEED_TEXT3
         }
     },
     computed: {
+        currentSpeed() {
+            var item = this.speedItems.filter((item) => {
+                return item.value == this.model.speed
+            })
+            if(item.length){
+                return item[0]
+            }
+            return {}
+        },
         speedCss() {
-            return ['btn-speed' + SPEEDS[this.model.speed].index, 'active']
+            return ['btn-speed' + this.currentSpeed.className, 'active']
         },
         speedText() {
-            return SPEEDS[this.model.speed].text
+            return this.currentSpeed.text
         },
         pm25_level() {
             for(var i = PM25_VAL.length-1; i >= 0; i--){
@@ -648,29 +644,26 @@ export default {
             this.controlDevice('control', val)
         },
         setSpeed(val) {
-            // if(this.model.control_status != 'manual'){
-            //     this.setControl('manual')
-            //     setTimeout(()=>{
-            //         this.controlDevice('speed', val)
-            //     },1000)
-            // }else{
-                this.controlDevice('speed', val)
-            // }
+            this.controlDevice('speed', val)
         },
         setNegativeIon() {
+            if(this.model.child_lock_switch_status == 'on'){
+                HdSmart.UI.toast('解除童锁后才能控制此设备')
+                return
+            }
             var val = getToggle(this.model.negative_ion_switch_status)
-            // if(this.model.control_status != 'manual' && val == 'on'){
-            //     this.setControl('manual')
-            //     setTimeout(()=>{
-            //         this.controlDevice('negative_ion_switch', val)
-            //     },1000)
-            // }else{
-                this.controlDevice('negative_ion_switch', val)
-            // }
+            this.controlDevice('negative_ion_switch', val)
         },
         setChildLock() {
             var val = getToggle(this.model.child_lock_switch_status)
             this.controlDevice('child_lock_switch', val)
+        },
+        showSpeedModal() {
+            if(this.model.child_lock_switch_status == 'on'){
+                this.confirm()
+            }else{
+                this.speedModalVisible = true
+            }
         },
         getSnapShot(cb) {
             HdSmart.Device.getSnapShot((data) => {
@@ -703,9 +696,16 @@ export default {
         },
         confirm(done) {
             if(this.model.child_lock_switch_status == 'on'){
-                if(confirm('解除童锁后才能控制此设备，是否解除？')){
-                    this.setChildLock()
-                }
+                // if(confirm('解除童锁后才能控制此设备，是否解除？')){
+                //     this.setChildLock()
+                // }
+                HdSmart.UI.alert({
+                    title: '解除童锁',
+                    message: '解除童锁后才能控制此设备，是否解除？',
+                    dialogStyle: 2
+                }, (val) => {
+                    if(val) this.setChildLock()
+                })
             }else{
                 done()
             }

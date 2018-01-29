@@ -17,7 +17,6 @@
     width:360px;
     height:360px;
     border-radius: 50%;
-    margin: 0 auto;
     background: #f8f8f8;
     position: relative;
 }
@@ -62,7 +61,7 @@ export default {
     props: ['value'],
     computed: {
         rotate() {
-            return this.value * 3.6
+            return (100-this.value) * 3.6
         },
         rightPieStyle() {
             var r = this.rotate < 180 ? this.rotate : 180

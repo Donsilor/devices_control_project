@@ -211,7 +211,7 @@
         .update{
             position: absolute;
             left: 0;
-            top: 386px;
+            bottom: 100px;
             background: rgba(0,0,0,.5);
             color: #fff;
             line-height: 30px;

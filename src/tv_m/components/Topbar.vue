@@ -2,7 +2,7 @@
     导航条
 -->
 <template>
-    <div class="topbar" :style="{marginTop:isIOS?'22px':0}">
+    <div class="topbar">
         <div class="left">
             <a class="icon icon-arrow" @click="goBack"></a>
         </div>
