@@ -1,10 +1,10 @@
 <template>
-    <div id="app">
-        <div class="title">11月29日&nbsp;&nbsp;周一&nbsp;&nbsp;农历十月十二</div>
+    <div id="app" :class="todyClass">
+        <div class="title">{{wList.length && wList[0].predictDate}}&nbsp;&nbsp;周一&nbsp;&nbsp;农历十月十二</div>
         <div class="city">
-            <div class="city-name">广州</div>
+            <div class="city-name">{{city.name}}</div>
             <img src="./assets/icn_weather_cloudy_l.png" width="120" height="120"/>
-            <div class="city-name">32℃&nbsp;&nbsp;多云</div>
+            <div class="city-name">{{wList.length && wList[0].tempDay}}℃&nbsp;&nbsp;{{wList.length && wList[0].conditionDay}}</div>
             <div class="city-detail">
                 <span>降水概率：10%</span>
                 <span>湿度：74%</span>
@@ -13,46 +13,119 @@
         </div>
         <div class="weather-list-con">
             <ul class="weather-list">
-                <li>
-                    <div class="">今天<br>周一</div>
-                    <div class="w-icon"><i class="w-icon-sunny"></i></div>
-                    <div class="">27～33℃</div>
-                    <div class="">多云</div>
-                    <div class="">无持续风向微风</div>
-                </li>
-                <li>
-                    <div class="">11月30日<br>周二</div>
-                    <div class="w-icon"><i class="w-icon-cloudy"></i></div>
-                    <div class="">27～33℃</div>
-                    <div class="">晴</div>
-                    <div class="">无持续风向微风</div>
-                </li>
-                <li>
-                    <div class="">12月1日<br>周三</div>
-                    <div class="w-icon"><i class="w-icon-overcast"></i></div>
-                    <div class="">27～33℃</div>
-                    <div class="">阴天</div>
-                    <div class="">无持续风向微风</div>
-                </li>
-                <li>
-                    <div class="">12月2日<br>周四</div>
-                    <div class="w-icon"><i class="w-icon-overcast"></i></div>
-                    <div class="">27～33℃</div>
-                    <div class="">阴天</div>
-                    <div class="">无持续风向微风</div>
-                </li>
-                <li>
-                    <div class="">12月3日<br>周五</div>
-                    <div class="w-icon"><i class="w-icon-overcast"></i></div>
-                    <div class="">27～33℃</div>
-                    <div class="">阴天</div>
-                    <div class="">无持续风向微风</div>
+                <li v-for="(item, index) in wList">
+                    <div class="">{{index === 0 ? '今天' : item.predictDate}}</div>
+                    <div class="w-icon"><i :class="renderClass(item.conditionIdDay)"></i></div>
+                    <div class="">{{item.tempNight}}～{{item.tempDay}}℃</div>
+                    <div class="">{{item.conditionDay}}</div>
+                    <div class="">{{item.windDirDay}}&nbsp;{{item.windLevelDay}}级</div>
                 </li>
             </ul>
         </div>
     </div>
 </template>
-
+<script>
+    import jsonp from 'jsonp'
+    import thisJson from './ww.json'
+    export default {
+        name: 'app',
+        data() {
+            return {
+                city: {
+                  name: '广州'
+                },
+                todyClass: '',
+                wList: []
+            }
+        },
+        mounted() {
+            let curArr = thisJson.data['forecast']
+            this.wList = curArr.slice(0, curArr.length - 1)
+            this.renderTodayClass(this.wList[0].conditionIdDay)
+//            jsonp('http://www.sojson.com/open/api/weather/json.shtml?city=北京', null, (err, res) => {
+//                if(!err && res.errorcode === '0'){
+//                    obj.weatherCallBack(res.data)
+//                }
+//            })
+        },
+        methods: {
+            renderTodayClass (val) {
+                switch (val) {
+                    case '0':
+                        this.todyClass = 'img_bg_weather_sunny'
+                        break
+                    case '1':
+                    case '2':
+                        this.todyClass = 'img_bg_weather_cloudy'
+                        break
+                    case '3':
+                    case '7':
+                    case '9':
+                    case '10':
+                        this.todyClass = 'img_bg_weather_rainy'
+                        break
+                    case '4':
+                        this.todyClass = 'img_bg_weather_thuner'
+                        break
+                    case '20':
+                    case '29':
+                        this.todyClass = 'img_bg_weather_wind'
+                        break
+                    case '13':
+                    case '14':
+                    case '15':
+                    case '16':
+                    case '17':
+                        this.todyClass = 'img_bg_weather_snowy'
+                        break
+                    default:
+                        break
+                }
+            },
+            renderClass (val) {
+                let curClass = ''
+                switch(val) {
+                    case '0':
+                        curClass = 'icn_weather_sunny_m'
+                        break
+                    case '1':
+                        curClass = 'icn_weather_cloudy_m'
+                        break
+                    case '2':
+                        curClass = 'icn_weather_mostlycloudy_m'
+                        break
+                    case '4':
+                        curClass = 'icn_weather_thunder_m'
+                        break
+                    case '3':
+                    case '7':
+                        curClass = 'icn_weather_rainy_m'
+                        break
+                    case '9':
+                    case '10':
+                        curClass = 'icn_weather_heavyrain_m'
+                        break
+                    case '20':
+                    case '29':
+                        curClass = 'icn_weather_wind_m'
+                        break
+                    case '13':
+                    case '14':
+                    case '15':
+                        curClass = 'icn_weather_snow_m'
+                        break
+                    case '16':
+                    case '17':
+                        curClass = 'icn_weather_heavysnow_m'
+                        break
+                    default:
+                        break
+                }
+                return curClass
+            }
+        }
+    }
+</script>
 <style lang="less">
     body {
         margin: 0;
@@ -63,7 +136,6 @@
         -ms-user-select: none;
         user-select: none;
         color: #fff;
-        background-image: linear-gradient(-180deg, #2499ff 0%, #13d5dc 100%);
         font-family: NotoSansHans-Regular;
     }
     #app {
@@ -72,6 +144,36 @@
         right: 0;
         top: 0;
         bottom: 0;
+    }
+    /*多云*/
+    .img_bg_weather_cloudy{
+        background: url('./assets/img_bg_weather_cloudy.png');
+        background-size:100% 100%;
+    }
+    /*下雨*/
+    .img_bg_weather_rainy{
+        background: url('./assets/img_bg_weather_rainy.png');
+        background-size:100% 100%;
+    }
+    /*下雪*/
+    .img_bg_weather_snowy{
+        background: url('./assets/img_bg_weather_snowy.png');
+        background-size:100% 100%;
+    }
+    /*晴朗*/
+    .img_bg_weather_sunny{
+        background: url('./assets/img_bg_weather_sunny.png');
+        background-size:100% 100%;
+    }
+    /*雷鸣*/
+    .img_bg_weather_thuner{
+        background: url('./assets/img_bg_weather_thuner.png');
+        background-size:100% 100%;
+    }
+    /*刮风*/
+    .img_bg_weather_wind{
+        background: url('./assets/img_bg_weather_wind.png');
+        background-size:100% 100%;
     }
     .tip {
         position: absolute;
@@ -110,29 +212,63 @@
         }
     }
     .weather-list-con{
-        padding: 60px 90px;
+        padding: 50px 90px 0;
         .weather-list{
+            margin: 0;
             text-align: center;
             li{
                 list-style: none;
                 .w-icon{
-                    padding:60px 0;
+                    padding:50px 0;
                     i{
                         display: inline-block;
                         height: 60px;
                         width: 60px;
                         background-repeat: no-repeat;
                     }
-                    .w-icon-sunny{
+                    /*多云*/
+                    .icn_weather_cloudy_m{
                         background: url('./assets/icn_weather_cloudy_m.png');
                         background-size:60px 60px;
                     }
-                    .w-icon-cloudy{
+                    /*大雨*/
+                    .icn_weather_heavyrain_m{
+                        background: url('./assets/icn_weather_heavyrain_m.png');
+                        background-size:60px 60px;
+                    }
+                    /*小雨*/
+                    .icn_weather_rainy_m{
+                        background: url('./assets/icn_weather_rainy_m.png');
+                        background-size:60px 60px;
+                    }
+                    /*大雪*/
+                    .icn_weather_heavysnow_m{
+                        background: url('./assets/icn_weather_heavysnow_m.png');
+                        background-size:60px 60px;
+                    }
+                    /*小雪*/
+                    .icn_weather_snow_m{
+                        background: url('./assets/icn_weather_snow_m.png');
+                        background-size:60px 60px;
+                    }
+                    /*大部多云*/
+                    .icn_weather_mostlycloudy_m{
                         background: url('./assets/icn_weather_mostlycloudy_m.png');
                         background-size:60px 60px;
                     }
-                    .w-icon-overcast{
-                        background: url('./assets/icn_weather_snow_m.png');
+                    /*晴*/
+                    .icn_weather_sunny_m{
+                        background: url('./assets/icn_weather_sunny_m.png');
+                        background-size:60px 60px;
+                    }
+                    /*打雷*/
+                    .icn_weather_thunder_m{
+                        background: url('./assets/icn_weather_thunder_m.png');
+                        background-size:60px 60px;
+                    }
+                    /*刮风*/
+                    .icn_weather_wind_m{
+                        background: url('./assets/icn_weather_wind_m.png');
                         background-size:60px 60px;
                     }
                 }
@@ -149,22 +285,3 @@
         }
     }
 </style>
-<script>
-    import axios from 'axios';
-    export default {
-        name: 'app',
-        data() {
-            return {
-
-            }
-        },
-        mounted() {
-            this.$http.jsonp('http://www.sojson.com/open/api/weather/json.shtml?city=%E5%8C%97%E4%BA%AC').then(res => {
-                console.log(res)
-            });
-        },
-        methods: {
-
-        }
-    }
-</script>

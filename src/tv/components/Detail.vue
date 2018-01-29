@@ -12,103 +12,112 @@
             </div>
         </div>
         <div class="detail-bd">
-        <div class="detail-info clearfix" v-show="cur.title">
-            <div class="pic">
-                <img v-lazy="cur.pictureUrl" :class="['pic-'+channelId]">
-            </div>
-            <div class="text">
-                <div class="shortinfo">
-                    <p v-show="isNotNull(cur.score)">评分：<span>{{cur.score}}</span></p>
-                    <p v-show="isNotNull(cur.year)">年代：{{cur.year}}</p>
-                    <p v-show="isNotNull(cur.cate)">类型：{{cur.cate}}</p>
-                    <p v-show="isNotNull(cur.director)">导演：{{cur.director}}</p>
-                    <p v-show="isNotNull(cur.starring)">主演：{{cur.starring}}</p>
+            <div class="detail-info clearfix" v-show="cur.title">
+                <div class="pic">
+                    <img v-lazy="cur.pictureUrl" :class="['pic-'+channelId]">
                 </div>
-                <div class="playstate playstate_unplay">
-                    <a href="#" class="btn" @click.prevent="play(cur.playlist2.list[0])"><i class="icon-play"></i>在电视上播放</a>
-                </div>
-                <!-- 未播放 -->
-                <!--
-                <div class="playstate playstate_unplay" v-show="playstate===0">
-                    <a href="#" class="btn" @click.prevent="play(cur.playlist[0].list[0])"><i class="icon-play"></i>在电视上播放</a>
-                </div>
-                <div class="playstate playstate_play" v-show="playstate===1">
-                    <a href="javascript:void(0)" class="btn btn-outline">正在投屏...</a>
-                </div>
-                -->
-                <!-- 正在播放 -->
-                <!--
-                <div class="playstate playstate_play" v-show="playstate===2">
-                    <a href="javascript:void(0)" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
-                </div>
-                -->
-                <!-- 继续播放 -->
-                <!--
-                <div class="playstate playstate_conplay" v-show="false">
-                    <a href="#" class="btn"><i class="icon-time"></i>继续播放</a>
-                    <span class="tip"><i class="arrow"></i>上次观看到第22集</span>
-                </div>
-                -->
-
-                <!-- 描述 -->
-                <div class="desc">
-                    <div class="desc-cont" :class="{
-                        'text-cut': isDescOverflow,
-                        'text-show': isDescShow
-                    }">
-                        <div class="desc-cont-p" v-html="toHTML(cur.desc)"></div>
+                <div class="text">
+                    <div class="shortinfo">
+                        <p v-show="isNotNull(cur.score)">评分：<span>{{cur.score}}</span></p>
+                        <p v-show="isNotNull(cur.year)">年代：{{cur.year}}</p>
+                        <p v-show="isNotNull(cur.cate)">类型：{{cur.cate}}</p>
+                        <p v-show="isNotNull(cur.director)">导演：{{cur.director}}</p>
+                        <p v-show="isNotNull(cur.starring)">主演：{{cur.starring}}</p>
                     </div>
-                    <a href="#" class="desc-toggle"
-                        @click.prevent="isDescShow=!isDescShow"
-                        v-show="isDescOverflow"
-                        :class="{'open':isDescShow}">
-                        {{isDescShow?'收起':'展开'}}<i></i>
-                    </a>
+                    <div class="playstate playstate_unplay">
+                        <a href="#" class="btn" @click.prevent="play(cur.playlist2.list[0])"><i class="icon-play"></i>在电视上播放</a>
+                    </div>
+                    <!-- 未播放 -->
+                    <!--
+                    <div class="playstate playstate_unplay" v-show="playstate===0">
+                        <a href="#" class="btn" @click.prevent="play(cur.playlist[0].list[0])"><i class="icon-play"></i>在电视上播放</a>
+                    </div>
+                    <div class="playstate playstate_play" v-show="playstate===1">
+                        <a href="javascript:void(0)" class="btn btn-outline">正在投屏...</a>
+                    </div>
+                    -->
+                    <!-- 正在播放 -->
+                    <!--
+                    <div class="playstate playstate_play" v-show="playstate===2">
+                        <a href="javascript:void(0)" class="btn btn-outline"><i class="icon-playing"></i>正在电视上播放</a>
+                    </div>
+                    -->
+                    <!-- 继续播放 -->
+                    <!--
+                    <div class="playstate playstate_conplay" v-show="false">
+                        <a href="#" class="btn"><i class="icon-time"></i>继续播放</a>
+                        <span class="tip"><i class="arrow"></i>上次观看到第22集</span>
+                    </div>
+                    -->
+
+                    <!-- 描述 -->
+                    <div class="desc">
+                        <div class="desc-cont" :class="{
+                            'text-cut': isDescOverflow,
+                            'text-show': isDescShow
+                        }">
+                            <div class="desc-cont-p" v-html="toHTML(cur.desc)"></div>
+                        </div>
+                        <a href="#" class="desc-toggle"
+                            @click.prevent="isDescShow=!isDescShow"
+                            v-show="isDescOverflow"
+                            :class="{'open':isDescShow}">
+                            {{isDescShow?'收起':'展开'}}<i></i>
+                        </a>
+                    </div>
+
                 </div>
-
+                <div class="control">
+                    <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
+                    <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>
+                    <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
+                    <a href="#" class="remote" @click.prevent="cmd('rcHome')"></a>
+                    <a href="#" class="left"></a>
+                    <a href="#" class="right"></a>
+                    <a href="#" class="back"></a>
+                </div>
             </div>
-        </div>
-
-        <div class="detail-playlist">
-            <div class="hd" v-if="cur.playlist2.list.length">
-                {{channelId==='001' ? '正片' : getUpdateSet()}}
+            <div class="detail-playlist">
+                <div class="hd" v-if="cur.playlist2.list.length">
+                    {{channelId==='001' ? '正片' : getUpdateSet()}}
+                </div>
+                <ul class="bd"  v-if="channelId==='001' || channelId==='004'">
+                    <li class="item-haspic"
+                        v-for="item in cur.playlist2.list"
+                        :key="item.index"
+                        @click="play(item)">
+                        <img v-lazy="item.pictureUrl">
+                        <p>{{item.name}}</p>
+                        <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
+                    </li>
+                </ul>
+                <ul class="bd bd-num" v-else>
+                    <li class="item-num"
+                        v-for="(item, num) in cur.playlist2.list"
+                        :key="item.index"
+                        @click="play(item)">{{item.index=='0' ? num+1 : item.index}}
+                        <!-- <span class="tag_new" v-show="item.states"></span> -->
+                    </li>
+                </ul>
+                <div class="hd" style="clear:both" v-if="cur.playlist2.list2.length">相关视频</div>
+                <ul class="bd">
+                    <li class="item-haspic"
+                        v-for="item in cur.playlist2.list2"
+                        :key="item.index"
+                        @click="play(item)">
+                        <img v-lazy="item.pictureUrl">
+                        <p>{{item.name}}</p>
+                        <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
+                    </li>
+                </ul>
             </div>
-            <ul class="bd"  v-if="channelId==='001' || channelId==='004'">
-                <li class="item-haspic"
-                    v-for="item in cur.playlist2.list"
-                    :key="item.index"
-                    @click="play(item)">
-                    <img v-lazy="item.pictureUrl">
-                    <p>{{item.name}}</p>
-                    <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
-                </li>
-            </ul>
-            <ul class="bd bd-num" v-else>
-                <li class="item-num"
-                    v-for="(item, num) in cur.playlist2.list"
-                    :key="item.index"
-                    @click="play(item)">{{item.index=='0' ? num+1 : item.index}}
-                    <!-- <span class="tag_new" v-show="item.states"></span> -->
-                </li>
-            </ul>
-            <div class="hd" style="clear:both" v-if="cur.playlist2.list2.length">相关视频</div>
-            <ul class="bd">
-                <li class="item-haspic"
-                    v-for="item in cur.playlist2.list2"
-                    :key="item.index"
-                    @click="play(item)">
-                    <img v-lazy="item.pictureUrl">
-                    <p>{{item.name}}</p>
-                    <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
-                </li>
-            </ul>
-        </div>
         </div>
     </div>
 <!-- </transition> -->
 </template>
 
 <style lang="less">
+
     .hidescroll{
         // overflow: visible !important;
         // width: auto;
@@ -117,6 +126,7 @@
         overflow: hidden !important;
     }
     .page-detail{
+        font-size: 30px;
         position: fixed;
         left: 0;
         top: 0;
@@ -166,6 +176,7 @@
             text-align: center;
             line-height: 90px;
             color:#2f3133;
+            font-size: 36px;
         }
     }
     .detail-bd{
@@ -175,6 +186,73 @@
         -webkit-overflow-scrolling: touch;
     }
     .detail-info{
+        .control {
+            /*transform: translateY(-50%);*/
+            background:rgba(242,242,242,0.95);
+            width: 1753px;
+            box-shadow:0 3px 12px 0 rgba(0,0,0,0.20);
+            border-radius:6px;
+            position: fixed;
+            z-index: 9999;
+            bottom: 200px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items:center;
+            height: 120px;
+            line-height: 120px;
+            margin-top: 0;
+            margin-left: 30px;
+            a{
+                width: 72px;
+                height: 72px;
+                display: block;
+                background-size: 100% 100%;
+                border-radius: 60px;
+            }
+            .back{
+                background-image: url(../assets/icn_remote_back_normal.png);
+                &:active{
+                    background-image: url(../assets/icn_remote_back_pressed.png);
+                }
+            }
+            .volup{
+                background-image: url(../assets/icn_remote_volumeup_normal.png);
+                &:active{
+                    background-image: url(../assets/icn_remote_volumeup_pressed.png);
+                }
+            }
+            .remote{
+                background-image: url(../assets/icn_remote_playpause_normal.png);
+                &:active{
+                    background-image: url(../assets/icn_remote_playpause_pressed.png);
+                }
+            }
+            .voldown{
+                background-image: url(../assets/icn_remote_volumedown_normal.png);
+                &:active{
+                    background-image: url(../assets/icn_remote_volumedown_pressed.png);
+                }
+            }
+            .shut{
+                background-image: url(../assets/icn_remote_power_normal.png);
+                &:active{
+                    background-image: url(../assets/icn_remote_power_pressed.png);
+                }
+            }
+            .left{
+                background-image: url(../assets/icn_remote_left_normal.png);
+                &:active{
+                    background-image: url(../assets/icn_remote_left_pressed.png);
+                }
+            }
+            .right{
+                background-image: url(../assets/icn_remote_right_normal.png);
+                &:active{
+                    background-image: url(../assets/icn_remote_right_pressed.png);
+                }
+            }
+        }
         margin: 0 60px 35px;
         overflow: hidden;
         .pic{
@@ -326,7 +404,6 @@
             }
         }
     }
-
     .detail-playlist{
          margin: 0 60px;
          border-top: 1px solid #dbdbdb;
@@ -410,17 +487,15 @@
             top: 0;
         }
     }
-</style>
 
+</style>
 <script>
     import { mapState, mapActions } from 'vuex'
     import * as service from '../service'
-
     //隐藏body滚动条
     function toggleBoayScroll(val){
         document.documentElement.className = val ? 'hidescroll' : ''
     }
-
     export default {
         // props: ['channelId','vid'],
         data() {
