@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-    <div class="page-on" v-if="1">
+    <div class="page-on">
         <div class="bg">
             <div class="cloud"></div>
         </div>
@@ -55,17 +55,15 @@
             </div>
         </div>
 
-        <!-- <transition name="fade"> -->
         <div class="overlay" v-show="modal_visible" @click.prevent="toggleModal(false)"></div>
-        <!-- </transition> -->
     </div>
 
-    <div class="page-error" v-if="0">
+    <!-- <div class="page-error" v-if="0">
         <div class="error-tip">
             <img src='./assets/init_err.png' />
             <p>加载失败，请点击屏幕刷新</p>
         </div>
-    </div>
+    </div> -->
 </div>
 </template>
 
@@ -474,6 +472,15 @@ export default {
             sterilization_remain: 0
         }
     },
+    watch: {
+        status(cur, prev) {
+            if(cur == 'up'){
+                setDuration(this.$refs.ani, 'up')
+            }else if(cur == 'down'){
+                setDuration(this.$refs.ani, 'down')
+            }
+        }
+    },
     methods: {
         showTip(text, fade){
             this.tip = text
@@ -518,8 +525,9 @@ export default {
                 }
                 return
             }
-            setDuration(this.$refs.ani, 'up')
-            this.controlDevice('control', 'up')
+            this.controlDevice('control', 'up', () => {
+                this.status = 'up'
+            })
         },
         setDown() {
             if(this.status == 'bottom' || this.status == 'down'){
@@ -528,14 +536,18 @@ export default {
                 }
                 return
             }
-            setDuration(this.$refs.ani, 'down')
-            this.controlDevice('control', 'down')
+            this.controlDevice('control', 'down', () => {
+                this.status = 'down'
+            })
         },
         setPause() {
             if(this.status == 'pause' || this.status == 'top' || this.status == 'bottom'){
                 return
             }
-            this.controlDevice('control', 'pause')
+            this.controlDevice('control', 'pause', () => {
+                this.status = 'pause'
+                this.showTip2(tips.move_pause, true)
+            })
         },
         setLight() {
             var val = getToggle(this.light)
@@ -558,7 +570,8 @@ export default {
         setSterilize() {
             var val = getToggle(this.sterilization)
             if(val == 'on' && this.status != 'top'){
-                this.showTip2('未上升至顶部', true)
+                HdSmart.UI.toast('请先将晾衣机升至顶部，再进行杀菌')
+                // this.showTip('请先将晾衣机升至顶部，再进行杀菌', true)
                 return
             }
             this.controlDevice('sterilization', val, () => {
@@ -582,10 +595,10 @@ export default {
                 this.showTip2(tips.moved_down, true)
                 return
             }
-            if(attrs.status == 'pause' && (this.status == 'up' || this.status == 'down')){
-                this.showTip2(tips.move_pause, true)
-                return
-            }
+            // if(attrs.status == 'pause' && (this.status == 'up' || this.status == 'down')){
+            //     this.showTip2(tips.move_pause, true)
+            //     return
+            // }
         },
         setModeTip(attrs) {
 

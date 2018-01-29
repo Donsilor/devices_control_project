@@ -1,23 +1,31 @@
 <template>
-<div id="app" :class="{warn:level==4}">
+<div id="app" :class="{warn:level>=4}">
     <div class="water_wave ww1"></div>
     <div class="water_wave ww2"></div>
     <div class="water_wave ww3"></div>
-    <div class="page-on" v-if="0">
+
+    <div class="page-on" :style="inPage('index')">
         <div class="name">{{device_name}}</div>
         <div class="tip">
-            <p v-show="tip">{{tip}}</p>
+            <p v-if="model.water_leakage=='on'">漏水</p>
+            <p v-else-if="model.water_shortage=='on'">缺水</p>
+            <p v-else-if="model.status=='maintain'">检修</p>
+            <p v-else-if="model.status=='filter'">制水中...</p>
+            <p v-else-if="model.status=='clean'">冲洗中...</p>
+            <p v-else-if="hasTDS && oldTDS">过滤前水质：{{oldTDS}} TDS</p>
         </div>
-        <div class="wash">
-            <a href="#"><i></i>一键冲洗</a>
-            <!-- <div class="progress"></div> -->
+
+        <div class="wash" :class="{washing:washing}">
+            <a href="#" @click.prevent="setClean"><i></i>一键冲洗</a>
+            <div class="progress"></div>
         </div>
-        <div class="record_panle">
+
+        <div class="record_panle" v-if="hasTDS" @click="tdsModalVisible = true">
             <div class="circle">
-                <span v-for="i in 4" :key="i" :class="'c'+i" v-show="i==level"></span>
+                <span v-for="i in 4" :key="i" :class="'c'+i" v-show="i==(level>4?4:level)"></span>
             </div>
             <div class="arrow" :style="{transform:'rotate('+ rotate +'deg)'}"></div>
-            <div class="value">100</div>
+            <div class="value">{{nowTDS}}</div>
             <div class="pic">TDS</div>
             <div class="valueset">
                 <span>0</span>
@@ -26,40 +34,28 @@
                 <span>300</span>
                 <span>300+</span>
             </div>
-            <div class="text">过滤后水质不可直接饮用</div>
+            <div class="text">
+                <span v-if="level==1">过滤后水质可直接饮用</span>
+                <span v-else-if="level==2">过滤后水质不建议直接饮用</span>
+                <span v-else-if="level==3">过滤后水质不建议直接饮用</span>
+                <span v-else>过滤后水质不可直接饮用</span>
+            </div>
         </div>
-        <a class="view">1个滤芯已过期，点击查看详情</a>
+        <a class="view" href="" @click.prevent="currentPage='list'" v-if="hasTDS">
+            <span v-if="expired_num > 0">{{expired_num}}个滤芯已过期，点击查看详情</span>
+            <span v-else-if="expiring_num > 0">{{expiring_num}}个滤芯将到期，点击查看详情</span>
+            <span v-else>查看滤芯寿命</span>
+        </a>
+
+        <filter-items v-if="!hasTDS" :items="filterItems" :view-filter="viewFilter" />
     </div>
 
-    <div class="page-sec" v-if="1">
+    <div class="page-sec" :style="inPage('list')">
         <div class="topbar">
-            <div class="left"><a href="" class="arrow" @click="back"></a></div>
+            <div class="left"><a href="" class="arrow" @click.prevent="currentPage='index'"></a></div>
             <div class="title">滤芯详情</div>
         </div>
-        <div class="lx_title">滤芯预计剩余使用时间</div>
-        <div class="lx_wrap">
-            <div class="lx_item">
-                <div class="item-name">滤芯1<i></i></div>
-                <div class="item-left">剩300天</div>
-            </div>
-            <div class="lx_item">
-                <div class="item-name">滤芯1<i></i></div>
-                <div class="item-left">剩300天</div>
-            </div>
-            <div class="lx_item">
-                <div class="item-name">滤芯1<i></i></div>
-                <div class="item-left">剩300天</div>
-            </div>
-            <div class="lx_item">
-                <div class="item-name">滤芯1<i></i></div>
-                <div class="item-left">剩300天</div>
-            </div>
-            <div class="lx_item active">
-                <div class="item-name">滤芯1<i></i></div>
-                <div class="item-left">剩0天</div>
-            </div>
-        </div>
-        <div class="lx_msg">实际剩余寿命受使用习惯及当地水质影响，可点击滤芯查看详情</div>
+        <filter-items :items="filterItems" :view-filter="viewFilter" />
     </div>
 
     <modal title="TDS简介" class="modal-w" v-model="tdsModalVisible">
@@ -74,48 +70,50 @@
 
     <modal title="净水器滤芯到期" v-model="timeoutModalVisible">
         <div class="alarm">
-            <div class="alert">净水器滤芯2已到期</div>
+            <div class="alert"><i></i>净水器滤芯2已到期</div>
             <div class="text">
                 <p>前置活性炭寿命已到期，请更换以保证饮水质量！</p>
                 <p>请在更换滤芯后重置寿命</p>
             </div>
 
             <div class="btn">
-                <a href="#">查看详情</a>
-                <a href="#">我知道了</a>
+                <a href="#" class="" @click.prevent="viewFilter()">查看详情</a>
+                <a href="#" class="btn-default" @click.prevent="timeoutModalVisible=false">我知道了</a>
             </div>
         </div>
     </modal>
 
     <modal title="漏水警报" v-model="alarmModalVisible">
         <div class="alarm">
-            <div class="alert">检测净水器到漏水！</div>
+            <div class="alert"><i></i>检测净水器到漏水！</div>
             <div class="text">
                 <p>请先排查管道、台盆、机器，确定漏水位置；</p>
                 <p>非机器漏水，请擦干报警器并将净水器断电重启；</p>
                 <p>若净水器漏水，请及时关闭电源和水源。</p>
             </div>
             <div class="btn">
-                <a href="">我知道了</a>
+                <a href="" class="btn-default" @click.prevent="alarmModalVisible=false">我知道了</a>
             </div>
         </div>
     </modal>
 
-    <modal title="滤芯状态" v-model="statusModalVisible">
+    <modal title="滤芯状态" class="modal-w" v-model="statusModalVisible">
         <div class="lx_status">
-            <div class="">滤芯2</div>
-            <div class="">PP棉</div>
-            <circle-pie :value="20">
-                <p class="">预计剩余寿命</p>
-                <p class="">100天</p>
-                <p class="">剩余80%</p>
+            <div class="p1">滤芯{{currentFilter.index+1}}</div>
+            <div class="p2"><!--PP棉--></div>
+            <circle-pie class="pie" :value="currentFilter.percent">
+                <p class="p3">预计剩余寿命</p>
+                <p class="p4">{{currentFilter.days}}天</p>
+                <p class="p5">剩余{{currentFilter.percent}}%</p>
             </circle-pie>
             <div class="btn">
-                <a href="">重置剩余时间</a>
-                <a href="">确定重置</a>
+                <div class="btn-block" :class="{active:isFilterResetActive}">
+                    <a href="" class="reset" @click.prevent="confirmFilterReset">重置剩余时间</a>
+                    <a href="" class="reset_submit" @click.prevent="submitFilterReset">确定重置</a>
+                </div>
             </div>
 
-            <div class="tip">更换滤芯后请重置剩余时间</div>
+            <div class="msg">更换滤芯后请重置剩余时间</div>
         </div>
     </modal>
 
@@ -180,17 +178,17 @@ a{
     &.ww1{
         background-image: url(./assets/waterpurifier_bg_wave_one.png);
         height: 185px;
-        animation: wave1 15s linear infinite;
+        animation: wave1 10s linear infinite;
     }
     &.ww2{
         background-image: url(./assets/waterpurifier_bg_wave_two.png);
         height: 201px;
-        animation: wave2 20s linear infinite;
+        animation: wave2 15s linear infinite;
     }
     &.ww3{
         background-image: url(./assets/waterpurifier_bg_wave_three.png);
         height: 226px;
-        animation: wave3 25s linear infinite;
+        animation: wave3 20s linear infinite;
     }
 }
 .name{
@@ -339,13 +337,22 @@ a{
         line-height: 56px;
         text-align: center;
         background:rgba(255,255,255,0.20);
+        display: block;
     }
     .progress{
         height: 57px;
         width: 0;
         background: url(./assets/waterpurifier_img_wash.png) no-repeat;
         background-size: 207px 100%;
-        transition: width 30s;
+    }
+    &.washing{
+        a{
+            display: none;
+        }
+        .progress{
+            width: 100%;
+            transition: width 30s;
+        }
     }
 }
 .view{
@@ -398,11 +405,11 @@ a{
 }
 .lx_wrap{
     position: absolute;
-    left: 8%;
+    left: 6%;
     top: 400px;
-    width: 84%;
+    width: 88%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 .lx_item{
     width: 302px;
@@ -460,6 +467,7 @@ a{
 //弹窗
 .modal{
     color:#76787a;
+    z-index: 9;
 }
 .modal-w .modal{
     width:1300px;
@@ -471,6 +479,111 @@ a{
     p{margin-bottom: 30px}
     img{width: 100%}
 }
+.alarm{
+    .alert{
+        i{
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background:url(./assets/waterpurifier_icon_remind_normal.png) no-repeat;
+            background-size: 100% 100%;
+            vertical-align: -5px;
+            margin-right: 10px;
+        }
+        font-size:30px;
+        color:#333333;
+        margin-bottom: 42px;
+    }
+    .text{
+        font-size:24px;
+        color:#76787a;
+        line-height:36px;
+        margin-bottom: 80px;
+    }
+    .btn{
+        width:504px;
+        display: flex;
+        justify-content: space-between;
+        margin: 0 auto;
+        a{
+            flex: 1;
+            border:1px solid #76787a;
+            border-radius:6px;
+            height:84px;
+            margin: 0 12px;
+            display: block;
+            line-height: 82px;
+            font-size:36px;
+            color:#76787a;
+        }
+        .btn-default{
+            border:1px solid #46bcff;
+            background:#46bcff;
+            color:#ffffff;
+        }
+    }
+}
+.lx_status{
+    .p1{
+        font-size:30px;
+        color:#76787a;
+        opacity:0.5;
+    }
+    .p2{
+        font-size:36px;
+        color:#333333;
+        margin-bottom: 30px;
+    }
+    .p3{
+        margin-top: 80px;
+        font-size:30px;
+        color:#76787a;
+        opacity:0.5;
+    }
+    .p4{
+        font-size:72px;
+        color:#333333;
+        line-height: 1.6
+    }
+    .p5{
+        font-size:30px;
+        color:#76787a;
+        opacity:0.5;
+    }
+    .pie{
+        margin:0 auto 80px;
+    }
+    .btn{
+        width:658px;
+        margin: 0 auto 20px;
+        overflow: hidden;
+        .btn-block{
+            display:-webkit-box;
+            transition: transform 400ms;
+            &.active{
+                transform: translate(-100%,0);
+            }
+        }
+        a{
+            border:1px solid #46bcff;
+            border-radius:6px;
+            width:656px;
+            height:82px;
+            display: block;
+            line-height: 82px;
+            font-size:36px;
+            color:#46bcff;
+        }
+        .reset_submit{
+            background:#46bcff;
+            color:#ffffff;
+        }
+    }
+    .msg{
+        font-size:30px;
+        color:rgba(118,120,122,0.50);
+    }
+}
 </style>
 
 
@@ -478,39 +591,196 @@ a{
 
 import Modal from './components/Modal.vue'
 import CirclePie from './components/CirclePie.vue'
+import FilterItems from './components/FilterItems.vue'
+
+const TDS_VALUE = [0,50,100,300,500]
+const TDS_ANGLE = [-136, -74, 0, 74, 136]
+
+function getRotate(val, start, end){
+    var min = TDS_VALUE[start]
+    var max = TDS_VALUE[end]
+    var min_r = TDS_ANGLE[start]
+    var max_r = TDS_ANGLE[end]
+    return min_r+(val-min)/(max-min)*(max_r-min_r)
+}
+
+function getDays(hour) {
+    return Math.ceil(hour/24)
+}
 
 export default {
     components: {
         Modal,
-        CirclePie
+        CirclePie,
+        FilterItems
     },
     data() {
         return {
             device_name: '智能净水器',
-            tip: '过滤前水质：422 TDS',
+            tip: '',
             tdsModalVisible: false,
             timeoutModalVisible: false,
             alarmModalVisible: false,
-            statusModalVisible: true
+            statusModalVisible: false,
+            model: {},
+            hasTDS: true,
+            oldTDS: '',
+            nowTDS: '',
+            currentPage: 'index',
+            currentFilter: {},
+            filterItems: [],
+            washing: false,
+            isFilterResetActive: false
         }
     },
     computed: {
         level() {
+            for(var i = TDS_VALUE.length-1; i >= 0; i--){
+                if(this.nowTDS > TDS_VALUE[i]){
+                    return i + 1
+                }
+            }
             return 1
         },
         rotate() {
-            return '180deg'
+            var level = this.level
+            if(level == 5){
+                return TDS_ANGLE[4]
+            }
+            return getRotate(this.nowTDS, level-1, level)
+        },
+        expired_num() {
+            if(!this.model.filter_time_remaining) return 0
+            return this.model.filter_time_remaining.filter((item) => {
+                return item == 0
+            }).length
+        },
+        expiring_num() {
+            if(!this.model.filter_time_remaining) return 0
+            return this.model.filter_time_remaining.filter((item) => {
+                return getDays(item) <= 30
+            }).length
+        }
+    },
+    watch: {
+        statusModalVisible(val) {
+            if(!val){
+                this.isFilterResetActive = false
+            }
+        },
+        currentPage(page) {
+            if(page == 'index'){
+                HdSmart.UI.toggleHeadAndFoot(true)
+            }else if(page == 'list'){
+                HdSmart.UI.toggleHeadAndFoot(false)
+            }
         }
     },
     methods: {
-        controlDevice() {
-
+        inPage(page) {
+            return {
+                visibility: this.currentPage==page ? '' : 'hidden'
+            }
         },
-        back() {
+        controlDevice(attr, val, success) {
+            HdSmart.Device.control({
+                method: 'dm_set',
+                nodeid: `water_filter.main.${attr}`,
+                params: {
+                    attribute: {
+                        [attr]: val
+                    }
+                }
+            }, () => {
+                success && success()
+            }, () => {
 
+            })
+        },
+        setClean() {
+
+            var el = this.$el.querySelector('.progress')
+
+            var onWash = () => {
+                this.washing = false
+                el.removeEventListener('transitionend', onWash, false)
+            }
+
+            this.controlDevice('control', 'clean', () => {
+                this.washing = true
+                el.addEventListener('transitionend', onWash, false)
+            })
+        },
+        getSnapShot(cb) {
+            HdSmart.Device.getSnapShot((data) => {
+                this.onSuccess(data)
+                cb && cb()
+            },()=>{
+                cb && cb()
+            })
+        },
+        onSuccess(result) {
+            var attrs = result.attribute
+
+            if(result.device_name){
+                this.device_name = result.device_name
+            }
+
+            this.model = attrs
+
+            var tds = attrs.water_filter_result.TDS
+            if(tds){
+                this.hasTDS = true
+                this.oldTDS = tds[0]
+                this.nowTDS = tds[1]
+            }else{
+                this.hasTDS = false
+            }
+            this.filterItems = this.model.filter_time_remaining.map((el ,index) => {
+                var total = this.model.filter_time_total[index]
+                return {
+                    remaining: getDays(el),
+                    total: total,
+                    index: index,
+                    days: getDays(el),
+                    percent: parseInt(el/total*100)
+                }
+            })
+        },
+        viewFilter(index) {
+            this.currentFilter = this.filterItems[index]
+            this.statusModalVisible = true
+        },
+        confirmFilterReset() {
+            this.isFilterResetActive = true
+        },
+        submitFilterReset() {
+            this.controlDevice('reset_filter', [this.currentFilter.index], () => {
+                HdSmart.UI.toast('重置成功')
+                this.isFilterResetActive = false
+            })
         }
     },
     created() {
+        HdSmart.ready(() => {
+            this.getSnapShot(() => {
+                HdSmart.UI.hideLoading()
+            })
+        })
+        HdSmart.onDeviceListen((data) => {
+            switch (data.method) {
+                case 'dm_set':
+                    if(data.code !== 0){
+                        this.getSnapShot()
+                    }
+                    break
+                default:
+                    this.onSuccess(data.result)
+                    break
+            }
+        })
+    },
+    mounted() {
 
     }
 }

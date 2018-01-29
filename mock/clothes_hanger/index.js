@@ -21,13 +21,13 @@ if (location.search.indexOf('env=desktop') != -1) {
                 setTimeout(function(){
                     ret.result.attribute.status = 'top'
                     onDeviceChange(ret)
-                },3000)
+                },10000)
             }
             if(data.params.attribute.control == 'down'){
                 setTimeout(function(){
                     ret.result.attribute.status = 'bottom'
                     onDeviceChange(ret)
-                },3000)
+                },10000)
             }
         },1000)
     })

@@ -1,6 +1,5 @@
 <template>
     <div id="app">
-        <div>={{raf_percent}}</div>
         <div class="tip" v-if="show && tip">{{tip}}</div>
         <navigator class="navigator" v-once></navigator>
         <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"></curtain>
