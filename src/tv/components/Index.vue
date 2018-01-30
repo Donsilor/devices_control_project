@@ -67,8 +67,8 @@
             <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>
             <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
             <a href="#" class="home" @click.prevent="cmd('rcHome')"></a>
-            <a href="#" class="menu"></a>
-            <a href="#" class="back"></a>
+            <a href="#" class="menu" @click.prevent="cmd('rcMenu')"></a>
+            <a href="#" class="back" @click.prevent="cmd('rcBack')"></a>
         </div>
     </div>
 </div></div>
@@ -288,11 +288,6 @@
             }
         }
     }
-
-    .grid{
-        margin-left: -90px;
-    }
-
 </style>
 
 <script>

@@ -1,0 +1,96 @@
+{
+    "code": 0,
+    "data": {
+        "city": {
+            "cityId": 892,
+            "counname": "中国",
+            "name": "深圳市",
+            "pname": "广东省",
+            "timezone": "8"
+        },
+        "forecast": [{
+            "conditionDay": "多云",
+            "conditionIdDay": "1",
+            "conditionIdNight": "31",
+            "conditionNight": "多云",
+            "predictDate": "2018-01-24",
+            "tempDay": "21",
+            "tempNight": "16",
+            "updatetime": "2018-01-24 12:10:08",
+            "windDirDay": "东风",
+            "windDirNight": "东风",
+            "windLevelDay": "4-5",
+            "windLevelNight": "3-4"
+        }, {
+            "conditionDay": "多云",
+            "conditionIdDay": "1",
+            "conditionIdNight": "31",
+            "conditionNight": "多云",
+            "predictDate": "2018-01-25",
+            "tempDay": "22",
+            "tempNight": "13",
+            "updatetime": "2018-01-24 12:10:08",
+            "windDirDay": "东风",
+            "windDirNight": "北风",
+            "windLevelDay": "3-4",
+            "windLevelNight": "3"
+        }, {
+            "conditionDay": "多云",
+            "conditionIdDay": "1",
+            "conditionIdNight": "31",
+            "conditionNight": "多云",
+            "predictDate": "2018-01-26",
+            "tempDay": "19",
+            "tempNight": "11",
+            "updatetime": "2018-01-24 12:10:08",
+            "windDirDay": "北风",
+            "windDirNight": "北风",
+            "windLevelDay": "3",
+            "windLevelNight": "3"
+        }, {
+            "conditionDay": "小雨",
+            "conditionIdDay": "7",
+            "conditionIdNight": "2",
+            "conditionNight": "阴",
+            "predictDate": "2018-01-27",
+            "tempDay": "18",
+            "tempNight": "15",
+            "updatetime": "2018-01-24 12:10:08",
+            "windDirDay": "北风",
+            "windDirNight": "北风",
+            "windLevelDay": "3",
+            "windLevelNight": "3"
+        }, {
+            "conditionDay": "阴",
+            "conditionIdDay": "2",
+            "conditionIdNight": "7",
+            "conditionNight": "小雨",
+            "predictDate": "2018-01-28",
+            "tempDay": "20",
+            "tempNight": "10",
+            "updatetime": "2018-01-24 12:10:08",
+            "windDirDay": "北风",
+            "windDirNight": "东北风",
+            "windLevelDay": "3",
+            "windLevelNight": "3-4"
+        }, {
+            "conditionDay": "小雨",
+            "conditionIdDay": "7",
+            "conditionIdNight": "7",
+            "conditionNight": "小雨",
+            "predictDate": "2018-01-29",
+            "tempDay": "16",
+            "tempNight": "9",
+            "updatetime": "2018-01-24 12:10:08",
+            "windDirDay": "东北风",
+            "windDirNight": "东北风",
+            "windLevelDay": "3-4",
+            "windLevelNight": "3-4"
+        }]
+    },
+    "msg": "success",
+    "rc": {
+        "c": 0,
+        "p": "success"
+    }
+}
