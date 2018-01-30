@@ -93,5 +93,9 @@
         "src": "suning_water_heater",
         "name": "热水器",
         "mock": "suning_water_heater"
+    },
+    "weather": {
+        "src": "weather",
+        "name": "天气"
     }
 }

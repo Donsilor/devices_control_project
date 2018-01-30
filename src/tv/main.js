@@ -15,6 +15,7 @@ import Topbar from './components/Topbar.vue'
 import ErrorView from './components/Error.vue'
 //import Statusbar from './components/Statusbar.vue'
 import watermark from '../../lib/watermark'
+import 'swiper/dist/css/swiper.css'
 
 Vue.use(Vuex)
 Vue.use(Router)

@@ -4,52 +4,72 @@
 <template>
 <div class="page-index"><div class="page-index2">
     <div class="grid">
-        <div class="span1">
-            <div class="swiper">
-                <div v-if="homePageInfo.length === 0" @click="pageInit">
-                    <img src="../assets/img_default_recommend.png">
+        <div class="content-con">
+            <div class="span1">
+                <div class="swiper">
+                    <div v-if="homePageInfo.length === 0" @click="pageInit">
+                        <img src="../assets/img_default_recommend.png">
+                    </div>
+                    <swiper v-if="homePageInfo.length > 0" :options="swiperOption" ref="swiper">
+                        <swiper-slide
+                            v-for="item in homePageInfo"
+                            :key="item.vid">
+                            <a href="#"
+                               :style="{backgroundImage:'url('+item.pictureUrl+')'}"
+                               @click.prevent="showDetailInfo(item)">
+                                <span class="title">{{item.title}}</span>
+                            </a>
+                        </swiper-slide>
+                        <div class="swiper-pagination" slot="pagination"></div>
+                    </swiper>
                 </div>
-                <swiper v-if="homePageInfo.length > 0" :options="swiperOption" ref="swiper">
-                    <swiper-slide
-                        v-for="item in homePageInfo"
-                        :key="item.vid">
-                        <a href="#"
-                            :style="{backgroundImage:'url('+item.pictureUrl+')'}"
-                            @click.prevent="showDetailInfo(item)">
-                            <span class="title">{{item.title}}</span>
-                        </a>
-                    </swiper-slide>
-                    <div class="swiper-pagination" slot="pagination"></div>
-                </swiper>
             </div>
-        </div>
-        <div class="span2">
-            <router-link to="/search" class="item item-search">搜索</router-link>
-            <a href="#" @click.prevent="cmd('screenProjectionEvent')" class="item item-tp">投屏</a>
-            <a href="#" @click.prevent="cmd('remoteControlEvent')" class="item item-ykq">遥控器</a>
-        </div>
-        <div class="span3">
-            <router-link
-                v-for="item in channels"
-                :key="item.channelId"
-                :to="{
+            <div class="span-right">
+                <div class="span3">
+                    <router-link
+                        v-for="item in channels_1"
+                        :key="item.channelId"
+                        :to="{
                     name: 'list',
                     query: {
                         channelId: item.channelId,
                         channel: item.channel
                     }
                 }"
-                :class="['item-'+item.channelId]"
-                class="item"
-            >{{item.channel}}</router-link>
+                        :class="['item-'+item.channelId]"
+                        class="item"
+                    >{{item.channel}}</router-link>
+                </div>
+                <div class="span3">
+                    <router-link
+                        v-for="item in channels_2"
+                        :key="item.channelId"
+                        :to="{
+                    name: 'list',
+                    query: {
+                        channelId: item.channelId,
+                        channel: item.channel
+                    }
+                }"
+                        :class="['item-'+item.channelId]"
+                        class="item"
+                    >{{item.channel}}</router-link>
+                </div>
+                <div class="span2">
+                    <router-link to="/search" class="item item-search">搜索</router-link>
+                    <a href="#" @click.prevent="cmd('screenProjectionEvent')" class="item item-tp">投屏</a>
+                    <!--<a href="#" @click.prevent="cmd('remoteControlEvent')" class="item item-ykq">遥控器</a>-->
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div class="control">
-        <a href="#" class="home" @click.prevent="cmd('rcHome')"></a>
-        <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>
-        <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
-        <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
+        <div class="control">
+            <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
+            <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>
+            <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
+            <a href="#" class="home" @click.prevent="cmd('rcHome')"></a>
+            <a href="#" class="menu"></a>
+            <a href="#" class="back"></a>
+        </div>
     </div>
 </div></div>
 </template>
@@ -77,7 +97,8 @@
         position: absolute;
         transform: translate(-50%,-50%);
         margin-top: -60px;
-        width: 1364px;
+        width: 1750px;
+        .content-con{ height: 500px }
         .span1{
             float: left;
             width: 1020px;
@@ -85,32 +106,40 @@
             border-radius: 6px;
             overflow: hidden;
         }
-        .span2{
+        .span-right{
             float: right;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: 332px;
+            width: 700px;
             height: 500px;
-            .item{
-                width: 332px;
-                height: 160px;
-                line-height: 160px;
-                background-color: #fff;
-                color:#75787a;
-                font-size: 36px;
+            .span2{
+                display: flex;
+                height: 158px;
+                justify-content: space-between;
+                .item{
+                    background-color: #fff;
+                    color:#75787a;
+                    font-size: 36px;
+                }
             }
-        }
-        .span3{
-            clear: left;
-            padding-top: 12px;
-            display: flex;
-            justify-content: space-between;
+            .span3{
+                margin-bottom: 15px;
+                display: flex;
+                height: 158px;
+                justify-content: space-between;
+                a.item{
+                    height: 158px;
+                    width: 332px;
+                    display: inline-block;
+                }
+
+            }
         }
         .item{
             width: 332px;
-            height: 180px;
-            line-height: 180px;
+            height: 158px;
+            line-height: 158px;
             border-radius: 6px;
             background-size: 72px 72px;
             background-position: 36px center;
@@ -208,21 +237,18 @@
     }
     */
     .control {
-        position: absolute;
-        right: 70px;
-        top: 50%;
-        transform: translateY(-50%);
+        /*transform: translateY(-50%);*/
+        clear: both;
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 700px;
-        margin-top: -60px;
+        flex-direction: row;
+        justify-content: space-around;
+        height: 144px;
+        margin-top: 60px;
         a{
             display: block;
             width: 144px;
             height: 144px;
             background-size: 100% 100%;
-            background-color: #fff;
             border-radius: 144px;
         }
         .home{
@@ -243,6 +269,12 @@
                 background-image: url(../assets/btn_remote_volumeup_pressed.png);
             }
         }
+        .menu{
+            background-image: url(../assets/btn_remote_menu_normal.png);
+            &:active{
+                background-image: url(../assets/btn_remote_menu_pressed.png);
+            }
+        }
         .voldown{
             background-image: url(../assets/btn_remote_volumedown_normal.png);
             &:active{
@@ -260,9 +292,6 @@
     .grid{
         margin-left: -90px;
     }
-    .control{
-        margin-right: 90px;
-    }
 
 </style>
 
@@ -277,14 +306,35 @@
                 channelId: '',
                 vid: '',
                 swiperOption: {
-                    autoplay: 2000,
+                    autoplay: 3000,
                     loop: true,
-                    autoplayDisableOnInteraction: false,
+                    paginationClickable :true,
+                    autoplayDisableOnInteraction: true,
                     pagination: '.swiper-pagination',
-                    //lazyLoading: true
+                    lazyLoading: true
                 },
                 homePageInfo: [],
-                ...service.getInitData()
+                "channels_1": [
+                     {
+                         "channelId": "001",
+                         "channel": "电影"
+                     },
+                     {
+                         "channelId": "002",
+                         "channel": "电视剧"
+                     }
+                 ],
+                "channels_2": [
+                    {
+                        "channelId": "003",
+                        "channel": "动漫"
+                    },
+                    {
+                        "channelId": "004",
+                        "channel": "综艺"
+                    }
+                ]
+//                ...service.getInitData()
             }
         },
         computed: {
@@ -294,13 +344,13 @@
         },
         watch: {
            detailVisible(visible) {
-               if(visible){
-                    HdSmart.UI.toggleHeadAndFoot(false)
-                    this.$refs.swiper.swiper.stopAutoplay()
-               }else{
-                    HdSmart.UI.toggleHeadAndFoot(true)
-                    this.$refs.swiper.swiper.startAutoplay()
-               }
+//               if(visible){
+//                    HdSmart.UI.toggleHeadAndFoot(false)
+//                    this.$refs.swiper.swiper.stopAutoplay()
+//               }else{
+//                    HdSmart.UI.toggleHeadAndFoot(true)
+//                    this.$refs.swiper.swiper.startAutoplay()
+//               }
            }
         },
         methods: {
