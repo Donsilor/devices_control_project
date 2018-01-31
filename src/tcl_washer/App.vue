@@ -90,6 +90,7 @@
                         <div class="bd">
                             <span class="option"
                                 v-for="item in temperature_options" :key="item.value"
+                                @click="setTemperature(item)"
                                 :class="{selected:current_temperature.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
@@ -104,6 +105,7 @@
                         <div class="bd">
                             <span class="option"
                                 v-for="item in detergent_options" :key="item.value"
+                                @click="setDetergent(item)"
                                 :class="{selected:current_detergent.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
@@ -118,6 +120,7 @@
                         <div class="bd">
                             <span class="option"
                                 v-for="item in drying_options" :key="item.value"
+                                @click="setDrying(item)"
                                 :class="{selected:current_drying.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
@@ -713,7 +716,7 @@ const MODE_OPTIONS = {
             default: 0
         },
         drying: {
-            options: [0,1,2,3,4],
+            options: [0,1,2,3],
             default: 0
         },
         detergent: {
@@ -728,7 +731,7 @@ const MODE_OPTIONS = {
             default: 0
         },
         drying: {
-            options: [0,1,2,3,4],
+            options: [0,1,2,3],
             default: 0
         },
         detergent: {
@@ -743,7 +746,7 @@ const MODE_OPTIONS = {
             default: 0
         },
         drying: {
-            options: [0,1,2,3,4],
+            options: [0,1,2,3],
             default: 0
         },
         detergent: {
@@ -773,7 +776,7 @@ const MODE_OPTIONS = {
             default: 2
         },
         drying: {
-            options: [0,1,2,3,4],
+            options: [0,1,2,3],
             default: 0
         },
         detergent: {
@@ -788,7 +791,7 @@ const MODE_OPTIONS = {
             default: 2
         },
         drying: {
-            options: [0,1,2,3,4],
+            options: [0,1,2,3],
             default: 0
         },
         detergent: {
@@ -803,7 +806,7 @@ const MODE_OPTIONS = {
             default: 3
         },
         drying: {
-            options: [0,1,2,3,4],
+            options: [0,1,2,3],
             default: 0
         },
         detergent: {
@@ -818,7 +821,7 @@ const MODE_OPTIONS = {
             default: 2
         },
         drying: {
-            options: [0,1,2,3,4],
+            options: [0,1,2,3],
             default: 0
         },
         detergent: {
@@ -833,7 +836,7 @@ const MODE_OPTIONS = {
             default: 0
         },
         drying: {
-            options: [0,1,2,3,4],
+            options: [0,1,2,3],
             default: 0
         },
         detergent: {
@@ -848,7 +851,7 @@ const MODE_OPTIONS = {
             default: 0
         },
         drying: {
-            options: [0,1,2,3,4],
+            options: [0,1,2,3],
             default: 0
         },
         detergent: {
@@ -863,7 +866,7 @@ const MODE_OPTIONS = {
             default: 3
         },
         drying: {
-            options: [0,1,2,3,4],
+            options: [0,1,2,3],
             default: 0
         },
         detergent: {
@@ -878,7 +881,7 @@ const MODE_OPTIONS = {
             default: 0
         },
         drying: {
-            options: [0,1,2,3,4],
+            options: [0,1,2,3],
             default: 0
         },
         detergent: {
@@ -938,7 +941,7 @@ const MODE_OPTIONS = {
             default: 0
         },
         drying: {
-            options: [1,2,3,4],
+            options: [1,2,3],
             default: 0
         },
         detergent: {
@@ -953,7 +956,7 @@ const MODE_OPTIONS = {
             default: 0
         },
         drying: {
-            options: [1,2,3,4],
+            options: [1,2,3],
             default: 0
         },
         detergent: {
@@ -1151,8 +1154,29 @@ export default {
         setReserve(time) {
             this.controlDevice('reserve_wash', time)
         },
-        setTemperature(temp){
-            this.controlDevice('temperature', temp)
+        setTemperature(item){
+            if(item.value == this.current_temperature.value){
+                return
+            }
+            this.controlDevice('temperature', item.value, () => {
+                this.current_temperature = item
+            })
+        },
+        setDetergent(item) {
+            if(item.value == this.current_detergent.value){
+                return
+            }
+            this.controlDevice('detergent', item.value, () => {
+                this.current_detergent = item
+            })
+        },
+        setDrying(item) {
+            if(item.value == this.current_drying.value){
+                return
+            }
+            this.controlDevice('drying', item.value, () => {
+                this.current_drying = item
+            })
         },
         cancleReserve() {
             this.reserveModalVisible = false

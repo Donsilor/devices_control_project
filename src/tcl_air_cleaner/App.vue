@@ -6,7 +6,7 @@
             <p v-show="tip">{{tip}}</p>
             <p v-show="!tip && remain_tip">{{remain_tip}}</p>
         </div>
-        <a href="" class="btn-more" @click.prevent="moreModalVisible = true"></a>
+        <a v-if="ab.child_lock_switch || ab.negative_ion_switch" href="" class="btn-more" @click.prevent="moreModalVisible = true"></a>
         <div class="pm25">
             <div class="circle">
                 <span v-for="i in 5" :key="i" :class="'c'+i" v-show="i==(pm25_level>5?5:pm25_level)"></span>
@@ -19,7 +19,7 @@
         </div>
         <div class="attrs">
             <span v-if="model.temperature && model.temperature!='0'">温度：{{model.temperature}}℃</span>
-            <span v-if="model.humidity && model.humidity!='0'">湿度：{{model.humidity}}</span>
+            <span v-if="model.humidity && model.humidity!='0'">湿度：{{model.humidity}}%</span>
         </div>
         <div class="btns btns-fn">
             <a href="" class="btn-on" @click.prevent="setSwitch('off')">
@@ -55,10 +55,10 @@
 
         <modal title="更多" v-model="moreModalVisible">
             <div class="btns btns-more">
-                <a href="" class="btn-ni" :class="{active:model.negative_ion_switch_status == 'on'}" @click.prevent="setNegativeIon">
+                <a v-if="ab.negative_ion_switch" href="" class="btn-ni" :class="{active:model.negative_ion_switch_status == 'on'}" @click.prevent="setNegativeIon">
                     <i></i> 负离子
                 </a>
-                <a href="" class="btn-cl" :class="{active:model.child_lock_switch_status == 'on'}" @click.prevent="setChildLock">
+                <a v-if="ab.child_lock_switch" href="" class="btn-cl" :class="{active:model.child_lock_switch_status == 'on'}" @click.prevent="setChildLock">
                     <i></i> 童锁
                 </a>
             </div>
@@ -177,7 +177,7 @@ a{
         top: 0;
         background: url(./assets/img_instrument_airquality_pointer.png) no-repeat;
         background-size: 100% 100%;
-        transition: transform 1.5s;
+        // transition: transform 1.5s;
     }
     .value{
         font-family:AbwechselnschriftBold;
@@ -538,6 +538,24 @@ const SPEED_TEXT3 = [
     {text: '中速', className: '3', value: 'middle'},
     {text: '高速', className: '5', value: 'high'}
 ]
+const DEVICE_MODEL = {
+    'KJ315F-A1': {
+        child_lock_switch: false,
+        negative_ion_switch: false,
+    },
+    'KJ400F-A11': {
+        child_lock_switch: false,
+        negative_ion_switch: false,
+    },
+    'KJ819F-B2': {
+        speed: 5
+    }
+}
+const DEVICE_DEFAULT = {
+    child_lock_switch: true,
+    negative_ion_switch: true,
+    speed: 3
+}
 
 const PM25_VAL = [0, 35, 75, 115, 150, 250]
 const PM25_ANGLE = [-136, -84, -28, 28, 84, 136]
@@ -569,7 +587,8 @@ export default {
             tip: '',
             remain_tip: '',
             pm25: '',
-            speedItems: SPEED_TEXT3
+            speedItems: SPEED_TEXT3,
+            ab: {}
         }
     },
     computed: {
@@ -614,7 +633,7 @@ export default {
         },
         controlDevice(attr, val, success, error) {
             var fn = this.confirm
-            if(attr == 'child_lock_switch' || (attr == 'switch' && val == 'off')){
+            if(attr == 'child_lock_switch'){
                 fn = function(cb){cb()}
             }
             fn(() => {
@@ -629,7 +648,7 @@ export default {
                 }, () => {
                     success && success()
                     if(attr != 'switch'){
-                        this.showTip('设置成功')
+                        // this.showTip('设置成功')
                     }
                 }, ()=>{
                     error && error()
@@ -641,10 +660,15 @@ export default {
             this.controlDevice('switch', val)
         },
         setControl(val) {
-            this.controlDevice('control', val)
+            this.controlDevice('control', val, () => {
+                this.model.control_status = val
+            })
         },
         setSpeed(val) {
-            this.controlDevice('speed', val)
+            this.controlDevice('speed', val, () => {
+                this.model.control_status = 'manual'
+                this.model.speed = val
+            })
         },
         setNegativeIon() {
             if(this.model.child_lock_switch_status == 'on'){
@@ -652,11 +676,15 @@ export default {
                 return
             }
             var val = getToggle(this.model.negative_ion_switch_status)
-            this.controlDevice('negative_ion_switch', val)
+            this.controlDevice('negative_ion_switch', val, () => {
+                this.model.negative_ion_switch_status = val
+            })
         },
         setChildLock() {
             var val = getToggle(this.model.child_lock_switch_status)
-            this.controlDevice('child_lock_switch', val)
+            this.controlDevice('child_lock_switch', val, () => {
+                this.model.child_lock_switch_status = val
+            })
         },
         showSpeedModal() {
             if(this.model.child_lock_switch_status == 'on'){
@@ -690,6 +718,16 @@ export default {
 
             var pm25 = this.model.air_filter_result.PM25
             this.pm25 = pm25.length == 2 ? pm25[1] : pm25[0]
+
+            // 根据设备型号判断功能点
+            this.ab = Object.assign(DEVICE_DEFAULT, DEVICE_MODEL[this.model.deviceModel] || {})
+            if(this.ab.speed == 5){
+                this.speedItems = SPEED_TEXT1
+            }else if(this.ab.speed == 4){
+                this.speedItems = SPEED_TEXT2
+            }else{
+                this.speedItems = SPEED_TEXT3
+            }
         },
         onError() {
             this.status = 'error'

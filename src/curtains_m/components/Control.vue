@@ -94,9 +94,9 @@
         line-height: 56px;
         font-size: 28px;
         color: #ffffff;
-        font-family: Roboto-Regular;
+        font-family: PingFangSC-Regular;
         text-align: center;
-        margin: 0 24px;
+        margin: 0 12px;
     }
 
     .tap:active {
