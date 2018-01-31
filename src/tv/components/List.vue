@@ -129,6 +129,7 @@
 
 <style lang="less">
     .page-list{
+        font-size: 30px;
         padding-top: 200px; //400
     }
     .fixedtop{

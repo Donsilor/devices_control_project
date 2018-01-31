@@ -110,6 +110,7 @@
         position: relative;
         width: 100%;
         input{
+            vertical-align: top;
             border:1px solid #dbdbdb;
             height: 70px;
             width: 100%;
