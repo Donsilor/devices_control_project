@@ -362,8 +362,12 @@
                 }
 
                 if(attr.temperature != undefined && !this.tempFlag){
-                    this.params.temperature = attr.temperature;
-                    this.fakeTemp = attr.temperature;
+                    var t = parseInt(attr.temperature)
+                    if(t > 100){
+                        t = t / 10
+                    }
+                    this.params.temperature = t;
+                    this.fakeTemp = t;
                 }
                 if(attr.mode != undefined){
                     this.params.mode = attr.mode;
@@ -771,7 +775,9 @@
         align-items: center;
     }
     .temp-show {
-        margin: 0 216px 0 240px;
+        width: 680px;
+        text-align: center;
+        // margin: 0 216px 0 240px;
     }
     .temp-number {
         font-size: 240px;

@@ -125,16 +125,16 @@
                 }
                 window.cancelAnimationFrame(this.raf_id);
                 if (quite) {
+                    this.open_percentage = percent
                     this.target_percentage = percent;
                 } else {
                     if(this.target_percentage != this.open_percentage){
-                        this.target_percentage = this.open_percentage
+                        // this.target_percentage = this.open_percentage
                     }
                     this.open_percentage = percent
-                    this.raf_percent = Math.abs(this.open_percentage - this.target_percentage) / 500 * this.raf_time
+                    this.raf_percent = Math.abs(this.open_percentage - this.target_percentage) / 600 * this.raf_time
                     var start = Date.now()
                     let rafFunc = () => {
-
                         //下一帧数的幅度
                         let nextTargetPercentage = this.target_percentage;
                         //当前的方向
@@ -142,6 +142,7 @@
                         //当前幅度小于预计移动的幅度，说明正在关闭
                         var end = Date.now()
                         var p = (end-start)/this.raf_time
+                        if(p == 0) p = 1
                         start = end
                         if (nextTargetPercentage > percent) {
                             nextTargetPercentage -= this.raf_percent * p;
@@ -172,7 +173,7 @@
                         this.target_percentage = nextTargetPercentage;
                         this.raf_id = window.requestAnimationFrame(rafFunc)
                     };
-                    rafFunc()
+                    this.raf_id = requestAnimationFrame(rafFunc)
                 }
             },
             onOpen(onFinishCallback) {
