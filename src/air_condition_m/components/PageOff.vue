@@ -57,7 +57,7 @@ export default {
     width: 100%;
     position: absolute;
     left: 0;
-    top: 208px;
+    top: 158px;
     .name{
         font-size: 32px;
         color:#75787a;

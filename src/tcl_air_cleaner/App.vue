@@ -714,6 +714,8 @@ export default {
                 this.remain_tip = '需更换滤网'
             }else if(this.model.filter_time_remaining <= 120){
                 this.remain_tip = `滤芯寿命剩余${this.model.filter_time_remaining}小时`
+            }else{
+                this.remain_tip = ''
             }
 
             var pm25 = this.model.air_filter_result.PM25

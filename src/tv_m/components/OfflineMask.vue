@@ -1,5 +1,7 @@
 <template>
-  <div class="mask" v-show="!$store.state.online" @touchmove.prevent="onTouchMove"></div>
+  <div class="mask" :style="maskStyle" v-show="!$store.state.online" @touchmove.prevent="onTouchMove">
+      <div></div>
+  </div>
 </template>
 
 <style scoped>
@@ -7,18 +9,32 @@
     background: rgba(0,0,0,0);
     position: fixed;
     left: 0;
-    top: 0;
+    top: 88px;
     width: 100%;
     height: 100%;
     z-index: 999;
+}
+.mask div{
+    background: rgba(0,0,0,0);
+    position: absolute;
+    left: 88px;
+    top: -88px;
+    width: 100%;
+    height: 100%;
 }
 </style>
 
 <script>
 export default {
+    props: ['page'],
     methods: {
         onTouchMove() {
             return false
+        }
+    },
+    computed: {
+        maskStyle() {
+            return this.page == 'index' ? {top:0+'px'} : ''
         }
     }
 }

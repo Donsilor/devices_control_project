@@ -2,7 +2,7 @@
 <div id="app">
     <router-view></router-view>
     <detail></detail>
-    <offline-mask v-if="isNotHome" />
+    <offline-mask v-if="isNotIndex" />
 </div>
 </template>
 
@@ -51,8 +51,8 @@
 <script>
 export default {
   computed: {
-      isNotHome() {
-          return this.$route.path != '/'
+      isNotIndex() {
+          return this.$store.state.detailVisible || this.$route.path != '/'
       }
   }
 }

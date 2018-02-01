@@ -171,9 +171,9 @@ a{
     .hotdry{
         position: absolute;
         left: 50%;
-        top: 34px;
-        width: 898px;
-        height: 562px;
+        top: 64px;
+        width: 464px;
+        height: 92px;
         transform: translate(-50%,0);
         background: url(./assets/img_hotdry.png) no-repeat;
         background-size: 100% 100%;

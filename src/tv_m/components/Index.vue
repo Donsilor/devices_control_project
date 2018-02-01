@@ -54,7 +54,7 @@
         </div>
     </div>
     </div>
-    <offline-mask />
+    <offline-mask page="index" v-if="!$store.state.detailVisible" />
 </div>
 </template>
 

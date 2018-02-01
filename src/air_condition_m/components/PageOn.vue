@@ -263,9 +263,10 @@ export default {
     width: 100%;
     position: absolute;
     left: 0;
-    top: 208px;
+    top: 158px;
     .name{
         font-size: 32px;
+        display: block;
     }
 }
 .current_temp{
@@ -273,7 +274,7 @@ export default {
     width: 100%;
     position: absolute;
     left: 0;
-    top: 320px;
+    top: 270px;
     .num{
         font-size: 200px;
         font-family:PingFangSC-Medium;
@@ -285,7 +286,7 @@ export default {
 }
 .btn-minus,.btn-add{
     position: absolute;
-    top: 372px;
+    top: 322px;
     width: 96px;
     height: 96px;
     background-size: 100% 100%;
@@ -328,7 +329,7 @@ export default {
 .btn-toggle{
     position: absolute;
     right: 32px;
-    top: 176px;
+    top: 128px;
     width: 96px;
     height: 96px;
     background-image: url(../assets/btn_aircon_more_normal@2x.png);
@@ -488,7 +489,7 @@ export default {
 .tip{
     position: absolute;
     left: 0;
-    top: 600px;
+    top: 500px;
     width: 100%;
     text-align: center;
     color:#fff;
