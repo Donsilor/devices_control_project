@@ -31,6 +31,9 @@ export function set(data){
     var attr = data.params.attribute
     if(attr.control){
         attr.status = attr.control
+        if(attr.status == 'start'){
+            attr.status = 'run'
+        }
     }
     res = Object.assign({}, res, attr)
     return Mock.mock({
