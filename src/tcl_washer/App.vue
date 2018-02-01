@@ -2,7 +2,7 @@
 <div id="app">
     <div class="page-on" v-if="model.switch=='on'">
         <div class="name">{{device_name}}</div>
-        <div class="fault" v-if="0">E15故障</div>
+        <div class="fault" v-if="errors.length" @click="showAlarmTip">{{errors[0]}}故障</div>
         <a href="" class="btn btn-more" @click.prevent="moreModalVisible = true"><i></i></a>
         <!-- 待机 -->
         <div class="circle" v-show="model.status=='standby'">
@@ -37,28 +37,38 @@
             <div class="group">
                 <div class="title">快洗</div>
                 <div class="btns btns-model">
-                    <a href="" class="btn btn-mode-high_speed_15m" :class="{active:model.mode=='high_speed_15m'}" @click.prevent="setMode('high_speed_15m')"><i></i>快速15分钟</a>
-                    <a href="" class="btn btn-mode-speed_wash_drying" :class="{active:model.mode=='speed_wash_drying'}" @click.prevent="setMode('speed_wash_drying')"><i></i>快速洗烘</a>
+                    <mode-button mode="high_speed_15m">快速15分钟</mode-button>
+                    <mode-button mode="speed_wash_drying">快速洗烘</mode-button>
+                    <!-- <a href="" class="btn btn-mode-high_speed_15m" :class="{active:model.mode=='high_speed_15m'}" @click.prevent="setMode('high_speed_15m')"><i></i>快速15分钟</a> -->
+                    <!-- <a href="" class="btn btn-mode-speed_wash_drying" :class="{active:model.mode=='speed_wash_drying'}" @click.prevent="setMode('speed_wash_drying')"><i></i>快速洗烘</a> -->
                 </div>
             </div>
             <div class="line"></div>
             <div class="group">
                 <div class="title">面料</div>
                 <div class="btns btns-model">
-                    <a href="" class="btn btn-mode-mix" :class="{active:model.mode=='mix'}" @click.prevent="setMode('mix')"><i></i>混合</a>
+                    <mode-button mode="mix">混合</mode-button>
+                    <mode-button mode="cotton">棉麻</mode-button>
+                    <mode-button mode="synthetic">化纤</mode-button>
+                    <mode-button mode="cardigan">羊毛</mode-button>
+                    <!-- <a href="" class="btn btn-mode-mix" :class="{active:model.mode=='mix'}" @click.prevent="setMode('mix')"><i></i>混合</a>
                     <a href="" class="btn btn-mode-cotton" :class="{active:model.mode=='cotton'}" @click.prevent="setMode('cotton')"><i></i>棉麻</a>
                     <a href="" class="btn btn-mode-synthetic" :class="{active:model.mode=='synthetic'}" @click.prevent="setMode('synthetic')"><i></i>化纤</a>
-                    <a href="" class="btn btn-mode-cardigan" :class="{active:model.mode=='cardigan'}" @click.prevent="setMode('cardigan')"><i></i>羊毛</a>
+                    <a href="" class="btn btn-mode-cardigan" :class="{active:model.mode=='cardigan'}" @click.prevent="setMode('cardigan')"><i></i>羊毛</a> -->
                 </div>
             </div>
             <div class="line"></div>
             <div class="group">
                 <div class="title">衣物类型</div>
                 <div class="btns btns-model">
-                    <a href="" class="btn btn-mode-baby_clothes" :class="{active:model.mode=='baby_clothes'}" @click.prevent="setMode('baby_clothes')"><i></i>婴儿服</a>
+                    <mode-button mode="baby_clothes">婴儿服</mode-button>
+                    <mode-button mode="underwear">内衣</mode-button>
+                    <mode-button mode="cowboy_suit">牛仔</mode-button>
+                    <mode-button mode="down_coat">羽绒服</mode-button>
+                    <!-- <a href="" class="btn btn-mode-baby_clothes" :class="{active:model.mode=='baby_clothes'}" @click.prevent="setMode('baby_clothes')"><i></i>婴儿服</a>
                     <a href="" class="btn btn-mode-underwear" :class="{active:model.mode=='underwear'}" @click.prevent="setMode('underwear')"><i></i>内衣</a>
                     <a href="" class="btn btn-mode-cowboy_suit" :class="{active:model.mode=='cowboy_suit'}" @click.prevent="setMode('cowboy_suit')"><i></i>牛仔</a>
-                    <a href="" class="btn btn-mode-down_coat" :class="{active:model.mode=='down_coat'}" @click.prevent="setMode('down_coat')"><i></i>羽绒服</a>
+                    <a href="" class="btn btn-mode-down_coat" :class="{active:model.mode=='down_coat'}" @click.prevent="setMode('down_coat')"><i></i>羽绒服</a> -->
                 </div>
             </div>
             </div>
@@ -69,12 +79,18 @@
                 <div class="group">
                     <div class="title">更多模式</div>
                     <div class="btns btns-more_model">
-                        <a href="" class="btn btn-mode-strong_wash" :class="{active:model.mode=='strong_wash'}" @click.prevent="setMode('strong_wash')"><i></i>强力</a>
+                        <mode-button mode="strong_wash">强力</mode-button>
+                        <mode-button mode="only_drying">单烘干</mode-button>
+                        <mode-button mode="spin">单脱水</mode-button>
+                        <mode-button mode="rinse_spin">漂洗+脱水</mode-button>
+                        <mode-button mode="odor_removal">除味</mode-button>
+                        <mode-button mode="antimite">除螨</mode-button>
+                        <!-- <a href="" class="btn btn-mode-strong_wash" :class="{active:model.mode=='strong_wash'}" @click.prevent="setMode('strong_wash')"><i></i>强力</a>
                         <a href="" class="btn btn-mode-only_drying" :class="{active:model.mode=='only_drying'}" @click.prevent="setMode('only_drying')"><i></i>单烘干</a>
                         <a href="" class="btn btn-mode-spin" :class="{active:model.mode=='spin'}" @click.prevent="setMode('spin')"><i></i>单脱水</a>
                         <a href="" class="btn btn-mode-rinse_spin" :class="{active:model.mode=='rinse_spin'}" @click.prevent="setMode('rinse_spin')"><i></i>漂洗+脱水</a>
                         <a href="" class="btn btn-mode-odor_removal" :class="{active:model.mode=='odor_removal'}" @click.prevent="setMode('odor_removal')"><i></i>除味</a>
-                        <a href="" class="btn btn-mode-antimite" :class="{active:model.mode=='antimite'}" @click.prevent="setMode('antimite')"><i></i>除螨</a>
+                        <a href="" class="btn btn-mode-antimite" :class="{active:model.mode=='antimite'}" @click.prevent="setMode('antimite')"><i></i>除螨</a> -->
                     </div>
                 </div>
                 <div class="group">
@@ -90,6 +106,7 @@
                         <div class="bd">
                             <span class="option"
                                 v-for="item in temperature_options" :key="item.value"
+                                @click="setTemperature(item)"
                                 :class="{selected:current_temperature.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
@@ -104,6 +121,7 @@
                         <div class="bd">
                             <span class="option"
                                 v-for="item in detergent_options" :key="item.value"
+                                @click="setDetergent(item)"
                                 :class="{selected:current_detergent.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
@@ -118,6 +136,7 @@
                         <div class="bd">
                             <span class="option"
                                 v-for="item in drying_options" :key="item.value"
+                                @click="setDrying(item)"
                                 :class="{selected:current_drying.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
@@ -132,7 +151,7 @@
                         <div class="bd1 childlock_confirm" v-show="confirmChildLockVisible">
                             关闭童锁后，所有按键可正常使用。确定关闭？
                             <div class="right">
-                                <a href="" class="cancle" @click.prevent="confirmChildLockVisible = false">取消</a>
+                                <a href="" class="cancel" @click.prevent="confirmChildLockVisible = false">取消</a>
                                 <a href="" class="submit" @click.prevent="submitChildLock">关闭</a>
                             </div>
                         </div>
@@ -148,7 +167,7 @@
                 <picker :slots="numberSlot" @change="onNumberChange" :item-height="itemHeight" :visible-item-count="5"></picker>
             </div>
             <div class="reserve-foot">
-                <a href="" class="cancle" @click.prevent="cancleReserve">取消</a>
+                <a href="" class="cancel" @click.prevent="cancelReserve">取消</a>
                 <a href="" class="submit" @click.prevent="submitReserve">确定</a>
             </div>
         </modal>
@@ -473,7 +492,7 @@ a{
         font-size:36px;
         box-sizing: border-box;
     }
-    .cancle{
+    .cancel{
         background:#ffffff;
         border:1px solid #76787a;
         color:#76787a;
@@ -499,7 +518,7 @@ a{
         box-sizing: border-box;
         text-align: center;
     }
-    .cancle{
+    .cancel{
         background:#ffffff;
         border:1px solid #76787a;
         color:#76787a;
@@ -695,6 +714,9 @@ a{
         &:active i{background-image: url(./assets/washer_btn_drysigle_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_drysigle_selected.png)}
     }
+    &.disable{
+        opacity: .5;
+    }
 }
 </style>
 
@@ -703,294 +725,19 @@ a{
 import Modal from './components/Modal.vue'
 import SwitchButton from './components/SwitchButton.vue'
 import Picker from './components/Picker/picker.vue'
+import ModeButton from './components/ModeButton.vue'
+import {
+    MODE_OPTIONS,
+    RESERVE_TIME_OPTIONS,
+    TEMPERATURE_OPTIONS,
+    DRY_OPTIONS,
+    DETERGENT_OPTIONS,
+    OPERATION_OPTIONS,
+    ERROR_CODE,
+    DEFAULT_ERROR_MSG
+} from './config'
 
 const radio = (document.documentElement.clientWidth || window.innerWidth) / 1920 * 75
-const MODE_OPTIONS = {
-    mix: {
-        text: '混合',
-        temperature: {
-            options: [0,1,2,3],
-            default: 0
-        },
-        drying: {
-            options: [0,1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [0,1,2],
-            default: 0
-        }
-    },
-    cotton: {
-        text: '棉麻',
-        temperature: {
-            options: [0,1,2,3,4,5],
-            default: 0
-        },
-        drying: {
-            options: [0,1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [0,1,2],
-            default: 0
-        }
-    },
-    synthetic: {
-        text: '化纤',
-        temperature: {
-            options: [0,1,2,3,4,],
-            default: 0
-        },
-        drying: {
-            options: [0,1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [0,1,2],
-            default: 0
-        }
-    },
-    cardigan: {
-        text: '羊毛衫',
-        temperature: {
-            options: [0,1,2,3],
-            default: 0
-        },
-        drying: {
-            options: [],
-            default: 0
-        },
-        detergent: {
-            options: [0,1,2],
-            default: 0
-        }
-    },
-    down_coat: {
-        text: '羽绒服',
-        temperature: {
-            options: [0,1,2,3],
-            default: 2
-        },
-        drying: {
-            options: [0,1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [0,1,2],
-            default: 0
-        }
-    },
-    baby_clothes: {
-        text: '婴儿服',
-        temperature: {
-            options: [0,1,2,3,4],
-            default: 2
-        },
-        drying: {
-            options: [0,1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [0,1,2],
-            default: 0
-        }
-    },
-    underwear: {
-        text: '内衣',
-        temperature: {
-            options: [0,1,2,3],
-            default: 3
-        },
-        drying: {
-            options: [0,1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [0,1,2],
-            default: 0
-        }
-    },
-    cowboy_suit: {
-        text: '牛仔',
-        temperature: {
-            options: [0,1,2,3],
-            default: 2
-        },
-        drying: {
-            options: [0,1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [0,1,2],
-            default: 0
-        }
-    },
-    rinse_spin: {
-        text: '漂洗+脱水',
-        temperature: {
-            options: [0],
-            default: 0
-        },
-        drying: {
-            options: [0,1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [],
-            default: 0
-        }
-    },
-    spin: {
-        text: '单脱水',
-        temperature: {
-            options: [0],
-            default: 0
-        },
-        drying: {
-            options: [0,1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [],
-            default: 0
-        }
-    },
-    strong_wash: {
-        text: '强力洗',
-        temperature: {
-            options: [0,1,2,3,4],
-            default: 3
-        },
-        drying: {
-            options: [0,1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [0,1,2],
-            default: 0
-        }
-    },
-    high_speed_15m: {
-        text: '极速15',
-        temperature: {
-            options: [0],
-            default: 0
-        },
-        drying: {
-            options: [0,1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [0,1,2],
-            default: 0
-        }
-    },
-    antimite: {
-        text: '除螨',
-        temperature: {
-            options: [],
-            default: 0
-        },
-        drying: {
-            options: [4],
-            default: 0
-        },
-        detergent: {
-            options: [],
-            default: 0
-        }
-    },
-    odor_removal: {
-        text: '除味',
-        temperature: {
-            options: [],
-            default: 0
-        },
-        drying: {
-            options: [4],
-            default: 0
-        },
-        detergent: {
-            options: [],
-            default: 0
-        }
-    },
-    speed_wash_drying: {
-        text: '快速洗烘',
-        temperature: {
-            options: [0],
-            default: 0
-        },
-        drying: {
-            options: [1],
-            default: 0
-        },
-        detergent: {
-            options: [0,1,2],
-            default: 0
-        }
-    },
-    normal_drying: {
-        text: '标准烘干',
-        temperature: {
-            options: [],
-            default: 0
-        },
-        drying: {
-            options: [1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [],
-            default: 0
-        }
-    },
-    only_drying: {
-        text: '单烘干',
-        temperature: {
-            options: [],
-            default: 0
-        },
-        drying: {
-            options: [1,2,3,4],
-            default: 0
-        },
-        detergent: {
-            options: [],
-            default: 0
-        }
-    },
-}
-const RESERVE_TIME_OPTIONS = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
-const TEMPERATURE_OPTIONS = [
-    {value: '0', text:'冷洗'},
-    {value: '20', text:'20℃'},
-    {value: '30', text:'30℃'},
-    {value: '40', text:'40℃'},
-    {value: '60', text:'60℃'},
-    {value: '95', text:'95℃'},
-]
-const DRY_OPTIONS = [
-    {value: 'no_drying', text: '不烘干'},
-    {value: 'normal_drying', text: '标准'},
-    {value: 'strong_drying', text: '特干'},
-    {value: 'air_drying', text: '晾干'},
-    {value: 'time_drying', text: '定时'},
-]
-const DETERGENT_OPTIONS = [
-    {value: 'non_condensed', text: '非浓缩'},
-    {value: 'condensed', text: '浓缩'},
-    {value: 'non_auto', text: '非自动'}
-]
-const OPERATION_OPTIONS = {
-    reserve: '预约等待',
-    'pre-wash': '预洗',
-    wash: '主洗',
-    rinse: '漂洗',
-    spin: '脱水',
-    drying: '烘干'
-}
 
 function getToggle(val) {
     return val === 'on' ? 'off' : 'on'
@@ -1011,7 +758,8 @@ export default {
     components: {
         Modal,
         SwitchButton,
-        Picker
+        Picker,
+        ModeButton
     },
     data() {
         return {
@@ -1023,15 +771,8 @@ export default {
             modeModalVisible: false,
             reserveModalVisible: false,
             currentReserveTime: 0,
-            childLockSwitch: false,
             confirmChildLockVisible: false,
             currentSet: -1,
-            // numberSlot: [{
-            //     flex: 1,
-            //     defaultIndex: 0,
-            //     values: makeArray(3, 24),
-            //     className: 'slot1'
-            // }],
             number: 0,
             itemHeight: 1.2 * radio,
             current_temperature: {},
@@ -1041,19 +782,12 @@ export default {
             drying_options: [],
             detergent_options: [],
             current_mode_text: '',
+            errors: []
         }
     },
     computed: {
         numberSlot() {
-            // var now = new Date()
-            // var currentHour = now.getHours()
-            // var currentMinute = now.getMinutes()
             var values = RESERVE_TIME_OPTIONS.map((item, i) => {
-                // var hour = currentHour + item
-                // if(hour >= 24){
-                //     hour = `次日${hour-24}`
-                // }
-                // return `${hour} : ${currentMinute}`
                 return `${item}`
             })
             return [{
@@ -1068,6 +802,9 @@ export default {
         },
         operation_text() {
             return OPERATION_OPTIONS[this.model.operation]
+        },
+        childLockSwitch() {
+            return this.model.child_lock_switch == 'on' ? true : false
         }
     },
     watch: {
@@ -1116,7 +853,12 @@ export default {
 
         },
         controlDevice(attr, val, success, error) {
-            if(attr != 'child_lock_switch' && this.model.child_lock_switch == 'on'){
+
+            if(this.errors.length){
+                this.showAlarmTip()
+                return
+            }
+            if(this.model.child_lock_switch == 'on' && attr != 'child_lock_switch'){
                 HdSmart.UI.toast('请先关闭童锁')
                 return
             }
@@ -1139,22 +881,53 @@ export default {
             this.controlDevice('switch', val)
         },
         setControl(val) {
+            if(this.model.operation == 'drying' && val == 'halt'){
+                HdSmart.UI.toast('烘干时不可暂停')
+                return
+            }
             this.controlDevice('control', val)
         },
         setMode(mode) {
+            if(this.model.status == 'run'){
+                return
+            }
+            if(this.model.mode == mode){
+                return
+            }
             this.controlDevice('mode', mode)
         },
-        setChildLock(val) {
+        setChildLock(val, callback) {
             // var val = getToggle(this.model.child_lock_switch)
-            this.controlDevice('child_lock_switch', val)
+            this.controlDevice('child_lock_switch', val, callback)
         },
         setReserve(time) {
             this.controlDevice('reserve_wash', time)
         },
-        setTemperature(temp){
-            this.controlDevice('temperature', temp)
+        setTemperature(item){
+            if(item.value == this.current_temperature.value){
+                return
+            }
+            this.controlDevice('temperature', item.value, () => {
+                this.current_temperature = item
+            })
         },
-        cancleReserve() {
+        setDetergent(item) {
+            if(item.value == this.current_detergent.value){
+                return
+            }
+            this.controlDevice('detergent', item.value, () => {
+                this.current_detergent = item
+            })
+        },
+        setDrying(item) {
+            if(item.value == this.current_drying.value){
+                return
+            }
+            this.controlDevice('drying', item.value, () => {
+                this.current_drying = item
+            })
+        },
+        cancelReserve() {
             this.reserveModalVisible = false
         },
         submitReserve() {
@@ -1172,8 +945,9 @@ export default {
             }
         },
         submitChildLock() {
-            this.confirmChildLockVisible = false
-            this.setChildLock('off')
+            this.setChildLock('off', () => {
+                this.confirmChildLockVisible = false
+            })
         },
         toggleSet(index) {
             this.currentSet = this.currentSet == index ? -1 : index
@@ -1193,11 +967,32 @@ export default {
                 this.device_name = data.device_name
             }
             this.model = data.attribute
-            this.childLockSwitch = this.model.child_lock_switch == 'on' ? true : false
         },
         onError() {
             this.status = 'error'
         },
+        onFault(attr) {
+            var code = attr.error_code
+            var index = this.errors.indexOf(code)
+
+            if(index > 0){
+                this.errors.splice(index, 1)
+            }
+
+            if(attr.error_status == 'open'){
+                this.errors.push(code)
+            }
+        },
+        showAlarmTip() {
+            var code = this.errors[0]
+            var msg = ERROR_CODE[code] || DEFAULT_ERROR_MSG
+            HdSmart.UI.alert({
+                title: '故障',
+                message: code + ' ' + msg,
+                cancelText: '',
+                onText: '知道了'
+            }, (val) => {})
+        }
     },
     created() {
         HdSmart.ready(() => {
@@ -1213,6 +1008,9 @@ export default {
                         this.getSnapShot()
                     }
                     break
+                case 'alarm':
+                    this.onFault(data.result.attribute)
+                    break;
                 default:
                     this.onSuccess(data.result)
                     break

@@ -316,10 +316,18 @@
             },
             //清空搜索历史
             clearHistory() {
-                HdSmart.UI.alert('清空记录', '确认要清空所有搜索记录？', ()=>{
-                    service.onClickEvent('clearSearchHistory')
-                    this.historyData = []
-                }, '清空', '取消')
+                HdSmart.UI.alert({
+                    title: '清空记录',
+                    message: '确认要清空所有搜索记录？',
+                    okText: '清空',
+                    cancelText: '取消',
+                    dialogStyle: 2
+                }, (val) => {
+                    if(val != undefined && val != false){
+                        service.onClickEvent('clearSearchHistory')
+                        this.historyData = []
+                    }
+                })
             },
             //提交
             submit() {

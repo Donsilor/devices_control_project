@@ -12,10 +12,10 @@
                 <span v-show="tip">{{tip}}</span>
                 <span v-show="!tip && tip2">{{tip2}}</span>&nbsp;
             </p>
-            <p v-show="drying == 'on'">正在烘干 将于{{drying_remain}}分钟后结束</p>
-            <p v-show="air_drying == 'on'">正在风干 将于{{air_drying_remain}}分钟后结束</p>
+            <p v-show="drying == 'on' && drying_remain > 0">正在烘干 将于{{drying_remain}}分钟后结束</p>
+            <p v-show="air_drying == 'on' && air_drying_remain > 0">正在风干 将于{{air_drying_remain}}分钟后结束</p>
             <!-- <p v-show="(drying == 'on' || air_drying == 'on') && sterilization == 'on'">杀菌 将于{{timeleft}}分钟后开始</p> -->
-            <p v-show="sterilization == 'on'">正在杀菌 将于{{sterilization_remain}}分钟后结束</p>
+            <p v-show="sterilization == 'on' && sterilization_remain > 0">正在杀菌 将于{{sterilization_remain}}分钟后结束</p>
         </div>
 
         <div class="entity">
@@ -135,8 +135,8 @@ a{
         height: 240px;
         min-height: 60px;
         max-height: 240px;
-        transition-property: height;
-        transition-duration: 28s;
+        // transition-property: height;
+        // transition-duration: 28s;
         margin: -30px auto 0;
         background: url(./assets/group_down02.png) no-repeat;
         background-size: 100% 100%;
@@ -171,9 +171,9 @@ a{
     .hotdry{
         position: absolute;
         left: 50%;
-        top: 34px;
-        width: 898px;
-        height: 562px;
+        top: 64px;
+        width: 464px;
+        height: 92px;
         transform: translate(-50%,0);
         background: url(./assets/img_hotdry.png) no-repeat;
         background-size: 100% 100%;
@@ -397,14 +397,64 @@ const tips = {
     sterilize_cancle: '杀菌已取消'
 }
 
-const duration = 28000
-const start_pos = 0.8
-const end_pos = 3.2
-const ch_height = 2.4
 const radio = (document.documentElement.clientWidth || window.innerWidth) / 1920 * 75
 
 function getToggle(val) {
     return val === 'on' ? 'off' : 'on'
+}
+
+const duration = 28000
+const start_pos = 0.8
+const end_pos = 3.2
+const ch_height = 2.4
+
+var speed = ch_height / duration * 20
+var moveRAF
+
+function setMove(el, dir) {
+    cancelAnimationFrame(moveRAF)
+    var start = Date.now()
+    var height = getHeight(el.style.height)
+    var move = function() {
+        var end = Date.now()
+        var p = (end-start)/20
+        if(p == 0) p = 1
+        start = end
+        if (dir == 'up') {
+            height -= speed * p;
+            el.style.height = height + 'rem'
+            if(height > start_pos){
+                moveRAF = requestAnimationFrame(move)
+            }else{
+                cancelAnimationFrame(moveRAF)
+            }
+        } else if (dir == 'down') {
+            height += speed * p
+            el.style.height = height + 'rem'
+            if(height < end_pos){
+                moveRAF = requestAnimationFrame(move)
+            }else{
+                cancelAnimationFrame(moveRAF)
+            }
+        }
+    }
+    moveRAF = requestAnimationFrame(move)
+}
+
+function setStop(el, height) {
+    if(height){
+        el.style.height = height
+    }
+    cancelAnimationFrame(moveRAF)
+}
+
+function getHeight(height) {
+    if(height.indexOf('px') >= 0){
+        height = (height.replace('px','')*1)/radio
+    }else{
+        height = height.replace('rem','')*1
+    }
+    return height
 }
 
 function setDuration(el, dir) {
@@ -427,22 +477,27 @@ function setPosition(el, pos){
     if(!el) return
     switch (pos){
         case 'top':
-            el.style.height = start_pos+'01rem'
-            el.style.transitionDuration = '1000ms'
+            setStop(el, start_pos+'01rem')
+            // el.style.height = start_pos+'01rem'
+            // el.style.transitionDuration = '1000ms'
             break;
         case 'up':
-            el.style.height = start_pos+'rem'
+            setMove(el, 'up')
+            // el.style.height = start_pos+'rem'
             break;
         case 'bottom':
-            el.style.height = end_pos+'01rem'
-            el.style.transitionDuration = '1000ms'
+            setStop(el, end_pos+'01rem')
+            // el.style.height = end_pos+'01rem'
+            // el.style.transitionDuration = '1000ms'
             break;
         case 'down':
-            el.style.height = end_pos+'rem'
+            setMove(el, 'down')
+            // el.style.height = end_pos+'rem'
             break;
         case 'pause':
-            var computedStyle = document.defaultView.getComputedStyle( el, null )
-            el.style.height = computedStyle.getPropertyValue( "height" )
+            setStop()
+            // var computedStyle = document.defaultView.getComputedStyle( el, null )
+            // el.style.height = computedStyle.getPropertyValue( "height" )
             break;
     }
     if(!el.init){
@@ -450,7 +505,7 @@ function setPosition(el, pos){
         if(pos == 'pause'){
             el.style.height = '2rem'
         }
-        el.style.transitionDuration = '0ms'
+        // el.style.transitionDuration = '0ms'
     }
 }
 
@@ -475,9 +530,9 @@ export default {
     watch: {
         status(cur, prev) {
             if(cur == 'up'){
-                setDuration(this.$refs.ani, 'up')
+                // setDuration(this.$refs.ani, 'up')
             }else if(cur == 'down'){
-                setDuration(this.$refs.ani, 'down')
+                // setDuration(this.$refs.ani, 'down')
             }
         }
     },
@@ -526,7 +581,7 @@ export default {
                 return
             }
             this.controlDevice('control', 'up', () => {
-                this.status = 'up'
+                // this.status = 'up'
             })
         },
         setDown() {
@@ -537,7 +592,7 @@ export default {
                 return
             }
             this.controlDevice('control', 'down', () => {
-                this.status = 'down'
+                // this.status = 'down'
             })
         },
         setPause() {
@@ -545,8 +600,8 @@ export default {
                 return
             }
             this.controlDevice('control', 'pause', () => {
-                this.status = 'pause'
-                this.showTip2(tips.move_pause, true)
+                // this.status = 'pause'
+                // this.showTip2(tips.move_pause, true)
             })
         },
         setLight() {
@@ -595,10 +650,10 @@ export default {
                 this.showTip2(tips.moved_down, true)
                 return
             }
-            // if(attrs.status == 'pause' && (this.status == 'up' || this.status == 'down')){
-            //     this.showTip2(tips.move_pause, true)
-            //     return
-            // }
+            if(attrs.status == 'pause' && (this.status == 'up' || this.status == 'down')){
+                this.showTip2(tips.move_pause, true)
+                return
+            }
         },
         setModeTip(attrs) {
 
@@ -648,14 +703,16 @@ export default {
         },
         onSuccess(result) {
 
-            var attrs = result.attribute
-
-            this.setModeTip(attrs)
-            this.setMoveTip(attrs)
+            if(!result) return
 
             if(result.device_name){
                 this.device_name = result.device_name
             }
+
+            var attrs = result.attribute
+
+            this.setModeTip(attrs)
+            this.setMoveTip(attrs)
 
             this.light = attrs.light
             this.air_drying = attrs.air_drying

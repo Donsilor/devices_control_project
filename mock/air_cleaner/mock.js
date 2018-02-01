@@ -21,7 +21,7 @@ let res = {
     "filter_time_remaining": "46",
     "temperature": "0",
     "humidity": "0",
-    "deviceModel": "KJ505F-A1",
+    "deviceModel": "KJ819F-B2",
     "manufactureId": "tcl",
     "deviceCategory": "air_filter.main",
     "deviceSubCategory": 0,
