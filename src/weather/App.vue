@@ -61,9 +61,7 @@
             HdSmart.ready(() => {
                 HdSmart.UI.showLoading()
                 let self = this
-                // http://www.sojson.com/open/api/weather/json.shtml?city=北京
-                let razyload = remoteLoad('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', false)
-                razyload.then((result) => {
+                remoteLoad('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', false).then((result) => {
                     if (remote_ip_info.ret === 1) {
                         self.city.name = remote_ip_info.city + '市'
                         let cityId = cityIdJson[self.city.name]
@@ -201,7 +199,7 @@
                 HdSmart.Device.control({
                     method: '3d_get_moji_weather',
                     params: {
-                        cityId: curId
+                        cityId: JSON.stringify(curId)
                     }
                 }, (res) => {
                     let innerData = res.result || ''
