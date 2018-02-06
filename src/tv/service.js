@@ -35,28 +35,28 @@ export function getHomePageInfo(callback){
     })
 }
 
-// export function getInitData(){
-//     return {
-//         "channels_1": [
-//             {
-//                 "channelId": "001",
-//                 "channel": "电影"
-//             },
-//             {
-//                 "channelId": "002",
-//                 "channel": "电视剧"
-//             },
-//             {
-//                 "channelId": "003",
-//                 "channel": "动漫"
-//             },
-//             {
-//                 "channelId": "004",
-//                 "channel": "综艺"
-//             }
-//         ]
-//     }
-// }
+export function getInitData(){
+    return {
+        "channels": [
+            {
+                "channelId": "001",
+                "channel": "电影"
+            },
+            {
+                "channelId": "002",
+                "channel": "电视剧"
+            },
+            {
+                "channelId": "003",
+                "channel": "动漫"
+            },
+            {
+                "channelId": "004",
+                "channel": "综艺"
+            }
+        ]
+    }
+}
 
 /**
  * 获取channel所有数据接口

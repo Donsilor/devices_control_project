@@ -71,10 +71,10 @@
                     <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
                     <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>
                     <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
-                    <a href="#" class="remote" @click.prevent="cmd('rcHome')"></a>
-                    <a href="#" class="left"></a>
-                    <a href="#" class="right"></a>
-                    <a href="#" class="back"></a>
+                    <!--<a href="#" class="remote" @click.prevent="cmd('rcHome')"></a>-->
+                    <a href="#" class="left" @click.prevent="cmd('rcLeft')"></a>
+                    <a href="#" class="right" @click.prevent="cmd('rcRight')"></a>
+                    <a href="#" class="back" @click.prevent="cmd('rcBack')"></a>
                 </div>
             </div>
             <div class="detail-playlist">
@@ -559,6 +559,9 @@
             ...mapActions([
                 'hideDetail'
             ]),
+            cmd(name) {
+                service.onClickEvent(name)
+            },
             getData() {
                 this.loading = true
                 service.getDetaileData({

@@ -98,6 +98,7 @@
 <style lang="less">
     .page-search{
         padding-top: 96px;
+        font-size: 30px;
     }
     .page-search .right{
         display: none;
