@@ -58,15 +58,18 @@
             }
         },
         mounted() {
-            let self = this
-            // http://www.sojson.com/open/api/weather/json.shtml?city=北京
-            let razyload = remoteLoad('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', false)
-            razyload.then((result) => {
-                if (remote_ip_info.ret === 1) {
-                    self.city.name = remote_ip_info.city + '市'
-                    let cityId = cityIdJson[self.city.name]
-                    self.getWeatherData(cityId)
-                }
+            HdSmart.ready(() => {
+                HdSmart.UI.showLoading()
+                let self = this
+                // http://www.sojson.com/open/api/weather/json.shtml?city=北京
+                let razyload = remoteLoad('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', false)
+                razyload.then((result) => {
+                    if (remote_ip_info.ret === 1) {
+                        self.city.name = remote_ip_info.city + '市'
+                        let cityId = cityIdJson[self.city.name]
+                        self.getWeatherData(cityId)
+                    }
+                })
             })
         },
         methods: {
@@ -175,7 +178,7 @@
                 }
                 return curClass
             },
-            getWeatherData (id,) {
+            getWeatherData (curId) {
                 let thisDay = (new Date()).getDay()
                 let curIndex = 0
                 let currentWeekArr = []
@@ -195,14 +198,14 @@
                 }
                 this.currentOldDay = getOldDate()  //获取农历日期
                 let self = this
-                HdSmart.ready(() => {
-                    HdSmart.Device.control({
-                        method: '3d_get_moji_weather',
-                        params: {
-                            cityId: '2'
-                        }
-                    }, (res) => {
-                        let innerData = res.result
+                HdSmart.Device.control({
+                    method: '3d_get_moji_weather',
+                    params: {
+                        cityId: curId
+                    }
+                }, (res) => {
+                    let innerData = res.result || ''
+                    if (innerData && innerData.aqi) {
                         self.renderAQI(innerData.aqi.data['aqi'].value)
                         let forecast = innerData.forecast.data['forecast']
                         let newArr = forecast.slice(0, forecast.length - 1)
@@ -211,10 +214,10 @@
                             return item
                         })
                         self.renderTodayClass(this.wList[0].conditionIdDay)
-                    }, (err) => {
-                        console.log('c错误了。。。。。。。。。。')
-                        console.log(err)
-                    })
+                    }
+                    HdSmart.UI.hideLoading();
+                }, (err) => {
+                    HdSmart.UI.hideLoading();
                 })
             }
         }
