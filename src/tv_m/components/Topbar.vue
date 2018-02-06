@@ -17,7 +17,8 @@
 <style lang="less">
     .topbar{
         background: #f2f2f2;
-        height: 88px;
+        // height: 88px;
+        height: 116px;
         border-bottom: 1px solid #dbdbdb;
         position: relative;
         .left{
@@ -32,12 +33,14 @@
         }
         .title{
             text-align: center;
-            line-height: 95px;
+            // line-height: 95px;
+            line-height: 116px;
             font-size: 36px;
         }
         .icon{
             width: 84px;
-            height: 88px;
+            // height: 88px;
+            height: 116px;
             display: inline-block;
             background-repeat: no-repeat;
             background-size: 36px 36px;
@@ -56,6 +59,15 @@
             }
         }
     }
+    .isIOS .topbar{
+         height: 88px;
+         .title{
+             line-height: 95px;
+         }
+         .icon{
+            height: 88px;
+        }
+    }
     .topbar-fixed{
         position: fixed;
         left: 0;
@@ -72,7 +84,7 @@
         },
         data() {
             return {
-                isIOS: /iphone|ipad/i.test(navigator.userAgent),
+
             }
         },
         methods: {

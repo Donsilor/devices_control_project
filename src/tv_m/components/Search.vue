@@ -96,14 +96,28 @@
 </template>
 
 <style lang="less">
-    .page-search{
+    .isIOS .page-search{
         padding-top: 96px;
+    }
+    .isIOS .search_bar{
+        padding: 12px 0 0 100px;
+        input{
+            height: 64px;
+        }
+        .del{
+            width: 36px;
+            height: 36px;
+            top: 16px;
+        }
+    }
+    .page-search{
+        padding-top: 124px;
     }
     .page-search .right{
         display: none;
     }
     .search_bar{
-        padding: 12px 0 0 100px;
+        padding: 20px 0 0 100px;
         display: flex;
     }
     .search_input{
@@ -111,7 +125,7 @@
         width: 100%;
         input{
             border:1px solid #dbdbdb;
-            height: 64px;
+            height: 75px;
             border-radius:32px;
             width: 100%;
             box-sizing: border-box;
@@ -130,10 +144,10 @@
         }
         .del{
             position: absolute;
-            width: 36px;
-            height: 36px;
-            right: 24px;
-            top: 12px;
+            width: 42px;
+            height: 42px;
+            right: 18px;
+            top: 18px;
             background-repeat: no-repeat;
             background-size: 100% 100%;
             background-image: url(../assets/btn_input_delete_normal.png);

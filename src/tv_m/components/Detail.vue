@@ -116,11 +116,17 @@
         display: flex;
         flex-direction: column;
     }
-    .detail-hd{
+    .isIOS .detail-hd{
         height: 96px;
         .back{
-            width: 100px;
             height: 96px;
+        }
+    }
+    .detail-hd{
+        height: 124px;
+        .back{
+            width: 100px;
+            height: 124px;
             background-size: 36px 36px;
             background-repeat: no-repeat;
             background-position: center center;

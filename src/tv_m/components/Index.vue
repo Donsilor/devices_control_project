@@ -3,7 +3,7 @@
 -->
 <template>
 <div class="page-index">
-    <div class="page-header" v-if="!isIOS"></div>
+    <div class="page-header"></div>
     <div class="page-body">
     <router-link to="/search" class="search">输入片名、导演、演员搜索</router-link>
 
@@ -71,7 +71,10 @@
         overflow-x: hidden;
     }
     .page-header{
-        height: 88px;
+        height: 116px;
+    }
+    .isIOS .page-header{
+        display: none;
     }
     .page-body{
         height: 100%;
@@ -104,8 +107,9 @@
             display: block;
             width: 33.33%;
             height: 250px;
-            border-left: 1px solid #dbdbdb;
-            border-top: 1px solid #dbdbdb;
+            box-shadow: inset 1px 1px 1px -1px #dbdbdb;
+            // border-left: 1px solid #dbdbdb;
+            // border-top: 1px solid #dbdbdb;
             background-color: #fff;
             background-size: 96px 96px;
             background-position: center 48px;
@@ -240,7 +244,6 @@
     export default {
         data() {
             return {
-                isIOS: /iphone|ipad/i.test(navigator.userAgent),
                 channelId: '',
                 vid: '',
                 swiperOption: {
