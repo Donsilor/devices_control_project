@@ -13,7 +13,7 @@
             </div>
             <div class="arrow" :style="{transform:'rotate('+ pm25_rotate +'deg)'}"></div>
             <div class="value">
-                {{pm25}}
+                {{pm25==0?'–':pm25}}
             </div>
             <div class="pic">PM 2.5</div>
         </div>
