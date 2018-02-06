@@ -1,5 +1,5 @@
 <template>
-<div id="app">
+<div id="app" :class="{isIOS:isIOS}">
     <router-view></router-view>
     <detail></detail>
     <offline-mask v-if="isNotIndex" />
@@ -50,6 +50,11 @@
 
 <script>
 export default {
+  data() {
+      return {
+          isIOS: /iphone|ipad/i.test(navigator.userAgent),
+      }
+  },
   computed: {
       isNotIndex() {
           return this.$store.state.detailVisible || this.$route.path != '/'

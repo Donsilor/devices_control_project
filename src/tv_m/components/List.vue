@@ -118,8 +118,14 @@
 </template>
 
 <style lang="less">
-    .page-list{
+    .isIOS .page-list{
         padding-top: 200px;
+    }
+    .isIOS .filters-placeholder{
+        height: 198px;
+    }
+    .page-list{
+        padding-top: 228px;
     }
     .fixedtop{
         position: fixed;
@@ -129,7 +135,7 @@
         z-index: 2;
     }
     .filters-placeholder{
-        height: 198px;
+        height: 226px;
     }
     .filters{
         padding: 32px 32px 8px;
