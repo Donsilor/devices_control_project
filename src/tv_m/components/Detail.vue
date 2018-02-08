@@ -390,6 +390,7 @@
             height: 306px;
             margin:0 25px 0 5px;
             float:left;
+            overflow: hidden;
             img{
                 width: 320px;
                 height: 180px;

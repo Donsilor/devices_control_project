@@ -254,6 +254,21 @@ export const MODE_OPTIONS = {
             default: 0
         }
     },
+    normal_drying: {
+        text: '单烘干',
+        temperature: {
+            options: [],
+            default: 0
+        },
+        drying: {
+            options: [1,2,3],
+            default: 0
+        },
+        detergent: {
+            options: [],
+            default: 0
+        }
+    },
 }
 
 export const RESERVE_TIME_OPTIONS = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
@@ -272,7 +287,8 @@ export const DRY_OPTIONS = [
     {value: 'normal_drying', text: '标准'},
     {value: 'strong_drying', text: '特干'},
     {value: 'air_drying', text: '晾干'},
-    {value: 'time_drying', text: '定时'},
+    // {value: 'time_drying', text: '定时'},
+    {value: 'timer', text: '定时'},
 ]
 
 export const DETERGENT_OPTIONS = [
@@ -297,7 +313,7 @@ export const ERROR_CODE = {
     'E2': '请检查排水管是否堵塞或弯折。若仍出现此警报，请联系维修人员4006-999999。',
     'E3': '请检查洗衣机上盖是否正常关闭。若仍出现此警报，请联系维修人员4006-999999。',
     'E4': '请自动排水至洗涤水位后再运行。若仍出现此警报，请断水断电并联系维修人员4006-999999。',
-    'n5p': '请先将衣物抖散或适当增加衣物后，重新启动烘干程序。若仍出现此警报，请联系维修人员4006-999999。',
+    'nSP': '请先将衣物抖散或适当增加衣物后，重新启动烘干程序。若仍出现此警报，请联系维修人员4006-999999。',
     'EP': '请将旋钮转动至之前运行的程序。'
 }
 

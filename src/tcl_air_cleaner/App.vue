@@ -630,7 +630,13 @@ export default {
             remain_tip: '',
             pm25: '',
             speedItems: SPEED_TEXT3,
-            ab: {}
+            //功能能力判断
+            ab: {},
+            //前一个状态
+            prevModel: {
+                control_status: 'auto',
+                speed: ''
+            }
         }
     },
     computed: {
@@ -675,23 +681,41 @@ export default {
         },
         controlDevice(attr, val, success, error) {
             var fn = this.confirm
+            var params = {
+                [attr]: val
+            }
+
+            //改变风速，模式先设置成手动
+            if(attr == 'speed'){
+                params.control = 'manual'
+            }
+
+            //睡眠模式下，负离子关闭
+            // if(val == 'sleep'){
+            //     params.negative_ion_switch = 'off'
+            // }
+
+            //睡眠模式下，开启负离子，要恢复到上一个模式
+            if(attr == 'negative_ion_switch' && this.model.control_status == 'sleep'){
+                params.control = this.prevModel.control_status
+                if(this.prevModel.control_status == 'manual'){
+                    params.speed = this.prevModel.speed
+                }
+            }
+
             if(attr == 'child_lock_switch'){
                 fn = function(cb){cb()}
             }
+
             fn(() => {
                 HdSmart.Device.control({
                     method: 'dm_set',
                     nodeid: `air_filter.main.${attr}`,
                     params: {
-                        attribute: {
-                            [attr]: val
-                        }
+                        attribute: params
                     }
                 }, () => {
                     success && success()
-                    if(attr != 'switch'){
-                        // this.showTip('设置成功')
-                    }
                 }, ()=>{
                     error && error()
                     this.showTip('操作失败')
@@ -769,7 +793,7 @@ export default {
             var pm25 = this.model.air_filter_result.PM25
             this.pm25 = pm25.length == 2 ? pm25[1] : pm25[0]
 
-            // 根据设备型号判断功能点
+            // 根据设备型号判断功能点，后边从开放平台拉取
             this.ab = Object.assign(DEVICE_DEFAULT, DEVICE_MODEL[this.model.deviceModel] || {})
             if(this.ab.speed == 5){
                 this.speedItems = SPEED_TEXT1
@@ -784,9 +808,6 @@ export default {
         },
         confirm(done) {
             if(this.model.child_lock_switch_status == 'on'){
-                // if(confirm('解除童锁后才能控制此设备，是否解除？')){
-                //     this.setChildLock()
-                // }
                 HdSmart.UI.alert({
                     title: '解除童锁',
                     message: '解除童锁后才能控制此设备，是否解除？',
@@ -800,12 +821,22 @@ export default {
         }
     },
     created() {
+
+        this.$watch('model.control_status', (newVal, oldVal) => {
+            this.prevModel.control_status = oldVal
+        })
+
+        this.$watch('model.speed', (newVal, oldVal) => {
+            this.prevModel.speed = oldVal
+        })
+
         HdSmart.ready(() => {
             HdSmart.UI.showLoading()
             this.getSnapShot(() => {
                 HdSmart.UI.hideLoading()
             })
         })
+
         HdSmart.onDeviceListen((data) => {
             switch (data.method) {
                 case 'dm_set':

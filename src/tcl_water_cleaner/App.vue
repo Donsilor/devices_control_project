@@ -7,7 +7,7 @@
     <div class="page-on" :style="inPage('index')" v-if="isInit">
         <div class="name">{{device_name}}</div>
         <div class="tip">
-            <p v-if="inError('E3')"><span @click="alarmModalVisible=true">漏水</span></p>
+            <p v-if="inError('E3')"><span @click="toggleErrorModal('E3', true)">漏水</span></p>
             <p v-else-if="inError('E1')"><span>缺水</span></p>
             <p v-else-if="model.status=='maintain'">检修</p>
             <p v-else-if="model.status=='filter'">制水中...</p>
@@ -68,22 +68,22 @@
         </div>
     </modal>
 
-    <modal title="净水器滤芯到期" v-model="timeoutModalVisible">
+    <modal title="净水器滤芯到期" v-model="timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
         <div class="alarm">
-            <div class="alert"><i></i>净水器滤芯2已到期</div>
+            <div class="alert"><i></i>净水器滤芯{{expiredFilter}}已到期</div>
             <div class="text">
                 <p>前置活性炭寿命已到期，请更换以保证饮水质量！</p>
                 <p>请在更换滤芯后重置寿命</p>
             </div>
 
             <div class="btn">
-                <a href="#" class="" @click.prevent="viewFilter()">查看详情</a>
-                <a href="#" class="btn-default" @click.prevent="timeoutModalVisible=false">我知道了</a>
+                <a href="#" class="" @click.prevent="viewExpired">查看详情</a>
+                <a href="#" class="btn-default" @click.prevent="confirmExpired">我知道了</a>
             </div>
         </div>
     </modal>
 
-    <modal title="漏水警报" v-model="alarmModalVisible">
+    <modal title="漏水警报" v-model="alarmModalVisible" :showCloseBtn="false" :overlayClickable="false">
         <div class="alarm">
             <div class="alert"><i></i>检测净水器到漏水！</div>
             <div class="text">
@@ -92,7 +92,7 @@
                 <p>若净水器漏水，请及时关闭电源和水源。</p>
             </div>
             <div class="btn">
-                <a href="" class="btn-default" @click.prevent="alarmModalVisible=false">我知道了</a>
+                <a href="" class="btn-default" @click.prevent="confirmError('E3')">我知道了</a>
             </div>
         </div>
     </modal>
@@ -595,6 +595,8 @@ import FilterItems from './components/FilterItems.vue'
 
 const TDS_VALUE = [0,50,100,300,500]
 const TDS_ANGLE = [-136, -74, 0, 74, 136]
+const ERROR_STORE_KEY = 'water_cleaner_error'
+const EXPIRED_STORE_KEY = 'water_cleaner_expired'
 
 function getRotate(val, start, end){
     var min = TDS_VALUE[start]
@@ -617,7 +619,6 @@ export default {
     data() {
         return {
             device_name: '智能净水器',
-            tip: '',
             tdsModalVisible: false,
             timeoutModalVisible: false,
             alarmModalVisible: false,
@@ -632,7 +633,9 @@ export default {
             washing: false,
             isFilterResetActive: false,
             isInit: false,
-            errors: []
+            errors: [],
+            errorStore: JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || [],
+            expiredStore: JSON.parse(localStorage.getItem(EXPIRED_STORE_KEY)) || [],
         }
     },
     computed: {
@@ -651,17 +654,24 @@ export default {
             }
             return getRotate(this.nowTDS, level-1, level)
         },
+        //已过期
         expired_num() {
             if(!this.model.filter_time_remaining) return 0
             return this.model.filter_time_remaining.filter((item) => {
-                return item == 0
+                return item <= 0
             }).length
         },
+        //即将过期
         expiring_num() {
             if(!this.model.filter_time_remaining) return 0
             return this.model.filter_time_remaining.filter((item) => {
                 return getDays(item) <= 30
             }).length
+        },
+        expiredFilter() {
+            // this.model.filter_time_remaining.filter((item) => {
+            //     return item <= 0 &&
+            // })
         }
     },
     watch: {
@@ -718,13 +728,10 @@ export default {
                 el.addEventListener('transitionend', onWash, false)
             })
         },
-        getSnapShot(cb) {
+        getSnapShot() {
             HdSmart.Device.getSnapShot((data) => {
                 this.onSuccess(data)
-                cb && cb()
-            },()=>{
-                cb && cb()
-            })
+            },() => {})
         },
         onSuccess(result) {
 
@@ -749,16 +756,16 @@ export default {
             }else{
                 this.hasTDS = false
             }
+
             this.filterItems = this.model.filter_time_remaining.map((el ,index) => {
                 var total = this.model.filter_time_total[index]
                 return {
                     remaining: el,
                     total: total,
-                    index: index,
-                    // days: getDays(el),
-                    // percent: parseInt(el/total*100)
+                    index: index
                 }
             })
+
         },
         toPercent(remaining, total) {
             // Math.ceil(remaining/total*100)
@@ -784,26 +791,58 @@ export default {
         onFault(attr) {
             var code = attr.error_code
             var index = this.errors.indexOf(code)
+            var storeIndex = this.errorStore.indexOf(code)
 
-            if(index > 0){
+            if(index >= 0){
                 this.errors.splice(index, 1)
             }
 
             if(attr.error_status == 'open'){
                 this.errors.push(code)
+                if(storeIndex < 0){
+                    this.toggleErrorModal(code, true)
+                }
+            }else{
+                if(storeIndex >= 0){
+                    this.errorStore.splice(storeIndex, 1)
+                }
             }
         },
         inError(error){
             return this.errors.indexOf(error) >= 0
         },
+        confirmError(error) {
+            this.toggleErrorModal(error, false)
+            if(this.errorStore.indexOf(error) < 0){
+                this.errorStore.push(error)
+            }
+        },
+        toggleErrorModal(error, visible) {
+            switch(error){
+                case 'E3':
+                    this.alarmModalVisible = visible
+                    break;
+                default:
+                    break;
+            }
+        },
+        viewExpired() {
+
+        },
+        confirmExpired() {
+
+        }
     },
     created() {
+        this.$watch('errorStore.length', () => {
+            localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
+        })
+
         HdSmart.ready(() => {
             HdSmart.UI.showLoading()
             this.getSnapShot()
         })
-        //E3 漏水
-        //E1 缺水
+
         HdSmart.onDeviceListen((data) => {
             switch (data.method) {
                 case 'dm_set':

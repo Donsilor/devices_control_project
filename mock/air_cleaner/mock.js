@@ -42,8 +42,14 @@ export function generateSnapShot() {
 
 export function set(data){
     var attr = data.params.attribute
-    if(attr.speed){
-        attr.control = 'manual'
+    if(attr.control){
+        attr.control_status = attr.control
+    }
+    if(attr.negative_ion_switch){
+        attr.negative_ion_switch_status = attr.negative_ion_switch
+    }
+    if(attr.switch){
+        attr.switch_status = attr.switch
     }
     res = Object.assign({}, res, attr)
     return Mock.mock({

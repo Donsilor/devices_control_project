@@ -1,10 +1,10 @@
 <template>
 <div :class="className">
-    <div class="overlay" v-show="visible" @click="close"></div>
+    <div class="overlay" v-show="visible" @click="overlayClick"></div>
     <div class="modal" v-show="visible">
         <div class="modal-header">
             <div class="modal-title">{{title}}</div>
-            <div class="modal-close" @click="close"></div>
+            <div class="modal-close" v-show="showCloseBtn" @click="close"></div>
         </div>
         <div class="modal-body">
             <slot />
@@ -66,7 +66,15 @@ export default {
             type: Boolean,
             default: false
         },
-        className: ''
+        className: '',
+        overlayClickable: {
+            type: Boolean,
+            default: true
+        },
+        showCloseBtn: {
+            type: Boolean,
+            default: true
+        }
     },
     data() {
         return {
@@ -86,6 +94,11 @@ export default {
             this.visible = false;
             this.$emit('input', false);
             this.$emit('on-cancel');
+        },
+        overlayClick() {
+            if(this.overlayClickable){
+                this.close()
+            }
         }
     }
 }

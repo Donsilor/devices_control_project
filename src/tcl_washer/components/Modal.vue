@@ -18,7 +18,7 @@
     position: fixed;
     left: 50%;
     top: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%,-58%);
     background: #fff;
     width: 600px;
     border-radius: 6px;

@@ -254,7 +254,7 @@
                     type: TEMPERATURE,
                     imgSrc: require('./assets/minus_normal.png'),
                     imgActiveSrc: require('./assets/minus_pressed.png'),
-                    value: this.fakeTemp - 1,
+                    value: this.fakeTemp - 0.5,
                     //送风模式下不能设置温度
                     disabled: this.params.mode === 'wind' || this.params.mode == 'auto' || this.params.mode == 'dehumidify',
                     //允许连续点击
@@ -267,7 +267,7 @@
                     type: TEMPERATURE,
                     imgSrc: require('./assets/plus_normal.png'),
                     imgActiveSrc: require('./assets/plus_pressed.png'),
-                    value: this.fakeTemp + 1,
+                    value: this.fakeTemp + 0.5,
                     //送风模式下不能设置温度
                     disabled: this.params.mode === 'wind' || this.params.mode == 'auto' || this.params.mode == 'dehumidify',
                     //允许连续点击
@@ -382,14 +382,11 @@
                     this.params.wind_left_right = attr.wind_left_right;
                 }
 
-                if(this.params.mode == 'auto' || this.params.mode == 'dehumidify'){
-                    this.params.speed = 'auto'
-                }
-
                 if(this.params.mode == 'wind' && attr.env_temperature){
                     this.fakeTemp = attr.env_temperature
                 }else if(this.params.mode == 'dehumidify'){
-                    this.fakeTemp = 23
+                    this.params.speed = 'auto'
+                    // this.fakeTemp = 23
                 }
 
             },

@@ -5,7 +5,7 @@
         <div class="fault" v-if="errors.length" @click="showAlarmTip">{{errors[0]}}故障</div>
         <a href="" class="btn btn-more" @click.prevent="moreModalVisible = true"><i></i></a>
         <!-- 待机 -->
-        <div class="circle" v-show="model.status=='standby'">
+        <div class="circle" v-show="model.status=='standby' && model.operation=='none'">
             <div class="inner">
                 <div class="title">{{current_mode_text}}模式</div>
                 <div class="sub_title">洗衣时间</div>
@@ -25,8 +25,8 @@
         </div>
         <div class="btns btns-fn">
             <a href="" class="btn btn-on" @click.prevent="setSwitch('off')"><i></i>关机</a>
-            <a href="" class="btn btn-start" v-show="model.status=='standby' || (model.status=='run' && model.operation=='none')" @click.prevent="setControl('start')"><i></i>启动</a>
-            <a href="" class="btn btn-pause" v-show="model.status=='run' && model.operation!='none'" @click.prevent="setControl('halt')"><i></i>暂停</a>
+            <a href="" class="btn btn-start" v-show="model.status=='standby'" @click.prevent="setControl('start')"><i></i>启动</a>
+            <a href="" class="btn btn-pause" v-show="model.status=='run'" @click.prevent="setControl('halt')"><i></i>暂停</a>
             <a href="" class="btn btn-mode" @click.prevent="modeModalVisible = true"><i></i>模式选择</a>
             <a href="" class="btn btn-reserve" @click.prevent="reserveModalVisible = true"><i></i>预约洗衣</a>
         </div>
@@ -80,7 +80,7 @@
                     <div class="title">更多模式</div>
                     <div class="btns btns-more_model">
                         <mode-button mode="strong_wash">强力</mode-button>
-                        <mode-button mode="only_drying">单烘干</mode-button>
+                        <mode-button mode="normal_drying">标准烘干</mode-button>
                         <mode-button mode="spin">单脱水</mode-button>
                         <mode-button mode="rinse_spin">漂洗+脱水</mode-button>
                         <mode-button mode="odor_removal">除味</mode-button>
@@ -714,6 +714,11 @@ a{
         &:active i{background-image: url(./assets/washer_btn_drysigle_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_drysigle_selected.png)}
     }
+    &-mode-normal_drying{
+        i{background-image: url(./assets/washer_btn_drysigle_normal.png)}
+        &:active i{background-image: url(./assets/washer_btn_drysigle_pressed.png)}
+        &.active i{background-image: url(./assets/washer_btn_drysigle_selected.png)}
+    }
     &.disable{
         opacity: .5;
     }
@@ -752,6 +757,15 @@ function formatTime(time) {
     }
     result += `${minute}<small>分</small>`
     return result
+}
+
+function findIndex(array, fn){
+    for(var i=0;i<array.length;i++){
+        if(fn(array[i])){
+            return i
+        }
+    }
+    return -1
 }
 
 export default {
@@ -809,7 +823,7 @@ export default {
     },
     watch: {
         'model.mode'() {
-            this.onModeChange()
+            // this.onModeChange()
         }
     },
     methods: {
@@ -817,6 +831,7 @@ export default {
             if(!this.model.mode || !MODE_OPTIONS[this.model.mode]){
                 return
             }
+
             var currentModeConfig = MODE_OPTIONS[this.model.mode]
             var temperatureConfig = currentModeConfig.temperature
             var dryingConfig = currentModeConfig.drying
@@ -827,8 +842,12 @@ export default {
             this.temperature_options = TEMPERATURE_OPTIONS.filter((item, i) => {
                 return temperatureConfig.options.indexOf(i) >= 0
             })
+
             if(this.temperature_options.length){
-                this.current_temperature = this.temperature_options[temperatureConfig.default]
+                var temp_index = findIndex(this.temperature_options, (item) => {
+                    return item.value == this.model.temperature
+                })
+                this.current_temperature = this.temperature_options[temp_index]
             }else{
                 this.current_temperature = {}
             }
@@ -837,7 +856,12 @@ export default {
                 return dryingConfig.options.indexOf(i) >= 0
             })
             if(this.drying_options.length){
-                this.current_drying = this.drying_options[dryingConfig.default]
+                var dry_index = findIndex(this.drying_options, (item) => {
+                    return item.value == this.model.dryingdrying
+                })
+                if(dry_index >= 0){
+                    this.current_drying = this.drying_options[dry_index]
+                }
             }else{
                 this.current_drying = {}
             }
@@ -846,7 +870,10 @@ export default {
                 return detergentConfig.options.indexOf(i) >= 0
             })
             if(this.detergent_options.length){
-                this.current_detergent = this.detergent_options[detergentConfig.default]
+                var detergent_index = findIndex(this.detergent_options, (item) => {
+                    return item.value == this.model.auto_detergent_switch
+                })
+                this.current_detergent = this.detergent_options[detergent_index]
             }else{
                 this.current_detergent = {}
             }
@@ -897,38 +924,50 @@ export default {
             this.controlDevice('mode', mode)
         },
         setChildLock(val, callback) {
-            // var val = getToggle(this.model.child_lock_switch)
             this.controlDevice('child_lock_switch', val, callback)
         },
         setReserve(time) {
+            // if(this.model.status == 'run'){
+            //     return
+            // }
             this.controlDevice('reserve_wash', time)
         },
         setTemperature(item){
+            // if(this.model.status == 'run'){
+            //     return
+            // }
             if(item.value == this.current_temperature.value){
                 return
             }
-            this.controlDevice('temperature', item.value, () => {
-                this.current_temperature = item
+            this.controlDevice('temperature', parseInt(item.value), () => {
+                // this.current_temperature = item
             })
         },
         setDetergent(item) {
+            // if(this.model.status == 'run'){
+            //     return
+            // }
             if(item.value == this.current_detergent.value){
                 return
             }
-            this.controlDevice('detergent', item.value, () => {
-                this.current_detergent = item
+            this.controlDevice('auto_detergent_switch', item.value, () => {
+                // this.current_detergent = item
             })
         },
         setDrying(item) {
+            // if(this.model.status == 'run'){
+            //     return
+            // }
             if(item.value == this.current_drying.value){
                 return
             }
             this.controlDevice('drying', item.value, () => {
-                this.current_drying = item
+                // this.current_drying = item
             })
         },
         cancelReserve() {
             this.reserveModalVisible = false
+            this.setReserve(0)
         },
         submitReserve() {
             this.reserveModalVisible = false
@@ -941,12 +980,17 @@ export default {
             if(this.childLockSwitch){
                 this.confirmChildLockVisible = true
             }else{
-                this.setChildLock('on')
+                if(this.model.status == 'run'){
+                    this.setChildLock('on')
+                }else{
+                    HdSmart.UI.toast('运行中才能开启童锁')
+                }
             }
         },
         submitChildLock() {
             this.setChildLock('off', () => {
                 this.confirmChildLockVisible = false
+                this.child_lock_switch = 'off'
             })
         },
         toggleSet(index) {
@@ -967,6 +1011,7 @@ export default {
                 this.device_name = data.device_name
             }
             this.model = data.attribute
+            this.onModeChange()
         },
         onError() {
             this.status = 'error'
