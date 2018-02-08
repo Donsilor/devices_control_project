@@ -7,7 +7,7 @@
         <!-- 待机 -->
         <div class="circle" v-show="model.status=='standby' && model.operation=='none'">
             <div class="inner">
-                <div class="title">{{current_mode_text}}模式</div>
+                <div class="title">{{currentModeConfig.text}}模式</div>
                 <div class="sub_title">洗衣时间</div>
                 <div class="timeleft" v-html="time_left"></div>
             </div>
@@ -17,10 +17,10 @@
             <div class="inner">
                 <div class="wave wave1"></div>
                 <div class="wave wave2"></div>
-                <div class="title">{{current_mode_text}}模式</div>
+                <div class="title">{{currentModeConfig.text}}模式</div>
                 <div class="sub_title">剩余总时间</div>
                 <div class="timeleft" v-html="time_left"></div>
-                <div class="status">{{operation_text}}</div>
+                <div class="status">{{operationText}}</div>
             </div>
         </div>
         <div class="btns btns-fn">
@@ -39,8 +39,6 @@
                 <div class="btns btns-model">
                     <mode-button mode="high_speed_15m">快速15分钟</mode-button>
                     <mode-button mode="speed_wash_drying">快速洗烘</mode-button>
-                    <!-- <a href="" class="btn btn-mode-high_speed_15m" :class="{active:model.mode=='high_speed_15m'}" @click.prevent="setMode('high_speed_15m')"><i></i>快速15分钟</a> -->
-                    <!-- <a href="" class="btn btn-mode-speed_wash_drying" :class="{active:model.mode=='speed_wash_drying'}" @click.prevent="setMode('speed_wash_drying')"><i></i>快速洗烘</a> -->
                 </div>
             </div>
             <div class="line"></div>
@@ -51,10 +49,6 @@
                     <mode-button mode="cotton">棉麻</mode-button>
                     <mode-button mode="synthetic">化纤</mode-button>
                     <mode-button mode="cardigan">羊毛</mode-button>
-                    <!-- <a href="" class="btn btn-mode-mix" :class="{active:model.mode=='mix'}" @click.prevent="setMode('mix')"><i></i>混合</a>
-                    <a href="" class="btn btn-mode-cotton" :class="{active:model.mode=='cotton'}" @click.prevent="setMode('cotton')"><i></i>棉麻</a>
-                    <a href="" class="btn btn-mode-synthetic" :class="{active:model.mode=='synthetic'}" @click.prevent="setMode('synthetic')"><i></i>化纤</a>
-                    <a href="" class="btn btn-mode-cardigan" :class="{active:model.mode=='cardigan'}" @click.prevent="setMode('cardigan')"><i></i>羊毛</a> -->
                 </div>
             </div>
             <div class="line"></div>
@@ -65,10 +59,6 @@
                     <mode-button mode="underwear">内衣</mode-button>
                     <mode-button mode="cowboy_suit">牛仔</mode-button>
                     <mode-button mode="down_coat">羽绒服</mode-button>
-                    <!-- <a href="" class="btn btn-mode-baby_clothes" :class="{active:model.mode=='baby_clothes'}" @click.prevent="setMode('baby_clothes')"><i></i>婴儿服</a>
-                    <a href="" class="btn btn-mode-underwear" :class="{active:model.mode=='underwear'}" @click.prevent="setMode('underwear')"><i></i>内衣</a>
-                    <a href="" class="btn btn-mode-cowboy_suit" :class="{active:model.mode=='cowboy_suit'}" @click.prevent="setMode('cowboy_suit')"><i></i>牛仔</a>
-                    <a href="" class="btn btn-mode-down_coat" :class="{active:model.mode=='down_coat'}" @click.prevent="setMode('down_coat')"><i></i>羽绒服</a> -->
                 </div>
             </div>
             </div>
@@ -85,59 +75,53 @@
                         <mode-button mode="rinse_spin">漂洗+脱水</mode-button>
                         <mode-button mode="odor_removal">除味</mode-button>
                         <mode-button mode="antimite">除螨</mode-button>
-                        <!-- <a href="" class="btn btn-mode-strong_wash" :class="{active:model.mode=='strong_wash'}" @click.prevent="setMode('strong_wash')"><i></i>强力</a>
-                        <a href="" class="btn btn-mode-only_drying" :class="{active:model.mode=='only_drying'}" @click.prevent="setMode('only_drying')"><i></i>单烘干</a>
-                        <a href="" class="btn btn-mode-spin" :class="{active:model.mode=='spin'}" @click.prevent="setMode('spin')"><i></i>单脱水</a>
-                        <a href="" class="btn btn-mode-rinse_spin" :class="{active:model.mode=='rinse_spin'}" @click.prevent="setMode('rinse_spin')"><i></i>漂洗+脱水</a>
-                        <a href="" class="btn btn-mode-odor_removal" :class="{active:model.mode=='odor_removal'}" @click.prevent="setMode('odor_removal')"><i></i>除味</a>
-                        <a href="" class="btn btn-mode-antimite" :class="{active:model.mode=='antimite'}" @click.prevent="setMode('antimite')"><i></i>除螨</a> -->
-                    </div>
+                      </div>
                 </div>
                 <div class="group">
                     <div class="title">高级设置</div>
-                    <div class="selectbox" :class="{active:currentSet==0}" v-show="temperature_options.length">
+                    <div class="selectbox" :class="{active:currentSet==0}" v-show="temperatureOptions.length">
                         <div class="hd" @click="toggleSet(0)">
                             <div class="left">水温</div>
                             <div class="right">
-                                <span class="value">{{current_temperature.text}}</span>
+                                <span class="value">{{currentTemperature.text}}</span>
                                 <i class="arrow"></i>
                             </div>
                         </div>
                         <div class="bd">
                             <span class="option"
-                                v-for="item in temperature_options" :key="item.value"
+                                v-for="item in temperatureOptions" :key="item.value"
                                 @click="setTemperature(item)"
-                                :class="{selected:current_temperature.value==item.value}">{{item.text}}</span>
+                                :class="{selected:currentTemperature.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
-                    <div class="selectbox" :class="{active:currentSet==1}" v-show="detergent_options.length">
+                    <div class="selectbox" :class="{active:currentSet==1}" v-show="detergentOptions.length">
                         <div class="hd" @click="toggleSet(1)">
                             <div class="left">洗涤剂投放</div>
                             <div class="right">
-                                <span class="value">{{current_detergent.text}}</span>
+                                <span class="value">{{currentDetergent.text}}</span>
                                 <i class="arrow"></i>
                             </div>
                         </div>
                         <div class="bd">
                             <span class="option"
-                                v-for="item in detergent_options" :key="item.value"
+                                v-for="item in detergentOptions" :key="item.value"
                                 @click="setDetergent(item)"
-                                :class="{selected:current_detergent.value==item.value}">{{item.text}}</span>
+                                :class="{selected:currentDetergent.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
-                    <div class="selectbox" :class="{active:currentSet==2}" v-show="drying_options.length">
+                    <div class="selectbox" :class="{active:currentSet==2}" v-show="dryingOptions.length">
                         <div class="hd" @click="toggleSet(2)">
                             <div class="left">烘干</div>
                             <div class="right">
-                                <span class="value">{{current_drying.text}}</span>
+                                <span class="value">{{currentDrying.text}}</span>
                                 <i class="arrow"></i>
                             </div>
                         </div>
                         <div class="bd">
                             <span class="option"
-                                v-for="item in drying_options" :key="item.value"
+                                v-for="item in dryingOptions" :key="item.value"
                                 @click="setDrying(item)"
-                                :class="{selected:current_drying.value==item.value}">{{item.text}}</span>
+                                :class="{selected:currentDrying.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
                     <div class="selectbox">
@@ -778,7 +762,6 @@ export default {
     data() {
         return {
             status: '',
-            tip: '',
             model: {},
             device_name: '',
             moreModalVisible: false,
@@ -789,13 +772,6 @@ export default {
             currentSet: -1,
             number: 0,
             itemHeight: 1.2 * radio,
-            current_temperature: {},
-            current_drying: {},
-            current_detergent: {},
-            temperature_options: [],
-            drying_options: [],
-            detergent_options: [],
-            current_mode_text: '',
             errors: []
         }
     },
@@ -814,71 +790,53 @@ export default {
         time_left() {
             return formatTime(this.model.time_left)
         },
-        operation_text() {
+        operationText() {
             return OPERATION_OPTIONS[this.model.operation]
         },
         childLockSwitch() {
             return this.model.child_lock_switch == 'on' ? true : false
-        }
-    },
-    watch: {
-        'model.mode'() {
-            // this.onModeChange()
+        },
+        currentModeConfig() {
+            return MODE_OPTIONS[this.model.mode]
+        },
+        temperatureOptions() {
+            var temperatureConfig = this.currentModeConfig.temperature
+            return TEMPERATURE_OPTIONS.filter((item, i) => {
+                return temperatureConfig.options.indexOf(i) >= 0
+            })
+        },
+        dryingOptions() {
+            var dryingConfig = this.currentModeConfig.drying
+            return DRY_OPTIONS.filter((item, i) => {
+                return dryingConfig.options.indexOf(i) >= 0
+            })
+        },
+        detergentOptions() {
+            var detergentConfig = this.currentModeConfig.detergent
+            return DETERGENT_OPTIONS.filter((item, i) => {
+                return detergentConfig.options.indexOf(i) >= 0
+            })
+        },
+        currentTemperature() {
+            var result = this.temperatureOptions.filter((item) => {
+                return item.value == this.model.temperature
+            })
+            return result[0] || {}
+        },
+        currentDrying() {
+            var result = this.dryingOptions.filter((item) => {
+                return item.value == this.model.drying
+            })
+            return result[0] || {}
+        },
+        currentDetergent() {
+            var result = this.detergentOptions.filter((item) => {
+                return item.value == this.model.auto_detergent_switch
+            })
+            return result[0] || {}
         }
     },
     methods: {
-        onModeChange() {
-            if(!this.model.mode || !MODE_OPTIONS[this.model.mode]){
-                return
-            }
-
-            var currentModeConfig = MODE_OPTIONS[this.model.mode]
-            var temperatureConfig = currentModeConfig.temperature
-            var dryingConfig = currentModeConfig.drying
-            var detergentConfig = currentModeConfig.detergent
-
-            this.current_mode_text = currentModeConfig.text
-
-            this.temperature_options = TEMPERATURE_OPTIONS.filter((item, i) => {
-                return temperatureConfig.options.indexOf(i) >= 0
-            })
-
-            if(this.temperature_options.length){
-                var temp_index = findIndex(this.temperature_options, (item) => {
-                    return item.value == this.model.temperature
-                })
-                this.current_temperature = this.temperature_options[temp_index]
-            }else{
-                this.current_temperature = {}
-            }
-
-            this.drying_options = DRY_OPTIONS.filter((item, i) => {
-                return dryingConfig.options.indexOf(i) >= 0
-            })
-            if(this.drying_options.length){
-                var dry_index = findIndex(this.drying_options, (item) => {
-                    return item.value == this.model.dryingdrying
-                })
-                if(dry_index >= 0){
-                    this.current_drying = this.drying_options[dry_index]
-                }
-            }else{
-                this.current_drying = {}
-            }
-
-            this.detergent_options = DETERGENT_OPTIONS.filter((item, i) => {
-                return detergentConfig.options.indexOf(i) >= 0
-            })
-            if(this.detergent_options.length){
-                var detergent_index = findIndex(this.detergent_options, (item) => {
-                    return item.value == this.model.auto_detergent_switch
-                })
-                this.current_detergent = this.detergent_options[detergent_index]
-            }else{
-                this.current_detergent = {}
-            }
-
-        },
         controlDevice(attr, val, success, error) {
 
             if(this.errors.length){
@@ -936,34 +894,28 @@ export default {
             // if(this.model.status == 'run'){
             //     return
             // }
-            if(item.value == this.current_temperature.value){
+            if(item.value == this.currentTemperature.value){
                 return
             }
-            this.controlDevice('temperature', parseInt(item.value), () => {
-                // this.current_temperature = item
-            })
+            this.controlDevice('temperature', parseInt(item.value))
         },
         setDetergent(item) {
             // if(this.model.status == 'run'){
             //     return
             // }
-            if(item.value == this.current_detergent.value){
+            if(item.value == this.currentDetergent.value){
                 return
             }
-            this.controlDevice('auto_detergent_switch', item.value, () => {
-                // this.current_detergent = item
-            })
+            this.controlDevice('auto_detergent_switch', item.value)
         },
         setDrying(item) {
             // if(this.model.status == 'run'){
             //     return
             // }
-            if(item.value == this.current_drying.value){
+            if(item.value == this.currentDrying.value){
                 return
             }
-            this.controlDevice('drying', item.value, () => {
-                // this.current_drying = item
-            })
+            this.controlDevice('drying', item.value)
         },
         cancelReserve() {
             this.reserveModalVisible = false
@@ -1011,7 +963,6 @@ export default {
                 this.device_name = data.device_name
             }
             this.model = data.attribute
-            this.onModeChange()
         },
         onError() {
             this.status = 'error'

@@ -7,7 +7,7 @@ var res = {
     },
     "status": "clean",
     "filter_time_total": [1000, 1000, 1000, 1000, 1000],
-    "filter_time_remaining": [300, 500, 0, 600, 800]
+    "filter_time_remaining": [300, 500, 0, 600, 0]
 }
 
 export function generateSnapShot() {

@@ -20,7 +20,7 @@
     justify-content: center;
     padding: 0;
     text-align: right;
-    font-size: 24px;
+    /* font-size: 24px; */
     position: relative;
   }
   .picker-center-highlight {

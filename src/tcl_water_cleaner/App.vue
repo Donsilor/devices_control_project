@@ -70,7 +70,7 @@
 
     <modal title="净水器滤芯到期" v-model="timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
         <div class="alarm">
-            <div class="alert"><i></i>净水器滤芯{{expiredFilter}}已到期</div>
+            <div class="alert"><i></i>{{expiredFilterText}}已到期</div>
             <div class="text">
                 <p>前置活性炭寿命已到期，请更换以保证饮水质量！</p>
                 <p>请在更换滤芯后重置寿命</p>
@@ -100,7 +100,7 @@
     <modal title="滤芯状态" class="modal-w" v-model="statusModalVisible">
         <div class="lx_status">
             <div class="p1">滤芯{{currentFilter.index+1}}</div>
-            <div class="p2"><!--PP棉--></div>
+            <div class="p2"> </div>
             <circle-pie class="pie" :value="toPercent(currentFilter.remaining, currentFilter.total)">
                 <p class="p3">预计剩余寿命</p>
                 <p class="p4">{{currentFilter.remaining | toDays}}天</p>
@@ -551,7 +551,7 @@ a{
         opacity:0.5;
     }
     .pie{
-        margin:0 auto 80px;
+        margin:0 auto 50px;
     }
     .btn{
         width:658px;
@@ -628,7 +628,7 @@ export default {
             oldTDS: '',
             nowTDS: '',
             currentPage: 'index',
-            currentFilter: {},
+            currentIndex: -1,
             filterItems: [],
             washing: false,
             isFilterResetActive: false,
@@ -668,10 +668,24 @@ export default {
                 return getDays(item) <= 30
             }).length
         },
+        currentFilter() {
+            if(this.currentIndex == -1) return {}
+            return this.filterItems[this.currentIndex]
+        },
         expiredFilter() {
-            // this.model.filter_time_remaining.filter((item) => {
-            //     return item <= 0 &&
-            // })
+            var result = []
+            if(!this.model.filter_time_remaining) return result
+            this.model.filter_time_remaining.forEach((item, index) => {
+                if(item <= 0 && this.expiredStore.indexOf(index) < 0){
+                    result.push(index)
+                }
+            })
+            return result
+        },
+        expiredFilterText() {
+            return this.expiredFilter.map((item) => {
+                return '滤芯' + (item + 1)
+            }).join('、')
         }
     },
     watch: {
@@ -772,18 +786,18 @@ export default {
             return parseInt(remaining/total*100)
         },
         viewFilter(index) {
-            this.currentFilter = this.filterItems[index]
+            this.currentIndex = index
             this.statusModalVisible = true
         },
         confirmFilterReset() {
             this.isFilterResetActive = true
         },
         submitFilterReset() {
-            var index = this.currentFilter.index + 1
-            this.controlDevice('reset_filter', [index], () => {
+            var index = this.currentIndex
+            this.controlDevice('reset_filter', [index+1], () => {
                 HdSmart.UI.toast('重置成功')
                 this.isFilterResetActive = false
-                this.currentFilter.remaining = this.currentFilter.total
+                this.filterItems[index].remaining = this.filterItems[index].total
             },() => {
                 HdSmart.UI.toast('重置失败')
             })
@@ -827,15 +841,33 @@ export default {
             }
         },
         viewExpired() {
-
+            if(this.expiredFilter.length == 1){
+                this.viewFilter(this.expiredFilter[0])
+            }else{
+                if(this.hasTDS){
+                    this.currentPage = 'list'
+                }
+            }
+            this.confirmExpired()
         },
         confirmExpired() {
-
+            this.timeoutModalVisible = false
+            this.expiredStore = this.expiredStore.concat(this.expiredFilter)
         }
     },
     created() {
         this.$watch('errorStore.length', () => {
             localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
+        })
+
+        this.$watch('expiredStore.length', () => {
+            localStorage.setItem(EXPIRED_STORE_KEY, JSON.stringify(this.expiredStore))
+        })
+
+        this.$watch('expiredFilter.length', (val) => {
+            if(val){
+                this.timeoutModalVisible = true
+            }
         })
 
         HdSmart.ready(() => {

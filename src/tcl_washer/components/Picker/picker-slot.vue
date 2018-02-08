@@ -11,7 +11,7 @@
 
 <style>
   .picker-slot {
-    font-size: 18px;
+    /* font-size: 18px; */
     overflow: hidden;
     position: relative;
     max-height: 100%
