@@ -282,12 +282,14 @@ export const DETERGENT_OPTIONS = [
 ]
 
 export const OPERATION_OPTIONS = {
+    none: '无操作',
     reserve: '预约等待',
     'pre-wash': '预洗',
     wash: '主洗',
     rinse: '漂洗',
     spin: '脱水',
-    drying: '烘干'
+    drying: '烘干',
+    finish: '完成'
 }
 
 export const ERROR_CODE = {

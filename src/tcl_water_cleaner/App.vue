@@ -4,11 +4,11 @@
     <div class="water_wave ww2"></div>
     <div class="water_wave ww3"></div>
 
-    <div class="page-on" :style="inPage('index')">
+    <div class="page-on" :style="inPage('index')" v-if="isInit">
         <div class="name">{{device_name}}</div>
         <div class="tip">
-            <p v-if="model.water_leakage=='on'">漏水</p>
-            <p v-else-if="model.water_shortage=='on'">缺水</p>
+            <p v-if="inError('E3')"><span @click="alarmModalVisible=true">漏水</span></p>
+            <p v-else-if="inError('E1')"><span>缺水</span></p>
             <p v-else-if="model.status=='maintain'">检修</p>
             <p v-else-if="model.status=='filter'">制水中...</p>
             <p v-else-if="model.status=='clean'">冲洗中...</p>
@@ -101,10 +101,10 @@
         <div class="lx_status">
             <div class="p1">滤芯{{currentFilter.index+1}}</div>
             <div class="p2"><!--PP棉--></div>
-            <circle-pie class="pie" :value="currentFilter.percent">
+            <circle-pie class="pie" :value="toPercent(currentFilter.remaining, currentFilter.total)">
                 <p class="p3">预计剩余寿命</p>
-                <p class="p4">{{currentFilter.days}}天</p>
-                <p class="p5">剩余{{currentFilter.percent}}%</p>
+                <p class="p4">{{currentFilter.remaining | toDays}}天</p>
+                <p class="p5">剩余{{toPercent(currentFilter.remaining, currentFilter.total)}}%</p>
             </circle-pie>
             <div class="btn">
                 <div class="btn-block" :class="{active:isFilterResetActive}">
@@ -171,7 +171,7 @@ a{
 .water_wave{
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: 170px;
     width: 100%;
     background-size: 100% 100%;
     background-repeat: repeat-x;
@@ -630,7 +630,9 @@ export default {
             currentFilter: {},
             filterItems: [],
             washing: false,
-            isFilterResetActive: false
+            isFilterResetActive: false,
+            isInit: false,
+            errors: []
         }
     },
     computed: {
@@ -683,6 +685,11 @@ export default {
             }
         },
         controlDevice(attr, val, success) {
+
+            if(this.errors.length){
+                return
+            }
+
             HdSmart.Device.control({
                 method: 'dm_set',
                 nodeid: `water_filter.main.${attr}`,
@@ -720,6 +727,12 @@ export default {
             })
         },
         onSuccess(result) {
+
+            if(!this.isInit){
+                this.isInit = true
+                HdSmart.UI.hideLoading()
+            }
+
             var attrs = result.attribute
 
             if(result.device_name){
@@ -729,7 +742,7 @@ export default {
             this.model = attrs
 
             var tds = attrs.water_filter_result.TDS
-            if(tds){
+            if(tds && tds[0] != 65535){
                 this.hasTDS = true
                 this.oldTDS = tds[0]
                 this.nowTDS = tds[1]
@@ -739,13 +752,17 @@ export default {
             this.filterItems = this.model.filter_time_remaining.map((el ,index) => {
                 var total = this.model.filter_time_total[index]
                 return {
-                    remaining: getDays(el),
+                    remaining: el,
                     total: total,
                     index: index,
-                    days: getDays(el),
-                    percent: parseInt(el/total*100)
+                    // days: getDays(el),
+                    // percent: parseInt(el/total*100)
                 }
             })
+        },
+        toPercent(remaining, total) {
+            // Math.ceil(remaining/total*100)
+            return parseInt(remaining/total*100)
         },
         viewFilter(index) {
             this.currentFilter = this.filterItems[index]
@@ -755,18 +772,38 @@ export default {
             this.isFilterResetActive = true
         },
         submitFilterReset() {
-            this.controlDevice('reset_filter', [this.currentFilter.index], () => {
+            var index = this.currentFilter.index + 1
+            this.controlDevice('reset_filter', [index], () => {
                 HdSmart.UI.toast('重置成功')
                 this.isFilterResetActive = false
+                this.currentFilter.remaining = this.currentFilter.total
+            },() => {
+                HdSmart.UI.toast('重置失败')
             })
-        }
+        },
+        onFault(attr) {
+            var code = attr.error_code
+            var index = this.errors.indexOf(code)
+
+            if(index > 0){
+                this.errors.splice(index, 1)
+            }
+
+            if(attr.error_status == 'open'){
+                this.errors.push(code)
+            }
+        },
+        inError(error){
+            return this.errors.indexOf(error) >= 0
+        },
     },
     created() {
         HdSmart.ready(() => {
-            this.getSnapShot(() => {
-                HdSmart.UI.hideLoading()
-            })
+            HdSmart.UI.showLoading()
+            this.getSnapShot()
         })
+        //E3 漏水
+        //E1 缺水
         HdSmart.onDeviceListen((data) => {
             switch (data.method) {
                 case 'dm_set':
@@ -774,14 +811,14 @@ export default {
                         this.getSnapShot()
                     }
                     break
+                case 'dr_report_dev_alert':
+                    this.onFault(data.result.attribute)
+                    break;
                 default:
                     this.onSuccess(data.result)
                     break
             }
         })
-    },
-    mounted() {
-
     }
 }
 </script>

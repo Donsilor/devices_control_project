@@ -13,7 +13,7 @@
             </div>
         </div>
         <!-- 运行中 -->
-        <div class="circle active" v-show="model.status!='standby'">
+        <div class="circle active" v-show="model.status=='run'">
             <div class="inner">
                 <div class="wave wave1"></div>
                 <div class="wave wave2"></div>
@@ -25,8 +25,8 @@
         </div>
         <div class="btns btns-fn">
             <a href="" class="btn btn-on" @click.prevent="setSwitch('off')"><i></i>关机</a>
-            <a href="" class="btn btn-start" v-show="model.status=='halt'" @click.prevent="setControl('start')"><i></i>启动</a>
-            <a href="" class="btn btn-pause" v-show="model.status=='run'" @click.prevent="setControl('halt')"><i></i>暂停</a>
+            <a href="" class="btn btn-start" v-show="model.status=='standby' || (model.status=='run' && model.operation=='none')" @click.prevent="setControl('start')"><i></i>启动</a>
+            <a href="" class="btn btn-pause" v-show="model.status=='run' && model.operation!='none'" @click.prevent="setControl('halt')"><i></i>暂停</a>
             <a href="" class="btn btn-mode" @click.prevent="modeModalVisible = true"><i></i>模式选择</a>
             <a href="" class="btn btn-reserve" @click.prevent="reserveModalVisible = true"><i></i>预约洗衣</a>
         </div>

@@ -456,6 +456,8 @@
                     category: this.current_category,
                     region: this.current_region,
                     year: this.current_year,
+                    cateId: this.current_category,
+                    regionId: this.current_region,
                     orderby: this.current_orderby,
                     pageSize: this.pageSize,
                     pageNo: page
