@@ -64,7 +64,7 @@
             </div>
         </modal>
         <!-- 更多 -->
-        <modal title="更多" class="modal-w" v-model="moreModalVisible">
+        <modal title="更多" class="modal-w modal-more" v-model="moreModalVisible">
             <div class="more-wrap">
                 <div class="group">
                     <div class="title">更多模式</div>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="group">
                     <div class="title">高级设置</div>
-                    <div class="selectbox" :class="{active:currentSet==0}" v-show="temperatureOptions.length">
+                    <div class="selectbox" :class="{active:currentSet==0,disable:model.status=='run'}" v-show="temperatureOptions.length">
                         <div class="hd" @click="toggleSet(0)">
                             <div class="left">水温</div>
                             <div class="right">
@@ -94,7 +94,7 @@
                                 :class="{selected:currentTemperature.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
-                    <div class="selectbox" :class="{active:currentSet==1}" v-show="detergentOptions.length">
+                    <div class="selectbox" :class="{active:currentSet==1,disable:model.status=='run'}" v-show="detergentOptions.length">
                         <div class="hd" @click="toggleSet(1)">
                             <div class="left">洗涤剂投放</div>
                             <div class="right">
@@ -109,7 +109,7 @@
                                 :class="{selected:currentDetergent.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
-                    <div class="selectbox" :class="{active:currentSet==2}" v-show="dryingOptions.length">
+                    <div class="selectbox" :class="{active:currentSet==2,disable:model.status=='run'}" v-show="dryingOptions.length">
                         <div class="hd" @click="toggleSet(2)">
                             <div class="left">烘干</div>
                             <div class="right">
@@ -347,6 +347,10 @@ a{
 .modal-w .modal{
     width: 1300px;
 }
+.modal-more .modal{
+    top: 100px;
+    transform: translate(-50%, 0);
+}
 .model-wrap{
     display: flex;
     justify-content: center;
@@ -431,6 +435,9 @@ a{
             display: flex;
         }
     }
+    &.disable{
+        opacity: .5;
+    }
 }
 .sb-wrap{
     position: relative;
@@ -448,7 +455,7 @@ a{
 
 .reserve-wrap{
     width: 504px;
-    margin: 0 auto 90px;
+    margin: 0 auto 60px;
     position: relative;
     .text1{
         position: absolute;
@@ -607,101 +614,118 @@ a{
         i{background-image: url(./assets/washer_btn_mixwashing_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_mixwashing_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_mixwashing_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_mixwashing_normal.png)}
     }
     //棉麻
     &-mode-cotton{
         i{background-image: url(./assets/washer_btn_cotton_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_cotton_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_cotton_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_cotton_normal.png)}
     }
     //化纤
     &-mode-synthetic{
         i{background-image: url(./assets/washer_btn_chemicalfiber_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_chemicalfiber_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_chemicalfiber_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_chemicalfiber_normal.png)}
     }
     //羊毛衫
     &-mode-cardigan{
         i{background-image: url(./assets/washer_btn_wool_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_wool_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_wool_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_wool_normal.png)}
     }
     //羽绒服
     &-mode-down_coat{
         i{background-image: url(./assets/washer_btn_eiderdown_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_eiderdown_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_eiderdown_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_eiderdown_normal.png)}
     }
     //婴儿服
     &-mode-baby_clothes{
         i{background-image: url(./assets/washer_btn_baby_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_baby_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_baby_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_baby_normal.png)}
     }
     //内衣
     &-mode-underwear{
         i{background-image: url(./assets/washer_btn_underwear_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_underwear_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_underwear_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_underwear_normal.png)}
     }
     //牛仔
     &-mode-cowboy_suit{
         i{background-image: url(./assets/washer_btn_jeans_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_jeans_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_jeans_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_jeans_normal.png)}
     }
     //漂洗+脱水
     &-mode-rinse_spin{
         i{background-image: url(./assets/washer_btn_rinseanddehydration_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_rinseanddehydration_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_rinseanddehydration_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_rinseanddehydration_normal.png)}
     }
     //单脱水
     &-mode-spin{
         i{background-image: url(./assets/washer_btn_dehydration_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_dehydration_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_dehydration_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_dehydration_normal.png)}
     }
     //强力洗
     &-mode-strong_wash{
         i{background-image: url(./assets/washer_btn_strongwash_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_strongwash_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_strongwash_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_strongwash_normal.png)}
     }
     //极速15'(15min快速烘干)
     &-mode-high_speed_15m{
         i{background-image: url(./assets/washer_btn_quickwash_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_quickwash_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_quickwash_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_quickwash_normal.png)}
     }
     //除螨
     &-mode-antimite{
         i{background-image: url(./assets/washer_btn_acaruskilling_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_acaruskilling_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_acaruskilling_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_acaruskilling_normal.png)}
     }
     //除味
     &-mode-odor_removal{
         i{background-image: url(./assets/washer_btn_deodorize_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_deodorize_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_deodorize_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_deodorize_normal.png)}
     }
     //快速洗烘
     &-mode-speed_wash_drying{
         i{background-image: url(./assets/washer_btn_fashdrying_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_fashdrying_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_fashdrying_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_fashdrying_normal.png)}
     }
     //标准烘干
     &-mode-only_drying{
         i{background-image: url(./assets/washer_btn_drysigle_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_drysigle_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_drysigle_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_drysigle_normal.png)}
     }
     &-mode-normal_drying{
         i{background-image: url(./assets/washer_btn_drysigle_normal.png)}
         &:active i{background-image: url(./assets/washer_btn_drysigle_pressed.png)}
         &.active i{background-image: url(./assets/washer_btn_drysigle_selected.png)}
+        &.disable:active i{background-image: url(./assets/washer_btn_drysigle_normal.png)}
     }
     &.disable{
         opacity: .5;
@@ -946,6 +970,9 @@ export default {
             })
         },
         toggleSet(index) {
+            // if(this.model.status == 'run'){
+            //     return
+            // }
             this.currentSet = this.currentSet == index ? -1 : index
         },
         getSnapShot(cb) {

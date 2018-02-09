@@ -31,11 +31,14 @@ Vue.component('offline-mask', OfflineMask)
 //强制关闭3d(详情页改成不透明了)
 //window.Swiper.prototype.support.transforms3d = false
 
+var scrollTop = 0
+var docEl = document.documentElement
+
 const store = new Vuex.Store({
     state: {
         online: true,
         detailVisible: false,
-        activeDetail: {}
+        activeDetail: {},
     },
     mutations: {
         showDetail(state, payload) {
@@ -51,9 +54,16 @@ const store = new Vuex.Store({
     },
     actions: {
         showDetail({ commit }, item) {
+            scrollTop = docEl.scrollTop
+            docEl.scrollTop = 0
             commit('showDetail', item)
         },
-        hideDetail: ({ commit }) => commit('hideDetail'),
+        hideDetail: ({ commit }) => {
+            setTimeout(() => {
+                docEl.scrollTop = scrollTop
+            },1)
+            commit('hideDetail')
+        },
         setOnline({ commit }, onlineStr) {
             commit('setOnline', onlineStr=='online' ? true : false)
         }

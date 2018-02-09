@@ -85,13 +85,13 @@
 </template>
 
 <style lang="less">
-    .hidescroll{
-        overflow: visible !important;
-        width: auto;
-    }
-    .hidescroll body{
-        overflow: hidden !important;
-    }
+    // .hidescroll{
+    //     overflow: visible !important;
+    //     width: auto;
+    // }
+    // .hidescroll body{
+    //     overflow: hidden !important;
+    // }
     .slideup-enter-active {
         transition: all .3s ease;
     }
@@ -104,17 +104,21 @@
         opacity: 0
     }
     .page-detail{
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow-y: hidden;
-        z-index: 9;
+        // position: fixed;
+        // left: 0;
+        // top: 0;
+        // width: 100%;
+        // height: 100%;
+        // overflow-y: hidden;
+        // z-index: 9;
         color:#75787a;
         background:#fafafa;
-        display: flex;
-        flex-direction: column;
+        // display: flex;
+        // flex-direction: column;
+        padding-top: 124px;
+    }
+    .isIOS .page-detail{
+        padding-top: 96px;
     }
     .isIOS .detail-hd{
         height: 96px;
@@ -124,6 +128,12 @@
     }
     .detail-hd{
         height: 124px;
+        width: 100%;
+        background: #fafafa;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9;
         .back{
             width: 100px;
             height: 124px;

@@ -6,7 +6,7 @@ import Mock from 'mockjs';
 let res = {
     control: '',
     'switch': 'on',
-    status: 'halt',
+    status: 'run',
     child_lock_switch: 'off',
     auto_detergent_switch: '',
     add_laundry_switch: '',
