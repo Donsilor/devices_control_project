@@ -339,13 +339,13 @@
         },
         watch: {
            detailVisible(visible) {
-//               if(visible){
-//                    HdSmart.UI.toggleHeadAndFoot(false)
-//                    this.$refs.swiper.swiper.stopAutoplay()
-//               }else{
-//                    HdSmart.UI.toggleHeadAndFoot(true)
-//                    this.$refs.swiper.swiper.startAutoplay()
-//               }
+               if(visible){
+                    HdSmart.UI.toggleHeadAndFoot(false)
+                    this.$refs.swiper.swiper.stopAutoplay()
+               }else{
+                    HdSmart.UI.toggleHeadAndFoot(true)
+                    this.$refs.swiper.swiper.startAutoplay()
+               }
            }
         },
         methods: {
