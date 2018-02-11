@@ -5,7 +5,7 @@
         <div class="fault" v-if="errors.length" @click="showAlarmTip">{{errors[0]}}故障</div>
         <a href="" class="btn btn-more" @click.prevent="moreModalVisible = true"><i></i></a>
         <!-- 待机 -->
-        <div class="circle" v-show="model.status=='standby' && model.operation=='none'">
+        <div class="circle" v-show="isStandby">
             <div class="inner">
                 <div class="title">{{currentModeConfig.text}}模式</div>
                 <div class="sub_title">洗衣时间</div>
@@ -13,20 +13,20 @@
             </div>
         </div>
         <!-- 运行中 -->
-        <div class="circle active" v-show="model.status=='run'">
+        <div class="circle active" :class="{run:isRun}" v-show="isRun || isPause">
             <div class="inner">
                 <div class="wave wave1"></div>
                 <div class="wave wave2"></div>
                 <div class="title">{{currentModeConfig.text}}模式</div>
                 <div class="sub_title">剩余总时间</div>
                 <div class="timeleft" v-html="time_left"></div>
-                <div class="status">{{operationText}}</div>
+                <div class="status">{{isRun ? operationText : '暂停中'}}</div>
             </div>
         </div>
         <div class="btns btns-fn">
             <a href="" class="btn btn-on" @click.prevent="setSwitch('off')"><i></i>关机</a>
-            <a href="" class="btn btn-start" v-show="model.status=='standby'" @click.prevent="setControl('start')"><i></i>启动</a>
-            <a href="" class="btn btn-pause" v-show="model.status=='run'" @click.prevent="setControl('halt')"><i></i>暂停</a>
+            <a href="" class="btn btn-start" v-show="isStandby || isPause" @click.prevent="setControl('start')"><i></i>启动</a>
+            <a href="" class="btn btn-pause" v-show="isRun" @click.prevent="setControl('halt')"><i></i>暂停</a>
             <a href="" class="btn btn-mode" @click.prevent="modeModalVisible = true"><i></i>模式选择</a>
             <a href="" class="btn btn-reserve" @click.prevent="reserveModalVisible = true"><i></i>预约洗衣</a>
         </div>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="group">
                     <div class="title">高级设置</div>
-                    <div class="selectbox" :class="{active:currentSet==0,disable:model.status=='run'}" v-show="temperatureOptions.length">
+                    <div class="selectbox" :class="{active:currentSet==0,disable:isRun||isPause}" v-show="temperatureOptions.length">
                         <div class="hd" @click="toggleSet(0)">
                             <div class="left">水温</div>
                             <div class="right">
@@ -94,7 +94,7 @@
                                 :class="{selected:currentTemperature.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
-                    <div class="selectbox" :class="{active:currentSet==1,disable:model.status=='run'}" v-show="detergentOptions.length">
+                    <div class="selectbox" :class="{active:currentSet==1,disable:isRun}" v-show="detergentOptions.length">
                         <div class="hd" @click="toggleSet(1)">
                             <div class="left">洗涤剂投放</div>
                             <div class="right">
@@ -109,7 +109,7 @@
                                 :class="{selected:currentDetergent.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
-                    <div class="selectbox" :class="{active:currentSet==2,disable:model.status=='run'}" v-show="dryingOptions.length">
+                    <div class="selectbox" :class="{active:currentSet==2,disable:isRun}" v-show="dryingOptions.length">
                         <div class="hd" @click="toggleSet(2)">
                             <div class="left">烘干</div>
                             <div class="right">
@@ -257,10 +257,6 @@ a{
     background-image: url(./assets/washer_bg_initial.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    // border: 15px solid rgba(255,255,255,.75);
-    // border-radius: 100%;
-    // -webkit-mask-image: url(./assets/washer_bg_initial.png);
-    // -webkit-mask-size: 100% 100%;
 
     .inner{
         position: absolute;
@@ -288,15 +284,16 @@ a{
         background-repeat: repeat-x;
         background-position-y: bottom;
         background-size: 885px 258px;
+
     }
+
     .wave1{
         background-position-x: 0px;
-        animation: wave1 5s linear infinite;
     }
     .wave2{
-        background-position-x: 0px;
-        animation: wave2 5s linear infinite;
+        background-position-x: -150px;
     }
+
     &.active{
         color: #fff;
         .inner{
@@ -304,6 +301,14 @@ a{
         }
         .wave{
             display: block;
+        }
+    }
+    &.run{
+        .wave1{
+            animation: wave1 5s linear infinite;
+        }
+        .wave2{
+            animation: wave2 5s linear infinite;
         }
     }
     .title{
@@ -348,7 +353,7 @@ a{
     width: 1300px;
 }
 .modal-more .modal{
-    top: 100px;
+    top: 80px;
     transform: translate(-50%, 0);
 }
 .model-wrap{
@@ -381,7 +386,7 @@ a{
 .selectbox{
     .hd{
         margin: 0 46px;
-        padding: 25px 46px;
+        padding: 20px 46px;
         height: 40px;
         line-height: 40px;
         border-top: 1px solid #f5f5f5;
@@ -421,7 +426,7 @@ a{
     }
     .bd1{
         overflow: hidden;
-        padding:31px 92px;
+        padding:20px 92px;
         background:#fafafa;
         text-align: left;
     }
@@ -494,18 +499,17 @@ a{
     }
 }
 .childlock_confirm{
-    line-height: 68px;
+    line-height: 58px;
     .right{
         float: right;
     }
     a{
-        width:178px;
-        height:68px;
+        width:148px;
+        height:58px;
         border-radius:6px;
         display: inline-block;
-        line-height: 68px;
         margin-left:12px;
-        font-size:36px;
+        font-size:30px;
         box-sizing: border-box;
         text-align: center;
     }
@@ -799,14 +803,30 @@ export default {
             errors: []
         }
     },
+    watch: {
+        isRun(val) {
+            if(val){
+                this.currentSet = -1
+            }
+        }
+    },
     computed: {
+        isRun() {
+            return this.model.status == 'run'
+        },
+        isPause() {
+            return this.model.status=='standby' && this.model.operation!='none'
+        },
+        isStandby() {
+            return this.model.status=='standby' && this.model.operation=='none'
+        },
         numberSlot() {
             var values = RESERVE_TIME_OPTIONS.map((item, i) => {
                 return `${item}`
             })
             return [{
                 flex: 1,
-                defaultIndex: 0,
+                defaultIndex: this.model.reserve_wash ? this.model.reserve_wash-3 : 0,
                 values: values,
                 className: 'slot1'
             }]
@@ -872,13 +892,19 @@ export default {
                 return
             }
 
+            var params = {
+                [attr]: val
+            }
+
+            if(attr == 'mode'){
+                //要切到待机模式
+            }
+
             HdSmart.Device.control({
                 method: 'dm_set',
                 nodeid: `wash_machine.main.${attr}`,
                 params: {
-                    attribute: {
-                        [attr]: val
-                    }
+                    attribute: params
                 }
             }, () => {
                 success && success()
@@ -897,7 +923,7 @@ export default {
             this.controlDevice('control', val)
         },
         setMode(mode) {
-            if(this.model.status == 'run'){
+            if(this.isRun){
                 return
             }
             if(this.model.mode == mode){
@@ -909,33 +935,33 @@ export default {
             this.controlDevice('child_lock_switch', val, callback)
         },
         setReserve(time) {
-            // if(this.model.status == 'run'){
-            //     return
-            // }
-            this.controlDevice('reserve_wash', time)
+            if(this.isRun){
+                return
+            }
+            this.controlDevice('reserve_wash', parseInt(time))
         },
         setTemperature(item){
-            // if(this.model.status == 'run'){
-            //     return
-            // }
+            if(this.isRun){
+                return
+            }
             if(item.value == this.currentTemperature.value){
                 return
             }
             this.controlDevice('temperature', parseInt(item.value))
         },
         setDetergent(item) {
-            // if(this.model.status == 'run'){
-            //     return
-            // }
+            if(this.isRun){
+                return
+            }
             if(item.value == this.currentDetergent.value){
                 return
             }
             this.controlDevice('auto_detergent_switch', item.value)
         },
         setDrying(item) {
-            // if(this.model.status == 'run'){
-            //     return
-            // }
+            if(this.isRun){
+                return
+            }
             if(item.value == this.currentDrying.value){
                 return
             }
@@ -956,7 +982,7 @@ export default {
             if(this.childLockSwitch){
                 this.confirmChildLockVisible = true
             }else{
-                if(this.model.status == 'run'){
+                if(this.isRun){
                     this.setChildLock('on')
                 }else{
                     HdSmart.UI.toast('运行中才能开启童锁')
@@ -970,9 +996,9 @@ export default {
             })
         },
         toggleSet(index) {
-            // if(this.model.status == 'run'){
-            //     return
-            // }
+            if(this.isRun || (index == 0 && this.isPause)){
+                return
+            }
             this.currentSet = this.currentSet == index ? -1 : index
         },
         getSnapShot(cb) {
