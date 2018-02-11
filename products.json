@@ -62,7 +62,7 @@
     "suning_air_cleaner": {
         "src": "suning_air_cleaner",
         "name": "空气净化器",
-        "mock": "suning_air_cleaner"
+        "mock": "air_cleaner"
     },
     "suning_air_condition": {
         "src": "suning_air_condition",
@@ -97,5 +97,9 @@
     "weather": {
         "src": "weather",
         "name": "天气"
+    },
+    "door_lock": {
+        "src": "door_lock",
+        "name": "智能门锁"
     }
 }
