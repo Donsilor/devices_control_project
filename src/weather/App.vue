@@ -1,6 +1,6 @@
 <template>
     <div id="app" :class="todyClass">
-        <div class="title">{{wList.length && wList[0].predictDate}}&nbsp;&nbsp;{{currentWeek}}&nbsp;&nbsp;农历{{currentOldDay}}</div>
+        <div class="title">{{wList.length && wList[0].predictDate}}&nbsp;&nbsp;{{currentWeek}}&nbsp;&nbsp;{{currentOldDay}}</div>
         <div class="city">
             <div class="city-name">{{city.name}}</div>
             <div><span class="img" :class="curMinBg"></span></div>
@@ -36,7 +36,7 @@
         data() {
             return {
                 city: {
-                  name: '广州'
+                  name: '未知'
                 },
                 todyClass: '',
                 wList: [],
@@ -102,9 +102,12 @@
                         this.curMinBg = 'icn_weather_sunny'
                         break
                     case '1':
-                    case '2':
                         this.todyClass = 'img_bg_weather_cloudy'
                         this.curMinBg = 'icn_weather_cloudy'
+                        break
+                    case '2':
+                        this.todyClass = 'img_bg_weather_cloudy'
+                        this.curMinBg = 'icn_weather_mostlycloudy'
                         break
                     case '3':
                     case '7':
@@ -231,10 +234,12 @@
         -ms-user-select: none;
         user-select: none;
         color: #fff;
+        background: #01518C;
         font-family: NotoSansHans-Regular;
     }
     #app {
         position: absolute;
+        padding-top: 60px;
         left: 0;
         right: 0;
         top: 0;
@@ -335,6 +340,9 @@
         .icn_weather_cloudy{
             background-image: url('./assets/icn_weather_cloudy_l.png');
         }
+        .icn_weather_mostlycloudy{
+            background-image: url('./assets/icn_weather_mostlycloudy_l.png');
+        }
         .img_bg_weather_rainy{
             background-image: url('./assets/icn_weather_rainy_l.png');
         }
@@ -388,7 +396,7 @@
                         background: url('./assets/icn_weather_snow_m.png');
                         background-size:60px 60px;
                     }
-                    /*大部多云*/
+                    /*大部多云 阴天*/
                     .icn_weather_mostlycloudy_m{
                         background: url('./assets/icn_weather_mostlycloudy_m.png');
                         background-size:60px 60px;
@@ -414,7 +422,7 @@
                 float: left;
                 width: 20%;
                 margin-left: -1px;
-                border-right: 1px solid #fff;
+                border-right: 1px solid #9CC1D8;
             }
             li:last-of-type{
                 border-right: 0;

@@ -101,5 +101,9 @@
     "door_lock": {
         "src": "door_lock",
         "name": "智能门锁"
+    },
+    "oven": {
+        "src": "oven",
+        "name": "烤箱"
     }
 }
