@@ -2,7 +2,9 @@
 <div id="app">
     <div class="page-on" v-if="model.switch=='on'">
         <div class="name">{{device_name}}</div>
-        <div class="fault" v-if="errors.length" @click="showAlarmTip">{{errors[0]}}故障</div>
+        <div class="fault" v-if="errors.length">
+            <span v-for="item in errors" :key="item.code" @click="showAlarmTip(item)">{{item.code}}故障</span>
+        </div>
         <a href="" class="btn btn-more" @click.prevent="moreModalVisible = true"><i></i></a>
         <!-- 待机 -->
         <div class="circle" v-show="isStandby">
@@ -215,19 +217,26 @@ a{
     opacity:0.5;
 }
 .fault{
-    box-sizing: border-box;
-    border-radius:0 48px 48px 0;
-    width:252px;
-    height:78px;
-    line-height: 78px;
-    font-size:30px;
-    color:#333333;
-    padding-left: 100px;
+
     position: absolute;
     left: 0;
     top: 141px;
-    background:#fff url(./assets/washer_icon_msg.png) no-repeat 60px center;
-    background-size: 30px 30px;
+
+    span{
+        box-sizing: border-box;
+        border-radius:0 48px 48px 0;
+        width:252px;
+        height:78px;
+        line-height: 78px;
+        font-size:30px;
+        color:#333333;
+        padding-left: 100px;
+        background:#fff url(./assets/washer_icon_msg.png) no-repeat 60px center;
+        background-size: 30px 30px;
+        display: block;
+        margin-bottom: 5px;
+        white-space: nowrap;
+    }
 }
 @keyframes wave1 {
     from {
@@ -808,6 +817,11 @@ export default {
             if(val){
                 this.currentSet = -1
             }
+        },
+        'model.mode'() {
+            if(this.isPause){
+                this.model.operation = 'none'
+            }
         }
     },
     computed: {
@@ -884,7 +898,7 @@ export default {
         controlDevice(attr, val, success, error) {
 
             if(this.errors.length){
-                this.showAlarmTip()
+                this.showAlarmTip(this.errors[0])
                 return
             }
             if(this.model.child_lock_switch == 'on' && attr != 'child_lock_switch'){
@@ -1015,32 +1029,60 @@ export default {
             if(data.device_name){
                 this.device_name = data.device_name
             }
+            if(this.isStandby && data.attribute.status == 'standby' && data.attribute.operation !='none'){
+                data.attribute.operation = 'none'
+            }
             this.model = data.attribute
         },
         onError() {
             this.status = 'error'
         },
-        onFault(attr) {
+        onAlarm(attr) {
             var code = attr.error_code
-            var index = this.errors.indexOf(code)
+            // var index = this.errors.indexOf(code)
+            var index = findIndex(this.errors, (item) => {
+                return item.code == code
+            })
 
-            if(index > 0){
+            if(index >= 0){
                 this.errors.splice(index, 1)
             }
 
             if(attr.error_status == 'open'){
-                this.errors.push(code)
+                this.errors.push({
+                    code: code,
+                    status: attr.error_status
+                })
             }
         },
-        showAlarmTip() {
-            var code = this.errors[0]
-            var msg = ERROR_CODE[code] || DEFAULT_ERROR_MSG
+        showAlarmTip(err) {
+            // var code = this.errors[0]
+            var msg = ERROR_CODE[err.code] || DEFAULT_ERROR_MSG
             HdSmart.UI.alert({
                 title: '故障',
-                message: code + ' ' + msg,
+                message: err.code + ' ' + msg,
                 cancelText: '',
                 onText: '知道了'
-            }, (val) => {})
+            }, (val) => {
+                // HdSmart.Device.control({
+                //     nodeid: "wifi.main.alarm_confirm",
+                //     params: {
+                //         attribute: {
+                //             error_code: err.code
+                //         }
+                //     }
+                // },(val)=>{
+                //     if(val){
+                //         var index = findIndex(this.errors, (item) => {
+                //             return item.code == err.code && item.status == 'fixed'
+                //         })
+
+                //         if(index >= 0){
+                //             this.errors.splice(index, 1)
+                //         }
+                //     }
+                // },()=>{})
+            })
         }
     },
     created() {
@@ -1057,8 +1099,8 @@ export default {
                         this.getSnapShot()
                     }
                     break
-                case 'alarm':
-                    this.onFault(data.result.attribute)
+                case 'dr_report_dev_alert':
+                    this.onAlarm(data.result.attribute)
                     break;
                 default:
                     this.onSuccess(data.result)

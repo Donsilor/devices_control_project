@@ -12,9 +12,7 @@
                 <span v-for="i in 5" :key="i" :class="'c'+i" v-show="i==(pm25_level>5?5:pm25_level)"></span>
             </div>
             <div class="arrow" :style="{transform:'rotate('+ pm25_rotate +'deg)'}"></div>
-            <div class="value">
-                {{pm25==0?'–':pm25}}
-            </div>
+            <div class="value" v-html="pm25_text"></div>
             <div class="pic">PM 2.5</div>
         </div>
         <div class="attrs">
@@ -180,14 +178,20 @@ a{
         // transition: transform 1.5s;
     }
     .value{
-        font-family:AbwechselnschriftBold;
-        font-size:144px;
+        font-family:Roboto-Medium;;
+        font-size:120px;
         color:#ffffff;
         position: absolute;
         left: 0px;
-        top: 120px;
+        top: 130px;
         width: 100%;
         text-align: center;
+        small{
+            font-size: 24px;
+            position: absolute;
+            // right: 60px;
+            bottom: 26px;
+        }
     }
     .pic{
         border:1px solid rgba(255,255,255,.5);
@@ -669,6 +673,9 @@ export default {
                 return PM25_ANGLE[5]
             }
             return getRotate(this.pm25, level-1, level)
+        },
+        pm25_text() {
+            return this.pm25==0 ? '–' : this.pm25 //+ '<small>μg/m³</small>'
         }
     },
     methods: {
@@ -696,14 +703,19 @@ export default {
             // }
 
             //睡眠模式下，开启负离子，要恢复到上一个模式
-            if(attr == 'negative_ion_switch' && this.model.control_status == 'sleep'){
-                params.control = this.prevModel.control_status
-                if(this.prevModel.control_status == 'manual'){
-                    params.speed = this.prevModel.speed
+            if(attr == 'negative_ion_switch'){
+                if(this.model.control_status == 'sleep'){
+                    params.control = this.prevModel.control_status
+                    // if(this.prevModel.control_status == 'manual'){
+                    //     params.speed = this.prevModel.speed
+                    // }
+                }else{
+                    params.control = this.model.control_status
                 }
             }
 
             if(attr == 'child_lock_switch'){
+                params.control = this.model.control_status
                 fn = function(cb){cb()}
             }
 
@@ -810,7 +822,7 @@ export default {
             if(this.model.child_lock_switch_status == 'on'){
                 HdSmart.UI.alert({
                     title: '解除童锁',
-                    message: '解除童锁后才能控制此设备，是否解除？',
+                    message: '解除童锁后才能控制此设备，\n是否解除？',
                     dialogStyle: 2
                 }, (val) => {
                     if(val) this.setChildLock()
