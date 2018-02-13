@@ -9,7 +9,7 @@ let res = {
         "very_high"
       ],
       "PM25": [
-        0
+        10
       ]
     },
     "switch_status": "on",

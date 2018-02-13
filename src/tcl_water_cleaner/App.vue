@@ -802,7 +802,7 @@ export default {
                 HdSmart.UI.toast('重置失败')
             })
         },
-        onFault(attr) {
+        onAlarm(attr) {
             var code = attr.error_code
             var index = this.errors.indexOf(code)
             var storeIndex = this.errorStore.indexOf(code)
@@ -883,7 +883,7 @@ export default {
                     }
                     break
                 case 'dr_report_dev_alert':
-                    this.onFault(data.result.attribute)
+                    this.onAlarm(data.result.attribute)
                     break;
                 default:
                     this.onSuccess(data.result)

@@ -630,7 +630,9 @@ export default {
             remain_tip: '',
             pm25: '',
             speedItems: SPEED_TEXT3,
-            ab: {}
+            ab: {},
+            lastControl: {},
+            lastControlTime: 0
         }
     },
     computed: {
@@ -688,10 +690,12 @@ export default {
                         }
                     }
                 }, () => {
-                    success && success()
-                    if(attr != 'switch'){
-                        // this.showTip('设置成功')
+                    this.lastControlTime = Date.now()
+                    this.lastControl = {
+                        key: attr,
+                        value: val
                     }
+                    success && success()
                 }, ()=>{
                     error && error()
                     this.showTip('操作失败')
@@ -752,6 +756,9 @@ export default {
         },
         onSuccess(data) {
             if(!data) return
+            if((Date.now()-this.lastControlTime) <= 3000 && data.attribute[this.lastControl.key] != this.lastControl.value){
+                data.attribute[this.lastControl.key] = this.lastControl.value
+            }
             this.status = 'success'
             if(data.device_name){
                 this.device_name = data.device_name
