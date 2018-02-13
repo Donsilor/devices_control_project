@@ -18,7 +18,6 @@ const ALL_MODE = {
         mode: 'barbecues', //模式
         temperature: 220, //温度
         bake_duration: 30, //时长
-        status: 'start',
         convection: 'off',
         rotisserie: 'off',
         fire: '上下火',
@@ -29,7 +28,6 @@ const ALL_MODE = {
         mode: 'pizza', //模式
         temperature: 220, //温度
         bake_duration: 20, //时长
-        status: 'start',
         convection: 'off',
         rotisserie: 'off',
         fire: '上下火',
@@ -40,7 +38,6 @@ const ALL_MODE = {
         mode: 'fish_shrimp', //模式
         temperature: 200, //温度
         bake_duration: 15, //时长
-        status: 'start',
         convection: 'off',
         rotisserie: 'off',
         fire: '上下火',
@@ -51,7 +48,6 @@ const ALL_MODE = {
         mode: 'biscuit', //模式
         temperature: 160, //温度
         bake_duration: 16, //时长
-        status: 'start',
         convection: 'on',
         rotisserie: 'off',
         fire: '上下火',
@@ -63,7 +59,6 @@ const ALL_MODE = {
         temperature: 230, //温度
         bake_duration: 4, //时长
         // switch: 'off',
-        status: 'start',
         // reserve_bake: 1,
         convection: 'off',
         rotisserie: 'off',
@@ -76,7 +71,6 @@ const ALL_MODE = {
         mode: 'cake', //模式
         temperature: 180, //温度
         bake_duration: 20, //时长
-        status: 'start',
         convection: 'off',
         rotisserie: 'off',
         fire: '上下火',
@@ -87,7 +81,6 @@ const ALL_MODE = {
         mode: 'sweet_potato', //模式
         temperature: 220, //温度
         bake_duration: 50, //时长
-        status: 'start',
         convection: 'on',
         rotisserie: 'off',
         fire: '上下火',
@@ -98,7 +91,6 @@ const ALL_MODE = {
         mode: 'chicken',
         temperature: 220,
         bake_duration: 50,
-        status: 'start',
         convection: 'off',
         rotisserie: 'on',
         fire: '上下火',
@@ -109,9 +101,6 @@ const ALL_MODE = {
         mode: 'broil',
         temperature: 200,
         bake_duration: 20,
-        // switch: 'off',
-        status: 'start',
-        // reserve_bake: 1,
         convection: 'off',
         rotisserie: 'off',
         // remaining: 88,
@@ -123,9 +112,6 @@ const ALL_MODE = {
         mode: 'bake',
         temperature: 100,
         bake_duration: 60,
-        // switch: 'off',
-        status: 'start',
-        // reserve_bake: 1,
         convection: 'off',
         rotisserie: 'on',
         // remaining: 88,
@@ -137,7 +123,6 @@ const ALL_MODE = {
         mode: 'roast',
         temperature: 220,
         bake_duration: 45,
-        status: 'start',
         convection: 'off',
         rotisserie: 'on',
         fire: '上下火',

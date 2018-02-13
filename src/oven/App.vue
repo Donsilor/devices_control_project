@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <div class="fault" v-if="errors.length" @click="showAlarmTip">{{errors[0]}}故障</div>
-        <div class="mask" v-if="maskLyerShow"></div>
+        <div class="mask" v-if="maskLyerShow" @click="maskLayerClick"></div>
         <span class="more-btn" @click="showMoreLayer"></span>
         <div class="wrapper">
             <h3 class="main-title">烤箱</h3>
@@ -192,9 +192,24 @@
                 status: ''
             }
         },
-        watcher: {
-            childLockSwitch(val) {
-                console.log(val)
+        watch: {
+            'allAttribute.wenduList' (curVal, oldVal) {
+                if (curVal && curVal.length) {
+                    curVal.forEach((item) => {
+                        if (item.value === this.allAttribute.temperature) {
+                            item.active = true
+                        }
+                    })
+                }
+            },
+            'allAttribute.timeList' (curVal, oldVal) {
+                if (curVal && curVal.length) {
+                    curVal.forEach((item) => {
+                        if (item.value === this.allAttribute.bake_duration) {
+                            item.active = true
+                        }
+                    })
+                }
             }
         },
         mounted() {
@@ -225,6 +240,11 @@
                 this.maskLyerShow = false
                 this.moreLayerShow = false
             },
+            maskLayerClick () {
+                this.maskLyerShow = false
+                this.moreLayerShow = false
+                this.modelLayerShow = false
+            },
             //取消模式选择
             closeModelLayer () {
                 this.maskLyerShow = false
@@ -237,15 +257,15 @@
                 if (curMode) {
                     this.elseModeList.forEach((inner) => {
                         if (inner.mode === curMode) {
-                            inner.icon += ' active'
+                            if (!/active/.test(inner.icon)){
+                                inner.icon += ' active'
+                            }
                         } else {
                             if (/active/.test(inner.icon)) {
                                 inner.icon = inner.icon.replace(/active/, '')
                             }
                         }
                     })
-                } else {
-                    this.tempElseMode = ''
                 }
             },
             showModelLayer () {
@@ -255,7 +275,9 @@
                 if (curMode) {
                     this.modeList.forEach((inner) => {
                         if (inner.mode === curMode) {
-                            inner.icon += ' active'
+                            if (!/active/.test(inner.icon)){
+                                inner.icon += ' active'
+                            }
                         } else {
                             if (/active/.test(inner.icon)) {
                                 inner.icon = inner.icon.replace(/active/, '')
@@ -284,7 +306,7 @@
                 if (this.allAttribute.status === 'start') {
                     return
                 }
-                this.tempElseMode = item.mode
+                this.allAttribute.mode = item.mode
                 this.elseModeList.forEach((inner) => {
                     if (/active/.test(inner.icon)) {
                         inner.icon = inner.icon.replace(/active/, '')
@@ -316,6 +338,7 @@
                         wenduList[i].active = false
                     }
                     item.active = true
+                    this.allAttribute.temperature = item.value
                 })
             },
             selectTime (item) {
@@ -326,6 +349,7 @@
                         timeList[i].active = false
                     }
                     item.active = true
+                    this.allAttribute.bake_duration = item.value
                 })
             },
             getModeName (val) {
@@ -422,7 +446,6 @@
             //设置各种模式后重新赋默认值
             afterResetData (mode) {
                 let currentData = AllConfig[mode]
-                console.log(currentData)
                 for (let attr in currentData) {
                     this.allAttribute[attr] = currentData[attr]
                 }
@@ -448,10 +471,10 @@
                 })
             },
             // 设置定时
-            setDuration (val) {
+            setDuration (val,suc) {
                 const obj = this
                 this.controlDevice('bake_duration',val, ()=>{
-
+                    suc && suc()
                 })
             },
             // 设置热风对流
@@ -877,6 +900,9 @@ body {
         }
         a.both-fire{
             background-image: url("assets/btn_conflagration_g.png")
+        }
+        .up-down-fire{
+            color: #ccc;
         }
     }
 
