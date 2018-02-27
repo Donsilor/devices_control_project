@@ -136,7 +136,7 @@
     const [ON, OFF] = ['on', 'off'];
     const NODE_ID = 'airconditioner.main.';
     //连续设置时间判断间隔
-    const SPAN = 300;
+    const SPAN = 500;
     //loading效果延迟
     const LOADING_DELAY = 800;
     //loading class
@@ -290,7 +290,7 @@
         watch: {
             tempFlag(val){
                 if (!val) {
-                    this.setParam(TEMPERATURE, this.fakeTemp, '温度设置成功', this.curButton);
+                    this.setParam(TEMPERATURE, this.fakeTemp*10, '温度设置成功', this.curButton);
                 }
             }
         },
@@ -774,7 +774,6 @@
     .temp-show {
         width: 680px;
         text-align: center;
-        // margin: 0 216px 0 240px;
     }
     .temp-number {
         font-size: 240px;

@@ -7,7 +7,7 @@
     },
     "curtains": {
         "src": "curtains",
-        "name": "窗帘",
+        "name": "杜亚窗帘",
         "mobileSrc": "curtains_m",
         "mock": "curtains"
     },
@@ -36,12 +36,12 @@
     },
     "tcl_clothes_hanger": {
         "src": "tcl_clothes_hanger",
-        "name": "晾衣架",
+        "name": "TCL晾衣架",
         "mock": "clothes_hanger"
     },
     "tcl_air_cleaner": {
         "src": "tcl_air_cleaner",
-        "name": "空气净化器",
+        "name": "TCL空气净化器",
         "mock": "air_cleaner"
     },
     "tcl_air_condition": {
@@ -51,48 +51,33 @@
     },
     "tcl_washer": {
         "src": "tcl_washer",
-        "name": "洗衣机",
+        "name": "TCL洗衣机",
         "mock": "washer"
     },
     "tcl_water_cleaner": {
         "src": "tcl_water_cleaner",
-        "name": "净水器",
+        "name": "TCL净水器",
         "mock": "water_cleaner"
     },
     "suning_air_cleaner": {
         "src": "suning_air_cleaner",
-        "name": "空气净化器",
+        "name": "苏宁空气净化器",
         "mock": "air_cleaner"
     },
     "suning_air_condition": {
         "src": "suning_air_condition",
-        "name": "空调",
+        "name": "苏宁空调",
         "mock": "air_condition"
     },
-    "suning_cleaning_robot": {
-        "src": "suning_cleaning_robot",
-        "name": "扫地机器人",
-        "mock": "suning_cleaning_robot"
+    "suning_gas_water_heater": {
+        "src": "suning_gas_water_heater",
+        "name": "苏宁燃气热水器",
+        "mock": "water_heater"
     },
-    "suning_oven": {
-        "src": "suning_oven",
-        "name": "烤箱",
-        "mock": "suning_oven"
-    },
-    "suning_washer": {
-        "src": "suning_washer",
-        "name": "洗衣机",
-        "mock": "suning_washer"
-    },
-    "suning_water_cleaner": {
-        "src": "suning_water_cleaner",
-        "name": "净水器",
-        "mock": "suning_water_cleaner"
-    },
-    "suning_water_heater": {
-        "src": "suning_water_heater",
-        "name": "热水器",
-        "mock": "suning_water_heater"
+    "suning_electric_water_heater": {
+        "src": "suning_electric_water_heater",
+        "name": "苏宁电热水器",
+        "mock": "water_heater"
     },
     "weather": {
         "src": "weather",
@@ -104,6 +89,6 @@
     },
     "oven": {
         "src": "oven",
-        "name": "烤箱"
+        "name": "苏宁烤箱"
     }
 }

@@ -772,6 +772,9 @@ export default {
             }
 
             this.filterItems = this.model.filter_time_remaining.map((el ,index) => {
+                if(el > 0 && this.expiredStore.indexOf(index) >= 0){
+                    this.expiredStore.splice(this.expiredStore.indexOf(index), 1)
+                }
                 var total = this.model.filter_time_total[index]
                 return {
                     remaining: el,

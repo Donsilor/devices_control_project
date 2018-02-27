@@ -675,7 +675,7 @@ export default {
             return getRotate(this.pm25, level-1, level)
         },
         pm25_text() {
-            return this.pm25==0 ? '–' : this.pm25 //+ '<small>μg/m³</small>'
+            return this.pm25==0 ? '--' : this.pm25 + '<small>μg/m³</small>'
         }
     },
     methods: {
