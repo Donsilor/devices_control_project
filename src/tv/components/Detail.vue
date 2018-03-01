@@ -143,7 +143,7 @@
     }
     .detail-hd{
         height: 96px;
-        background: #fff;
+        position: relative;
         /*position: absolute;
         left: 0;
         top: 0;
@@ -174,6 +174,7 @@
             }
         }
         .title{
+            background: #fff;
             text-align: center;
             line-height: 90px;
             color:#2f3133;
