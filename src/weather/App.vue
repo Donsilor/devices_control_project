@@ -36,7 +36,7 @@
         data() {
             return {
                 city: {
-                  name: '未知'
+                  name: ''
                 },
                 todyClass: '',
                 wList: [],

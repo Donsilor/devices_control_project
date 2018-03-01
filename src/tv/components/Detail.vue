@@ -143,6 +143,7 @@
     }
     .detail-hd{
         height: 96px;
+        background: #fff;
         /*position: absolute;
         left: 0;
         top: 0;
