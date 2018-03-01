@@ -144,6 +144,7 @@
     .detail-hd{
         height: 96px;
         position: relative;
+        z-index: 9999;
         /*position: absolute;
         left: 0;
         top: 0;
