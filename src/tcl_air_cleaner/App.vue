@@ -698,9 +698,9 @@ export default {
             }
 
             //睡眠模式下，负离子关闭
-            // if(val == 'sleep'){
-            //     params.negative_ion_switch = 'off'
-            // }
+             if(val == 'sleep'){
+                 params.negative_ion_switch = 'off'
+             }
 
             //睡眠模式下，开启负离子，要恢复到上一个模式
             if(attr == 'negative_ion_switch'){
