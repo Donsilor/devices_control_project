@@ -214,7 +214,7 @@
                             item.weekday = currentWeekArr[index]
                             return item
                         })
-                        self.renderTodayClass(this.wList[0].conditionIdDay)
+                        self.renderTodayClass(self.wList[0].conditionIdDay)
                     }
                     HdSmart.UI.hideLoading();
                 }, (err) => {
