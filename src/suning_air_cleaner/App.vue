@@ -34,7 +34,7 @@
             <a href="" class="btn-auto active" @click.prevent="showSpeedModal" v-if="model.control_status == 'auto'">
                 <i></i> 自动
             </a>
-            <a href="" :class="speedCss" @click.prevent="showSpeedModal" v-else-if="model.control_status == 'manual'">
+            <a href="" :class="speedCss" @click.prevent="showSpeedModal" v-else-if="model.control_status == 'manual' && model.speed && model.speed != 'sleep'">
                 <i></i> {{speedText}}
             </a>
             <a href="" class="btn-speed" @click.prevent="showSpeedModal" v-else>
