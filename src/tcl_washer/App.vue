@@ -950,6 +950,7 @@ export default {
         },
         setReserve(time) {
             if(this.isRun){
+                HdSmart.UI.toast('运行中无法设置预约')
                 return
             }
             this.controlDevice('reserve_wash', parseInt(time))
@@ -1025,6 +1026,7 @@ export default {
             })
         },
         onSuccess(data) {
+            HdSmart.UI.hideLoading()
             this.status = 'success'
             if(data.device_name){
                 this.device_name = data.device_name
@@ -1056,41 +1058,24 @@ export default {
             }
         },
         showAlarmTip(err) {
-            // var code = this.errors[0]
             var msg = ERROR_CODE[err.code] || DEFAULT_ERROR_MSG
             HdSmart.UI.alert({
                 title: '故障',
                 message: err.code + ' ' + msg,
                 cancelText: '',
                 onText: '知道了'
-            }, (val) => {
-                // HdSmart.Device.control({
-                //     nodeid: "wifi.main.alarm_confirm",
-                //     params: {
-                //         attribute: {
-                //             error_code: err.code
-                //         }
-                //     }
-                // },(val)=>{
-                //     if(val){
-                //         var index = findIndex(this.errors, (item) => {
-                //             return item.code == err.code && item.status == 'fixed'
-                //         })
-
-                //         if(index >= 0){
-                //             this.errors.splice(index, 1)
-                //         }
-                //     }
-                // },()=>{})
-            })
-        }
+            }, (val) => {})
+        },
+        inError(error){
+            return findIndex(this.errors, (item) => {
+                return item.code == error
+            }) >= 0
+        },
     },
     created() {
         HdSmart.ready(() => {
             HdSmart.UI.showLoading()
-            this.getSnapShot(() => {
-                HdSmart.UI.hideLoading()
-            })
+            this.getSnapShot()
         })
         HdSmart.onDeviceListen((data) => {
             switch (data.method) {

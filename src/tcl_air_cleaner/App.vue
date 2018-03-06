@@ -23,7 +23,7 @@
             <a href="" class="btn-on" @click.prevent="setSwitch('off')">
                 <i></i> 开关
             </a>
-            <a href="" class="btn-sleep" :class="{active:model.control_status == 'sleep'}" @click.prevent="setControl('sleep')">
+            <a href="" class="btn-sleep" :class="{active:model.control_status == 'sleep'}" @click.prevent="setSleep">
                 <i></i> 睡眠
             </a>
             <!-- <a href="" class="btn-sleep"  @click.prevent="setControl('manual')">
@@ -686,36 +686,13 @@ export default {
                 this.tip = ''
             },2000)
         },
-        controlDevice(attr, val, success, error) {
+        controlDevice(attr, val, param, success, error) {
             var fn = this.confirm
-            var params = {
+            var params = Object.assign({
                 [attr]: val
-            }
-
-            //改变风速，模式先设置成手动
-            if(attr == 'speed'){
-                params.control = 'manual'
-            }
-
-            //睡眠模式下，负离子关闭
-            // if(val == 'sleep'){
-            //     params.negative_ion_switch = 'off'
-            // }
-
-            //睡眠模式下，开启负离子，要恢复到上一个模式
-            if(attr == 'negative_ion_switch'){
-                if(this.model.control_status == 'sleep'){
-                    params.control = this.prevModel.control_status
-                    // if(this.prevModel.control_status == 'manual'){
-                    //     params.speed = this.prevModel.speed
-                    // }
-                }else{
-                    params.control = this.model.control_status
-                }
-            }
+            }, param)
 
             if(attr == 'child_lock_switch'){
-                params.control = this.model.control_status
                 fn = function(cb){cb()}
             }
 
@@ -745,11 +722,20 @@ export default {
                 this.model.control_status = val
             })
         }),
+        setSleep() {
+            if(this.model.negative_ion_switch_status == 'on'){
+                this.controlDevice('negative_ion_switch', 'off', {control: 'sleep'}, () => {
+                    this.model.control_status = 'sleep'
+                })
+            }else{
+                this.setControl('sleep')
+            }
+        },
         setSpeed: throttle(function(val){
             if(this.model.control_status == 'manual' && this.model.speed == val){
                 return
             }
-            this.controlDevice('speed', val, () => {
+            this.controlDevice('speed', val, {control: 'manual'}, () => {
                 this.model.control_status = 'manual'
                 this.model.speed = val
             })
@@ -760,13 +746,17 @@ export default {
                 return
             }
             var val = getToggle(this.model.negative_ion_switch_status)
-            this.controlDevice('negative_ion_switch', val, () => {
+            this.controlDevice('negative_ion_switch', val, {control: this.model.control_status == 'sleep' ? this.prevModel.control_status : this.model.control_status}, () => {
                 this.model.negative_ion_switch_status = val
             })
         }),
         setChildLock: throttle(function(){
+            if(this.model.control_status == 'sleep'){
+                HdSmart.UI.toast('睡眠模式下不能开启童锁')
+                return
+            }
             var val = getToggle(this.model.child_lock_switch_status)
-            this.controlDevice('child_lock_switch', val, () => {
+            this.controlDevice('child_lock_switch', val, {control: this.model.control_status}, () => {
                 this.model.child_lock_switch_status = val
             })
         }),

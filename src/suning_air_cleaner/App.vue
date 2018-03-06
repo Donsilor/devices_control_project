@@ -12,9 +12,7 @@
                 <span v-for="i in 5" :key="i" :class="'c'+i" v-show="i==(pm25_level>5?5:pm25_level)"></span>
             </div>
             <div class="arrow" :style="{transform:'rotate('+ pm25_rotate +'deg)'}"></div>
-            <div class="value">
-                {{pm25==0?'–':pm25}}
-            </div>
+            <div class="value" v-html="pm25_text"></div>
             <div class="pic">PM 2.5</div>
         </div>
         <div class="attrs">
@@ -180,14 +178,20 @@ a{
         // transition: transform 1.5s;
     }
     .value{
-        font-family:AbwechselnschriftBold;
-        font-size:144px;
+        font-family:Roboto-Medium;;
+        font-size:120px;
         color:#ffffff;
         position: absolute;
         left: 0px;
-        top: 120px;
+        top: 130px;
         width: 100%;
         text-align: center;
+        small{
+            font-size: 24px;
+            position: absolute;
+            // right: 60px;
+            bottom: 26px;
+        }
     }
     .pic{
         border:1px solid rgba(255,255,255,.5);
@@ -665,6 +669,9 @@ export default {
                 return PM25_ANGLE[5]
             }
             return getRotate(this.pm25, level-1, level)
+        },
+        pm25_text() {
+            return this.pm25==0 ? '--' : this.pm25 + '<small>μg/m³</small>'
         }
     },
     methods: {
@@ -733,6 +740,10 @@ export default {
             })
         }),
         setChildLock: throttle(function(){
+            if(this.model.control_status == 'sleep'){
+                HdSmart.UI.toast('睡眠模式下不能开启童锁')
+                return
+            }
             var val = getToggle(this.model.child_lock_switch_status)
             this.controlDevice('child_lock_switch', val, () => {
                 this.model.child_lock_switch_status = val

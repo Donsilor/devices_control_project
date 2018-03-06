@@ -6,14 +6,6 @@
 
     <div class="page-on" :style="inPage('index')" v-if="isInit">
         <div class="name">{{device_name}}</div>
-        <div class="tip">
-            <p v-if="inError('E3')"><span @click="toggleErrorModal('E3', true)">漏水</span></p>
-            <p v-else-if="inError('E1')"><span>缺水</span></p>
-            <p v-else-if="model.status=='maintain'">检修</p>
-            <p v-else-if="model.status=='filter'">制水中...</p>
-            <p v-else-if="model.status=='clean'">冲洗中...</p>
-            <p v-else-if="hasTDS && oldTDS">过滤前水质：{{oldTDS}} TDS</p>
-        </div>
 
         <div class="wash" :class="{washing:washing}">
             <a href="#" @click.prevent="setClean"><i></i>一键冲洗</a>
@@ -27,7 +19,7 @@
             <div class="arrow" :style="{transform:'rotate('+ rotate +'deg)'}"></div>
             <div class="value">{{nowTDS}}</div>
             <div class="pic">TDS</div>
-            <div class="valueset">
+            <div class="valueset" @click.stop="">
                 <span>0</span>
                 <span>50</span>
                 <span>100</span>
@@ -41,6 +33,16 @@
                 <span v-else>过滤后水质不可直接饮用</span>
             </div>
         </div>
+
+        <div class="tip">
+            <p v-if="inError('E3')"><span @click="toggleErrorModal('E3', true)">漏水</span></p>
+            <p v-else-if="inError('E1')"><span>缺水</span></p>
+            <p v-else-if="model.status=='standby'">待机</p>
+            <p v-else-if="model.status=='filter'">制水中...</p>
+            <p v-else-if="model.status=='clean'">冲洗中...</p>
+            <p v-else-if="hasTDS && oldTDS">过滤前水质：{{oldTDS}} TDS</p>
+        </div>
+
         <a class="view" href="" @click.prevent="currentPage='list'" v-if="hasTDS">
             <span v-if="expired_num > 0">{{expired_num}}个滤芯已过期，点击查看详情</span>
             <span v-else-if="expiring_num > 0">{{expiring_num}}个滤芯将到期，点击查看详情</span>
@@ -68,24 +70,24 @@
         </div>
     </modal>
 
-    <modal title="净水器滤芯到期" v-model="timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
+    <modal v-for="item in expiredFilter" :key="item" title="净水器滤芯到期" v-model="item.timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
         <div class="alarm">
-            <div class="alert"><i></i>{{expiredFilterText}}已到期</div>
+            <div class="alert"><i></i>滤芯{{item.index+1}}已到期</div>
             <div class="text">
                 <p>前置活性炭寿命已到期，请更换以保证饮水质量！</p>
                 <p>请在更换滤芯后重置寿命</p>
             </div>
 
             <div class="btn">
-                <a href="#" class="" @click.prevent="viewExpired">查看详情</a>
-                <a href="#" class="btn-default" @click.prevent="confirmExpired">我知道了</a>
+                <a href="#" class="" @click.prevent="viewExpired(item)">查看详情</a>
+                <a href="#" class="btn-default" @click.prevent="confirmExpired(item)">我知道了</a>
             </div>
         </div>
     </modal>
 
     <modal title="漏水警报" v-model="alarmModalVisible" :showCloseBtn="false" :overlayClickable="false">
         <div class="alarm">
-            <div class="alert"><i></i>检测净水器到漏水！</div>
+            <div class="alert"><i></i>检测到净水器漏水！</div>
             <div class="text">
                 <p>请先排查管道、台盆、机器，确定漏水位置；</p>
                 <p>非机器漏水，请擦干报警器并将净水器断电重启；</p>
@@ -178,17 +180,17 @@ a{
     &.ww1{
         background-image: url(./assets/waterpurifier_bg_wave_one.png);
         height: 185px;
-        animation: wave1 10s linear infinite;
+        // animation: wave1 10s linear infinite;
     }
     &.ww2{
         background-image: url(./assets/waterpurifier_bg_wave_two.png);
         height: 201px;
-        animation: wave2 15s linear infinite;
+        // animation: wave2 15s linear infinite;
     }
     &.ww3{
         background-image: url(./assets/waterpurifier_bg_wave_three.png);
         height: 226px;
-        animation: wave3 20s linear infinite;
+        // animation: wave3 20s linear infinite;
     }
 }
 .name{
@@ -209,6 +211,11 @@ a{
     font-size:30px;
     color:#ffffff;
     opacity:0.5;
+    height: 80px;
+    span{
+        display: inline-block;
+        height: 80px;
+    }
 }
 .record_panle{
     position: absolute;
@@ -677,7 +684,11 @@ export default {
             if(!this.model.filter_time_remaining) return result
             this.model.filter_time_remaining.forEach((item, index) => {
                 if(item <= 0 && this.expiredStore.indexOf(index) < 0){
-                    result.push(index)
+                    // result.push(index)
+                    result.push({
+                        index: index,
+                        timeoutModalVisible: true
+                    })
                 }
             })
             return result
@@ -734,11 +745,17 @@ export default {
 
             var onWash = () => {
                 this.washing = false
+                el.washing = false
                 el.removeEventListener('transitionend', onWash, false)
+            }
+
+            if(el.washing){
+                return
             }
 
             this.controlDevice('control', 'clean', () => {
                 this.washing = true
+                el.washing = true
                 el.addEventListener('transitionend', onWash, false)
             })
         },
@@ -749,9 +766,10 @@ export default {
         },
         onSuccess(result) {
 
+            HdSmart.UI.hideLoading()
+
             if(!this.isInit){
                 this.isInit = true
-                HdSmart.UI.hideLoading()
             }
 
             var attrs = result.attribute
@@ -785,8 +803,8 @@ export default {
 
         },
         toPercent(remaining, total) {
-            // Math.ceil(remaining/total*100)
-            return parseInt(remaining/total*100)
+            return  Math.ceil(remaining/total*100)
+            // return parseInt(remaining/total*100)
         },
         viewFilter(index) {
             this.currentIndex = index
@@ -843,19 +861,22 @@ export default {
                     break;
             }
         },
-        viewExpired() {
-            if(this.expiredFilter.length == 1){
-                this.viewFilter(this.expiredFilter[0])
-            }else{
-                if(this.hasTDS){
-                    this.currentPage = 'list'
-                }
-            }
-            this.confirmExpired()
+        viewExpired(item) {
+            // if(this.expiredFilter.length == 1){
+            //     this.viewFilter(this.expiredFilter[0])
+            // }else{
+            //     if(this.hasTDS){
+            //         this.currentPage = 'list'
+            //     }
+            // }
+            this.viewFilter(item.index)
+            this.confirmExpired(item)
         },
-        confirmExpired() {
-            this.timeoutModalVisible = false
-            this.expiredStore = this.expiredStore.concat(this.expiredFilter)
+        confirmExpired(item) {
+            // this.timeoutModalVisible = false
+            // this.expiredStore = this.expiredStore.concat(this.expiredFilter)
+            item.timeoutModalVisible = false
+            this.expiredStore = this.expiredStore.concat(item.index)
         }
     },
     created() {
@@ -867,11 +888,11 @@ export default {
             localStorage.setItem(EXPIRED_STORE_KEY, JSON.stringify(this.expiredStore))
         })
 
-        this.$watch('expiredFilter.length', (val) => {
-            if(val){
-                this.timeoutModalVisible = true
-            }
-        })
+        // this.$watch('expiredFilter.length', (val) => {
+        //     if(val){
+        //         this.timeoutModalVisible = true
+        //     }
+        // })
 
         HdSmart.ready(() => {
             HdSmart.UI.showLoading()
