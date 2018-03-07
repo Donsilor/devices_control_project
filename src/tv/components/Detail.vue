@@ -69,8 +69,8 @@
                 </div>
                 <div class="control">
                     <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
-                    <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>
-                    <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
+                    <a href="#" class="volup" @touchstart.prevent="volupStart('up')" @touchmove="volupMove('up')" @touchend="volupEnd('up')"></a>
+                    <a href="#" class="voldown" @touchstart.prevent="volupStart('down')" @touchmove="volupMove('down')" @touchend="volupEnd('down')"></a>
                     <a href="#" class="remote" @click.prevent="cmd('rcOk')"></a>
                     <a href="#" class="left" @click.prevent="cmd('rcLeft')"></a>
                     <a href="#" class="right" @click.prevent="cmd('rcRight')"></a>
@@ -519,7 +519,9 @@
                 //描述展开按钮状态
                 isDescShow: false,
                 loading: false,
-                history: false
+                history: false,
+                timeOutEventUp: 0,
+                timeOutEventDown: 0
             }
         },
         computed: {
@@ -562,6 +564,60 @@
             ...mapActions([
                 'hideDetail'
             ]),
+            longPressUp () {
+                this.timeOutEventUp = 0
+                // 长按操作
+                this.cmd('rcVolumeUpStart')
+            },
+            longPressDown () {
+                this.timeOutEventDown = 0
+                // 长按操作
+                this.cmd('rcVolumeDownStart')
+            },
+            volupStart (type) {
+                if (type === 'up') {
+                    this.timeOutEventUp = setTimeout(this.longPressUp, 500)
+                } else {
+                    this.timeOutEventDown = setTimeout(this.longPressDown, 500)
+                }
+            },
+            volupMove (type) {
+                if (type === 'up') {
+                    if (this.timeOutEventUp) {
+                        clearTimeout(this.timeOutEventUp)
+                        this.timeOutEventUp = 0
+                    }
+                } else {
+                    if (this.timeOutEventDown) {
+                        clearTimeout(this.timeOutEventDown)
+                        this.timeOutEventDown = 0
+                    }
+                }
+            },
+            volupEnd (type) {
+                if (type === 'up') {
+                    if (this.timeOutEventUp) {
+                        clearTimeout(this.timeOutEventUp)
+                    }
+                    if(this.timeOutEventUp != 0){
+                        // 这里是短按
+                        this.cmd('rcVolumeUp')
+                    } else {
+                        this.cmd('rcVolumeUpStop')
+                    }
+                } else {
+                    if (this.timeOutEventDown) {
+                        clearTimeout(this.timeOutEventDown)
+                    }
+                    // 这里是短按
+                    if(this.timeOutEventDown != 0){
+                        this.cmd('rcVolumeDown')
+                    } else {
+                        this.cmd('rcVolumeDownStop')
+                    }
+                }
+                return false;
+            },
             cmd(name) {
                 service.onClickEvent(name)
             },
