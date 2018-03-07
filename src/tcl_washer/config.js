@@ -305,7 +305,7 @@ export const OPERATION_OPTIONS = {
     rinse: '漂洗',
     spin: '脱水',
     drying: '烘干',
-    finish: '完成'
+    finish: '洗衣完成'
 }
 
 export const ERROR_CODE = {

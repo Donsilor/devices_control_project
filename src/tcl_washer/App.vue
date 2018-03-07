@@ -7,11 +7,17 @@
         </div>
         <a href="" class="btn btn-more" @click.prevent="moreModalVisible = true"><i></i></a>
         <!-- 待机 -->
-        <div class="circle" v-show="isStandby">
+        <div class="circle" v-show="isStandby || isFinish">
             <div class="inner">
                 <div class="title">{{currentModeConfig.text}}模式</div>
-                <div class="sub_title">洗衣时间</div>
-                <div class="timeleft" v-html="time_left"></div>
+                <template v-if="isStandby">
+                    <div class="sub_title">洗衣时间</div>
+                    <div class="timeleft" v-html="time_left"></div>
+                </template>
+                <template v-else>
+                    <div class="ok"></div>
+                    <div class="status">洗衣完成</div>
+                </template>
             </div>
         </div>
         <!-- 运行中 -->
@@ -22,12 +28,14 @@
                 <div class="title">{{currentModeConfig.text}}模式</div>
                 <div class="sub_title">剩余总时间</div>
                 <div class="timeleft" v-html="time_left"></div>
-                <div class="status">{{isRun ? operationText : '暂停中'}}</div>
+                <div class="status">{{operationText}}</div>
+                <div class="lock"></div>
             </div>
         </div>
+        <!-- 完成 -->
         <div class="btns btns-fn">
             <a href="" class="btn btn-on" @click.prevent="setSwitch('off')"><i></i>关机</a>
-            <a href="" class="btn btn-start" v-show="isStandby || isPause" @click.prevent="setControl('start')"><i></i>启动</a>
+            <a href="" class="btn btn-start" v-show="isStandby || isPause || isFinish" @click.prevent="setControl('start')"><i></i>启动</a>
             <a href="" class="btn btn-pause" v-show="isRun" @click.prevent="setControl('halt')"><i></i>暂停</a>
             <a href="" class="btn btn-mode" @click.prevent="modeModalVisible = true"><i></i>模式选择</a>
             <a href="" class="btn btn-reserve" @click.prevent="reserveModalVisible = true"><i></i>预约洗衣</a>
@@ -164,6 +172,14 @@
         <div class="washer"></div>
         <div class="btns btns-fn">
             <a href="" class="btn btn-off" @click.prevent="setSwitch('on')"><i></i></a>
+        </div>
+    </div>
+
+    <!--初始化失败界面-->
+    <div class="page-error" v-if="status=='error' || model.operation=='abnormal'" @click="getSnapShot">
+        <div class="error-tip">
+            <img src='./assets/init_err.png' />
+            <p>加载失败，请点击屏幕刷新</p>
         </div>
     </div>
 </div>
@@ -338,6 +354,23 @@ a{
     .status{
         font-size:24px;
         top: 350px
+    }
+    .lock{
+        background: url(./assets/washer_icon_childlock_normal.png) no-repeat;
+        background-size: 100% 100%;
+        width: 36px !important;
+        height: 36px !important;
+        left: 50% !important;
+        transform: translateX(-50%);
+        top: 20px;
+    }
+    .ok{
+        width: 190px !important;
+        height: 190px !important;
+        left: 120px !important;
+        top: 141px;
+        background: url(./assets/icon_normal.png) no-repeat;
+        background-size: 100% 100%;
     }
 }
 //关机样式
@@ -744,6 +777,29 @@ a{
         opacity: .5;
     }
 }
+
+.page-error{
+    height: 100%;
+    background: #f2f2f2;
+    text-align: center;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+.error-tip{
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+}
+.error-tip p{
+    min-height: 30px;
+    font-size: 30px;
+    margin: 24px 0 110px 0;
+    opacity: 1;
+    position: relative;
+}
 </style>
 
 
@@ -818,8 +874,8 @@ export default {
                 this.currentSet = -1
             }
         },
-        'model.mode'() {
-            if(this.isPause){
+        'model.mode'(nowval, prevval) {
+            if((this.isPause || this.isFinish) &&  prevval){
                 this.model.operation = 'none'
             }
         }
@@ -829,10 +885,13 @@ export default {
             return this.model.status == 'run'
         },
         isPause() {
-            return this.model.status=='standby' && this.model.operation!='none'
+            return this.model.status=='standby' && this.model.operation!='none' && this.model.operation!='finish'
         },
         isStandby() {
             return this.model.status=='standby' && this.model.operation=='none'
+        },
+        isFinish() {
+            return this.model.status=='standby' && this.model.operation=='finish'
         },
         numberSlot() {
             var values = RESERVE_TIME_OPTIONS.map((item, i) => {
@@ -849,7 +908,7 @@ export default {
             return formatTime(this.model.time_left)
         },
         operationText() {
-            return OPERATION_OPTIONS[this.model.operation]
+            return this.isRun ? OPERATION_OPTIONS[this.model.operation] : '暂停中'
         },
         childLockSwitch() {
             return this.model.child_lock_switch == 'on' ? true : false
@@ -897,10 +956,10 @@ export default {
     methods: {
         controlDevice(attr, val, success, error) {
 
-            if(this.errors.length){
-                this.showAlarmTip(this.errors[0])
-                return
-            }
+            // if(this.errors.length){
+            //     this.showAlarmTip(this.errors[0])
+            //     return
+            // }
             if(this.model.child_lock_switch == 'on' && attr != 'child_lock_switch'){
                 HdSmart.UI.toast('请先关闭童锁')
                 return
@@ -943,7 +1002,9 @@ export default {
             if(this.model.mode == mode){
                 return
             }
-            this.controlDevice('mode', mode)
+            this.controlDevice('mode', mode, () => {
+                this.model.mode = mode
+            })
         },
         setChildLock(val, callback) {
             this.controlDevice('child_lock_switch', val, callback)
@@ -1035,6 +1096,10 @@ export default {
                 data.attribute.operation = 'none'
             }
             this.model = data.attribute
+
+            if(data.attribute.error){
+
+            }
         },
         onError() {
             this.status = 'error'

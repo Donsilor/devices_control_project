@@ -37,10 +37,10 @@
         <div class="tip">
             <p v-if="inError('E3')"><span @click="toggleErrorModal('E3', true)">漏水</span></p>
             <p v-else-if="inError('E1')"><span>缺水</span></p>
-            <p v-else-if="model.status=='standby'">待机</p>
             <p v-else-if="model.status=='filter'">制水中...</p>
             <p v-else-if="model.status=='clean'">冲洗中...</p>
-            <p v-else-if="hasTDS && oldTDS">过滤前水质：{{oldTDS}} TDS</p>
+            <p v-else-if="model.status=='standby' && hasTDS && oldTDS">过滤前水质：{{oldTDS}} TDS</p>
+            <p v-else-if="model.status=='standby'">待机</p>
         </div>
 
         <a class="view" href="" @click.prevent="currentPage='list'" v-if="hasTDS">
@@ -801,10 +801,14 @@ export default {
                 }
             })
 
+            if(this.isInit){
+                this.isInit = true
+                this.onAlarm(attrs.error)
+            }
+
         },
         toPercent(remaining, total) {
             return  Math.ceil(remaining/total*100)
-            // return parseInt(remaining/total*100)
         },
         viewFilter(index) {
             this.currentIndex = index
@@ -823,7 +827,26 @@ export default {
                 HdSmart.UI.toast('重置失败')
             })
         },
-        onAlarm(attr) {
+        onAlarm(errors) {
+            for(var i=0; i<this.errorStore.length; i++){
+                var index = (errors && errors.error_code) ? errors.error_code.indexOf(this.errorStore[i]) : -1
+                if(index < 0 || (index >= 0 && errors.error_status[index] == 'fixed')){
+                    this.errorStore.splice(i, 1)
+                    i--
+                }
+            }
+            if(errors && errors.error_code){
+                errors.error_code.forEach((el, j) => {
+                    if(errors.error_status[j] == 'open'){
+                        this.errors.push(el)
+                        if(this.errorStore.indexOf(el) < 0){
+                            this.toggleErrorModal(el, true)
+                        }
+                    }
+                })
+            }
+        },
+        doAlarm(attr) {
             var code = attr.error_code
             var index = this.errors.indexOf(code)
             var storeIndex = this.errorStore.indexOf(code)
@@ -837,20 +860,25 @@ export default {
                 if(storeIndex < 0){
                     this.toggleErrorModal(code, true)
                 }
-            }else{
-                if(storeIndex >= 0){
-                    this.errorStore.splice(storeIndex, 1)
-                }
             }
         },
         inError(error){
             return this.errors.indexOf(error) >= 0
         },
         confirmError(error) {
-            this.toggleErrorModal(error, false)
             if(this.errorStore.indexOf(error) < 0){
+                HdSmart.Device.control({
+                    method: 'dm_set',
+                    "nodeid": "wifi.main.alarm_confirm",
+                    "params": {
+                        "attribute": {
+                            "error_code": error
+                        }
+                    }
+                })
                 this.errorStore.push(error)
             }
+            this.toggleErrorModal(error, false)
         },
         toggleErrorModal(error, visible) {
             switch(error){
@@ -862,37 +890,22 @@ export default {
             }
         },
         viewExpired(item) {
-            // if(this.expiredFilter.length == 1){
-            //     this.viewFilter(this.expiredFilter[0])
-            // }else{
-            //     if(this.hasTDS){
-            //         this.currentPage = 'list'
-            //     }
-            // }
             this.viewFilter(item.index)
             this.confirmExpired(item)
         },
         confirmExpired(item) {
-            // this.timeoutModalVisible = false
-            // this.expiredStore = this.expiredStore.concat(this.expiredFilter)
             item.timeoutModalVisible = false
             this.expiredStore = this.expiredStore.concat(item.index)
         }
     },
     created() {
-        this.$watch('errorStore.length', () => {
+        this.$watch('errorStore', () => {
             localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
         })
 
-        this.$watch('expiredStore.length', () => {
+        this.$watch('expiredStore', () => {
             localStorage.setItem(EXPIRED_STORE_KEY, JSON.stringify(this.expiredStore))
         })
-
-        // this.$watch('expiredFilter.length', (val) => {
-        //     if(val){
-        //         this.timeoutModalVisible = true
-        //     }
-        // })
 
         HdSmart.ready(() => {
             HdSmart.UI.showLoading()
@@ -907,7 +920,11 @@ export default {
                     }
                     break
                 case 'dr_report_dev_alert':
-                    this.onAlarm(data.result.attribute)
+                    if(data.result.attribute.error){
+                        this.onAlarm(data.result.attribute.error)
+                    }else{
+                        this.doAlarm(data.result.attribute)
+                    }
                     break;
                 default:
                     this.onSuccess(data.result)

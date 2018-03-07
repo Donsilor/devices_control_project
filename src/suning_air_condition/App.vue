@@ -374,8 +374,12 @@
                 if(attr.mode != undefined){
                     this.params.mode = attr.mode;
                 }
+
                 if(attr.speed != undefined){
                     this.params.speed = attr.speed;
+                    if(attr.enforce_mode == 'on'){
+                        this.params.speed = 'high'
+                    }
                 }
                 if(attr.wind_up_down != undefined){
                     this.params.wind_up_down = attr.wind_up_down;

@@ -766,6 +766,7 @@ export default {
             })
         },
         onSuccess(data) {
+            HdSmart.UI.hideLoading()
             if(!data) return
             if((Date.now()-this.lastControlTime) <= 3000 && data.attribute[this.lastControl.key] != this.lastControl.value){
                 data.attribute[this.lastControl.key] = this.lastControl.value
@@ -824,9 +825,7 @@ export default {
     created() {
         HdSmart.ready(() => {
             HdSmart.UI.showLoading()
-            this.getSnapShot(() => {
-                HdSmart.UI.hideLoading()
-            })
+            this.getSnapShot()
         })
         HdSmart.onDeviceListen((data) => {
             switch (data.method) {

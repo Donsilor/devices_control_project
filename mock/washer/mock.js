@@ -6,7 +6,8 @@ import Mock from 'mockjs';
 let res = {
     control: '',
     'switch': 'on',
-    status: 'run',
+    status: 'standby',
+    operation: 'finish',
     child_lock_switch: 'off',
     auto_detergent_switch: '',
     add_laundry_switch: '',
@@ -33,6 +34,10 @@ export function set(data){
         attr.status = attr.control
         if(attr.status == 'start'){
             attr.status = 'run'
+        }
+        if(attr.status == 'halt'){
+            attr.status = 'standby'
+            attr.operation = 'wash'
         }
     }
     res = Object.assign({}, res, attr)
