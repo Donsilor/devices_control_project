@@ -74,6 +74,11 @@
         "name": "苏宁燃气热水器",
         "mock": "water_heater"
     },
+    "suning_water_cleaner": {
+        "src": "suning_water_cleaner",
+        "name": "苏宁净水器",
+        "mock": "water_cleaner"
+    },
     "suning_electric_water_heater": {
         "src": "suning_electric_water_heater",
         "name": "苏宁电热水器",

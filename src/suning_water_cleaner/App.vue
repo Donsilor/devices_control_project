@@ -4,7 +4,7 @@
     <div class="water_wave ww2"></div>
     <div class="water_wave ww3"></div>
 
-    <div class="page-on" :style="inPage('index')" v-if="isInit">
+    <div class="page-on" :style="inPage('list')" v-if="isInit">
         <div class="name">{{device_name}}</div>
         <div class="tip">
             <p v-if="inError('E3')"><span @click="toggleErrorModal('E3', true)">漏水</span></p>
@@ -50,10 +50,10 @@
         <filter-items v-if="!hasTDS" :items="filterItems" :view-filter="viewFilter" />
     </div>
 
-    <div class="page-sec" :style="inPage('list')">
+    <div class="page-sec" :style="inPage('index')">
         <div class="topbar">
-            <div class="left"><a href="" class="arrow" @click.prevent="currentPage='index'"></a></div>
-            <div class="title">滤芯详情</div>
+            <!--<div class="left"><a href="" class="arrow" @click.prevent="currentPage='index'"></a></div>-->
+            <div class="title">滤芯寿命</div>
         </div>
         <filter-items :items="filterItems" :view-filter="viewFilter" />
     </div>
@@ -103,17 +103,16 @@
             <div class="p2"> </div>
             <circle-pie class="pie" :value="toPercent(currentFilter.remaining, currentFilter.total)">
                 <p class="p3">预计剩余寿命</p>
-                <p class="p4">{{currentFilter.remaining | toDays}}天</p>
-                <p class="p5">剩余{{toPercent(currentFilter.remaining, currentFilter.total)}}%</p>
+                <p class="p4">{{currentFilter.remaining}}%</p>
             </circle-pie>
-            <div class="btn">
-                <div class="btn-block" :class="{active:isFilterResetActive}">
-                    <a href="" class="reset" @click.prevent="confirmFilterReset">重置剩余时间</a>
-                    <a href="" class="reset_submit" @click.prevent="submitFilterReset">确定重置</a>
-                </div>
-            </div>
+            <!--<div class="btn">-->
+                <!--<div class="btn-block" :class="{active:isFilterResetActive}">-->
+                    <!--<a href="" class="reset" @click.prevent="confirmFilterReset">复位剩余时间</a>-->
+                    <!--<a href="" class="reset_submit" @click.prevent="submitFilterReset">确定重置</a>-->
+                <!--</div>-->
+            <!--</div>-->
 
-            <div class="msg">更换滤芯后请重置剩余时间</div>
+            <!--<div class="msg">更换滤芯后请重置剩余时间</div>-->
         </div>
     </modal>
 
@@ -656,15 +655,15 @@ export default {
         },
         //已过期
         expired_num() {
-            if(!this.model.filter_time_remaining) return 0
-            return this.model.filter_time_remaining.filter((item) => {
+            if(!this.model.filter_lifetime) return 0
+            return this.model.filter_lifetime.filter((item) => {
                 return item <= 0
             }).length
         },
         //即将过期
         expiring_num() {
-            if(!this.model.filter_time_remaining) return 0
-            return this.model.filter_time_remaining.filter((item) => {
+            if(!this.model.filter_lifetime) return 0
+            return this.model.filter_lifetime.filter((item) => {
                 return getDays(item) <= 30
             }).length
         },
@@ -674,8 +673,8 @@ export default {
         },
         expiredFilter() {
             var result = []
-            if(!this.model.filter_time_remaining) return result
-            this.model.filter_time_remaining.forEach((item, index) => {
+            if(!this.model.filter_lifetime) return result
+            this.model.filter_lifetime.forEach((item, index) => {
                 if(item <= 0 && this.expiredStore.indexOf(index) < 0){
                     result.push(index)
                 }
@@ -750,9 +749,9 @@ export default {
         onSuccess(result) {
 
             if(!this.isInit){
-                this.isInit = true
-                HdSmart.UI.hideLoading()
+                 this.isInit = true
             }
+            HdSmart.UI.hideLoading()
 
             var attrs = result.attribute
 
@@ -762,23 +761,23 @@ export default {
 
             this.model = attrs
 
-            var tds = attrs.water_filter_result.TDS
-            if(tds && tds[0] != 65535){
-                this.hasTDS = true
-                this.oldTDS = tds[0]
-                this.nowTDS = tds[1]
-            }else{
-                this.hasTDS = false
-            }
+//            var tds = attrs.water_filter_result.TDS
+//            if(tds && tds[0] != 65535){
+//                this.hasTDS = true
+//                this.oldTDS = tds[0]
+//                this.nowTDS = tds[1]
+//            }else{
+//                this.hasTDS = false
+//            }
 
-            this.filterItems = this.model.filter_time_remaining.map((el ,index) => {
+            this.filterItems = this.model.filter_lifetime.map((el ,index) => {
                 if(el > 0 && this.expiredStore.indexOf(index) >= 0){
                     this.expiredStore.splice(this.expiredStore.indexOf(index), 1)
                 }
-                var total = this.model.filter_time_total[index]
+                // var total = this.model.filter_time_total[index]
                 return {
                     remaining: el,
-                    total: total,
+                    // total: total,
                     index: index
                 }
             })
@@ -800,7 +799,7 @@ export default {
             this.controlDevice('reset_filter', [index+1], () => {
                 HdSmart.UI.toast('重置成功')
                 this.isFilterResetActive = false
-                this.filterItems[index].remaining = this.filterItems[index].total
+                // this.filterItems[index].remaining = this.filterItems[index].total
             },() => {
                 HdSmart.UI.toast('重置失败')
             })

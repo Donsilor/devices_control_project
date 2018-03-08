@@ -2,9 +2,9 @@
     <div id="app" :class="todyClass">
         <div class="title">{{wList.length && wList[0].predictDate}}&nbsp;&nbsp;{{currentWeek}}&nbsp;&nbsp;{{currentOldDay}}</div>
         <div class="city">
-            <div class="city-name">{{city.name}}</div>
+            <div class="city-name" style="margin-top: 10px">{{city.name}}</div>
             <div><span class="img" :class="curMinBg"></span></div>
-            <div class="city-name">{{wList.length && wList[0].tempDay}}℃&nbsp;&nbsp;{{wList.length && wList[0].conditionDay}}</div>
+            <div class="city-name">{{acturlTemp}}℃&nbsp;&nbsp;{{acturlCondition}}</div>
             <div class="city-detail">
                 <!--<span>降水概率：10%</span>-->
                 <!--<span>湿度：74%</span>-->
@@ -27,7 +27,6 @@
 </template>
 <script>
     import jsonp from 'jsonp'
-    import thisJson from './ww.json'
     import cityIdJson from './assets/cityId.json'
     import getOldDate from './getOldDate'
     import remoteLoad from './loadscript'
@@ -40,6 +39,8 @@
                 },
                 todyClass: '',
                 wList: [],
+                acturlCondition: '', //实时天气
+                acturlTemp: '', //实时温度
                 curMinBg: '', //当天天气对应的大图标
                 airLevel: '', //空气质量指数
                 airLevelText: '', //空气质量描述
@@ -206,8 +207,12 @@
                     }
                 }, (res) => {
                     let innerData = res.result || ''
-                    if (innerData && innerData.aqi) {
+                    // 空气质量
+                    if (innerData && innerData.aqi && innerData.aqi.data) {
                         self.renderAQI(innerData.aqi.data['aqi'].value)
+                    }
+                    // 5天实况
+                    if (innerData && innerData.forecast && innerData.forecast.data) {
                         let forecast = innerData.forecast.data['forecast']
                         let newArr = forecast.slice(0, forecast.length - 1)
                         self.wList = newArr.map((item, index) => {
@@ -215,6 +220,13 @@
                             return item
                         })
                         self.renderTodayClass(self.wList[0].conditionIdDay)
+                    }
+                    // 实时天气
+                    if (innerData && innerData.brief && innerData.brief.data) {
+                        self.acturlTemp = innerData.brief.data.condition.temp
+                        self.acturlCondition = innerData.brief.data.condition.condition
+                    } else {
+                        self.actrulTemp = '0'
                     }
                     HdSmart.UI.hideLoading();
                 }, (err) => {
@@ -239,7 +251,6 @@
     }
     #app {
         position: absolute;
-        padding-top: 60px;
         left: 0;
         right: 0;
         top: 0;
@@ -299,7 +310,7 @@
         font-size: 42px;
         .city-name{
             font-size: 42px;
-            margin: 20px 0;
+            margin: 30px 0;
         }
         .city-detail{
             font-size: 30px;
