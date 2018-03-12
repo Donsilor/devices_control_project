@@ -293,8 +293,8 @@
         }
         .desc{
             padding-top: 30px;
-            border-top: 1px solid #dbdbdb;;
-            color:#c8cacc;
+            border-top: 1px solid #dbdbdb;
+            color: #7578a;
             position: relative;
         }
         .desc-cont{
