@@ -307,7 +307,7 @@
                     autoplay: 3000,
                     loop: true,
                     paginationClickable :true,
-                    autoplayDisableOnInteraction: true,
+                    autoplayDisableOnInteraction: false,
                     pagination: '.swiper-pagination',
                     lazyLoading: true
                 },
