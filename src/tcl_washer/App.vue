@@ -875,7 +875,7 @@ export default {
             }
         },
         'model.mode'(nowval, prevval) {
-            if((this.isPause || this.isFinish) &&  prevval){
+            if(this.isPause && prevval){
                 this.model.operation = 'none'
             }
         }
@@ -1097,14 +1097,18 @@ export default {
             }
             this.model = data.attribute
 
-            if(data.attribute.error){
-
-            }
+            this.onAlarm(data.attribute.error)
         },
         onError() {
             this.status = 'error'
         },
-        onAlarm(attr) {
+        onAlarm(errors) {
+            errors = errors || []
+            this.errors = errors.filter((item) => {
+                return item.status == 1
+            })
+        },
+        doAlarm(attr) {
             var code = attr.error_code
             // var index = this.errors.indexOf(code)
             var index = findIndex(this.errors, (item) => {
@@ -1150,7 +1154,11 @@ export default {
                     }
                     break
                 case 'dr_report_dev_alert':
-                    this.onAlarm(data.result.attribute)
+                    if(data.result.attribute.error){
+                        this.onAlarm(data.result.attribute.error)
+                    }else{
+                        this.doAlarm(data.result.attribute)
+                    }
                     break;
                 default:
                     this.onSuccess(data.result)
