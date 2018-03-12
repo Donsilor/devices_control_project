@@ -37,10 +37,7 @@
         <div class="tip">
             <p v-if="inError('E3')"><span @click="toggleErrorModal('E3', true)">漏水</span></p>
             <p v-else-if="inError('E1')"><span>缺水</span></p>
-            <p v-else-if="model.status=='filter'">制水中...</p>
-            <p v-else-if="model.status=='clean'">冲洗中...</p>
-            <p v-else-if="model.status=='standby' && hasTDS && oldTDS">过滤前水质：{{oldTDS}} TDS</p>
-            <p v-else-if="model.status=='standby'">待机</p>
+            <p v-else>{{statusTip}}</p>
         </div>
 
         <a class="view" href="" @click.prevent="currentPage='list'" v-if="hasTDS">
@@ -52,7 +49,7 @@
         <filter-items v-if="!hasTDS" :items="filterItems" :view-filter="viewFilter" />
     </div>
 
-    <div class="page-sec" :style="inPage('list')">
+    <div class="page-sec" :style="inPage('list')" v-if="hasTDS">
         <div class="topbar">
             <div class="left"><a href="" class="arrow" @click.prevent="currentPage='index'"></a></div>
             <div class="title">滤芯详情</div>
@@ -72,7 +69,7 @@
 
     <modal v-for="item in expiredFilter" :key="item" title="净水器滤芯到期" v-model="item.timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
         <div class="alarm">
-            <div class="alert"><i></i>滤芯{{item.index+1}}已到期</div>
+            <div class="alert"><i></i>“净水器”的滤芯{{item.index+1}}已到期</div>
             <div class="text">
                 <p>前置活性炭寿命已到期，请更换以保证饮水质量！</p>
                 <p>请在更换滤芯后重置寿命</p>
@@ -256,7 +253,7 @@ a{
         top: 0;
         background: url(./assets/img_instrument_airquality_pointer.png) no-repeat;
         background-size: 100% 100%;
-        transition: transform 1.5s;
+        // transition: transform 1.5s;
     }
     .value{
         font-family:AbwechselnschriftBold;
@@ -358,7 +355,8 @@ a{
         }
         .progress{
             width: 100%;
-            transition: width 30s;
+            transition-property: width;
+            transition-duration: 30s;
         }
     }
 }
@@ -693,10 +691,20 @@ export default {
             })
             return result
         },
-        expiredFilterText() {
-            return this.expiredFilter.map((item) => {
-                return '滤芯' + (item + 1)
-            }).join('、')
+        statusTip() {
+            if(this.model.status=='filter'){
+                return '制水中...'
+            }
+            if(this.model.status=='clean'){
+                return '冲洗中...'
+            }
+            if(this.model.status=='standby' && this.hasTDS && this.oldTDS){
+                return '过滤前水质：'+this.oldTDS+' TDS'
+            }
+            if(this.model.status=='standby'){
+                return '待机'
+            }
+            return ''
         }
     },
     watch: {
@@ -710,6 +718,16 @@ export default {
                 HdSmart.UI.toggleHeadAndFoot(true)
             }else if(page == 'list'){
                 HdSmart.UI.toggleHeadAndFoot(false)
+            }
+        },
+        'model.status'(newVal, oldVal) {
+            if(oldVal == 'clean' && this.washing){
+                var el = this.$el.querySelector('.progress')
+                el.style.transitionDuration = '1.2s'
+                el.style.width = '100.1%'
+                setTimeout(() => {
+                    el.style.cssText = ''
+                }, 1500)
             }
         }
     },
@@ -753,11 +771,19 @@ export default {
                 return
             }
 
-            this.controlDevice('control', 'clean', () => {
+            //如果正在冲洗中，只是改变下UI状态
+            if(this.model.status == 'clean'){
                 this.washing = true
                 el.washing = true
                 el.addEventListener('transitionend', onWash, false)
-            })
+            }else{
+                this.controlDevice('control', 'clean', () => {
+                    this.washing = true
+                    el.washing = true
+                    el.addEventListener('transitionend', onWash, false)
+                })
+            }
+
         },
         getSnapShot() {
             HdSmart.Device.getSnapShot((data) => {
@@ -765,7 +791,6 @@ export default {
             },() => {})
         },
         onSuccess(result) {
-
             HdSmart.UI.hideLoading()
 
             if(!this.isInit){
@@ -779,6 +804,8 @@ export default {
             }
 
             this.model = attrs
+
+            // this.onAlarm(attrs.error)
 
             var tds = attrs.water_filter_result.TDS
             if(tds && tds[0] != 65535){
@@ -800,12 +827,6 @@ export default {
                     index: index
                 }
             })
-
-            if(this.isInit){
-                this.isInit = true
-                this.onAlarm(attrs.error)
-            }
-
         },
         toPercent(remaining, total) {
             return  Math.ceil(remaining/total*100)
@@ -828,28 +849,30 @@ export default {
             })
         },
         onAlarm(errors) {
+            errors = errors || []
             for(var i=0; i<this.errorStore.length; i++){
-                var index = (errors && errors.error_code) ? errors.error_code.indexOf(this.errorStore[i]) : -1
-                if(index < 0 || (index >= 0 && errors.error_status[index] == 'fixed')){
+                var item = errors.filter((el) => {
+                    return el.code == this.errorStore[i]
+                })
+                if(item.length==0 || item[0].status==0){
                     this.errorStore.splice(i, 1)
                     i--
                 }
             }
-            if(errors && errors.error_code){
-                errors.error_code.forEach((el, j) => {
-                    if(errors.error_status[j] == 'open'){
-                        this.errors.push(el)
-                        if(this.errorStore.indexOf(el) < 0){
-                            this.toggleErrorModal(el, true)
-                        }
+
+            this.errors = errors.map((el) => {
+                if(el.status == 1){
+                    if(this.errorStore.indexOf(el.code) < 0){
+                        this.toggleErrorModal(el.code, true)
                     }
-                })
-            }
+                    return el.code
+                }
+            })
         },
         doAlarm(attr) {
             var code = attr.error_code
             var index = this.errors.indexOf(code)
-            var storeIndex = this.errorStore.indexOf(code)
+            // var storeIndex = this.errorStore.indexOf(code)
 
             if(index >= 0){
                 this.errors.splice(index, 1)
@@ -857,9 +880,9 @@ export default {
 
             if(attr.error_status == 'open'){
                 this.errors.push(code)
-                if(storeIndex < 0){
-                    this.toggleErrorModal(code, true)
-                }
+                // if(storeIndex < 0){
+                //     this.toggleErrorModal(code, true)
+                // }
             }
         },
         inError(error){
@@ -875,7 +898,7 @@ export default {
                             "error_code": error
                         }
                     }
-                })
+                }, () => {})
                 this.errorStore.push(error)
             }
             this.toggleErrorModal(error, false)
@@ -899,6 +922,7 @@ export default {
         }
     },
     created() {
+
         this.$watch('errorStore', () => {
             localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
         })
