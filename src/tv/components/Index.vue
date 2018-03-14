@@ -64,10 +64,8 @@
         </div>
         <div class="control">
             <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
-            <a href="#" class="volup" @touchstart.prevent="volupStart('up')" @touchmove="volupMove('up')" @touchend="volupEnd('up')"></a>
-            <a href="#" class="voldown" @touchstart.prevent="volupStart('down')" @touchmove="volupMove('down')" @touchend="volupEnd('down')"></a>
-            <!--<a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>-->
-            <!--<a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>-->
+            <a href="#" class="volup" v-finger:touch-end="volupEnd" v-finger:touch-move="touchMove" v-finger:long-tap="volupStart" ></a>
+            <a href="#" class="voldown" v-finger:touch-end="voldownEnd" v-finger:touch-move="touchMove"  v-finger:long-tap="voldownStart"></a>
             <a href="#" class="home" @click.prevent="cmd('rcHome')"></a>
             <a href="#" class="menu" @click.prevent="cmd('rcMenu')"></a>
             <a href="#" class="back" @click.prevent="cmd('rcBack')"></a>
@@ -315,7 +313,7 @@
                 "channels_1": [
                      {
                          "channelId": "001",
-                         "channel": "电影"
+                         "channel": "电影12"
                      },
                      {
                          "channelId": "002",
@@ -352,59 +350,33 @@
            }
         },
         methods: {
-            longPressUp () {
-                this.timeOutEventUp = 0
-                // 长按操作
+            touchMove (e) {
+                e.preventDefault()
+            },
+            volupStart () {
+                this.timeOutEventUp = 1
                 this.cmd('rcVolumeUpStart')
             },
-            longPressDown () {
-                this.timeOutEventDown = 0
-                // 长按操作
+            voldownStart () {
+                this.timeOutEventDown = 1
                 this.cmd('rcVolumeDownStart')
             },
-            volupStart (type) {
-                if (type === 'up') {
-                    this.timeOutEventUp = setTimeout(this.longPressUp, 500)
+            volupEnd () {
+                if (this.timeOutEventUp) {
+                    this.cmd('rcVolumeUpStop')
+                    this.timeOutEventUp = 0
                 } else {
-                    this.timeOutEventDown = setTimeout(this.longPressDown, 500)
+                    this.cmd('rcVolumeUp')
                 }
+
             },
-            volupMove (type) {
-                if (type === 'up') {
-                    if (this.timeOutEventUp) {
-                        clearTimeout(this.timeOutEventUp)
-                        this.timeOutEventUp = 0
-                    }
+            voldownEnd () {
+                if (this.timeOutEventDown) {
+                    this.cmd('rcVolumeDownStop')
+                    this.timeOutEventDown = 0
                 } else {
-                    if (this.timeOutEventDown) {
-                        clearTimeout(this.timeOutEventDown)
-                        this.timeOutEventDown = 0
-                    }
+                    this.cmd('rcVolumeDown')
                 }
-            },
-            volupEnd (type) {
-                if (type === 'up') {
-                    if (this.timeOutEventUp) {
-                        clearTimeout(this.timeOutEventUp)
-                    }
-                    if(this.timeOutEventUp != 0){
-                        // 这里是短按
-                        this.cmd('rcVolumeUp')
-                    } else {
-                        this.cmd('rcVolumeUpStop')
-                    }
-                } else {
-                    if (this.timeOutEventDown) {
-                        clearTimeout(this.timeOutEventDown)
-                    }
-                    // 这里是短按
-                    if(this.timeOutEventDown != 0){
-                        this.cmd('rcVolumeDown')
-                    } else {
-                        this.cmd('rcVolumeDownStop')
-                    }
-                }
-                return false;
             },
             cmd(name) {
                 service.onClickEvent(name)

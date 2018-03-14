@@ -13,6 +13,8 @@ import Search from './components/Search.vue'
 import Detail from './components/Detail.vue'
 import Topbar from './components/Topbar.vue'
 import ErrorView from './components/Error.vue'
+import AlloyFinger from 'alloyfinger/alloy_finger'
+import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue'
 //import Statusbar from './components/Statusbar.vue'
 import watermark from '../../lib/watermark'
 import 'swiper/dist/css/swiper.css'
@@ -20,6 +22,9 @@ import 'swiper/dist/css/swiper.css'
 Vue.use(Vuex)
 Vue.use(Router)
 Vue.use(VueAwesomeSwiper)
+Vue.use(AlloyFingerVue, {
+    AlloyFinger
+})
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   attempt: 1

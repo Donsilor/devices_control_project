@@ -19,7 +19,7 @@
     "vuex": "^2.3.1"
   },
   "devDependencies": {
-    "alloyfinger": "^0.1.6",
+    "alloyfinger": "^0.1.13",
     "async": "^2.5.0",
     "atpl": "^0.9.3",
     "autoprefixer": "^6.7.7",
