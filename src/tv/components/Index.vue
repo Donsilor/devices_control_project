@@ -313,7 +313,7 @@
                 "channels_1": [
                      {
                          "channelId": "001",
-                         "channel": "电影12"
+                         "channel": "电影"
                      },
                      {
                          "channelId": "002",
