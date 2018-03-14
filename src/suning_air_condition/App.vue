@@ -38,13 +38,14 @@
                 <ac-button :info="buttonList.dehumidify" :curValue="params[buttonList.dehumidify.type]"
                            @tap="setParam"></ac-button>
                 <ac-button :info="buttonList.on" v-show="params.switch === 'on'" @tap="toggle"></ac-button>
-                <ac-button :info="buttonList.low" :curValue="params[buttonList.low.type]" @tap="setParam" v-if="params[buttonList.low.type]!='overlow'"></ac-button>
-                <ac-button :info="buttonList.overlow" :curValue="params[buttonList.overlow.type]" @tap="setParam" v-if="params[buttonList.overlow.type]=='overlow'"></ac-button>
-                <ac-button :info="buttonList.normal" :curValue="params[buttonList.normal.type]"
-                           @tap="setParam" v-if="params[buttonList.normal.type]!='overnormal'"></ac-button>
-                <ac-button :info="buttonList.overnormal" :curValue="params[buttonList.overnormal.type]"
-                           @tap="setParam" v-if="params[buttonList.overnormal.type]=='overnormal'"></ac-button>
-                <ac-button :info="buttonList.high" :curValue="params[buttonList.high.type]" @tap="setParam"></ac-button>
+
+                <ac-button :info="low" :curValue="params[low.type]" @tap="setParam" v-if="params[low.type]!='overlow'"></ac-button>
+                <ac-button :info="overlow" :curValue="params[overlow.type]" @tap="setParam" v-if="params[overlow.type]=='overlow'"></ac-button>
+                <ac-button :info="normal" :curValue="params[normal.type]"
+                           @tap="setParam" v-if="params[normal.type]!='overnormal'"></ac-button>
+                <ac-button :info="overnormal" :curValue="params[overnormal.type]"
+                           @tap="setParam" v-if="params[overnormal.type]=='overnormal'"></ac-button>
+                <ac-button :info="high" :curValue="params[high.type]" @tap="setParam"></ac-button>
             </div>
             <!--底部按钮End-->
 
@@ -67,7 +68,7 @@
                     </div>
                     <devider :content="'摆风'" style="margin-top: 30px;"></devider>
                     <div class="more-wind-direction">
-                        <ac-button v-if="deviceCategory === 1" :info="lrBtn" @tap="toggle"></ac-button>
+                        <ac-button :info="lrBtn" @tap="toggle"></ac-button>
                         <ac-button :info="udBtn" @tap="toggle"></ac-button>
                     </div>
                     <!--TODO:830以后做-->
@@ -115,9 +116,9 @@
                 <ac-button :info="buttonList.heat"></ac-button>
                 <ac-button :info="buttonList.dehumidify"></ac-button>
                 <ac-button v-show="params.switch === 'off'" :info="buttonList.off" @tap="toggle"></ac-button>
-                <ac-button :info="buttonList.low"></ac-button>
-                <ac-button :info="buttonList.normal"></ac-button>
-                <ac-button :info="buttonList.high"></ac-button>
+                <ac-button :info="low"></ac-button>
+                <ac-button :info="normal"></ac-button>
+                <ac-button :info="high"></ac-button>
             </div>
         </div>
 
@@ -171,17 +172,8 @@
                     cool: new Button('制冷', MODE, 'cold', require('./assets/cool_normal.png'), require('./assets/cool_active.png'), '制冷模式切换成功'),
                     heat: new Button('制热', MODE, 'heat', require('./assets/heat_normal.png'), require('./assets/heat_active.png'), '制热模式切换成功'),
                     dehumidify: new Button('除湿', MODE, 'dehumidify', require('./assets/dehumidify_normal.png'), require('./assets/dehumidify_active.png'), '除湿模式切换成功'),
-//                    mode_auto: new Button('智能', MODE, 'auto', require('./assets/auto_normal.png'), require('./assets/auto_active.png'), '智能模式切换成功'),
-//                    wind: new Button('送风', MODE, 'wind', require('./assets/wind_normal.png'), require('./assets/wind_active.png'), '送风模式切换成功'),
                     mode_auto: new Button('智能', MODE, 'auto', require('./assets/mode_auto_normal.png'), require('./assets/mode_auto_active.png'), '智能模式切换成功'),
                     wind: new Button('送风', MODE, 'wind', require('./assets/mode_air_normal.png'), require('./assets/mode_air_active.png'), '送风模式切换成功'),
-                    //风速
-                    low: new Button('低风', SPEED, 'low', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
-                    overlow: new Button('低风', SPEED, 'overlow', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
-                    normal: new Button('中风', SPEED, 'normal', require('./assets/medium_normal.png'), require('./assets/medium_active.png'), '中风切换成功'),
-                    overnormal: new Button('中风', SPEED, 'overnormal', require('./assets/medium_normal.png'), require('./assets/medium_active.png'), '中风切换成功'),
-                    high: new Button('高风', SPEED, 'high', require('./assets/high_normal.png'), require('./assets/high_active.png'), '高风切换成功'),
-
                     //电源开关
                     on: new Button('', POWER, '', require('./assets/on_normal.png'), require('./assets/on_active.png'), ''),
                     off: new Button('', POWER, '', require('./assets/off_normal.png'), require('./assets/off_active.png'), '')
@@ -243,7 +235,71 @@
                 return obj;
             },
             sleepMode() {
-                return new Button('静眠', SLEEP_MODE, this.params.sleep_mode, require('./assets/sleep_normal.png'), require('./assets/sleep_active.png'))
+                // title, type, value, imgSrc, imgActiveSrc, tip
+                // return new Button('静眠', SLEEP_MODE, this.params.sleep_mode, require('./assets/sleep_normal.png'), require('./assets/sleep_active.png'))
+                return {
+                    title: '静眠',
+                    type: SLEEP_MODE,
+                    value: this.params.sleep_mode,
+                    imgSrc: require('./assets/sleep_normal.png'),
+                    imgActiveSrc: require('./assets/sleep_active.png'),
+                    disabled: this.params.mode == 'auto' || this.params.mode == 'wind' || this.params.mode == 'dehumidify'
+                }
+            },
+            low(){
+                return {
+                    title: '低风',
+                    type: SPEED,
+                    value: 'low',
+                    imgSrc: require('./assets/low_normal.png'),
+                    imgActiveSrc: require('./assets/low_active.png'),
+                    tip: '低风切换成功',
+                    disabled: this.params.mode == 'dehumidify'
+                }
+            },
+            overlow(){
+                return {
+                    title: '低风',
+                    type: SPEED,
+                    value: 'overlow',
+                    imgSrc: require('./assets/low_normal.png'),
+                    imgActiveSrc: require('./assets/low_active.png'),
+                    tip: '低风切换成功',
+                    disabled: this.params.mode == 'dehumidify'
+                }
+            },
+            normal(){
+                return {
+                    title: '中风',
+                    type: SPEED,
+                    value: 'normal',
+                    imgSrc: require('./assets/medium_normal.png'),
+                    imgActiveSrc: require('./assets/medium_active.png'),
+                    tip: '中风切换成功',
+                    disabled: this.params.mode == 'dehumidify'
+                }
+            },
+            overnormal(){
+                return {
+                    title: '中风',
+                    type: SPEED,
+                    value: 'overnormal',
+                    imgSrc: require('./assets/medium_normal.png'),
+                    imgActiveSrc: require('./assets/medium_active.png'),
+                    tip: '中风切换成功',
+                    disabled: this.params.mode == 'dehumidify'
+                }
+            },
+            high(){
+                return {
+                    title: '高风',
+                    type: SPEED,
+                    value: 'high',
+                    imgSrc: require('./assets/high_normal.png'),
+                    imgActiveSrc: require('./assets/high_active.png'),
+                    tip: '高风切换成功',
+                    disabled: this.params.mode == 'dehumidify'
+                }
             },
             lrBtn: function () {
                 return new Button('左右', WIND_LEFT_RIGHT, this.params.wind_left_right, require('./assets/horizontal_normal.png'), require('./assets/horizontal_active.png'));
@@ -259,7 +315,7 @@
                     imgActiveSrc: require('./assets/minus_pressed.png'),
                     value: this.fakeTemp - 1,
                     //送风模式下不能设置温度
-                    disabled: this.params.mode === 'wind',
+                    disabled: this.params.mode === 'auto',
                     //允许连续点击
                     continuousClick: true
                 }
@@ -272,7 +328,7 @@
                     imgActiveSrc: require('./assets/plus_pressed.png'),
                     value: this.fakeTemp + 1,
                     //送风模式下不能设置温度
-                    disabled: this.params.mode === 'wind',
+                    disabled: this.params.mode === 'auto',
                     //允许连续点击
                     continuousClick: true
                 }
@@ -342,7 +398,9 @@
                         this.initErr = false;
                         this.setState(data.attribute);
                         // if(!this.deviceName){
-                        this.deviceName = data.device_name;
+                        if(data.device_name){
+                            this.deviceName = data.device_name;
+                        }
                         this.deviceCategory = data.attribute.deviceSubCategory;
                         // }
                     }
@@ -451,16 +509,6 @@
                 //如果参数值没有变化，直接返回(设置温度除外)
                 if (that.params[type] === value && type !== TEMPERATURE) {
                     that.removePressedClass(that.curButton);
-                    return;
-                }
-
-                //判断是否为重置命令
-                if(that.isResetCommand(type, value)){
-                    that.removePressedClass(that.curButton);
-                    //如果当前设置的是温度，需要改回去
-                    if (type === TEMPERATURE) {
-                        that.fakeTemp = that.params.temperature;
-                    }
                     return;
                 }
 
@@ -1015,6 +1063,8 @@
     .disabled img {
         filter: invert(12%);
     }
+
+    .on .more-mode .disabled{opacity: .5}
 
     /*.pageTip{
         opacity:0.8;

@@ -306,9 +306,9 @@
             }
         },
         watch: {
-            word() {
-                // if(this.word === '' && this.curpage === 2){
-                if(this.word === ''){
+            word(val) {
+                if(val == ''){
+                    this.word = ' '
                     this.curpage = 1
                 }
             },
