@@ -58,7 +58,7 @@
                     </div>
                     <devider :content="'摆风'"></devider>
                     <div class="more-wind-direction">
-                        <ac-button v-if="deviceCategory === 1" :info="lrBtn" @tap="toggle"></ac-button>
+                        <ac-button :info="lrBtn" @tap="toggle"></ac-button>
                         <ac-button :info="udBtn" @tap="toggle"></ac-button>
                     </div>
                     <!--TODO:830以后做-->
@@ -136,7 +136,7 @@
     const [ON, OFF] = ['on', 'off'];
     const NODE_ID = 'airconditioner.main.';
     //连续设置时间判断间隔
-    const SPAN = 300;
+    const SPAN = 500;
     //loading效果延迟
     const LOADING_DELAY = 600;
     //loading class
@@ -331,7 +331,9 @@
                         this.initErr = false;
                         this.setState(data.attribute);
                         // if(!this.deviceName){
-                        this.deviceName = data.device_name;
+                        if(data.device_name){
+                            this.deviceName = data.device_name;
+                        }
                         this.deviceCategory = data.attribute.deviceSubCategory;
                         // }
                     }
@@ -356,7 +358,7 @@
 //                if (attr.deviceSubCategory != undefined) {
 //                    this.params.deviceSubCategory = attr.deviceSubCategory;
 //                }
-                if(attr.temperature != undefined){
+                if(attr.temperature != undefined && !this.tempFlag){
                     this.params.temperature = attr.temperature;
                     this.fakeTemp = attr.temperature;
                 }
