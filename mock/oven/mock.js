@@ -22,6 +22,7 @@ let res = {
     status: 'stop',
     reserve_bake: 1,
     remaining: 88,
+    step: 'bake',
     mode: 'barbecues', //模式
     temperature: 220, //温度
     bake_duration: 30, //时长
