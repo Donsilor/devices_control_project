@@ -808,7 +808,7 @@ export default {
 
             this.model = attrs
 
-            // this.onAlarm(attrs.error)
+            this.onAlarm(attrs.error)
 
             var tds = attrs.water_filter_result.TDS
             if(tds && tds[0] != 65535){
@@ -893,15 +893,15 @@ export default {
         },
         confirmError(error) {
             if(this.errorStore.indexOf(error) < 0){
-                HdSmart.Device.control({
-                    method: 'dm_set',
-                    "nodeid": "wifi.main.alarm_confirm",
-                    "params": {
-                        "attribute": {
-                            "error_code": error
-                        }
-                    }
-                }, () => {})
+                // HdSmart.Device.control({
+                //     method: 'dm_set',
+                //     "nodeid": "wifi.main.alarm_confirm",
+                //     "params": {
+                //         "attribute": {
+                //             "error_code": error
+                //         }
+                //     }
+                // }, () => {})
                 this.errorStore.push(error)
             }
             this.toggleErrorModal(error, false)

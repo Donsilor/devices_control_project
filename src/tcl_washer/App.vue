@@ -1119,8 +1119,7 @@ export default {
         onAlarm(errors) {
             errors = errors || []
             this.errors = errors.filter((item) => {
-                // return item.status == 1
-                return true
+                return item.status == 1
             })
         },
         doAlarm(attr) {
@@ -1150,15 +1149,15 @@ export default {
                 onText: '知道了'
             }, (val) => {
                 if(val){
-                    HdSmart.Device.control({
-                        method: 'dm_set',
-                        "nodeid": "wifi.main.alarm_confirm",
-                        "params": {
-                            "attribute": {
-                                "error_code": err.code
-                            }
-                        }
-                    }, () => {})
+                    // HdSmart.Device.control({
+                    //     method: 'dm_set',
+                    //     "nodeid": "wifi.main.alarm_confirm",
+                    //     "params": {
+                    //         "attribute": {
+                    //             "error_code": err.code
+                    //         }
+                    //     }
+                    // }, () => {})
                 }
             })
         },
