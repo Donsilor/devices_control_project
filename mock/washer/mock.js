@@ -13,7 +13,10 @@ let res = {
     add_laundry_switch: '',
     mode: 'mix',
     time_use: '100',
-    time_left: '80'
+    time_left: '80',
+    reserve_wash: 8,
+    temperature: 0,
+    drying: ''
 }
 
 export function generateSnapShot() {

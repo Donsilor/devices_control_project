@@ -61,31 +61,8 @@
                         <ac-button v-if="deviceCategory === 1" :info="lrBtn" @tap="toggle"></ac-button>
                         <ac-button :info="udBtn" @tap="toggle"></ac-button>
                     </div>
-                    <!--TODO:830以后做-->
-                    <!--<devider :content="'定时'"></devider>-->
-                    <!--<div class="more-timing">-->
-                    <!--<ac-switch :title="'开机时间'" :time="params.bootTime" :on="params.bootSwitch"-->
-                    <!--@change="bootTpVisible = params.bootSwitch"-->
-                    <!--@toggle="toggle('bootSwitch')"></ac-switch>-->
-                    <!--<ac-switch :title="'关机时间'" :time="params.offTime" :on="params.offSwitch"-->
-                    <!--@change="offTpVisible = params.offSwitch" @toggle="toggle('offSwitch')"></ac-switch>-->
-                    <!--</div>-->
                 </div>
             </transition>
-            <!--更多子菜单End-->
-
-            <!--时间选择器Start-->
-            <!--<transition name="fade">-->
-            <!--<time-picker v-show="bootTpVisible" :vis="bootTpVisible" :hour="bootHour" :minute="bootMinute"-->
-            <!--:title="'设置空调开机时间'"-->
-            <!--@vchange="setBootTimePickerVisibility" @change="setBootTime"></time-picker>-->
-            <!--</transition>-->
-            <!--<transition name="fade">-->
-            <!--<time-picker v-show="offTpVisible" :vis="offTpVisible" :hour="offHour" :minute="offMinute"-->
-            <!--:title="'设置空调关机时间'"-->
-            <!--@vchange="setOffTimePickerVisibility" @change="setOffTime"></time-picker>-->
-            <!--</transition>-->
-            <!--时间选择器End-->
         </div>
 
         <!--关机界面-->
@@ -136,7 +113,7 @@
     const [ON, OFF] = ['on', 'off'];
     const NODE_ID = 'airconditioner.main.';
     //连续设置时间判断间隔
-    const SPAN = 500;
+    const SPAN = 600;
     //loading效果延迟
     const LOADING_DELAY = 800;
     //loading class
@@ -148,12 +125,6 @@
 
     //Button构造方法
     function Button(title, type, value, imgSrc, imgActiveSrc, tip) {
-        // this.title = title;
-        // this.type = type;
-        // this.value = value;
-        // this.imgSrc = imgSrc;
-        // this.imgActiveSrc = imgActiveSrc;
-        // this.tip = tip;
         return {
             title,
             type,
@@ -163,6 +134,8 @@
             tip
         }
     }
+
+    var temperatureRadio = 1
 
     export default {
         components: {AcButton, Devider,  AcSwitch}, //TimePicker,
@@ -273,24 +246,13 @@
                     //允许连续点击
                     continuousClick: true
                 }
-            },
-            bootHour: function () {
-                return this.getHour(this.params.bootTime);
-            },
-            bootMinute: function () {
-                return this.getMinute(this.params.bootTime);
-            },
-            offHour: function () {
-                return this.getHour(this.params.offTime);
-            },
-            offMinute: function () {
-                return this.getMinute(this.params.offTime);
             }
         },
         watch: {
             tempFlag(val){
                 if (!val) {
-                    this.setParam(TEMPERATURE, this.fakeTemp*10, '温度设置成功', this.curButton);
+                    alert(this.params.temperature)
+                    this.setParam(TEMPERATURE, this.fakeTemp * temperatureRadio, '温度设置成功', this.curButton);
                 }
             }
         },
@@ -362,12 +324,11 @@
                 }
 
                 if(attr.temperature != undefined && !this.tempFlag){
-                    var t = parseInt(attr.temperature)
-                    if(t > 100){
-                        t = t / 10
+                    if(attr.temperature > 100){
+                        temperatureRadio = 10
                     }
-                    this.params.temperature = t;
-                    this.fakeTemp = t;
+                    this.params.temperature = attr.temperature / temperatureRadio;
+                    this.fakeTemp = attr.temperature / temperatureRadio
                 }
                 if(attr.mode != undefined){
                     this.params.mode = attr.mode;
@@ -383,7 +344,7 @@
                 }
 
                 if(this.params.mode == 'wind' && attr.env_temperature){
-                    this.fakeTemp = attr.env_temperature
+                    this.fakeTemp = attr.env_temperature >= 100 ? attr.env_temperature/10 : attr.env_temperature
                 }else if(this.params.mode == 'dehumidify'){
                     this.params.speed = 'auto'
                     // this.fakeTemp = 23
@@ -455,26 +416,21 @@
                     params: {
                         attribute: attr
                     }
-                },
-                //HdSmart.Device.instruct('dm_set', NODE_ID + type, attr,
-                    () => {
-                        that.removeLoading();
-                        that.removePressedClass(that.curButton);
+                }, () => {
+                    that.removeLoading();
+                    that.removePressedClass(that.curButton);
 
-                        that.params[type] = value;
-                        that.setTip(tip);
-                    },
-                    (data) => {
-                        that.removeLoading();
-                        that.removePressedClass(that.curButton);
+                    that.params[type] = value;
+                    that.setTip(tip);
+                }, (data) => {
+                    that.removeLoading();
+                    that.removePressedClass(that.curButton);
 
-                        if (type === TEMPERATURE && !this.tempFlag) {
-                            that.fakeTemp = that.params.temperature;
-                        }
-                        that.setTip('设置失败');
-//                        alert('控制失败：' + JSON.stringify(that.params));
+                    if (type === TEMPERATURE && !this.tempFlag) {
+                        that.fakeTemp = that.params.temperature;
                     }
-                );
+                    that.setTip('设置失败');
+                });
             },
             //添加loading效果
             addLoading(el){
@@ -500,47 +456,8 @@
                     this.loadingElement = null;
                 }
             },
-            setTimer(switchType, switchValue, time, tip){
-                //没有设置时间，不发送指令
-                if (!time) {
-                    this.params[switchType] = switchValue;
-                    this.setTip(tip);
-                    return;
-                }
-
-                let timerObj = this.getTimerObj(switchValue, time);
-
-                let attr = {};
-                attr[POWER] = switchType === BOOT_SWITCH ? ON : OFF;
-
-                HdSmart.Device.control({
-                    method: 'dm_set',
-                    nodeid: NODE_ID + POWER,
-                    params: {
-                        attribute: attr
-                    }
-                },
-                //HdSmart.Device.instruct('set', NODE_ID + POWER, attr,
-                    () => {
-                        this.params[switchType] = switchValue;
-                        if (switchType === BOOT_SWITCH) {
-                            this.params.bootTime = time;
-                        }
-                        else if (switchType === OFF_SWITCH) {
-                            this.params.offTime = time;
-                        }
-                        this.setTip(tip);
-                    },
-                    () => {
-                        this.setTip('设置失败');
-                    }
-                );
-            },
             setTemperature(type, value, tip, el){
-//                if(this.curButton && this.curButton != el){
-//                    this.removePressedClass(this.curButton);
-//                }
-//                this.curButton = el;
+
                 this.addPressedClass(el);
 
                 //送风模式不能设置温度
@@ -588,53 +505,6 @@
                     this.tempFlag = false;
                 }, SPAN);
             },
-            getTimerObj(switchValue, time){
-                if (switchValue === true) {//打开开关
-                    return {operation: "add", time: time, periodic: 1};
-                }
-                else {
-                    return {operation: "delete"};
-                }
-            },
-            setBootTimePickerVisibility(visible){
-                this.bootTpVisible = visible
-            },
-            setOffTimePickerVisibility(visible){
-                this.offTpVisible = visible
-            },
-            setBootTime(value){
-//                this.setParam('bootTime', value);
-                if (value !== this.params.bootTime) {
-                    this.setTimer(BOOT_SWITCH, true, value, '开机时间设置成功');
-                }
-                this.bootTpVisible = false;
-            },
-            setOffTime(value){
-//                this.setParam('offTime', value);
-                if (value !== this.params.offTime) {
-                    this.setTimer(OFF_SWITCH, true, value, '关机时间设置成功');
-                }
-                this.offTpVisible = false;
-            },
-            getHour(str){
-                var arr = str.split(':');
-                var s = '';
-                if (arr.length > 0) {
-                    s = arr[0].trim();
-                }
-
-                return s.length > 0 ? s : '12';
-            },
-            getMinute(str){
-                var arr = str.split(':');
-                var s = '';
-
-                if (arr.length > 1) {
-                    s = arr[1].trim();
-                }
-
-                return s.length > 0 ? s : '30';
-            },
             setTip(tip){
                 this.tip = tip || '';
                 clearTimeout(this.tipTimer);
@@ -680,7 +550,7 @@
                 obj[MODE] = this.params[MODE];
                 obj[type] = value;
 
-                if(obj[TEMPERATURE] === 30 && obj[SPEED] === 'low' && obj[MODE] === 'cold'){
+                if(obj[TEMPERATURE] === MAX_TEMP && obj[SPEED] === 'low' && obj[MODE] === 'cold'){
                     return true;
                 }
 
@@ -964,8 +834,9 @@
     }
 
     /*disabled样式*/
-    .disabled img {
+    .off .disabled img {
         filter: invert(12%);
     }
 
+    .on .disabled{opacity: .5}
 </style>

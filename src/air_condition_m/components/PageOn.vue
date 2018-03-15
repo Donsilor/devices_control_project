@@ -118,7 +118,7 @@ export default {
     data() {
         return {
             isIOS: /iphone|ipad/i.test(navigator.userAgent),
-            temperature: this.ac.temperature,
+            temperature: this.ac.temperature > 100 ? this.ac.temperature/10 : this.ac.temperature,
             toggle: false,
             tipVisible: false,
             tip: '',
@@ -128,7 +128,11 @@ export default {
         //同步
         syncTemp() {
             if(tempFlag){
-                this.temperature = this.ac.temperature
+                if(this.ac.temperature > 100){
+                    this.temperature = this.ac.temperature / 10
+                }else{
+                    this.temperature = this.ac.temperature
+                }
             }
         },
         setOff(event) {
@@ -163,7 +167,7 @@ export default {
                 tempFlag = true
                 this.control(
                     'temperature',
-                    this.temperature,
+                    this.ac.temperature > 100 ? this.temperature * 10 : this.temperature,
                     event.target,
                     this.onSetSuccess(tips.temperature),
                     this.onSetError(true)
