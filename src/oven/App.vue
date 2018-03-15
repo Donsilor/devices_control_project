@@ -7,7 +7,7 @@
             <h3 class="main-title">烤箱</h3>
             <div class="pannel">
                 <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
-                <p class="color-gray">(预约中)</p>
+                <p class="color-gray">({{allAttribute.step === 'bake' ?  '烘烤中' : '预约中'}})</p>
                 <div class="p-main-time">
                     <p class="p-num"><strong>{{allAttribute.remaining}}</strong>分&nbsp;&nbsp;钟</p>
                     <p class="color-gray">剩余总时间</p>
@@ -68,12 +68,12 @@
                     </div>
                     <div class="slide-list" v-if="wenduSelectFlag">
                         <div class="slide-list-inner">
-                            <a v-for="item in allAttribute.wenduList" @click="selectWendu(item)" :class="item.active?'active':''">{{item.name}}</a>
+                            <a v-for="item in allAttribute.wenduList" @touchmovc="touchMove"  @touchend="selectWendu(item)"  :class="item.active?'active':''">{{item.name}}</a>
                         </div>
                     </div>
                     <div class="slide-list" v-if="timeSelectFlag">
                         <div class="slide-list-inner">
-                            <a v-for="item in allAttribute.timeList" @click="selectTime(item)" :class="item.active?'active':''">{{item.name}}</a>
+                            <a v-for="item in allAttribute.timeList" @touchmovc="touchMove"  @touchend="selectTime(item)" :class="item.active?'active':''">{{item.name}}</a>
                         </div>
                     </div>
                     <div class="select-param">
@@ -91,6 +91,20 @@
     </div>
 </template>
 <script>
+    const getWenduList = (begin,end) => {
+        let arr = []
+        for (let i = begin; i<=end; i += 5) {
+            arr.push({name: i, value: i, active: false})
+        }
+        return arr
+    }
+    const getTimeList = (begin,end) => {
+        let arr = []
+        for (let i = begin; i<=end; i++ ) {
+            arr.push({name: i, value: i, active: false})
+        }
+        return arr
+    }
     import * as service from './service'
     import SwitchButton from './components/SwitchButton.vue'
     import AllConfig from './config'
@@ -106,15 +120,16 @@
                     mode: 'cake', //模式
                     temperature: 100, //温度
                     bake_duration: 0, //时长
+                    step: '',
                     switch: 'off',
-                    status: 'start',
+                    status: 'stop',
                     reserve_bake: 1,
                     convection: 'on',
                     rotisserie: 'on',
                     remaining: 88,
                     fire: '',
-                    wenduList: [],
-                    timeList: []
+                    wenduList: getWenduList(100,230),
+                    timeList: getTimeList(1,60)
                 },
                 //模式
                 tempMode: '', //临时变量，点击确认的时候才赋值给真mode
@@ -189,7 +204,8 @@
                 ],
                 //出错信息
                 errors: [],
-                status: ''
+                status: '',
+                firstIn: true
             }
         },
         watch: {
@@ -330,6 +346,9 @@
                     }
                 }
             },
+            touchMove (e) {
+                e.preventDefault()
+            },
             selectWendu (item) {
                 this.setTemperature(item.value, () => {
                     let wenduList = this.allAttribute.wenduList
@@ -395,12 +414,19 @@
                 }
             },
             onSuccess(data) {
-                console.log(data)
                 this.status = 'success'
                 let attributes = data.attribute
                 let curAttributes = this.allAttribute
                 for (let attr in curAttributes) {
-                    curAttributes[attr] = attributes[attr]
+                    if (attributes[attr]) {
+                        curAttributes[attr] = attributes[attr]
+                    }
+                }
+                if (this.firstIn) {
+                    let currentData = AllConfig[attributes.mode]
+                    this.allAttribute['wenduList'] = currentData['wenduList']
+                    this.allAttribute['timeList'] = currentData['timeList']
+                    this.firstIn = false
                 }
             },
             onError() {
@@ -451,12 +477,12 @@
                 }
             },
             // 设置模式
-            setMode () {
+            setMode (mode) {
                 if (this.allAttribute.status === 'start') {
                     return
                 }
                 const obj = this
-                this.controlDevice('mode',this.allAttribute.mode, ()=>{
+                this.controlDevice('mode',obj.tempMode, ()=>{
                     obj.maskLyerShow = false
                     obj.modelLayerShow = false
                     obj.allAttribute.mode = obj.tempMode
@@ -497,11 +523,11 @@ body {
     margin: 0;
     height: 600px;
     font-size: 30px;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    /*-webkit-tap-highlight-color: transparent;*/
+    /*-webkit-user-select: none;*/
+    /*-moz-user-select: none;*/
+    /*-ms-user-select: none;*/
+    /*user-select: none;*/
     background: #f3f3f3;
     color: #333;
     font-family: NotoSansHans-Regular;
@@ -531,7 +557,7 @@ body {
 }
 .wrapper{
     text-align: center;
-    margin-top: 80px;
+    margin-top: 100px;
     height: 600px;
     left: 50%;
     width: 900px;
@@ -613,18 +639,18 @@ body {
     font-size: 24px;
     color: #76787a;
     width: 1300px;
-    height: 832px;
+    height: 780px;
     position: absolute;
     z-index: 9999;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -60%);
     background:#ffffff;
-    box-shadow:0 3px 12px 0 rgba(0,0,0,0.10);
+    /*box-shadow:0 3px 12px 0 rgba(0,0,0,0.10);*/
     border-radius:6px;
     .layer-header{
         height: 84px;
-        box-shadow:inset 0 -1px 0 0 #dbdbdb;
+        //box-shadow:inset 0 -1px 0 0 #dbdbdb;
         text-align: center;
         position: relative;
         h3{
@@ -649,7 +675,7 @@ body {
     }
     .layer-bottom-btn{
         clear: both;
-        margin-top: 110px;
+        margin-top: 60px;
         text-align: center;
         button{
             border:1px solid #76787a;
@@ -784,7 +810,7 @@ body {
     }
 }
 .model-more-layer{
-    height: 849px;
+    height: 820px;
     .more-model-title{
         color: #c8cacc;
         height: 70px;
@@ -834,8 +860,8 @@ body {
             border-top:1px solid #d8d8d8;
             position: relative;
             padding:0 45px;
-            height: 90px;
-            line-height: 90px;
+            height: 80px;
+            line-height: 80px;
             .value-wendu{
                 color:#46bcff;
                 position: absolute;
@@ -862,19 +888,23 @@ body {
             }
         }
         .slide-list{
-            overflow: scroll;
-            &::-webkit-scrollbar {display:none}
-            padding: 31px 15px;
+            padding: 0 15px 10px;
             .slide-list-inner{
-                margin: 0;
-                width: 9000px;
+                /*&::-webkit-scrollbar {width: 10px}*/
+                &::-webkit-scrollbar {display:none}
+                margin: 0 auto;
+                width: 150px;
+                height: 140px;
+                overflow-y: auto;
+                /*display: -webkit-box;*/
+                /*-webkit-box-orient: horizontal;*/
+                /*width: auto;*/
                 a{
-                    display: inline-block;
+                    display: block;
                     width: 90px;
                     height: 60px;
                     text-align: center;
                     line-height: 60px;
-
                     &.active{
                         background: #46bcff;
                         border:1px solid #46bcff;
