@@ -78,9 +78,6 @@
         },
         methods:{
             tap(){
-                if(this.info.disabled){
-                    return
-                }
                 //不允许连续点击，添加timer及tag判断
                 if(!this.info.continuousClick){
                     if(this.processing){

@@ -26,10 +26,16 @@
                 <div class="wave wave1"></div>
                 <div class="wave wave2"></div>
                 <div class="title">{{currentModeConfig.text}}模式</div>
-                <div class="sub_title">剩余总时间</div>
-                <div class="timeleft" v-html="time_left"></div>
+                <template v-if="model.operation == 'reserve'">
+                    <div class="sub_title">预约时间</div>
+                    <div class="timeleft">{{model.reserve_wash}}<small>时</small></div>
+                </template>
+                <template v-else>
+                    <div class="sub_title">剩余总时间</div>
+                    <div class="timeleft" v-html="time_left"></div>
+                </template>
                 <div class="status">{{operationText}}</div>
-                <div class="lock"></div>
+                <div class="lock" v-show="childLockSwitch"></div>
             </div>
         </div>
         <!-- 完成 -->
@@ -38,7 +44,7 @@
             <a href="" class="btn btn-start" v-show="isStandby || isPause || isFinish" @click.prevent="setControl('start')"><i></i>启动</a>
             <a href="" class="btn btn-pause" v-show="isRun" @click.prevent="setControl('halt')"><i></i>暂停</a>
             <a href="" class="btn btn-mode" @click.prevent="modeModalVisible = true"><i></i>模式选择</a>
-            <a href="" class="btn btn-reserve" @click.prevent="reserveModalVisible = true"><i></i>预约洗衣</a>
+            <!-- <a href="" class="btn btn-reserve" @click.prevent="reserveModalVisible = true"><i></i>预约洗衣</a> -->
         </div>
 
         <!-- 模式 -->
@@ -138,7 +144,7 @@
                         <div class="hd">
                             <div class="left">童锁</div>
                             <div class="right sb-wrap">
-                                <switch-button :value="childLockSwitch" :sync="true" />
+                                <switch-button :value="childLockSwitch" :sync="true" :disabled="!isRun" />
                                 <div class="sb-btn" @click="confirmChildLock"></div>
                             </div>
                         </div>
@@ -1023,7 +1029,9 @@ export default {
             if(item.value == this.currentTemperature.value){
                 return
             }
-            this.controlDevice('temperature', parseInt(item.value))
+            this.controlDevice('temperature', parseInt(item.value), () => {
+                this.model.temperature = item.value
+            })
         },
         setDetergent(item) {
             if(this.isRun){
@@ -1032,7 +1040,9 @@ export default {
             if(item.value == this.currentDetergent.value){
                 return
             }
-            this.controlDevice('auto_detergent_switch', item.value)
+            this.controlDevice('auto_detergent_switch', item.value, () => {
+                this.model.auto_detergent_switch = item.value
+            })
         },
         setDrying(item) {
             if(this.isRun){
@@ -1041,7 +1051,9 @@ export default {
             if(item.value == this.currentDrying.value){
                 return
             }
-            this.controlDevice('drying', item.value)
+            this.controlDevice('drying', item.value, () => {
+                this.model.drying = item.value
+            })
         },
         cancelReserve() {
             this.reserveModalVisible = false
@@ -1059,7 +1071,9 @@ export default {
                 this.confirmChildLockVisible = true
             }else{
                 if(this.isRun){
-                    this.setChildLock('on')
+                    this.setChildLock('on', () => {
+                        this.model.child_lock_switch = 'on'
+                    })
                 }else{
                     HdSmart.UI.toast('运行中才能开启童锁')
                 }
@@ -1068,7 +1082,7 @@ export default {
         submitChildLock() {
             this.setChildLock('off', () => {
                 this.confirmChildLockVisible = false
-                this.child_lock_switch = 'off'
+                this.model.child_lock_switch = 'off'
             })
         },
         toggleSet(index) {
@@ -1105,7 +1119,8 @@ export default {
         onAlarm(errors) {
             errors = errors || []
             this.errors = errors.filter((item) => {
-                return item.status == 1
+                // return item.status == 1
+                return true
             })
         },
         doAlarm(attr) {
@@ -1133,7 +1148,19 @@ export default {
                 message: err.code + ' ' + msg,
                 cancelText: '',
                 onText: '知道了'
-            }, (val) => {})
+            }, (val) => {
+                if(val){
+                    HdSmart.Device.control({
+                        method: 'dm_set',
+                        "nodeid": "wifi.main.alarm_confirm",
+                        "params": {
+                            "attribute": {
+                                "error_code": err.code
+                            }
+                        }
+                    }, () => {})
+                }
+            })
         },
         inError(error){
             return findIndex(this.errors, (item) => {

@@ -71,7 +71,7 @@
         <div class="alarm">
             <div class="alert"><i></i>“净水器”的滤芯{{item.index+1}}已到期</div>
             <div class="text">
-                <p>前置活性炭寿命已到期，请更换以保证饮水质量！</p>
+                <p>{{getName(item.index)}}寿命已到期，请更换以保证饮水质量！</p>
                 <p>请在更换滤芯后重置寿命</p>
             </div>
 
