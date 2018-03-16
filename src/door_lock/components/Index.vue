@@ -209,21 +209,21 @@ export default {
     onAlarm(attr) {
       let alertArry = [];
       const _this = this;
-      attr.error_code.forEach(function(v, i) {
-        if (error_status[i] == "open") {
+      attr.error.forEach(function(v, i) {
+        if (v.status) {
           let key = 1;
-          if (v == "e1") {
+          if (v.code == "e1") {
             _this.lowBattery = true;
             key = 0;
           }
           alertArry.push({
-            msg:WARN_CODE[v].msg,
+            msg:WARN_CODE[v.code].msg,
             key:key,
-            switch:WARN_CODE[v].switch
+            switch:WARN_CODE[v.code].switch
             });
         }
         else{
-          if(v == "e1"){
+          if(v.code == "e1"){
             _this.lowBattery = false;
           }
         }
