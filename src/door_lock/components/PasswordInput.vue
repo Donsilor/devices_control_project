@@ -186,8 +186,9 @@ export default {
         return;
       }
       let tmp = this.psw.map(x => {
-        return (x ^ 0xa5).toString(16);
+        return (x.charCodeAt(0) ^ 0xa5).toString(16);
       });
+      alert(tmp.join(''))
 
       //发送指令
       HdSmart.Device.control(
@@ -202,12 +203,12 @@ export default {
           }
         },
         () => {
-          HdSmart.UI.toast("开锁成功");
+          //HdSmart.UI.toast("开锁成功");
           this.close();
         },
         data => {
           HdSmart.UI.toast("开锁失败！");
-          this.msg = '密码错误，请重新输入';
+          //this.msg = '密码错误，请重新输入';
         }
       );
     },
