@@ -252,7 +252,7 @@
         watch: {
             tempFlag(val){
                 if (!val) {
-                    this.setParam(TEMPERATURE, this.fakeTemp * temperatureRadio, '温度设置成功', this.curButton);
+                    this.setParam(TEMPERATURE, this.fakeTemp, '温度设置成功', this.curButton);
                 }
             }
         },
@@ -391,7 +391,7 @@
                 that.addLoading(el);
 
                 let attr = {};
-                attr[type] = value;
+                attr[type] = type == TEMPERATURE ? value*temperatureRadio : value;
                 //发送指令
                 HdSmart.Device.control({
                     method: 'dm_set',

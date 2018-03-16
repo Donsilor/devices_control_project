@@ -118,7 +118,7 @@ export default {
     data() {
         return {
             isIOS: /iphone|ipad/i.test(navigator.userAgent),
-            temperature: this.ac.temperature > 100 ? this.ac.temperature/10 : this.ac.temperature,
+            temperature: this.ac.temperature,
             toggle: false,
             tipVisible: false,
             tip: '',
@@ -128,11 +128,7 @@ export default {
         //同步
         syncTemp() {
             if(tempFlag){
-                if(this.ac.temperature > 100){
-                    this.temperature = this.ac.temperature / 10
-                }else{
-                    this.temperature = this.ac.temperature
-                }
+                this.temperature = this.ac.temperature
             }
         },
         setOff(event) {
@@ -145,34 +141,46 @@ export default {
             )
         },
         setTemperature(val, event) {
-            if(val > 0 && this.temperature === MAX_TEMP){
-                this.showTip(tips.err_temp2)
-                return
+            var temp = this.temperature + val
+
+            if(temp < MIN_TEMP){
+                if(this.temperature == MIN_TEMP){
+                    this.showTip(tips.err_temp3)
+                    return
+                }else{
+                    temp = MIN_TEMP
+                }
             }
-            if(val < 0 && this.temperature === MIN_TEMP){
-                this.showTip(tips.err_temp3)
-                return
+
+            if(temp > MAX_TEMP){
+                if(this.temperature == MAX_TEMP){
+                    this.showTip(tips.err_temp2)
+                    return
+                }else{
+                    temp = MAX_TEMP
+                }
             }
-            if(this.checkCmd('temperature',this.temperature+val)){
+
+            if(this.checkCmd('temperature', temp)){
                 return
             }
             if(this.ac.mode === 'wind'){
                 this.showTip(tips.err_temp1)
                 return
             }
-            this.temperature += val
+            this.temperature = temp
             clearTimeout(tempDelay)
             tempFlag = false
             tempDelay = setTimeout(()=>{
                 tempFlag = true
                 this.control(
                     'temperature',
-                    this.ac.temperature > 100 ? this.temperature * 10 : this.temperature,
+                    this.temperature,
                     event.target,
                     this.onSetSuccess(tips.temperature),
                     this.onSetError(true)
                 )
-            },300)
+            },500)
         },
         setSpeed(event) {
             var index = SPEED.indexOf(this.ac.speed)
@@ -239,7 +247,7 @@ export default {
         checkCmd(attr, val) {
             var ac = JSON.parse(JSON.stringify(this.ac))
             ac[attr] = val
-            if(ac.temperature===30 && ac.speed==='low' && ac.mode==='cold'){
+            if(ac.temperature==MAX_TEMP && ac.speed=='low' && ac.mode=='cold'){
                 return true
             }
             return false
