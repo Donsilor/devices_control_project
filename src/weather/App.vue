@@ -206,7 +206,7 @@
                         cityId: JSON.stringify(curId)
                     }
                 }, (res) => {
-                    let innerData = res.result || ''
+                    let innerData = (res.result && res.result.data) || ''
                     // 空气质量
                     if (innerData && innerData.aqi) {
                         self.renderAQI(innerData.aqi.value)
