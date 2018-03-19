@@ -23,6 +23,7 @@ import PageError from './components/PageError.vue'
 
 const DefaultSpin = require('./assets/buffering_power_white.gif')
 const BlueSpin = require('./assets/buffering_power_blue.gif')
+let tempRadio = 1
 
 export default {
     components: {
@@ -57,7 +58,7 @@ export default {
                 this.spinner.src = style==='blue' ? BlueSpin : DefaultSpin
                 this.loadingEl = ele
                 this.loadingEl.appendChild(this.spinner)
-            }, 600)
+            }, 800)
         },
         removeSpin() {
             clearTimeout(this.loadingDelay)
@@ -84,13 +85,15 @@ export default {
                 nodeid: `airconditioner.main.${attr}`,
                 params: {
                     attribute: {
-                        [attr]: val
+                        [attr]: attr=='temperature' ? val*tempRadio : val
                     }
                 }
             }, (res)=>{
-                this.setAttr({
-                    [attr]: val
-                })
+                if(attr == 'switch'){
+                    this.ac.switchStatus = val
+                }else{
+                    this.ac[attr] = val
+                }
                 this.removeSpin()
                 success && success()
             }, ()=>{
@@ -99,9 +102,14 @@ export default {
             })
         },
         setAttr(attrs) {
-            for(var p in attrs){
-                this.ac[p==='switch'?'switchStatus':p] = attrs[p]
+            // for(var p in attrs){
+            //     this.ac[p==='switch'?'switchStatus':p] = attrs[p]
+            // }
+            if(attrs.temperature > 100){
+                tempRadio = 10
+                attrs.temperature = attrs.temperature / tempRadio
             }
+            this.ac = attrs
         },
         init() {
             HdSmart.ready(()=>{

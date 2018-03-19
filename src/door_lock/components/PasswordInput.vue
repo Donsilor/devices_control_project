@@ -36,11 +36,12 @@
     box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.1);
     border-radius: 6px;
     width: 600px;
-    height: 900px;
+    padding-bottom: 15px;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate3d(-300px, -450px, 0);
+
     .password-input-title {
       box-shadow: inset 0 -1px 0 0 #dbdbdb;
       width: 100%;
@@ -65,12 +66,13 @@
       }
     }
     .password-input-content {
-      padding: 48px 48px 0;
+      padding: 30px 48px 0;
       position: relative;
       input {
         width: 504px;
         height: 96px;
-        font-size: 48px;
+        font-size: 54px;
+        letter-spacing: 12px;
         background: #f2f2f2;
         border-radius: 6px;
         outline: none;
@@ -83,7 +85,7 @@
         width: 48px;
         height: 48px;
         right: 84px;
-        top: 72px;
+        top: 54px;
         background: url(../assets/btn_input_back_normal.png) no-repeat;
         background-size: 48px;
         &:active {
@@ -101,7 +103,7 @@
           text-align: center;
           font-size: 42px;
           color: #46bcff;
-          margin-top: 36px;
+          margin-top: 26px;
           margin-right: 60px;
           background: #ffffff;
           border-radius: 100%;
@@ -145,11 +147,10 @@
 
 <script>
 export default {
-  props: ["visible","switch"],
+  props: ["visible"],
   data() {
     return {
       msg: "请输入管理员开锁密码",
-      disabled: true,
       psw: [],
       btns: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "C", "0"]
     };
@@ -157,6 +158,13 @@ export default {
   computed: {
     psw_str() {
       return this.psw.join("");
+    },
+    disabled() {
+      if (this.psw.length < 6) {
+        return true;
+      } else {
+        return false;
+      }
     }
   },
   methods: {
@@ -166,41 +174,41 @@ export default {
           return;
         }
         this.psw.push(num);
-        if (this.psw.length >= 6) {
-          this.disabled = false;
-        }
       } else {
         this.psw.splice(0, this.psw.length);
       }
     },
     delNum() {
       this.psw.splice(this.psw.length - 1, 1);
-      if (this.psw.length < 6) {
-        this.disabled = true;
-      }
     },
     unlock() {
       if (this.disabled) {
         return;
       }
+      let tmp = this.psw.map(x => {
+        return (x.charCodeAt(0) ^ 0xa5).toString(16);
+      });
+      alert(tmp.join(''))
+
       //发送指令
       HdSmart.Device.control(
         {
-          method: "set",
+          method: "dm_set",
           nodeid: "doorlock.main.switch",
           params: {
             attribute: {
-              switch: this.switch,
-              pwd: this.psw.join("")
+              switch: "on",
+              pwd: tmp.join('')
             }
           }
         },
         () => {
-          HdSmart.UI.toast("开锁成功");
+          //HdSmart.UI.toast("开锁成功");
           this.close();
         },
-        (data) => {
+        data => {
           HdSmart.UI.toast("开锁失败！");
+          //this.msg = '密码错误，请重新输入';
         }
       );
     },
@@ -211,7 +219,6 @@ export default {
     reset() {
       this.psw.splice(0, this.psw.length);
       this.msg = "请输入管理员开锁密码";
-      this.disabled = true;
     }
   }
 };
