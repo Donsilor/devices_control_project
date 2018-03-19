@@ -19,10 +19,10 @@ const getTimeList = (begin,end) => {
 
 let res = {
     switch: 'off',
-    status: 'stop',
+    status: '',
     reserve_bake: 1,
     remaining: 88,
-    step: 'reserve',
+    step: 'bake',
     mode: 'barbecues', //模式
     temperature: 220, //温度
     bake_duration: 30, //时长
