@@ -208,12 +208,12 @@
                 }, (res) => {
                     let innerData = res.result || ''
                     // 空气质量
-                    if (innerData && innerData.aqi && innerData.aqi.data) {
-                        self.renderAQI(innerData.aqi.data['aqi'].value)
+                    if (innerData && innerData.aqi) {
+                        self.renderAQI(innerData.aqi.value)
                     }
                     // 5天实况
-                    if (innerData && innerData.forecast && innerData.forecast.data) {
-                        let forecast = innerData.forecast.data['forecast']
+                    if (innerData && innerData.forecast) {
+                        let forecast = innerData.forecast
                         let newArr = forecast.slice(0, forecast.length - 1)
                         self.wList = newArr.map((item, index) => {
                             item.weekday = currentWeekArr[index]
@@ -222,9 +222,9 @@
                         self.renderTodayClass(self.wList[0].conditionIdDay)
                     }
                     // 实时天气
-                    if (innerData && innerData.brief && innerData.brief.data) {
-                        self.acturlTemp = innerData.brief.data.condition.temp
-                        self.acturlCondition = innerData.brief.data.condition.condition
+                    if (innerData && innerData.condition) {
+                        self.acturlTemp = innerData.condition.temp
+                        self.acturlCondition = innerData.condition.condition
                     } else {
                         self.actrulTemp = '0'
                     }
