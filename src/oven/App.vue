@@ -10,9 +10,9 @@
                 <p class="color-gray">({{allAttribute.step === 'bake' ?  '烘烤中' : '预约中'}})</p>
                 <div class="p-main-time">
                     <p class="p-num"><strong>{{allAttribute.remaining}}</strong>分&nbsp;&nbsp;钟</p>
-                    <p class="color-gray">剩余总时间</p>
+                    <p class="color-gray">{{allAttribute.step === 'bake' ?  '剩余总时间' : '预约时间'}}</p>
                 </div>
-                <p class="color-gray"><span>{{allAttribute.fire}}</span>设定温度<span class="p-wendu">{{allAttribute.temperature}}</span>℃</p>
+                <p class="color-gray"><span>{{getModeName(allAttribute.mode)}}</span>设定温度<span class="p-wendu">{{allAttribute.temperature}}</span>℃</p>
             </div>
             <div class="controls">
                 <button @click="startOven" v-if="allAttribute.status==='stop'"><i class="c-firing"></i></button>
@@ -68,12 +68,12 @@
                     </div>
                     <div class="slide-list" v-if="wenduSelectFlag">
                         <div class="slide-list-inner">
-                            <a v-for="item in allAttribute.wenduList" @touchmovc="touchMove"  @touchend="selectWendu(item)"  :class="item.active?'active':''">{{item.name}}</a>
+                            <a v-for="item in allAttribute.wenduList"  @touchend="selectWendu(item)"  :class="item.active?'active':''">{{item.name}}</a>
                         </div>
                     </div>
                     <div class="slide-list" v-if="timeSelectFlag">
                         <div class="slide-list-inner">
-                            <a v-for="item in allAttribute.timeList" @touchmovc="touchMove"  @touchend="selectTime(item)" :class="item.active?'active':''">{{item.name}}</a>
+                            <a v-for="item in allAttribute.timeList"  @touchend="selectTime(item)" :class="item.active?'active':''">{{item.name}}</a>
                         </div>
                     </div>
                     <div class="select-param">
@@ -117,17 +117,16 @@
             return {
                 //状态集合
                 allAttribute: {
-                    mode: 'cake', //模式
-                    temperature: 100, //温度
+                    mode: '', //模式
+                    temperature: 0, //温度
                     bake_duration: 0, //时长
-                    step: '',
+                    step: '',  // 模式是烘烤中(bake)还是预约中(reserve)
                     switch: 'off',
-                    status: 'stop',
-                    reserve_bake: 1,
-                    convection: 'on',
-                    rotisserie: 'on',
-                    remaining: 88,
-                    fire: '',
+                    status: 'stop',  //开关机状态
+                    reserve_bake: 0, //预约时间
+                    convection: 'on', // 热风对流
+                    rotisserie: 'on', //烤叉
+                    remaining: 0,  //剩余总时间
                     wenduList: getWenduList(100,230),
                     timeList: getTimeList(1,60)
                 },
@@ -350,31 +349,57 @@
                 e.preventDefault()
             },
             selectWendu (item) {
-                this.setTemperature(item.value, () => {
-                    let wenduList = this.allAttribute.wenduList
-                    let len = wenduList.length
-                    for (let i=0; i<len; i++) {
-                        wenduList[i].active = false
-                    }
-                    item.active = true
-                    this.allAttribute.temperature = item.value
-                })
+                if (this.allAttribute.status === 'start') {
+                    return
+                }
+                let wenduList = this.allAttribute.wenduList
+                let len = wenduList.length
+                for (let i=0; i<len; i++) {
+                    wenduList[i].active = false
+                }
+                item.active = true
+                this.allAttribute.temperature = item.value
+//                this.setTemperature(item.value, () => {
+//                    let wenduList = this.allAttribute.wenduList
+//                    let len = wenduList.length
+//                    for (let i=0; i<len; i++) {
+//                        wenduList[i].active = false
+//                    }
+//                    item.active = true
+//                    this.allAttribute.temperature = item.value
+//                })
             },
             selectTime (item) {
-                this.setDuration(item.value, () => {
-                    let timeList = this.allAttribute.timeList
-                    let len = timeList.length
-                    for (let i=0; i<len; i++) {
-                        timeList[i].active = false
-                    }
-                    item.active = true
-                    this.allAttribute.bake_duration = item.value
-                })
+                if (this.allAttribute.status === 'start') {
+                    return
+                }
+                let timeList = this.allAttribute.timeList
+                let len = timeList.length
+                for (let i=0; i<len; i++) {
+                    timeList[i].active = false
+                }
+                item.active = true
+                this.allAttribute.bake_duration = item.value
+//                this.setDuration(item.value, () => {
+//                    let timeList = this.allAttribute.timeList
+//                    let len = timeList.length
+//                    for (let i=0; i<len; i++) {
+//                        timeList[i].active = false
+//                    }
+//                    item.active = true
+//                    this.allAttribute.bake_duration = item.value
+//                })
             },
             getModeName (val) {
                 let text = ''
                 let modeList = this.modeList
+                let elseModeList = this.elseModeList
                 modeList.forEach((item) => {
+                    if (item.mode === val) {
+                        text = item.name
+                    }
+                })
+                elseModeList.forEach((item) => {
                     if (item.mode === val) {
                         text = item.name
                     }
@@ -416,10 +441,16 @@
             onSuccess(data) {
                 this.status = 'success'
                 let attributes = data.attribute
+                alert(JSON.stringify(attributes))
                 let curAttributes = this.allAttribute
                 for (let attr in curAttributes) {
                     if (attributes[attr]) {
-                        curAttributes[attr] = attributes[attr]
+                        if (attr === 'bake_duration') {
+                            curAttributes[attr] = attributes[attr]/60
+                        } else {
+                            curAttributes[attr] = attributes[attr]
+                        }
+
                     }
                 }
                 if (this.firstIn) {
@@ -432,22 +463,16 @@
             onError() {
                 this.status = 'error'
             },
-            controlDevice(attr, val, success, error) {
+            controlDevice(paramObj, success, error) {
                 if(this.errors.length){
                     this.showAlarmTip()
                     return
                 }
-//                if(this.model.child_lock_switch == 'on' && attr != 'child_lock_switch'){
-//                    HdSmart.UI.toast('请先关闭童锁')
-//                    return
-//                }
                 HdSmart.Device.control({
                     method: 'dm_set',
-                    nodeid: `oven.main.${attr}`,
+                    nodeid: `oven.main.custom`,
                     params: {
-                        attribute: {
-                            [attr]: val
-                        }
+                        attribute: paramObj
                     }
                 }, () => {
                     success && success()
@@ -458,14 +483,25 @@
             // 启动
             startOven () {
                 const obj = this
-                this.controlDevice('control','start', ()=>{
+                let curParam = this.allAttribute
+                let paramObj = {
+                    control: 'start',
+                    mode: curParam.mode,
+                    bake_duration: curParam.bake_duration * 60,
+                    temperature: curParam.temperature,
+//                    reserve_bake: curParam.reserve_bake,
+//                    convection: curParam.convection,
+//                    rotisserie: curParam.rotisserie
+//                    remaining: curParam.remaining
+                }
+                this.controlDevice(paramObj, ()=>{
                     obj.allAttribute.status = 'start'
                 })
             },
             // 停止
             stopOven () {
                 const obj = this
-                this.controlDevice('control','stop', ()=>{
+                this.controlDevice({control: 'stop'}, ()=>{
                     obj.allAttribute.status = 'stop'
                 })
             },
@@ -481,38 +517,31 @@
                 if (this.allAttribute.status === 'start') {
                     return
                 }
-                const obj = this
-                this.controlDevice('mode',obj.tempMode, ()=>{
-                    obj.maskLyerShow = false
-                    obj.modelLayerShow = false
-                    obj.allAttribute.mode = obj.tempMode
-                    obj.afterResetData(obj.tempMode)
-                })
+                this.maskLyerShow = false
+                this.modelLayerShow = false
+                this.allAttribute.mode = this.tempMode
+                this.afterResetData(this.tempMode)
             },
             // 设置温度
-            setTemperature (val,suc) {
-                const obj = this
-                this.controlDevice('temperature',val, ()=>{
-                    suc && suc()
-                })
-            },
-            // 设置定时
-            setDuration (val,suc) {
-                const obj = this
-                this.controlDevice('bake_duration',val, ()=>{
-                    suc && suc()
-                })
-            },
+//            setTemperature (val,suc) {
+//                const obj = this
+//                this.controlDevice('temperature',val, ()=>{
+//                    suc && suc()
+//                })
+//            },
             // 设置热风对流
             changeConvection (obj) {
-                this.controlDevice('convection',obj.value, ()=>{
-
+                let self = this
+                this.controlDevice({convection: obj.value ? 'on' : 'off'}, ()=>{
+                    self.allAttribute.convection = self.value ? 'on' : 'off'
                 })
+
             },
             // 设置转叉
             changeRotisserie (obj) {
-                this.controlDevice('rotisserie',obj.value, ()=>{
-
+                let self = this
+                this.controlDevice({rotisserie: obj.value ? 'on' : 'off'}, ()=>{
+                    self.allAttribute.rotisserie = self.value ? 'on' : 'off'
                 })
             }
         }
@@ -531,6 +560,7 @@ body {
     background: #f3f3f3;
     color: #333;
     font-family: NotoSansHans-Regular;
+    -webkit-tap-highlight-color: transparent;
 }
 *{ margin: 0; padding: 0}
 #app {
@@ -610,6 +640,7 @@ body {
     .controls{
         padding-top: 80px;
         button{
+            outline: none;
             width: 300px;
             height: 130px;
             display: inline-block;
