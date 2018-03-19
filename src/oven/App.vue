@@ -9,7 +9,7 @@
                 <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
                 <p class="color-gray">({{allAttribute.step === 'bake' ?  '烘烤中' : '预约中'}})</p>
                 <div class="p-main-time">
-                    <p class="p-num"><strong>{{allAttribute.remaining}}</strong>分&nbsp;&nbsp;钟</p>
+                    <p class="p-num"><strong>{{remainingText}}</strong>分&nbsp;&nbsp;钟</p>
                     <p class="color-gray">{{allAttribute.step === 'bake' ?  '剩余总时间' : '预约时间'}}</p>
                 </div>
                 <p class="color-gray"><span>{{getModeName(allAttribute.mode)}}</span>设定温度<span class="p-wendu">{{allAttribute.temperature}}</span>℃</p>
@@ -78,11 +78,11 @@
                     </div>
                     <div class="select-param">
                         <p>热风对流</p>
-                        <switch-button :sync="true" :value="allAttribute.convection==='on'" @change="changeConvection"/>
+                        <switch-button :sync="true" :disabled="allAttribute.status!='start'" :value="allAttribute.convection==='on'" @change="changeConvection"/>
                     </div>
                     <div class="select-param">
                         <p>烤叉旋转</p>
-                        <switch-button :sync="true" :value="allAttribute.rotisserie==='on'" @change="changeRotisserie"/>
+                        <switch-button :sync="true" :disabled="allAttribute.status!='start'" :value="allAttribute.rotisserie==='on'" @change="changeRotisserie"/>
                         <i class="switch off"></i>
                     </div>
                 </div>
@@ -224,6 +224,15 @@
                             item.active = true
                         }
                     })
+                }
+            }
+        },
+        computed: {
+            remainingText() {
+                if(this.allAttribute.step === 'bake'){
+                    return this.allAttribute.bake_duration
+                }else{
+                    return this.allAttribute.remaining
                 }
             }
         },
@@ -441,7 +450,6 @@
             onSuccess(data) {
                 this.status = 'success'
                 let attributes = data.attribute
-                alert(JSON.stringify(attributes))
                 let curAttributes = this.allAttribute
                 for (let attr in curAttributes) {
                     if (attributes[attr]) {

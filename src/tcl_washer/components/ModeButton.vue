@@ -21,7 +21,7 @@ export default {
                 'btn-mode-' + this.mode,
                 {
                     active:  this.root.model.mode == this.mode,
-                    disable: this.root.model.status == 'run'
+                    disable: this.root.isRun || this.root.isPause
                 }
             ]
         },

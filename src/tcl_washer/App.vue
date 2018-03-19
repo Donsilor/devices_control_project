@@ -110,7 +110,7 @@
                                 :class="{selected:currentTemperature.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
-                    <div class="selectbox" :class="{active:currentSet==1,disable:isRun}" v-show="detergentOptions.length">
+                    <div class="selectbox" :class="{active:currentSet==1,disable:isRun||isPause}" v-show="detergentOptions.length">
                         <div class="hd" @click="toggleSet(1)">
                             <div class="left">洗涤剂投放</div>
                             <div class="right">
@@ -125,7 +125,7 @@
                                 :class="{selected:currentDetergent.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
-                    <div class="selectbox" :class="{active:currentSet==2,disable:isRun}" v-show="dryingOptions.length">
+                    <div class="selectbox" :class="{active:currentSet==2,disable:isRun||isPause}" v-show="dryingOptions.length">
                         <div class="hd" @click="toggleSet(2)">
                             <div class="left">烘干</div>
                             <div class="right">
@@ -880,11 +880,11 @@ export default {
                 this.currentSet = -1
             }
         },
-        'model.mode'(nowval, prevval) {
-            if(this.isPause && prevval){
-                this.model.operation = 'none'
-            }
-        }
+        // 'model.mode'(nowval, prevval) {
+        //     if(this.isPause && prevval){
+        //         this.model.operation = 'none'
+        //     }
+        // }
     },
     computed: {
         isRun() {
@@ -1002,7 +1002,7 @@ export default {
             this.controlDevice('control', val)
         },
         setMode(mode) {
-            if(this.isRun){
+            if(this.isRun || this.isPause){
                 return
             }
             if(this.model.mode == mode){
@@ -1086,7 +1086,7 @@ export default {
             })
         },
         toggleSet(index) {
-            if(this.isRun || (index == 0 && this.isPause)){
+            if(this.isRun || this.isPause){
                 return
             }
             this.currentSet = this.currentSet == index ? -1 : index
@@ -1106,9 +1106,9 @@ export default {
             if(data.device_name){
                 this.device_name = data.device_name
             }
-            if(this.isStandby && data.attribute.status == 'standby' && data.attribute.operation !='none'){
-                data.attribute.operation = 'none'
-            }
+            // if(this.isStandby && data.attribute.status == 'standby' && data.attribute.operation !='none'){
+            //     data.attribute.operation = 'none'
+            // }
             this.model = data.attribute
 
             this.onAlarm(data.attribute.error)
