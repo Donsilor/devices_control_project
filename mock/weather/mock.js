@@ -3,25 +3,26 @@
  */
 import Mock from 'mockjs';
 let res = {
-    "aqi": {
-        "cityName": "北京市",
-        "co": "11",
-        "coC": "1.1",
-        "no2": "19",
-        "no2C": "37.0",
-        "o3": "23",
-        "o3C": "72.0",
-        "pm10": "98",
-        "pm10C": "146.0",
-        "pm25": "80",
-        "pm25C": "59.0",
-        "pubtime": "1520244000000",
-        "rank": "560\/581",
-        "so2": "6",
-        "so2C": "17.0",
-        "value": "98"
-    },
-    "forecast": [{
+    "data":{
+        "aqi": {
+            "cityName": "北京市",
+            "co": "11",
+            "coC": "1.1",
+            "no2": "19",
+            "no2C": "37.0",
+            "o3": "23",
+            "o3C": "72.0",
+            "pm10": "98",
+            "pm10C": "146.0",
+            "pm25": "80",
+            "pm25C": "59.0",
+            "pubtime": "1520244000000",
+            "rank": "560\/581",
+            "so2": "6",
+            "so2C": "17.0",
+            "value": "98"
+        },
+        "forecast": [{
             "conditionDay": "多云",
             "conditionIdDay": "1",
             "conditionIdNight": "30",
@@ -100,16 +101,18 @@ let res = {
             "windLevelDay": "3",
             "windLevelNight": "3"
         }
-    ],
-    "condition": {
-        "condition": "多云",
-        "humidity": "27",
-        "icon": "1",
-        "temp": "9",
-        "updatetime": "2018-03-16 15:20:00",
-        "windDir": "西南风",
-        "windLevel": "4"
-     }
+        ],
+        "condition": {
+            "condition": "多云",
+            "humidity": "27",
+            "icon": "1",
+            "temp": "9",
+            "updatetime": "2018-03-16 15:20:00",
+            "windDir": "西南风",
+            "windLevel": "4"
+        }
+    }
+
 }
 
 export function generateSnapShot() {
