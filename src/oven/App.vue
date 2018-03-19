@@ -7,10 +7,10 @@
             <h3 class="main-title">烤箱</h3>
             <div class="pannel">
                 <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
-                <p class="color-gray">({{allAttribute.step === 'bake' ?  '烘烤中' : '预约中'}})</p>
+                <p class="color-gray p-status"><span v-if="allAttribute.status=='start'">({{allAttribute.step === 'bake' ?  '烘烤中' : '预约中'}})</span></p>
                 <div class="p-main-time">
-                    <p class="p-num"><strong>{{remainingText}}</strong>分&nbsp;&nbsp;钟</p>
-                    <p class="color-gray">{{allAttribute.step === 'bake' ?  '剩余总时间' : '预约时间'}}</p>
+                    <p class="p-num" v-html="remainingText"></p>
+                    <p class="color-gray">剩余总时间</p>
                 </div>
                 <p class="color-gray"><span>{{getModeName(allAttribute.mode)}}</span>设定温度<span class="p-wendu">{{allAttribute.temperature}}</span>℃</p>
             </div>
@@ -229,11 +229,21 @@
         },
         computed: {
             remainingText() {
-                if(this.allAttribute.step === 'bake'){
-                    return this.allAttribute.bake_duration
-                }else{
-                    return this.allAttribute.remaining
-                }
+                // if(this.allAttribute.step === 'bake'){
+                //     var m = Math.floor(this.allAttribute.remaining / 60)
+                //     var s = this.allAttribute.remaining % 60
+                //     var result = ''
+                //     if(m > 0){
+                //         result += `<strong>${m}</strong>分钟 &nbsp;`
+                //     }
+                //     if(s > 0){
+                //         result += `<strong>${s}</strong>秒`
+                //     }
+                //     return result
+                // }else{
+                //     return `<strong>${this.allAttribute.remaining}</strong>分钟`
+                // }
+                return `<strong>${this.allAttribute.remaining}</strong>分钟`
             }
         },
         mounted() {
@@ -451,20 +461,25 @@
                 this.status = 'success'
                 let attributes = data.attribute
                 let curAttributes = this.allAttribute
+
+                let config = AllConfig[attributes.mode || 'barbecues']
+
+                if(!attributes.mode){
+                    attributes = Object.assign(attributes, config)
+                    attributes.remaining = attributes.bake_duration
+                }
+                //HACK：bake_duration应该是设置时长，作剩余时间不合理，需要协议修改，增加烘烤剩余时间
+                attributes.bake_duration = config.bake_duration
+
                 for (let attr in curAttributes) {
                     if (attributes[attr]) {
-                        if (attr === 'bake_duration') {
-                            curAttributes[attr] = attributes[attr]/60
-                        } else {
-                            curAttributes[attr] = attributes[attr]
-                        }
-
+                        curAttributes[attr] = attributes[attr]
                     }
                 }
+
                 if (this.firstIn) {
-                    let currentData = AllConfig[attributes.mode]
-                    this.allAttribute['wenduList'] = currentData['wenduList']
-                    this.allAttribute['timeList'] = currentData['timeList']
+                    this.allAttribute['wenduList'] = config['wenduList']
+                    this.allAttribute['timeList'] = config['timeList']
                     this.firstIn = false
                 }
             },
@@ -472,10 +487,6 @@
                 this.status = 'error'
             },
             controlDevice(paramObj, success, error) {
-                if(this.errors.length){
-                    this.showAlarmTip()
-                    return
-                }
                 HdSmart.Device.control({
                     method: 'dm_set',
                     nodeid: `oven.main.custom`,
@@ -519,6 +530,8 @@
                 for (let attr in currentData) {
                     this.allAttribute[attr] = currentData[attr]
                 }
+                this.allAttribute.remaining = this.allAttribute.bake_duration
+                this.allAttribute.bake_duration = currentData.bake_duration
             },
             // 设置模式
             setMode (mode) {
@@ -638,6 +651,9 @@ body {
             height: 60px;
             line-height: 60px;
             font-size: 36px;
+        }
+        .p-status{
+            height: 30px;
         }
         .p-wendu{
             font-weight: bold;
