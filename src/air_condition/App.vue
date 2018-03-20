@@ -4,7 +4,7 @@
         <p class="tip" v-show="(!initErr) && params.switch === 'off'">已关闭</p>
 
         <!--开机界面-->
-        <div v-show="(!initErr) && params.switch === 'on'">
+        <div v-if="(!initErr) && params.switch === 'on'">
             <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
                 <defs>
                     <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509"
@@ -20,12 +20,13 @@
 
             <!--温度Start-->
             <div class="temp">
-                <ac-button :info="minusBtn" @tap="setTemperature"></ac-button>
+
+                <ac-button class="minus" :class="{disabled:params.mode=='wind'}" :info="buttonList.minusBtn" @tap="setTemperature"></ac-button>
                 <div class="temp-show">
                     <label class="temp-number">{{ fakeTemp }}</label>
                     <label class="temp-unit">℃</label>
                 </div>
-                <ac-button :info="plusBtn" @tap="setTemperature"></ac-button>
+                <ac-button class="plus" :class="{disabled:params.mode=='wind'}" :info="buttonList.plusBtn" @tap="setTemperature"></ac-button>
             </div>
             <!--温度End-->
 
@@ -33,15 +34,14 @@
 
             <!--底部按钮Start-->
             <div class="bottom">
-                <ac-button :info="buttonList.cool" :curValue="params[buttonList.cool.type]" @tap="setParam"></ac-button>
-                <ac-button :info="buttonList.heat" :curValue="params[buttonList.heat.type]" @tap="setParam"></ac-button>
-                <ac-button :info="buttonList.dehumidify" :curValue="params[buttonList.dehumidify.type]"
-                           @tap="setParam"></ac-button>
-                <ac-button :info="buttonList.on" v-show="params.switch === 'on'" @tap="toggle"></ac-button>
-                <ac-button :info="buttonList.low" :curValue="params[buttonList.low.type]" @tap="setParam"></ac-button>
-                <ac-button :info="buttonList.normal" :curValue="params[buttonList.normal.type]"
-                           @tap="setParam"></ac-button>
-                <ac-button :info="buttonList.high" :curValue="params[buttonList.high.type]" @tap="setParam"></ac-button>
+
+                <ac-button class="cool" :class="{active:params.mode=='cold'}" :info="buttonList.cool" @tap="setParam"></ac-button>
+                <ac-button class="heat" :class="{active:params.mode=='heat'}" :info="buttonList.heat" @tap="setParam"></ac-button>
+                <ac-button class="dehumidify" :class="{active:params.mode=='dehumidify'}" :info="buttonList.dehumidify" @tap="setParam"></ac-button>
+                <ac-button class="switch on" :info="buttonList.on" @tap="toggle"></ac-button>
+                <ac-button class="low" :class="{active:params.speed=='low'}" :info="buttonList.low" @tap="setParam"></ac-button>
+                <ac-button class="normal" :class="{active:params.speed=='normal'}" :info="buttonList.normal" @tap="setParam"></ac-button>
+                <ac-button class="high" :class="{active:params.speed=='high'}" :info="buttonList.high" @tap="setParam"></ac-button>
             </div>
             <!--底部按钮End-->
 
@@ -51,15 +51,13 @@
                 <div class="subMenu" v-show="showMore" @click.stop="">
                     <devider :content="'模式'"></devider>
                     <div class="more-mode">
-                        <ac-button :info="buttonList.mode_auto" :curValue="params[buttonList.mode_auto.type]"
-                                   @tap="setParam"></ac-button>
-                        <ac-button :info="buttonList.wind" :curValue="params[buttonList.wind.type]"
-                                   @tap="setParam"></ac-button>
+                        <ac-button class="mode_auto" :class="{active:params.mode=='auto'}" :info="buttonList.mode_auto" @tap="setParam"></ac-button>
+                        <ac-button class="wind" :class="{active:params.mode=='wind'}" :info="buttonList.wind" @tap="setParam"></ac-button>
                     </div>
                     <devider :content="'摆风'"></devider>
                     <div class="more-wind-direction">
-                        <ac-button :info="lrBtn" @tap="toggle"></ac-button>
-                        <ac-button :info="udBtn" @tap="toggle"></ac-button>
+                        <ac-button class="lr" :class="{active:params.wind_left_right=='on'}" :info="buttonList.lrBtn" @tap="toggle"></ac-button>
+                        <ac-button class="ud" :class="{active:params.wind_up_down=='on'}" :info="buttonList.udBtn" @tap="toggle"></ac-button>
                     </div>
                 </div>
             </transition>
@@ -67,7 +65,7 @@
         </div>
 
         <!--关机界面-->
-        <div v-show="(!initErr) && params.switch === 'off'">
+        <div v-if="(!initErr) && params.switch === 'off'">
             <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
                 <defs>
                     <linearGradient id="lg2" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509"
@@ -82,14 +80,17 @@
             </svg>
             <div v-if="deviceCategory === 0" class="hanging"></div>
             <div v-if="deviceCategory === 1" class="package"></div>
+
             <div class="bottom">
-                <ac-button :info="buttonList.cool"></ac-button>
-                <ac-button :info="buttonList.heat"></ac-button>
-                <ac-button :info="buttonList.dehumidify"></ac-button>
-                <ac-button v-show="params.switch === 'off'" :info="buttonList.off" @tap="toggle"></ac-button>
-                <ac-button :info="buttonList.low"></ac-button>
-                <ac-button :info="buttonList.normal"></ac-button>
-                <ac-button :info="buttonList.high"></ac-button>
+
+                <ac-button class="cool disabled"></ac-button>
+                <ac-button class="heat disabled"></ac-button>
+                <ac-button class="dehumidify disabled"></ac-button>
+                <ac-button class="switch off" :info="buttonList.off" @tap="toggle" />
+                <ac-button class="low disabled"></ac-button>
+                <ac-button class="normal disabled"></ac-button>
+                <ac-button class="high disabled"></ac-button>
+
             </div>
         </div>
 
@@ -104,7 +105,6 @@
 <script>
     import AcButton from './components/AcButton.vue';
     import Devider from './components/Devider.vue';
-    import AcSwitch from './components/AcSwitch.vue';
 
     import watermark from '../../lib/watermark'
 
@@ -119,19 +119,15 @@
     const LOADING_DELAY = 800;
     //loading class
     const LOADING_CLASS = 'loading';
-    //pressed class
-    const PRESSED_CLASS = 'pressed';
     //提示持续时间--3s
     const TIP_DURATION = 3000;
 
     //Button构造方法
-    function Button(title, type, value, imgSrc, imgActiveSrc, tip) {
+    function Button(title, type, value,tip) {
         return {
             title,
             type,
             value,
-            imgSrc,
-            imgActiveSrc,
             tip
         }
     }
@@ -139,27 +135,42 @@
     var temperatureRadio = 1
 
     export default {
-        components: {AcButton, Devider,  AcSwitch}, //TimePicker,
+        components: {AcButton, Devider},
         data() {
             return {
                 buttonList: {
+
                     //模式
-                    cool: Button('制冷', MODE, 'cold', require('./assets/cool_normal.png'), require('./assets/cool_active.png'), '制冷模式切换成功'),
-                    heat: Button('制热', MODE, 'heat', require('./assets/heat_normal.png'), require('./assets/heat_active.png'), '制热模式切换成功'),
-                    dehumidify: Button('除湿', MODE, 'dehumidify', require('./assets/dehumidify_normal.png'), require('./assets/dehumidify_active.png'), '除湿模式切换成功'),
-//                    mode_auto: Button('智能', MODE, 'auto', require('./assets/auto_normal.png'), require('./assets/auto_active.png'), '智能模式切换成功'),
-//                    wind: Button('送风', MODE, 'wind', require('./assets/wind_normal.png'), require('./assets/wind_active.png'), '送风模式切换成功'),
-                    mode_auto: Button('智能', MODE, 'auto', require('./assets/mode_auto_normal.png'), require('./assets/mode_auto_active.png'), '智能模式切换成功'),
-                    wind: Button('送风', MODE, 'wind', require('./assets/mode_air_normal.png'), require('./assets/mode_air_active.png'), '送风模式切换成功'),
+                    cool: Button('制冷', MODE, 'cold', '制冷模式切换成功'),
+                    heat: Button('制热', MODE, 'heat', '制热模式切换成功'),
+                    dehumidify: Button('除湿', MODE, 'dehumidify', '除湿模式切换成功'),
+                    mode_auto: Button('智能', MODE, 'auto', '智能模式切换成功'),
+                    wind: Button('送风', MODE, 'wind', '送风模式切换成功'),
 
                     //风速
-                    low: Button('低风', SPEED, 'low', require('./assets/low_normal.png'), require('./assets/low_active.png'), '低风切换成功'),
-                    normal: Button('中风', SPEED, 'normal', require('./assets/medium_normal.png'), require('./assets/medium_active.png'), '中风切换成功'),
-                    high: Button('高风', SPEED, 'high', require('./assets/high_normal.png'), require('./assets/high_active.png'), '高风切换成功'),
+                    low: Button('低风', SPEED, 'low', '低风切换成功'),
+                    normal: Button('中风', SPEED, 'normal', '中风切换成功'),
+                    high: Button('高风', SPEED, 'high', '高风切换成功'),
 
                     //电源开关
-                    on: Button('', POWER, '', require('./assets/on_normal.png'), require('./assets/on_active.png'), ''),
-                    off: Button('', POWER, '', require('./assets/off_normal.png'), require('./assets/off_active.png'), '')
+                    on: Button('', POWER, '', ''),
+                    off: Button('', POWER, '', ''),
+
+                    //扫风
+                    lrBtn: Button('左右', WIND_LEFT_RIGHT, ''),
+                    udBtn: Button('上下', WIND_UP_DOWN, ''),
+
+                    //温度
+                    minusBtn: {
+                        type: TEMPERATURE,
+                        value: -1,
+                        continuousClick: true
+                    },
+                    plusBtn: {
+                        type: TEMPERATURE,
+                        value: 1,
+                        continuousClick: true
+                    }
                 },
                 //设备名称
                 deviceName: '',
@@ -212,41 +223,9 @@
         computed: {
             appClassObj: function () {
                 let obj = {main: true};
-                obj[this.params.switch] = true;
+                obj['page_'+this.params.switch] = true;
                 obj['err'] = this.initErr;
                 return obj;
-            },
-            lrBtn: function () {
-                return Button('左右', WIND_LEFT_RIGHT, this.params.wind_left_right, require('./assets/horizontal_normal.png'), require('./assets/horizontal_active.png'));
-            },
-            udBtn: function () {
-                return Button('上下', WIND_UP_DOWN, this.params.wind_up_down, require('./assets/vertical_normal.png'), require('./assets/vertical_active.png'));
-            },
-            minusBtn: function () {
-                return {
-                    //降低温度
-                    type: TEMPERATURE,
-                    imgSrc: require('./assets/minus_normal.png'),
-                    imgActiveSrc: require('./assets/minus_pressed.png'),
-                    value: this.fakeTemp - 1,
-                    //送风模式下不能设置温度
-                    disabled: this.params.mode === 'wind',
-                    //允许连续点击
-                    continuousClick: true
-                }
-            },
-            plusBtn: function () {
-                return {
-                    //升高温度
-                    type: TEMPERATURE,
-                    imgSrc: require('./assets/plus_normal.png'),
-                    imgActiveSrc: require('./assets/plus_pressed.png'),
-                    value: this.fakeTemp + 1,
-                    //送风模式下不能设置温度
-                    disabled: this.params.mode === 'wind',
-                    //允许连续点击
-                    continuousClick: true
-                }
             }
         },
         watch: {
@@ -316,29 +295,51 @@
                     return;
                 }
 
-                if(attr.switchStatus != undefined){
-                    this.params.switch = attr.switchStatus;
+                if(attr.temperature > 100){
+                    temperatureRadio = 10
                 }
 
-                if(attr.temperature != undefined && !this.tempFlag){
-                    if(attr.temperature > 100){
-                        temperatureRadio = 10
+                for(var k in attr){
+                    if(this.operationFlag && k == this.operationKey){
+                        break;
                     }
-                    this.params.temperature = attr.temperature / temperatureRadio;
-                    this.fakeTemp = attr.temperature / temperatureRadio
+                    switch(k){
+                        case 'switchStatus':
+                            this.params.switch = attr.switchStatus;
+                            break;
+                        case 'temperature':
+                            this.params.temperature = attr.temperature / temperatureRadio;
+                            this.fakeTemp = attr.temperature / temperatureRadio
+                            break;
+                        default:
+                            this.params[k] = attr[k]
+                            break;
+                    }
                 }
-                if(attr.mode != undefined){
-                    this.params.mode = attr.mode;
-                }
-                if(attr.speed != undefined){
-                    this.params.speed = attr.speed;
-                }
-                if(attr.wind_up_down != undefined){
-                    this.params.wind_up_down = attr.wind_up_down;
-                }
-                if(attr.wind_left_right != undefined){
-                    this.params.wind_left_right = attr.wind_left_right;
-                }
+
+                // if(attr.switchStatus != undefined){
+                //     this.params.switch = attr.switchStatus;
+                // }
+
+                // if(attr.temperature != undefined && !this.tempFlag){
+                //     if(attr.temperature > 100){
+                //         temperatureRadio = 10
+                //     }
+                //     this.params.temperature = attr.temperature / temperatureRadio;
+                //     this.fakeTemp = attr.temperature / temperatureRadio
+                // }
+                // if(attr.mode != undefined){
+                //     this.params.mode = attr.mode;
+                // }
+                // if(attr.speed != undefined){
+                //     this.params.speed = attr.speed;
+                // }
+                // if(attr.wind_up_down != undefined){
+                //     this.params.wind_up_down = attr.wind_up_down;
+                // }
+                // if(attr.wind_left_right != undefined){
+                //     this.params.wind_left_right = attr.wind_left_right;
+                // }
 
             },
             toggle(type, value, tip, el){
@@ -357,8 +358,6 @@
                 switch (type){
                     case WIND_LEFT_RIGHT: this.setParam(type, newValue, '左右扫风' + str, el); break;
                     case WIND_UP_DOWN: this.setParam(type, newValue, '上下扫风' + str, el); break;
-                    case BOOT_SWITCH: this.setTimer(BOOT_SWITCH, newValue, this.params.bootTime, '开机时间' + str); break;
-                    case OFF_SWITCH: this.setTimer(OFF_SWITCH, newValue, this.params.offTime, '关机时间' + str); break;
                     default: this.setParam(type, newValue, tip, el); break;
                 }
             },
@@ -367,19 +366,16 @@
 
                 //初始化失败，则按钮不能操作
                 if(that.initErr){
-                    that.removePressedClass(that.curButton);
                     return;
                 }
 
                 //如果参数值没有变化，直接返回(设置温度除外)
                 if (that.params[type] === value && type !== TEMPERATURE) {
-                    that.removePressedClass(that.curButton);
                     return;
                 }
 
                 //判断是否为重置命令
                 if(that.isResetCommand(type, value)){
-                    that.removePressedClass(that.curButton);
                     //如果当前设置的是温度，需要改回去
                     if (type === TEMPERATURE) {
                         that.fakeTemp = that.params.temperature;
@@ -387,11 +383,18 @@
                     return;
                 }
 
-                that.addPressedClass(el);
                 that.addLoading(el);
 
                 let attr = {};
                 attr[type] = type == TEMPERATURE ? value*temperatureRadio : value;
+
+                clearTimeout(this.operationDelay)
+                this.operationFlag = true
+                this.operationKey = type
+                this.operationValue = attr[type]
+                this.operationDelay = setTimeout(() => {
+                    this.operationFlag = false
+                }, 1500)
                 //发送指令
                 HdSmart.Device.control({
                     method: 'dm_set',
@@ -401,13 +404,11 @@
                     }
                 }, () => {
                     that.removeLoading();
-                    that.removePressedClass(that.curButton);
 
                     that.params[type] = value;
                     that.setTip(tip);
                 },  (data) => {
                     that.removeLoading();
-                    that.removePressedClass(that.curButton);
 
                     if (type === TEMPERATURE) {
                         that.fakeTemp = that.params.temperature;
@@ -426,7 +427,6 @@
 //                    this.removeLoading();
 
                     this.loadingElement = el;
-                    this.removePressedClass(this.loadingElement);
                     this.loadingElement.classList.add(LOADING_CLASS);
                 }, LOADING_DELAY);
             },
@@ -441,18 +441,16 @@
             },
             setTemperature(type, value, tip, el){
 
-                this.addPressedClass(el);
+                value = this.fakeTemp + value
 
                 //送风模式不能设置温度
                 if (this.params.mode === 'wind') {
                     this.setTip('送风模式下不能设置温度');
-                    this.removePressedClass(this.curButton);
                     return;
                 }
 
-                //限制温度范围16-30℃
+                //限制温度范围16-30℃。TODO：智能模式19-25，24-30
                 if(value < MIN_TEMP){
-                    this.removePressedClass(this.curButton);
                     if(this.params.temperature == MIN_TEMP){
                         this.setTip('温度已调至最低')
                         return
@@ -462,7 +460,6 @@
                 }
 
                 if(value > MAX_TEMP){
-                    this.removePressedClass(this.curButton);
                     if(this.params.temperature == MAX_TEMP){
                         this.setTip('温度已调至最高')
                         return
@@ -485,18 +482,6 @@
                 this.tipTimer = setTimeout(() => {
                     this.tip = '';
                 }, TIP_DURATION);
-            },
-            addPressedClass(el){
-                if(el && this.curButton != el){
-                    this.removePressedClass(this.curButton);
-                    this.curButton = el;
-                    el.classList.add(PRESSED_CLASS);
-                }
-            },
-            removePressedClass(el){
-                if(el){
-                    el.classList.remove(PRESSED_CLASS);
-                }
             },
             screenClick(){
                 if(this.initErr) { //初始化失败，点击屏幕，重新获取数据
@@ -534,7 +519,7 @@
     }
 </script>
 
-<style>
+<style lang="less">
     * {
         margin: 0;
         padding: 0;
@@ -557,10 +542,10 @@
         padding: 155px 0 180px 0;
         text-align: center;
     }
-    .main.on {
+    .main.page_on {
         background-color: #0bc0fe;
     }
-    .main.off {
+    .main.page_off {
         background-color: #f2f2f2;
     }
     .main.err{
@@ -604,7 +589,7 @@
         font-size: 30px;
         margin-bottom: 78px;
     }
-    .off .title {
+    .page_off .title {
         color: #75787a;
         margin-bottom: 0;
     }
@@ -639,7 +624,7 @@
     .tip.transparent {
         opacity: 0;
     }
-    .off .tip {
+    .page_off .tip {
         /*color: #c8cacc;*/
         color: #46bcff;
         margin: 24px 0;
@@ -659,12 +644,7 @@
         width: 204px;
         height: 204px;
     }
-    .off .imgWrapper img {
-        filter: invert(30%);
-    }
-    .off .switch img {
-        filter: invert(0);
-    }
+
     .err img{
         width: 360px;
         height: 360px;
@@ -683,7 +663,6 @@
         background-size: 96px 96px;
         outline: 0;
         cursor: pointer;
-        border-radius: 100%;
         /*扩展点击范围*/
         padding: 24px;
         top: 108px;
@@ -708,14 +687,10 @@
         color: #75787a;
         font-size: 24px;
     }
-    .subMenu .imgWrapper {
+    .subMenu .button .imgWrapper {
+        width:117px;
+        height:117px;
         margin: 0 24px 18px 24px;
-    }
-    .subMenu img {
-        /*width: 96px;*/
-        /*height: 96px;*/
-        width: 120px;
-        height: 120px;
     }
     .subMenu .devider {
         /*margin-top: 30px;*/
@@ -724,25 +699,6 @@
     .more-timing {
         font-size: 30px;
         margin-top: 12px;
-    }
-
-    /*按钮底部文字样式*/
-    .bottom .btnName {
-        opacity: 0.5;
-        line-height: 30px;
-        display: inline-block;
-    }
-    .off .btnName {
-        opacity: 0;
-    }
-    .on .active .btnName {
-        font-size: 30px;
-        opacity: 1;
-    }
-    .subMenu .active .btnName {
-        font-size: 24px;
-        color: #46bcff;
-        opacity: 1;
     }
 
     /*loading样式*/
@@ -767,11 +723,11 @@
         width: 180px;
         height: 180px;
     }
-    .on .switch.loading:before {
+    .page_on .switch.loading:before {
         background: url('./assets/buffering_power_white.gif') no-repeat center;
         background-size: 100%;
     }
-    .off .switch.loading:before {
+    .page_off .switch.loading:before {
         background: url('./assets/buffering_power_blue.gif') no-repeat center;
         background-size: 100%;
     }
@@ -784,35 +740,157 @@
         left: 24px;
     }
 
-    /*按钮点击样式*/
-    .pressed img{
-        filter: opacity(0.67);
-    }
-    .subMenu .pressed .imgWrapper{
-        background: rgba(0,0,0,0.1);
-    }
-    .pressed.switch img{
-        filter: opacity(1);
-    }
 
-    .on .pressed.switch .imgWrapper, .temp .pressed .imgWrapper{
-        background-color: rgba(255,255,255,0.5)
+.button{
+    display: inline-block;
+    .imgWrapper{
+        width: 144px;
+        height: 144px;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
     }
-    .off .pressed.switch .imgWrapper{
-        background-color: rgba(70,188,255,0.5);
+    &:active{
+        opacity: .8;
     }
-    .off .pressed.switch .img-normal{
-        display: none;
+    &.active{
+        .btnName{
+            opacity: 1;
+        }
     }
-    .off .pressed.switch .img-active{
-        display: inline-block;
-    }
+}
 
-    /*disabled样式*/
-    .off .disabled img {
-        filter: invert(12%);
+/*按钮底部文字样式*/
+.bottom .btnName {
+    opacity: 0.5;
+    line-height: 30px;
+    display: inline-block;
+}
+.bottom .active .btnName{
+    font-size: 30px;
+}
+
+.page_on .disabled .imgWrapper{
+    opacity: .5;
+}
+
+.page_off .disabled .imgWrapper {
+    filter: invert(18%);
+}
+
+.cool{
+    .imgWrapper{
+        background-image: url(./assets/cool_normal.png);
     }
-
-    .on .disabled{opacity: .5}
-
+    &.active .imgWrapper{
+        background-image: url(./assets/cool_active.png);
+    }
+}
+.heat{
+    .imgWrapper{
+        background-image: url(./assets/heat_normal.png);
+    }
+    &.active .imgWrapper{
+        background-image: url(./assets/heat_active.png);
+    }
+}
+.dehumidify{
+    .imgWrapper{
+        background-image: url(./assets/dehumidify_normal.png);
+    }
+    &.active .imgWrapper{
+        background-image: url(./assets/dehumidify_active.png);
+    }
+}
+.on{
+    .imgWrapper{
+        width: 204px;
+        height: 204px;
+        background-image: url(./assets/on_normal.png);
+    }
+    &:active .imgWrapper{
+        background-image: url(./assets/on_active.png);
+    }
+}
+.off{
+    .imgWrapper{
+        width: 204px;
+        height: 204px;
+        background-image: url(./assets/off_normal.png);
+    }
+    &:active .imgWrapper{
+        background-image: url(./assets/off_active.png);
+    }
+}
+.low{
+    .imgWrapper{
+        background-image: url(./assets/low_normal.png);
+    }
+    &.active .imgWrapper{
+        background-image: url(./assets/low_active.png);
+    }
+}
+.normal{
+    .imgWrapper{
+        background-image: url(./assets/medium_normal.png);
+    }
+    &.active .imgWrapper{
+        background-image: url(./assets/medium_active.png);
+    }
+}
+.high{
+    .imgWrapper{
+        background-image: url(./assets/high_normal.png);
+    }
+    &.active .imgWrapper{
+        background-image: url(./assets/high_active.png);
+    }
+}
+.minus{
+    .imgWrapper{
+        background-image: url(./assets/minus_normal.png);
+    }
+    &:active .imgWrapper{
+        background-image: url(./assets/minus_pressed.png);
+    }
+}
+.plus{
+    .imgWrapper{
+        background-image: url(./assets/plus_normal.png);
+    }
+    &:active .imgWrapper{
+        background-image: url(./assets/plus_pressed.png);
+    }
+}
+.mode_auto{
+    .imgWrapper{
+        background-image: url(./assets/mode_auto_normal.png);
+    }
+    &.active .imgWrapper{
+        background-image: url(./assets/mode_auto_active.png);
+    }
+}
+.wind{
+    .imgWrapper{
+        background-image: url(./assets/mode_air_normal.png);
+    }
+    &.active .imgWrapper{
+        background-image: url(./assets/mode_air_active.png);
+    }
+}
+.lr{
+    .imgWrapper{
+        background-image: url(./assets/vertical_normal.png);
+    }
+    &.active .imgWrapper{
+        background-image: url(./assets/vertical_active.png);
+    }
+}
+.ud{
+    .imgWrapper{
+        background-image: url(./assets/horizontal_normal.png);
+    }
+    &.active .imgWrapper{
+        background-image: url(./assets/horizontal_active.png);
+    }
+}
 </style>
