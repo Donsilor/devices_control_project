@@ -1,118 +1,28 @@
 <template>
-<div id="app" :class="{warn:level>=4}">
+<div id="app">
     <div class="water_wave ww1"></div>
     <div class="water_wave ww2"></div>
     <div class="water_wave ww3"></div>
 
-    <div class="page-on" :style="inPage('list')" v-if="isInit">
+    <div class="page-on" v-if="isInit">
         <div class="name">{{device_name}}</div>
         <div class="tip">
-            <p v-if="inError('E3')"><span @click="toggleErrorModal('E3', true)">漏水</span></p>
-            <p v-else-if="inError('E1')"><span>缺水</span></p>
-            <p v-else-if="model.status=='maintain'">检修</p>
+            <p v-if="model.status=='standby'">待机</p>
             <p v-else-if="model.status=='filter'">制水中...</p>
             <p v-else-if="model.status=='clean'">冲洗中...</p>
-            <p v-else-if="hasTDS && oldTDS">过滤前水质：{{oldTDS}} TDS</p>
         </div>
 
-        <div class="wash" :class="{washing:washing}">
-            <a href="#" @click.prevent="setClean"><i></i>一键冲洗</a>
-            <div class="progress"></div>
-        </div>
-
-        <div class="record_panle" v-if="hasTDS" @click="tdsModalVisible = true">
-            <div class="circle">
-                <span v-for="i in 4" :key="i" :class="'c'+i" v-show="i==(level>4?4:level)"></span>
-            </div>
-            <div class="arrow" :style="{transform:'rotate('+ rotate +'deg)'}"></div>
-            <div class="value">{{nowTDS}}</div>
-            <div class="pic">TDS</div>
-            <div class="valueset">
-                <span>0</span>
-                <span>50</span>
-                <span>100</span>
-                <span>300</span>
-                <span>300+</span>
-            </div>
-            <div class="text">
-                <span v-if="level==1">过滤后水质可直接饮用</span>
-                <span v-else-if="level==2">过滤后水质不建议直接饮用</span>
-                <span v-else-if="level==3">过滤后水质不建议直接饮用</span>
-                <span v-else>过滤后水质不可直接饮用</span>
-            </div>
-        </div>
-        <a class="view" href="" @click.prevent="currentPage='list'" v-if="hasTDS">
-            <span v-if="expired_num > 0">{{expired_num}}个滤芯已过期，点击查看详情</span>
-            <span v-else-if="expiring_num > 0">{{expiring_num}}个滤芯将到期，点击查看详情</span>
-            <span v-else>查看滤芯寿命</span>
-        </a>
-
-        <filter-items v-if="!hasTDS" :items="filterItems" :view-filter="viewFilter" />
-    </div>
-
-    <div class="page-sec" :style="inPage('index')">
-        <div class="topbar">
-            <!--<div class="left"><a href="" class="arrow" @click.prevent="currentPage='index'"></a></div>-->
-            <div class="title">滤芯寿命</div>
-        </div>
         <filter-items :items="filterItems" :view-filter="viewFilter" />
     </div>
-
-    <modal title="TDS简介" class="modal-w" v-model="tdsModalVisible">
-        <div class="tds">
-            <p>
-                对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果，
-                数值越低代表过滤效果越好。但对于含有致病菌、悬浮物等有害物质的水源，TDS并不适用。
-            </p>
-            <img src="./assets/waterpurifier_img_tdsppm.png"/>
-        </div>
-    </modal>
-
-    <modal title="净水器滤芯到期" v-model="timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
-        <div class="alarm">
-            <div class="alert"><i></i>{{expiredFilterText}}已到期</div>
-            <div class="text">
-                <p>前置活性炭寿命已到期，请更换以保证饮水质量！</p>
-                <p>请在更换滤芯后重置寿命</p>
-            </div>
-
-            <div class="btn">
-                <a href="#" class="" @click.prevent="viewExpired">查看详情</a>
-                <a href="#" class="btn-default" @click.prevent="confirmExpired">我知道了</a>
-            </div>
-        </div>
-    </modal>
-
-    <modal title="漏水警报" v-model="alarmModalVisible" :showCloseBtn="false" :overlayClickable="false">
-        <div class="alarm">
-            <div class="alert"><i></i>检测净水器到漏水！</div>
-            <div class="text">
-                <p>请先排查管道、台盆、机器，确定漏水位置；</p>
-                <p>非机器漏水，请擦干报警器并将净水器断电重启；</p>
-                <p>若净水器漏水，请及时关闭电源和水源。</p>
-            </div>
-            <div class="btn">
-                <a href="" class="btn-default" @click.prevent="confirmError('E3')">我知道了</a>
-            </div>
-        </div>
-    </modal>
 
     <modal title="滤芯状态" class="modal-w" v-model="statusModalVisible">
         <div class="lx_status">
             <div class="p1">滤芯{{currentFilter.index+1}}</div>
             <div class="p2"> </div>
-            <circle-pie class="pie" :value="toPercent(currentFilter.remaining, currentFilter.total)">
+            <circle-pie class="pie" :value="toPercent(currentFilter.remaining)">
                 <p class="p3">预计剩余寿命</p>
                 <p class="p4">{{currentFilter.remaining}}%</p>
             </circle-pie>
-            <!--<div class="btn">-->
-                <!--<div class="btn-block" :class="{active:isFilterResetActive}">-->
-                    <!--<a href="" class="reset" @click.prevent="confirmFilterReset">复位剩余时间</a>-->
-                    <!--<a href="" class="reset_submit" @click.prevent="submitFilterReset">确定重置</a>-->
-                <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="msg">更换滤芯后请重置剩余时间</div>-->
         </div>
     </modal>
 
@@ -618,129 +528,20 @@ export default {
     data() {
         return {
             device_name: '智能净水器',
-            tdsModalVisible: false,
-            timeoutModalVisible: false,
-            alarmModalVisible: false,
             statusModalVisible: false,
             model: {},
-            hasTDS: true,
-            oldTDS: '',
-            nowTDS: '',
-            currentPage: 'index',
             currentIndex: -1,
             filterItems: [],
-            washing: false,
-            isFilterResetActive: false,
-            isInit: false,
-            errors: [],
-            errorStore: JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || [],
-            expiredStore: JSON.parse(localStorage.getItem(EXPIRED_STORE_KEY)) || [],
+            isInit: false
         }
     },
     computed: {
-        level() {
-            for(var i = TDS_VALUE.length-1; i >= 0; i--){
-                if(this.nowTDS > TDS_VALUE[i]){
-                    return i + 1
-                }
-            }
-            return 1
-        },
-        rotate() {
-            var level = this.level
-            if(level == 5){
-                return TDS_ANGLE[4]
-            }
-            return getRotate(this.nowTDS, level-1, level)
-        },
-        //已过期
-        expired_num() {
-            if(!this.model.filter_lifetime) return 0
-            return this.model.filter_lifetime.filter((item) => {
-                return item <= 0
-            }).length
-        },
-        //即将过期
-        expiring_num() {
-            if(!this.model.filter_lifetime) return 0
-            return this.model.filter_lifetime.filter((item) => {
-                return getDays(item) <= 30
-            }).length
-        },
         currentFilter() {
             if(this.currentIndex == -1) return {}
             return this.filterItems[this.currentIndex]
-        },
-        expiredFilter() {
-            var result = []
-            if(!this.model.filter_lifetime) return result
-            this.model.filter_lifetime.forEach((item, index) => {
-                if(item <= 0 && this.expiredStore.indexOf(index) < 0){
-                    result.push(index)
-                }
-            })
-            return result
-        },
-        expiredFilterText() {
-            return this.expiredFilter.map((item) => {
-                return '滤芯' + (item + 1)
-            }).join('、')
-        }
-    },
-    watch: {
-        statusModalVisible(val) {
-            if(!val){
-                this.isFilterResetActive = false
-            }
-        },
-        currentPage(page) {
-            if(page == 'index'){
-                HdSmart.UI.toggleHeadAndFoot(true)
-            }else if(page == 'list'){
-                HdSmart.UI.toggleHeadAndFoot(false)
-            }
         }
     },
     methods: {
-        inPage(page) {
-            return {
-                visibility: this.currentPage==page ? '' : 'hidden'
-            }
-        },
-        controlDevice(attr, val, success) {
-
-            if(this.errors.length){
-                return
-            }
-
-            HdSmart.Device.control({
-                method: 'dm_set',
-                nodeid: `water_filter.main.${attr}`,
-                params: {
-                    attribute: {
-                        [attr]: val
-                    }
-                }
-            }, () => {
-                success && success()
-            }, () => {
-
-            })
-        },
-        setClean() {
-
-            var el = this.$el.querySelector('.progress')
-
-            var onWash = () => {
-                this.washing = false
-                el.removeEventListener('transitionend', onWash, false)
-            }
-
-            this.controlDevice('control', 'clean', () => {
-                this.washing = true
-                el.addEventListener('transitionend', onWash, false)
-            })
-        },
         getSnapShot() {
             HdSmart.Device.getSnapShot((data) => {
                 this.onSuccess(data)
@@ -761,116 +562,23 @@ export default {
 
             this.model = attrs
 
-//            var tds = attrs.water_filter_result.TDS
-//            if(tds && tds[0] != 65535){
-//                this.hasTDS = true
-//                this.oldTDS = tds[0]
-//                this.nowTDS = tds[1]
-//            }else{
-//                this.hasTDS = false
-//            }
-
             this.filterItems = this.model.filter_lifetime.map((el ,index) => {
-                if(el > 0 && this.expiredStore.indexOf(index) >= 0){
-                    this.expiredStore.splice(this.expiredStore.indexOf(index), 1)
-                }
-                // var total = this.model.filter_time_total[index]
                 return {
                     remaining: el,
-                    // total: total,
                     index: index
                 }
             })
 
         },
-        toPercent(remaining, total) {
-            // Math.ceil(remaining/total*100)
-            return parseInt(remaining/total*100)
+        toPercent(remaining) {
+            return remaining
         },
         viewFilter(index) {
             this.currentIndex = index
             this.statusModalVisible = true
-        },
-        confirmFilterReset() {
-            this.isFilterResetActive = true
-        },
-        submitFilterReset() {
-            var index = this.currentIndex
-            this.controlDevice('reset_filter', [index+1], () => {
-                HdSmart.UI.toast('重置成功')
-                this.isFilterResetActive = false
-                // this.filterItems[index].remaining = this.filterItems[index].total
-            },() => {
-                HdSmart.UI.toast('重置失败')
-            })
-        },
-        onAlarm(attr) {
-            var code = attr.error_code
-            var index = this.errors.indexOf(code)
-            var storeIndex = this.errorStore.indexOf(code)
-
-            if(index >= 0){
-                this.errors.splice(index, 1)
-            }
-
-            if(attr.error_status == 'open'){
-                this.errors.push(code)
-                if(storeIndex < 0){
-                    this.toggleErrorModal(code, true)
-                }
-            }else{
-                if(storeIndex >= 0){
-                    this.errorStore.splice(storeIndex, 1)
-                }
-            }
-        },
-        inError(error){
-            return this.errors.indexOf(error) >= 0
-        },
-        confirmError(error) {
-            this.toggleErrorModal(error, false)
-            if(this.errorStore.indexOf(error) < 0){
-                this.errorStore.push(error)
-            }
-        },
-        toggleErrorModal(error, visible) {
-            switch(error){
-                case 'E3':
-                    this.alarmModalVisible = visible
-                    break;
-                default:
-                    break;
-            }
-        },
-        viewExpired() {
-            if(this.expiredFilter.length == 1){
-                this.viewFilter(this.expiredFilter[0])
-            }else{
-                if(this.hasTDS){
-                    this.currentPage = 'list'
-                }
-            }
-            this.confirmExpired()
-        },
-        confirmExpired() {
-            this.timeoutModalVisible = false
-            this.expiredStore = this.expiredStore.concat(this.expiredFilter)
         }
     },
     created() {
-        this.$watch('errorStore.length', () => {
-            localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
-        })
-
-        this.$watch('expiredStore.length', () => {
-            localStorage.setItem(EXPIRED_STORE_KEY, JSON.stringify(this.expiredStore))
-        })
-
-        this.$watch('expiredFilter.length', (val) => {
-            if(val){
-                this.timeoutModalVisible = true
-            }
-        })
 
         HdSmart.ready(() => {
             HdSmart.UI.showLoading()
@@ -884,9 +592,6 @@ export default {
                         this.getSnapShot()
                     }
                     break
-                case 'dr_report_dev_alert':
-                    this.onAlarm(data.result.attribute)
-                    break;
                 default:
                     this.onSuccess(data.result)
                     break

@@ -140,7 +140,7 @@
                                 :class="{selected:currentDrying.value==item.value}">{{item.text}}</span>
                         </div>
                     </div>
-                    <div class="selectbox">
+                    <div class="selectbox" :class="{disable:!isRun}">
                         <div class="hd">
                             <div class="left">童锁</div>
                             <div class="right sb-wrap">
