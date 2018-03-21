@@ -370,6 +370,10 @@
                     return;
                 }
 
+                if(el && el.classList.contains('disabled')){
+                    return;
+                }
+
                 that.addLoading(el);
 
                 let attr = {};
@@ -464,6 +468,7 @@
 
                 this.tempFlag = true;
                 this.fakeTemp = value;
+                this.curButton = el
                 //设置timer
                 clearTimeout(this.tempTimer);
                 this.tempTimer = setTimeout(() => {
