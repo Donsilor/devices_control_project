@@ -7,10 +7,10 @@
             <h3 class="main-title">烤箱</h3>
             <div class="pannel">
                 <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
-                <p class="color-gray p-status"><span v-if="allAttribute.status=='start'">({{allAttribute.step === 'bake' ?  '烘烤中' : '预约中'}})</span></p>
+                <p class="color-gray p-status"><span v-if="allAttribute.status==='start'">({{allAttribute.step === 'bake' ?  '烘烤中' : '预约中'}})</span></p>
                 <div class="p-main-time">
                     <p class="p-num" v-html="remainingText"></p>
-                    <p class="color-gray">剩余总时间</p>
+                    <p class="color-gray">{{allAttribute.status==='start'? '剩余总时间' : '总时间'}}</p>
                 </div>
                 <p class="color-gray"><span>{{getModeName(allAttribute.mode)}}</span>设定温度<span class="p-wendu">{{allAttribute.temperature}}</span>℃</p>
             </div>
