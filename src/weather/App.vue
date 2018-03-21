@@ -219,10 +219,11 @@
                             item.weekday = currentWeekArr[index]
                             return item
                         })
-                        self.renderTodayClass(self.wList[0].conditionIdDay)
+                        // self.renderTodayClass(self.wList[0].conditionIdDay)
                     }
                     // 实时天气
                     if (innerData && innerData.condition) {
+                        self.renderTodayClass(innerData.condition.icon)
                         self.acturlTemp = innerData.condition.temp
                         self.acturlCondition = innerData.condition.condition
                     } else {
