@@ -50,6 +50,10 @@
             <div class="overlay" v-show="showMore"></div>
             <transition name="fade-in">
                 <div class="subMenu" v-show="showMore" @click.stop="">
+                    <div class="subHeader">
+                        更多
+                        <span class="sub-close" @click.stop="showMore=false;"></span>
+                    </div>
                     <devider :content="'模式'"></devider>
                     <div class="more-mode">
                         <ac-button class="mode_auto" :class="{active:params.mode=='auto'}" :info="buttonList.mode_auto" @tap="setParam"></ac-button>
@@ -344,6 +348,7 @@
                 switch (type){
                     case WIND_LEFT_RIGHT: this.setParam(type, newValue, '左右扫风' + str, el); break;
                     case WIND_UP_DOWN: this.setParam(type, newValue, '上下扫风' + str, el); break;
+                    case SLEEP_MODE: this.setParam(type, newValue, '静眠模式' + str, el); break;
                     default: this.setParam(type, newValue, tip, el); break;
                 }
             },
@@ -365,6 +370,10 @@
                     return;
                 }
 
+                if(el && el.classList.contains('disabled')){
+                    return;
+                }
+
                 that.addLoading(el);
 
                 let attr = {};
@@ -377,6 +386,7 @@
                 this.operationDelay = setTimeout(() => {
                     this.operationFlag = false
                 }, 1500)
+
                 //发送指令
                 HdSmart.Device.control({
                     method: 'dm_set',
@@ -457,6 +467,7 @@
 
                 this.tempFlag = true;
                 this.fakeTemp = value;
+                this.curButton = el
                 //设置timer
                 clearTimeout(this.tempTimer);
                 this.tempTimer = setTimeout(() => {

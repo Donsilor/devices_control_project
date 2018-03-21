@@ -24,6 +24,7 @@ let res = {
       "speed": "auto",
       "wind_up_down": "off",
       "wind_left_right": "off",
+      "sleep_mode": "on",
       "deviceModel": "KFRd-26GW/FE22BpA",
       "manufactureId": "tcl",
       "deviceCategory": "airconditioner.new",
