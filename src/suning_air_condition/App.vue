@@ -360,13 +360,13 @@
                     return;
                 }
 
-                //如果参数值没有变化，直接返回(设置温度除外)
-                if (that.params[type] === value && type !== TEMPERATURE) {
+                if(type == 'speed' && that.params.mode == 'dehumidify'){
+                    that.setTip('除湿模式下不可设置风速');
                     return;
                 }
 
-                if(type == 'speed' && that.params.mode == 'dehumidify'){
-                    that.setTip('除湿模式下不可设置风速');
+                //如果参数值没有变化，直接返回(设置温度除外)
+                if (that.params[type] === value && type !== TEMPERATURE) {
                     return;
                 }
 
@@ -434,12 +434,6 @@
             setTemperature(type, value, tip, el){
 
                 value = this.fakeTemp + value
-
-                //送风模式不能设置温度
-                if (this.params.mode === 'wind') {
-                    this.setTip('送风模式下不能设置温度');
-                    return;
-                }
 
                 if (this.params.mode === 'auto') {
                     this.setTip('智能模式下不能设置温度');

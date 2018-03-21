@@ -317,29 +317,10 @@
                     }
                 }
 
-                // if(attr.switchStatus != undefined){
-                //     this.params.switch = attr.switchStatus;
-                // }
+                if(this.params.mode == 'wind' && attr.env_temperature){
+                    this.fakeTemp = attr.env_temperature >= 100 ? attr.env_temperature/10 : attr.env_temperature
+                }
 
-                // if(attr.temperature != undefined && !this.tempFlag){
-                //     if(attr.temperature > 100){
-                //         temperatureRadio = 10
-                //     }
-                //     this.params.temperature = attr.temperature / temperatureRadio;
-                //     this.fakeTemp = attr.temperature / temperatureRadio
-                // }
-                // if(attr.mode != undefined){
-                //     this.params.mode = attr.mode;
-                // }
-                // if(attr.speed != undefined){
-                //     this.params.speed = attr.speed;
-                // }
-                // if(attr.wind_up_down != undefined){
-                //     this.params.wind_up_down = attr.wind_up_down;
-                // }
-                // if(attr.wind_left_right != undefined){
-                //     this.params.wind_left_right = attr.wind_left_right;
-                // }
 
             },
             toggle(type, value, tip, el){
