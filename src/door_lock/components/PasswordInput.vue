@@ -204,7 +204,7 @@ export default {
         },
         () => {
           //HdSmart.UI.toast("开锁成功");
-          this.close();
+          this.reset();
         },
         data => {
           HdSmart.UI.toast("开锁失败！");

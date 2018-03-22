@@ -15,6 +15,10 @@
     <!-- <router-link to="log" class="btn-golog"></router-link> -->
 
     <div class="alert-wraper">
+      <div class="alert" v-if="showLowBattery">
+        <i></i>智能门锁电池电量不足，请及时更换电池！
+        <a class="close" href="javascript:void(0)" @click="showLowBattery=false"></a>
+      </div>
       <div class="alert" :class="{warn:item.key}" v-for="(item,index) in alertModel" :key="index">
         <i></i>{{item.msg}}
         <a class="close" href="javascript:void(0)" @click="closeAlert(index)"></a>
@@ -164,8 +168,9 @@ const WARN_CODE = {
   e2: { msg: "有人非法开锁！", switch: true },
   e3: { msg: "有人强行拆门锁！", switch: true },
   e4: { msg: "门锁触发被挟持报警！", switch: true },
-  e5: { msg: "门锁：门锁已被锁死，无法手机开锁", switch:false}
+  e5: { msg: "门锁：门锁已被锁死，无法手机开锁", switch: false }
 };
+let errorSession = {};
 export default {
   components: {
     PasswordInput,
@@ -173,13 +178,13 @@ export default {
   },
   data() {
     return {
-      hasSnapShot:false,
+      hasSnapShot: false,
       device_name: "",
       passwordInputVisible: false,
       lowBattery: false,
+      showLowBattery: false,
       alertModel: [
-        { msg: "智能门锁电池电量不足，请及时更换电池！", key: 0,switch:true },
-        { msg: "有人非法开锁！", key: 1,switch:true }
+        // { msg: "智能门锁电池电量不足，请及时更换电池！", key: 0,switch:true },
       ],
       model: {
         switch: "on",
@@ -189,8 +194,8 @@ export default {
   },
   computed: {
     btnDisabled() {
-      let status = this.model.switch=='on'?true:false;
-      this.alertModel.forEach(function(v,i){
+      let status = this.model.switch == "on" ? true : false;
+      this.alertModel.forEach(function(v, i) {
         status = v.switch && status;
       });
       return status;
@@ -210,22 +215,38 @@ export default {
       let alertArry = [];
       const _this = this;
       attr.error.forEach(function(v, i) {
+        if (v.code == "e1") {
+          if (v.status) {
+            _this.lowBattery = true;
+            if (!errorSession["e1"]) {
+              _this.showLowBattery = true;
+              errorSession["e1"] = { status: 1 };
+            }
+          } else {
+            _this.lowBattery = false;
+            _this.showLowBattery = false;
+            if (errorSession["e1"]) {
+              delete errorSession["e1"];
+            }
+          }
+          return;
+        }
         if (v.status) {
           let key = 1;
-          if (v.code == "e1") {
-            _this.lowBattery = true;
-            key = 0;
-          }
-          alertArry.push({
-            msg:WARN_CODE[v.code].msg,
-            key:key,
-            switch:WARN_CODE[v.code].switch
+          if (!errorSession[v.code]) {
+            alertArry.push({
+              msg: WARN_CODE[v.code].msg,
+              key: key,
+              switch: WARN_CODE[v.code].switch
             });
-        }
-        else{
-          if(v.code == "e1"){
-            _this.lowBattery = false;
           }
+        } else {
+          if (errorSession[v.code]) {
+            delete errorSession[v.code];
+          }
+        }
+        if (!errorSession[v.code] && v.status) {
+          errorSession[v.code] = { status: v.status };
         }
       });
       this.alertModel = alertArry;
@@ -248,9 +269,21 @@ export default {
         this.device_name = data.device_name;
       }
       this.model = data.attribute;
-      if(this.model.battery_percentage==0){
+      if (this.model.battery_percentage <= 10) {
         this.lowBattery = true;
-        this.btnDisabled = true;
+        if (!errorSession["e1"]) {
+          this.showLowBattery = true;
+          errorSession["e1"] = { status: 1 };
+        }
+      } else {
+        this.lowBattery = false;
+        this.showLowBattery = false;
+        if (errorSession["e1"]) {
+          delete errorSession["e1"];
+        }
+      }
+      if (this.model.switch == "on") {
+        this.passwordInputVisible = false;
       }
     },
     onError() {}
