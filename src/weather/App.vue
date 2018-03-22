@@ -112,6 +112,7 @@
                         break
                     case '3':
                     case '7':
+                    case '8':
                     case '9':
                     case '10':
                         this.todyClass = 'img_bg_weather_rainy'
@@ -135,6 +136,8 @@
                         this.curMinBg = 'icn_weather_snowy'
                         break
                     default:
+                        this.todyClass = 'img_bg_weather_cloudy'
+                        this.curMinBg = 'icn_weather_cloudy'
                         break
                 }
             },
@@ -176,6 +179,7 @@
                         curClass = 'icn_weather_heavysnow_m'
                         break
                     default:
+                        curClass = 'icn_weather_cloudy_m'
                         break
                 }
                 return curClass
