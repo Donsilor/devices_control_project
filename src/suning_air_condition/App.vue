@@ -311,7 +311,7 @@
 
                 for(var k in attr){
                     if(this.operationFlag && k == this.operationKey){
-                        break;
+                        continue;
                     }
                     switch(k){
                         case 'switchStatus':
