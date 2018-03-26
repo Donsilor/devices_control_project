@@ -111,10 +111,10 @@
         }
         return arr
     }
-    import * as service from './service'
+
     import SwitchButton from './components/SwitchButton.vue'
     import AllConfig from './config'
-    import IScroll from 'iscroll/build/iscroll-lite';
+    // import IScroll from 'iscroll/build/iscroll-lite';
 
     export default {
         name: 'app',
