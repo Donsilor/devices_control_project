@@ -17,7 +17,7 @@
             <div class="controls">
                 <button @click="startOven" v-if="allAttribute.status==='stop'"><i class="c-firing"></i></button>
                 <button @click="stopOven" v-if="allAttribute.status==='start'"><i class="c-stop"></i></button>
-                <button style="margin-left: 100px" @click="showModelLayer"><i class="c-model"></i></button>
+                <button style="margin-left: 100px" @click="showModelLayer" :class="{disabled:allAttribute.status==='start'}"><i class="c-model"></i></button>
             </div>
         </div>
         <div class="model-select-layer oven-layer"  v-show="modelLayerShow">
@@ -31,6 +31,10 @@
                         <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
                         <div class="mode-name">{{item.name}}</div>
                     </li>
+                    <li @click="seleteMode(item)" v-for="item in elseModeList">
+                        <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
+                        <div class="mode-name">{{item.name}}</div>
+                    </li>
                 </ul>
                 <div class="select-param" @click="toggleShowSlider('wendu')">
                     <div class="hasDisable">
@@ -39,11 +43,12 @@
                     </div>
                 </div>
                 <div class="slide-list" v-show="wenduSelectFlag">
-                    <div class="slide-scroller" ref="tempScroll">
+                    <picker :slots="wenduSlot" @change="selectWendu" :valueKey="'value'" :item-height="30" :visible-item-count="3"></picker>
+                    <!-- <div class="slide-scroller" ref="tempScroll">
                         <ul class="slide-list-inner">
                             <li v-for="item in allAttribute.wenduList"  @click="selectWendu(item)"  :class="{active:item.value==allAttribute.temperature}">{{item.name}}</li>
                         </ul>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="select-param" @click="toggleShowSlider('time')">
                     <div class="hasDisable">
@@ -52,11 +57,12 @@
                     </div>
                 </div>
                 <div class="slide-list" v-show="timeSelectFlag">
-                    <div class="slide-scroller" ref="timeScroll">
+                    <picker :slots="timeSlot" @change="selectTime" :valueKey="'value'" :item-height="30" :visible-item-count="3"></picker>
+                    <!-- <div class="slide-scroller" ref="timeScroll">
                         <ul class="slide-list-inner">
                             <li v-for="item in allAttribute.timeList"  @click="selectTime(item)" :class="item.active?'active':''">{{item.name}}</li>
                         </ul>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- <div class="layer-bottom-btn" :class="allAttribute.status === 'start' ? 'disable' : ''">
@@ -66,11 +72,11 @@
         </div>
         <div class="model-more-layer oven-layer" v-if="moreLayerShow">
             <div class="layer-header">
-                <h3>更多</h3>
+                <h3>更多设置</h3>
                 <i class="btn-close" @click="closeMoreLayer"></i>
             </div>
             <div class="layer-body">
-                <p class="more-model-title">更多模式</p>
+                <!-- <p class="more-model-title">更多模式</p>
                 <div :class="allAttribute.status === 'start' ? 'disable' : ''">
                 <div class="up-down-fire">
                     <span @click="seleteMode(item)"
@@ -80,9 +86,10 @@
                         {{item.name}}
                     </span>
                 </div>
-                </div>
+                </div> -->
                 <div class="main-select-con" :class="{disable:allAttribute.status!='start'}">
-                    <div class="select-param hasDisable">
+                    <br><br>
+                    <div class="select-param noborder hasDisable">
                         <p>热风对流</p>
                         <switch-button :sync="true" :disabled="allAttribute.status!='start'" :value="allAttribute.convection==='on'" @change="changeConvection"/>
                     </div>
@@ -112,14 +119,25 @@
         return arr
     }
 
+    function findIndex(array, fn){
+        for(var i=0;i<array.length;i++){
+            if(fn(array[i])){
+                return i
+            }
+        }
+        return -1
+    }
+
     import SwitchButton from './components/SwitchButton.vue'
+    import Picker from './components/Picker/picker.vue'
     import AllConfig from './config'
     // import IScroll from 'iscroll/build/iscroll-lite';
 
     export default {
         name: 'app',
         components: {
-            SwitchButton
+            SwitchButton,
+            Picker
         },
         data() {
             return {
@@ -135,8 +153,8 @@
                     convection: 'on', // 热风对流
                     rotisserie: 'on', //烤叉
                     remaining: 0,  //剩余总时间
-                    wenduList: getWenduList(100,230),
-                    timeList: getTimeList(1,60)
+                    wenduList: [],
+                    timeList: []
                 },
                 //模式
                 tempMode: '', //临时变量，点击确认的时候才赋值给真mode
@@ -219,10 +237,31 @@
                 if(val == 'start'){
                     this.wenduSelectFlag = false
                     this.timeSelectFlag = false
+                    this.modelLayerShow = false
                 }
             }
         },
         computed: {
+            wenduSlot() {
+                var current = findIndex(this.allAttribute.wenduList, (item) => {
+                    return this.allAttribute.temperature == item.value
+                })
+
+                return [{
+                    flex: 1,
+                    defaultIndex: current,
+                    values: this.allAttribute.wenduList,
+                    className: 'slot1'
+                }]
+            },
+            timeSlot() {
+                return [{
+                    flex: 1,
+                    // defaultIndex: current,
+                    values: this.allAttribute.timeList,
+                    className: 'slot2'
+                }]
+            },
             remainingText() {
                 var total = this.allAttribute.remaining
                 if(this.allAttribute.status == 'start' && this.allAttribute.step == 'reserve'){
@@ -280,8 +319,10 @@
                 this.moreLayerShow = true
             },
             showModelLayer () {
-                this.maskLyerShow = true
-                this.modelLayerShow = true
+                if(this.allAttribute.status != 'start'){
+                    this.maskLyerShow = true
+                    this.modelLayerShow = true
+                }
             },
             seleteMode (item) {
                 // 如果正在工作 不能选模式
@@ -311,17 +352,15 @@
                     }
                 }
             },
-            selectWendu (item) {
-                if (this.allAttribute.status === 'start') {
-                    return
+            selectWendu (picker, values) {
+                if(values.length && values[0]){
+                    this.allAttribute.temperature = values[0].value
                 }
-                this.allAttribute.temperature = item.value
             },
-            selectTime (item) {
-                if (this.allAttribute.status === 'start') {
-                    return
+            selectTime (picker, values) {
+                if(values.length && values[0]){
+                    this.allAttribute.bake_duration = values[0].value
                 }
-                this.allAttribute.bake_duration = item.value
             },
             getModeName (val) {
                 let text = ''
@@ -461,7 +500,7 @@ ul{
 }
 .wrapper{
     text-align: center;
-    margin-top: 140px;
+    margin-top: 120px;
     height: 600px;
     left: 50%;
     width: 900px;
@@ -543,15 +582,19 @@ ul{
         }
     }
 }
+.disabled .c-model{
+    filter: grayscale(1);
+    opacity: .5;
+}
 .oven-layer{
     font-size: 24px;
     color: #76787a;
     width: 1300px;
-    height: 840px;
+    height: 800px;
     position: absolute;
     z-index: 9999;
     left: 50%;
-    top: 100px;
+    top: 80px;
     transform: translate(-50%, 0);
     background:#ffffff;
     /*box-shadow:0 3px 12px 0 rgba(0,0,0,0.10);*/
@@ -642,7 +685,7 @@ ul{
 
     }
     .model-list{
-        width: 920px;
+        width: 1180px;
         margin: 30px auto 0;
         overflow: hidden;
         li{
@@ -650,8 +693,8 @@ ul{
             text-align: center;
             float: left;
             width: 130px;
-            margin:0 50px;
-            padding-bottom: 30px;
+            margin:0 30px;
+            padding-bottom: 25px;
             div{
                 margin-top: 5px;
                 height: 40px;
@@ -715,12 +758,31 @@ ul{
                 }
 
             }
+
+            .up-fire{
+                background-image: url("assets/btn_up_fire.png");
+                &.active{
+                    background-image: url("assets/btn_up_fire_selected.png")
+                }
+            }
+            .down-fire{
+                background-image: url("assets/btn_down_fire.png");
+                &.active{
+                    background-image: url("assets/btn_down_fire_selected.png")
+                }
+            }
+            .both-fire{
+                background-image: url("assets/btn_conflagration.png");
+                &.active{
+                    background-image: url("assets/btn_conflagration_selected.png")
+                }
+            }
         }
     }
 }
 .model-more-layer{
-    height: 600px;
-    top: 150px;
+    height: 400px;
+    top: 200px;
     .more-model-title{
         color: #c8cacc;
         height: 70px;
@@ -772,16 +834,18 @@ ul{
     }
 
 .select-param{
-            box-shadow:inset 0 1px 0 0 #dbdbdb;
+            border-top:1px solid #dbdbdb;
             position: relative;
             margin:0 45px;
-            height: 80px;
-            line-height: 80px;
+            padding: 10px 0;
+            line-height: 2;
+            overflow: hidden;
+            p{
+                float: left;
+            }
             .value-wendu{
                 color:#46bcff;
-                position: absolute;
-                top: 5px;
-                right: 20px;
+                float: right;
                 i{
                     display: inline-block;
                     width: 24px;
@@ -797,9 +861,7 @@ ul{
                 }
             }
             .vue-js-switch{
-                position: absolute !important;
-                right: 18px;
-                top: 18px;
+                float: right;
             }
         }
         .slide-list{
@@ -853,5 +915,8 @@ ul{
         .up-down-fire{
             color: #ccc;
         }
+}
+.noborder{
+    border-top: 0;
 }
 </style>
