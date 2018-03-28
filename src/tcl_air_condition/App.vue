@@ -3,20 +3,21 @@
         <p class="title" v-show="!initErr">{{ deviceName }}</p>
         <p class="tip" v-show="(!initErr) && params.switch === 'off'">已关闭</p>
 
+        <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
+            <defs>
+                <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509"
+                                y2="1.0971">
+                    <stop offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
+                    <stop offset="1" style="stop-color:#FFFFFF; stop-opacity:0.3"/>
+                </linearGradient>
+            </defs>
+            <path
+                d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z"
+                style="fill:url(#lg1);"/>
+        </svg>
+
         <!--开机界面-->
         <div v-if="(!initErr) && params.switch === 'on'">
-            <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
-                <defs>
-                    <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509"
-                                    y2="1.0971">
-                        <stop offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
-                        <stop offset="1" style="stop-color:#FFFFFF; stop-opacity:0.3"/>
-                    </linearGradient>
-                </defs>
-                <path
-                    d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z"
-                    style="fill:url(#lg1);"/>
-            </svg>
 
             <!--温度Start-->
             <div class="temp">
@@ -66,18 +67,7 @@
 
         <!--关机界面-->
         <div v-if="(!initErr) && params.switch === 'off'">
-            <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
-                <defs>
-                    <linearGradient id="lg2" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509"
-                                    y2="1.0971"><!--x1="0%" y1="0%" x2="0%" y2="100%"-->
-                        <stop offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
-                        <stop offset="1" style="stop-color:#FFFFFF; stop-opacity:0.75"/>
-                    </linearGradient>
-                </defs>
-                <path
-                    d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z"
-                    style="fill:url(#lg2);"/>
-            </svg>
+
             <div v-if="deviceCategory === 0" class="hanging"></div>
             <div v-if="deviceCategory === 1" class="package"></div>
 

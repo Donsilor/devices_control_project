@@ -3,7 +3,7 @@
         <div class="mask" v-if="maskLyerShow" @click="maskLayerClick"></div>
         <span class="more-btn" @click="showMoreLayer"></span>
         <div class="wrapper">
-            <h3 class="main-title">烤箱</h3>
+            <h3 class="main-title">{{device_name}}</h3>
             <div class="pannel">
                 <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
                 <p class="color-gray p-status"><span v-if="allAttribute.status==='start'">({{allAttribute.step === 'bake' ?  '烘烤中' : '预约中'}})</span></p>
@@ -17,7 +17,7 @@
             <div class="controls">
                 <button @click="startOven" v-if="allAttribute.status==='stop'"><i class="c-firing"></i></button>
                 <button @click="stopOven" v-if="allAttribute.status==='start'"><i class="c-stop"></i></button>
-                <button style="margin-left: 100px" @click="showModelLayer" :class="{disabled:allAttribute.status==='start'}"><i class="c-model"></i></button>
+                <button style="margin-left: 100px" @click="showModelLayer"><i class="c-model"></i></button>
             </div>
         </div>
         <div class="model-select-layer oven-layer"  v-show="modelLayerShow">
@@ -70,7 +70,7 @@
                 <button class="confirm" @click="setMode">确定</button>
             </div> -->
         </div>
-        <div class="model-more-layer oven-layer" v-if="moreLayerShow">
+        <div class="model-more-layer oven-layer" v-show="moreLayerShow">
             <div class="layer-header">
                 <h3>更多设置</h3>
                 <i class="btn-close" @click="closeMoreLayer"></i>
@@ -156,9 +156,6 @@
                     wenduList: [],
                     timeList: []
                 },
-                //模式
-                tempMode: '', //临时变量，点击确认的时候才赋值给真mode
-                tempElseMode: '',
                 // 遮罩层
                 maskLyerShow: false,
                 //模式选择层
@@ -227,9 +224,7 @@
                         mode: 'roast'
                     }
                 ],
-                //出错信息
-                status: '',
-                firstIn: true
+                device_name: '烤箱',
             }
         },
         watch: {
@@ -237,7 +232,9 @@
                 if(val == 'start'){
                     this.wenduSelectFlag = false
                     this.timeSelectFlag = false
-                    this.modelLayerShow = false
+                    if(this.modelLayerShow){
+                        this.closeModelLayer()
+                    }
                 }
             }
         },
@@ -319,10 +316,8 @@
                 this.moreLayerShow = true
             },
             showModelLayer () {
-                if(this.allAttribute.status != 'start'){
-                    this.maskLyerShow = true
-                    this.modelLayerShow = true
-                }
+                this.maskLyerShow = true
+                this.modelLayerShow = true
             },
             seleteMode (item) {
                 // 如果正在工作 不能选模式
@@ -360,6 +355,7 @@
             selectTime (picker, values) {
                 if(values.length && values[0]){
                     this.allAttribute.bake_duration = values[0].value
+                    this.allAttribute.remaining = values[0].value
                 }
             },
             getModeName (val) {
@@ -386,9 +382,11 @@
                 let attributes = data.attribute
                 let curAttributes = this.allAttribute
                 let config = AllConfig[attributes.mode || 'barbecues']
+                //剩余时间设置为烘干时间，避免没有该字段显示异常
                 config.remaining = config.bake_duration
 
                 if(attributes.mode){
+                    //烘烤时间设置为默认时间，设备不保存，上报bake_duration为剩余时间
                     attributes.bake_duration = config.bake_duration
                 }
                 attributes = Object.assign({}, config, attributes)
@@ -399,11 +397,10 @@
                     }
                 }
 
-                // if (this.firstIn) {
-                //     this.allAttribute['wenduList'] = config['wenduList']
-                //     this.allAttribute['timeList'] = config['timeList']
-                //     this.firstIn = false
-                // }
+                if(data.device_name){
+                    this.device_name = data.device_name
+                }
+
             },
             controlDevice(paramObj, success, error) {
                 HdSmart.Device.control({

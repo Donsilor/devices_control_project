@@ -64,6 +64,7 @@
   .picker-item.picker-selected {
     color: #000;
     transform: translate3d(0, 0, 0) rotateX(0);
+    font-size: 30px;
   }
   .picker-3d .picker-items {
     overflow: hidden;
