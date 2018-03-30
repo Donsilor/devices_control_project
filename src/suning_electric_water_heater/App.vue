@@ -1,48 +1,51 @@
 <template>
 <div id="app">
     <div class="page-on">
-        <div class="device_name">{{device_name}}</div>
-        <div class="status">正在加热</div>
-        <div class="current_temp">
-            <strong>38</strong>
-            <small>℃</small>
-            <p>当前温度</p>
-        </div>
-        <div class="set_temp">
-            <p><span>预设温度</span>{{temp}}℃</p>
-            <a href="" class="btn btn-reduce" @click.prevent="setTempDown"><i></i></a>
-            <a href="" class="btn btn-add" @click.prevent="setTempUp"><i></i></a>
-            <div class="slider">
-                <slider ref="tempSlider" v-model="temp" :options="sliderOptions" @change="onTempChange" />
-                <span class="min">{{sliderOptions.range.min}}℃</span>
-                <span class="max">{{sliderOptions.range.max}}℃</span>
+        <div class="ani"></div>
+        <div class="inner">
+            <div class="device_name">{{device_name}}</div>
+            <div class="status">正在加热</div>
+            <div class="current_temp">
+                <strong>38</strong>
+                <small>℃</small>
+                <p>当前温度</p>
             </div>
-        </div>
-        <div class="btns">
-            <a href="" class="btn btn-shut" v-if="model.switch=='on'" @click.prevent="setSwitch('off')">
-                <i></i>
-                <span>关闭</span>
-            </a>
-            <a href="" class="btn btn-shut" @click.prevent="setSwitch('on')" v-else>
-                <i></i>
-                <span>开机</span>
-            </a>
-            <a href="" class="btn btn-heating_half" :class="{active:model.mode=='half_tank'}" @click.prevent="setMode('half_tank')">
-                <i></i>
-                <span>速热半胆</span>
-            </a>
-            <a href="" class="btn btn-heating_whole" :class="{active:model.mode=='full_tank'}" @click.prevent="setMode('full_tank')">
-                <i></i>
-                <span>速热全胆</span>
-            </a>
-            <a href="" class="btn btn-heating_append" :class="{active:model.mode=='max_volume'}" @click.prevent="setMode('max_volume')">
-                <i></i>
-                <span>Max增容</span>
-            </a>
-            <a href="" class="btn btn-intelligentbath" :class="{active:model.mode=='smart'}" @click.prevent="setMode('smart')">
-                <i></i>
-                <span>智能浴</span>
-            </a>
+            <div class="set_temp">
+                <p><span>预设温度</span>{{temp}}℃</p>
+                <a href="" class="btn btn-reduce" @click.prevent="setTempDown"><i></i></a>
+                <a href="" class="btn btn-add" @click.prevent="setTempUp"><i></i></a>
+                <div class="slider">
+                    <slider ref="tempSlider" v-model="temp" :options="sliderOptions" @change="onTempChange" />
+                    <span class="min">{{sliderOptions.range.min}}℃</span>
+                    <span class="max">{{sliderOptions.range.max}}℃</span>
+                </div>
+            </div>
+            <div class="btns">
+                <a href="" class="btn btn-shut" v-if="model.switch=='on'" @click.prevent="setSwitch('off')">
+                    <i></i>
+                    <span>关闭</span>
+                </a>
+                <a href="" class="btn btn-shut" @click.prevent="setSwitch('on')" v-else>
+                    <i></i>
+                    <span>开机</span>
+                </a>
+                <a href="" class="btn btn-heating_half" :class="{active:model.mode=='half_tank'}" @click.prevent="setMode('half_tank')">
+                    <i></i>
+                    <span>速热半胆</span>
+                </a>
+                <a href="" class="btn btn-heating_whole" :class="{active:model.mode=='full_tank'}" @click.prevent="setMode('full_tank')">
+                    <i></i>
+                    <span>速热全胆</span>
+                </a>
+                <a href="" class="btn btn-heating_append" :class="{active:model.mode=='max_volume'}" @click.prevent="setMode('max_volume')">
+                    <i></i>
+                    <span>Max增容</span>
+                </a>
+                <a href="" class="btn btn-intelligentbath" :class="{active:model.mode=='smart'}" @click.prevent="setMode('smart')">
+                    <i></i>
+                    <span>智能浴</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -52,6 +55,9 @@
 *{
     padding: 0;
     margin: 0;
+}
+body{
+    overflow: hidden;
 }
 #app{
     font-size: 24px;
@@ -68,6 +74,13 @@ a{
     left: 0;
     top: 0;
     background:#1eb0ff;
+}
+.inner{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
 }
 .device_name{
     text-align: center;
@@ -244,12 +257,49 @@ a{
         background-image: url(./assets/btn_intelligentbath_selected.png);
     }
 }
+.ani{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+.bubble{
+    position: absolute;
+    left: 0;
+    top: 0;
+    background:rgba(255,255,255,0.1);
+    width:62px;
+    height:62px;
+    border-radius:100%;
+    transition: all 20s;
+    transform: translateX(-50%);
+}
 </style>
 
 <script>
 import Slider from './components/Slider.vue'
 
 const [TEMP_MIN,TEMP_MAX] = [35, 65]
+
+function createBubble(container, option){
+    var el = document.createElement('div')
+    el.className = 'bubble'
+    el.style.left = option.left + 'px'
+    el.style.top = option.top + 'px'
+    el.style.width = el.style.height = '50px'
+
+    container.appendChild(el)
+
+    el.addEventListener('transitionend', function() {
+        container.removeChild(container.firstChild)
+    }, false)
+
+    setTimeout(function() {
+        el.style.top = '-200px'
+        el.style.width = el.style.height = '100px'
+    }, 100)
+}
 
 export default {
     components: {
@@ -331,6 +381,17 @@ export default {
                 }
             })
         })
+    },
+    mounted() {
+        var el = this.$el.querySelector('.ani')
+        var top = document.documentElement.offsetHeight
+        var width = document.documentElement.offsetWidth
+        setInterval(()=> {
+            createBubble(el, {
+                left: Math.random() * width,
+                top: top
+            })
+        }, 1500)
     }
 }
 </script>

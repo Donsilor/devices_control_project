@@ -17,7 +17,7 @@
                     <span class="unlock-btn" :class="{'unlock-disabled':disabled}">开锁</span>
                 </a>
             </div>
-        </div>      
+        </div>
     </div>
 </div>
 </template>
@@ -188,7 +188,7 @@ export default {
       let tmp = this.psw.map(x => {
         return (x.charCodeAt(0) ^ 0xa5).toString(16);
       });
-      alert(tmp.join(''))
+    //   alert(tmp.join(''))
 
       //发送指令
       HdSmart.Device.control(

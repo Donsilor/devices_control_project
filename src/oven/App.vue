@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <div class="mask" v-if="maskLyerShow" @click="maskLayerClick"></div>
+        <div class="mask" v-show="maskLyerShow" @click="maskLayerClick"></div>
         <span class="more-btn" @click="showMoreLayer"></span>
         <div class="wrapper">
             <h3 class="main-title">{{device_name}}</h3>
@@ -252,9 +252,13 @@
                 }]
             },
             timeSlot() {
+                var current = findIndex(this.allAttribute.timeList, (item) => {
+                    return this.allAttribute.bake_duration == item.value
+                })
+
                 return [{
                     flex: 1,
-                    // defaultIndex: current,
+                    defaultIndex: current,
                     values: this.allAttribute.timeList,
                     className: 'slot2'
                 }]

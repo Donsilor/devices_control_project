@@ -19,12 +19,12 @@
         <i></i>智能门锁电池电量不足，请及时更换电池！
         <a class="close" href="javascript:void(0)" @click="showLowBattery=false"></a>
       </div>
-      <div class="alert" :class="{warn:item.key}" v-for="(item,index) in alertModel" :key="index">
+      <div class="alert" :class="{warn:item.key}" v-for="(item,index) in alertModel" :key="index" v-if="!item.clicked">
         <i></i>{{item.msg}}
         <a class="close" href="javascript:void(0)" @click="closeAlert(index)"></a>
       </div>
     </div>
-    
+
 
     <password-input :visible="passwordInputVisible" v-on:close-dialog="passwordInputVisible=false" />
 
@@ -170,6 +170,7 @@ const WARN_CODE = {
   e4: { msg: "门锁触发被挟持报警！", switch: true },
   e5: { msg: "门锁：门锁已被锁死，无法手机开锁", switch: false }
 };
+const ERROR_STORE_KEY = 'door_lock_error'
 let errorSession = {};
 export default {
   components: {
@@ -189,15 +190,16 @@ export default {
       model: {
         switch: "on",
         battery_percentage: 0
-      }
+      },
+      errorStore: []
     };
   },
   computed: {
     btnDisabled() {
       let status = this.model.switch == "on" ? true : false;
-      this.alertModel.forEach(function(v, i) {
-        status = v.switch && status;
-      });
+    //   this.alertModel.forEach(function(v, i) {
+    //     status = v.switch && status;
+    //   });
       return status;
     }
   },
@@ -209,9 +211,16 @@ export default {
       this.passwordInputVisible = true;
     },
     closeAlert(index) {
-      this.alertModel.splice(index, 1);
+    //   this.alertModel.splice(index, 1);
+      let error = this.alertModel[index]
+      let code = error.code
+      if(this.errorStore.indexOf(code) < 0){
+        this.errorStore.push(code)
+        error.clicked = true
+      }
     },
     onAlarm(attr) {
+        /*
       let alertArry = [];
       const _this = this;
       attr.error.forEach(function(v, i) {
@@ -250,6 +259,33 @@ export default {
         }
       });
       this.alertModel = alertArry;
+    */
+      let errors = attr.error || []
+      let alertArry = [];
+        for(var i=0; i<this.errorStore.length; i++){
+            var item = errors.filter((el) => {
+                return el.code == this.errorStore[i]
+            })
+            if(item.length==0 || item[0].status==0){
+                this.errorStore.splice(i, 1)
+                i--
+            }
+        }
+
+        errors.forEach((el) => {
+            if(el.status == 1){
+                alertArry.push({
+                    msg: WARN_CODE[el.code].msg,
+                    code: el.code,
+                    key: 1,
+                    switch: WARN_CODE[el.code].switch,
+                    clicked: this.errorStore.indexOf(el.code) >= 0
+                })
+            }
+        })
+
+        this.alertModel = alertArry
+
     },
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot(
@@ -271,24 +307,22 @@ export default {
       this.model = data.attribute;
       if (this.model.battery_percentage <= 10) {
         this.lowBattery = true;
-        if (!errorSession["e1"]) {
-          this.showLowBattery = true;
-          errorSession["e1"] = { status: 1 };
-        }
+        this.showLowBattery = true;
       } else {
         this.lowBattery = false;
         this.showLowBattery = false;
-        if (errorSession["e1"]) {
-          delete errorSession["e1"];
-        }
       }
       if (this.model.switch == "on") {
         this.passwordInputVisible = false;
       }
+      this.onAlarm(data.attribute)
     },
     onError() {}
   },
   created() {
+    this.$watch('errorStore', () => {
+        localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
+    })
     HdSmart.ready(() => {
       HdSmart.UI.showLoading();
       this.getSnapShot(() => {
