@@ -6,11 +6,11 @@
             <router-link to="/" class="icon icon-arrow"></router-link>
         </div>
         <div class="title">
-            <a href="#" @click.prevent="switchLog('lock')" :class="{active:activeName=='lock'}">开锁记录</a>
-            <a href="#" @click.prevent="switchLog('warn')" :class="{active:activeName=='warn'}">预警记录</a>
+            <a href="" @click.prevent="switchLog('lock')">开锁记录</a>
+            <!-- <a href="#" @click.prevent="switchLog('warn')" :class="{active:activeName=='warn'}">预警记录</a> -->
         </div>
         <div class="right">
-            <a href="" class="icon icon-del" @click.prevent="clearLog"></a>
+            <!-- <a href="" class="icon icon-del" @click.prevent="clearLog"></a> -->
         </div>
     </div>
 
@@ -87,7 +87,7 @@
 .btn-cale {
   position: fixed;
   right: 60px;
-  bottom: 78px;
+  bottom: 80px;
   width: 96px;
   height: 96px;
   background: url(../assets/btn_calendar_normal.png) no-repeat;
@@ -100,126 +100,94 @@
 </style>
 
 <script>
-import Vue from "vue";
-import datepick from "vue2-datepick";
 import LogList from "./LogList";
-import Calendar from "./Calendar";
-Vue.use(datepick);
+
+let device_id = null
+let family_id = null
+
+function fillz(num) {
+    return num.length == 1 ? '0' + num : num
+}
+
+function getDate(date){
+    let d = date.split('-')
+    let result = d[0] + fillz(d[1]) + fillz(d[2])
+    return result
+}
+
 export default {
   components: {
-    LogList,
-    Calendar
+    LogList
   },
   data() {
-    let date = new Date();
-    let year = date.getYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDay();
-    month = month > 9 ? month : "0" + month;
-    day = day > 9 ? day : "0" + day;
     return {
-      family_id: "",
-      device_id: "",
-      activeName: "lock",
-      date: year + month + day,
-      list: []
+        list: []
     };
   },
   methods: {
     showCalendar() {
       this.$calendar.show({
+        year: [2017,2020],
         onOk: date => {
-          this.date = date;
-          if(this.activeName=='lock'){
-              this.getLockList()
-          }else{
-              this.getWarnList();
-          }
+            this.getLogData(getDate(date))
         }
       });
     },
     clearLog() {
-        HdSmart.UI.alert({message:'确认清除所有记录吗？'},()=>{
-            this.list = [];
-        });
+
     },
-    switchLog(type) {
-      if (type == this.activeName) {
-        return;
-      }
-      this.activeName = type;
-      if(type=='lock'){
-          this.getLockList();
-      }else{
-          this.getWarnList();
-      }
-    },
-    getSnapShot(cb) {
-      HdSmart.Device.getSnapShot(
-        data => {
-          this.onSuccess(data);
-          cb && cb();
-        },
-        () => {
-          this.onError();
-          cb && cb();
-        }
-      );
-    },
-    onSuccess(data) {
-      if (!data) return;
-      if (data.family_id) {
-        this.family_id = data.family_id;
-        this.device_id = data.device_id;
-      }
-    },
-    onError() {},
-    getLockList() {
-      //发送指令
-      HdSmart.Device.control(
-        {
-          method: "get",
-          nodeid: "doorlock.main.user_identify",
+    getLogData(date){
+        HdSmart.Device.control({
+          method: "dr_get_dev_status_list",
           params: {
-            attribute: {
-              user_identify: "",
-              date: this.date
-            }
+              device_id: device_id,
+              family_id: family_id,
+              date: date || '20180330',
+              page: {
+                size: 10,
+                begin: 0
+              }
           }
-        },
-        data => {},
-        data => {
-          HdSmart.UI.toast("查询开锁记录失败！");
+        }, (data) => {
+            if(data.code === 0 && data.result.list){
+                this.list = data.result.list
+            }else{
+                alert(JSON.stringify(data))
+            }
+        }, (data) => {
+
         }
-      );
+      )
     },
-    getWarnList() {
-      HdSmart.Device.control(
-        {
-          method: "get",
-          nodeid: "doorlock.main.open_type",
-          params: {
-            attribute: {
-              open_type: "",
-              date: this.date
-            }
-          }
-        },
-        data => {},
-        data => {
-          HdSmart.UI.toast("查询预警记录失败！");
+    getAlertData() {
+
+    },
+    beforeInit(data){
+        if(!data || !data.device_id || !data.family_id){
+            return
         }
-      );
+        if(data.device_id){
+            device_id = data.device_id
+        }
+        if(data.family_id){
+            family_id = data.family_id
+        }
+        this.getLogData()
     }
   },
   created() {
-    HdSmart.ready(() => {
-      HdSmart.UI.showLoading();
-      this.getSnapShot(() => {
-        this.getLockList();
-        HdSmart.UI.hideLoading();
-      });
-    });
+    HdSmart.ready(() =>{
+        setTimeout(() => {
+            HdSmart.Device.getSnapShot(this.beforeInit)
+        }, 100)
+    })
+
+    HdSmart.onDeviceListen((data) => {
+        if(data.method == 'dm_get_device_info'){
+            this.beforeInit(data.result)
+        }
+    })
+
   }
 };
 </script>

@@ -44,7 +44,9 @@
                 default:''
             }
         },
+
         mounted(){
+
             if(this.defaultVal){
                 this.moveTo()
             }else{
@@ -52,18 +54,22 @@
                     transform:'translate3d(0px, '+this.sY+'px, 0px)',
                 }
             }
+
+
         },
         watch:{
             dataList(){
+
                 if(this.type=='month'||this.type=='day'){
-                    console.log(this.dataList[1])
+                    // console.log(this.dataList[1])
                     if(this.itemLength>this.dataList[1]){
-                        console.log(this.dataList[1])
+                        // console.log(this.dataList[1])
                         this.$emit('update:defaultVal', this.dataList[1])
                         // 调用this.$emit('update')后，this.defaultVal并没有马上改变，但是父级的值已经改了
                         this.moveTo(this.dataList[1])
                     }
                 }
+
             }
         },
         computed:{
@@ -76,10 +82,12 @@
                   case 'day':txt = '日';break;
                   default:txt = '年';
               }
+
               for(let i =this.dataList[0];i<=this.dataList[1];i++){
                   a.push({txt:i+txt,val:i})
               }
               this.itemLength = a.length;
+
               if(this.type=='day'){
                   let end  = (this.itemLength-1)*-34+102;
                   if(this.eY<=end){
@@ -87,14 +95,20 @@
                       this.eY = end;
                       this.activeItem = this.itemLength-1;
                   }
+
                   this.style =  {
                       transform:'translate3d(0px, '+this.eY+'px, 0px)',
                       transition:'all ease '+this.t+'s'
                   }
+
                     this.curVal = a[this.activeItem]['val']
+
                     this.$emit('changeCurVal',this.type,this.curVal)
               }
+
+
               return a
+
           }
         },
         methods:{
@@ -104,20 +118,25 @@
             },
             //初始化有值的时候滚动到某个地方
             moveTo(defaultVal){
+
                 this.dateList.map((i,k)=>{
+
                     if(i.val==(defaultVal||this.defaultVal)){
                         this.activeItem = k;
                         this.activeItemValue = i.val;
                     }
                 });
+
                 this.Y =102- (this.activeItem*34);
                 this.eY = 102- (this.activeItem*34);
+
                 this.style =  {
                     transform:'translate3d(0px, '+this.Y+'px, 0px)',
                     transition:'all ease '+this.t+'s'
                 }
             },
             move(e){
+
                 this.Y =this.eY+ e.touches[0].clientY  - this.sY;
 //
                 this.t = 0.1;
@@ -127,34 +146,46 @@
                 }
             },
             end(e){
+
                 let m = this.Y;
                 let start  = 102;
                 let end  = (this.itemLength-1)*-34+102;
                 this.eY = this.Y;
                 this.touchEndTime = e.timeStamp  - this.touchStartTime;
+
                 this.t = 0.1;
+
                 //没有移动
                 if(this.sY ==e.changedTouches[0].clientY){
                     return
                 }
+
                 /*
                  * 在短时间移动比较大的距离的时候会滑动距离变大
                  * */
+
                 if((this.touchEndTime<220)&&Math.abs(e.changedTouches[0].clientY-this.sY)>100){
+
                     this.eY  = this.eY+(e.changedTouches[0].clientY-this.sY)*this.touchEndTime/100
                     this.t = 25/this.touchEndTime*2;
+
                 };
+
                 //跳转对位
                 if(Math.abs(this.eY%34)<=17){
                     this.eY =  parseInt(this.eY/34)*34;
+
                 }else{
                     if(this.eY>0){
                         this.eY =  parseInt(this.eY/34)*34+34
                     }else{
                         this.eY =  parseInt(this.eY/34)*34-34
                     }
+
                 }
+
                 this.activeItem = Math.abs((this.eY-102)/34);
+
                 //超出范围，滚回去
                 if(this.eY>start){
                     this.Y= 102;
@@ -166,13 +197,23 @@
                     this.eY = end;
                     this.activeItem = this.itemLength-1;
                 }
+
                 this.style =  {
                     transform:'translate3d(0px, '+this.eY+'px, 0px)',
                     transition:'all ease '+this.t+'s'
                 }
+
+
                 this.curVal = this.dateList[this.activeItem]['val']
+
+
                 this.$emit('changeCurVal',this.type,this.curVal)
+
+
             }
         },
+
     }
+
+
 </script>

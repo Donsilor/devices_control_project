@@ -1,5 +1,5 @@
 <template>
-<div class="page-index" v-show="hasSnapShot">
+<div class="page-index">
 
     <div class="name">{{device_name}}</div>
     <div class="lock-status">
@@ -12,7 +12,7 @@
 
     <a href="#" class="btn-unlock" :class="{disabled:btnDisabled}" @click.prevent="showPwdInput">开锁</a>
 
-    <!-- <router-link to="log" class="btn-golog"></router-link> -->
+    <router-link to="log" class="btn-golog"></router-link>
 
     <div class="alert-wraper">
       <div class="alert" v-if="showLowBattery">
@@ -24,8 +24,6 @@
         <a class="close" href="javascript:void(0)" @click="closeAlert(index)"></a>
       </div>
     </div>
-
-
     <password-input :visible="passwordInputVisible" v-on:close-dialog="passwordInputVisible=false" />
 
 </div>
@@ -168,7 +166,9 @@ const WARN_CODE = {
   e2: { msg: "有人非法开锁！", switch: true },
   e3: { msg: "有人强行拆门锁！", switch: true },
   e4: { msg: "门锁触发被挟持报警！", switch: true },
-  e5: { msg: "门锁：门锁已被锁死，无法手机开锁", switch: false }
+  e5: { msg: "门锁：门锁已被锁死，无法手机开锁", switch: false },
+  e6: { msg: "门锁：门锁已被反锁，无法手机开锁", switch: false },
+  e7: { msg: "门锁：无法手机开锁", switch: false },
 };
 const ERROR_STORE_KEY = 'door_lock_error'
 let errorSession = {};
@@ -197,9 +197,9 @@ export default {
   computed: {
     btnDisabled() {
       let status = this.model.switch == "on" ? true : false;
-    //   this.alertModel.forEach(function(v, i) {
-    //     status = v.switch && status;
-    //   });
+      this.alertModel.forEach(function(v, i) {
+        status = v.switch && status;
+      });
       return status;
     }
   },
@@ -211,7 +211,6 @@ export default {
       this.passwordInputVisible = true;
     },
     closeAlert(index) {
-    //   this.alertModel.splice(index, 1);
       let error = this.alertModel[index]
       let code = error.code
       if(this.errorStore.indexOf(code) < 0){
@@ -220,46 +219,6 @@ export default {
       }
     },
     onAlarm(attr) {
-        /*
-      let alertArry = [];
-      const _this = this;
-      attr.error.forEach(function(v, i) {
-        if (v.code == "e1") {
-          if (v.status) {
-            _this.lowBattery = true;
-            if (!errorSession["e1"]) {
-              _this.showLowBattery = true;
-              errorSession["e1"] = { status: 1 };
-            }
-          } else {
-            _this.lowBattery = false;
-            _this.showLowBattery = false;
-            if (errorSession["e1"]) {
-              delete errorSession["e1"];
-            }
-          }
-          return;
-        }
-        if (v.status) {
-          let key = 1;
-          if (!errorSession[v.code]) {
-            alertArry.push({
-              msg: WARN_CODE[v.code].msg,
-              key: key,
-              switch: WARN_CODE[v.code].switch
-            });
-          }
-        } else {
-          if (errorSession[v.code]) {
-            delete errorSession[v.code];
-          }
-        }
-        if (!errorSession[v.code] && v.status) {
-          errorSession[v.code] = { status: v.status };
-        }
-      });
-      this.alertModel = alertArry;
-    */
       let errors = attr.error || []
       let alertArry = [];
         for(var i=0; i<this.errorStore.length; i++){
@@ -288,16 +247,9 @@ export default {
 
     },
     getSnapShot(cb) {
-      HdSmart.Device.getSnapShot(
-        data => {
-          this.onSuccess(data);
-          cb && cb();
-        },
-        () => {
-          this.onError();
-          cb && cb();
-        }
-      );
+      HdSmart.Device.getSnapShot((data) => {
+          this.onSuccess(data)
+      });
     },
     onSuccess(data) {
       if (!data) return;
@@ -316,6 +268,7 @@ export default {
         this.passwordInputVisible = false;
       }
       this.onAlarm(data.attribute)
+      HdSmart.UI.hideLoading()
     },
     onError() {}
   },
@@ -325,10 +278,9 @@ export default {
     })
     HdSmart.ready(() => {
       HdSmart.UI.showLoading();
-      this.getSnapShot(() => {
-        this.hasSnapShot = true;
-        HdSmart.UI.hideLoading();
-      });
+      setTimeout(() => {
+        this.getSnapShot();
+      }, 100)
     });
 
     HdSmart.onDeviceListen(data => {

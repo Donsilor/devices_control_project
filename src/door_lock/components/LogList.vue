@@ -1,13 +1,13 @@
 <template>
     <div class="door-log">
-        <template v-if="hasData">
+        <template v-if="data.length">
             <span class="which-day">今天</span>
             <ul>
-                <li v-for="(item,index) in list" :key="index">
+                <li v-for="(item,index) in data" :key="index" v-if="item.attribute.switch=='on'">
                     <span class="line"></span>
                     <span class="dot"></span>
-                    <span class="date">{{item.time}}</span>
-                    <span class="log">{{item.log}}</span>
+                    <span class="date">{{formatDate(item.updated_at)}}</span>
+                    <span class="log">{{item.attribute.user_identify}} 通过{{getOpenType(item.attribute.open_type)}}</span>
                 </li>
             </ul>
         </template>
@@ -19,31 +19,59 @@
 </template>
 
 <script>
+
+/**
+ {
+  "attribute": {
+    "switch": "off",
+    "switch_open_cnt": 0,
+    "switch_close_cnt": 0,
+    "user_identify": 255,
+    "open_type": 19,
+    "battery_percentage": 80,
+    "is_user_operate": 1,
+    "alarm_state": 0,
+    "error": [
+
+    ],
+    "connectivity": "online"
+  },
+  "updated_at": 1522394609
+}
+ */
+
+function fillz(num) {
+    num = num + ''
+    return num.length == 1 ? '0' + num : num
+}
+
+
 export default {
   props: ["data"],
   data() {
     return {
-      hasData: false,
-      list: [
-        { time: "15:39", log: "Steven通过手机App开锁" },
-        { time: "14:39", log: "Bryan通过密码开锁" },
-        { time: "14:19", log: "Bryan通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" },
-        { time: "14:19", log: "Steven通过密码开锁" }
-      ]
     };
   },
   methods:{
+      formatDate(timestamp) {
+        var date = new Date(timestamp*1000)
+        return fillz(date.getHours()) + ':' + fillz(date.getMinutes())
+        // date.getFullYear() + '-'
+        // + fillz(1+date.getMonth()) + '-'
+        // + fillz(date.getDate()) + ' '
+        // + fillz(date.getHours()) + ':'
+        // + fillz(date.getMinutes()) + ':'
+        // + fillz(date.getSeconds())
+    },
+    getOpenType(type) {
+        return {
+            '17': '密码开锁',
+            '18': '指纹开锁',
+            '19': 'IC卡开锁',
+            '20': '钥匙开门',
+            '21': 'zigbee无线开锁'
+        }[type]
+    }
   }
 };
 </script>

@@ -7,7 +7,10 @@ import App from './App.vue'
 import Index from './components/Index.vue'
 import Log from './components/Log.vue'
 
-Vue.use(Vuex)
+import Calendar from './components/DatePicker/modules/index';
+
+Vue.use(Calendar);
+
 Vue.use(Router)
 
 const router =  new Router({
@@ -25,9 +28,26 @@ const router =  new Router({
     ]
   })
 
+//   router.push('log')
+
+  HdSmart.ready(() => {
+
+    router.beforeEach((to, from, next) => {
+        if(to.name == 'index'){
+            HdSmart.UI.toggleHeadAndFoot(true)
+        }else{
+            HdSmart.UI.toggleHeadAndFoot(false)
+        }
+        next()
+    })
+
+  })
+
   new Vue({
     el: '#app',
     router,
     template: '<App />',
     components: { App }
   });
+
+
