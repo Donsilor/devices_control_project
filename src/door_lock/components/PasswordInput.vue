@@ -170,7 +170,7 @@ export default {
   methods: {
     numberPressed(num) {
       if (num != "C") {
-        if (this.psw.length == 8) {
+        if (this.psw.length == 12) {
           return;
         }
         this.psw.push(num);
@@ -189,7 +189,7 @@ export default {
         return (x.charCodeAt(0) ^ 0xa5).toString(16);
       });
     //   alert(tmp.join(''))
-
+      this.reset();
       //发送指令
       HdSmart.Device.control(
         {
@@ -202,13 +202,15 @@ export default {
             }
           }
         },
-        () => {
-          //HdSmart.UI.toast("开锁成功");
-          this.reset();
+        (data) => {
+            HdSmart.UI.toast("开锁成功");
         },
-        data => {
-          HdSmart.UI.toast("开锁失败！");
-          //this.msg = '密码错误，请重新输入';
+        (data) => {
+            if(data.code == -16005){
+                HdSmart.UI.toast("密码错误");
+            }else{
+                HdSmart.UI.toast("开锁失败！");
+            }
         }
       );
     },

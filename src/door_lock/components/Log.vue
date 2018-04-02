@@ -14,7 +14,16 @@
         </div>
     </div>
 
-    <log-list :data="list" />
+    <mt-datetime-picker
+      ref="picker2"
+      type="date"
+      v-model="date"
+      :start-date="startDate"
+      :end-date="endDate"
+      @confirm="handleChange">
+    </mt-datetime-picker>
+
+    <log-list :current-date="currentDate" :data="list" v-show="!firstLoad" />
     <a href="javascript:void(0)" class="btn-cale" @click.prevent="showCalendar"></a>
 </div>
 </template>
@@ -100,19 +109,23 @@
 </style>
 
 <script>
+import Vue from 'vue'
 import LogList from "./LogList";
+import { DatetimePicker } from 'mint-ui';
+import 'mint-ui/lib/style.css';
+
+Vue.component(DatetimePicker.name, DatetimePicker);
 
 let device_id = null
 let family_id = null
 
 function fillz(num) {
+    num = '' + num
     return num.length == 1 ? '0' + num : num
 }
 
-function getDate(date){
-    let d = date.split('-')
-    let result = d[0] + fillz(d[1]) + fillz(d[2])
-    return result
+function getDateStr(date) {
+    return date.getFullYear() + fillz(1+date.getMonth()) + fillz(date.getDate())
 }
 
 export default {
@@ -120,47 +133,60 @@ export default {
     LogList
   },
   data() {
+    var now = new Date()
+
     return {
-        list: []
+        date: now,
+        startDate: new Date(now.getFullYear()-1, now.getMonth(), now.getDate()),
+        endDate: now,
+        currentDate: now,
+        list: [],
+        firstLoad: true
     };
   },
   methods: {
     showCalendar() {
-      this.$calendar.show({
-        year: [2017,2020],
-        onOk: date => {
-            this.getLogData(getDate(date))
-        }
-      });
+        this.$refs.picker2.open();
     },
-    clearLog() {
-
+    handleChange(value) {
+        this.getLogData()
     },
     getLogData(date){
+        HdSmart.UI.showLoading()
         HdSmart.Device.control({
           method: "dr_get_dev_status_list",
           params: {
               device_id: device_id,
               family_id: family_id,
-              date: date || '20180330',
+              date: getDateStr(this.date),
               page: {
                 size: 10,
                 begin: 0
               }
           }
         }, (data) => {
-            if(data.code === 0 && data.result.list){
-                this.list = data.result.list
-            }else{
-                alert(JSON.stringify(data))
-            }
+            this.firstLoad = false
+            HdSmart.UI.hideLoading()
+            // alert(JSON.stringify(data.result.list))
+            data.result.list.forEach(item => {
+                if(item.report_msg){
+                    item.attribute = item.report_msg
+                }
+            });
+            this.list = data.result.list.filter((item) => {
+                return item.attribute && item.attribute.switch == 'on' && item.attribute.is_user_operate == 1
+            })
+            this.currentDate = this.date
         }, (data) => {
-
+            HdSmart.UI.hideLoading()
+            if(data && data.code == -15032){
+                this.firstLoad = false
+                this.list = []
+            }else{
+                HdSmart.UI.toast(JSON.stringify(data))
+            }
         }
       )
-    },
-    getAlertData() {
-
     },
     beforeInit(data){
         if(!data || !data.device_id || !data.family_id){
@@ -178,8 +204,10 @@ export default {
   created() {
     HdSmart.ready(() =>{
         setTimeout(() => {
-            HdSmart.Device.getSnapShot(this.beforeInit)
-        }, 100)
+            HdSmart.Device.getSnapShot((data) => {
+                this.beforeInit(data)
+            })
+        }, 300)
     })
 
     HdSmart.onDeviceListen((data) => {

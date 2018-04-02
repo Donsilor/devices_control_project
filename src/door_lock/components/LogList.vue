@@ -1,9 +1,9 @@
 <template>
     <div class="door-log">
         <template v-if="data.length">
-            <span class="which-day">今天</span>
+            <span class="which-day">{{dayText}}</span>
             <ul>
-                <li v-for="(item,index) in data" :key="index" v-if="item.attribute.switch=='on'">
+                <li v-for="(item,index) in data" :key="index">
                     <span class="line"></span>
                     <span class="dot"></span>
                     <span class="date">{{formatDate(item.updated_at)}}</span>
@@ -12,56 +12,38 @@
             </ul>
         </template>
         <div class="nodata" v-else>
-            <span></span>
-            本日暂无记录
+            <span></span> 本日暂无记录
         </div>
     </div>
 </template>
 
 <script>
 
-/**
- {
-  "attribute": {
-    "switch": "off",
-    "switch_open_cnt": 0,
-    "switch_close_cnt": 0,
-    "user_identify": 255,
-    "open_type": 19,
-    "battery_percentage": 80,
-    "is_user_operate": 1,
-    "alarm_state": 0,
-    "error": [
-
-    ],
-    "connectivity": "online"
-  },
-  "updated_at": 1522394609
-}
- */
-
 function fillz(num) {
     num = num + ''
     return num.length == 1 ? '0' + num : num
 }
 
+function getDateStr(date) {
+    return date.getFullYear() + '-' + fillz(1+date.getMonth()) + '-' + fillz(date.getDate())
+}
 
 export default {
-  props: ["data"],
+  props: ["data",'currentDate'],
   data() {
-    return {
-    };
+    return {};
+  },
+  computed: {
+      dayText() {
+          var inputDate = getDateStr(this.currentDate)
+          var now = getDateStr(new Date)
+          return inputDate == now ? '今日' : inputDate
+      }
   },
   methods:{
       formatDate(timestamp) {
         var date = new Date(timestamp*1000)
         return fillz(date.getHours()) + ':' + fillz(date.getMinutes())
-        // date.getFullYear() + '-'
-        // + fillz(1+date.getMonth()) + '-'
-        // + fillz(date.getDate()) + ' '
-        // + fillz(date.getHours()) + ':'
-        // + fillz(date.getMinutes()) + ':'
-        // + fillz(date.getSeconds())
     },
     getOpenType(type) {
         return {
@@ -72,6 +54,9 @@ export default {
             '21': 'zigbee无线开锁'
         }[type]
     }
+  },
+  created() {
+    //   alert(this.data)
   }
 };
 </script>

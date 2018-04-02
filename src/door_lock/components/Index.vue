@@ -15,10 +15,10 @@
     <router-link to="log" class="btn-golog"></router-link>
 
     <div class="alert-wraper">
-      <div class="alert" v-if="showLowBattery">
+      <!-- <div class="alert" v-if="showLowBattery">
         <i></i>智能门锁电池电量不足，请及时更换电池！
         <a class="close" href="javascript:void(0)" @click="showLowBattery=false"></a>
-      </div>
+      </div> -->
       <div class="alert" :class="{warn:item.key}" v-for="(item,index) in alertModel" :key="index" v-if="!item.clicked">
         <i></i>{{item.msg}}
         <a class="close" href="javascript:void(0)" @click="closeAlert(index)"></a>
@@ -41,6 +41,7 @@
   color: #808080;
   text-align: center;
   margin: 60px auto 6px;
+  height: 40px;
 }
 .lock-status {
   text-align: center;
@@ -162,16 +163,25 @@ import Log from "./Log.vue";
 
 const WARN_CODE = {
   e0: { msg: "门未关好!", switch: false },
-  e1: { msg: "智能门锁电池电量不足，请及时更换电池！", switch: true },
+  e1: { msg: "智能门锁电池电量不足，请及时更换电池！", switch: false },
   e2: { msg: "有人非法开锁！", switch: true },
   e3: { msg: "有人强行拆门锁！", switch: true },
   e4: { msg: "门锁触发被挟持报警！", switch: true },
-  e5: { msg: "门锁：门锁已被锁死，无法手机开锁", switch: false },
-  e6: { msg: "门锁：门锁已被反锁，无法手机开锁", switch: false },
-  e7: { msg: "门锁：无法手机开锁", switch: false },
+  e5: { msg: "门锁：门锁已被锁死，无法手机开锁", switch: true },
+  e6: { msg: "门锁：门锁已被反锁，无法手机开锁", switch: true },
+  e7: { msg: "门锁：无法手机开锁", switch: true },
 };
-const ERROR_STORE_KEY = 'door_lock_error'
-let errorSession = {};
+let ERROR_STORE_KEY = ''
+
+function findIndex(array, fn){
+    for(var i=0;i<array.length;i++){
+        if(fn(array[i])){
+            return i
+        }
+    }
+    return -1
+}
+
 export default {
   components: {
     PasswordInput,
@@ -184,12 +194,10 @@ export default {
       passwordInputVisible: false,
       lowBattery: false,
       showLowBattery: false,
-      alertModel: [
-        // { msg: "智能门锁电池电量不足，请及时更换电池！", key: 0,switch:true },
-      ],
+      alertModel: [],
       model: {
-        switch: "on",
-        battery_percentage: 0
+        switch: "off",
+        battery_percentage: '--'
       },
       errorStore: []
     };
@@ -198,7 +206,7 @@ export default {
     btnDisabled() {
       let status = this.model.switch == "on" ? true : false;
       this.alertModel.forEach(function(v, i) {
-        status = v.switch && status;
+        status = v.switch || status;
       });
       return status;
     }
@@ -213,6 +221,20 @@ export default {
     closeAlert(index) {
       let error = this.alertModel[index]
       let code = error.code
+      if(code == 'e4'){
+          HdSmart.Device.control({
+              method: 'dm_set',
+              nodeid: 'doorlock.main.error',
+              params: {
+                  attribute: {
+                      error: [{
+                        "code": "e4",
+				        "status": 1
+                      }]
+                  }
+              }
+          })
+      }
       if(this.errorStore.indexOf(code) < 0){
         this.errorStore.push(code)
         error.clicked = true
@@ -246,6 +268,35 @@ export default {
         this.alertModel = alertArry
 
     },
+    onAlert(errors) {
+        for(var i=0; i<this.errorStore.length; i++){
+            var item = errors.filter((el) => {
+                return el.code == this.errorStore[i] && el.status == 0
+            })
+            if(item.length){
+                this.errorStore.splice(i, 1)
+                i--
+            }
+        }
+        for(var i=0; i<errors.length; i++){
+            var el = errors[i]
+            var index = findIndex(this.alertModel, (item) => {
+                return item.code == el.code
+            })
+            if(index >= 0){
+                this.alertModel.splice(index, 1)
+            }
+            if(el.status == 1){
+                this.alertModel.push({
+                    msg: WARN_CODE[el.code].msg,
+                    code: el.code,
+                    key: 1,
+                    switch: WARN_CODE[el.code].switch,
+                    clicked: false
+                })
+            }
+        }
+    },
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot((data) => {
           this.onSuccess(data)
@@ -257,14 +308,8 @@ export default {
         this.device_name = data.device_name;
       }
       this.model = data.attribute;
-      if (this.model.battery_percentage <= 10) {
-        this.lowBattery = true;
-        this.showLowBattery = true;
-      } else {
-        this.lowBattery = false;
-        this.showLowBattery = false;
-      }
-      if (this.model.switch == "on") {
+
+      if(this.model.switch == "on") {
         this.passwordInputVisible = false;
       }
       this.onAlarm(data.attribute)
@@ -273,14 +318,16 @@ export default {
     onError() {}
   },
   created() {
-    this.$watch('errorStore', () => {
-        localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
-    })
+    // this.$watch('errorStore', () => {
+    //     localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
+    // })
     HdSmart.ready(() => {
+    //   ERROR_STORE_KEY = window.device_uuid
+    //   this.errorStore = JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || []
       HdSmart.UI.showLoading();
       setTimeout(() => {
         this.getSnapShot();
-      }, 100)
+      }, 150)
     });
 
     HdSmart.onDeviceListen(data => {
@@ -291,7 +338,7 @@ export default {
           }
           break;
         case "dr_report_dev_alert":
-          this.onAlarm(data.result.attribute);
+            this.onAlert(data.result.attribute.error)
           break;
         default:
           this.onSuccess(data.result);

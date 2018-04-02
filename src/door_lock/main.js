@@ -7,10 +7,6 @@ import App from './App.vue'
 import Index from './components/Index.vue'
 import Log from './components/Log.vue'
 
-import Calendar from './components/DatePicker/modules/index';
-
-Vue.use(Calendar);
-
 Vue.use(Router)
 
 const router =  new Router({
@@ -49,5 +45,4 @@ const router =  new Router({
     template: '<App />',
     components: { App }
   });
-
 

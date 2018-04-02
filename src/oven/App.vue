@@ -25,7 +25,7 @@
                 <h3>模式设定</h3>
                 <i class="btn-close" @click="closeModelLayer"></i>
             </div>
-            <div class="layer-body" :class="allAttribute.status == 'start' ? 'disable' : ''">
+            <div class="layer-body" :class="allAttribute.status === 'start' ? 'disable' : ''">
                 <ul class="model-list">
                     <li @click="seleteMode(item)" v-for="item in modeList">
                         <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
@@ -44,11 +44,6 @@
                 </div>
                 <div class="slide-list" v-show="wenduSelectFlag">
                     <picker :slots="wenduSlot" @change="selectWendu" :valueKey="'value'" :item-height="30" :visible-item-count="3"></picker>
-                    <!-- <div class="slide-scroller" ref="tempScroll">
-                        <ul class="slide-list-inner">
-                            <li v-for="item in allAttribute.wenduList"  @click="selectWendu(item)"  :class="{active:item.value==allAttribute.temperature}">{{item.name}}</li>
-                        </ul>
-                    </div> -->
                 </div>
                 <div class="select-param" @click="toggleShowSlider('time')">
                     <div class="hasDisable">
@@ -58,17 +53,9 @@
                 </div>
                 <div class="slide-list" v-show="timeSelectFlag">
                     <picker :slots="timeSlot" @change="selectTime" :valueKey="'value'" :item-height="30" :visible-item-count="3"></picker>
-                    <!-- <div class="slide-scroller" ref="timeScroll">
-                        <ul class="slide-list-inner">
-                            <li v-for="item in allAttribute.timeList"  @click="selectTime(item)" :class="item.active?'active':''">{{item.name}}</li>
-                        </ul>
-                    </div> -->
                 </div>
             </div>
-            <!-- <div class="layer-bottom-btn" :class="allAttribute.status === 'start' ? 'disable' : ''">
-                <button class="cancel" @click="closeModelLayer">取消</button>
-                <button class="confirm" @click="setMode">确定</button>
-            </div> -->
+
         </div>
         <div class="model-more-layer oven-layer" v-show="moreLayerShow">
             <div class="layer-header">
@@ -76,17 +63,6 @@
                 <i class="btn-close" @click="closeMoreLayer"></i>
             </div>
             <div class="layer-body">
-                <!-- <p class="more-model-title">更多模式</p>
-                <div :class="allAttribute.status === 'start' ? 'disable' : ''">
-                <div class="up-down-fire">
-                    <span @click="seleteMode(item)"
-                          v-for="(item,index) in elseModeList"
-                          :style="index===2?'margin-right: 0':''">
-                        <a :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
-                        {{item.name}}
-                    </span>
-                </div>
-                </div> -->
                 <div class="main-select-con" :class="{disable:allAttribute.status!='start'}">
                     <br><br>
                     <div class="select-param noborder hasDisable">
@@ -352,12 +328,12 @@
                 }
             },
             selectWendu (picker, values) {
-                if(values.length && values[0]){
+                if(values.length && values[0] && this.wenduSelectFlag){
                     this.allAttribute.temperature = values[0].value
                 }
             },
             selectTime (picker, values) {
-                if(values.length && values[0]){
+                if(values.length && values[0] && this.timeSelectFlag){
                     this.allAttribute.bake_duration = values[0].value
                     this.allAttribute.remaining = values[0].value
                 }
@@ -897,7 +873,8 @@ ul{
                 }
             }
         }
-    .disable{
+
+ .model-select-layer .disable li{
         .hasDisable{
             opacity: 0.5;
             .value-wendu{
