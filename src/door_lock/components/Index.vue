@@ -6,9 +6,7 @@
         <span class="status">{{model.switch == 'on' ? '已打开' : '已关闭'}}</span>
         <span class="battery" :class="{low:lowBattery}">{{model.battery_percentage}}%电量</span>
     </div>
-    <div class="lock" :class="[model.switch]">
-        <!-- <div class="pic" :class="[model.switch]"></div> -->
-    </div>
+    <div class="lock" :class="[model.switch]"></div>
 
     <a href="#" class="btn-unlock" :class="{disabled:btnDisabled}" @click.prevent="showPwdInput">开锁</a>
 
@@ -159,17 +157,27 @@
 
 <script>
 import PasswordInput from "./PasswordInput.vue";
-import Log from "./Log.vue";
 
+/**
+ *  {0, "e0", "not fully locked"}, // 未锁好
+    {1, "e3", "tamper alarm: "},   // 防拆
+    {2, "e4", "hijacked"},         // 挟持
+    {3, "e2", "wrong code entry limit"}, // 密码试探
+    {4, "e1", "battery low power"},      // 低电量
+    {5, "e5", "dead locked"},            // 锁死
+    {6, "e6", "dead bolt on"},      //反锁
+    {7, "e7", "remote open disabled"} //禁止远程开锁
+ */
+//switch理解为disabled
 const WARN_CODE = {
   e0: { msg: "门未关好!", switch: false },
   e1: { msg: "智能门锁电池电量不足，请及时更换电池！", switch: false },
-  e2: { msg: "有人非法开锁！", switch: true },
-  e3: { msg: "有人强行拆门锁！", switch: true },
-  e4: { msg: "门锁触发被挟持报警！", switch: true },
-  e5: { msg: "门锁：门锁已被锁死，无法手机开锁", switch: true },
-  e6: { msg: "门锁：门锁已被反锁，无法手机开锁", switch: true },
-  e7: { msg: "门锁：无法手机开锁", switch: true },
+  e2: { msg: "密码错误超过限制，请2分钟后再试", switch: true },
+  e3: { msg: "有人强行拆门锁！", switch: false },
+  e4: { msg: "门锁触发被挟持报警！", switch: false },
+  e5: { msg: "门锁已被锁死，无法手机开锁", switch: true },
+  e6: { msg: "门锁已被反锁，无法手机开锁", switch: true },
+  e7: { msg: "无法手机开锁", switch: true },
 };
 let ERROR_STORE_KEY = ''
 
@@ -184,8 +192,7 @@ function findIndex(array, fn){
 
 export default {
   components: {
-    PasswordInput,
-    Log
+    PasswordInput
   },
   data() {
     return {
@@ -211,9 +218,16 @@ export default {
       return status;
     }
   },
+  watch: {
+      btnDisabled(val) {
+          if(val){
+              this.passwordInputVisible = false
+          }
+      }
+  },
   methods: {
     showPwdInput() {
-      if (this.model.switch == "on") {
+      if (this.btnDisabled) {
         return;
       }
       this.passwordInputVisible = true;

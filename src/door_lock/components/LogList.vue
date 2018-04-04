@@ -12,7 +12,7 @@
             </ul>
         </template>
         <div class="nodata" v-else>
-            <span></span> 本日暂无记录
+            <span></span> {{dayText}}暂无记录
         </div>
     </div>
 </template>
@@ -51,7 +51,7 @@ export default {
             '18': '指纹开锁',
             '19': 'IC卡开锁',
             '20': '钥匙开门',
-            '21': 'zigbee无线开锁'
+            '21': '手机App开锁'
         }[type]
     }
   },

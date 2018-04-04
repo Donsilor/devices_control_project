@@ -1,12 +1,12 @@
 <template>
 <div id="app">
-    <div class="page-on">
+    <div class="page-on" v-show="model.switch=='on'">
         <div class="ani"></div>
         <div class="inner">
             <div class="device_name">{{device_name}}</div>
-            <div class="status">正在加热</div>
+            <div class="status">{{statusText}}</div>
             <div class="current_temp">
-                <strong>38</strong>
+                <strong>{{model.temperature}}</strong>
                 <small>℃</small>
                 <p>当前温度</p>
             </div>
@@ -21,14 +21,11 @@
                 </div>
             </div>
             <div class="btns">
-                <a href="" class="btn btn-shut" v-if="model.switch=='on'" @click.prevent="setSwitch('off')">
+                <a href="" class="btn btn-shut" @click.prevent="setSwitch('off')">
                     <i></i>
                     <span>关闭</span>
                 </a>
-                <a href="" class="btn btn-shut" @click.prevent="setSwitch('on')" v-else>
-                    <i></i>
-                    <span>开机</span>
-                </a>
+
                 <a href="" class="btn btn-heating_half" :class="{active:model.mode=='half_tank'}" @click.prevent="setMode('half_tank')">
                     <i></i>
                     <span>速热半胆</span>
@@ -48,6 +45,17 @@
             </div>
         </div>
     </div>
+
+    <div class="page-off" v-show="model.switch=='off'">
+        <div class="device_name">{{device_name}}</div>
+        <div class="status">已关闭</div>
+        <div class="pic"></div>
+        <div class="btns">
+            <a href="" class="btn btn-turnon" @click.prevent="setSwitch('on')">
+                <i></i>
+            </a>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -56,7 +64,7 @@
     padding: 0;
     margin: 0;
 }
-body{
+html,body{
     overflow: hidden;
 }
 #app{
@@ -74,6 +82,28 @@ a{
     left: 0;
     top: 0;
     background:#1eb0ff;
+    overflow: hidden;
+}
+.page-off{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-image:linear-gradient(-180deg, #fafafa 0%, #f2f2f2 100%);
+    .device_name{
+        color:#76787a;
+    }
+    .status{
+        color:#c8cacc;
+    }
+    .pic{
+        width: 260px;
+        height: 385px;
+        background: url(./assets/img_heater_off.png) no-repeat;
+        background-size: 100% 100%;
+        margin: 50px auto 48px;
+    }
 }
 .inner{
     position: absolute;
@@ -92,10 +122,11 @@ a{
     text-align: center;
     opacity:0.6;
     height: 30px;
-    margin-top: 70px;
+    margin-top: 20px;
 }
 .current_temp{
     text-align: center;
+    margin-top: 30px;
     strong{
         font-size: 144px;
         font-weight: normal;
@@ -205,6 +236,14 @@ a{
         opacity: .5;
     }
 }
+.btn-turnon{
+    i{
+        background-image: url(./assets/washer_btn_poweron_normal.png);
+    }
+    &:active i{
+        background-image: url(./assets/washer_btn_poweron_pressed.png);
+    }
+}
 .btn-shut{
     i{
         background-image: url(./assets/washer_btn_poweroff_normal.png);
@@ -280,9 +319,12 @@ a{
 <script>
 import Slider from './components/Slider.vue'
 
-const [TEMP_MIN,TEMP_MAX] = [35, 65]
+const [TEMP_MIN,TEMP_MAX] = [30, 75]
 
 function createBubble(container, option){
+
+    if(!container) return
+
     var el = document.createElement('div')
     el.className = 'bubble'
     el.style.left = option.left + 'px'
@@ -320,6 +362,25 @@ export default {
             device_name: ''
         }
     },
+    computed: {
+        statusText() {
+            switch(this.model.heat_status) {
+                case 'heat':
+                    return '正在加热'
+                case 'keep_warm':
+                    return '保温'
+                case 'reserve':
+                    return '预约'
+                default:
+                    return ''
+            }
+        }
+    },
+    watch: {
+        'model.set_temperature'(val) {
+            this.temp = val
+        }
+    },
     methods: {
         controlDevice(attr, value) {
 
@@ -347,7 +408,7 @@ export default {
             }
         },
         onTempChange(val) {
-            this.controlDevice('temperature', val)
+            this.controlDevice('set_temperature', val)
         },
         setSwitch(val) {
             this.controlDevice('switch', val)
@@ -387,10 +448,12 @@ export default {
         var top = document.documentElement.offsetHeight
         var width = document.documentElement.offsetWidth
         setInterval(()=> {
-            createBubble(el, {
-                left: Math.random() * width,
-                top: top
-            })
+            if(this.model.switch == 'on'){
+                createBubble(el, {
+                    left: Math.random() * width,
+                    top: top
+                })
+            }
         }, 1500)
     }
 }

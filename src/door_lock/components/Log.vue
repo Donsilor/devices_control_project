@@ -24,6 +24,8 @@
     </mt-datetime-picker>
 
     <log-list :current-date="currentDate" :data="list" v-show="!firstLoad" />
+    <div class="loadmore" v-if="!isLoading && more"><a href="" @click.prevent="loadMore">加载更多</a></div>
+    <div class="nomore" v-if="list.length && !more">已加载完全部</div>
     <a href="javascript:void(0)" class="btn-cale" @click.prevent="showCalendar"></a>
 </div>
 </template>
@@ -106,6 +108,17 @@
     -webkit-tap-highlight-color: transparent;
   }
 }
+.loadmore,.nomore{
+    text-align: center;
+    font-size: 24px;
+    padding: 30px 0;
+}
+.loadmore a{
+    color: #2f3133
+}
+.nomore{
+    color: #ccc
+}
 </style>
 
 <script>
@@ -141,8 +154,21 @@ export default {
         endDate: now,
         currentDate: now,
         list: [],
-        firstLoad: true
+        firstLoad: true,
+        isLoading: false,
+        size: 50,
+        begin: 0,
+        more: 0
     };
+  },
+  watch: {
+      isLoading(val) {
+          if(val){
+              HdSmart.UI.showLoading()
+          }else{
+              HdSmart.UI.hideLoading()
+          }
+      }
   },
   methods: {
     showCalendar() {
@@ -151,8 +177,20 @@ export default {
     handleChange(value) {
         this.getLogData()
     },
-    getLogData(date){
-        HdSmart.UI.showLoading()
+    loadMore() {
+        this.getLogData(true)
+    },
+    getLogData(more){
+
+        if(!more){
+            this.begin = 0
+            this.more = 0
+        }else{
+            this.begin += this.size
+        }
+
+        this.isLoading = true
+
         HdSmart.Device.control({
           method: "dr_get_dev_status_list",
           params: {
@@ -160,25 +198,31 @@ export default {
               family_id: family_id,
               date: getDateStr(this.date),
               page: {
-                size: 10,
-                begin: 0
+                size: this.size,
+                begin: this.begin
               }
           }
         }, (data) => {
+            this.isLoading = false
             this.firstLoad = false
-            HdSmart.UI.hideLoading()
-            // alert(JSON.stringify(data.result.list))
             data.result.list.forEach(item => {
                 if(item.report_msg){
                     item.attribute = item.report_msg
                 }
             });
-            this.list = data.result.list.filter((item) => {
+            var list = data.result.list.filter((item) => {
                 return item.attribute && item.attribute.switch == 'on' && item.attribute.is_user_operate == 1
             })
+            if(!more){
+                this.list = list
+            }else{
+                this.list = this.list.concat(list)
+            }
+            this.more = data.result.more
             this.currentDate = this.date
+
         }, (data) => {
-            HdSmart.UI.hideLoading()
+            this.isLoading = false
             if(data && data.code == -15032){
                 this.firstLoad = false
                 this.list = []
@@ -202,6 +246,7 @@ export default {
     }
   },
   created() {
+    // device_id，family_id，后边需要优化获取
     HdSmart.ready(() =>{
         setTimeout(() => {
             HdSmart.Device.getSnapShot((data) => {

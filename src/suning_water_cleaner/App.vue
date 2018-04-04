@@ -7,7 +7,9 @@
     <div class="page-on" v-if="isInit">
         <div class="name">{{device_name}}</div>
         <div class="tip">
-            <p v-if="model.status=='standby'">待机</p>
+            <p v-if="model.water_leakage=='on'"><span @click="toggleErrorModal(true)">漏水</span></p>
+            <p v-else-if="model.water_shortage=='on'">缺水</p>
+            <p v-else-if="model.status=='standby'">待机</p>
             <p v-else-if="model.status=='filter'">制水中...</p>
             <p v-else-if="model.status=='clean'">冲洗中...</p>
         </div>
@@ -23,6 +25,20 @@
                 <p class="p3">预计剩余寿命</p>
                 <p class="p4">{{currentFilter.remaining}}%</p>
             </circle-pie>
+        </div>
+    </modal>
+
+    <modal title="漏水警报" v-model="alarmModalVisible" :showCloseBtn="false" :overlayClickable="false">
+        <div class="alarm">
+            <div class="alert"><i></i>检测到净水器漏水！</div>
+            <div class="text">
+                <p>请先排查管道、台盆、机器，确定漏水位置；</p>
+                <p>非机器漏水，请擦干报警器并将净水器断电重启；</p>
+                <p>若净水器漏水，请及时关闭电源和水源。</p>
+            </div>
+            <div class="btn">
+                <a href="" class="btn-default" @click.prevent="confirmError()">我知道了</a>
+            </div>
         </div>
     </modal>
 
@@ -532,7 +548,9 @@ export default {
             model: {},
             currentIndex: -1,
             filterItems: [],
-            isInit: false
+            isInit: false,
+            alarmModalVisible: false,
+            errorStore: JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || [],
         }
     },
     computed: {
@@ -569,6 +587,23 @@ export default {
                 }
             })
 
+            var errIndex = this.errorStore.indexOf('water_leakage')
+
+            switch(this.model.water_leakage){
+                case 'on':
+                    if(errIndex < 0){
+                        this.toggleErrorModal(true)
+                    }
+                    break;
+                case 'off':
+                    if(errIndex >= 0){
+                        this.errorStore.splice(errIndex, 1)
+                    }
+                    break;
+                default:
+                    break;
+            }
+
         },
         toPercent(remaining) {
             return remaining
@@ -576,6 +611,15 @@ export default {
         viewFilter(index) {
             this.currentIndex = index
             this.statusModalVisible = true
+        },
+        toggleErrorModal(visible) {
+            this.alarmModalVisible = visible
+        },
+        confirmError() {
+            this.toggleErrorModal(false)
+            if(this.errorStore.indexOf('water_leakage') < 0){
+                this.errorStore.push('water_leakage')
+            }
         }
     },
     created() {

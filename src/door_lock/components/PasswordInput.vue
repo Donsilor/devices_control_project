@@ -150,7 +150,7 @@ export default {
   props: ["visible"],
   data() {
     return {
-      msg: "请输入管理员开锁密码",
+      msg: "请输入开锁密码",
       psw: [],
       btns: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "C", "0"]
     };
@@ -207,7 +207,7 @@ export default {
         },
         (data) => {
             if(data.code == -16005){
-                HdSmart.UI.toast("密码错误");
+                HdSmart.UI.toast("密码错误，请重新输入");
             }else{
                 HdSmart.UI.toast("开锁失败！");
             }
@@ -220,7 +220,6 @@ export default {
     },
     reset() {
       this.psw.splice(0, this.psw.length);
-      this.msg = "请输入管理员开锁密码";
     }
   }
 };
