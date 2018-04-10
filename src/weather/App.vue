@@ -61,14 +61,14 @@
         mounted() {
             HdSmart.ready(() => {
                 HdSmart.UI.showLoading()
-                let self = this
-                remoteLoad('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', false).then((result) => {
-                    if (remote_ip_info.ret === 1) {
-                        self.city.name = remote_ip_info.city + '市'
-                        let cityId = cityIdJson[self.city.name]
-                        self.getWeatherData(cityId)
-                    }
-                })
+                this.getWeatherData()
+//                remoteLoad('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', false).then((result) => {
+//                    if (remote_ip_info.ret === 1) {
+//                        self.city.name = remote_ip_info.city + '市'
+//                        let cityId = cityIdJson[self.city.name]
+//                        self.getWeatherData(cityId)
+//                    }
+//                })
             })
         },
         methods: {
@@ -184,7 +184,7 @@
                 }
                 return curClass
             },
-            getWeatherData (curId) {
+            getWeatherData () {
                 let thisDay = (new Date()).getDay()
                 let curIndex = 0
                 let currentWeekArr = []
@@ -206,9 +206,7 @@
                 let self = this
                 HdSmart.Device.control({
                     method: '3d_get_moji_weather',
-                    params: {
-                        cityId: JSON.stringify(curId)
-                    }
+                    params: {}
                 }, (res) => {
                     let innerData = (res.result && res.result.data) || ''
                     // 空气质量
@@ -303,6 +301,7 @@
         font-family: NotoSansHans-DemiLight;
     }
     .title{
+        margin-top: 30px;
         line-height: 95px;
         height: 95px;
         text-align: center;
@@ -315,7 +314,7 @@
         font-size: 42px;
         .city-name{
             font-size: 42px;
-            margin: 30px 0;
+            margin: 40px 0;
         }
         .city-detail{
             font-size: 30px;
@@ -373,7 +372,7 @@
         }
     }
     .weather-list-con{
-        padding: 50px 90px 0;
+        padding: 90px 90px 0;
         .weather-list{
             margin: 0;
             text-align: center;
