@@ -112,6 +112,9 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-origin {
     top: -17px;
     position: absolute;
 }
+.noUi-target[disabled] {
+    opacity: .6;
+}
 </style>
 
 
@@ -119,16 +122,33 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-origin {
 import noUiSlider from 'nouislider'
 // import 'nouislider/distribute/nouislider.css'
 export default {
-    props: ['options', 'value'],
+    props: {
+        options: {
+            type: Object
+        },
+        value: {
+            type: Number
+        },
+        disabled: {
+            type: Boolean,
+            default: false
+        }
+    },
     data() {
         return {
-
         }
     },
     watch: {
         value(val){
             if(!this.isDraging){
                 this.slider.set(val)
+            }
+        },
+        disabled(val) {
+            if(val){
+                this.$el.setAttribute('disabled', true)
+            }else{
+                this.$el.removeAttribute('disabled')
             }
         }
     },
@@ -142,10 +162,19 @@ export default {
         this.slider = this.$el.noUiSlider
         this.isDraging = false
         this.setTimer = null
+        this.init = false
+
+        if(this.disabled){
+            this.$el.setAttribute('disabled', true)
+        }
 
         this.slider.on('update', function ( values, handle ) {
-            self.$emit('input', parseInt(values[handle]))
             // console.log('update')
+            self.$emit('input', parseInt(values[handle]))
+            if(self.init){
+                self.isUpdating = true
+            }
+            self.init = true
         });
         this.slider.on('change', function ( values, handle ) {
             self.$emit('input', parseInt(values[handle]))
@@ -158,16 +187,14 @@ export default {
             // console.log('set')
             clearTimeout(self.setTimer)
             self.setTimer = setTimeout(function() {
+                self.isUpdating = false
                 self.$emit('change', parseInt(values[handle]))
             }, 500)
         });
         this.slider.on('start', function ( values, handle ) {
-            // console.log('start')
             self.isDraging = true
-
         });
         this.slider.on('end', function ( values, handle ) {
-            // console.log('end')
             self.isDraging = false
         });
 

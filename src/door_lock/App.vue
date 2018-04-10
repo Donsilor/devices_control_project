@@ -14,7 +14,6 @@
     }
     body{
         font-size: 30px;
-        background:#f2f2f2;
     }
 </style>
 

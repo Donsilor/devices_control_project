@@ -3,7 +3,7 @@
 
     <div class="name">{{device_name}}</div>
     <div class="lock-status">
-        <span class="status">{{model.switch == 'on' ? '已打开' : '已关闭'}}</span>
+        <span class="status" :class="{on:model.switch=='on'}">{{statusText}}</span>
         <span class="battery" :class="{low:lowBattery}">{{model.battery_percentage}}%电量</span>
     </div>
     <div class="lock" :class="[model.switch]"></div>
@@ -13,13 +13,9 @@
     <router-link to="log" class="btn-golog"></router-link>
 
     <div class="alert-wraper">
-      <!-- <div class="alert" v-if="showLowBattery">
-        <i></i>智能门锁电池电量不足，请及时更换电池！
-        <a class="close" href="javascript:void(0)" @click="showLowBattery=false"></a>
-      </div> -->
-      <div class="alert" :class="{warn:item.key}" v-for="(item,index) in alertModel" :key="index" v-if="!item.clicked">
+      <div class="alert" :class="{warn:item.key}" v-for="(item,index) in theUnclickAlert" :key="index" v-if="index==0">
         <i></i>{{item.msg}}
-        <a class="close" href="javascript:void(0)" @click="closeAlert(index)"></a>
+        <a class="close" href="javascript:void(0)" @click="closeAlert(item)"></a>
       </div>
     </div>
     <password-input :visible="passwordInputVisible" v-on:close-dialog="passwordInputVisible=false" />
@@ -33,6 +29,12 @@
 }
 .page-index {
   padding-top: 96px;
+  background:#f2f2f2;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
 }
 .name {
   font-size: 30px;
@@ -174,7 +176,7 @@ const WARN_CODE = {
   e1: { msg: "智能门锁电池电量不足，请及时更换电池！", switch: false },
   e2: { msg: "密码错误超过限制，请2分钟后再试", switch: true },
   e3: { msg: "有人强行拆门锁！", switch: false },
-  e4: { msg: "门锁触发被挟持报警！", switch: false },
+  e4: { msg: "家庭成员触发被挟持报警！", switch: false },
   e5: { msg: "门锁已被锁死，无法手机开锁", switch: true },
   e6: { msg: "门锁已被反锁，无法手机开锁", switch: true },
   e7: { msg: "无法手机开锁", switch: true },
@@ -199,8 +201,6 @@ export default {
       hasSnapShot: false,
       device_name: "",
       passwordInputVisible: false,
-      lowBattery: false,
-      showLowBattery: false,
       alertModel: [],
       model: {
         switch: "off",
@@ -210,12 +210,42 @@ export default {
     };
   },
   computed: {
+    lowBattery() {
+        return this.model.battery_percentage <= 15
+    },
     btnDisabled() {
       let status = this.model.switch == "on" ? true : false;
       this.alertModel.forEach(function(v, i) {
         status = v.switch || status;
       });
       return status;
+    },
+    theUnclickAlert() {
+        var hasE5 = findIndex(this.alertModel, (item) =>{
+            return item.code == 'e5'
+        })
+        var result = this.alertModel.filter((item) => {
+            if(item.clicked){
+                return false
+            }
+            if(item.code == 'e6'){
+                return false
+            }
+            if(item.code == 'e2' && hasE5 >= 0){
+                return false
+            }
+            return true
+        })
+        return result
+    },
+    lockedStatus() {
+        var hasE6 = findIndex(this.alertModel, (item) =>{
+            return item.code == 'e6'
+        })
+        return hasE6 >= 0
+    },
+    statusText() {
+        return this.lockedStatus ? '已反锁' : (this.model.switch == 'on' ? '已打开' : '已关闭')
     }
   },
   watch: {
@@ -232,8 +262,7 @@ export default {
       }
       this.passwordInputVisible = true;
     },
-    closeAlert(index) {
-      let error = this.alertModel[index]
+    closeAlert(error) {
       let code = error.code
       if(code == 'e4'){
           HdSmart.Device.control({
@@ -347,8 +376,12 @@ export default {
     HdSmart.onDeviceListen(data => {
       switch (data.method) {
         case "dm_set":
-          if (data.code !== 0) {
-            this.getSnapShot();
+          if(data.code === 0){
+              HdSmart.UI.toast("开锁成功");
+          } else if(data.code == -16005){
+            HdSmart.UI.toast("密码错误，请重新输入");
+          }else{
+            HdSmart.UI.toast("开锁失败！");
           }
           break;
         case "dr_report_dev_alert":

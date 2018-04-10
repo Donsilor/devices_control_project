@@ -156,7 +156,7 @@ export default {
         list: [],
         firstLoad: true,
         isLoading: false,
-        size: 50,
+        size: 20,
         begin: 0,
         more: 0
     };

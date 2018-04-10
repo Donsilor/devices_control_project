@@ -12,6 +12,7 @@
             <p v-else-if="model.status=='standby'">待机</p>
             <p v-else-if="model.status=='filter'">制水中...</p>
             <p v-else-if="model.status=='clean'">冲洗中...</p>
+            <p v-else-if="model.status=='protect'">保护</p>
         </div>
 
         <filter-items :items="filterItems" :view-filter="viewFilter" />

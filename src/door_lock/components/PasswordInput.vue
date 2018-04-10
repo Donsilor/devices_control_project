@@ -203,7 +203,9 @@ export default {
           }
         },
         (data) => {
-            HdSmart.UI.toast("开锁成功");
+            if(data.msg != 'TcpClient send msg success'){
+                HdSmart.UI.toast("开锁成功");
+            }
         },
         (data) => {
             if(data.code == -16005){

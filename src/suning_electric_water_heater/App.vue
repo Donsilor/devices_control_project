@@ -12,10 +12,10 @@
             </div>
             <div class="set_temp">
                 <p><span>预设温度</span>{{temp}}℃</p>
-                <a href="" class="btn btn-reduce" @click.prevent="setTempDown"><i></i></a>
-                <a href="" class="btn btn-add" @click.prevent="setTempUp"><i></i></a>
+                <a href="" class="btn btn-reduce" :class="{disabled:tempDisabled}" @click.prevent="setTempDown"><i></i></a>
+                <a href="" class="btn btn-add" :class="{disabled:tempDisabled}" @click.prevent="setTempUp"><i></i></a>
                 <div class="slider">
-                    <slider ref="tempSlider" v-model="temp" :options="sliderOptions" @change="onTempChange" />
+                    <slider ref="tempSlider" v-model="temp" :options="sliderOptions" @change="onTempChange" :disabled="tempDisabled" />
                     <span class="min">{{sliderOptions.range.min}}℃</span>
                     <span class="max">{{sliderOptions.range.max}}℃</span>
                 </div>
@@ -203,6 +203,9 @@ a{
     &.active span{
         opacity: 1;
     }
+    &.disabled{
+        opacity: .6;
+    }
 }
 .btn-add{
     position: absolute;
@@ -319,7 +322,7 @@ a{
 <script>
 import Slider from './components/Slider.vue'
 
-const [TEMP_MIN,TEMP_MAX] = [30, 75]
+const [TEMP_MIN, TEMP_MAX] = [30, 75]
 
 function createBubble(container, option){
 
@@ -374,16 +377,20 @@ export default {
                 default:
                     return ''
             }
+        },
+        tempDisabled() {
+            return this.model.mode == 'max_volume'
         }
     },
     watch: {
         'model.set_temperature'(val) {
-            this.temp = val
+            if(!this.$refs.tempSlider.isUpdating){
+                this.temp = val
+            }
         }
     },
     methods: {
         controlDevice(attr, value) {
-
             HdSmart.Device.control({
                 nodeid: `water_heater.main.${attr}`,
                 params: {
@@ -392,17 +399,21 @@ export default {
                     }
                 }
             }, () => {
-
             }, () => {
-
             })
         },
         setTempUp() {
+            if(this.tempDisabled){
+                return
+            }
             if(this.temp < TEMP_MAX){
                 this.temp++
             }
         },
         setTempDown() {
+            if(this.tempDisabled){
+                return
+            }
             if(this.temp > TEMP_MIN){
                 this.temp--
             }
