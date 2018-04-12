@@ -21,7 +21,7 @@
     <modal title="滤芯状态" class="modal-w" v-model="statusModalVisible">
         <div class="lx_status">
             <div class="p1">滤芯{{currentFilter.index+1}}</div>
-            <div class="p2"> </div>
+            <div class="p2">{{getName(currentFilter.index)}} </div>
             <circle-pie class="pie" :value="toPercent(currentFilter.remaining)">
                 <p class="p3">预计剩余寿命</p>
                 <p class="p4">{{currentFilter.remaining}}%</p>
@@ -561,6 +561,9 @@ export default {
         }
     },
     methods: {
+        getName(index) {
+            return ['PP棉', '前置活性炭', 'PP棉', 'RO', '后置活性炭'][index]
+        },
         getSnapShot() {
             HdSmart.Device.getSnapShot((data) => {
                 this.onSuccess(data)

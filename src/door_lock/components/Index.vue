@@ -3,7 +3,7 @@
 
     <div class="name">{{device_name}}</div>
     <div class="lock-status">
-        <span class="status" :class="{on:model.switch=='on'}">{{statusText}}</span>
+        <span class="status" :class="{red:lockedStatus,on:model.switch=='on'}">{{statusText}}</span>
         <span class="battery" :class="{low:lowBattery}">{{model.battery_percentage}}%电量</span>
     </div>
     <div class="lock" :class="[model.switch]"></div>
@@ -48,8 +48,11 @@
   font-size: 0;
   .status {
     font-size: 30px;
-    color: #c8cacc;
     margin-right: 12px;
+    color: #c8cacc;
+    &.red{
+        color: #f26161;
+    }
     &.on {
       color: #46bcff;
     }
@@ -179,9 +182,10 @@ const WARN_CODE = {
   e4: { msg: "家庭成员触发被挟持报警！", switch: false },
   e5: { msg: "门锁已被锁死，无法手机开锁", switch: true },
   e6: { msg: "门锁已被反锁，无法手机开锁", switch: true },
-  e7: { msg: "无法手机开锁", switch: true },
+  e7: { msg: "密码错误超过限制，无法远程开锁", switch: true },
 };
 let ERROR_STORE_KEY = ''
+let isInit = false
 
 function findIndex(array, fn){
     for(var i=0;i<array.length;i++){
@@ -236,7 +240,7 @@ export default {
             }
             return true
         })
-        return result
+        return result.reverse()
     },
     lockedStatus() {
         var hasE6 = findIndex(this.alertModel, (item) =>{
@@ -245,7 +249,13 @@ export default {
         return hasE6 >= 0
     },
     statusText() {
-        return this.lockedStatus ? '已反锁' : (this.model.switch == 'on' ? '已打开' : '已关闭')
+        if(this.lockedStatus){
+            return '已反锁'
+        }
+        if(this.model.switch == 'on'){
+            return '已打开'
+        }
+        return '已关闭'
     }
   },
   watch: {
@@ -343,7 +353,7 @@ export default {
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot((data) => {
           this.onSuccess(data)
-      });
+      },() => {});
     },
     onSuccess(data) {
       if (!data) return;
@@ -352,9 +362,6 @@ export default {
       }
       this.model = data.attribute;
 
-      if(this.model.switch == "on") {
-        this.passwordInputVisible = false;
-      }
       this.onAlarm(data.attribute)
       HdSmart.UI.hideLoading()
     },
@@ -373,25 +380,21 @@ export default {
       }, 150)
     });
 
-    HdSmart.onDeviceListen(data => {
-      switch (data.method) {
-        case "dm_set":
-          if(data.code === 0){
-              HdSmart.UI.toast("开锁成功");
-          } else if(data.code == -16005){
-            HdSmart.UI.toast("密码错误，请重新输入");
-          }else{
-            HdSmart.UI.toast("开锁失败！");
-          }
-          break;
-        case "dr_report_dev_alert":
-            this.onAlert(data.result.attribute.error)
-          break;
-        default:
-          this.onSuccess(data.result);
-          break;
-      }
-    });
+    // if(!isInit){
+        // isInit = true
+        HdSmart.onDeviceListen(data => {
+            switch (data.method) {
+                case "dm_set":
+                break;
+                case "dr_report_dev_alert":
+                    this.onAlert(data.result.attribute.error)
+                break;
+                default:
+                    this.onSuccess(data.result);
+                break;
+            }
+        });
+    // }
   }
 };
 </script>

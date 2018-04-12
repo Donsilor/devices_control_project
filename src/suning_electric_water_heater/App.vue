@@ -32,7 +32,7 @@
                 </a>
                 <a href="" class="btn btn-heating_whole" :class="{active:model.mode=='full_tank'}" @click.prevent="setMode('full_tank')">
                     <i></i>
-                    <span>速热全胆</span>
+                    <span>速热整胆</span>
                 </a>
                 <a href="" class="btn btn-heating_append" :class="{active:model.mode=='max_volume'}" @click.prevent="setMode('max_volume')">
                     <i></i>

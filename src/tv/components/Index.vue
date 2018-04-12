@@ -67,7 +67,7 @@
             <a href="#" class="volup" v-finger:touch-end="volupEnd" v-finger:touch-move="touchMove" v-finger:long-tap="volupStart" ></a>
             <a href="#" class="voldown" v-finger:touch-end="voldownEnd" v-finger:touch-move="touchMove"  v-finger:long-tap="voldownStart"></a>
             <a href="#" class="home" @click.prevent="cmd('rcHome')"></a>
-            <a href="#" class="menu" @click.prevent="cmd('rcMenu')"></a>
+            <!-- <a href="#" class="menu" @click.prevent="cmd('rcMenu')"></a> -->
             <a href="#" class="back" @click.prevent="cmd('rcBack')"></a>
         </div>
     </div>

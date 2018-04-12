@@ -1,7 +1,7 @@
 <template>
     <div id="app" :class="appClassObj" @click="screenClick">
-        <p class="title" v-show="!initErr">{{ deviceName }}</p>
-        <p class="tip" v-show="(!initErr) && params.switch === 'off'">已关闭</p>
+        <p class="title">{{ deviceName }}</p>
+        <p class="tip" v-show="params.switch === 'off'">已关闭</p>
 
         <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
                 <defs>
@@ -17,7 +17,7 @@
             </svg>
 
         <!--开机界面-->
-        <div v-if="(!initErr) && params.switch === 'on'">
+        <div v-if="initErr || params.switch === 'on'">
             <!--温度Start-->
             <div class="temp">
 
@@ -65,10 +65,10 @@
         </div>
 
         <!--关机界面-->
-        <div v-if="(!initErr) && params.switch === 'off'">
+        <div v-if="params.switch === 'off'">
 
-            <div v-if="deviceCategory === 0" class="hanging"></div>
-            <div v-if="deviceCategory === 1" class="package"></div>
+            <!-- <div v-if="deviceCategory === 0" class="hanging"></div> -->
+            <div class="package"></div>
 
             <div class="bottom">
 
@@ -84,9 +84,11 @@
         </div>
 
         <!--初始化失败界面-->
-        <div v-if="initErr">
-            <img src='./assets/init_err.png' />
-            <p class="tip">加载失败，请点击屏幕刷新</p>
+        <div class="alert" v-if="initErr">
+            <p v-show="!loading" @click="init"><i class="error"></i>连接异常，请点击此处刷新</p>
+            <p v-show="loading"><i class="spin"></i>刷新中...</p>
+            <!-- <img src='./assets/init_err.png' />
+            <p class="tip">加载失败，请点击屏幕刷新</p> -->
         </div>
     </div>
 </template>
@@ -205,16 +207,20 @@
                 curButton: null,
                 //页面初始化失败
                 initErr: false,
-                //获取快照是否完成
-                initComplete: false
+                loading: false
             }
         },
         computed: {
             appClassObj: function () {
-                let obj = {main: true};
-                obj['page_'+this.params.switch] = true;
-                obj['err'] = this.initErr;
-                return obj;
+                // let obj = {main: true};
+                // obj.page_on =
+                // obj['page_'+this.params.switch] = true;
+                // obj['err'] = this.initErr;
+                return {
+                    'main': true,
+                    'page_on': this.params.switch == 'on' || this.initErr,
+                    'page_off': this.params.switch == 'off'
+                };
             }
         },
         watch: {
@@ -248,35 +254,35 @@
         methods: {
             //初始化，获取设备快照
             init(){
+                this.loading = true
                 HdSmart.Device.getSnapShot((data) => {
-                    setWebView();
                     this.onSuccess(data)
                 },() => {
-                    setWebView();
+                    this.loading = false
+                    HdSmart.UI.hideLoading();
                     this.onError()
                 });
-
-                function setWebView(){
-                    HdSmart.UI.hideLoading();
-                }
             },
             onSuccess(data) {
                 if(data && data.attribute){
+                    this.loading = false
+                    HdSmart.UI.hideLoading();
+                    if(data.device_name){
+                        this.deviceName = data.device_name;
+                    }
                     //设备故障
-                    if(data.attribute.operation === 'abnormal'){
+                    if(data.attribute.operation == 'abnormal'){
                         this.onError()
                     }else{
                         this.initErr = false;
                         this.setState(data.attribute);
-                        if(data.device_name){
-                            this.deviceName = data.device_name;
-                        }
                         this.deviceCategory = data.attribute.deviceSubCategory;
                     }
                 }
             },
             onError() {
                 this.initErr = true;
+                this.fakeTemp = '--'
             },
             //设置全量状态
             setState(attr){//设置空调状态
@@ -415,6 +421,10 @@
             },
             setTemperature(type, value, tip, el){
 
+                if(this.initErr){
+                    return
+                }
+
                 value = this.fakeTemp + value
 
                 //送风模式不能设置温度
@@ -459,13 +469,7 @@
                 }, TIP_DURATION);
             },
             screenClick(){
-                if(this.initErr) { //初始化失败，点击屏幕，重新获取数据
-                    HdSmart.UI.showLoading();
-                    this.init();
-                }
-                else{//其他情况，点击屏幕，隐藏子菜单
-                    this.showMore = false;
-                }
+                this.showMore = false;
             },
             //取反
             negation(value){
@@ -866,6 +870,45 @@
     }
     &.active .imgWrapper{
         background-image: url(./assets/horizontal_active.png);
+    }
+}
+
+.alert{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background:#fff7d9;
+    height:84px;
+    line-height: 84px;
+    font-size:30px;
+    color:#000000;
+    text-align: center;
+    overflow: hidden;
+    i{
+        display: inline-block;
+        width: 36px;
+        height: 36px;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        vertical-align: -4px;
+        margin-right: 10px;
+    }
+    .error{
+        background-image: url(./assets/icn_warn_s.png);
+    }
+    .spin{
+        background-image: url(./assets/buffering_updating.png);
+        animation: rotate 1s linear infinite;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(360deg)
     }
 }
 </style>

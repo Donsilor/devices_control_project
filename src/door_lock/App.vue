@@ -15,6 +15,9 @@
     body{
         font-size: 30px;
     }
+    html{
+        padding-bottom: 2px;
+    }
 </style>
 
 <script>

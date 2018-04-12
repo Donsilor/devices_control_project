@@ -131,6 +131,7 @@ Vue.component(DatetimePicker.name, DatetimePicker);
 
 let device_id = null
 let family_id = null
+let isInit = false
 
 function fillz(num) {
     num = '' + num
@@ -197,6 +198,7 @@ export default {
               device_id: device_id,
               family_id: family_id,
               date: getDateStr(this.date),
+              type: 'switch',
               page: {
                 size: this.size,
                 begin: this.begin
@@ -205,14 +207,15 @@ export default {
         }, (data) => {
             this.isLoading = false
             this.firstLoad = false
-            data.result.list.forEach(item => {
-                if(item.report_msg){
-                    item.attribute = item.report_msg
-                }
-            });
-            var list = data.result.list.filter((item) => {
-                return item.attribute && item.attribute.switch == 'on' && item.attribute.is_user_operate == 1
-            })
+            // data.result.list.forEach(item => {
+            //     if(item.report_msg){
+            //         item.attribute = item.report_msg
+            //     }
+            // });
+            // var list = data.result.list.filter((item) => {
+            //     return item.attribute && item.attribute.switch == 'on' && item.attribute.is_user_operate == 1
+            // })
+            var list = data.result.list
             if(!more){
                 this.list = list
             }else{
@@ -223,6 +226,7 @@ export default {
 
         }, (data) => {
             this.isLoading = false
+            this.currentDate = this.date
             if(data && data.code == -15032){
                 this.firstLoad = false
                 this.list = []
@@ -246,7 +250,7 @@ export default {
     }
   },
   created() {
-    // device_id，family_id，后边需要优化获取
+
     HdSmart.ready(() =>{
         setTimeout(() => {
             HdSmart.Device.getSnapShot((data) => {
@@ -255,11 +259,11 @@ export default {
         }, 300)
     })
 
-    HdSmart.onDeviceListen((data) => {
-        if(data.method == 'dm_get_device_info'){
-            this.beforeInit(data.result)
-        }
-    })
+    // HdSmart.onDeviceListen((data) => {
+    //     if(data.method == 'dm_get_device_info'){
+    //         this.beforeInit(data.result)
+    //     }
+    // })
 
   }
 };

@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <div class="device_name">{{device_name}}</div>
         <div class="tip" v-if="show && tip">{{tip}}</div>
         <navigator class="navigator" v-once></navigator>
         <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"></curtain>
@@ -31,7 +32,7 @@
     }
 
     .navigator {
-        margin: 160px auto 0 auto;
+        margin: 180px auto 0 auto;
     }
 
     .curtain {
@@ -47,13 +48,23 @@
     .tip {
         position: absolute;
         left: 0;
-        top: 120px;
+        top: 130px;
         width: 100%;
         text-align: center;
         font-size: 24px;
         line-height: 24px;
         color: #ffffff;
         font-family: NotoSansHans-DemiLight;
+    }
+    .device_name{
+        position: absolute;
+        left: 0;
+        top: 80px;
+        width: 100%;
+        text-align: center;
+        text-align: center;
+        color:#fff;
+        font-size: 30px;
     }
 </style>
 <script>
@@ -86,7 +97,7 @@
                 show: false,
                 //临时处理窗帘变动没有上传的问题
                 cbFunc: null,
-                test: 0
+                device_name: '窗帘'
             }
         },
         mounted() {
@@ -102,6 +113,9 @@
                     if(data && data.attribute){
                         this.open_percentage = data.attribute.open_percentage;
                         this.animateToTargetPercentage(this.open_percentage, true);
+                    }
+                    if(data.device_name){
+                        this.device_name = data.device_name
                     }
                 }, () => {
                     this.is_ready = true;

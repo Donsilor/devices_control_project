@@ -71,7 +71,8 @@
                     <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
                     <a href="#" class="volup"  v-finger:long-tap="volupStart" v-finger:touch-move="touchMove" v-finger:touch-end="volupEnd"></a>
                     <a href="#" class="voldown"  v-finger:long-tap="voldownStart" v-finger:touch-move="touchMove" v-finger:touch-end="voldownEnd"></a>
-                    <a href="#" class="remote" @click.prevent="cmd('rcOk')"></a>
+                    <!-- <a href="#" class="remote" @click.prevent="cmd('rcOk')"></a> -->
+                    <a href="#" class="ok" @click.prevent="cmd('rcOk')"></a>
                     <a href="#" class="left" @click.prevent="cmd('rcLeft')"></a>
                     <a href="#" class="right" @click.prevent="cmd('rcRight')"></a>
                     <a href="#" class="back" @click.prevent="cmd('rcBack')"></a>
@@ -229,6 +230,12 @@
                 background-image: url(../assets/icn_remote_playpause_normal.png);
                 &:active{
                     background-image: url(../assets/icn_remote_playpause_pressed.png);
+                }
+            }
+            .ok{
+                background-image: url(../assets/icn_remote_ok_normal.png);
+                &:active{
+                    background-image: url(../assets/icn_remote_ok_pressed.png);
                 }
             }
             .voldown{
