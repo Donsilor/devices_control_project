@@ -3,6 +3,7 @@
 -->
 <template>
 <div class="page-index"><div class="page-index2">
+    <div class="device_name">{{$store.state.device_name}}</div>
     <div class="grid">
         <div class="content-con">
             <div class="span1">
@@ -91,12 +92,20 @@
         width: 100%;
         height: 100%;
     }
+    .device_name{
+        position: absolute;
+        left: 0;
+        top: 120px;
+        width:100%;
+        text-align: center;
+        font-size: 30px;
+        color:#333333;
+    }
     .grid{
         left: 50%;
-        top: 50%;
+        top: 200px;
         position: absolute;
-        transform: translate(-50%,-50%);
-        margin-top: -60px;
+        transform: translateX(-50%);
         width: 1750px;
         .content-con{ height: 500px }
         .span1{

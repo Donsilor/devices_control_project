@@ -40,7 +40,8 @@ Vue.component('topbar', Topbar)
 const store = new Vuex.Store({
     state: {
         detailVisible: false,
-        activeDetail: {}
+        activeDetail: {},
+        device_name: 'TCL电视'
     },
     mutations: {
         showDetail(state, payload) {
@@ -49,6 +50,9 @@ const store = new Vuex.Store({
         },
         hideDetail(state) {
             state.detailVisible = false
+        },
+        setDeviceName(state, payload) {
+            state.device_name = payload
         }
     },
     actions: {
@@ -95,6 +99,10 @@ HdSmart.ready(() => {
   if(!is_ready){
 
     is_ready = true
+
+    HdSmart.Device.getSnapShot((data) => {
+        store.commit('setDeviceName', data.device_name)
+    })
 
     //解决300ms延迟问题
     FastClick.attach(document.body)

@@ -32,7 +32,7 @@
     }
 
     .navigator {
-        margin: 180px auto 0 auto;
+        margin: 200px auto 0 auto;
     }
 
     .curtain {
@@ -48,7 +48,7 @@
     .tip {
         position: absolute;
         left: 0;
-        top: 130px;
+        top: 150px;
         width: 100%;
         text-align: center;
         font-size: 24px;
@@ -59,7 +59,7 @@
     .device_name{
         position: absolute;
         left: 0;
-        top: 80px;
+        top: 100px;
         width: 100%;
         text-align: center;
         text-align: center;

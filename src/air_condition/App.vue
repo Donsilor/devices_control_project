@@ -876,7 +876,7 @@
 .alert{
     position: fixed;
     left: 0;
-    top: 0;
+    top: 96px;
     width: 100%;
     background:#fff7d9;
     height:84px;

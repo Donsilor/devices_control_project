@@ -384,7 +384,7 @@ export default {
     },
     watch: {
         'model.set_temperature'(val) {
-            if(!this.$refs.tempSlider.isUpdating){
+            if(!this.isTempUpdating){
                 this.temp = val
             }
         }
@@ -419,7 +419,15 @@ export default {
             }
         },
         onTempChange(val) {
-            this.controlDevice('set_temperature', val)
+            this.isTempUpdating = true
+            clearTimeout(this.tempTimer)
+            this.controlDevice('set_temperature', val, () =>{
+                this.tempTimer = setTimeout(() => {
+                    this.isTempUpdating = false
+                }, 1500)
+            }, () =>{
+                this.temp = this.model.set_temperature
+            })
         },
         setSwitch(val) {
             this.controlDevice('switch', val)
