@@ -67,6 +67,9 @@
 html,body{
     overflow: hidden;
 }
+body{
+    -webkit-tap-highlight-color: transparent;
+}
 #app{
     font-size: 24px;
     color: #fff;
@@ -98,11 +101,11 @@ a{
         color:#c8cacc;
     }
     .pic{
-        width: 260px;
-        height: 385px;
-        background: url(./assets/img_heater_off.png) no-repeat;
+        width: 450px;
+        height: 450px;
+        background: url(./assets/img_heater_off2.png) no-repeat;
         background-size: 100% 100%;
-        margin: 50px auto 48px;
+        margin: 0 auto;
     }
 }
 .inner{
