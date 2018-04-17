@@ -44,6 +44,13 @@
                 </a>
             </div>
         </div>
+
+        <div class="alert-wraper" v-if="model.fault && model.fault!='normal'">
+        <div class="alert">
+            <i></i> {{errorText}}
+            <!-- <a class="close" href="javascript:void(0)"></a> -->
+        </div>
+        </div>
     </div>
 
     <div class="page-off" v-show="model.switch=='off'">
@@ -320,6 +327,48 @@ a{
     transition: all 20s;
     transform: translateX(-50%);
 }
+
+.alert-wraper {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  top: 96px;
+  .alert {
+    background: rgba(51, 51, 51, 0.75);
+    width: 100%;
+    height: 84px;
+    line-height: 84px;
+    text-align: center;
+    color: #fff;
+    font-size: 30px;
+    margin-bottom: 4px;
+    i {
+      display: inline-block;
+      width: 34px;
+      height: 34px;
+      background: url(./assets/icn_notice_white_s.png) no-repeat;
+      background-size: 34px;
+      margin-right: 13px;
+      vertical-align: text-bottom;
+    }
+    .close {
+      float: right;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      background: url(./assets/btn_close_white_normal.png) no-repeat;
+      background-size: 30px;
+      margin-top: 27px;
+      margin-right: 26px;
+      &:active {
+        background-image: url(./assets/btn_close_pressed.png);
+      }
+    }
+    &.warn {
+      background: rgba(242, 97, 97, 0.9);
+    }
+  }
+}
 </style>
 
 <script>
@@ -383,6 +432,15 @@ export default {
         },
         tempDisabled() {
             return this.model.mode == 'max_volume'
+        },
+        errorText() {
+            switch(this.model.fault){
+                case 'normal': return '正常'
+                case 'dry_heat': return '热水器干烧，请检查设备'
+                case 'sensor_error': return '热水器传感器故障，请检查设备'
+                case 'over_temperature': return '热水器超温，请检查设备'
+                default: return '热水器故障，请检查设备'
+            }
         }
     },
     watch: {

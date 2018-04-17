@@ -57,7 +57,7 @@ export default {
     width: 100%;
     position: absolute;
     left: 0;
-    top: 158px;
+    top: 200px;
     .name{
         font-size: 32px;
         color:#75787a;
@@ -67,6 +67,7 @@ export default {
     .status{
         font-size: 28px;
         color:#c8cacc;
+        display: block;
     }
 }
 .ac1,.ac2{
