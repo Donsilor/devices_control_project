@@ -44,13 +44,6 @@
                 </a>
             </div>
         </div>
-
-        <div class="alert-wraper" v-if="model.fault && model.fault!='normal'">
-        <div class="alert">
-            <i></i> {{errorText}}
-            <!-- <a class="close" href="javascript:void(0)"></a> -->
-        </div>
-        </div>
     </div>
 
     <div class="page-off" v-show="model.switch=='off'">
@@ -61,6 +54,12 @@
             <a href="" class="btn btn-turnon" @click.prevent="setSwitch('on')">
                 <i></i>
             </a>
+        </div>
+    </div>
+
+    <div class="alert-wraper" v-if="model.fault && model.fault!='normal'">
+        <div class="alert">
+            <i></i> {{errorText}}
         </div>
     </div>
 </div>
@@ -452,6 +451,12 @@ export default {
     },
     methods: {
         controlDevice(attr, value) {
+
+            if(this.model.fault && this.model.fault != 'normal'){
+                HdSmart.UI.toast(this.errorText)
+                return
+            }
+
             HdSmart.Device.control({
                 nodeid: `water_heater.main.${attr}`,
                 params: {

@@ -66,13 +66,13 @@ var webpackConfig = merge(baseWebpackConfig, {
             // necessary to consistently work with multiple chunks via CommonsChunkPlugin
             chunksSortMode: utils.sortChunks
         }),
-        new CopyWebpackPlugin([
-            {
-                from: path.resolve(__dirname, '../static'),
-                to: config.build.assetsSubDirectory,
-                ignore: ['.*']
-            }
-        ])
+        // new CopyWebpackPlugin([
+        //     {
+        //         from: path.resolve(__dirname, '../static'),
+        //         to: config.build.assetsSubDirectory,
+        //         ignore: ['.*']
+        //     }
+        // ])
     ]
 })
 
