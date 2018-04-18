@@ -11,8 +11,7 @@ var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 var util = require('./util');
 var env = config.build.env;
-var appName = util.getCommandAppName();
-var app = util.getCommandApp();
+var app = util.getInputName();
 
 // 本地测试使用
 // baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/${app}/index.js`;
@@ -34,7 +33,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     plugins: [
         // http://vuejs.github.io/vue-loader/en/workflow/production.html
         new webpack.DefinePlugin({
-            'process.env': merge(util.getBuildArgs(),config.build.env)
+            'process.env': config.build.env
         }),
         new UglifyJSPlugin(),
         // extract css into its own file
@@ -55,7 +54,7 @@ var webpackConfig = merge(baseWebpackConfig, {
             filename: config.build.index,
             template: 'index.html',
             inject: true,
-            title: appName,
+            title: app,
             minify: {
                 removeComments: true,
                 collapseWhitespace: true,

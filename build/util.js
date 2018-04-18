@@ -4,43 +4,13 @@ try {
 }	catch(ex) {
     argv = process.argv;
 }
-var prod = argv.slice(2)[0]
+var product = argv.slice(2)[0]
 var params = require('minimist')(argv.slice(3))
-var products = require('../products.json')
-var appConfig = products[prod]
-
-if(!appConfig){
-    throw new Error(`${prod} is not found in products.json`);
-}
 
 if(params.m || params.mobile){
-    appConfig.src = appConfig.mobileSrc
+    product += '_m'
 }
 
-exports.getBuildArgs = function(){
-    return params
-}
-
-exports.getAppConfig = function(){
-    return appConfig
-}
-
-exports.getCommandPort = function () {
-    return appConfig.port || 8081
-};
-
-exports.getCommandApp = function () {
-    if(appConfig.src){
-        return appConfig.src
-    }else{
-        throw new Error('src is undefined');
-    }
-}
-
-exports.getCommandAppName = function () {
-    if(appConfig.name){
-        return appConfig.name
-    }else{
-        throw new Error('name is undefined');
-    }
+exports.getInputName = function(){
+    return product
 }

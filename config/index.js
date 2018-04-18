@@ -1,7 +1,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
 var util = require('../build/util')
-var app = util.getCommandApp();
+var app = util.getInputName();
 module.exports = {
     build: {
         env: require('./prod.env'),

@@ -10,10 +10,9 @@ var webpack = require('webpack')
 var config = require('../config')
 var webpackConfig = require('./webpack.prod.conf')
 var util = require('./util')
-var app = util.getCommandApp();
-var appName = util.getCommandAppName()
+var app = util.getInputName();
 
-var spinner = ora(`building for ${app}:${appName}...`)
+var spinner = ora(`building for ${app}:...`)
 spinner.start()
 rm(path.resolve(config.build.assetsRoot), err => {
   if (err) throw err

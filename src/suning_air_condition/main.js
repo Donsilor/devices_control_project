@@ -1,6 +1,7 @@
-/**
- * Created by lenovo on 2017/6/27.
- */
+if(process.env.NODE_ENV == 'development'){
+    require('../../mock/air_condition/index.js')
+}
+
 import Vue from 'vue';
 import App from './App.vue';
 

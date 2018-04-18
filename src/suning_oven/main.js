@@ -1,3 +1,8 @@
+if(process.env.NODE_ENV == 'development'){
+    require('../../mock/oven/index.js')
+}
+
+
 import Vue from 'vue'
 import App from './App.vue'
 

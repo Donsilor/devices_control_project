@@ -12,11 +12,7 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
     baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name])
 })
 
-var app = util.getCommandApp();
-var appName = util.getCommandAppName();
-var mock = util.getAppConfig().mock || app
-
-baseWebpackConfig.entry['after_iot'] = `${__dirname}/../mock/${mock}/index.js`;
+var app = util.getInputName();
 
 module.exports = merge(baseWebpackConfig, {
     module: {
@@ -26,7 +22,7 @@ module.exports = merge(baseWebpackConfig, {
     devtool: '#cheap-module-eval-source-map',
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': merge(util.getBuildArgs(),config.dev.env)
+            'process.env': config.dev.env
         }),
         // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
         new webpack.HotModuleReplacementPlugin(),
@@ -35,7 +31,7 @@ module.exports = merge(baseWebpackConfig, {
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: 'index.html',
-            title: appName,
+            title: app,
             inject: true,
             chunksSortMode: utils.sortChunks
         }),

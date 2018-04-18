@@ -12,7 +12,7 @@ function resolve(dir) {
 }
 
 var isProduction = process.env.NODE_ENV === 'production';
-var app = util.getCommandApp();
+var app = util.getInputName();
 
 module.exports = {
     entry: {

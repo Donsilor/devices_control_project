@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV == 'development'){
+    require('../../mock/door_lock/index.js')
+}
+
 import Vue from 'vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
