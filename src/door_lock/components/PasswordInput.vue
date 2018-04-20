@@ -7,10 +7,10 @@
         </div>
         <div class="password-input-content">
             <input type="password" readonly :value="psw_str">
-            <a v-show="psw.length>0" href="javascript:void(0)" @click="delNum" class="del"></a>
+            <a v-show="psw.length>0" href="javascript:void(0)" @touchstart="delNum" class="del"></a>
             <div class="password-input-btns">
                 <a  v-for="(item,index) in btns" href="javascript:void(0)"
-                    :key="item" @click="numberPressed(item)"
+                    :key="item" @touchstart="numberPressed(item)"
                     :class="['btn-item',(index+1)%3==0 ? 'item-wrap' : '']">{{item}}
                 </a>
                 <a href="javascript:void(0)" class="unlock"  @click="unlock">
@@ -33,7 +33,7 @@
   background: rgba(0, 0, 0, 0.5);
   .password-input-container {
     background: #ffffff;
-    box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.1);
+    // box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.1);
     border-radius: 6px;
     width: 600px;
     padding-bottom: 15px;

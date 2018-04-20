@@ -28,19 +28,19 @@
 
                 <a href="" class="btn btn-heating_half" :class="{active:model.mode=='half_tank'}" @click.prevent="setMode('half_tank')">
                     <i></i>
-                    <span>速热半胆</span>
+                    <span>半胆速热</span>
                 </a>
                 <a href="" class="btn btn-heating_whole" :class="{active:model.mode=='full_tank'}" @click.prevent="setMode('full_tank')">
                     <i></i>
-                    <span>速热整胆</span>
+                    <span>整胆加热</span>
                 </a>
                 <a href="" class="btn btn-heating_append" :class="{active:model.mode=='max_volume'}" @click.prevent="setMode('max_volume')">
                     <i></i>
-                    <span>Max增容</span>
+                    <span>蓄热增容</span>
                 </a>
                 <a href="" class="btn btn-intelligentbath" :class="{active:model.mode=='smart'}" @click.prevent="setMode('smart')">
                     <i></i>
-                    <span>智能浴</span>
+                    <span>智能沐浴</span>
                 </a>
             </div>
         </div>
@@ -444,9 +444,7 @@ export default {
     },
     watch: {
         'model.set_temperature'(val) {
-            if(!this.isTempUpdating){
-                this.temp = val
-            }
+
         }
     },
     methods: {
@@ -485,12 +483,11 @@ export default {
             }
         },
         onTempChange(val) {
-            this.isTempUpdating = true
-            clearTimeout(this.tempTimer)
+            if(val == this.model.set_temperature){
+                return
+            }
+
             this.controlDevice('set_temperature', val, () =>{
-                this.tempTimer = setTimeout(() => {
-                    this.isTempUpdating = false
-                }, 1500)
             }, () =>{
                 this.temp = this.model.set_temperature
             })
@@ -499,6 +496,7 @@ export default {
             this.controlDevice('switch', val)
         },
         setMode(val) {
+            this.$refs.tempSlider.isUpdating = false
             this.controlDevice('mode', val)
         },
         getSnapShot() {
@@ -507,9 +505,12 @@ export default {
             })
         },
         onSuccess(data) {
-            this.model = data.attribute
             if(data.device_name){
                 this.device_name = data.device_name
+            }
+            this.model = data.attribute
+            if(!this.$refs.tempSlider.isUpdating){
+                this.temp = this.model.set_temperature
             }
             HdSmart.UI.hideLoading()
         }

@@ -6,11 +6,12 @@
     <div class="page-detail" v-show="visible">
         <div class="detail-hd">
             <span class="back" @click="close"></span>
-            <div class="title" v-show="cur.title">
-                {{cur.title}}
-                <span class="isvip" v-show="ispay && ispay !== '1'">付费</span>
+            <div class="title">
+                {{loading?'正在加载中...':cur.title}}
+                <span class="isvip" v-show="!loading && ispay && ispay !== '1'">付费</span>
             </div>
         </div>
+        <screen-projection-tip class="sp_status_detail" />
         <div class="detail-bd">
             <div class="detail-info clearfix" v-show="cur.title">
                 <div class="pic">
@@ -69,8 +70,8 @@
                 </div>
                 <div class="control">
                     <a href="#" class="shut" @click.prevent="cmd('rcPower')"></a>
-                    <a href="#" class="volup"  v-finger:long-tap="volupStart" v-finger:touch-move="touchMove" v-finger:touch-end="volupEnd"></a>
-                    <a href="#" class="voldown"  v-finger:long-tap="voldownStart" v-finger:touch-move="touchMove" v-finger:touch-end="voldownEnd"></a>
+                    <a href="javascript:void(0)" class="volup"  v-finger:long-tap="volupStart" v-finger:touch-move="touchMove" v-finger:touch-end="volupEnd"></a>
+                    <a href="javascript:void(0)" class="voldown"  v-finger:long-tap="voldownStart" v-finger:touch-move="touchMove" v-finger:touch-end="voldownEnd"></a>
                     <!-- <a href="#" class="remote" @click.prevent="cmd('rcOk')"></a> -->
                     <a href="#" class="ok" @click.prevent="cmd('rcOk')"></a>
                     <a href="#" class="left" @click.prevent="cmd('rcLeft')"></a>
@@ -133,7 +134,7 @@
         top: 0;
         width: 100%;
         height: 100%;
-        overflow-y: hidden;
+        // overflow-y: hidden;
         z-index: 9;
         //color: #fff;
         //background: rgba(47,49,51,1);
@@ -144,8 +145,13 @@
     }
     .detail-hd{
         height: 96px;
+        // height: 192px;
+        // overflow: hidden;
+        flex-shrink: 0;
         position: relative;
         z-index: 9999;
+        background: #fff;
+        border-bottom:1px solid #dbdbdb;
         /*position: absolute;
         left: 0;
         top: 0;
@@ -160,6 +166,7 @@
             color:#fff;
             opacity:0.9;
             display: inline-block;
+            vertical-align:4px;
         }
         .back{
             width: 100px;
@@ -176,9 +183,10 @@
             }
         }
         .title{
-            background: #fff;
             text-align: center;
             line-height: 90px;
+            // height: 96px;
+            overflow: hidden;
             color:#2f3133;
             font-size: 36px;
         }

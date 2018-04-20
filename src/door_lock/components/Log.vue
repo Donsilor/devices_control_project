@@ -129,10 +129,6 @@ import 'mint-ui/lib/style.css';
 
 Vue.component(DatetimePicker.name, DatetimePicker);
 
-let device_id = null
-let family_id = null
-let isInit = false
-
 function fillz(num) {
     num = '' + num
     return num.length == 1 ? '0' + num : num
@@ -148,8 +144,11 @@ export default {
   },
   data() {
     var now = new Date()
+    var query = this.$route.query
 
     return {
+        device_id: query.device_id,
+        family_id: query.family_id,
         date: now,
         startDate: new Date(now.getFullYear()-1, now.getMonth(), now.getDate()),
         endDate: now,
@@ -195,8 +194,8 @@ export default {
         HdSmart.Device.control({
           method: "dr_get_dev_status_list",
           params: {
-              device_id: device_id,
-              family_id: family_id,
+              device_id: this.device_id,
+              family_id: this.family_id,
               date: getDateStr(this.date),
               type: 'switch',
               page: {
@@ -235,35 +234,15 @@ export default {
             }
         }
       )
-    },
-    beforeInit(data){
-        if(!data || !data.device_id || !data.family_id){
-            return
-        }
-        if(data.device_id){
-            device_id = data.device_id
-        }
-        if(data.family_id){
-            family_id = data.family_id
-        }
-        this.getLogData()
     }
   },
   created() {
 
     HdSmart.ready(() =>{
         setTimeout(() => {
-            HdSmart.Device.getSnapShot((data) => {
-                this.beforeInit(data)
-            })
+            this.getLogData()
         }, 300)
     })
-
-    // HdSmart.onDeviceListen((data) => {
-    //     if(data.method == 'dm_get_device_info'){
-    //         this.beforeInit(data.result)
-    //     }
-    // })
 
   }
 };

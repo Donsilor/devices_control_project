@@ -3,6 +3,7 @@
 -->
 <template>
 <div class="page-index"><div class="page-index2">
+    <screen-projection-tip class="sp_status_home" />
     <div class="device_name">{{$store.state.device_name}}</div>
     <div class="grid">
         <div class="content-con">

@@ -1,10 +1,12 @@
 <template>
 <div id="app">
-    <div class="water_wave ww1"></div>
-    <div class="water_wave ww2"></div>
-    <div class="water_wave ww3"></div>
 
-    <div class="page-on" v-if="isInit">
+    <div class="page-on" v-if="isInit && success">
+
+        <div class="water_wave ww1"></div>
+        <div class="water_wave ww2"></div>
+        <div class="water_wave ww3"></div>
+
         <div class="name">{{device_name}}</div>
         <div class="tip">
             <p v-if="model.water_leakage=='on'"><span @click="toggleErrorModal(true)">漏水</span></p>
@@ -16,6 +18,12 @@
         </div>
 
         <filter-items :items="filterItems" :view-filter="viewFilter" />
+
+    </div>
+
+    <div class="page-nodata" v-if="isInit && !success">
+        <div class="name">{{device_name}}</div>
+        <div class="pic1"></div>
     </div>
 
     <modal title="滤芯状态" class="modal-w" v-model="statusModalVisible">
@@ -59,12 +67,30 @@ body{
 a{
     text-decoration: none;
 }
-#app{
+#app,.page-on,.page-nodata{
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
+}
+.page-nodata{
+    background-image: linear-gradient(-180deg, #FAFAFA 0%, #F2F2F2 100%);
+    .name{
+        color: #76787A;
+    }
+    .pic1{
+        position: absolute;
+        top: 320px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 420px;
+        height: 420px;
+        background: url(./assets/waterpurifier_img_offline.png) no-repeat;
+        background-size: 100% 100%;
+    }
+}
+.page-on{
     background:#46bcff;
     &.warn{
         background:#d04802;
@@ -544,12 +570,13 @@ export default {
     },
     data() {
         return {
-            device_name: '智能净水器',
+            device_name: '',
             statusModalVisible: false,
             model: {},
             currentIndex: -1,
             filterItems: [],
             isInit: false,
+            success: false,
             alarmModalVisible: false,
             errorStore: JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || [],
         }
@@ -566,14 +593,16 @@ export default {
         },
         getSnapShot() {
             HdSmart.Device.getSnapShot((data) => {
+                this.isInit = true
+                this.success = true
                 this.onSuccess(data)
-            },() => {})
+            },() => {
+                this.isInit = true
+                this.success = false
+            })
         },
         onSuccess(result) {
 
-            if(!this.isInit){
-                 this.isInit = true
-            }
             HdSmart.UI.hideLoading()
 
             var attrs = result.attribute
@@ -629,6 +658,9 @@ export default {
     created() {
 
         HdSmart.ready(() => {
+            if(window.device_name){
+                this.device_name = window.device_name
+            }
             HdSmart.UI.showLoading()
             this.getSnapShot()
         })

@@ -5,7 +5,6 @@ if(process.env.NODE_ENV == 'development'){
 import Vue from 'vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
-import FastClick from 'fastclick'
 
 import App from './App.vue'
 import Index from './components/Index.vue'

@@ -17,11 +17,14 @@ import Search from './components/Search.vue'
 import Detail from './components/Detail.vue'
 import Topbar from './components/Topbar.vue'
 import ErrorView from './components/Error.vue'
+import ScreenProjectionTip from './components/ScreenProjectionTip.vue'
 import AlloyFinger from 'alloyfinger/alloy_finger'
 import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue'
 //import Statusbar from './components/Statusbar.vue'
 import watermark from '../../lib/watermark'
 import 'swiper/dist/css/swiper.css'
+
+import * as service from './service'
 
 Vue.use(Vuex)
 Vue.use(Router)
@@ -36,6 +39,7 @@ Vue.use(VueLazyload, {
 
 Vue.component('detail', Detail)
 Vue.component('topbar', Topbar)
+Vue.component('ScreenProjectionTip', ScreenProjectionTip)
 //Vue.component('statusbar', Statusbar)
 
 //强制关闭3d(详情页改成不透明了)
@@ -45,7 +49,12 @@ const store = new Vuex.Store({
     state: {
         detailVisible: false,
         activeDetail: {},
-        device_name: 'TCL电视'
+        device_name: 'TCL电视',
+        screenProjectionStatus: {
+            tvOnlineStatus: 1,
+            screenProjectType: 0,
+            screenProjectTitle: ''
+        }
     },
     mutations: {
         showDetail(state, payload) {
@@ -57,6 +66,9 @@ const store = new Vuex.Store({
         },
         setDeviceName(state, payload) {
             state.device_name = payload
+        },
+        setScreenProjectionStatus(state, payload){
+            state.screenProjectionStatus = payload
         }
     },
     actions: {
@@ -107,6 +119,14 @@ HdSmart.ready(() => {
     HdSmart.Device.getSnapShot((data) => {
         store.commit('setDeviceName', data.device_name)
     })
+
+    service.getScreenProjectionStatus((error, data) => {
+        store.commit('setScreenProjectionStatus', data)
+    })
+
+    window.onScreenProjectStatusChanged = function(data){
+        store.commit('setScreenProjectionStatus', data)
+    }
 
     //解决300ms延迟问题
     FastClick.attach(document.body)

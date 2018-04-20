@@ -171,9 +171,9 @@ export default {
         this.slider.on('update', function ( values, handle ) {
             // console.log('update')
             self.$emit('input', parseInt(values[handle]))
-            // if(self.init){
-            //     self.isUpdating = true
-            // }
+            if(self.init){
+                self.isUpdating = true
+            }
             self.init = true
         });
         this.slider.on('change', function ( values, handle ) {
@@ -187,7 +187,7 @@ export default {
             // console.log('set')
             clearTimeout(self.setTimer)
             self.setTimer = setTimeout(function() {
-                // self.isUpdating = false
+                self.isUpdating = false
                 self.$emit('change', parseInt(values[handle]))
             }, 500)
         });

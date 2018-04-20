@@ -10,7 +10,7 @@
 
     <a href="#" class="btn-unlock" :class="{disabled:btnDisabled}" @click.prevent="showPwdInput">开锁</a>
 
-    <router-link to="log" class="btn-golog"></router-link>
+    <router-link :to="{name:'log',query:{device_id:device_id,family_id:family_id}}" class="btn-golog"></router-link>
 
     <div class="alert-wraper">
       <div class="alert" :class="{warn:item.key}" v-for="(item,index) in theUnclickAlert" :key="index" v-if="index==0">
@@ -204,6 +204,8 @@ export default {
     return {
       hasSnapShot: false,
       device_name: "",
+      device_id: '',
+      family_id: '',
       passwordInputVisible: false,
       alertModel: [],
       model: {
@@ -352,18 +354,24 @@ export default {
     },
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot((data) => {
+
           this.onSuccess(data)
       },() => {});
     },
     onSuccess(data) {
+      HdSmart.UI.hideLoading()
       if (!data) return;
-      if (data.device_name) {
+      if(data.device_name) {
         this.device_name = data.device_name;
       }
+      if(data.device_id){
+          this.device_id = data.device_id
+      }
+      if(data.family_id){
+          this.family_id = data.family_id
+      }
       this.model = data.attribute;
-
       this.onAlarm(data.attribute)
-      HdSmart.UI.hideLoading()
     },
     onError() {}
   },
