@@ -11,7 +11,7 @@
                 <span class="isvip" v-show="!loading && ispay && ispay !== '1'">付费</span>
             </div>
         </div>
-        <screen-projection-tip class="sp_status_detail" />
+        <status-tip class="sp_status_detail" />
         <div class="detail-bd">
             <div class="detail-info clearfix" v-show="cur.title">
                 <div class="pic">

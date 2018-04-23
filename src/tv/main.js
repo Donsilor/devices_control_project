@@ -17,7 +17,7 @@ import Search from './components/Search.vue'
 import Detail from './components/Detail.vue'
 import Topbar from './components/Topbar.vue'
 import ErrorView from './components/Error.vue'
-import ScreenProjectionTip from './components/ScreenProjectionTip.vue'
+import StatusTip from './components/StatusTip.vue'
 import AlloyFinger from 'alloyfinger/alloy_finger'
 import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue'
 //import Statusbar from './components/Statusbar.vue'
@@ -39,7 +39,7 @@ Vue.use(VueLazyload, {
 
 Vue.component('detail', Detail)
 Vue.component('topbar', Topbar)
-Vue.component('ScreenProjectionTip', ScreenProjectionTip)
+Vue.component('StatusTip', StatusTip)
 //Vue.component('statusbar', Statusbar)
 
 //强制关闭3d(详情页改成不透明了)
@@ -50,7 +50,7 @@ const store = new Vuex.Store({
         detailVisible: false,
         activeDetail: {},
         device_name: 'TCL电视',
-        screenProjectionStatus: {
+        tvStatus: {
             tvOnlineStatus: 1,
             screenProjectType: 0,
             screenProjectTitle: ''
@@ -68,7 +68,7 @@ const store = new Vuex.Store({
             state.device_name = payload
         },
         setScreenProjectionStatus(state, payload){
-            state.screenProjectionStatus = payload
+            state.tvStatus = payload
         }
     },
     actions: {

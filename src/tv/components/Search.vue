@@ -12,6 +12,8 @@
                 <input type="submit" value="搜索" class="search_submit">
             </form>
         </topbar>
+        <div class="status-tip-placeholder" v-show="$store.state.tvStatus.tvOnlineStatus!=1"></div>
+        <status-tip class="sp_status_search" />
         <!-- 搜索建议 -->
         <div class="search_suggest" v-show="curpage===2">
             <ul>
