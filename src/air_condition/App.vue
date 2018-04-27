@@ -242,12 +242,8 @@
                 that.init();
 
                 //监听设备状态report
-                HdSmart.onDeviceListen((data) => {
-                    if(data.method === 'dm_set'){
-                        if(data.code !== 0) that.init()
-                    }else{
-                        that.onSuccess(data.result)
-                    }
+                HdSmart.onDeviceStateChange((data) => {
+                    that.onSuccess(data.result)
                 })
             });
         },

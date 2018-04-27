@@ -839,17 +839,8 @@ export default {
             })
         })
 
-        HdSmart.onDeviceListen((data) => {
-            switch (data.method) {
-                case 'dm_set':
-                    if(data.code !== 0){
-                        this.getSnapShot()
-                    }
-                    break
-                default:
-                    this.onSuccess(data.result)
-                    break
-            }
+        HdSmart.onDeviceStateChange((data) => {
+            this.onSuccess(data.result)
         })
     }
 }

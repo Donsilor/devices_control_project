@@ -125,7 +125,7 @@
 
             var isFirstLoad = true
 
-            HdSmart.onDeviceListen((data) => {
+            HdSmart.onDeviceStateChange((data) => {
                 if (this.cbFunc) {
                     //等硬件修复了需要干掉
                     this.cbFunc();

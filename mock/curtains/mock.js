@@ -2,7 +2,7 @@ import Mock from 'mockjs';
 
 export function generateSnapShot() {
     return Mock.mock({
-        method: 'report',
+        method: 'dr_report_dev_status',
         code: 0,
         result: {
             attribute: {

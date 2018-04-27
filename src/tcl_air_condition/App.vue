@@ -122,7 +122,22 @@
         }
     }
 
-    var temperatureRadio = 1
+    let temperatureRadio = 1
+
+    let store = {}
+
+    function getStoreKey(){
+        return window.device_uuid + '_remember'
+    }
+
+    function getStore() {
+        return JSON.parse(localStorage.getItem(getStoreKey()) || '{}')
+    }
+
+    function setStore(json){
+        localStorage.setItem(getStoreKey(), JSON.stringify(json))
+    }
+
 
     export default {
         components: {AcButton, Devider},
@@ -237,12 +252,8 @@
                 that.init();
 
                 //监听设备状态report
-                HdSmart.onDeviceListen((data) => {
-                    if(data.method === 'dm_set'){
-                        if(data.code !== 0) that.init()
-                    }else{
-                        that.onSuccess(data.result)
-                    }
+                HdSmart.onDeviceStateChange((data) => {
+                    that.onSuccess(data.result)
                 })
             });
         },
@@ -250,16 +261,12 @@
             //初始化，获取设备快照
             init(){
                 HdSmart.Device.getSnapShot((data) => {
-                    setWebView();
+                    HdSmart.UI.hideLoading();
                     this.onSuccess(data)
                 },() => {
-                    setWebView();
+                    HdSmart.UI.hideLoading();
                     this.onError()
                 });
-
-                function setWebView(){
-                    HdSmart.UI.hideLoading();
-                }
             },
             onSuccess(data) {
                 if(data && data.attribute){
@@ -369,6 +376,31 @@
                 let attr = {};
                 attr[type] = type == TEMPERATURE ? value*temperatureRadio : value;
 
+                let store = getStore()
+
+                console.log(store)
+
+                if(type == 'switch' && value == 'on'){
+                    if(store.mode){
+                        attr.mode = store.mode
+                        let modeStore = store[attr.mode] || {}
+                        if(modeStore.temperature){
+                            attr.temperature = modeStore.temperature
+                        }
+                        if(modeStore.speed){
+                            attr.speed = modeStore.speed
+                        }
+                    }
+                }else if(type == 'mode'){
+                    let modeStore = store[value] || {}
+                    if(modeStore.temperature){
+                        attr.temperature = modeStore.temperature
+                    }
+                    if(modeStore.speed){
+                        attr.speed = modeStore.speed
+                    }
+                }
+
                 clearTimeout(this.operationDelay)
                 this.operationFlag = true
                 this.operationKey = type
@@ -385,9 +417,28 @@
                     }
                 }, () => {
                     that.removeLoading();
-
-                    that.params[type] = value;
+                    that.params[type] = attr[type];
                     that.setTip(tip);
+
+                    if(!store[that.params.mode]){
+                        store[that.params.mode] = {}
+                    }
+
+                    switch (type) {
+                        case 'temperature':
+                            store[that.params.mode].temperature = attr[type]
+                            setStore(store)
+                        break;
+                        case 'speed':
+                            store[that.params.mode].speed = attr[type]
+                            setStore(store)
+                        break;
+                        case 'mode':
+                            store.mode = attr[type]
+                            setStore(store)
+                        break;
+                    }
+
                 },  (data) => {
                     that.removeLoading();
 

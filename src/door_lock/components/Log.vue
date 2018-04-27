@@ -6,7 +6,7 @@
             <router-link to="/" class="icon icon-arrow"></router-link>
         </div>
         <div class="title">
-            <a href="" @click.prevent="switchLog('lock')">开锁记录</a>
+            <a href="javascript:void(0)">开锁记录</a>
             <!-- <a href="#" @click.prevent="switchLog('warn')" :class="{active:activeName=='warn'}">预警记录</a> -->
         </div>
         <div class="right">
@@ -124,10 +124,13 @@
 <script>
 import Vue from 'vue'
 import LogList from "./LogList";
-import { DatetimePicker } from 'mint-ui';
+import DatetimePicker from './DatePicker'
+import { Popup, Picker } from 'mint-ui';
 import 'mint-ui/lib/style.css';
 
 Vue.component(DatetimePicker.name, DatetimePicker);
+Vue.component(Popup.name, Popup);
+Vue.component(Picker.name, Picker);
 
 function fillz(num) {
     num = '' + num
@@ -147,8 +150,8 @@ export default {
     var query = this.$route.query
 
     return {
-        device_id: query.device_id,
-        family_id: query.family_id,
+        device_id: parseInt(query.device_id),
+        family_id: parseInt(query.family_id),
         date: now,
         startDate: new Date(now.getFullYear()-1, now.getMonth(), now.getDate()),
         endDate: now,

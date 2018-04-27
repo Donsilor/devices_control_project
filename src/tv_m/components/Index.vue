@@ -281,14 +281,15 @@
                 this.$store.dispatch('showDetail', item)
             },
             pageInit() {
-                service.getHomePageInfo(data=>{
+                service.getHomePageInfo(data => {
                     infoCache = data
                     this.homePageInfo = infoCache
                 })
             }
         },
-        mounted () {
+        created () {
             if(!infoCache.length){
+                // this.$nextTick(this.pageInit)
                 this.pageInit()
             }else{
                 this.homePageInfo = infoCache

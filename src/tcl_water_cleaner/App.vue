@@ -939,6 +939,13 @@ export default {
             this.getSnapShot()
         })
 
+        HdSmart.onDeviceStateChange(data => {
+            this.onSuccess(data.result)
+        })
+        HdSmart.onDeviceAlert(data => {
+            this.onAlarm(data.result.attribute.error)
+        })
+        /*
         HdSmart.onDeviceListen((data) => {
             switch (data.method) {
                 case 'dm_set':
@@ -953,11 +960,14 @@ export default {
                         this.doAlarm(data.result.attribute)
                     }
                     break;
+                case 'da_report_dev_alert':
+                    break;
                 default:
                     this.onSuccess(data.result)
                     break
             }
         })
+        */
     }
 }
 </script>

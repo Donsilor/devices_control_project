@@ -104,7 +104,7 @@ let current_page = 'index'
 let thaf_timer
 
 //app jsbridge ready
-HdSmart.onDeviceListen(function(data){
+HdSmart.onDeviceStateChange(function(data){
     if(data && data.result){
         store.dispatch('setOnline', data.result.attribute.connectivity)
     }

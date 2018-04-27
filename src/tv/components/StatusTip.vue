@@ -3,11 +3,14 @@
         <div class="sp_status_bar" @click="goToScreenProjectionPage" v-if="spVisible">
             <i class="ico"></i>正在投屏 {{spStatusText}}：{{tvStatus.screenProjectTitle}} <i class="arr"></i>
         </div>
-        <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==0">
-            <i class="error"></i>路由器已离线 <span class="link">查看帮助</span><i class="arr"></i>
-        </div>
         <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-1">
             <i class="wifi"></i>无法连接网络，请检查网络设置
+        </div>
+        <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-2">
+            <i class="error"></i>路由器已离线 &nbsp;<span class="link">查看帮助</span><i class="arr"></i>
+        </div>
+        <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-3">
+            <i class="error"></i>设备已离线 &nbsp;<span class="link">查看帮助</span><i class="arr"></i>
         </div>
     </div>
 </template>

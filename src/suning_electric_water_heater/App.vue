@@ -520,12 +520,8 @@ export default {
 
             this.getSnapShot()
 
-            HdSmart.onDeviceListen((data) => {
-                if(data.method == 'dm_set'){
-                    if(data.code !== 0) this.getSnapShot()
-                }else{
-                    this.onSuccess(data.result)
-                }
+            HdSmart.onDeviceStateChange((data) => {
+                this.onSuccess(data.result)
             })
         })
     },

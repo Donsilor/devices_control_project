@@ -284,7 +284,7 @@ export default {
                   attribute: {
                       error: [{
                         "code": "e4",
-				        "status": 1
+				        "status": error.status
                       }]
                   }
               }
@@ -315,7 +315,8 @@ export default {
                     code: el.code,
                     key: 1,
                     switch: WARN_CODE[el.code].switch,
-                    clicked: this.errorStore.indexOf(el.code) >= 0
+                    clicked: this.errorStore.indexOf(el.code) >= 0,
+                    status: el.status
                 })
             }
         })
@@ -347,14 +348,39 @@ export default {
                     code: el.code,
                     key: 1,
                     switch: WARN_CODE[el.code].switch,
-                    clicked: false
+                    clicked: false,
+                    status: el.status
                 })
             }
         }
     },
+    onDaAlert(error) {
+        var index1 = findIndex(this.errorStore, (item) => {
+            return item == error.code && error.status == 0
+        })
+        if(index1 >= 0){
+            this.errorStore.splice(index1, 1)
+        }
+        //
+        var index = findIndex(this.alertModel, (item) => {
+            return item.code == error.code
+        })
+        if(index >= 0){
+            this.alertModel.splice(index, 1)
+        }
+        if(error.status != 0){
+            this.alertModel.push({
+                msg: WARN_CODE[error.code].msg,
+                code: error.code,
+                key: 1,
+                switch: WARN_CODE[error.code].switch,
+                clicked: false,
+                status: error.status
+            })
+        }
+    },
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot((data) => {
-
           this.onSuccess(data)
       },() => {});
     },
@@ -390,6 +416,13 @@ export default {
 
     // if(!isInit){
         // isInit = true
+        HdSmart.onDeviceStateChange(data => {
+            this.onSuccess(data.result);
+        })
+        HdSmart.onDeviceAlert(data => {
+            this.onAlert(data.result.attribute.error)
+        })
+        /*
         HdSmart.onDeviceListen(data => {
             switch (data.method) {
                 case "dm_set":
@@ -397,11 +430,15 @@ export default {
                 case "dr_report_dev_alert":
                     this.onAlert(data.result.attribute.error)
                 break;
+                case "da_report_dev_alert":
+                    this.onDaAlert(data.result.attribute)
+                break;
                 default:
                     this.onSuccess(data.result);
                 break;
             }
         });
+        */
     // }
   }
 };

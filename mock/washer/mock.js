@@ -21,7 +21,7 @@ let res = {
 
 export function generateSnapShot() {
     return Mock.mock({
-        method: 'report',
+        method: 'dr_report_dev_status',
         code: 0,
         result: {
             "device_name": "洗衣机",
