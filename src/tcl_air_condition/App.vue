@@ -378,7 +378,7 @@
 
                 let store = getStore()
 
-                console.log(store)
+                // alert(JSON.stringify(store))
 
                 if(type == 'switch' && value == 'on'){
                     if(store.mode){

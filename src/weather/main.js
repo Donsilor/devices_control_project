@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV == 'development'){
+    require('../../mock/weather/index.js')
+}
+
 import Vue from 'vue'
 import App from './App.vue'
 

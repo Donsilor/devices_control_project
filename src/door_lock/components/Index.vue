@@ -382,7 +382,9 @@ export default {
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot((data) => {
           this.onSuccess(data)
-      },() => {});
+      },() => {
+          HdSmart.UI.hideLoading()
+      });
     },
     onSuccess(data) {
       HdSmart.UI.hideLoading()

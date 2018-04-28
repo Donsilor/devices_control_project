@@ -1,6 +1,7 @@
 <template>
     <div id="app" :class="todyClass">
-        <div class="title">{{wList.length && wList[0].predictDate}}&nbsp;&nbsp;{{currentWeek}}&nbsp;&nbsp;{{currentOldDay}}</div>
+        <div class="title">{{currentDate}}&nbsp;&nbsp;{{currentWeek}}&nbsp;&nbsp;{{currentOldDay}}</div>
+        <template v-if="success">
         <div class="city">
             <div class="city-name" style="margin-top: 10px">{{city.name}}</div>
             <div><span class="img" :class="curMinBg"></span></div>
@@ -8,12 +9,12 @@
             <div class="city-detail">
                 <!--<span>降水概率：10%</span>-->
                 <!--<span>湿度：74%</span>-->
-                <span>实时空气质量：<i :class="airLevel">{{curAQIvalue}}&nbsp;{{airLevelText}}</i></span>
+                <span v-if="curAQIvalue">实时空气质量：<i :class="airLevel">{{curAQIvalue}}&nbsp;{{airLevelText}}</i></span>
             </div>
         </div>
         <div class="weather-list-con">
             <ul class="weather-list">
-                <li v-for="(item, index) in wList">
+                <li v-for="(item, index) in wList" :key="index">
                     <div class="">{{index === 0 ? '今天' : item.predictDate}}</div>
                     <div>{{item.weekday}}</div>
                     <div class="w-icon"><i :class="renderClass(item.conditionIdDay)"></i></div>
@@ -23,28 +24,37 @@
                 </li>
             </ul>
         </div>
+        </template>
+        <template v-else>
+            <div class="error_tip" @click="getWeatherData">
+                <div class="icon"></div>
+                <div class="msg">无法连接网络，请检查网络后 <span>点击屏幕刷新</span></div>
+            </div>
+        </template>
     </div>
 </template>
 <script>
-    import jsonp from 'jsonp'
-    import cityIdJson from './assets/cityId.json'
+    // import jsonp from 'jsonp'
+    // import cityIdJson from './assets/cityId.json'
     import getOldDate from './getOldDate'
     import remoteLoad from './loadscript'
     export default {
         name: 'app',
         data() {
             return {
+                success: true,
                 city: {
                   name: ''
                 },
                 todyClass: '',
                 wList: [],
                 acturlCondition: '', //实时天气
-                acturlTemp: '', //实时温度
+                acturlTemp: '-- ', //实时温度
                 curMinBg: '', //当天天气对应的大图标
                 airLevel: '', //空气质量指数
                 airLevelText: '', //空气质量描述
                 curAQIvalue: '', //实时空气质量
+                currentDate: '',
                 currentWeek: '', //当天为星期几
                 currentOldDay: '', //农历日期
                 allWeekDays: [
@@ -62,13 +72,14 @@
             HdSmart.ready(() => {
                 HdSmart.UI.showLoading()
                 this.getWeatherData()
-//                remoteLoad('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', false).then((result) => {
-//                    if (remote_ip_info.ret === 1) {
-//                        self.city.name = remote_ip_info.city + '市'
-//                        let cityId = cityIdJson[self.city.name]
-//                        self.getWeatherData(cityId)
-//                    }
-//                })
+                // remoteLoad('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', false).then((result) => {
+                //     if (remote_ip_info.ret === 1) {
+                //         alert(remote_ip_info.city)
+                //         //    self.city.name = remote_ip_info.city + '市'
+                //         //    let cityId = cityIdJson[self.city.name]
+                //         //    self.getWeatherData(cityId)
+                //     }
+                // })
             })
         },
         methods: {
@@ -185,7 +196,8 @@
                 return curClass
             },
             getWeatherData () {
-                let thisDay = (new Date()).getDay()
+                let now = new Date()
+                let thisDay = now.getDay()
                 let curIndex = 0
                 let currentWeekArr = []
                 let awds = this.allWeekDays
@@ -202,6 +214,7 @@
                     currentWeekArr.push(awds[curIndex].name)
                     curIndex ++
                 }
+                this.currentDate = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`
                 this.currentOldDay = getOldDate()  //获取农历日期
                 let self = this
                 HdSmart.Device.control({
@@ -231,8 +244,14 @@
                     } else {
                         self.actrulTemp = '0'
                     }
+                    //城市信息
+                    if(innerData && innerData.city){
+                        self.city = innerData.city
+                    }
+                    self.success = true
                     HdSmart.UI.hideLoading();
                 }, (err) => {
+                    self.success = false
                     HdSmart.UI.hideLoading();
                 })
             }
@@ -249,7 +268,7 @@
         -ms-user-select: none;
         user-select: none;
         color: #fff;
-        background: #01518C;
+        background-image: linear-gradient(-179deg, #4586E2 5%, #48A8F3 97%);
         font-family: NotoSansHans-Regular;
     }
     #app {
@@ -302,7 +321,7 @@
     }
     .title{
         margin-top: 30px;
-        line-height: 95px;
+        // line-height: 95px;
         height: 95px;
         text-align: center;
         font-size: 36px;
@@ -358,7 +377,7 @@
         .icn_weather_mostlycloudy{
             background-image: url('./assets/icn_weather_mostlycloudy_l.png');
         }
-        .img_bg_weather_rainy{
+        .icn_weather_rainy{
             background-image: url('./assets/icn_weather_rainy_l.png');
         }
         .icn_weather_thuner{
@@ -437,10 +456,33 @@
                 float: left;
                 width: 20%;
                 margin-left: -1px;
-                border-right: 1px solid #9CC1D8;
+                border-right: 1px solid rgba(255,255,255,0.50);
+                // box-shadow: inset -1px 0 0 0 rgba(255,255,255,0.50);
             }
             li:last-of-type{
                 border-right: 0;
+            }
+        }
+    }
+    .error_tip{
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        text-align: center;
+        .icon{
+            width: 240px;
+            height: 240px;
+            background: url(./assets/icon_net.png) no-repeat center bottom;
+            background-size: 232px 210px;
+            margin: 380px auto 80px;
+        }
+        .msg{
+            font-size: 30px;
+            color: #b4d7f7;
+            span{
+                color: #fff;
             }
         }
     }
