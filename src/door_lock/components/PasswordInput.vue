@@ -203,12 +203,12 @@ export default {
           }
         },
         (data) => {
-            if(data.msg != 'TcpClient send msg success'){
+            // if(data.msg != 'TcpClient send msg success'){
                 HdSmart.UI.toast("开锁成功");
                 setTimeout(() => {
                     this.$parent.passwordInputVisible = false;
                 },300)
-            }
+            // }
         },
         (data) => {
             if(data.code == -16005){

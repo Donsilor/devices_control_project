@@ -25,138 +25,138 @@
 
 <style lang="less" scoped>
 * {
-  -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
 }
 .page-index {
-  padding-top: 96px;
-  background:#f2f2f2;
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
+    padding-top: 96px;
+    background: #f2f2f2;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
 }
 .name {
-  font-size: 30px;
-  color: #808080;
-  text-align: center;
-  margin: 60px auto 6px;
-  height: 40px;
+    font-size: 30px;
+    color: #808080;
+    text-align: center;
+    margin: 60px auto 6px;
+    height: 40px;
 }
 .lock-status {
-  text-align: center;
-  font-size: 0;
-  .status {
-    font-size: 30px;
-    margin-right: 12px;
-    color: #c8cacc;
-    &.red{
-        color: #f26161;
+    text-align: center;
+    font-size: 0;
+    .status {
+        font-size: 30px;
+        margin-right: 12px;
+        color: #c8cacc;
+        &.red {
+            color: #f26161;
+        }
+        &.on {
+            color: #46bcff;
+        }
     }
-    &.on {
-      color: #46bcff;
+    .battery {
+        font-size: 30px;
+        color: #c8cacc;
+        margin-left: 12px;
+        &.low {
+            color: #f26161;
+        }
     }
-  }
-  .battery {
-    font-size: 30px;
-    color: #c8cacc;
-    margin-left: 12px;
-    &.low {
-      color: #f26161;
-    }
-  }
 }
 .lock {
-  width: 504px;
-  height: 504px;
-  margin: 24px auto 0;
-  background: url(../assets/img_lock_locked.png) no-repeat;
-  background-size: 504px;
-  text-align: center;
-  &.on {
-    background-image: url(../assets/img_lock_unlocked.png);
-  }
-  .pic {
-    width: 96px;
-    height: 96px;
-    background: url(../assets/icn_lock_locked.png) no-repeat;
-    background-size: 96px;
-    margin: 132px auto 60px;
-    display: inline-block;
+    width: 504px;
+    height: 504px;
+    margin: 24px auto 0;
+    background: url(../assets/img_lock_locked.png) no-repeat;
+    background-size: 504px;
+    text-align: center;
     &.on {
-      background-image: url(../assets/icn_lock_unlocked.png);
+        background-image: url(../assets/img_lock_unlocked.png);
     }
-  }
+    .pic {
+        width: 96px;
+        height: 96px;
+        background: url(../assets/icn_lock_locked.png) no-repeat;
+        background-size: 96px;
+        margin: 132px auto 60px;
+        display: inline-block;
+        &.on {
+            background-image: url(../assets/icn_lock_unlocked.png);
+        }
+    }
 }
 .btn-unlock {
-  background: #46bcff;
-  width: 144px;
-  height: 144px;
-  border-radius: 100%;
-  margin: 24px auto 0;
-  display: block;
-  text-align: center;
-  line-height: 144px;
-  color: #ffffff;
-  font-size: 36px;
-  &.disabled {
-    background: #ffffff;
-    color: #c8cacc;
-  }
+    background: #46bcff;
+    width: 144px;
+    height: 144px;
+    border-radius: 100%;
+    margin: 24px auto 0;
+    display: block;
+    text-align: center;
+    line-height: 144px;
+    color: #ffffff;
+    font-size: 36px;
+    &.disabled {
+        background: #ffffff;
+        color: #c8cacc;
+    }
 }
 .btn-golog {
-  position: fixed;
-  display: inline-block;
-  right: 60px;
-  top: 132px;
-  width: 96px;
-  height: 96px;
-  background: url(../assets/btn_record_normal.png) no-repeat;
-  background-size: 100% 100%;
-  &:active {
-    background-image: url(../assets/btn_record_pressed.png);
-  }
+    position: fixed;
+    display: inline-block;
+    right: 60px;
+    top: 132px;
+    width: 96px;
+    height: 96px;
+    background: url(../assets/btn_record_normal.png) no-repeat;
+    background-size: 100% 100%;
+    &:active {
+        background-image: url(../assets/btn_record_pressed.png);
+    }
 }
 .alert-wraper {
-  position: fixed;
-  left: 0;
-  width: 100%;
-  top: 96px;
-  .alert {
-    background: rgba(51, 51, 51, 0.75);
+    position: fixed;
+    left: 0;
     width: 100%;
-    height: 84px;
-    line-height: 84px;
-    text-align: center;
-    color: #fff;
-    font-size: 30px;
-    margin-bottom: 4px;
-    i {
-      display: inline-block;
-      width: 34px;
-      height: 34px;
-      background: url(../assets/icn_notice_white_s.png) no-repeat;
-      background-size: 34px;
-      margin-right: 13px;
-      vertical-align: text-bottom;
+    top: 96px;
+    .alert {
+        background: rgba(51, 51, 51, 0.75);
+        width: 100%;
+        height: 84px;
+        line-height: 84px;
+        text-align: center;
+        color: #fff;
+        font-size: 30px;
+        margin-bottom: 4px;
+        i {
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            background: url(../assets/icn_notice_white_s.png) no-repeat;
+            background-size: 34px;
+            margin-right: 13px;
+            vertical-align: text-bottom;
+        }
+        .close {
+            float: right;
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: url(../assets/btn_close_white_normal.png) no-repeat;
+            background-size: 30px;
+            margin-top: 27px;
+            margin-right: 26px;
+            &:active {
+                background-image: url(../assets/btn_close_pressed.png);
+            }
+        }
+        &.warn {
+            background: rgba(242, 97, 97, 0.9);
+        }
     }
-    .close {
-      float: right;
-      display: inline-block;
-      width: 30px;
-      height: 30px;
-      background: url(../assets/btn_close_white_normal.png) no-repeat;
-      background-size: 30px;
-      margin-top: 27px;
-      margin-right: 26px;
-      &:active {
-        background-image: url(../assets/btn_close_pressed.png);
-      }
-    }
-    &.warn {
-      background: rgba(242, 97, 97, 0.9);
-    }
-  }
 }
 </style>
 
@@ -175,255 +175,258 @@ import PasswordInput from "./PasswordInput.vue";
  */
 //switch理解为disabled
 const WARN_CODE = {
-  e0: { msg: "门未关好!", switch: false },
-  e1: { msg: "智能门锁电池电量不足，请及时更换电池！", switch: false },
-  e2: { msg: "密码错误超过限制，请2分钟后再试", switch: true },
-  e3: { msg: "有人强行拆门锁！", switch: false },
-  e4: { msg: "家庭成员触发被挟持报警！", switch: false },
-  e5: { msg: "门锁已被锁死，无法手机开锁", switch: true },
-  e6: { msg: "门锁已被反锁，无法手机开锁", switch: true },
-  e7: { msg: "密码错误超过限制，无法远程开锁", switch: true },
+    e0: { msg: "门未关好!", switch: false },
+    e1: { msg: "智能门锁电池电量不足，请及时更换电池！", switch: false },
+    e2: { msg: "密码错误超过限制，请2分钟后再试", switch: true },
+    e3: { msg: "有人强行拆门锁！", switch: false },
+    e4: { msg: "家庭成员触发被挟持报警！", switch: false },
+    e5: { msg: "门锁已被锁死，无法手机开锁", switch: true },
+    e6: { msg: "门锁已被反锁，无法手机开锁", switch: true },
+    e7: { msg: "密码错误超过限制，无法远程开锁", switch: true }
 };
-let ERROR_STORE_KEY = ''
-let isInit = false
+let ERROR_STORE_KEY = "";
+let isInit = false;
 
-function findIndex(array, fn){
-    for(var i=0;i<array.length;i++){
-        if(fn(array[i])){
-            return i
+function findIndex(array, fn) {
+    for (var i = 0; i < array.length; i++) {
+        if (fn(array[i])) {
+            return i;
         }
     }
-    return -1
+    return -1;
 }
 
 export default {
-  components: {
-    PasswordInput
-  },
-  data() {
-    return {
-      hasSnapShot: false,
-      device_name: "",
-      device_id: '',
-      family_id: '',
-      passwordInputVisible: false,
-      alertModel: [],
-      model: {
-        switch: "off",
-        battery_percentage: '--'
-      },
-      errorStore: []
-    };
-  },
-  computed: {
-    lowBattery() {
-        return this.model.battery_percentage <= 15
+    components: {
+        PasswordInput
     },
-    btnDisabled() {
-      let status = this.model.switch == "on" ? true : false;
-      this.alertModel.forEach(function(v, i) {
-        status = v.switch || status;
-      });
-      return status;
+    data() {
+        return {
+            hasSnapShot: false,
+            device_name: "",
+            device_id: "",
+            family_id: "",
+            passwordInputVisible: false,
+            alertModel: [],
+            model: {
+                switch: "off",
+                battery_percentage: "--"
+            },
+            errorStore: []
+        };
     },
-    theUnclickAlert() {
-        var hasE5 = findIndex(this.alertModel, (item) =>{
-            return item.code == 'e5'
-        })
-        var result = this.alertModel.filter((item) => {
-            if(item.clicked){
-                return false
+    computed: {
+        lowBattery() {
+            return this.model.battery_percentage <= 15;
+        },
+        btnDisabled() {
+            let status = this.model.switch == "on" ? true : false;
+            this.alertModel.forEach(function(v, i) {
+                status = v.switch || status;
+            });
+            return status;
+        },
+        theUnclickAlert() {
+            var hasE5 = findIndex(this.alertModel, item => {
+                return item.code == "e5";
+            });
+            var result = this.alertModel.filter(item => {
+                if (item.clicked) {
+                    return false;
+                }
+                if (item.code == "e6") {
+                    return false;
+                }
+                if (item.code == "e2" && hasE5 >= 0) {
+                    return false;
+                }
+                return true;
+            });
+            return result.reverse();
+        },
+        lockedStatus() {
+            var hasE6 = findIndex(this.alertModel, item => {
+                return item.code == "e6";
+            });
+            return hasE6 >= 0;
+        },
+        statusText() {
+            if (this.lockedStatus) {
+                return "已反锁";
             }
-            if(item.code == 'e6'){
-                return false
+            if (this.model.switch == "on") {
+                return "已打开";
             }
-            if(item.code == 'e2' && hasE5 >= 0){
-                return false
-            }
-            return true
-        })
-        return result.reverse()
-    },
-    lockedStatus() {
-        var hasE6 = findIndex(this.alertModel, (item) =>{
-            return item.code == 'e6'
-        })
-        return hasE6 >= 0
-    },
-    statusText() {
-        if(this.lockedStatus){
-            return '已反锁'
+            return "已关闭";
         }
-        if(this.model.switch == 'on'){
-            return '已打开'
-        }
-        return '已关闭'
-    }
-  },
-  watch: {
-      btnDisabled(val) {
-          if(val){
-              this.passwordInputVisible = false
-          }
-      }
-  },
-  methods: {
-    showPwdInput() {
-      if (this.btnDisabled) {
-        return;
-      }
-      this.passwordInputVisible = true;
     },
-    closeAlert(error) {
-      let code = error.code
-      if(code == 'e4'){
-          HdSmart.Device.control({
-              method: 'dm_set',
-              nodeid: 'doorlock.main.error',
-              params: {
-                  attribute: {
-                      error: [{
-                        "code": "e4",
-				        "status": error.status
-                      }]
-                  }
-              }
-          })
-      }
-      if(this.errorStore.indexOf(code) < 0){
-        this.errorStore.push(code)
-        error.clicked = true
-      }
-    },
-    onAlarm(attr) {
-      let errors = attr.error || []
-      let alertArry = [];
-        for(var i=0; i<this.errorStore.length; i++){
-            var item = errors.filter((el) => {
-                return el.code == this.errorStore[i]
-            })
-            if(item.length==0 || item[0].status==0){
-                this.errorStore.splice(i, 1)
-                i--
+    watch: {
+        btnDisabled(val) {
+            if (val) {
+                this.passwordInputVisible = false;
             }
         }
+    },
+    methods: {
+        showPwdInput() {
+            if (this.btnDisabled) {
+                return;
+            }
+            this.passwordInputVisible = true;
+        },
+        closeAlert(error) {
+            let code = error.code;
+            if (code == "e4") {
+                HdSmart.Device.control({
+                    method: "dm_set",
+                    nodeid: "doorlock.main.error",
+                    params: {
+                        attribute: {
+                            error: [
+                                {
+                                    code: "e4",
+                                    status: error.status
+                                }
+                            ]
+                        }
+                    }
+                });
+            }
+            if (this.errorStore.indexOf(code) < 0) {
+                this.errorStore.push(code);
+                error.clicked = true;
+            }
+        },
+        onAlarm(attr) {
+            let errors = attr.error || [];
+            let alertArry = [];
+            for (var i = 0; i < this.errorStore.length; i++) {
+                var item = errors.filter(el => {
+                    return el.code == this.errorStore[i];
+                });
+                if (item.length == 0 || item[0].status == 0) {
+                    this.errorStore.splice(i, 1);
+                    i--;
+                }
+            }
 
-        errors.forEach((el) => {
-            if(el.status == 1){
-                alertArry.push({
-                    msg: WARN_CODE[el.code].msg,
-                    code: el.code,
-                    key: 1,
-                    switch: WARN_CODE[el.code].switch,
-                    clicked: this.errorStore.indexOf(el.code) >= 0,
-                    status: el.status
-                })
-            }
-        })
+            errors.forEach(el => {
+                if (el.status == 1) {
+                    alertArry.push({
+                        msg: WARN_CODE[el.code].msg,
+                        code: el.code,
+                        key: 1,
+                        switch: WARN_CODE[el.code].switch,
+                        clicked: this.errorStore.indexOf(el.code) >= 0,
+                        status: el.status
+                    });
+                }
+            });
 
-        this.alertModel = alertArry
-
-    },
-    onAlert(errors) {
-        for(var i=0; i<this.errorStore.length; i++){
-            var item = errors.filter((el) => {
-                return el.code == this.errorStore[i] && el.status == 0
-            })
-            if(item.length){
-                this.errorStore.splice(i, 1)
-                i--
+            this.alertModel = alertArry;
+        },
+        onAlert(errors) {
+            for (var i = 0; i < this.errorStore.length; i++) {
+                var item = errors.filter(el => {
+                    return el.code == this.errorStore[i] && el.status == 0;
+                });
+                if (item.length) {
+                    this.errorStore.splice(i, 1);
+                    i--;
+                }
             }
-        }
-        for(var i=0; i<errors.length; i++){
-            var el = errors[i]
-            var index = findIndex(this.alertModel, (item) => {
-                return item.code == el.code
-            })
-            if(index >= 0){
-                this.alertModel.splice(index, 1)
+            for (var i = 0; i < errors.length; i++) {
+                var el = errors[i];
+                var index = findIndex(this.alertModel, item => {
+                    return item.code == el.code;
+                });
+                if (index >= 0) {
+                    this.alertModel.splice(index, 1);
+                }
+                if (el.status == 1) {
+                    this.alertModel.push({
+                        msg: WARN_CODE[el.code].msg,
+                        code: el.code,
+                        key: 1,
+                        switch: WARN_CODE[el.code].switch,
+                        clicked: false,
+                        status: el.status
+                    });
+                }
             }
-            if(el.status == 1){
+        },
+        onDaAlert(error) {
+            var index1 = findIndex(this.errorStore, item => {
+                return item == error.code && error.status == 0;
+            });
+            if (index1 >= 0) {
+                this.errorStore.splice(index1, 1);
+            }
+            //
+            var index = findIndex(this.alertModel, item => {
+                return item.code == error.code;
+            });
+            if (index >= 0) {
+                this.alertModel.splice(index, 1);
+            }
+            if (error.status != 0) {
                 this.alertModel.push({
-                    msg: WARN_CODE[el.code].msg,
-                    code: el.code,
+                    msg: WARN_CODE[error.code].msg,
+                    code: error.code,
                     key: 1,
-                    switch: WARN_CODE[el.code].switch,
+                    switch: WARN_CODE[error.code].switch,
                     clicked: false,
-                    status: el.status
-                })
+                    status: error.status
+                });
             }
-        }
+        },
+        getSnapShot(cb) {
+            HdSmart.Device.getSnapShot(
+                data => {
+                    this.onSuccess(data);
+                },
+                () => {
+                    HdSmart.UI.hideLoading();
+                }
+            );
+        },
+        onSuccess(data) {
+            HdSmart.UI.hideLoading();
+            if (data.device_id) {
+                this.device_id = data.device_id;
+            }
+            if (data.family_id) {
+                this.family_id = data.family_id;
+            }
+            this.model = data.attribute;
+            this.onAlarm(data.attribute);
+        },
+        onError() {}
     },
-    onDaAlert(error) {
-        var index1 = findIndex(this.errorStore, (item) => {
-            return item == error.code && error.status == 0
-        })
-        if(index1 >= 0){
-            this.errorStore.splice(index1, 1)
-        }
-        //
-        var index = findIndex(this.alertModel, (item) => {
-            return item.code == error.code
-        })
-        if(index >= 0){
-            this.alertModel.splice(index, 1)
-        }
-        if(error.status != 0){
-            this.alertModel.push({
-                msg: WARN_CODE[error.code].msg,
-                code: error.code,
-                key: 1,
-                switch: WARN_CODE[error.code].switch,
-                clicked: false,
-                status: error.status
-            })
-        }
-    },
-    getSnapShot(cb) {
-      HdSmart.Device.getSnapShot((data) => {
-          this.onSuccess(data)
-      },() => {
-          HdSmart.UI.hideLoading()
-      });
-    },
-    onSuccess(data) {
-      HdSmart.UI.hideLoading()
-      if (!data) return;
-      if(data.device_name) {
-        this.device_name = data.device_name;
-      }
-      if(data.device_id){
-          this.device_id = data.device_id
-      }
-      if(data.family_id){
-          this.family_id = data.family_id
-      }
-      this.model = data.attribute;
-      this.onAlarm(data.attribute)
-    },
-    onError() {}
-  },
-  created() {
-    // this.$watch('errorStore', () => {
-    //     localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
-    // })
-    HdSmart.ready(() => {
-    //   ERROR_STORE_KEY = window.device_uuid
-    //   this.errorStore = JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || []
-      HdSmart.UI.showLoading();
-      setTimeout(() => {
-        this.getSnapShot();
-      }, 150)
-    });
+    created() {
+        // this.$watch('errorStore', () => {
+        //     localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
+        // })
+        HdSmart.ready(() => {
+            //   ERROR_STORE_KEY = window.device_uuid
+            //   this.errorStore = JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || []
+            if (window.device_name) {
+                this.device_name = window.device_name;
+            }
+            HdSmart.UI.showLoading();
+            setTimeout(() => {
+                this.getSnapShot();
+            }, 150);
+        });
 
-    // if(!isInit){
+        // if(!isInit){
         // isInit = true
         HdSmart.onDeviceStateChange(data => {
             this.onSuccess(data.result);
-        })
+        });
         HdSmart.onDeviceAlert(data => {
-            this.onAlert(data.result.attribute.error)
-        })
+            this.onAlert(data.result.attribute.error);
+        });
         /*
         HdSmart.onDeviceListen(data => {
             switch (data.method) {
@@ -441,7 +444,7 @@ export default {
             }
         });
         */
-    // }
-  }
+        // }
+    }
 };
 </script>

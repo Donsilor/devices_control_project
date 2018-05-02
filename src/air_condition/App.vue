@@ -94,641 +94,694 @@
 </template>
 
 <script>
-    import AcButton from './components/AcButton.vue';
-    import Devider from './components/Devider.vue';
+import AcButton from "./components/AcButton.vue";
+import Devider from "./components/Devider.vue";
 
-    import watermark from '../../lib/watermark'
+import watermark from "../../lib/watermark";
 
-    const [MIN_TEMP, MAX_TEMP] = [16, 30];
-    const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] =
-        ['switch', 'mode', 'speed', 'temperature', 'wind_up_down', 'wind_left_right', 'bootSwitch', 'offSwitch'];
-    const [ON, OFF] = ['on', 'off'];
-    const NODE_ID = 'airconditioner.main.';
-    //连续设置时间判断间隔
-    const SPAN = 600;
-    //loading效果延迟
-    const LOADING_DELAY = 800;
-    //loading class
-    const LOADING_CLASS = 'loading';
-    //提示持续时间--3s
-    const TIP_DURATION = 3000;
+const [MIN_TEMP, MAX_TEMP] = [16, 30];
+const [
+    POWER,
+    MODE,
+    SPEED,
+    TEMPERATURE,
+    WIND_UP_DOWN,
+    WIND_LEFT_RIGHT,
+    BOOT_SWITCH,
+    OFF_SWITCH
+] = [
+    "switch",
+    "mode",
+    "speed",
+    "temperature",
+    "wind_up_down",
+    "wind_left_right",
+    "bootSwitch",
+    "offSwitch"
+];
+const [ON, OFF] = ["on", "off"];
+const NODE_ID = "airconditioner.main.";
+//连续设置时间判断间隔
+const SPAN = 600;
+//loading效果延迟
+const LOADING_DELAY = 800;
+//loading class
+const LOADING_CLASS = "loading";
+//提示持续时间--3s
+const TIP_DURATION = 3000;
 
-    //Button构造方法
-    function Button(title, type, value,tip) {
+//Button构造方法
+function Button(title, type, value, tip) {
+    return {
+        title,
+        type,
+        value,
+        tip
+    };
+}
+
+var temperatureRadio = 1;
+
+export default {
+    components: { AcButton, Devider },
+    data() {
         return {
-            title,
-            type,
-            value,
-            tip
-        }
-    }
+            buttonList: {
+                //模式
+                cool: Button("制冷", MODE, "cold", "制冷模式切换成功"),
+                heat: Button("制热", MODE, "heat", "制热模式切换成功"),
+                dehumidify: Button(
+                    "除湿",
+                    MODE,
+                    "dehumidify",
+                    "除湿模式切换成功"
+                ),
+                mode_auto: Button("智能", MODE, "auto", "智能模式切换成功"),
+                wind: Button("送风", MODE, "wind", "送风模式切换成功"),
 
-    var temperatureRadio = 1
+                //风速
+                low: Button("低风", SPEED, "low", "低风切换成功"),
+                normal: Button("中风", SPEED, "normal", "中风切换成功"),
+                high: Button("高风", SPEED, "high", "高风切换成功"),
 
-    export default {
-        components: {AcButton, Devider},
-        data() {
+                //电源开关
+                on: Button("", POWER, "", ""),
+                off: Button("", POWER, "", ""),
+
+                //扫风
+                lrBtn: Button("左右", WIND_LEFT_RIGHT, ""),
+                udBtn: Button("上下", WIND_UP_DOWN, ""),
+
+                //温度
+                minusBtn: {
+                    type: TEMPERATURE,
+                    value: -1,
+                    continuousClick: true
+                },
+                plusBtn: {
+                    type: TEMPERATURE,
+                    value: 1,
+                    continuousClick: true
+                }
+            },
+            //设备名称
+            deviceName: "",
+            //空调类型，0：挂机，1：柜机
+            deviceCategory: -1,
+            params: {
+                //开关
+                switch: "",
+                //温度
+                temperature: null,
+                //模式
+                mode: "",
+                //风速
+                speed: "",
+                //上下扫风
+                wind_up_down: "",
+                //左右扫风
+                wind_left_right: "",
+                //                        sleep: false,//睡眠模式
+                bootSwitch: false,
+                offSwitch: false,
+                //开机时间
+                bootTime: "",
+                //关机时间
+                offTime: ""
+            },
+            //提示，3秒后隐藏
+            tip: "",
+            //提示计时器
+            tipTimer: "",
+            //更多菜单是否可见
+            showMore: false,
+            //开机时间选择器是否可见
+            bootTpVisible: false,
+            //关机时间选择器是否可见
+            offTpVisible: false,
+            tempFlag: false,
+            tempTimer: null,
+            fakeTemp: null,
+            loadingTimer: null,
+            loadingElement: null,
+            //当前点击的按钮
+            curButton: null,
+            //页面初始化失败
+            initErr: false,
+            loading: false
+        };
+    },
+    computed: {
+        appClassObj: function() {
+            // let obj = {main: true};
+            // obj.page_on =
+            // obj['page_'+this.params.switch] = true;
+            // obj['err'] = this.initErr;
             return {
-                buttonList: {
-
-                    //模式
-                    cool: Button('制冷', MODE, 'cold', '制冷模式切换成功'),
-                    heat: Button('制热', MODE, 'heat', '制热模式切换成功'),
-                    dehumidify: Button('除湿', MODE, 'dehumidify', '除湿模式切换成功'),
-                    mode_auto: Button('智能', MODE, 'auto', '智能模式切换成功'),
-                    wind: Button('送风', MODE, 'wind', '送风模式切换成功'),
-
-                    //风速
-                    low: Button('低风', SPEED, 'low', '低风切换成功'),
-                    normal: Button('中风', SPEED, 'normal', '中风切换成功'),
-                    high: Button('高风', SPEED, 'high', '高风切换成功'),
-
-                    //电源开关
-                    on: Button('', POWER, '', ''),
-                    off: Button('', POWER, '', ''),
-
-                    //扫风
-                    lrBtn: Button('左右', WIND_LEFT_RIGHT, ''),
-                    udBtn: Button('上下', WIND_UP_DOWN, ''),
-
-                    //温度
-                    minusBtn: {
-                        type: TEMPERATURE,
-                        value: -1,
-                        continuousClick: true
-                    },
-                    plusBtn: {
-                        type: TEMPERATURE,
-                        value: 1,
-                        continuousClick: true
-                    }
-                },
-                //设备名称
-                deviceName: '',
-                //空调类型，0：挂机，1：柜机
-                deviceCategory: -1,
-                params: {
-                    //开关
-                    switch: '',
-                    //温度
-                    temperature: null,
-                    //模式
-                    mode: '',
-                    //风速
-                    speed: '',
-                    //上下扫风
-                    wind_up_down: '',
-                    //左右扫风
-                    wind_left_right: '',
-//                        sleep: false,//睡眠模式
-                    bootSwitch: false,
-                    offSwitch: false,
-                    //开机时间
-                    bootTime: '',
-                    //关机时间
-                    offTime: ''
-                },
-                //提示，3秒后隐藏
-                tip: '',
-                //提示计时器
-                tipTimer: '',
-                //更多菜单是否可见
-                showMore: false,
-                //开机时间选择器是否可见
-                bootTpVisible: false,
-                //关机时间选择器是否可见
-                offTpVisible: false,
-                tempFlag: false,
-                tempTimer: null,
-                fakeTemp: null,
-                loadingTimer: null,
-                loadingElement: null,
-                //当前点击的按钮
-                curButton: null,
-                //页面初始化失败
-                initErr: false,
-                loading: false
+                main: true,
+                page_on: this.params.switch == "on" || this.initErr,
+                page_off: this.params.switch == "off"
+            };
+        }
+    },
+    watch: {
+        tempFlag(val) {
+            if (!val) {
+                this.setParam(
+                    TEMPERATURE,
+                    this.fakeTemp,
+                    "温度设置成功",
+                    this.curButton
+                );
             }
-        },
-        computed: {
-            appClassObj: function () {
-                // let obj = {main: true};
-                // obj.page_on =
-                // obj['page_'+this.params.switch] = true;
-                // obj['err'] = this.initErr;
-                return {
-                    'main': true,
-                    'page_on': this.params.switch == 'on' || this.initErr,
-                    'page_off': this.params.switch == 'off'
-                };
+        }
+    },
+    //        mounted: function () {
+    created: function() {
+        let that = this;
+        HdSmart.ready(() => {
+            if (window.device_name) {
+                this.deviceName = window.device_name;
             }
-        },
-        watch: {
-            tempFlag(val){
-                if (!val) {
-                    this.setParam(TEMPERATURE, this.fakeTemp, '温度设置成功', this.curButton);
-                }
+
+            if (window.user_name && window.phone) {
+                watermark({ el: "#app" });
             }
-        },
-//        mounted: function () {
-        created: function () {
-            let that = this;
-            HdSmart.ready(() => {
 
-                if(window.user_name && window.phone){
-                    watermark({el:'#app'})
-                }
+            that.init();
 
-                that.init();
-
-                //监听设备状态report
-                HdSmart.onDeviceStateChange((data) => {
-                    that.onSuccess(data.result)
-                })
+            //监听设备状态report
+            HdSmart.onDeviceStateChange(data => {
+                that.onSuccess(data.result);
             });
+        });
+    },
+    methods: {
+        //初始化，获取设备快照
+        init() {
+            this.loading = true;
+            HdSmart.Device.getSnapShot(
+                data => {
+                    this.onSuccess(data);
+                },
+                () => {
+                    this.loading = false;
+                    HdSmart.UI.hideLoading();
+                    this.onError();
+                }
+            );
         },
-        methods: {
-            //初始化，获取设备快照
-            init(){
-                this.loading = true
-                HdSmart.Device.getSnapShot((data) => {
-                    this.onSuccess(data)
-                },() => {
-                    this.loading = false
-                    HdSmart.UI.hideLoading();
-                    this.onError()
-                });
-            },
-            onSuccess(data) {
-                if(data && data.attribute){
-                    this.loading = false
-                    HdSmart.UI.hideLoading();
-                    if(data.device_name){
-                        this.deviceName = data.device_name;
-                    }
-                    //设备故障
-                    if(data.attribute.operation == 'abnormal'){
-                        this.onError()
-                    }else{
-                        this.initErr = false;
-                        this.setState(data.attribute);
-                        this.deviceCategory = data.attribute.deviceSubCategory;
-                    }
+        onSuccess(data) {
+            if (data && data.attribute) {
+                this.loading = false;
+                HdSmart.UI.hideLoading();
+                //设备故障
+                if (data.attribute.operation == "abnormal") {
+                    this.onError();
+                } else {
+                    this.initErr = false;
+                    this.setState(data.attribute);
+                    this.deviceCategory = data.attribute.deviceSubCategory;
                 }
-            },
-            onError() {
-                this.initErr = true;
-                this.fakeTemp = '--'
-            },
-            //设置全量状态
-            setState(attr){//设置空调状态
-                if (!attr) {
-                    return;
+            }
+        },
+        onError() {
+            this.initErr = true;
+            this.fakeTemp = "--";
+        },
+        //设置全量状态
+        setState(attr) {
+            //设置空调状态
+            if (!attr) {
+                return;
+            }
+
+            if (attr.temperature > 100) {
+                temperatureRadio = 10;
+            }
+
+            for (var k in attr) {
+                if (this.operationFlag && k == this.operationKey) {
+                    continue;
                 }
-
-                if(attr.temperature > 100){
-                    temperatureRadio = 10
+                switch (k) {
+                    case "switchStatus":
+                        this.params.switch = attr.switchStatus;
+                        break;
+                    case "temperature":
+                        this.params.temperature =
+                            attr.temperature / temperatureRadio;
+                        this.fakeTemp = attr.temperature / temperatureRadio;
+                        break;
+                    default:
+                        this.params[k] = attr[k];
+                        break;
                 }
+            }
 
-                for(var k in attr){
-                    if(this.operationFlag && k == this.operationKey){
-                        continue;
-                    }
-                    switch(k){
-                        case 'switchStatus':
-                            this.params.switch = attr.switchStatus;
-                            break;
-                        case 'temperature':
-                            this.params.temperature = attr.temperature / temperatureRadio;
-                            this.fakeTemp = attr.temperature / temperatureRadio
-                            break;
-                        default:
-                            this.params[k] = attr[k]
-                            break;
-                    }
+            if (this.params.mode == "wind" && attr.env_temperature) {
+                this.fakeTemp =
+                    attr.env_temperature >= 100
+                        ? attr.env_temperature / 10
+                        : attr.env_temperature;
+            }
+        },
+        toggle(type, value, tip, el) {
+            let str = "";
+            let newValue = this.negation(this.params[type]);
+
+            if (newValue === OFF || newValue === false) {
+                str = "已关闭";
+            } else if (newValue === ON || newValue === true) {
+                str = "已启动";
+            } else {
+                str = "";
+            }
+
+            switch (type) {
+                case WIND_LEFT_RIGHT:
+                    this.setParam(type, newValue, "左右扫风" + str, el);
+                    break;
+                case WIND_UP_DOWN:
+                    this.setParam(type, newValue, "上下扫风" + str, el);
+                    break;
+                default:
+                    this.setParam(type, newValue, tip, el);
+                    break;
+            }
+        },
+        setParam(type, value, tip, el) {
+            let that = this;
+
+            //初始化失败，则按钮不能操作
+            if (that.initErr) {
+                return;
+            }
+
+            //如果参数值没有变化，直接返回(设置温度除外)
+            if (that.params[type] === value && type !== TEMPERATURE) {
+                return;
+            }
+
+            //判断是否为重置命令
+            if (that.isResetCommand(type, value)) {
+                //如果当前设置的是温度，需要改回去
+                if (type === TEMPERATURE) {
+                    that.fakeTemp = that.params.temperature;
                 }
+                return;
+            }
 
-                if(this.params.mode == 'wind' && attr.env_temperature){
-                    this.fakeTemp = attr.env_temperature >= 100 ? attr.env_temperature/10 : attr.env_temperature
-                }
+            if (el && el.classList.contains("disabled")) {
+                return;
+            }
 
+            that.addLoading(el);
 
-            },
-            toggle(type, value, tip, el){
-                let str = '';
-                let newValue = this.negation(this.params[type]);
+            let attr = {};
+            attr[type] = type == TEMPERATURE ? value * temperatureRadio : value;
 
-                if(newValue === OFF || newValue === false){
-                    str = '已关闭';
-                } else if(newValue === ON || newValue === true){
-                    str = '已启动';
-                } else{
-                    str = '';
-                }
-
-
-                switch (type){
-                    case WIND_LEFT_RIGHT: this.setParam(type, newValue, '左右扫风' + str, el); break;
-                    case WIND_UP_DOWN: this.setParam(type, newValue, '上下扫风' + str, el); break;
-                    default: this.setParam(type, newValue, tip, el); break;
-                }
-            },
-            setParam(type, value, tip, el){
-                let that = this;
-
-                //初始化失败，则按钮不能操作
-                if(that.initErr){
-                    return;
-                }
-
-                //如果参数值没有变化，直接返回(设置温度除外)
-                if (that.params[type] === value && type !== TEMPERATURE) {
-                    return;
-                }
-
-                //判断是否为重置命令
-                if(that.isResetCommand(type, value)){
-                    //如果当前设置的是温度，需要改回去
-                    if (type === TEMPERATURE) {
-                        that.fakeTemp = that.params.temperature;
-                    }
-                    return;
-                }
-
-                if(el && el.classList.contains('disabled')){
-                    return;
-                }
-
-                that.addLoading(el);
-
-                let attr = {};
-                attr[type] = type == TEMPERATURE ? value*temperatureRadio : value;
-
-                clearTimeout(this.operationDelay)
-                this.operationFlag = true
-                this.operationKey = type
-                this.operationValue = attr[type]
-                this.operationDelay = setTimeout(() => {
-                    this.operationFlag = false
-                }, 1500)
-                //发送指令
-                HdSmart.Device.control({
-                    method: 'dm_set',
+            clearTimeout(this.operationDelay);
+            this.operationFlag = true;
+            this.operationKey = type;
+            this.operationValue = attr[type];
+            this.operationDelay = setTimeout(() => {
+                this.operationFlag = false;
+            }, 1500);
+            //发送指令
+            HdSmart.Device.control(
+                {
+                    method: "dm_set",
                     nodeid: NODE_ID + type,
                     params: {
                         attribute: attr
                     }
-                }, () => {
+                },
+                () => {
                     that.removeLoading();
 
                     that.params[type] = value;
                     that.setTip(tip);
-                },  (data) => {
+                },
+                data => {
                     that.removeLoading();
 
                     if (type === TEMPERATURE) {
                         that.fakeTemp = that.params.temperature;
                     }
-                    that.setTip('设置失败');
-                });
-            },
-            //添加loading效果
-            addLoading(el){
-                if (!el) {
-                    return;
+                    that.setTip("设置失败");
                 }
-
-                this.removeLoading();
-                this.loadingTimer = setTimeout(() => {
-//                    this.removeLoading();
-
-                    this.loadingElement = el;
-                    this.loadingElement.classList.add(LOADING_CLASS);
-                }, LOADING_DELAY);
-            },
-            //移除按钮loading
-            removeLoading(){
-                clearTimeout(this.loadingTimer);
-
-                if (this.loadingElement) {
-                    this.loadingElement.classList.remove(LOADING_CLASS);
-                    this.loadingElement = null;
-                }
-            },
-            setTemperature(type, value, tip, el){
-
-                if(this.initErr){
-                    return
-                }
-
-                value = this.fakeTemp + value
-
-                //送风模式不能设置温度
-                if (this.params.mode === 'wind') {
-                    this.setTip('送风模式下不能设置温度');
-                    return;
-                }
-
-                //限制温度范围16-30℃。TODO：智能模式19-25，24-30
-                if(value < MIN_TEMP){
-                    if(this.params.temperature == MIN_TEMP){
-                        this.setTip('温度已调至最低')
-                        return
-                    }else{
-                        value = MIN_TEMP
-                    }
-                }
-
-                if(value > MAX_TEMP){
-                    if(this.params.temperature == MAX_TEMP){
-                        this.setTip('温度已调至最高')
-                        return
-                    }else{
-                        value = MAX_TEMP
-                    }
-                }
-
-                this.tempFlag = true;
-                this.fakeTemp = value;
-                this.curButton = el
-                //设置timer
-                clearTimeout(this.tempTimer);
-                this.tempTimer = setTimeout(() => {
-                    this.tempFlag = false;
-                }, SPAN);
-            },
-            setTip(tip){
-                this.tip = tip || '';
-                clearTimeout(this.tipTimer);
-                this.tipTimer = setTimeout(() => {
-                    this.tip = '';
-                }, TIP_DURATION);
-            },
-            screenClick(){
-                this.showMore = false;
-            },
-            //取反
-            negation(value){
-                switch (value){
-                    case ON: return OFF;
-                    case OFF: return ON;
-                    case true: return false;
-                    case false: return true;
-                    default: return value;
-                }
-            },
-            isResetCommand(type, value){
-                let obj = {};
-                obj[TEMPERATURE] = this.params[TEMPERATURE];
-                obj[SPEED] = this.params[SPEED];
-                obj[MODE] = this.params[MODE];
-                obj[type] = value;
-
-                if(obj[TEMPERATURE] === MAX_TEMP && obj[SPEED] === 'low' && obj[MODE] === 'cold'){
-                    return true;
-                }
-
-                return false;
+            );
+        },
+        //添加loading效果
+        addLoading(el) {
+            if (!el) {
+                return;
             }
+
+            this.removeLoading();
+            this.loadingTimer = setTimeout(() => {
+                //                    this.removeLoading();
+
+                this.loadingElement = el;
+                this.loadingElement.classList.add(LOADING_CLASS);
+            }, LOADING_DELAY);
+        },
+        //移除按钮loading
+        removeLoading() {
+            clearTimeout(this.loadingTimer);
+
+            if (this.loadingElement) {
+                this.loadingElement.classList.remove(LOADING_CLASS);
+                this.loadingElement = null;
+            }
+        },
+        setTemperature(type, value, tip, el) {
+            if (this.initErr) {
+                return;
+            }
+
+            value = this.fakeTemp + value;
+
+            //送风模式不能设置温度
+            if (this.params.mode === "wind") {
+                this.setTip("送风模式下不能设置温度");
+                return;
+            }
+
+            //限制温度范围16-30℃。TODO：智能模式19-25，24-30
+            if (value < MIN_TEMP) {
+                if (this.params.temperature == MIN_TEMP) {
+                    this.setTip("温度已调至最低");
+                    return;
+                } else {
+                    value = MIN_TEMP;
+                }
+            }
+
+            if (value > MAX_TEMP) {
+                if (this.params.temperature == MAX_TEMP) {
+                    this.setTip("温度已调至最高");
+                    return;
+                } else {
+                    value = MAX_TEMP;
+                }
+            }
+
+            this.tempFlag = true;
+            this.fakeTemp = value;
+            this.curButton = el;
+            //设置timer
+            clearTimeout(this.tempTimer);
+            this.tempTimer = setTimeout(() => {
+                this.tempFlag = false;
+            }, SPAN);
+        },
+        setTip(tip) {
+            this.tip = tip || "";
+            clearTimeout(this.tipTimer);
+            this.tipTimer = setTimeout(() => {
+                this.tip = "";
+            }, TIP_DURATION);
+        },
+        screenClick() {
+            this.showMore = false;
+        },
+        //取反
+        negation(value) {
+            switch (value) {
+                case ON:
+                    return OFF;
+                case OFF:
+                    return ON;
+                case true:
+                    return false;
+                case false:
+                    return true;
+                default:
+                    return value;
+            }
+        },
+        isResetCommand(type, value) {
+            let obj = {};
+            obj[TEMPERATURE] = this.params[TEMPERATURE];
+            obj[SPEED] = this.params[SPEED];
+            obj[MODE] = this.params[MODE];
+            obj[type] = value;
+
+            if (
+                obj[TEMPERATURE] === MAX_TEMP &&
+                obj[SPEED] === "low" &&
+                obj[MODE] === "cold"
+            ) {
+                return true;
+            }
+
+            return false;
         }
     }
+};
 </script>
 
 <style lang="less">
-    * {
-        margin: 0;
-        padding: 0;
-    }
+* {
+    margin: 0;
+    padding: 0;
+}
 
-    body {
-        font: 24px/1 'NotoSansHans-Regular';
-        color: #FFF;
-    }
-    html, body, .main {
-        height: 100%;
-    }
-    ::-webkit-scrollbar {
-        opacity: 0;
-    }
+body {
+    font: 24px/1 "NotoSansHans-Regular";
+    color: #fff;
+}
+html,
+body,
+.main {
+    height: 100%;
+}
+::-webkit-scrollbar {
+    opacity: 0;
+}
 
-    /*main样式*/
-    .main {
-        box-sizing: border-box;
-        padding: 155px 0 180px 0;
-        text-align: center;
-    }
-    .main.page_on {
-        background-color: #0bc0fe;
-    }
-    .main.page_off {
-        background-color: #f2f2f2;
-    }
-    .main.err{
-        padding-top: 264px;
-        background: #f2f2f2;
-    }
-    .bg {
-        position: absolute;
-        left: 0;
-        bottom: 180px;
-        width: 100%;
-        height: auto;
-    }
+/*main样式*/
+.main {
+    box-sizing: border-box;
+    padding: 155px 0 180px 0;
+    text-align: center;
+}
+.main.page_on {
+    background-color: #0bc0fe;
+}
+.main.page_off {
+    background-color: #f2f2f2;
+}
+.main.err {
+    padding-top: 264px;
+    background: #f2f2f2;
+}
+.bg {
+    position: absolute;
+    left: 0;
+    bottom: 180px;
+    width: 100%;
+    height: auto;
+}
 
-    /*bottom样式*/
-    .bottom {
-        display: flex;
-        margin: 0 240px;
-        justify-content: space-around;
-        align-items: center;
-        position: relative;
-    }
-    .bottom .imgWrapper{
-        margin-bottom: 10px;
-    }
+/*bottom样式*/
+.bottom {
+    display: flex;
+    margin: 0 240px;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+}
+.bottom .imgWrapper {
+    margin-bottom: 10px;
+}
 
-    .hanging, .package {
-        height: 360px;
-        margin-bottom: 45px;
-    }
-    .hanging {
-        background: url(./assets/bg_off_hanging.png) no-repeat center;
-    }
-    .package {
-        background: url(./assets/bg_off_package.png) no-repeat center;
-        background-size: 540px 360px;
-    }
+.hanging,
+.package {
+    height: 360px;
+    margin-bottom: 45px;
+}
+.hanging {
+    background: url(./assets/bg_off_hanging.png) no-repeat center;
+}
+.package {
+    background: url(./assets/bg_off_package.png) no-repeat center;
+    background-size: 540px 360px;
+}
 
-    /*title样式*/
-    .title {
-        font-size: 30px;
-        margin-bottom: 78px;
-    }
-    .page_off .title {
-        color: #75787a;
-        margin-bottom: 0;
-    }
+/*title样式*/
+.title {
+    font-size: 30px;
+    margin-bottom: 78px;
+}
+.page_off .title {
+    color: #75787a;
+    margin-bottom: 0;
+}
 
-    /*温度*/
-    .temp {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .temp-show {
-        width: 680px;
-        text-align: center;
-    }
-    .temp-number {
-        font-size: 240px;
-        font-family: RobotoCondensed-Regular;
-    }
-    .temp-unit {
-        font-size: 72px;
-    }
+/*温度*/
+.temp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.temp-show {
+    width: 680px;
+    text-align: center;
+}
+.temp-number {
+    font-size: 240px;
+    font-family: RobotoCondensed-Regular;
+}
+.temp-unit {
+    font-size: 72px;
+}
 
-    /*提示*/
-    .tip {
-        min-height: 30px;
-        font-size: 30px;
-        margin: 24px 0 110px 0;
-        opacity: 1;
-        transition: opacity 1s linear;
-        position: relative;
-    }
-    .tip.transparent {
-        opacity: 0;
-    }
-    .page_off .tip {
-        /*color: #c8cacc;*/
-        color: #46bcff;
-        margin: 24px 0;
-        /*margin: 25px 0 37px 0;*/
-    }
-    .err .tip{
-        margin-top: 36px;
-        color: #c8cacc;
-    }
+/*提示*/
+.tip {
+    min-height: 30px;
+    font-size: 30px;
+    margin: 24px 0 110px 0;
+    opacity: 1;
+    transition: opacity 1s linear;
+    position: relative;
+}
+.tip.transparent {
+    opacity: 0;
+}
+.page_off .tip {
+    /*color: #c8cacc;*/
+    color: #46bcff;
+    margin: 24px 0;
+    /*margin: 25px 0 37px 0;*/
+}
+.err .tip {
+    margin-top: 36px;
+    color: #c8cacc;
+}
 
-    /*图片*/
-    .temp img, .bottom img {
-        width: 144px;
-        height: 144px;
-    }
-    .switch img {
-        width: 204px;
-        height: 204px;
-    }
+/*图片*/
+.temp img,
+.bottom img {
+    width: 144px;
+    height: 144px;
+}
+.switch img {
+    width: 204px;
+    height: 204px;
+}
 
-    .err img{
-        width: 360px;
-        height: 360px;
-    }
+.err img {
+    width: 360px;
+    height: 360px;
+}
 
-    /*更多*/
-    .more, .subMenu {
-        position: absolute;
-        right: 60px;
-        top: 132px;
-    }
-    .more {
-        width: 96px;
-        height: 96px;
-        background: url(./assets/more_normal.png) no-repeat center;
-        background-size: 96px 96px;
-        outline: 0;
-        cursor: pointer;
-        /*扩展点击范围*/
-        padding: 24px;
-        top: 108px;
-        right: 36px;
-    }
-    .more:hover {
-        background-image: url(./assets/more_active.png);
-    }
+/*更多*/
+.more,
+.subMenu {
+    position: absolute;
+    right: 60px;
+    top: 132px;
+}
+.more {
+    width: 96px;
+    height: 96px;
+    background: url(./assets/more_normal.png) no-repeat center;
+    background-size: 96px 96px;
+    outline: 0;
+    cursor: pointer;
+    /*扩展点击范围*/
+    padding: 24px;
+    top: 108px;
+    right: 36px;
+}
+.more:hover {
+    background-image: url(./assets/more_active.png);
+}
 
-    /*子菜单*/
-    .subMenu {
-        opacity: 0.95;
-        background: #ffffff;
-        box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.10);
-        box-sizing: border-box;
-        border-radius: 6px;
-        padding: 0 24px;
-        /*width: 456px;*/
-        /*height: 660px;*/
-        width: 408px;
-        height: 558px;
-        color: #75787a;
-        font-size: 24px;
-    }
-    .subMenu .button .imgWrapper {
-        width:117px;
-        height:117px;
-        margin: 0 24px 18px 24px;
-    }
-    .subMenu .devider {
-        /*margin-top: 30px;*/
-        margin: 30px 0;
-    }
-    .more-timing {
-        font-size: 30px;
-        margin-top: 12px;
-    }
+/*子菜单*/
+.subMenu {
+    opacity: 0.95;
+    background: #ffffff;
+    box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    border-radius: 6px;
+    padding: 0 24px;
+    /*width: 456px;*/
+    /*height: 660px;*/
+    width: 408px;
+    height: 558px;
+    color: #75787a;
+    font-size: 24px;
+}
+.subMenu .button .imgWrapper {
+    width: 117px;
+    height: 117px;
+    margin: 0 24px 18px 24px;
+}
+.subMenu .devider {
+    /*margin-top: 30px;*/
+    margin: 30px 0;
+}
+.more-timing {
+    font-size: 30px;
+    margin-top: 12px;
+}
 
-    /*loading样式*/
-    .loading {
-        position: relative;
-    }
-    .loading:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 144px;
-        height: 144px;
-        background: url('./assets/buffering_mode_white.gif') no-repeat center;
-        background-size: 100%;
-        /*transform: translate3d(0,0,0);*/
-        /*animation: circle 1s linear infinite;*/
-    }
-    .switch.loading:before {
-        top: 12px;
-        left: 12px;
-        width: 180px;
-        height: 180px;
-    }
-    .page_on .switch.loading:before {
-        background: url('./assets/buffering_power_white.gif') no-repeat center;
-        background-size: 100%;
-    }
-    .page_off .switch.loading:before {
-        background: url('./assets/buffering_power_blue.gif') no-repeat center;
-        background-size: 100%;
-    }
-    .subMenu .loading:before {
-        background: url('./assets/buffering_submenu_blue.gif') no-repeat center;
-        background-size: 100%;
-        width: 120px;
-        height: 120px;
-        top: 0;
-        left: 24px;
-    }
+/*loading样式*/
+.loading {
+    position: relative;
+}
+.loading:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 144px;
+    height: 144px;
+    background: url("./assets/buffering_mode_white.gif") no-repeat center;
+    background-size: 100%;
+    /*transform: translate3d(0,0,0);*/
+    /*animation: circle 1s linear infinite;*/
+}
+.switch.loading:before {
+    top: 12px;
+    left: 12px;
+    width: 180px;
+    height: 180px;
+}
+.page_on .switch.loading:before {
+    background: url("./assets/buffering_power_white.gif") no-repeat center;
+    background-size: 100%;
+}
+.page_off .switch.loading:before {
+    background: url("./assets/buffering_power_blue.gif") no-repeat center;
+    background-size: 100%;
+}
+.subMenu .loading:before {
+    background: url("./assets/buffering_submenu_blue.gif") no-repeat center;
+    background-size: 100%;
+    width: 120px;
+    height: 120px;
+    top: 0;
+    left: 24px;
+}
 
-
-.button{
+.button {
     display: inline-block;
-    .imgWrapper{
+    .imgWrapper {
         width: 144px;
         height: 144px;
         background-size: 100% 100%;
         background-repeat: no-repeat;
     }
-    &:active{
-        opacity: .8;
+    &:active {
+        opacity: 0.8;
     }
-    &.active{
-        .btnName{
+    &.active {
+        .btnName {
             opacity: 1;
         }
     }
@@ -740,148 +793,148 @@
     line-height: 30px;
     display: inline-block;
 }
-.bottom .active .btnName{
+.bottom .active .btnName {
     font-size: 30px;
 }
 
-.page_on .disabled .imgWrapper{
-    opacity: .5;
+.page_on .disabled .imgWrapper {
+    opacity: 0.5;
 }
 
 .page_off .disabled .imgWrapper {
     filter: invert(18%);
 }
 
-.cool{
-    .imgWrapper{
+.cool {
+    .imgWrapper {
         background-image: url(./assets/cool_normal.png);
     }
-    &.active .imgWrapper{
+    &.active .imgWrapper {
         background-image: url(./assets/cool_active.png);
     }
 }
-.heat{
-    .imgWrapper{
+.heat {
+    .imgWrapper {
         background-image: url(./assets/heat_normal.png);
     }
-    &.active .imgWrapper{
+    &.active .imgWrapper {
         background-image: url(./assets/heat_active.png);
     }
 }
-.dehumidify{
-    .imgWrapper{
+.dehumidify {
+    .imgWrapper {
         background-image: url(./assets/dehumidify_normal.png);
     }
-    &.active .imgWrapper{
+    &.active .imgWrapper {
         background-image: url(./assets/dehumidify_active.png);
     }
 }
-.on{
-    .imgWrapper{
+.on {
+    .imgWrapper {
         width: 204px;
         height: 204px;
         background-image: url(./assets/on_normal.png);
     }
-    &:active .imgWrapper{
+    &:active .imgWrapper {
         background-image: url(./assets/on_active.png);
     }
 }
-.off{
-    .imgWrapper{
+.off {
+    .imgWrapper {
         width: 204px;
         height: 204px;
         background-image: url(./assets/off_normal.png);
     }
-    &:active .imgWrapper{
+    &:active .imgWrapper {
         background-image: url(./assets/off_active.png);
     }
 }
-.low{
-    .imgWrapper{
+.low {
+    .imgWrapper {
         background-image: url(./assets/low_normal.png);
     }
-    &.active .imgWrapper{
+    &.active .imgWrapper {
         background-image: url(./assets/low_active.png);
     }
 }
-.normal{
-    .imgWrapper{
+.normal {
+    .imgWrapper {
         background-image: url(./assets/medium_normal.png);
     }
-    &.active .imgWrapper{
+    &.active .imgWrapper {
         background-image: url(./assets/medium_active.png);
     }
 }
-.high{
-    .imgWrapper{
+.high {
+    .imgWrapper {
         background-image: url(./assets/high_normal.png);
     }
-    &.active .imgWrapper{
+    &.active .imgWrapper {
         background-image: url(./assets/high_active.png);
     }
 }
-.minus{
-    .imgWrapper{
+.minus {
+    .imgWrapper {
         background-image: url(./assets/minus_normal.png);
     }
-    &:active .imgWrapper{
+    &:active .imgWrapper {
         background-image: url(./assets/minus_pressed.png);
     }
 }
-.plus{
-    .imgWrapper{
+.plus {
+    .imgWrapper {
         background-image: url(./assets/plus_normal.png);
     }
-    &:active .imgWrapper{
+    &:active .imgWrapper {
         background-image: url(./assets/plus_pressed.png);
     }
 }
-.mode_auto{
-    .imgWrapper{
+.mode_auto {
+    .imgWrapper {
         background-image: url(./assets/mode_auto_normal.png);
     }
-    &.active .imgWrapper{
+    &.active .imgWrapper {
         background-image: url(./assets/mode_auto_active.png);
     }
 }
-.wind{
-    .imgWrapper{
+.wind {
+    .imgWrapper {
         background-image: url(./assets/mode_air_normal.png);
     }
-    &.active .imgWrapper{
+    &.active .imgWrapper {
         background-image: url(./assets/mode_air_active.png);
     }
 }
-.lr{
-    .imgWrapper{
+.lr {
+    .imgWrapper {
         background-image: url(./assets/vertical_normal.png);
     }
-    &.active .imgWrapper{
+    &.active .imgWrapper {
         background-image: url(./assets/vertical_active.png);
     }
 }
-.ud{
-    .imgWrapper{
+.ud {
+    .imgWrapper {
         background-image: url(./assets/horizontal_normal.png);
     }
-    &.active .imgWrapper{
+    &.active .imgWrapper {
         background-image: url(./assets/horizontal_active.png);
     }
 }
 
-.alert{
+.alert {
     position: fixed;
     left: 0;
     top: 96px;
     width: 100%;
-    background:#fff7d9;
-    height:84px;
+    background: #fff7d9;
+    height: 84px;
     line-height: 84px;
-    font-size:30px;
-    color:#000000;
+    font-size: 30px;
+    color: #000000;
     text-align: center;
     overflow: hidden;
-    i{
+    i {
         display: inline-block;
         width: 36px;
         height: 36px;
@@ -890,10 +943,10 @@
         vertical-align: -4px;
         margin-right: 10px;
     }
-    .error{
+    .error {
         background-image: url(./assets/icn_warn_s.png);
     }
-    .spin{
+    .spin {
         background-image: url(./assets/buffering_updating.png);
         animation: rotate 1s linear infinite;
     }
@@ -901,10 +954,10 @@
 
 @keyframes rotate {
     from {
-        transform: rotate(0deg)
+        transform: rotate(0deg);
     }
     to {
-        transform: rotate(360deg)
+        transform: rotate(360deg);
     }
 }
 </style>

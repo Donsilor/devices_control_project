@@ -1103,12 +1103,7 @@ export default {
         onSuccess(data) {
             HdSmart.UI.hideLoading()
             this.status = 'success'
-            if(data.device_name){
-                this.device_name = data.device_name
-            }
-            // if(this.isStandby && data.attribute.status == 'standby' && data.attribute.operation !='none'){
-            //     data.attribute.operation = 'none'
-            // }
+
             this.model = data.attribute
 
             this.onAlarm(data.attribute.error)
@@ -1169,6 +1164,9 @@ export default {
     },
     created() {
         HdSmart.ready(() => {
+            if(window.device_name){
+                this.device_name = window.device_name
+            }
             HdSmart.UI.showLoading()
             this.getSnapShot()
         })

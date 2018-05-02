@@ -628,7 +628,7 @@ export default {
             status: '',
             speedModalVisible: false,
             moreModalVisible: false,
-            device_name: '空气净化器',
+            device_name: '',
             model: {},
             tip: '',
             remain_tip: '',
@@ -779,9 +779,7 @@ export default {
         onSuccess(data) {
             if(!data) return
             this.status = 'success'
-            if(data.device_name){
-                this.device_name = data.device_name
-            }
+
             this.model = data.attribute
 
             if(this.model.filter_time_remaining <=0){
@@ -833,6 +831,9 @@ export default {
         })
 
         HdSmart.ready(() => {
+            if(window.device_name){
+                this.device_name = window.device_name
+            }
             HdSmart.UI.showLoading()
             this.getSnapShot(() => {
                 HdSmart.UI.hideLoading()

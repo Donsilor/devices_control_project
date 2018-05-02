@@ -505,9 +505,6 @@ export default {
             })
         },
         onSuccess(data) {
-            if(data.device_name){
-                this.device_name = data.device_name
-            }
             this.model = data.attribute
             if(!this.$refs.tempSlider.isUpdating){
                 this.temp = this.model.set_temperature
@@ -518,11 +515,15 @@ export default {
     created() {
         HdSmart.ready(() => {
 
-            this.getSnapShot()
+            if(window.device_name){
+                this.device_name = window.device_name
+            }
 
-            HdSmart.onDeviceStateChange((data) => {
-                this.onSuccess(data.result)
-            })
+            this.getSnapShot()
+        })
+
+        HdSmart.onDeviceStateChange((data) => {
+            this.onSuccess(data.result)
         })
     },
     mounted() {

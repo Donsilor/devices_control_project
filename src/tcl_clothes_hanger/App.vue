@@ -705,10 +705,6 @@ export default {
 
             if(!result) return
 
-            if(result.device_name){
-                this.device_name = result.device_name
-            }
-
             var attrs = result.attribute
 
             this.setModeTip(attrs)
@@ -734,6 +730,9 @@ export default {
     },
     created() {
         HdSmart.ready(() => {
+            if(window.device_name){
+                this.device_name = window.device_name
+            }
             HdSmart.UI.hideLoading()
             this.getSnapShot()
         })

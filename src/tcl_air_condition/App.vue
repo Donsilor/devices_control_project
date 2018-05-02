@@ -245,6 +245,10 @@
             let that = this;
             HdSmart.ready(() => {
 
+                if(window.device_name){
+                            this.deviceName = window.device_name;
+                        }
+
                 if(window.user_name && window.phone){
                     watermark({el:'#app'})
                 }
@@ -276,9 +280,6 @@
                     }else{
                         this.initErr = false;
                         this.setState(data.attribute);
-                        if(data.device_name){
-                            this.deviceName = data.device_name;
-                        }
                         this.deviceCategory = data.attribute.deviceSubCategory;
                     }
                 }

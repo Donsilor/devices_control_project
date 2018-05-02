@@ -114,6 +114,9 @@ export default {
         init() {
             HdSmart.ready(()=>{
                 HdSmart.UI.showLoading()
+                if(window.device_name){
+                    this.device.name = window.device_name
+                }
                 this.getSnapShot()
             })
         },
@@ -139,9 +142,6 @@ export default {
                         }catch(e){}
                     })
 
-                    if(data.device_name){
-                        this.device.name = data.device_name
-                    }
                     if(data.attribute.deviceSubCategory != undefined){
                         this.device.category_id = data.attribute.deviceSubCategory
                     }

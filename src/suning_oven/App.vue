@@ -200,7 +200,7 @@
                         mode: 'roast'
                     }
                 ],
-                device_name: '烤箱',
+                device_name: '',
             }
         },
         watch: {
@@ -259,6 +259,9 @@
         mounted() {
 
             HdSmart.ready(() => {
+                 if(window.device_name){
+                    this.device_name = window.device_name
+                }
                 // HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
                 HdSmart.UI.showLoading()
                 this.getSnapShot()
@@ -366,10 +369,6 @@
                     if (attributes[attr]) {
                         curAttributes[attr] = attributes[attr]
                     }
-                }
-
-                if(data.device_name){
-                    this.device_name = data.device_name
                 }
 
             },

@@ -97,11 +97,14 @@
                 show: false,
                 //临时处理窗帘变动没有上传的问题
                 cbFunc: null,
-                device_name: '窗帘'
+                device_name: ''
             }
         },
         mounted() {
             HdSmart.ready(() => {
+                if(window.device_name){
+                    this.device_name = window.device_name
+                }
                 if(window.user_name && window.phone){
                     watermark({el:'#app'})
                     // this.raf_time = 150
@@ -113,9 +116,6 @@
                     if(data && data.attribute){
                         this.open_percentage = data.attribute.open_percentage;
                         this.animateToTargetPercentage(this.open_percentage, true);
-                    }
-                    if(data.device_name){
-                        this.device_name = data.device_name
                     }
                 }, () => {
                     this.is_ready = true;
