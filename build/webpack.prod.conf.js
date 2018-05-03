@@ -12,6 +12,7 @@ var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 var util = require('./util');
 var env = config.build.env;
 var app = util.getInputName();
+var buildTime = util.getBuildTime()
 
 // 本地测试使用
 // baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/${app}/index.js`;
@@ -33,7 +34,8 @@ var webpackConfig = merge(baseWebpackConfig, {
     plugins: [
         // http://vuejs.github.io/vue-loader/en/workflow/production.html
         new webpack.DefinePlugin({
-            'process.env': config.build.env
+            'process.env': config.build.env,
+            'buildTime': JSON.stringify(buildTime)
         }),
         new UglifyJSPlugin(),
         // extract css into its own file
@@ -95,7 +97,7 @@ if (config.build.productionGzip) {
     webpackConfig.plugins.push(
         new ZipPlugin({
         path:path.join(__dirname,'../dist'),
-        filename: app + '.zip'
+        filename: app + `_${buildTime}.zip`
         })
     )
 }

@@ -49,7 +49,7 @@ const store = new Vuex.Store({
     state: {
         detailVisible: false,
         activeDetail: {},
-        device_name: 'TCL电视',
+        device_name: '',
         tvStatus: {
             tvOnlineStatus: 1,
             screenProjectType: 0,
@@ -119,6 +119,10 @@ HdSmart.ready(() => {
     HdSmart.Device.getSnapShot((data) => {
         store.commit('setDeviceName', data.device_name)
     })
+
+    if(window.device_name){
+        store.commit('setDeviceName', window.device_name)
+    }
 
     service.getScreenProjectionStatus((error, data) => {
         store.commit('setScreenProjectionStatus', data)

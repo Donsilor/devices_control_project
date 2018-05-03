@@ -13,6 +13,7 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
 })
 
 var app = util.getInputName();
+var buildTime = util.getBuildTime()
 
 module.exports = merge(baseWebpackConfig, {
     module: {
@@ -22,7 +23,8 @@ module.exports = merge(baseWebpackConfig, {
     devtool: '#cheap-module-eval-source-map',
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': config.dev.env
+            'process.env': config.dev.env,
+            'buildTime': JSON.stringify(buildTime)
         }),
         // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
         new webpack.HotModuleReplacementPlugin(),

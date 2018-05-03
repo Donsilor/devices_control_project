@@ -3,8 +3,10 @@
 -->
 <template>
 <div class="page-index">
-    <div class="page-header"></div>
-    <div class="page-body">
+    <!-- <div class="page-header"></div>
+    <div class="page-body"> -->
+    <div class="status-tip-placeholder" v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"></div>
+    <status-tip class="sp_status_home" />
     <router-link to="/search" class="search">输入片名、导演、演员搜索</router-link>
 
     <div class="swiper">
@@ -52,7 +54,7 @@
             <a href="#" @click.prevent="cmd('screenProjectionEvent')" class="item item-tp">投屏</a>
             <a href="#" @click.prevent="cmd('remoteControlEvent')" class="item item-ykq">遥控器</a>
         </div>
-    </div>
+    <!-- </div> -->
     </div>
     <offline-mask page="index" v-if="!$store.state.detailVisible" />
 </div>
@@ -61,20 +63,21 @@
 <style lang="less">
     .page-index{
         background:#fafafa;
-        position: fixed;
-        left: 0;
-        top: 0;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        width: 100%;
-        overflow-x: hidden;
+        padding-top: 116px;
+        // position: fixed;
+        // left: 0;
+        // top: 116px;
+        // display: flex;
+        // flex-direction: column;
+        // height: 100%;
+        // width: 100%;
+        // overflow-x: hidden;
     }
     .page-header{
         height: 116px;
     }
-    .isIOS .page-header{
-        display: none;
+    .isIOS .page-index{
+        padding-top: 0;
     }
     .page-body{
         height: 100%;

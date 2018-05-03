@@ -13,9 +13,11 @@
         </div>
 
         <div class="filters-placeholder" v-show="filterVisible"></div>
+        <div class="status-tip-placeholder" v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"></div>
 
         <div class="fixedtop">
             <topbar :title="title"></topbar>
+            <status-tip class="sp_status_list" />
             <!-- 条件 -->
             <div class="filters" v-if="!error">
                 <!-- 地区 -->

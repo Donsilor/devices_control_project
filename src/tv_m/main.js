@@ -19,6 +19,10 @@ import Topbar from './components/Topbar.vue'
 import ErrorView from './components/Error.vue'
 import OfflineMask from './components/OfflineMask.vue'
 //import Statusbar from './components/Statusbar.vue'
+import StatusTip from './components/StatusTip.vue'
+
+import * as service from './service'
+
 Vue.use(Vuex)
 Vue.use(Router)
 Vue.use(VueAwesomeSwiper)
@@ -30,6 +34,7 @@ Vue.use(VueLazyload, {
 Vue.component('detail', Detail)
 Vue.component('topbar', Topbar)
 Vue.component('offline-mask', OfflineMask)
+Vue.component('StatusTip', StatusTip)
 //Vue.component('statusbar', Statusbar)
 
 //强制关闭3d(详情页改成不透明了)
@@ -43,6 +48,12 @@ const store = new Vuex.Store({
         online: true,
         detailVisible: false,
         activeDetail: {},
+        device_name: '',
+        tvStatus: {
+            tvOnlineStatus: -1,
+            screenProjectType: 0,
+            screenProjectTitle: ''
+        }
     },
     mutations: {
         showDetail(state, payload) {
@@ -54,6 +65,12 @@ const store = new Vuex.Store({
         },
         setOnline(state, payload) {
             state.online = payload
+        },
+        setDeviceName(state, payload) {
+            state.device_name = payload
+        },
+        setScreenProjectionStatus(state, payload){
+            state.tvStatus = payload
         }
     },
     actions: {
@@ -116,6 +133,18 @@ HdSmart.ready(() => {
   if(!is_ready){
 
     is_ready = true
+
+    if(window.device_name){
+        store.commit('setDeviceName', window.device_name)
+    }
+
+    service.getScreenProjectionStatus((error, data) => {
+        store.commit('setScreenProjectionStatus', data)
+    })
+
+    window.onScreenProjectStatusChanged = function(data){
+        store.commit('setScreenProjectionStatus', data)
+    }
 
     //解决300ms延迟问题,iOS下报错了
     // FastClick.attach(document.body)

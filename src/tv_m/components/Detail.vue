@@ -6,8 +6,12 @@
     <div class="page-detail" v-show="visible">
         <div class="detail-hd">
             <span class="back" @click="close"></span>
-            <div class="title">{{cur.title}}</div>
+            <div class="title">
+                {{loading?'正在加载中...':cur.title}}
+                <!-- <span class="isvip" v-show="!loading && ispay && ispay !== '1'">付费</span> -->
+            </div>
         </div>
+        <status-tip class="sp_status_detail" />
         <div class="detail-bd">
         <div class="detail-info clearfix" v-show="cur.title">
             <div class="info-inner">
@@ -104,36 +108,41 @@
         opacity: 0
     }
     .page-detail{
-        // position: fixed;
-        // left: 0;
-        // top: 0;
-        // width: 100%;
-        // height: 100%;
-        // overflow-y: hidden;
-        // z-index: 9;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: hidden;
+        z-index: 9;
         color:#75787a;
         background:#fafafa;
-        // display: flex;
-        // flex-direction: column;
-        padding-top: 124px;
+        display: flex;
+        flex-direction: column;
+        // padding-top: 124px;
     }
     .isIOS .page-detail{
-        padding-top: 96px;
+        // padding-top: 96px;
     }
     .isIOS .detail-hd{
         height: 96px;
         .back{
             height: 96px;
         }
+        .title{
+            line-height: 96px;
+        }
     }
     .detail-hd{
         height: 124px;
         width: 100%;
         background: #fafafa;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 9;
+        flex-shrink: 0;
+        border-bottom:1px solid #dbdbdb;
+        // position: fixed;
+        // top: 0;
+        // left: 0;
+        // z-index: 9;
         .back{
             width: 100px;
             height: 124px;
@@ -150,7 +159,7 @@
         }
         .title{
             text-align: center;
-            line-height: 90px;
+            line-height: 124px;
             color:#2f3133;
             font-size: 36px;
             text-overflow: ellipsis;

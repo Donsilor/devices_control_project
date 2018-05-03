@@ -26,7 +26,7 @@
           }else{
             rem = clientWidth * radio / 1920;
           }
-          if(window.devicePixelRatio == 2.625){
+          if(window.devicePixelRatio == 2.625 && /SM-N9500/.test(navigator.userAgent)){
               rem = '37.45'
           }
           document.querySelector('html').style.fontSize = rem + 'px';
@@ -47,6 +47,10 @@
         }, false);
 
     }());
+    </script>
+    <script>
+        var BUILD_TIME = "<%= buildTime %>"
+        console.log('buildTime: ' + BUILD_TIME)
     </script>
 </head>
 <body>

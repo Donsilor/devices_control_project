@@ -115,3 +115,11 @@ export function onClickEvent(eventCode){
 export function playVideo(link, title){
     sendApp('playVideo', {link,title})
 }
+
+export function getScreenProjectionStatus(callback) {
+    sendApp('screenProjectionStatus', '', callback)
+}
+
+export function goToScreenProjectionPage(){
+    sendApp('screenProjectionStatusClick', '')
+}
