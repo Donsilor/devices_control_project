@@ -66,47 +66,48 @@
 </template>
 
 <style lang="less">
-*{
+* {
     padding: 0;
     margin: 0;
 }
-html,body{
+html,
+body {
     overflow: hidden;
 }
-body{
+body {
     -webkit-tap-highlight-color: transparent;
 }
-#app{
+#app {
     font-size: 24px;
     color: #fff;
 }
-a{
+a {
     color: #fff;
     text-decoration: none;
 }
-.page-on{
+.page-on {
     position: absolute;
     width: 100%;
     height: 100%;
     left: 0;
     top: 0;
-    background:#1eb0ff;
+    background: #1eb0ff;
     overflow: hidden;
 }
-.page-off{
+.page-off {
     position: absolute;
     width: 100%;
     height: 100%;
     left: 0;
     top: 0;
-    background-image:linear-gradient(-180deg, #fafafa 0%, #f2f2f2 100%);
-    .device_name{
-        color:#76787a;
+    background-image: linear-gradient(-180deg, #fafafa 0%, #f2f2f2 100%);
+    .device_name {
+        color: #76787a;
     }
-    .status{
-        color:#c8cacc;
+    .status {
+        color: #c8cacc;
     }
-    .pic{
+    .pic {
         width: 450px;
         height: 450px;
         background: url(./assets/img_heater_off2.png) no-repeat;
@@ -114,58 +115,60 @@ a{
         margin: 0 auto;
     }
 }
-.inner{
+.inner {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
 }
-.device_name{
+.device_name {
     text-align: center;
     font-size: 30px;
     height: 30px;
     margin-top: 140px;
 }
-.status{
+.status {
     text-align: center;
-    opacity:0.6;
+    opacity: 0.6;
     height: 30px;
     margin-top: 20px;
 }
-.current_temp{
+.current_temp {
     text-align: center;
     margin-top: 30px;
-    strong{
+    strong {
         font-size: 144px;
         font-weight: normal;
         line-height: 1.2;
     }
-    small{
+    small {
         font-size: 28px;
     }
-    p{
-        opacity:0.6;
+    p {
+        opacity: 0.6;
     }
 }
-.set_temp{
+.set_temp {
     text-align: center;
     height: 160px;
     width: 1200px;
     margin: 70px auto 0;
     position: relative;
-    p{
-        span{opacity: .6;}
+    p {
+        span {
+            opacity: 0.6;
+        }
         margin-bottom: 44px;
     }
-    .slider{
-        span{
+    .slider {
+        span {
             position: absolute;
             width: 50px;
             text-align: center;
             padding-top: 30px;
-            color: rgba(0,0,0,.4);
-            &:before{
+            color: rgba(0, 0, 0, 0.4);
+            &:before {
                 content: "";
                 width: 15px;
                 height: 15px;
@@ -177,224 +180,227 @@ a{
                 border-radius: 100%;
             }
         }
-        .min{
+        .min {
             left: -25px;
         }
-        .max{
+        .max {
             right: -25px;
         }
     }
 }
-.btns{
+.btns {
     display: flex;
     justify-content: center;
-    .btn{
+    .btn {
         margin: 0 48px;
     }
 }
-.btn{
+.btn {
     text-align: center;
-    i{
+    i {
         display: inline-block;
         width: 144px;
         height: 144px;
         background-size: 100% 100%;
         background-repeat: no-repeat;
     }
-    span{
+    span {
         display: block;
         line-height: 2;
-        opacity: .5;
+        opacity: 0.5;
     }
-    &:active span{
-        opacity: .45;
+    &:active span {
+        opacity: 0.45;
     }
-    &.active span{
+    &.active span {
         opacity: 1;
     }
-    &.disabled{
-        opacity: .6;
+    &.disabled {
+        opacity: 0.6;
     }
 }
-.btn-add{
+.btn-add {
     position: absolute;
     top: 40px;
     right: -130px;
-    i{
+    i {
         background-image: url(./assets/icon_heater_increase.png);
         width: 80px;
         height: 80px;
     }
-    &:active{
-        opacity: .8;
+    &:active {
+        opacity: 0.8;
     }
-    &.disabled{
-        opacity: .5;
+    &.disabled {
+        opacity: 0.5;
     }
 }
-.btn-reduce{
+.btn-reduce {
     position: absolute;
     top: 40px;
     left: -130px;
-    i{
+    i {
         background-image: url(./assets/icon_heater_subtract.png);
         width: 80px;
         height: 80px;
     }
-    &:active{
-        opacity: .8;
+    &:active {
+        opacity: 0.8;
     }
-    &.disabled{
-        opacity: .5;
+    &.disabled {
+        opacity: 0.5;
     }
 }
-.btn-turnon{
-    i{
+.btn-turnon {
+    i {
         background-image: url(./assets/washer_btn_poweron_normal.png);
     }
-    &:active i{
+    &:active i {
         background-image: url(./assets/washer_btn_poweron_pressed.png);
     }
 }
-.btn-shut{
-    i{
+.btn-shut {
+    i {
         background-image: url(./assets/washer_btn_poweroff_normal.png);
     }
-    &:active i{
+    &:active i {
         background-image: url(./assets/washer_btn_poweroff_pressed.png);
     }
 }
-.btn-heating_half{
-    i{
+.btn-heating_half {
+    i {
         background-image: url(./assets/btn_heating_half.png);
     }
-    &:active i{
+    &:active i {
         background-image: url(./assets/btn_heating_half_pressed.png);
     }
-    &.active i{
+    &.active i {
         background-image: url(./assets/btn_heating_half_selected.png);
     }
 }
-.btn-heating_whole{
-    i{
+.btn-heating_whole {
+    i {
         background-image: url(./assets/btn_heating_whole.png);
     }
-    &:active i{
+    &:active i {
         background-image: url(./assets/btn_heating_whole_pressed.png);
     }
-    &.active i{
+    &.active i {
         background-image: url(./assets/btn_heating_whole_selected.png);
     }
 }
-.btn-heating_append{
-    i{
+.btn-heating_append {
+    i {
         background-image: url(./assets/btn_heating_append.png);
     }
-    &:active i{
+    &:active i {
         background-image: url(./assets/btn_heating_append_pressed.png);
     }
-    &.active i{
+    &.active i {
         background-image: url(./assets/btn_heating_append_selected.png);
     }
 }
-.btn-intelligentbath{
-    i{
+.btn-intelligentbath {
+    i {
         background-image: url(./assets/btn_intelligentbath.png);
     }
-    &:active i{
+    &:active i {
         background-image: url(./assets/btn_intelligentbath_pressed.png);
     }
-    &.active i{
+    &.active i {
         background-image: url(./assets/btn_intelligentbath_selected.png);
     }
 }
-.ani{
+.ani {
     position: absolute;
     width: 100%;
     height: 100%;
     left: 0;
     top: 0;
 }
-.bubble{
+.bubble {
     position: absolute;
     left: 0;
     top: 0;
-    background:rgba(255,255,255,0.1);
-    width:62px;
-    height:62px;
-    border-radius:100%;
+    background: rgba(255, 255, 255, 0.1);
+    width: 62px;
+    height: 62px;
+    border-radius: 100%;
     transition: all 20s;
     transform: translateX(-50%);
 }
 
 .alert-wraper {
-  position: fixed;
-  left: 0;
-  width: 100%;
-  top: 96px;
-  .alert {
-    background: rgba(51, 51, 51, 0.75);
+    position: fixed;
+    left: 0;
     width: 100%;
-    height: 84px;
-    line-height: 84px;
-    text-align: center;
-    color: #fff;
-    font-size: 30px;
-    margin-bottom: 4px;
-    i {
-      display: inline-block;
-      width: 34px;
-      height: 34px;
-      background: url(./assets/icn_notice_white_s.png) no-repeat;
-      background-size: 34px;
-      margin-right: 13px;
-      vertical-align: text-bottom;
+    top: 96px;
+    .alert {
+        background: rgba(51, 51, 51, 0.75);
+        width: 100%;
+        height: 84px;
+        line-height: 84px;
+        text-align: center;
+        color: #fff;
+        font-size: 30px;
+        margin-bottom: 4px;
+        i {
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            background: url(./assets/icn_notice_white_s.png) no-repeat;
+            background-size: 34px;
+            margin-right: 13px;
+            vertical-align: text-bottom;
+        }
+        .close {
+            float: right;
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: url(./assets/btn_close_white_normal.png) no-repeat;
+            background-size: 30px;
+            margin-top: 27px;
+            margin-right: 26px;
+            &:active {
+                background-image: url(./assets/btn_close_pressed.png);
+            }
+        }
+        &.warn {
+            background: rgba(242, 97, 97, 0.9);
+        }
     }
-    .close {
-      float: right;
-      display: inline-block;
-      width: 30px;
-      height: 30px;
-      background: url(./assets/btn_close_white_normal.png) no-repeat;
-      background-size: 30px;
-      margin-top: 27px;
-      margin-right: 26px;
-      &:active {
-        background-image: url(./assets/btn_close_pressed.png);
-      }
-    }
-    &.warn {
-      background: rgba(242, 97, 97, 0.9);
-    }
-  }
 }
 </style>
 
 <script>
-import Slider from './components/Slider.vue'
+import Slider from "./components/Slider.vue";
 
-const [TEMP_MIN, TEMP_MAX] = [30, 75]
+const [TEMP_MIN, TEMP_MAX] = [30, 75];
 
-function createBubble(container, option){
+function createBubble(container, option) {
+    if (!container) return;
 
-    if(!container) return
+    var el = document.createElement("div");
+    el.className = "bubble";
+    el.style.left = option.left + "px";
+    el.style.top = option.top + "px";
+    el.style.width = el.style.height = "50px";
 
-    var el = document.createElement('div')
-    el.className = 'bubble'
-    el.style.left = option.left + 'px'
-    el.style.top = option.top + 'px'
-    el.style.width = el.style.height = '50px'
+    container.appendChild(el);
 
-    container.appendChild(el)
-
-    el.addEventListener('transitionend', function() {
-        container.removeChild(container.firstChild)
-    }, false)
+    el.addEventListener(
+        "transitionend",
+        function() {
+            container.removeChild(container.firstChild);
+        },
+        false
+    );
 
     setTimeout(function() {
-        el.style.top = '-200px'
-        el.style.width = el.style.height = '100px'
-    }, 100)
+        el.style.top = "-200px";
+        el.style.width = el.style.height = "100px";
+    }, 100);
 }
 
 export default {
@@ -413,131 +419,175 @@ export default {
                     max: TEMP_MAX
                 }
             },
-            device_name: ''
-        }
+            device_name: ""
+        };
     },
     computed: {
         statusText() {
-            switch(this.model.heat_status) {
-                case 'heat':
-                    return '正在加热'
-                case 'keep_warm':
-                    return '保温'
-                case 'reserve':
-                    return '预约'
+            switch (this.model.heat_status) {
+                case "heat":
+                    return "正在加热";
+                case "keep_warm":
+                    return "保温";
+                case "reserve":
+                    return "预约";
                 default:
-                    return ''
+                    return "";
             }
         },
         tempDisabled() {
-            return this.model.mode == 'max_volume'
+            return this.model.mode == "max_volume";
         },
         errorText() {
-            switch(this.model.fault){
-                case 'normal': return '正常'
-                case 'dry_heat': return '热水器干烧，请检查设备'
-                case 'sensor_error': return '热水器传感器故障，请检查设备'
-                case 'over_temperature': return '热水器超温，请检查设备'
-                default: return '热水器故障，请检查设备'
+            switch (this.model.fault) {
+                case "normal":
+                    return "正常";
+                case "dry_heat":
+                    return "热水器干烧，请检查设备";
+                case "sensor_error":
+                    return "热水器传感器故障，请检查设备";
+                case "over_temperature":
+                    return "热水器超温，请检查设备";
+                default:
+                    return "热水器故障，请检查设备";
             }
         }
     },
     watch: {
-        'model.set_temperature'(val) {
-
-        }
+        "model.set_temperature"(val) {}
     },
     methods: {
         controlDevice(attr, value) {
-
-            if(this.model.fault && this.model.fault != 'normal'){
-                HdSmart.UI.toast(this.errorText)
-                return
+            if (this.model.fault && this.model.fault != "normal") {
+                HdSmart.UI.toast(this.errorText);
+                return;
+            }
+            //切换模式的时候加上温度字段
+            let temperature = {};
+            if (attr === "mode") {
+                let oldVal = this.getOldTemperature(value);
+                temperature = oldVal ? { set_temperature: oldVal } : {};
             }
 
-            HdSmart.Device.control({
-                nodeid: `water_heater.main.${attr}`,
-                params: {
-                    attribute: {
-                        [attr]: value
+            HdSmart.Device.control(
+                {
+                    nodeid: `water_heater.main.${
+                        attr === "mode" ? "custom" : attr
+                    }`,
+                    params: {
+                        attribute: {
+                            [attr]: value,
+                            ...temperature
+                        }
                     }
-                }
-            }, () => {
-            }, () => {
-            })
+                },
+                () => {},
+                () => {}
+            );
         },
         setTempUp() {
-            if(this.tempDisabled){
-                return
+            if (this.tempDisabled) {
+                return;
             }
-            if(this.temp < TEMP_MAX){
-                this.temp++
+            if (this.temp < TEMP_MAX) {
+                this.temp++;
             }
         },
         setTempDown() {
-            if(this.tempDisabled){
-                return
+            if (this.tempDisabled) {
+                return;
             }
-            if(this.temp > TEMP_MIN){
-                this.temp--
+            if (this.temp > TEMP_MIN) {
+                this.temp--;
             }
         },
         onTempChange(val) {
-            if(val == this.model.set_temperature){
-                return
+            if (val == this.model.set_temperature) {
+                return;
             }
 
-            this.controlDevice('set_temperature', val, () =>{
-            }, () =>{
-                this.temp = this.model.set_temperature
-            })
+            //缓存设置的温度到本地
+            this.setOldTemperature(val);
+            this.controlDevice(
+                "set_temperature",
+                val,
+                () => {},
+                () => {
+                    this.temp = this.model.set_temperature;
+                }
+            );
         },
         setSwitch(val) {
-            this.controlDevice('switch', val)
+            this.controlDevice("switch", val);
         },
         setMode(val) {
-            this.$refs.tempSlider.isUpdating = false
-            this.controlDevice('mode', val)
+            this.$refs.tempSlider.isUpdating = false;
+            this.controlDevice("mode", val);
         },
         getSnapShot() {
-            HdSmart.Device.getSnapShot((data) => {
-                this.onSuccess(data)
-            })
+            HdSmart.Device.getSnapShot(data => {
+                this.onSuccess(data);
+                //初始化缓存温度
+                this.setOldTemperature(this.model.set_temperature);
+            });
         },
         onSuccess(data) {
-            this.model = data.attribute
-            if(!this.$refs.tempSlider.isUpdating){
-                this.temp = this.model.set_temperature
+            this.model = data.attribute;
+            if (!this.$refs.tempSlider.isUpdating) {
+                this.temp = this.model.set_temperature;
             }
-            HdSmart.UI.hideLoading()
+            HdSmart.UI.hideLoading();
+        },
+        //从本地缓存中获取温度数据
+        getOldTemperature(mode) {
+            return (window.device_uuid && this.getCurrentStorage()[mode]) || 0;
+        },
+        //获取当前device_uuid的缓存object
+        getCurrentStorage() {
+            return (
+                (localStorage.getItem(window.device_uuid) &&
+                    JSON.parse(localStorage.getItem(window.device_uuid))) ||
+                {}
+            );
+        },
+        setOldTemperature(val) {
+            if (this.model.mode && window.device_uuid) {
+                localStorage.setItem(
+                    window.device_uuid,
+                    JSON.stringify(
+                        Object.assign(this.getCurrentStorage() || {}, {
+                            [this.model.mode]: val
+                        })
+                    )
+                );
+            }
         }
     },
     created() {
         HdSmart.ready(() => {
-
-            if(window.device_name){
-                this.device_name = window.device_name
+            if (window.device_name) {
+                this.device_name = window.device_name;
             }
 
-            this.getSnapShot()
-        })
+            this.getSnapShot();
+        });
 
-        HdSmart.onDeviceStateChange((data) => {
-            this.onSuccess(data.result)
-        })
+        HdSmart.onDeviceStateChange(data => {
+            this.onSuccess(data.result);
+        });
     },
     mounted() {
-        var el = this.$el.querySelector('.ani')
-        var top = document.documentElement.offsetHeight
-        var width = document.documentElement.offsetWidth
-        setInterval(()=> {
-            if(this.model.switch == 'on'){
+        var el = this.$el.querySelector(".ani");
+        var top = document.documentElement.offsetHeight;
+        var width = document.documentElement.offsetWidth;
+        setInterval(() => {
+            if (this.model.switch == "on") {
                 createBubble(el, {
                     left: Math.random() * width,
                     top: top
-                })
+                });
             }
-        }, 1500)
+        }, 1500);
     }
-}
+};
 </script>
