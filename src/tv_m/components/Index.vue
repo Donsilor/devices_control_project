@@ -5,7 +5,8 @@
 <div class="page-index">
     <!-- <div class="page-header"></div>
     <div class="page-body"> -->
-    <div class="status-tip-placeholder" v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"></div>
+    <div class="device_name">{{$store.state.device_name}}</div>
+    <!-- <div class="status-tip-placeholder" v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"></div> -->
     <status-tip class="sp_status_home" />
     <router-link to="/search" class="search">输入片名、导演、演员搜索</router-link>
 
@@ -13,13 +14,12 @@
         <div v-if="homePageInfo.length === 0" @click="pageInit">
             <img src="../assets/img_default_recommend.png">
         </div>
-        <swiper v-if="homePageInfo.length > 0" :options="swiperOption" ref="swiper">
+        <swiper v-if="homePageInfo.length" :options="swiperOption" ref="swiper">
             <swiper-slide
                 v-for="item in homePageInfo"
                 :key="item.vid">
-                <a href="#"
-                    :style="{backgroundImage:'url('+item.pictureUrl+')'}"
-                    @click.prevent="showDetailInfo(item)">
+                <a href="javascript:void(0)"
+                    :style="{backgroundImage:'url('+item.pictureUrl+')'}">
                     <span class="title">{{item.title}}</span>
                 </a>
             </swiper-slide>
@@ -83,6 +83,11 @@
         height: 100%;
         padding-bottom: 120px;
         overflow-y: auto;
+    }
+    .device_name{
+        text-align: center;
+        font-size: 32px;
+        padding: 30px 0 20px;
     }
     .search{
         background:#ffffff  url(../assets/icn_topbar_search_pressed@2x.png) no-repeat 25px center;
@@ -246,15 +251,31 @@
 
     export default {
         data() {
+            let self = this
             return {
                 channelId: '',
                 vid: '',
                 swiperOption: {
-                    autoplay: 2000,
                     loop: true,
-                    autoplayDisableOnInteraction: false,
-                    pagination: '.swiper-pagination',
-                    //lazyLoading: true
+                    autoplay: {
+                        delay: 2000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination'
+                    },
+                    on: {
+                        tap() {
+                            let i = this.clickedIndex - 1
+                            let len = self.homePageInfo.length
+                            if(i == -1){
+                                i = len - 1
+                            }else if(i == len){
+                                i = 0
+                            }
+                            self.showDetailInfo(self.homePageInfo[i])
+                        }
+                    }
                 },
                 homePageInfo: [],
                 ...service.getInitData()
@@ -269,10 +290,10 @@
            detailVisible(visible) {
                if(visible){
                     HdSmart.UI.toggleHeadAndFoot(false)
-                    this.$refs.swiper.swiper.stopAutoplay()
+                    this.$refs.swiper.swiper.autoplay.stop()
                }else{
                     HdSmart.UI.toggleHeadAndFoot(true)
-                    this.$refs.swiper.swiper.startAutoplay()
+                    this.$refs.swiper.swiper.autoplay.start()
                }
            }
         },

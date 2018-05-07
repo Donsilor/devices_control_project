@@ -8,6 +8,7 @@ import Vuex from 'vuex'
 import FastClick from 'fastclick'
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
 import VueLazyload from 'vue-lazyload'
 
 import App from './App.vue'
@@ -50,7 +51,7 @@ const store = new Vuex.Store({
         activeDetail: {},
         device_name: '',
         tvStatus: {
-            tvOnlineStatus: -1,
+            tvOnlineStatus: 1,
             screenProjectType: 0,
             screenProjectTitle: ''
         }

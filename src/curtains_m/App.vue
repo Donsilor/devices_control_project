@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <div class="device_name">{{device_name}}</div>
         <div class="tip" v-if="show && tip">{{tip}}</div>
         <navigator class="navigator" v-once></navigator>
         <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"></curtain>
@@ -31,7 +32,7 @@
     }
 
     .navigator {
-        margin: 252px auto 0 auto;
+        margin: 270px auto 0 auto;
     }
 
     .curtain {
@@ -41,13 +42,23 @@
     .tip {
         position: absolute;
         left: 0;
-        top: 180px;
+        top: 210px;
         width: 100%;
         text-align: center;
         font-size: 28px;
         line-height: 24px;
         color: #ffffff;
         font-family: NotoSansHans-DemiLight;
+    }
+    .device_name{
+        position: absolute;
+        left: 0;
+        top: 160px;
+        width: 100%;
+        text-align: center;
+        text-align: center;
+        color:#fff;
+        font-size: 30px;
     }
 </style>
 <script>
@@ -79,11 +90,14 @@
                 // show_active_btn: false,
                 //临时处理窗帘变动没有上传的问题
                 cbFunc: null,
-                test: 0
+                device_name: ''
             }
         },
         mounted() {
             HdSmart.ready(() => {
+                if(window.device_name){
+                    this.device_name = window.device_name
+                }
                 //获取快照
                 HdSmart.Device.getSnapShot((data) => {
                     HdSmart.UI.hideLoading();

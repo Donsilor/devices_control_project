@@ -16,9 +16,8 @@
                         <swiper-slide
                             v-for="item in homePageInfo"
                             :key="item.vid">
-                            <a href="#"
-                               :style="{backgroundImage:'url('+item.pictureUrl+')'}"
-                               @click.prevent="showDetailInfo(item)">
+                            <a href="javascript:void(0)"
+                               :style="{backgroundImage:'url('+item.pictureUrl+')'}">
                                 <span class="title">{{item.title}}</span>
                             </a>
                         </swiper-slide>
@@ -306,18 +305,33 @@
     let infoCache = []
     export default {
         data() {
+            let self = this
             return {
                 timeOutEventUp: 0,
                 timeOutEventDown: 0,
                 channelId: '',
                 vid: '',
                 swiperOption: {
-                    autoplay: 3000,
                     loop: true,
-                    paginationClickable :true,
-                    autoplayDisableOnInteraction: false,
-                    pagination: '.swiper-pagination',
-                    lazyLoading: true
+                    autoplay: {
+                        delay: 2000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination'
+                    },
+                    on: {
+                        tap() {
+                            let i = this.clickedIndex - 1
+                            let len = self.homePageInfo.length
+                            if(i == -1){
+                                i = len - 1
+                            }else if(i == len){
+                                i = 0
+                            }
+                            self.showDetailInfo(self.homePageInfo[i])
+                        }
+                    }
                 },
                 homePageInfo: [],
                 "channels_1": [
@@ -352,10 +366,10 @@
            detailVisible(visible) {
                if(visible){
                     HdSmart.UI.toggleHeadAndFoot(false)
-                    this.$refs.swiper.swiper.stopAutoplay()
+                    this.$refs.swiper.swiper.autoplay.stop()
                }else{
                     HdSmart.UI.toggleHeadAndFoot(true)
-                    this.$refs.swiper.swiper.startAutoplay()
+                    this.$refs.swiper.swiper.autoplay.start()
                }
            }
         },
