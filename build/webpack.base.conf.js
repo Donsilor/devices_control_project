@@ -50,7 +50,7 @@ module.exports = {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
                 options: {
-                    limit: 8000,
+                    limit: 1,  // 页面内置到APP，没必要减少请求数，反而会增加代码大小
                     name: isProduction ? 'images/[name].[hash:7].[ext]' : utils.assetsPath(`images/[name].[hash:7].[ext]`)
                 }
             },

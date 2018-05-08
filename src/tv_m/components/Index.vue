@@ -5,7 +5,7 @@
 <div class="page-index">
     <!-- <div class="page-header"></div>
     <div class="page-body"> -->
-    <div class="device_name">{{$store.state.device_name}}</div>
+    <div class="device_name" v-if="$store.state.device_name">{{$store.state.device_name}}</div>
     <!-- <div class="status-tip-placeholder" v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"></div> -->
     <status-tip class="sp_status_home" />
     <router-link to="/search" class="search">输入片名、导演、演员搜索</router-link>
@@ -97,7 +97,7 @@
         width:702px;
         height:64px;
         line-height: 64px;
-        margin: 12px auto 24px;
+        margin: 24px auto 24px;
         display: block;
         font-size:32px;
         color:#c8cacc;

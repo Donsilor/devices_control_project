@@ -111,6 +111,7 @@ let thaf_timer
 //app jsbridge ready
 HdSmart.ready(() => {
   //HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
+  HdSmart.UI.showLoading()
 
   if(!is_ready){
 

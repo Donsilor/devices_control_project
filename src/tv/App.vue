@@ -58,3 +58,12 @@
         padding-bottom: 360px;
     }
 </style>
+
+<script>
+export default {
+  mounted() {
+    HdSmart.UI.hideLoading()
+  }
+}
+</script>
+

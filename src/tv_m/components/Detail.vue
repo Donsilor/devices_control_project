@@ -8,7 +8,7 @@
             <span class="back" @click="close"></span>
             <div class="title">
                 {{loading?'正在加载中...':cur.title}}
-                <!-- <span class="isvip" v-show="!loading && ispay && ispay !== '1'">付费</span> -->
+                <span class="isvip" v-show="!loading && ispay && ispay !== '1'">付费</span>
             </div>
         </div>
         <status-tip class="sp_status_detail" />
@@ -143,6 +143,18 @@
         // top: 0;
         // left: 0;
         // z-index: 9;
+        .isvip{
+            background: #f26161;
+            width: 60px;
+            line-height: 32px;
+            border-radius:3px;
+            font-size:24px;
+            text-align: center;
+            color:#fff;
+            opacity:0.9;
+            display: inline-block;
+            vertical-align:4px;
+        }
         .back{
             width: 100px;
             height: 124px;
