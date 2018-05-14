@@ -282,6 +282,8 @@ export default {
             this.loading = true;
             HdSmart.Device.getSnapShot(
                 data => {
+                    this.loading = false;
+                    HdSmart.UI.hideLoading();
                     this.onSuccess(data);
                 },
                 () => {
@@ -293,8 +295,6 @@ export default {
         },
         onSuccess(data) {
             if (data && data.attribute) {
-                this.loading = false;
-                HdSmart.UI.hideLoading();
                 //设备故障
                 if (data.attribute.operation == "abnormal") {
                     this.onError();

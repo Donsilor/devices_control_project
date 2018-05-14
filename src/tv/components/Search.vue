@@ -297,6 +297,7 @@
                 // if(this.word === '' && this.curpage === 2){
                 if(this.word === ''){
                     this.curpage = 1
+                    this.getHistory()
                 }
             },
             loadState(val) {
@@ -423,16 +424,22 @@
             },
             getThumbPic(pic) {
                 return pic.replace('.jpg','_y.jpg')
+            },
+            getHistory() {
+                service.getSearchHistory((err, data)=>{
+                    if(err) return
+                    this.historyData = data.data
+                })
             }
         },
         mounted() {
-            service.getSearchHistory((err, data)=>{
-                if(err) return
-                this.historyData = data.data
-            })
-            setTimeout(()=>{
+
+            this.getHistory()
+
+            setTimeout(() => {
                 this.$el.querySelector('.search_input input').focus()
-            },500)
+            }, 500)
+
             window.addEventListener('scroll',this.loadMore)
             this.$Lazyload.$on('error',function({el, src, loading}){
                 el.src = el.dataset.src1

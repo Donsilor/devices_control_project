@@ -6,6 +6,8 @@ import * as mockData from './mock';
 
 if (location.search.indexOf('env=desktop') != -1) {
 
+    window.device_name = '电视'
+
     window.tvInitData = mockData.getInitData()
 
     on(apiList.util_dispatchevent, function(data, callback){
