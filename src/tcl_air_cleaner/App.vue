@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-    <div class="page-on" v-if="status == 'success' && model.switch_status == 'on'">
+    <div class="page-on" v-if="status == 'error' || model.switch_status == 'on'">
         <div class="name">{{device_name}}</div>
         <div class="tip">
             <p v-show="tip">{{tip}}</p>
@@ -64,7 +64,7 @@
 
     </div>
 
-    <div class="page-off" v-if="status == 'success' && model.switch_status == 'off'">
+    <div class="page-off" v-if="model.switch_status == 'off'">
         <div class="name">{{device_name}}</div>
         <div class="tip">已关闭</div>
         <div class="air_cleaner"></div>
@@ -81,7 +81,7 @@
         </div>
     </div>
 
-    <error-tip v-if="status == 'error'" @click.native="getSnapShot" />
+    <!-- <error-tip v-if="status == 'error'" @click.native="getSnapShot" /> -->
 </div>
 </template>
 
@@ -777,9 +777,7 @@ export default {
             })
         },
         onSuccess(data) {
-            if(!data) return
             this.status = 'success'
-
             this.model = data.attribute
 
             if(this.model.filter_time_remaining <=0){

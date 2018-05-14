@@ -6,6 +6,9 @@ import {apiList} from '../app/constant'
 import * as mockData from './mock';
 
 if (location.search.indexOf('env=desktop') != -1) {
+
+    window.device_name = '智能晾衣架'
+
     on(apiList.device_getsnapshot, function(data, done){
         done(mockData.generateSnapShot())
     })

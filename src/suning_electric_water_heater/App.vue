@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-    <div class="page-on" v-show="model.switch=='on'">
+    <div class="page-on" v-show="status =='error' || model.switch=='on'">
         <div class="ani"></div>
         <div class="inner">
             <div class="device_name">{{device_name}}</div>
@@ -419,7 +419,8 @@ export default {
                     max: TEMP_MAX
                 }
             },
-            device_name: ""
+            device_name: "",
+            status: ''
         };
     },
     computed: {
@@ -508,14 +509,7 @@ export default {
 
             //缓存设置的温度到本地
             this.setOldTemperature(val);
-            this.controlDevice(
-                "set_temperature",
-                val,
-                () => {},
-                () => {
-                    this.temp = this.model.set_temperature;
-                }
-            );
+            this.controlDevice("set_temperature", val);
         },
         setSwitch(val) {
             this.controlDevice("switch", val);
@@ -526,17 +520,21 @@ export default {
         },
         getSnapShot() {
             HdSmart.Device.getSnapShot(data => {
+                HdSmart.UI.hideLoading();
                 this.onSuccess(data);
                 //初始化缓存温度
                 this.setOldTemperature(this.model.set_temperature);
+            }, () => {
+                this.status = 'error'
+                HdSmart.UI.hideLoading();
             });
         },
         onSuccess(data) {
+            this.status = 'success'
             this.model = data.attribute;
             if (!this.$refs.tempSlider.isUpdating) {
                 this.temp = this.model.set_temperature;
             }
-            HdSmart.UI.hideLoading();
         },
         //从本地缓存中获取温度数据
         getOldTemperature(mode) {

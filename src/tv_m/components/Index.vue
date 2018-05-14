@@ -3,8 +3,8 @@
 -->
 <template>
 <div class="page-index">
-    <!-- <div class="page-header"></div>
-    <div class="page-body"> -->
+    <div class="page-header"></div>
+    <!-- <div class="page-body"> -->
     <div class="device_name" v-if="$store.state.device_name">{{$store.state.device_name}}</div>
     <!-- <div class="status-tip-placeholder" v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"></div> -->
     <status-tip class="sp_status_home" />
@@ -64,6 +64,7 @@
     .page-index{
         background:#fafafa;
         padding-top: 116px;
+        padding-bottom: 120px;
         // position: fixed;
         // left: 0;
         // top: 116px;
@@ -74,10 +75,19 @@
         // overflow-x: hidden;
     }
     .page-header{
+        width: 100%;
+        z-index: 999;
         height: 116px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        background:#fafafa;
     }
     .isIOS .page-index{
         padding-top: 0;
+    }
+    .isIOS .page-header {
+        display: none;
     }
     .page-body{
         height: 100%;
