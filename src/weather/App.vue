@@ -1,5 +1,15 @@
 <template>
     <div id="app" :class="todyClass">
+        <!--城市切换-->
+        <template v-if="showSwitchCity">
+            <switchCity></switchCity>
+        </template>
+        <!--城市切换-->
+        <template v-else>
+            <span class="switch" @click="showSwitchCity=true">
+                <span class="s-icon"></span>
+                <span class="s-text">城市切换</span>
+            </span>
         <div class="title">{{currentDate}}&nbsp;&nbsp;{{currentWeek}}&nbsp;&nbsp;{{currentOldDay}}</div>
         <template v-if="success">
         <div class="city">
@@ -30,6 +40,7 @@
                 <div class="icon"></div>
                 <div class="msg">无法连接网络，请检查网络后 <span>点击屏幕刷新</span></div>
             </div>
+        </template>
         </template>
     </div>
 </template>
@@ -65,7 +76,9 @@ export default {
                 { name: "周四", value: 4 },
                 { name: "周五", value: 5 },
                 { name: "周六", value: 6 }
-            ]
+            ],
+
+            showSwitchCity: true
         };
     },
     mounted() {
@@ -489,6 +502,32 @@ body {
         span {
             color: #fff;
         }
+    }
+}
+
+/*
+切换城市
+*/
+.switch {
+    position: absolute;
+    top: 33px;
+    right: 24px;
+    line-height: 36px;
+    width: 168px;
+    height: 36px;
+    cursor: pointer;
+    .s-icon {
+        width: 36px;
+        height: 36px;
+        display: inline-block;
+        background-image: url(./assets/icn_switch.png);
+    }
+    .s-text {
+        display: inline-block;
+        width: 120px;
+        height: 36px;
+        font-size: 25px;
+        line-height: 36px;
     }
 }
 </style>
