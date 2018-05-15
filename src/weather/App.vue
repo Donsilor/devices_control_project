@@ -2,7 +2,7 @@
     <div id="app" :class="todyClass">
         <!--城市切换-->
         <template v-if="showSwitchCity">
-            <switchCity></switchCity>
+            <switchCity @hideswitch="hideSwitchCity" :getCityWeather="getCityWeather"></switchCity>
         </template>
         <!--城市切换-->
         <template v-else>
@@ -78,7 +78,7 @@ export default {
                 { name: "周六", value: 6 }
             ],
 
-            showSwitchCity: true
+            showSwitchCity: false
         };
     },
     mounted() {
@@ -272,6 +272,13 @@ export default {
                     HdSmart.UI.hideLoading();
                 }
             );
+        },
+        hideSwitchCity() {
+            this.showSwitchCity = false;
+        },
+        getCityWeather() {
+            //TODO
+            console.log("getcityweather");
         }
     }
 };
