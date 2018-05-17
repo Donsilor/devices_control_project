@@ -20,7 +20,7 @@
             
                 <div class="hot-city-text">热门城市</div>
                 <div class="city-list">
-                    <span @click="getWeather" class="sc-hot-city">北京</span>
+                    <span v-for="(item, index) in hotCities" :key="index" @click="getWeather" class="sc-hot-city">{{item.name}}</span>
                 </div>
             
             
@@ -43,9 +43,14 @@
 
             <div class="alpha-filter">
                 <div class="filter-hot-text">热门</div>
-                <div @touchmove.prevent="jump">
+                <div @touchmove.prevent="jump" @touchend.prevent="finishFiler">
                 <template v-for="(char, index) in chars">
-                    <div :key="index" class="alpha-filter-char">{{char}}</div>
+                    <div :key="index" class="filter-char-box" >
+                        <span v-if="current_filterchar == char" class="scale-char">
+                            <span class="scale-char-text">{{current_filterchar}}</span>
+                        </span>
+                    <div :class="`alpha-filter-char ${current_filterchar == char ? `active-filter-char` : ``}`">{{char}}</div>
+                    </div>
                 </template>
                 </div>
             </div>
@@ -86,6 +91,51 @@ const CHARS = [
     "X",
     "Y",
     "Z"
+];
+
+const HOTCITIES = [
+    {
+        name: "北京"
+    },
+    {
+        name: "上海"
+    },
+    {
+        name: "深圳"
+    },
+    {
+        name: "郑州"
+    },
+    {
+        name: "南京"
+    },
+    {
+        name: "无锡"
+    },
+    {
+        name: "成都"
+    },
+    {
+        name: "广州"
+    },
+    {
+        name: "天津"
+    },
+    {
+        name: "杭州"
+    },
+    {
+        name: "台北"
+    },
+    {
+        name: "宁波"
+    },
+    {
+        name: "武汉"
+    },
+    {
+        name: "乌鲁木齐"
+    }
 ];
 const ALPHA_CITIES = [
     {
@@ -220,12 +270,7 @@ const ALPHA_CITIES = [
         name: "内蒙古自治区"
     }
 ];
-// const ALPHA_CITIES = [
-//     { text: "阿尔山" },
-//     { text: "阿里" },
-//     { text: "阿三" },
-//     { text: "阿里巴巴" }
-// ];
+
 export default {
     data() {
         return {
@@ -234,7 +279,9 @@ export default {
             userinput: "",
             filteredAlphaCityList: [],
             alphaCityList: [],
-            charScale: false
+            current_filterchar: ``,
+            charScale: false,
+            hotCities: []
         };
     },
     mounted() {
@@ -244,6 +291,7 @@ export default {
         this.alphaCityList = this.filteredAlphaCityList = this.groupByAlpha(
             ALPHA_CITIES
         );
+        this.hotCities = HOTCITIES;
     },
 
     props: ["getCityWeather"],
@@ -263,9 +311,17 @@ export default {
         //用户过滤
         alphafilter(val) {
             if (val == "") this.filteredAlphaCityList = this.alphaCityList;
-            this.filteredAlphaCityList = this.alphaCityList.filter(city =>
-                city.text.includes(val)
-            );
+            this.filteredAlphaCityList = this.alphaCityList
+                .map(city => {
+                    let newItem = Object.assign({}, city, {
+                        list: city.list.filter(item => item.name.includes(val))
+                    });
+                    if (!newItem.list.length) {
+                        return null;
+                    }
+                    return newItem;
+                })
+                .filter(x => x);
         },
         getWeather(city_id) {
             this.getCityWeather(city_id);
@@ -282,10 +338,11 @@ export default {
                     fromel &&
                     fromel.className.indexOf("alpha-filter-char") !== -1
                 ) {
+                    this.current_filterchar = `${fromel.innerHTML}`;
                     let toel = document.querySelector(
                         `.alpha-city-list #${fromel.innerHTML}`
                     );
-                    console.log("toel", toel);
+                    // console.log("toel", toel);
                     if (toel) {
                         toel.scrollIntoView();
                     }
@@ -319,6 +376,9 @@ export default {
             });
             // console.log(res);
             return res;
+        },
+        finishFiler() {
+            this.current_filterchar = "";
         }
     }
 };
@@ -326,6 +386,7 @@ export default {
 <style lang="less">
 .scbody {
     font-size: 30px;
+    font-family: NotoSansHans-Regular;
 }
 .nav {
     height: 96px;
@@ -333,12 +394,12 @@ export default {
     .back {
         position: absolute;
         top: 30px;
-        left: 24px;
+        left: 70px;
         cursor: pointer;
-        width: 36px;
-        height: 36px;
+        width: 54px;
+        height: 54px;
         display: inline-block;
-        background-image: url(../assets/icn_topbar_arrowdown_w_normal.png);
+        background: url(../assets/icn_topbar_arrowdown_w_normal.png);
     }
 
     .text {
@@ -353,25 +414,31 @@ export default {
     position: relative;
     height: 72px;
     width: 1809px;
-    margin: 11px 0 0 0px;
+    margin: 11px 0 0 48px;
     background-color: white;
     input {
         display: inline-block;
         height: 72px;
         width: 1739px;
-        margin-left: 70px;
+        margin-left: 80px;
         font-size: 30px;
         border: none;
         position: absolute;
         top: 0px;
+        padding: 0;
+        // color: #c8cacc;
+        &:focus {
+            outline: none;
+        }
     }
     .input-ico {
         position: absolute;
-        top: 19px;
+        top: 11px;
         left: 10px;
         display: inline-block;
-        width: 34px;
-        height: 34px;
+        width: 54px;
+        height: 54px;
+        background-size: 34px 34px;
         background: url("../assets/icn_topbar_search_pressed.png");
     }
 }
@@ -385,8 +452,39 @@ export default {
         font-size: 24px;
     }
     .alpha-filter-char {
-        width: 18px;
-        margin: 1px 0 0 10px;
+        text-align: center;
+        line-height: 36px;
+        vertical-align: middle;
+        width: 36px;
+        height: 36px;
+        margin: 6px 8px 0 10px;
+    }
+
+    .active-filter-char {
+        background: #ffffff;
+        color: #808080;
+        border-radius: 50%;
+    }
+
+    .filter-char-box {
+        position: relative;
+    }
+}
+
+.scale-char {
+    display: inline-block;
+    top: -53px;
+    right: 45px;
+    position: absolute;
+    height: 144px;
+    width: 144px;
+    background: url("../assets/icn_instructions.png");
+    .scale-char-text {
+        font-size: 72px;
+        color: #808080;
+        position: absolute;
+        top: 22px;
+        left: 35px;
     }
 }
 
@@ -402,6 +500,7 @@ export default {
     font-size: 30px;
     line-height: 54px;
     margin: 0px 60px 54px 0;
+    border-radius: 4px;
 }
 
 .sc-location {
@@ -410,11 +509,15 @@ export default {
         display: inline-block;
         width: 36px;
         height: 36px;
+        background-size: 36px 36px;
         background: url("../assets/icn__positioning.png");
     }
     .location-text {
+        position: absolute;
+        line-height: 36px;
+        vertical-align: middle;
         margin-left: 12px;
-        width: 270px;
+        width: 290px;
         height: 30px;
     }
 }
@@ -441,7 +544,7 @@ export default {
     width: 1815.5px;
     .alpha-title {
         font-size: 36px;
-        margin: 0 0 24px 0;
+        margin: 33px 0 24px 0;
     }
 
     .alpah-city-text {
