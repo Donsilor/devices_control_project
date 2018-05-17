@@ -208,7 +208,7 @@ export default {
             }
             return curClass;
         },
-        getWeatherData() {
+        getWeatherData(city_id) {
             let now = new Date();
             let thisDay = now.getDay();
             let curIndex = 0;
@@ -234,7 +234,7 @@ export default {
             HdSmart.Device.control(
                 {
                     method: "3d_get_moji_weather",
-                    params: {}
+                    params: { city_id }
                 },
                 res => {
                     let innerData = (res.result && res.result.data) || "";
@@ -276,8 +276,9 @@ export default {
         hideSwitchCity() {
             this.showSwitchCity = false;
         },
-        getCityWeather() {
+        getCityWeather(city_id) {
             //TODO
+            this.getWeatherData(city_id);
             console.log("getcityweather");
         }
     }
