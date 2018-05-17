@@ -20,7 +20,7 @@
             
                 <div class="hot-city-text">热门城市</div>
                 <div class="city-list">
-                    <span v-for="(item, index) in hotCities" :key="index" @click="getWeather" class="sc-hot-city">{{item.name}}</span>
+                    <span v-for="(item, index) in hotCities" :key="index" @click="getWeather(item.city_id)" class="sc-hot-city">{{item.name}}</span>
                 </div>
             
             
@@ -95,46 +95,60 @@ const CHARS = [
 
 const HOTCITIES = [
     {
-        name: "北京"
+        name: "北京",
+        city_id: "2"
     },
     {
-        name: "上海"
+        name: "上海",
+        city_id: "39"
     },
     {
-        name: "深圳"
+        name: "深圳",
+        city_id: "892"
     },
     {
-        name: "郑州"
+        name: "郑州",
+        city_id: "379"
     },
     {
-        name: "南京"
+        name: "南京",
+        city_id: "1045"
     },
     {
-        name: "无锡"
+        name: "无锡",
+        city_id: "1061"
     },
     {
-        name: "成都"
+        name: "成都",
+        city_id: "2635"
     },
     {
-        name: "广州"
+        name: "广州",
+        city_id: "886"
     },
     {
-        name: "天津"
+        name: "天津",
+        city_id: "24"
     },
     {
-        name: "杭州"
+        name: "杭州",
+        city_id: "1185"
     },
     {
-        name: "台北"
+        name: "台北",
+        city_id: "39"
     },
     {
-        name: "宁波"
+        name: "宁波",
+        city_id: "1208"
     },
     {
-        name: "武汉"
+        name: "武汉",
+        city_id: "537"
     },
     {
-        name: "乌鲁木齐"
+        name: "乌鲁木齐",
+        city_id: "2505"
     }
 ];
 const ALPHA_CITIES = [

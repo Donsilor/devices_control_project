@@ -521,7 +521,7 @@ body {
     top: 33px;
     right: 24px;
     line-height: 36px;
-    width: 168px;
+    width: 186px;
     height: 36px;
     cursor: pointer;
     .s-icon {
@@ -536,6 +536,9 @@ body {
         height: 36px;
         font-size: 25px;
         line-height: 36px;
+        position: absolute;
+        top: 10px;
+        right: 15px;
     }
 }
 </style>
