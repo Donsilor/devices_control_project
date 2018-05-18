@@ -2,7 +2,7 @@
     <div id="app" :class="todyClass">
         <!--城市切换-->
         <template v-if="showSwitchCity">
-            <switchCity @hideswitch="hideSwitchCity" :getCityWeather="getCityWeather"></switchCity>
+            <switchCity @hideswitch="hideSwitchCity" :city="city" :getCityWeather="getCityWeather"></switchCity>
         </template>
         <!--城市切换-->
         <template v-else>
@@ -83,8 +83,12 @@ export default {
     },
     mounted() {
         HdSmart.ready(() => {
+            let weathercnid = localStorage.getItem("weathercnid");
             HdSmart.UI.showLoading();
-            this.getWeatherData();
+            if (weathercnid) {
+                //走缓存
+                this.getWeatherData(weathercnid);
+            } else this.getWeatherData();
             // remoteLoad('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', false).then((result) => {
             //     if (remote_ip_info.ret === 1) {
             //         alert(remote_ip_info.city)
@@ -208,7 +212,7 @@ export default {
             }
             return curClass;
         },
-        getWeatherData(city_id) {
+        getWeatherData(weathercnid) {
             let now = new Date();
             let thisDay = now.getDay();
             let curIndex = 0;
@@ -234,7 +238,7 @@ export default {
             HdSmart.Device.control(
                 {
                     method: "3d_get_moji_weather",
-                    params: { city_id }
+                    params: { cityId: weathercnid }
                 },
                 res => {
                     let innerData = (res.result && res.result.data) || "";
@@ -263,6 +267,10 @@ export default {
                     //城市信息
                     if (innerData && innerData.city) {
                         self.city = innerData.city;
+                    } else {
+                        self.city = {
+                            name: innerData.cityName
+                        };
                     }
                     self.success = true;
                     HdSmart.UI.hideLoading();
@@ -276,9 +284,9 @@ export default {
         hideSwitchCity() {
             this.showSwitchCity = false;
         },
-        getCityWeather(city_id) {
+        getCityWeather(weathercnid) {
             //TODO
-            this.getWeatherData(city_id);
+            this.getWeatherData(weathercnid);
             console.log("getcityweather");
         }
     }
@@ -300,38 +308,39 @@ body {
 #app {
     position: absolute;
     left: 0;
-    right: 0;
     top: 0;
-    bottom: 0;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
 }
 /*多云*/
 .img_bg_weather_cloudy {
-    background: url("./assets/img_bg_weather_cloudy.png");
+    background: url("./assets/img_bg_weather_cloudy.png") no-repeat fixed;
     background-size: 100% 100%;
 }
 /*下雨*/
 .img_bg_weather_rainy {
-    background: url("./assets/img_bg_weather_rainy.png");
+    background: url("./assets/img_bg_weather_rainy.png") no-repeat fixed;
     background-size: 100% 100%;
 }
 /*下雪*/
 .img_bg_weather_snowy {
-    background: url("./assets/img_bg_weather_snowy.png");
+    background: url("./assets/img_bg_weather_snowy.png") no-repeat fixed;
     background-size: 100% 100%;
 }
 /*晴朗*/
 .img_bg_weather_sunny {
-    background: url("./assets/img_bg_weather_sunny.png");
+    background: url("./assets/img_bg_weather_sunny.png") no-repeat fixed;
     background-size: 100% 100%;
 }
 /*雷鸣*/
 .img_bg_weather_thuner {
-    background: url("./assets/img_bg_weather_thuner.png");
+    background: url("./assets/img_bg_weather_thuner.png") no-repeat fixed;
     background-size: 100% 100%;
 }
 /*刮风*/
 .img_bg_weather_wind {
-    background: url("./assets/img_bg_weather_wind.png");
+    background: url("./assets/img_bg_weather_wind.png") no-repeat fixed;
     background-size: 100% 100%;
 }
 .tip {
@@ -528,7 +537,8 @@ body {
         width: 36px;
         height: 36px;
         display: inline-block;
-        background-image: url(./assets/icn_switch.png);
+        background: url(./assets/icn_switch.png) no-repeat;
+        background-size: 100% 100%;
     }
     .s-text {
         display: inline-block;
