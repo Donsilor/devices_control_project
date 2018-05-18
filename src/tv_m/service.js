@@ -105,8 +105,8 @@ export function getSearchHistory(callback){
  * 遥控器 remoteControlEvent
  * 清除搜索历史记录 clearSearchHistory
  */
-export function onClickEvent(eventCode){
-    sendApp('onClickEvent', {eventCode})
+export function onClickEvent(eventCode, params){
+    sendApp('onClickEvent', {eventCode, ...params})
 }
 
 /**

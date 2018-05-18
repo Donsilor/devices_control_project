@@ -46,12 +46,13 @@ var docEl = document.documentElement
 
 const store = new Vuex.Store({
     state: {
+        toolbarHeight: 38.89,
         online: true,
         detailVisible: false,
         activeDetail: {},
         device_name: '',
         tvStatus: {
-            tvOnlineStatus: 1,
+            tvOnlineStatus: -1,
             screenProjectType: 0,
             screenProjectTitle: ''
         }
@@ -134,6 +135,10 @@ HdSmart.ready(() => {
   if(!is_ready){
 
     is_ready = true
+
+    HdSmart.Device.getSnapShot((data) => {
+        store.commit('setDeviceName', data.device_name)
+    })
 
     if(window.device_name){
         store.commit('setDeviceName', window.device_name)

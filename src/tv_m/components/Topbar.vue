@@ -17,8 +17,7 @@
 <style lang="less">
     .topbar{
         background: #f2f2f2;
-        // height: 88px;
-        height: 116px;
+        height: 100px;
         border-bottom: 1px solid #dbdbdb;
         position: relative;
         .left{
@@ -33,14 +32,12 @@
         }
         .title{
             text-align: center;
-            // line-height: 95px;
-            line-height: 116px;
+            line-height: 100px;
             font-size: 36px;
         }
         .icon{
             width: 84px;
-            // height: 88px;
-            height: 116px;
+            height: 100px;
             display: inline-block;
             background-repeat: no-repeat;
             background-size: 36px 36px;
@@ -59,6 +56,19 @@
             }
         }
     }
+
+    @media only screen and (-webkit-min-device-pixel-ratio: 3), only screen and (min-device-pixel-ratio: 3) {
+        .topbar{
+            height: 116px;
+            .title{
+                line-height: 116px;
+            }
+            .icon{
+                height: 116px;
+            }
+        }
+    }
+
     .isIOS .topbar{
          height: 88px;
          .title{

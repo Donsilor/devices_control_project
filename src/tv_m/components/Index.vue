@@ -65,30 +65,17 @@
         background:#fafafa;
         padding-top: 116px;
         padding-bottom: 120px;
-        // position: fixed;
-        // left: 0;
-        // top: 116px;
-        // display: flex;
-        // flex-direction: column;
-        // height: 100%;
-        // width: 100%;
-        // overflow-x: hidden;
     }
     .page-header{
         width: 100%;
         z-index: 999;
-        height: 116px;
+        height: 100px;
         position: fixed;
         left: 0;
         top: 0;
         background:#fafafa;
     }
-    .isIOS .page-index{
-        padding-top: 0;
-    }
-    .isIOS .page-header {
-        display: none;
-    }
+
     .page-body{
         height: 100%;
         padding-bottom: 120px;
@@ -251,6 +238,19 @@
                 background-image: url(../assets/btn_TV_power_pressed@2x.png);
             }
         }
+    }
+
+    @media only screen and (-webkit-min-device-pixel-ratio: 3), only screen and (min-device-pixel-ratio: 3) {
+        .page-header{
+            height: 116px;
+        }
+    }
+
+    .isIOS .page-index{
+        padding-top: 0;
+    }
+    .isIOS .page-header {
+        display: none;
     }
 </style>
 
