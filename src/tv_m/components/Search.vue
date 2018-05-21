@@ -98,20 +98,7 @@
 </template>
 
 <style lang="less">
-    .isIOS .page-search{
-        padding-top: 96px;
-    }
-    .isIOS .search_bar{
-        padding: 12px 0 0 100px;
-        input{
-            height: 64px;
-        }
-        .del{
-            width: 36px;
-            height: 36px;
-            top: 16px;
-        }
-    }
+
     .page-search{
         padding-top: 124px;
     }
@@ -119,7 +106,7 @@
         display: none;
     }
     .search_bar{
-        padding: 20px 0 0 100px;
+        padding: 12px 0 0 100px;
         display: flex;
     }
     .search_input{
@@ -250,6 +237,35 @@
                     background: #13d5dc;
                 }
             }
+        }
+    }
+
+    @media only screen and (-webkit-min-device-pixel-ratio: 3), only screen and (min-device-pixel-ratio: 3) {
+        .search_bar{
+            padding: 20px 0 0 100px;
+            input{
+                height: 75px;
+            }
+            .del{
+                width: 42px;
+                height: 42px;
+                top: 18px;
+            }
+        }
+    }
+
+    .isIOS .page-search{
+        padding-top: 96px;
+    }
+    .isIOS .search_bar{
+        padding: 12px 0 0 100px;
+        input{
+            height: 64px;
+        }
+        .del{
+            width: 36px;
+            height: 36px;
+            top: 16px;
         }
     }
 </style>

@@ -1,6 +1,7 @@
 <template>
     <div id="app" :class="appClassObj" @click="screenClick">
         <p class="title">{{ deviceName }}</p>
+        <p class="status" v-show="params.switch === 'on'">{{modeText}} {{speedText}}</p>
         <p class="tip" v-show="params.switch === 'off'">已关闭</p>
 
        <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
@@ -18,8 +19,10 @@
 
         <!--开机界面-->
         <div v-if="initErr || params.switch === 'on'">
-            <div class="temp">
-
+            <div class="mode_img" v-if="params.mode=='auto'">
+                <img src="./assets/icn_smart.png">
+            </div>
+            <div class="temp" v-else>
                 <ac-button class="minus" :class="{disabled:params.mode=='auto'}" :info="buttonList.minusBtn" @tap="setTemperature"></ac-button>
                 <div class="temp-show">
                     <label class="temp-number">{{ fakeTemp }}</label>
@@ -27,6 +30,7 @@
                 </div>
                 <ac-button class="plus" :class="{disabled:params.mode=='auto'}" :info="buttonList.plusBtn" @tap="setTemperature"></ac-button>
             </div>
+
             <!--温度End-->
 
             <p :class="{'tip':true, 'transparent': tip.length == 0}">{{ tip }}</p>
@@ -72,9 +76,10 @@
         <!--关机界面-->
         <div v-if="params.switch === 'off'">
 
-            <div v-if="deviceCategory === 0" class="hanging"></div>
-            <div v-if="deviceCategory === 1" class="package"></div>
-
+            <div class="ac_img">
+                <div v-if="deviceCategory === 0" class="hanging"></div>
+                <div v-if="deviceCategory === 1" class="package"></div>
+            </div>
             <div class="bottom">
 
                 <ac-button class="cool disabled"></ac-button>
@@ -222,10 +227,29 @@
         computed: {
             appClassObj: function () {
                  return {
-                main: true,
-                page_on: this.params.switch == "on" || this.initErr,
-                page_off: this.params.switch == "off"
-            };
+                    main: true,
+                    page_on: this.params.switch == "on" || this.initErr,
+                    page_off: this.params.switch == "off"
+                };
+            },
+            modeText() {
+                return {
+                    'cold': '制冷模式',
+                    'heat': '制热模式',
+                    'dehumidify': '除湿模式',
+                    'auto': '智能模式',
+                    'wind': '送风模式'
+                }[this.params.mode]
+            },
+            speedText() {
+                return {
+                    'low': '低风',
+                    'overlow': '低风',
+                    'normal': '中风',
+                    'overnormal': '中风',
+                    'high': '高风',
+                    // 'auto': '自动风'
+                }[this.params.speed]
             }
         },
         watch: {
@@ -566,7 +590,7 @@
     /*title样式*/
     .title {
         font-size: 30px;
-        margin-bottom: 78px;
+        // margin-bottom: 78px;
     }
     .page_off .title {
         color: #75787a;
@@ -608,6 +632,11 @@
         color: #46bcff;
         margin: 24px 0;
         /*margin: 25px 0 37px 0;*/
+    }
+    .page_on .status{
+        color: rgba(255,255,255, .6);
+        margin: 24px 0;
+        font-size: 30px;
     }
     .err .tip{
         margin-top: 36px;
@@ -968,5 +997,15 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+.temp,.mode_img{
+    height: 260px;
+}
+.ac_img{
+    height: 420px;
+}
+.mode_img img{
+    width: 260px;
 }
 </style>

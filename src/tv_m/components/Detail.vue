@@ -121,18 +121,6 @@
         flex-direction: column;
         // padding-top: 124px;
     }
-    .isIOS .page-detail{
-        // padding-top: 96px;
-    }
-    .isIOS .detail-hd{
-        height: 96px;
-        .back{
-            height: 96px;
-        }
-        .title{
-            line-height: 96px;
-        }
-    }
     .detail-hd{
         height: 124px;
         width: 100%;
@@ -465,6 +453,16 @@
             position: absolute;
             right: 0;
             top: 0;
+        }
+    }
+
+    .isIOS .detail-hd{
+        height: 96px;
+        .back{
+            height: 96px;
+        }
+        .title{
+            line-height: 96px;
         }
     }
 </style>

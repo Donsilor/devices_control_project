@@ -120,12 +120,6 @@
 </template>
 
 <style lang="less">
-    .isIOS .page-list{
-        padding-top: 200px;
-    }
-    .isIOS .filters-placeholder{
-        height: 198px;
-    }
     .page-list{
         padding-top: 228px;
     }
@@ -137,7 +131,7 @@
         z-index: 2;
     }
     .filters-placeholder{
-        height: 226px;
+        height: 200px;
     }
     .filters{
         padding: 32px 32px 8px;
@@ -357,6 +351,13 @@
             display: block;
             margin: 0 auto 36px;
         }
+    }
+
+    .isIOS .page-list{
+        padding-top: 200px;
+    }
+    .isIOS .filters-placeholder{
+        height: 198px;
     }
 
     @media(min-device-width:414px) {

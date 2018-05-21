@@ -18,11 +18,12 @@
 <style>
 .sp_status_bar{
     /* background:#ffffff; */
+    background: rgba(255, 255, 255, 0.98);
     box-shadow:inset 0 -1px 0 0 #dbdbdb;
     text-align: center;
-    height:84px;
-    line-height: 84px;
-    font-size:30px;
+    height: 72px;
+    line-height: 72px;
+    font-size: 25.2px;
     color:#13d5dc;
     overflow: hidden;
 }
@@ -30,8 +31,8 @@
     color:#13d5dc;
 }
 .status_bar .ico{
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
     background: url(../assets/icn_sync_blue.png) no-repeat;
     background-size: 100% 100%;
     display: inline-block;
@@ -48,8 +49,8 @@
     vertical-align: 4px;
 }
 .status_bar .wifi{
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
     background: url(../assets/ico_wifi.png) no-repeat;
     background-size: 100% 100%;
     display: inline-block;
@@ -58,51 +59,60 @@
     position: fixed;
     left: 0;
     width: 100%;
-    top: 116px;
+    top: 100px;
     z-index: 2;
-    background: rgba(255, 255, 255, 0.98);
-}
-.isIOS .sp_status_home{
-    top: 0;
+
 }
 .sp_status_detail{
-    background: #fff;
+    /* background: #fff; */
     flex-shrink: 0;
 }
 .sp_status_list{
-    background: #fff;
+    /* background: #fff; */
 }
 .sp_status_search{
     position: fixed;
     left: 0;
     width: 100%;
-    top: 116px;
+    top: 100px;
     z-index: 9;
 }
-.isIOS .sp_status_search{
-    top: 88px;
-}
 .status-tip-placeholder{
-    height: 84px;
+    height: 72px;
 }
 .offline_bar{
     background: rgba(51, 51, 51, 0.75);
     width: 100%;
-    height: 84px;
-    line-height: 84px;
+    height: 72px;
+    line-height: 72px;
     text-align: center;
     color: #fff;
-    font-size: 30px;
+    font-size: 25.2px;
 }
 .offline_bar i {
     display: inline-block;
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     background: url(../assets/icn_notice_white_s.png) no-repeat;
-    background-size: 34px;
-    margin-right: 13px;
+    background-size: 100% 100%;
+    margin-right: 10px;
     vertical-align: text-bottom;
 }
+
+
+@media only screen and (-webkit-min-device-pixel-ratio: 3), only screen and (min-device-pixel-ratio: 3) {
+    .sp_status_home,.sp_status_search{
+        top: 116px;
+    }
+}
+
+.isIOS .sp_status_home{
+    top: 0;
+}
+.isIOS .sp_status_search{
+    top: 88px;
+}
+
 </style>
 
 
