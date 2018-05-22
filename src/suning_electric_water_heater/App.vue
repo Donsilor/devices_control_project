@@ -4,7 +4,7 @@
         <div class="ani"></div>
         <div class="inner">
             <div class="device_name">{{device_name}}</div>
-            <div class="status">{{`当前模式 :  ${modelText}`}}<a href="" class="intro-helper" @click.prevent="toggleModePop"><i></i></a></div>
+            <div class="mode-status">{{`当前模式 :  ${modelText}`}}<a href="" class="intro-helper" @click.prevent="toggleModePop"><i></i></a></div>
             <modal title="加热模式介绍" class="modal-w" v-model="modePopVisible" @click.prevent="toggleModePop">
                 <div class="intro-body">
                     <img src="./assets/img_waterheater.png"/>
@@ -140,11 +140,20 @@ a {
     height: 30px;
     margin-top: 140px;
 }
+
+.mode-status {
+    text-align: center;
+    opacity: 0.6;
+    height: 30px;
+    margin-top: 12px;
+    font-size: 30px;
+}
 .status {
     text-align: center;
     opacity: 0.6;
     height: 30px;
-    margin-top: 20px;
+    margin-top: 43px;
+    font-size: 24px;
 }
 .current_temp {
     text-align: center;
@@ -395,6 +404,8 @@ a {
         height: 30px;
         background: url(./assets/icn_explain.png);
         background-size: 30px 30px;
+        line-height: 30px;
+        vertical-align: -6px;
     }
 }
 

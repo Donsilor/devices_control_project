@@ -24,21 +24,21 @@
                 <div class="pm-range">
                     <p class="pm-title">PM2.5数值范围说明</p>
                     <p class="pm-number"><span>0</span><span>35</span><span>75</span><span>115</span><span>150</span><span>250+</span></p>
-                    <div>
-                    <img src="./assets/pm25_color01.png"/>
-                    <img src="./assets/pm25_color02.png"/>
-                    <img src="./assets/pm25_color03.png"/>
-                    <img src="./assets/pm25_color04.png"/>
-                    <img src="./assets/pm25_color05.png"/>
-                    <img src="./assets/pm25_color06.png"/>
+                    <div class="pm-color">
+                        <img src="./assets/pm25_color01.png"/>
+                        <img src="./assets/pm25_color02.png"/>
+                        <img src="./assets/pm25_color03.png"/>
+                        <img src="./assets/pm25_color04.png"/>
+                        <img src="./assets/pm25_color05.png"/>
+                        <img src="./assets/pm25_color06.png"/>
                     </div>
                     <div>
-                    <img src="./assets/pm25_line.png"/>
-                    <img src="./assets/pm25_line.png"/>
-                    <img src="./assets/pm25_line.png"/>
-                    <img src="./assets/pm25_line.png"/>
-                    <img src="./assets/pm25_line.png"/>
-                    <img src="./assets/pm25_line.png"/>
+                        <img src="./assets/pm25_line.png"/>
+                        <img src="./assets/pm25_line.png"/>
+                        <img src="./assets/pm25_line.png"/>
+                        <img src="./assets/pm25_line.png"/>
+                        <img src="./assets/pm25_line.png"/>
+                        <img src="./assets/pm25_line.png"/>
                     </div>
                     <p class="pm-grade"><span>优</span><span>良</span><span>轻度污染</span><span>中度污染</span><span>重度污染</span><span>严重污染</span></p>
                 </div>
@@ -566,9 +566,13 @@ a {
         }
     }
 
+    .pm-color {
+        margin-bottom: -20px;
+    }
+
     .pm-number {
         text-align: left;
-        margin-left: 24px;
+        margin-left: -6px;
         span {
             display: inline-block;
             text-align: left;

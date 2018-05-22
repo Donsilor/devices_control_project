@@ -15,7 +15,7 @@
             <div class="value" v-html="pm25_text"></div>
             <div class="pic" @click="togglePMPop">PM 2.5</div>
         </div>
-        <modal title="加热模式介绍" class="modal-w" v-model="pmPopVisible" @click.prevent="toggleModePop">
+        <modal title="PM2.5简介" class="modal-w" v-model="pmPopVisible" @click.prevent="toggleModePop">
             <div class="intro-body">
                 <p>
                     PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
@@ -23,7 +23,7 @@
                 <div class="pm-range">
                     <p class="pm-title">PM2.5数值范围说明</p>
                     <p class="pm-number"><span>0</span><span>35</span><span>75</span><span>115</span><span>150</span><span>250+</span></p>
-                    <div>
+                    <div class="pm-color">
                     <img src="./assets/pm25_color01.png"/>
                     <img src="./assets/pm25_color02.png"/>
                     <img src="./assets/pm25_color03.png"/>
@@ -565,9 +565,13 @@ a {
         }
     }
 
+    .pm-color {
+        margin-bottom: -20px;
+    }
+
     .pm-number {
         text-align: left;
-        margin-left: 24px;
+        margin-left: -6px;
         span {
             display: inline-block;
             text-align: left;
