@@ -4,6 +4,18 @@
         <div class="ani"></div>
         <div class="inner">
             <div class="device_name">{{device_name}}</div>
+            <div class="status">{{`当前模式 :  ${modelText}`}}<a href="" class="intro-helper" @click.prevent="toggleModePop"><i></i></a></div>
+            <modal title="加热模式介绍" class="modal-w" v-model="modePopVisible" @click.prevent="toggleModePop">
+                <div class="intro-body">
+                    <img src="./assets/img_waterheater.png"/>
+                    <div class="intro-content">
+                    <p><span>速热半胆: </span>加热半胆热水，快速提供适量热水，节能环保</p>
+                    <p><span>速热全胆: </span>开启下方加热棒整体加热，提供充沛水量，满足全家需求</p>
+                    <p><span>Max增容: </span>上下两个加热棒一起开启，升温更快</p>
+                    <p><span>&nbsp;&nbsp;&nbsp;智能浴: </span>自动调节加热方式，使用更便捷</p>
+                    </div>
+                </div>
+            </modal>
             <div class="status">{{statusText}}</div>
             <div class="current_temp">
                 <strong>{{model.temperature}}</strong>
@@ -371,12 +383,48 @@ a {
         }
     }
 }
+
+.modal {
+    width: 50% !important;
+}
+
+.intro-helper {
+    i {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background: url(./assets/icn_explain.png);
+        background-size: 30px 30px;
+    }
+}
+
+.intro-content {
+    text-align: left;
+    margin: 78px 0 0 46px;
+    color: #76787a;
+    font-size: 30px;
+    p {
+        span {
+            width: 130px;
+            margin-right: 21px;
+            color: #13d5dc;
+        }
+    }
+}
 </style>
 
 <script>
 import Slider from "./components/Slider.vue";
+//TODO可能要从公共组件中引用
+import Modal from "../tcl_water_cleaner/components/Modal.vue";
 
 const [TEMP_MIN, TEMP_MAX] = [30, 75];
+const MODEL_MAP = {
+    half_tank: "半胆速热",
+    full_tank: "整胆加热",
+    max_volume: "蓄热增容",
+    smart: "智能沐浴"
+};
 
 function createBubble(container, option) {
     if (!container) return;
@@ -405,7 +453,8 @@ function createBubble(container, option) {
 
 export default {
     components: {
-        Slider
+        Slider,
+        Modal
     },
     data() {
         return {
@@ -420,7 +469,8 @@ export default {
                 }
             },
             device_name: "",
-            status: ''
+            status: "",
+            modePopVisible: false
         };
     },
     computed: {
@@ -435,6 +485,9 @@ export default {
                 default:
                     return "";
             }
+        },
+        modelText() {
+            return MODEL_MAP[this.model.mode];
         },
         tempDisabled() {
             return this.model.mode == "max_volume";
@@ -519,18 +572,21 @@ export default {
             this.controlDevice("mode", val);
         },
         getSnapShot() {
-            HdSmart.Device.getSnapShot(data => {
-                HdSmart.UI.hideLoading();
-                this.onSuccess(data);
-                //初始化缓存温度
-                this.setOldTemperature(this.model.set_temperature);
-            }, () => {
-                this.status = 'error'
-                HdSmart.UI.hideLoading();
-            });
+            HdSmart.Device.getSnapShot(
+                data => {
+                    HdSmart.UI.hideLoading();
+                    this.onSuccess(data);
+                    //初始化缓存温度
+                    this.setOldTemperature(this.model.set_temperature);
+                },
+                () => {
+                    this.status = "error";
+                    HdSmart.UI.hideLoading();
+                }
+            );
         },
         onSuccess(data) {
-            this.status = 'success'
+            this.status = "success";
             this.model = data.attribute;
             if (!this.$refs.tempSlider.isUpdating) {
                 this.temp = this.model.set_temperature;
@@ -559,6 +615,9 @@ export default {
                     )
                 );
             }
+        },
+        toggleModePop() {
+            this.modePopVisible = !this.modePopVisible;
         }
     },
     created() {
