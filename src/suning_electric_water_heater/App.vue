@@ -394,7 +394,7 @@ a {
 }
 
 .modal {
-    width: 50% !important;
+    width: 52% !important;
 }
 
 .intro-helper {
@@ -411,7 +411,7 @@ a {
 
 .intro-content {
     text-align: left;
-    margin: 78px 0 0 46px;
+    margin: 50px 0 0 46px;
     color: #76787a;
     font-size: 30px;
     p {

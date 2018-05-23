@@ -22,25 +22,7 @@
                     PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
                 </p>
                 <div class="pm-range">
-                    <p class="pm-title">PM2.5数值范围说明</p>
-                    <p class="pm-number"><span>0</span><span>35</span><span>75</span><span>115</span><span>150</span><span>250+</span></p>
-                    <div class="pm-color">
-                        <img src="./assets/pm25_color01.png"/>
-                        <img src="./assets/pm25_color02.png"/>
-                        <img src="./assets/pm25_color03.png"/>
-                        <img src="./assets/pm25_color04.png"/>
-                        <img src="./assets/pm25_color05.png"/>
-                        <img src="./assets/pm25_color06.png"/>
-                    </div>
-                    <div>
-                        <img src="./assets/pm25_line.png"/>
-                        <img src="./assets/pm25_line.png"/>
-                        <img src="./assets/pm25_line.png"/>
-                        <img src="./assets/pm25_line.png"/>
-                        <img src="./assets/pm25_line.png"/>
-                        <img src="./assets/pm25_line.png"/>
-                    </div>
-                    <p class="pm-grade"><span>优</span><span>良</span><span>轻度污染</span><span>中度污染</span><span>重度污染</span><span>严重污染</span></p>
+                    <img src="./assets/PM2.5_scale@3x.png"/>
                 </div>
             </div>
         </modal>
@@ -558,35 +540,8 @@ a {
     }
     .pm-range {
         margin: 60px 46px 0 46px;
-        .pm-title {
-            text-align: center;
-            margin-bottom: 35px;
-            font-size: 36px;
-            color: #333333;
-        }
-    }
-
-    .pm-color {
-        margin-bottom: -20px;
-    }
-
-    .pm-number {
-        text-align: left;
-        margin-left: -6px;
-        span {
-            display: inline-block;
-            text-align: left;
-            width: 200px;
-            color: #333333;
-        }
-    }
-    .pm-grade {
-        text-align: left;
-        span {
-            display: inline-block;
-            text-align: center;
-            width: 16.66%;
-            color: #333333;
+        img {
+            width: 100%;
         }
     }
 }
