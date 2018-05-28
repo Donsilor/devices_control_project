@@ -3,7 +3,10 @@
         <div class="sp_status_bar" @click="goToScreenProjectionPage" v-if="spVisible">
             <i class="ico"></i>正在投屏 {{spStatusText}}：{{tvStatus.screenProjectTitle}} <i class="arr"></i>
         </div>
-        <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-1">
+
+        <div class="offline_bar_blank" v-if="tvStatus.tvOnlineStatus < 0"></div>
+
+        <!-- <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-1">
             <i class="wifi"></i>无法连接网络，请检查网络设置
         </div>
         <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-2">
@@ -11,13 +14,13 @@
         </div>
         <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-3">
             <i class="error"></i>设备已离线 &nbsp;<span class="link">查看帮助</span><i class="arr"></i>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <style>
 .sp_status_bar{
-    /* background:#ffffff; */
+    background: rgba(255, 255, 255, 0.98);
     box-shadow:inset 0 -1px 0 0 #dbdbdb;
     text-align: center;
     height:84px;
@@ -60,14 +63,13 @@
     width: 100%;
     top: 96px;
     z-index: 2;
-    background: rgba(255, 255, 255, 0.98);
+
 }
 .sp_status_detail{
-    background: #fff;
     flex-shrink: 0;
 }
 .sp_status_list{
-    background: #fff;
+    background: rgba(255, 255, 255, 0.98);
 }
 .sp_status_search{
     position: fixed;
@@ -86,6 +88,9 @@
     text-align: center;
     color: #fff;
     font-size: 30px;
+}
+.offline_bar_blank{
+    height: 84px;
 }
 .offline_bar i {
     display: inline-block;

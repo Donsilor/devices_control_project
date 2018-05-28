@@ -42,7 +42,7 @@ Vue.component('StatusTip', StatusTip)
 //window.Swiper.prototype.support.transforms3d = false
 
 var scrollTop = 0
-var docEl = document.documentElement
+var docEl = document.body
 
 const store = new Vuex.Store({
     state: {
@@ -82,10 +82,10 @@ const store = new Vuex.Store({
             commit('showDetail', item)
         },
         hideDetail: ({ commit }) => {
+            commit('hideDetail')
             setTimeout(() => {
                 docEl.scrollTop = scrollTop
-            },1)
-            commit('hideDetail')
+            }, 50)
         },
         setOnline({ commit }, onlineStr) {
             commit('setOnline', onlineStr=='online' ? true : false)
