@@ -6,11 +6,11 @@
             <router-link to="/" class="icon icon-arrow"></router-link>
         </div>
         <div class="title">
-            <a href="javascript:void(0)" @click.prevent="switchLog('open')">开锁记录</a>
-            <a href="#" @click.prevent="switchLog('warn')" :class="{active:activeName=='warn'}">预警记录</a>
+            <a href="javascript:void(0)" :class="{active:type!=='warn'}" @click.prevent="switchLog('open')">开锁记录</a>
+            <a href="#" @click.prevent="switchLog('warn')" :class="{active:type=='warn'}">预警记录</a>
         </div>
         <div class="right">
-            <!-- <a href="" class="icon icon-del" @click.prevent="clearLog"></a> -->
+            <a href="" class="icon icon-del" @click.prevent="clearLog"></a>
         </div>
     </div>
 
@@ -25,6 +25,7 @@
 
     <log-list :current-date="currentDate" :data="list" v-show="!firstLoad" />
     <div class="loadmore" v-if="!isLoading && more"><a href="" @click.prevent="loadMore">加载更多</a></div>
+    <div class="loadmore" v-if="isLoading && more"><a href="">加载中</a></div>
     <div class="nomore" v-if="list.length && !more">已加载完全部</div>
     <a href="javascript:void(0)" class="btn-cale" @click.prevent="showCalendar"></a>
 </div>
@@ -172,8 +173,7 @@ export default {
             size: 20,
             begin: 0,
             more: 0,
-            type: "open",
-            activeName: "warn"
+            type: "open"
         };
     },
     watch: {
@@ -216,6 +216,7 @@ export default {
                             date_start: getDateStr(this.date),
                             date_end: getDateStr(this.date),
                             level: 1,
+                            status: [0, 1, 2, 3, 4],
                             page: {
                                 size: this.size,
                                 begin: this.begin
@@ -225,8 +226,7 @@ export default {
                     data => {
                         this.isLoading = false;
                         this.firstLoad = false;
-
-                        var list = this.formatListData(data.result.list);
+                        var list = this.formatListData(data.result.list, type);
                         if (!more) {
                             this.list = list;
                         } else {
@@ -272,7 +272,7 @@ export default {
                         // var list = data.result.list.filter((item) => {
                         //     return item.attribute && item.attribute.switch == 'on' && item.attribute.is_user_operate == 1
                         // })
-                        var list = this.formatListData(data.result.list);
+                        var list = this.formatListData(data.result.list, type);
                         if (!more) {
                             this.list = list;
                         } else {
@@ -328,7 +328,6 @@ export default {
         switchLog(type) {
             this.type = type;
             if (type == "warn") {
-                this.activeName == "warn";
                 this.getLogData(undefined, type);
             }
 
@@ -346,19 +345,19 @@ export default {
                 scrollTop + window.innerHeight >=
                     document.documentElement.scrollHeight - 15
             ) {
-                if (
-                    this.loadState === "LOADING" ||
-                    this.loadState === "NO_DATA"
-                ) {
+                if (this.isLoading || this.loadState === "NO_DATA") {
                     return;
                 }
-                if (this.loadState === "NO_MORE") {
-                    HdSmart.UI.toast("已加载全部");
-                    return;
-                }
+                // if (list.length && !more) {
+                //     HdSmart.UI.toast("已加载全部");
+                //     return;
+                // }
                 this.getLogData(true, this.type);
             }
-        }, 200)
+        }, 200),
+        clearLog() {
+            //TODO
+        }
     },
     created() {},
     mounted() {

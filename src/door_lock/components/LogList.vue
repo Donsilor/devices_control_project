@@ -49,12 +49,7 @@ export default {
     },
     methods: {
         formatDate(timestamp) {
-            var date;
-            if (typeof timestamp == "string") {
-                date = new Date(timestamp);
-            } else {
-                date = new Date(timestamp * 1000);
-            }
+            var date = new Date(timestamp * 1000);
             return fillz(date.getHours()) + ":" + fillz(date.getMinutes());
         }
     },
