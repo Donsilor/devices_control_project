@@ -1,34 +1,32 @@
 <template>
-<div class="page-log">
-    <!-- 顶部条 -->
-    <div class="topbar topbar-fixed">
-        <div class="left">
-            <router-link to="/" class="icon icon-arrow"></router-link>
+    <div class="page-log">
+        <!-- 顶部条 -->
+        <div class="topbar topbar-fixed">
+            <div class="left">
+                <router-link to="/" class="icon icon-arrow"></router-link>
+            </div>
+            <div class="title">
+                <a href="javascript:void(0)" :class="{active:type!=='warn'}" @click.prevent="switchLog('open')">开锁记录</a>
+                <a href="#" @click.prevent="switchLog('warn')" :class="{active:type=='warn'}">预警记录</a>
+            </div>
+            <div class="right">
+                <a href="" class="icon icon-del" @click.prevent="clearLog"></a>
+            </div>
         </div>
-        <div class="title">
-            <a href="javascript:void(0)" :class="{active:type!=='warn'}" @click.prevent="switchLog('open')">开锁记录</a>
-            <a href="#" @click.prevent="switchLog('warn')" :class="{active:type=='warn'}">预警记录</a>
+
+        <mt-datetime-picker ref="picker2" type="date" v-model="date" :start-date="startDate" :end-date="endDate" @confirm="handleChange">
+        </mt-datetime-picker>
+
+        <log-list :current-date="currentDate" :data="list" v-show="!firstLoad" />
+        <div class="loadmore" v-if="!isLoading && more">
+            <a href="" @click.prevent="loadMore">加载更多</a>
         </div>
-        <div class="right">
-            <a href="" class="icon icon-del" @click.prevent="clearLog"></a>
+        <div class="loadmore" v-if="isLoading && more">
+            <a href="">加载中</a>
         </div>
+        <div class="nomore" v-if="list.length && !more">已加载完全部</div>
+        <a href="javascript:void(0)" class="btn-cale" @click.prevent="showCalendar"></a>
     </div>
-
-    <mt-datetime-picker
-      ref="picker2"
-      type="date"
-      v-model="date"
-      :start-date="startDate"
-      :end-date="endDate"
-      @confirm="handleChange">
-    </mt-datetime-picker>
-
-    <log-list :current-date="currentDate" :data="list" v-show="!firstLoad" />
-    <div class="loadmore" v-if="!isLoading && more"><a href="" @click.prevent="loadMore">加载更多</a></div>
-    <div class="loadmore" v-if="isLoading && more"><a href="">加载中</a></div>
-    <div class="nomore" v-if="list.length && !more">已加载完全部</div>
-    <a href="javascript:void(0)" class="btn-cale" @click.prevent="showCalendar"></a>
-</div>
 </template>
 
 <style lang="less" scoped>
