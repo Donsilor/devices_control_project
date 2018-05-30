@@ -48,7 +48,7 @@
         </div>
 
         <!-- 模式 -->
-        <modal title="模式选择" class="modal-w" v-model="modeModalVisible">
+        <sub-page title="模式选择" class="modal-w" v-model="modeModalVisible">
             <div class="model-wrap">
             <div class="group">
                 <div class="title">快洗</div>
@@ -78,9 +78,9 @@
                 </div>
             </div>
             </div>
-        </modal>
+        </sub-page>
         <!-- 更多 -->
-        <modal title="更多" class="modal-w modal-more" v-model="moreModalVisible">
+        <sub-page title="更多" class="modal-w modal-more" v-model="moreModalVisible">
             <div class="more-wrap">
                 <div class="group">
                     <div class="title">更多模式</div>
@@ -158,7 +158,7 @@
                     </div>
                 </div>
             </div>
-        </modal>
+        </sub-page>
         <!-- 预约 -->
         <modal title="预约洗衣" class="modal-w" v-model="reserveModalVisible">
             <div class="reserve-wrap">
@@ -397,44 +397,33 @@ a{
     background-size: 100% 100%;
 }
 //弹框样式
-.modal-w .modal{
-    width: 1300px;
-}
-.modal-more .modal{
-    top: 80px;
-    transform: translate(-50%, 0);
-}
+
 .model-wrap{
-    display: flex;
-    justify-content: center;
-    .line{
-        width: 1px;
-        border-left: 1px solid #f0f0f0;
-        height:370px;
-        margin-top: 60px;
-    }
     .group{
-        padding: 0 50px;
         .title{
-            font-size:24px;
-            color:#c8cacc;
-            margin-bottom: 24px;
+            text-align: center;
+            font-size:28px;
+            color: #76787A;
+            margin:60px 0 24px;
+            font-weight: bold;
         }
     }
 }
 .more-wrap{
     .group{
         .title{
-            font-size:24px;
-            color:#c8cacc;
-            margin-bottom: 24px;
+            text-align: center;
+            font-size:28px;
+            color: #76787A;
+            margin:60px 0 24px;
+            font-weight: bold;
         }
     }
 }
 .selectbox{
     .hd{
-        margin: 0 46px;
-        padding: 20px 46px;
+        margin: 0 32px;
+        padding: 20px 0px;
         height: 40px;
         line-height: 40px;
         border-top: 1px solid #f5f5f5;
@@ -458,7 +447,7 @@ a{
     .bd{
         display: none;
         overflow: hidden;
-        padding:31px 92px;
+        padding:31px 32px;
         background:#fafafa;
         .option{
             display: block;
@@ -547,17 +536,18 @@ a{
     }
 }
 .childlock_confirm{
-    line-height: 58px;
+    text-align: center;
     .right{
-        float: right;
+        text-align: center;
+        margin-top: 15px;
     }
     a{
-        width:148px;
-        height:58px;
+        width:100px;
+        line-height:42px;
         border-radius:6px;
+        margin: 0 10px;
         display: inline-block;
-        margin-left:12px;
-        font-size:30px;
+        font-size:28px;
         box-sizing: border-box;
         text-align: center;
     }
@@ -568,18 +558,19 @@ a{
     }
     .submit{
         background:#46bcff;
+        border:1px solid #46bcff;
         color:#ffffff;
     }
 }
 //按钮样式
 .btns{
     display: flex;
-    justify-content: center;
     &-fn{
         position: absolute;
         left: 0;
         top: 720px;
         width: 100%;
+        justify-content: center;
         .btn{
             margin: 0 50px;
             color:#ffffff;
@@ -590,25 +581,24 @@ a{
     }
     &-model{
         flex-wrap: wrap;
+        padding-left:20px;
         .btn{
-            margin: 0 18px 46px;
+            margin: 0 28px;
         }
     }
     &-more_model{
+        flex-wrap: wrap;
+        padding-left:20px;
         .btn{
-            margin:0 55px 36px;
-           i{
-               width: 90px;
-               height: 90px;
-           }
+            margin:0 28px 50px;
         }
     }
 }
 .btn{
     display: block;
     text-align: center;
-    color:#76787a;
-    font-size:24px;
+    font-size: 28px;
+    color: #76787A;
     i{
         width: 120px;
         height: 120px;
@@ -814,6 +804,8 @@ import Modal from './components/Modal.vue'
 import SwitchButton from './components/SwitchButton.vue'
 import Picker from './components/Picker/picker.vue'
 import ModeButton from './components/ModeButton.vue'
+import SubPage from './components/SubPage.vue'
+
 import {
     MODE_OPTIONS,
     RESERVE_TIME_OPTIONS,
@@ -825,7 +817,7 @@ import {
     DEFAULT_ERROR_MSG
 } from './config'
 
-const radio = (document.documentElement.clientWidth || window.innerWidth) / 1920 * 75
+const radio = (document.documentElement.clientWidth || window.innerWidth) / 750 * 75
 
 function getToggle(val) {
     return val === 'on' ? 'off' : 'on'
@@ -856,7 +848,8 @@ export default {
         Modal,
         SwitchButton,
         Picker,
-        ModeButton
+        ModeButton,
+        SubPage
     },
     data() {
         return {
