@@ -33,15 +33,8 @@
         width: 100%;
     }
 
-
-    @media all and (max-height: 799px) {
-        .button-box {
-            margin-top: 15px !important;
-        }
-    }
-
     .button-box {
-        margin-top: 36px;
+        margin-top: 20px;
     }
 
     .box {

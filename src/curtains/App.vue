@@ -36,13 +36,7 @@
     }
 
     .curtain {
-        margin: 4px auto 24px auto;
-    }
-
-    @media all and (max-height: 799px) {
-        .curtain {
-            margin-bottom: 12px !important;
-        }
+        margin: 4px auto 12px auto;
     }
 
     .tip {

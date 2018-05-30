@@ -91,6 +91,7 @@
                         <img v-lazy="item.pictureUrl">
                         <p>{{item.name}}</p>
                         <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
+                        <span class="tag_pay" v-show="item.drm && item.drm!='0'"></span>
                     </li>
                 </ul>
                 <ul class="bd bd-num" v-else>
@@ -99,6 +100,7 @@
                         :key="item.index"
                         @click="play(item)">{{item.index=='0' ? num+1 : item.index}}
                         <!-- <span class="tag_new" v-show="item.states"></span> -->
+                        <span class="tag_pay" v-show="item.drm && item.drm!='0'"></span>
                     </li>
                 </ul>
                 <div class="hd" style="clear:both" v-if="cur.playlist2.list2.length">相关视频</div>
@@ -110,6 +112,7 @@
                         <img v-lazy="item.pictureUrl">
                         <p>{{item.name}}</p>
                         <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
+                        <span class="tag_pay" v-show="item.drm && item.drm!='0'"></span>
                     </li>
                 </ul>
             </div>
@@ -499,6 +502,15 @@
             width: 72px;
             height: 72px;
             background: url(../assets/tag_tv_new.png) no-repeat;
+            background-size: 100%;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+        .tag_pay{
+            width: 72px;
+            height: 72px;
+            background: url(../assets/tv_fee.png) no-repeat;
             background-size: 100%;
             position: absolute;
             right: 0;
