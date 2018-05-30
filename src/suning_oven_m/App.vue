@@ -1,7 +1,6 @@
 <template>
     <div id="app">
-        <div class="mask" v-show="maskLyerShow" @click="maskLayerClick"></div>
-        <span class="more-btn" @click="showMoreLayer"></span>
+
         <div class="wrapper">
             <h3 class="main-title">{{device_name}}</h3>
             <div class="pannel">
@@ -15,16 +14,13 @@
                 设定温度<span class="p-wendu">{{allAttribute.temperature}}</span>℃</p>
             </div>
             <div class="controls">
-                <button @click="startOven" v-if="allAttribute.status==='stop'"><i class="c-firing"></i></button>
-                <button @click="stopOven" v-if="allAttribute.status==='start'"><i class="c-stop"></i></button>
-                <button style="margin-left: 100px" @click="showModelLayer"><i class="c-model"></i></button>
+                <button @click="startOven" v-if="allAttribute.status==='stop'"><i class="c-firing"></i>启动</button>
+                <button @click="stopOven" v-if="allAttribute.status==='start'"><i class="c-stop"></i>停止</button>
+                <button @click="showModelLayer"><i class="c-model"></i>模式</button>
             </div>
         </div>
-        <div class="model-select-layer oven-layer"  v-show="modelLayerShow">
-            <div class="layer-header">
-                <h3>模式设定</h3>
-                <i class="btn-close" @click="closeModelLayer"></i>
-            </div>
+        <span class="more-btn" @click="showMoreLayer"></span>
+        <sub-page class="model-select-layer" v-model="modelLayerShow" title="模式">
             <div class="layer-body" :class="allAttribute.status === 'start' ? 'disable' : ''">
                 <ul class="model-list">
                     <li @click="seleteMode(item)" v-for="item in modeList">
@@ -55,16 +51,11 @@
                     <picker :slots="timeSlot" @change="selectTime" :valueKey="'value'" :item-height="30" :visible-item-count="3"></picker>
                 </div>
             </div>
+        </sub-page>
 
-        </div>
-        <div class="model-more-layer oven-layer" v-show="moreLayerShow">
-            <div class="layer-header">
-                <h3>更多设置</h3>
-                <i class="btn-close" @click="closeMoreLayer"></i>
-            </div>
+        <sub-page v-model="moreLayerShow" title="更多">
             <div class="layer-body">
                 <div class="main-select-con" :class="{disable:allAttribute.status!='start'}">
-                    <br><br>
                     <div class="select-param noborder hasDisable">
                         <p>热风对流</p>
                         <switch-button :sync="true" :disabled="allAttribute.status!='start'" :value="allAttribute.convection==='on'" @change="changeConvection"/>
@@ -76,7 +67,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+    </sub-page>
     </div>
 </template>
 <script>
@@ -107,13 +98,15 @@
     import SwitchButton from './components/SwitchButton.vue'
     import Picker from './components/Picker/picker.vue'
     import AllConfig from './config'
+    import SubPage from './components/SubPage.vue'
     // import IScroll from 'iscroll/build/iscroll-lite';
 
     export default {
         name: 'app',
         components: {
             SwitchButton,
-            Picker
+            Picker,
+            SubPage
         },
         data() {
             return {
@@ -132,8 +125,6 @@
                     wenduList: [],
                     timeList: []
                 },
-                // 遮罩层
-                maskLyerShow: false,
                 //模式选择层
                 modelLayerShow: false,
                 //更多选择层
@@ -272,25 +263,15 @@
         },
         methods: {
             closeMoreLayer () {
-                this.maskLyerShow = false
                 this.moreLayerShow = false
             },
-            maskLayerClick () {
-                this.maskLyerShow = false
-                this.moreLayerShow = false
-                this.modelLayerShow = false
-            },
-            //取消模式选择
             closeModelLayer () {
-                this.maskLyerShow = false
                 this.modelLayerShow = false
             },
             showMoreLayer () {
-                this.maskLyerShow = true
                 this.moreLayerShow = true
             },
             showModelLayer () {
-                this.maskLyerShow = true
                 this.modelLayerShow = true
             },
             seleteMode (item) {
@@ -446,46 +427,34 @@ ul{
 #app {
 
 }
-.mask{
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background:rgba(0,0,0,0.50);
-    z-index: 998;
-    position: absolute;
-}
+
 .more-btn{
     position: absolute;
     right: 65px;
-    width: 96px;
-    height: 96px;
+    width: 36px;
+    height: 36px;
     top: 132px;
-    display: block;
-    background-image: url("assets/btn_aircon_more.png");
+    background-image: url("assets/btn_more@2x.png");
     background-size: 100% 100%;
 }
 .wrapper{
     text-align: center;
-    margin-top: 120px;
-    height: 600px;
-    left: 50%;
-    width: 900px;
+    margin: 120px auto 0;
+
     position: relative;
-    transform: translate(-50%, 0);
     .color-gray{
         color: #999;
     }
     .main-title{
         font-weight: normal;
-        height: 80px;
-        color: #333;
-        opacity: 0.7;
-        line-height: 80px;
-        margin-bottom: 10px;
+        margin-bottom: 80px;
+        font-size: 32px;
+        color: #76787A;
     }
     .pannel{
-        height: 460px;
+        height: 480px;
+        width: 510px;
+        margin: 0 auto;
         background: #fff;
         border-radius: 38px;
         .p-main-time{
@@ -524,27 +493,31 @@ ul{
         padding-top: 80px;
         button{
             outline: none;
-            width: 300px;
-            height: 130px;
+            width: 140px;
+            height: 140px;
             display: inline-block;
-            border-radius: 16px;
-            background: #fff;
+            background: none;
             border: 0;
-            box-shadow:0 6px 10px 0 rgba(0,0,0,0.04);
+            color: #76787A;
+            margin: 0 18px;
+            // border-radius: 16px;
+            // background: #fff;
+            // border: 0;
+            // box-shadow:0 6px 10px 0 rgba(0,0,0,0.04);
             i{
                 display: inline-block;
-                width: 165px;
-                height: 58px;
+                width: 140px;
+                height: 140px;
                 background-size: 100% 100%;
             }
             .c-stop{
-                background-image: url("./assets/icon__stop.png");
+                background-image: url("./assets/btn-stop-normal@2x.png");
             }
             .c-model{
-                background-image: url("./assets/icon_selectionpattern.png");
+                background-image: url("./assets/btn-mode-normal@2x.png");
             }
             .c-firing{
-                background-image: url("./assets/icon__firing.png");
+                background-image: url("./assets/btn-start-normal@2x.png");
             }
         }
     }
@@ -553,69 +526,7 @@ ul{
     filter: grayscale(1);
     opacity: .5;
 }
-.oven-layer{
-    font-size: 24px;
-    color: #76787a;
-    width: 1300px;
-    height: 800px;
-    position: absolute;
-    z-index: 9999;
-    left: 50%;
-    top: 80px;
-    transform: translate(-50%, 0);
-    background:#ffffff;
-    /*box-shadow:0 3px 12px 0 rgba(0,0,0,0.10);*/
-    border-radius:6px;
-    .layer-header{
-        height: 84px;
-        box-shadow:inset 0 -1px 0 0 #dbdbdb;
-        text-align: center;
-        position: relative;
-        h3{
-            height: 100%;
-            font-size: 30px;
-            font-weight: normal;
-            line-height: 84px;
-        }
-        .btn-close{
-            position: absolute;
-            right: 28px;
-            display: inline-block;
-            top: 26px;
-            height: 30px;
-            width: 30px;
-            background-size: 100% 100%;
-            background-image: url("assets/btn_close.png");
-        }
-    }
-    .layer-body {
-        overflow: hidden;
-    }
-    .layer-bottom-btn{
-        clear: both;
-        margin-top: 60px;
-        text-align: center;
-        button{
-            border:1px solid #76787a;
-            border-radius:6px;
-            width:238px;
-            height:82px;
-            font-size: 36px;
-            line-height: 82px;
-            text-align: center;
-        }
-        .cancel {
-            background: #ffffff;
-            color: #76787a;
-            margin-right: 20px;
-        }
-        .confirm {
-            color: #fff;
-            background:#46bcff;
-            border: 0;
-        }
-    }
-}
+
 .model-select-layer{
     .disable {
         .confirm{
@@ -652,25 +563,22 @@ ul{
 
     }
     .model-list{
-        width: 1180px;
-        margin: 30px auto 0;
+        padding: 79px 0 0 20px;
         overflow: hidden;
         li{
             list-style: none;
             text-align: center;
             float: left;
-            width: 130px;
-            margin:0 30px;
-            padding-bottom: 25px;
+            width: 120px;
+            margin:0 28px;
+            padding-bottom: 54px;
             div{
                 margin-top: 5px;
-                height: 40px;
-                line-height: 40px;
             }
             a{
                 display: block;
-                width: 130px;
-                height: 130px;
+                width: 120px;
+                height: 120px;
                 background-size: 100% 100%;
             }
             .ico-bread{
@@ -747,23 +655,7 @@ ul{
         }
     }
 }
-.model-more-layer{
-    height: 400px;
-    top: 200px;
-    .more-model-title{
-        color: #c8cacc;
-        height: 70px;
-        text-align: center;
-        line-height: 70px;
-    }
-    .main-select-con{
-        padding: 0 45px;
-        .border-both{
-            box-shadow:inset 0 -1px 0 0 #dbdbdb, inset 0 1px 0 0 #dbdbdb;
-        }
-    }
 
-}
 
 .up-down-fire{
         text-align: center;
@@ -801,10 +693,10 @@ ul{
     }
 
 .select-param{
-            border-top:1px solid #dbdbdb;
+            border-top: 1px solid #DBDBDB;
             position: relative;
-            margin:0 45px;
-            padding: 10px 0;
+            margin:0 32px;
+            padding: 30px 0;
             line-height: 2;
             overflow: hidden;
             p{
@@ -829,6 +721,7 @@ ul{
             }
             .vue-js-switch{
                 float: right;
+                margin-top: 8px;
             }
         }
         .slide-list{
