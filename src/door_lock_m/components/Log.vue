@@ -291,6 +291,10 @@ export default {
                 );
             }
         },
+        getOpenType(type) {
+            return OPEN_TYPE[type];
+        },
+
         formatListData(list, type) {
             if (type == "warn") {
                 return list.map(item => {
