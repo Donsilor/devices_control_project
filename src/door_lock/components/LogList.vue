@@ -7,7 +7,8 @@
                     <span class="line"></span>
                     <span class="dot"></span>
                     <span class="date">{{formatDate(item.updated_at)}}</span>
-                    <span class="log">{{item.log}}</span>
+                    <span class="log">
+                        <i v-if="item.isOpen" :class="`log-icon-${item.attribute.open_type}`"> </i>{{item.log}}</span>
                 </li>
             </ul>
         </template>
@@ -116,6 +117,14 @@ export default {
             color: #76787a;
             letter-spacing: 0;
             text-align: left;
+            i {
+                display: inline-block;
+                width: 36px;
+                height: 36px;
+                margin: 0 24px 0 0px;
+                line-height: 36px;
+                vertical-align: -7px;
+            }
         }
     }
 }
@@ -145,5 +154,27 @@ export default {
 
 .door-log li:nth-child(odd) {
     background: #fafafa;
+}
+
+/*
+    日志图标
+*/
+.log-icon-17 {
+    background: url("../assets/code.png");
+}
+
+.log-icon-18 {
+    background: url("../assets/fingerprint.png");
+}
+
+.log-icon-19 {
+    background: url("../assets/card.png");
+}
+
+.log-icon-20 {
+    background: url("../assets/key.png");
+}
+.log-icon-21 {
+    background: url("../assets/phone.png");
 }
 </style>

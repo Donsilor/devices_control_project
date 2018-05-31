@@ -128,7 +128,7 @@ import DatetimePicker from "./DatePicker";
 import { Popup, Picker } from "mint-ui";
 import "mint-ui/lib/style.css";
 
-import { WARN_CODE } from "./const";
+import { WARN_CODE, OPEN_TYPE } from "./const";
 import _ from "./utils";
 
 Vue.component(DatetimePicker.name, DatetimePicker);
@@ -294,13 +294,7 @@ export default {
         },
 
         getOpenType(type) {
-            return {
-                "17": "密码开锁",
-                "18": "指纹开锁",
-                "19": "IC卡开锁",
-                "20": "钥匙开门",
-                "21": "手机App开锁"
-            }[type];
+            return OPEN_TYPE[type];
         },
 
         formatListData(list, type) {
@@ -317,6 +311,7 @@ export default {
                         log: `${
                             item.attribute.user_identify
                         } 通过${this.getOpenType(item.attribute.open_type)}`,
+                        isOpen: true,
                         ...item
                     };
                 });
