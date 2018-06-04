@@ -65,6 +65,9 @@
                     @click="showDetailInfo(item)">
                     <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
                     <div class="name">{{item.title}}</div>
+                    <span class="update" v-if="item.channelId!='001'">
+                        {{getUpdateSet(item.setCount,item.lastUpdateSet)}}
+                    </span>
                     <div class="label">
                         <span class="isvip" v-if="item.ispay && item.ispay !== '1'">付费</span>
                     </div>
@@ -421,6 +424,15 @@
             },300),
             showDetailInfo(item) {
                 this.$store.dispatch('showDetail', item)
+            },
+            getUpdateSet(count, last) {
+                if(!count || !last || count == '0' || last == '0'){
+                    return ''
+                }else if(last === count){
+                    return count + '集全'
+                }else{
+                    return '更新至' + last + '集'
+                }
             },
             getThumbPic(pic) {
                 return pic.replace('.jpg','_y.jpg')

@@ -13,19 +13,19 @@
         </div>
 
         <div class="record_panle" v-if="hasTDS" @click="tdsModalVisible = true">
-            <div class="circle">
+            <!-- <div class="circle">
                 <span v-for="i in 4" :key="i" :class="'c'+i" v-show="i==(level>4?4:level)"></span>
-            </div>
-            <div class="arrow" :style="{transform:'rotate('+ rotate +'deg)'}"></div>
+            </div> -->
+            <!-- <div class="arrow" :style="{transform:'rotate('+ rotate +'deg)'}"></div> -->
             <div class="value">{{nowTDS}}</div>
             <div class="pic">TDS</div>
-            <div class="valueset" @click.stop="">
+            <!-- <div class="valueset" @click.stop="">
                 <span>0</span>
                 <span>50</span>
                 <span>100</span>
                 <span>300</span>
                 <span>300+</span>
-            </div>
+            </div> -->
             <div class="text">
                 <span v-if="level==1">过滤后水质可直接饮用</span>
                 <span v-else-if="level==2">过滤后水质不建议直接饮用</span>
@@ -57,7 +57,7 @@
         <filter-items :items="filterItems" :view-filter="viewFilter" />
     </div>
 
-    <modal title="TDS简介" class="modal-w" v-model="tdsModalVisible">
+    <sub-page title="TDS简介" class="modal-w" v-model="tdsModalVisible">
         <div class="tds">
             <p>
                 对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果，
@@ -65,7 +65,7 @@
             </p>
             <img src="./assets/waterpurifier_img_tdsppm.png"/>
         </div>
-    </modal>
+    </sub-page>
 
     <modal v-for="item in expiredFilter" :key="item" title="净水器滤芯到期" v-model="item.timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
         <div class="alarm">
@@ -96,7 +96,7 @@
         </div>
     </modal>
 
-    <modal title="滤芯状态" class="modal-w" v-model="statusModalVisible">
+    <sub-page title="滤芯状态" class="modal-w" v-model="statusModalVisible">
         <div class="lx_status">
             <div class="p1">滤芯{{currentFilter.index+1}}</div>
             <div class="p2">{{getName(currentFilter.index)}} </div>
@@ -114,7 +114,7 @@
 
             <div class="msg">更换滤芯后请重置剩余时间</div>
         </div>
-    </modal>
+    </sub-page>
 
 </div>
 </template>
@@ -138,9 +138,10 @@ a {
     top: 0;
     width: 100%;
     height: 100%;
-    background: #46bcff;
+    color: #1EA0FF;
+    // background: #46bcff;
     &.warn {
-        background: #d04802;
+        // background: #d04802;
     }
 }
 @keyframes wave1 {
@@ -148,7 +149,7 @@ a {
         background-position-x: 0;
     }
     to {
-        background-position-x: -1920px;
+        background-position-x: -750px;
     }
 }
 @keyframes wave2 {
@@ -156,7 +157,7 @@ a {
         background-position-x: 300px;
     }
     to {
-        background-position-x: -1620px;
+        background-position-x: -450px;
     }
 }
 @keyframes wave3 {
@@ -164,31 +165,35 @@ a {
         background-position-x: 600px;
     }
     to {
-        background-position-x: -1320px;
+        background-position-x: -150px;
     }
 }
 .water_wave {
     position: absolute;
     left: 0;
-    bottom: 170px;
+    bottom: 0px;
     width: 100%;
     background-size: 100% 100%;
     background-repeat: repeat-x;
+    background-color: red;
     &.ww1 {
         background-image: url(./assets/waterpurifier_bg_wave_one.png);
-        height: 185px;
-        // animation: wave1 10s linear infinite;
+        height: 800px;
+        animation: wave1 5s linear infinite;
     }
     &.ww2 {
         background-image: url(./assets/waterpurifier_bg_wave_two.png);
-        height: 201px;
-        // animation: wave2 15s linear infinite;
+        height: 800px;
+        animation: wave2 8s linear infinite;
     }
     &.ww3 {
         background-image: url(./assets/waterpurifier_bg_wave_three.png);
-        height: 226px;
-        // animation: wave3 20s linear infinite;
+        height: 800px;
+        animation: wave3 10s linear infinite;
     }
+}
+.page-on,.page-sec{
+    position: relative;
 }
 .name {
     position: absolute;
@@ -197,7 +202,7 @@ a {
     width: 100%;
     text-align: center;
     font-size: 30px;
-    color: #ffffff;
+    color: #1EA0FF;
 }
 .tip {
     position: absolute;
@@ -206,7 +211,7 @@ a {
     width: 100%;
     text-align: center;
     font-size: 30px;
-    color: #ffffff;
+    color: #1EA0FF;
     opacity: 0.5;
     height: 80px;
     span {
@@ -259,7 +264,7 @@ a {
     .value {
         font-family: AbwechselnschriftBold;
         font-size: 144px;
-        color: #ffffff;
+        color: #1EA0FF;
         position: absolute;
         left: 0px;
         top: 120px;
@@ -267,11 +272,11 @@ a {
         text-align: center;
     }
     .pic {
-        border: 1px solid #fff;
+        border: 1px solid #1EA0FF;
         background: rgba(255, 255, 255, 0.2);
         border-radius: 43px;
         width: 122px;
-        color: #fff;
+        color: #1EA0FF;
         text-align: center;
         font-family: Roboto-Regular;
         font-size: 30px;
@@ -287,7 +292,7 @@ a {
         width: 100%;
         top: 420px;
         text-align: center;
-        color: #fff;
+        color: #1EA0FF;
     }
     .valueset {
         span {
@@ -402,36 +407,36 @@ a {
     }
 }
 .lx_title {
-    position: absolute;
-    left: 0;
-    top: 288px;
-    width: 100%;
+    // position: absolute;
+    // left: 0;
+    // top: 288px;
+    // width: 100%;
     text-align: center;
     font-size: 36px;
     color: #ffffff;
 }
 .lx_wrap {
-    position: absolute;
-    left: 6%;
-    top: 400px;
-    width: 88%;
-    display: flex;
-    justify-content: space-around;
+    // position: absolute;
+    // left: 6%;
+    // top: 400px;
+    // width: 88%;
+    // display: flex;
+    // justify-content: space-around;
 }
 .lx_item {
-    width: 302px;
-    height: 302px;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-image: url(./assets/waterpurifier_btn_filter_normal.png);
-    &:active {
-        background-image: url(./assets/waterpurifier_btn_filter_pressed.png);
-    }
+    // width: 302px;
+    // height: 302px;
+    // background-repeat: no-repeat;
+    // background-size: 100% 100%;
+    // background-image: url(./assets/waterpurifier_btn_filter_normal.png);
+    // &:active {
+    //     background-image: url(./assets/waterpurifier_btn_filter_pressed.png);
+    // }
     &.active {
-        background-image: url(./assets/waterpurifier_btn_expiredfilter_normal.png);
-        &:active {
-            background-image: url(./assets/waterpurifier_btn_expiredfilter_pressed.png);
-        }
+        // background-image: url(./assets/waterpurifier_btn_expiredfilter_normal.png);
+        // &:active {
+        //      background-image: url(./assets/waterpurifier_btn_expiredfilter_pressed.png);
+        // }
         .item-name {
             color: rgba(74, 144, 226, 0.5);
             i {
@@ -446,7 +451,7 @@ a {
         margin-top: 100px;
         text-align: center;
         font-size: 30px;
-        color: rgba(255, 255, 255, 0.5);
+        // color: rgba(255, 255, 255, 0.5);
         margin-bottom: 10px;
         i {
             width: 22px;
@@ -463,10 +468,10 @@ a {
     }
 }
 .lx_msg {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    top: 832px;
+    // position: absolute;
+    // left: 0;
+    // width: 100%;
+    // top: 832px;
     text-align: center;
     font-size: 30px;
     color: #ffffff;
@@ -603,6 +608,7 @@ a {
 import Modal from "./components/Modal.vue";
 import CirclePie from "./components/CirclePie.vue";
 import FilterItems from "./components/FilterItems.vue";
+import SubPage from './components/SubPage.vue'
 
 const TDS_VALUE = [0, 50, 100, 300, 500];
 const TDS_ANGLE = [-136, -74, 0, 74, 136];
@@ -625,7 +631,8 @@ export default {
     components: {
         Modal,
         CirclePie,
-        FilterItems
+        FilterItems,
+        SubPage
     },
     data() {
         return {

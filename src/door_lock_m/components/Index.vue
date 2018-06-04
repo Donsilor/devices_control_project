@@ -121,7 +121,8 @@
     position: fixed;
     left: 0;
     width: 100%;
-    top: 96px;
+    // top: 96px;
+    top: 130px;
     .alert {
         background: rgba(51, 51, 51, 0.75);
         width: 100%;

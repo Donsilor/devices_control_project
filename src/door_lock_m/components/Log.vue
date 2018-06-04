@@ -154,8 +154,8 @@ export default {
         var query = this.$route.query;
 
         return {
-            device_id: parseInt(query.device_id),
-            family_id: parseInt(query.family_id),
+            device_id: query.device_id,
+            family_id: query.family_id,
             date: now,
             startDate: new Date(
                 now.getFullYear() - 1,
