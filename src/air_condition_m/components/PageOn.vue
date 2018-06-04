@@ -1,5 +1,5 @@
 <template>
-<div class="wrap-on" :class="{isios:isIOS}">
+<div class="wrap-on">
 
     <div class="bg"></div>
 
@@ -117,7 +117,6 @@ export default {
     },
     data() {
         return {
-            isIOS: /iphone|ipad/i.test(navigator.userAgent),
             temperature: this.ac.temperature,
             toggle: false,
             tipVisible: false,
@@ -327,7 +326,7 @@ export default {
     background-size: 100% 100%;
     background-repeat: no-repeat;
     // top: 600px;
-    bottom: 252px;
+    bottom: 140px;
     background-image: url(../assets/btn_aircon_poweroff_normal@2x.png);
     transition: all 1s;
     &:active {
@@ -378,7 +377,7 @@ export default {
 .btns-hold{
     position: absolute;
     left: 50%;
-    bottom: 428px;
+    bottom: 328px;
     width: 750px;
     transform: translateX(-50%);
     padding: 0 35px;
@@ -513,10 +512,10 @@ export default {
 .fade-enter, .fade-leave-to{
   opacity: 0
 }
-.isios .btns-hold{
-    bottom: 328px;
+.android .btns-hold{
+    bottom: 428px;
 }
-.isios .btn-off{
-    bottom: 140px;
+.android .btn-off{
+    bottom: 252px;
 }
 </style>
