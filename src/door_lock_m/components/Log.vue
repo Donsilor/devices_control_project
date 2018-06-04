@@ -355,7 +355,7 @@ export default {
                         params: {
                             device_id: this.device_id,
                             family_id: this.family_id,
-                            del_time: +this.date / 1000
+                            del_time: Math.floor(+new Date() / 1000)
                         }
                     },
                     data => {
@@ -372,13 +372,15 @@ export default {
                         params: {
                             device_id: this.device_id,
                             family_id: this.family_id,
-                            del_time: +this.date / 1000
+                            del_time: Math.floor(+new Date() / 1000)
                         }
                     },
                     data => {
+                        console.log(data);
                         this.getLogData(undefined, this.type);
                     },
                     data => {
+                        console.log(data);
                         this.getLogData(undefined, this.type);
                     }
                 );

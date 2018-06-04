@@ -350,6 +350,43 @@ export default {
         }, 200),
         clearLog() {
             //TODO
+            if (this.type == "warn") {
+                HdSmart.Device.control(
+                    {
+                        method: "da_delete_dev_alert",
+                        params: {
+                            device_id: this.device_id,
+                            family_id: this.family_id,
+                            del_time: Math.floor(+new Date() / 1000)
+                        }
+                    },
+                    data => {
+                        this.getLogData(undefined, this.type);
+                    },
+                    data => {
+                        this.getLogData(undefined, this.type);
+                    }
+                );
+            } else {
+                HdSmart.Device.control(
+                    {
+                        method: "dr_delete_dev_status",
+                        params: {
+                            device_id: this.device_id,
+                            family_id: this.family_id,
+                            del_time: Math.floor(+new Date() / 1000)
+                        }
+                    },
+                    data => {
+                        console.log(data);
+                        this.getLogData(undefined, this.type);
+                    },
+                    data => {
+                        console.log(data);
+                        this.getLogData(undefined, this.type);
+                    }
+                );
+            }
         }
     },
     created() {},

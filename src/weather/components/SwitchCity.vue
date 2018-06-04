@@ -5,66 +5,69 @@
                 <span class="back" @click="back"></span>
                 <span class="text">切换城市</span>
             </div>
-            
+
             <div class="sc-city">
                 <div class="input">
-                <span class="input-ico"></span>
-                <input v-model="userinput" placeholder="请输入城市名称搜索" />
-            </div>
-            <div class="sc-location">
-                <span class="location-ico"></span>
-                <span class='location-text'>当前定位城市：&nbsp; {{city.name || ""}}</span>
-            </div>
+                    <span class="input-ico"></span>
+                    <input v-model="userinput" placeholder="请输入城市名称搜索" />
+                </div>
+                <div class="sc-location">
+                    <span class="location-ico"></span>
+                    <span class='location-text'>当前定位城市：&nbsp; {{city.name || ""}}</span>
+                </div>
 
-            <div class="sc-line-location"></div>
+                <div class="sc-line-location"></div>
 
-            
                 <div class="hot-city-text">热门城市</div>
                 <div class="city-list">
                     <span v-for="(item, index) in hotCities" :key="index" @click="getWeather(item.city_id)" class="sc-hot-city">{{item.name}}</span>
                 </div>
-            
-            
-            <div class="alpha-city-list">
-                <template v-for="(item, index) in filteredAlphaCityList">
-                    <div :key="index">
-                        <div :id="item.char" class="alpha-title">{{item.char}}</div>
-                        <div class="sc-line-location"></div>
-                        <template v-for="(child, childindex) in item.list">
-                            <div :key="childindex">
-                                <div class="alpah-city-text" @click="getWeather(child.city_id)" >{{child.name}}</div>
+
+                <div id="wrapper">
+                    <div class="alpha-city-list">
+                        <template v-for="(item, index) in filteredAlphaCityList">
+                            <div :key="index">
+                                <div :id="item.char" class="alpha-title">{{item.char}}</div>
                                 <div class="sc-line-location"></div>
+                                <template v-for="(child, childindex) in item.list">
+                                    <div :key="childindex">
+                                        <div class="alpah-city-text" @click="getWeather(child.city_id)">{{child.name}}</div>
+                                        <div class="sc-line-location"></div>
+                                    </div>
+                                </template>
                             </div>
                         </template>
                     </div>
-                </template>
-            </div>
-
+                </div>
             </div>
 
             <div class="alpha-filter">
                 <div class="filter-hot-text">热门</div>
                 <div @touchmove.prevent="jump" @touchend.prevent="finishFiler">
-                <template v-for="(char, index) in chars">
-                    <div :key="index" class="filter-char-box" >
-                        <span v-if="current_filterchar == char" class="scale-char">
-                            <span class="scale-char-text">{{current_filterchar}}</span>
-                        </span>
-                    <div @touchstart="jump" :class="`alpha-filter-char ${current_filterchar == char ? `active-filter-char` : ``}`">{{char}}</div>
-                    </div>
-                </template>
+                    <template v-for="(char, index) in chars">
+                        <div :key="index" class="filter-char-box">
+                            <span v-if="current_filterchar == char" class="scale-char">
+                                <span class="scale-char-text">{{current_filterchar}}</span>
+                            </span>
+                            <div @touchstart="jump" :class="`alpha-filter-char ${current_filterchar == char ? `active-filter-char` : ``}`">{{char}}</div>
+                        </div>
+                    </template>
                 </div>
             </div>
         </template>
         <template v-else>
             <div class="error_tip">
                 <div class="icon"></div>
-                <div class="msg">无法连接网络，请检查网络后 <span>点击屏幕刷新</span></div>
+                <div class="msg">无法连接网络，请检查网络后
+                    <span>点击屏幕刷新</span>
+                </div>
             </div>
         </template>
     </div>
 </template>
 <script>
+import IScroll from "iscroll/build/iscroll-lite";
+
 const HOTCITIES = [
     {
         name: "北京",
@@ -4820,6 +4823,9 @@ export default {
         this.chars = this.alphaCityList.map(item => item.char);
 
         this.hotCities = HOTCITIES;
+
+        //iscroll
+        let myScroll = new IScroll("#wrapper");
     },
 
     props: ["getCityWeather", "city"],
@@ -5080,6 +5086,10 @@ export default {
     .city-list {
         margin-top: 39px;
     }
+}
+
+#wrapper {
+    position: relative;
 }
 
 .alpha-city-list {

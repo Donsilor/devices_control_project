@@ -10,37 +10,45 @@
                 <span class="s-icon"></span>
                 <span class="s-text">城市切换</span>
             </span>
-        <div class="title">{{currentDate}}&nbsp;&nbsp;{{currentWeek}}&nbsp;&nbsp;{{currentOldDay}}</div>
-        <template v-if="success">
-        <div class="city">
-            <div class="city-name" style="margin-top: 10px">{{city.name}}</div>
-            <div><span class="img" :class="curMinBg"></span></div>
-            <div class="city-name">{{acturlTemp}}℃&nbsp;&nbsp;{{acturlCondition}}</div>
-            <div class="city-detail">
-                <!--<span>降水概率：10%</span>-->
-                <!--<span>湿度：74%</span>-->
-                <span v-if="curAQIvalue">实时空气质量：<i :class="airLevel">{{curAQIvalue}}&nbsp;{{airLevelText}}</i></span>
-            </div>
-        </div>
-        <div class="weather-list-con">
-            <ul class="weather-list">
-                <li v-for="(item, index) in wList" :key="index">
-                    <div class="">{{index === 0 ? '今天' : item.predictDate}}</div>
-                    <div>{{item.weekday}}</div>
-                    <div class="w-icon"><i :class="renderClass(item.conditionIdDay)"></i></div>
-                    <div class="">{{item.tempNight}}～{{item.tempDay}}℃</div>
-                    <div class="">{{item.conditionDay}}</div>
-                    <div class="">{{item.windDirDay}}&nbsp;{{item.windLevelDay}}级</div>
-                </li>
-            </ul>
-        </div>
-        </template>
-        <template v-else>
-            <div class="error_tip" @click="getWeatherData">
-                <div class="icon"></div>
-                <div class="msg">无法连接网络，请检查网络后 <span>点击屏幕刷新</span></div>
-            </div>
-        </template>
+            <div class="title">{{currentDate}}&nbsp;&nbsp;{{currentWeek}}&nbsp;&nbsp;{{currentOldDay}}</div>
+            <template v-if="success">
+                <div class="city">
+                    <div class="city-name" style="margin-top: 10px">{{city.name}}</div>
+                    <div>
+                        <span class="img" :class="curMinBg"></span>
+                    </div>
+                    <div class="city-name">{{acturlTemp}}℃&nbsp;&nbsp;{{acturlCondition}}</div>
+                    <div class="city-detail">
+                        <!--<span>降水概率：10%</span>-->
+                        <!--<span>湿度：74%</span>-->
+                        <span v-if="curAQIvalue">实时空气质量：
+                            <i :class="airLevel">{{curAQIvalue}}&nbsp;{{airLevelText}}</i>
+                        </span>
+                    </div>
+                </div>
+                <div class="weather-list-con">
+                    <ul class="weather-list">
+                        <li v-for="(item, index) in wList" :key="index">
+                            <div class="">{{index === 0 ? '今天' : item.predictDate}}</div>
+                            <div>{{item.weekday}}</div>
+                            <div class="w-icon">
+                                <i :class="renderClass(item.conditionIdDay)"></i>
+                            </div>
+                            <div class="">{{item.tempNight}}～{{item.tempDay}}℃</div>
+                            <div class="">{{item.conditionDay}}</div>
+                            <div class="">{{item.windDirDay}}&nbsp;{{item.windLevelDay}}级</div>
+                        </li>
+                    </ul>
+                </div>
+            </template>
+            <template v-else>
+                <div class="error_tip" @click="getWeatherData">
+                    <div class="icon"></div>
+                    <div class="msg">无法连接网络，请检查网络后
+                        <span>点击屏幕刷新</span>
+                    </div>
+                </div>
+            </template>
         </template>
     </div>
 </template>
