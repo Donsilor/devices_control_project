@@ -376,11 +376,11 @@ export default {
                         }
                     },
                     data => {
-                        console.log(data);
+                        // console.log(data);
                         this.getLogData(undefined, this.type);
                     },
                     data => {
-                        console.log(data);
+                        // console.log(data);
                         this.getLogData(undefined, this.type);
                     }
                 );

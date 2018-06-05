@@ -1,62 +1,60 @@
 <template>
-    <div class="scbody" id="wrapper">
-        <div id="scroller">
+    <div class="scbody">
 
-            <div class="nav">
-                <span class="back" @click="back">返回</span>
-                <span class="text">切换城市</span>
+        <div class="nav">
+            <span class="back" @click="back">返回</span>
+            <span class="text">切换城市</span>
+        </div>
+
+        <div class="sc-city">
+            <div class="input">
+                <span class="input-ico"></span>
+                <input v-model="userinput" placeholder="请输入城市名称搜索" />
+            </div>
+            <div class="sc-location">
+                <span class="location-ico"></span>
+                <span class='location-text'>当前定位城市：&nbsp; {{city.name || ""}}</span>
             </div>
 
-            <div class="sc-city">
-                <div class="input">
-                    <span class="input-ico"></span>
-                    <input v-model="userinput" placeholder="请输入城市名称搜索" />
-                </div>
-                <div class="sc-location">
-                    <span class="location-ico"></span>
-                    <span class='location-text'>当前定位城市：&nbsp; {{city.name || ""}}</span>
-                </div>
+            <div class="sc-line-location"></div>
 
-                <div class="sc-line-location"></div>
-
-                <div class="hot-city-text">热门城市</div>
-                <div class="city-list">
-                    <span v-for="(item, index) in hotCities" :key="index" @click="getWeather(item.city_id)" class="sc-hot-city">{{item.name}}</span>
-                </div>
-
-                <div>
-                    <div class="alpha-city-list">
-                        <template v-for="(item, index) in filteredAlphaCityList">
-                            <div :key="index">
-                                <div :id="item.char" class="alpha-title">{{item.char}}</div>
-                                <div class="sc-line-location"></div>
-                                <template v-for="(child, childindex) in item.list">
-                                    <div :key="childindex">
-                                        <div class="alpah-city-text" @click="getWeather(child.city_id)">{{child.name}}</div>
-                                        <div class="sc-line-location"></div>
-                                    </div>
-                                </template>
-                            </div>
-                        </template>
-                    </div>
-                </div>
+            <div class="hot-city-text">热门城市</div>
+            <div class="city-list">
+                <span v-for="(item, index) in hotCities" :key="index" @click="getWeather(item.city_id)" class="sc-hot-city">{{item.name}}</span>
             </div>
 
-            <div class="alpha-filter">
-                <div class="filter-hot-text">热门</div>
-                <div @touchmove.prevent="jump" @touchend.prevent="finishFiler">
-                    <template v-for="(char, index) in chars">
-                        <div :key="index" class="filter-char-box">
-                            <span v-if="current_filterchar == char" class="scale-char">
-                                <span class="scale-char-text">{{current_filterchar}}</span>
-                            </span>
-                            <div @touchstart="jump" :class="`alpha-filter-char ${current_filterchar == char ? `active-filter-char` : ``}`">{{char}}</div>
+            <div>
+                <div class="alpha-city-list">
+                    <template v-for="(item, index) in filteredAlphaCityList">
+                        <div :key="index">
+                            <div :id="item.char" class="alpha-title">{{item.char}}</div>
+                            <div class="sc-line-location"></div>
+                            <template v-for="(child, childindex) in item.list">
+                                <div :key="childindex">
+                                    <div class="alpah-city-text" @click="getWeather(child.city_id)">{{child.name}}</div>
+                                    <div class="sc-line-location"></div>
+                                </div>
+                            </template>
                         </div>
                     </template>
                 </div>
             </div>
-
         </div>
+
+        <div class="alpha-filter">
+            <div class="filter-hot-text">热门</div>
+            <div @touchmove.prevent="jump" @touchend.prevent="finishFiler">
+                <template v-for="(char, index) in chars">
+                    <div :key="index" class="filter-char-box">
+                        <span v-if="current_filterchar == char" class="scale-char">
+                            <span class="scale-char-text">{{current_filterchar}}</span>
+                        </span>
+                        <div @touchstart="jump" :class="`alpha-filter-char ${current_filterchar == char ? `active-filter-char` : ``}`">{{char}}</div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
     </div>
 </template>
 <script>

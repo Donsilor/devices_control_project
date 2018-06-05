@@ -295,7 +295,6 @@ export default {
         getCityWeather(weathercnid) {
             //TODO
             this.getWeatherData(weathercnid);
-            console.log("getcityweather");
         }
     }
 };
