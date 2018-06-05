@@ -220,7 +220,7 @@ export default {
             }
             return curClass;
         },
-        getWeatherData(weathercnid) {
+        getWeatherData(city_id) {
             let now = new Date();
             let thisDay = now.getDay();
             let curIndex = 0;
@@ -246,7 +246,7 @@ export default {
             HdSmart.Device.control(
                 {
                     method: "3d_get_moji_weather",
-                    params: { cityId: weathercnid }
+                    params: { city_id: ~~city_id }
                 },
                 res => {
                     let innerData = (res.result && res.result.data) || "";
@@ -555,8 +555,8 @@ body {
         font-size: 25px;
         line-height: 36px;
         position: absolute;
-        top: 10px;
-        right: 15px;
+        top: 9px;
+        right: 16px;
     }
 }
 </style>

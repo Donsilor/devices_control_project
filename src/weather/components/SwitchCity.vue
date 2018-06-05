@@ -1,8 +1,9 @@
 <template>
-    <div class="scbody">
-        <template v-if="success">
+    <div class="scbody" id="wrapper">
+        <div id="scroller">
+
             <div class="nav">
-                <span class="back" @click="back"></span>
+                <span class="back" @click="back">返回</span>
                 <span class="text">切换城市</span>
             </div>
 
@@ -23,7 +24,7 @@
                     <span v-for="(item, index) in hotCities" :key="index" @click="getWeather(item.city_id)" class="sc-hot-city">{{item.name}}</span>
                 </div>
 
-                <div id="wrapper">
+                <div>
                     <div class="alpha-city-list">
                         <template v-for="(item, index) in filteredAlphaCityList">
                             <div :key="index">
@@ -54,15 +55,8 @@
                     </template>
                 </div>
             </div>
-        </template>
-        <template v-else>
-            <div class="error_tip">
-                <div class="icon"></div>
-                <div class="msg">无法连接网络，请检查网络后
-                    <span>点击屏幕刷新</span>
-                </div>
-            </div>
-        </template>
+
+        </div>
     </div>
 </template>
 <script>
@@ -4825,7 +4819,7 @@ export default {
         this.hotCities = HOTCITIES;
 
         //iscroll
-        let myScroll = new IScroll("#wrapper");
+        // let myScroll = new IScroll("#wrapper", { useTransition: false });
     },
 
     props: ["getCityWeather", "city"],
@@ -4938,14 +4932,11 @@ export default {
     text-align: center;
     .back {
         position: absolute;
-        top: 30px;
-        left: 90px;
-        cursor: pointer;
-        width: 54px;
+        top: 37px;
+        right: 60px;
+        width: 64px;
         height: 54px;
         display: inline-block;
-        background: url(../assets/icn_topbar_arrowdown_w_normal.png) no-repeat;
-        background-size: 100% 100%;
     }
 
     .text {
@@ -5087,10 +5078,13 @@ export default {
         margin-top: 39px;
     }
 }
-
-#wrapper {
-    position: relative;
-}
+//iscroll
+// #wrapper {
+//     position: absolute;
+// }
+// #scroller {
+//     position: absolute;
+// }
 
 .alpha-city-list {
     .alpha-title {
