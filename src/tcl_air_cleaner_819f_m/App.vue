@@ -13,7 +13,7 @@
             </div>
             <div class="arrow" :style="{transform:'rotate('+ pm25_rotate +'deg)'}"></div>
             <div class="value" v-html="pm25_text"></div>
-            <div class="pic">PM 2.5</div>
+            <div class="pic" @click="togglePMPop">PM 2.5</div>
         </div>
         <div class="attrs">
             <span v-if="model.temperature && model.temperature!='0'">温度：{{model.temperature}}℃</span>
@@ -61,6 +61,16 @@
                 </a>
             </div>
         </modal>
+        <sub-page title="PM2.5简介" class="modal-w" v-model="pmPopVisible" @click.prevent="toggleModePop">
+            <div class="intro-body">
+                <p class="main_text" >
+                    PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
+                </p>
+                <div class="pm-range">
+                    <img src="./assets/PM2.5_scale@3x.png"/>
+                </div>
+            </div>
+        </sub-page>
 
     </div>
 
@@ -96,6 +106,27 @@ body{
 a{
     text-decoration: none;
 }
+/**pm2.5介绍样式 start */
+.main_text{
+    width:100%;
+    box-sizing:border-box;
+    padding:34px 32px 0 32px;
+    color:#333333;
+    font-size:28px;
+}
+.pm-range{
+    width:100%;
+    height:auto;
+    margin-top:60px;
+    box-sizing:border-box;
+    padding:0 18px;
+    img{
+        width:100%;
+        height:auto;
+        display:block;
+    }
+}
+/**pm2.5介绍样式 end */
 .page-on{
     background:#46bcff;
     position: absolute;
@@ -471,7 +502,7 @@ a{
     top: 750px;
     width: 100%;
     a{
-        margin:0 48px;
+        margin:0 25px;
         i{
             margin-bottom: 24px;
         }
@@ -523,6 +554,7 @@ a{
 <script>
 import Modal from './components/Modal.vue'
 import ErrorTip from './components/ErrorTip.vue'
+import SubPage from './components/SubPage'
 
 const SPEED_TEXT1 = [
     {text: '低速', className: '1', value: 'low'},
@@ -621,7 +653,8 @@ function throttle(func, wait, options) {
 export default {
     components: {
         Modal,
-        ErrorTip
+        ErrorTip,
+        SubPage
     },
     data() {
         return {
@@ -640,7 +673,8 @@ export default {
             prevModel: {
                 control_status: 'auto',
                 speed: ''
-            }
+            },
+            pmPopVisible:false
         }
     },
     computed: {
@@ -679,6 +713,15 @@ export default {
         }
     },
     methods: {
+        togglePMPop() {//pm2.5
+        console.log(99999999,this.pmPopVisible)
+            this.pmPopVisible = !this.pmPopVisible;
+            if(this.pmPopVisible){
+                HdSmart.UI.toggleHeadAndFoot(false)
+            }else{
+                HdSmart.UI.toggleHeadAndFoot(true)
+            }
+        },
         showTip(text) {
             clearTimeout(this.tipTime)
             this.tip = text
