@@ -226,6 +226,11 @@ export default {
             let curIndex = 0;
             let currentWeekArr = [];
             let awds = this.allWeekDays;
+            let params = {};
+            if (city_id !== undefined && ~~city_id) {
+                params.city_id = ~~city_id;
+            }
+
             awds.forEach((item, index) => {
                 if (item.value === thisDay) {
                     curIndex = index;
@@ -246,7 +251,7 @@ export default {
             HdSmart.Device.control(
                 {
                     method: "3d_get_moji_weather",
-                    params: { city_id: ~~city_id }
+                    params
                 },
                 res => {
                     let innerData = (res.result && res.result.data) || "";
