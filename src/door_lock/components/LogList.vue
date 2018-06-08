@@ -161,20 +161,25 @@ export default {
 */
 .log-icon-17 {
     background: url("../assets/code.png");
+    background-size: 100% 100%;
 }
 
 .log-icon-18 {
     background: url("../assets/fingerprint.png");
+    background-size: 100% 100%;
 }
 
 .log-icon-19 {
     background: url("../assets/card.png");
+    background-size: 100% 100%;
 }
 
 .log-icon-20 {
     background: url("../assets/key.png");
+    background-size: 100% 100%;
 }
 .log-icon-21 {
     background: url("../assets/phone.png");
+    background-size: 100% 100%;
 }
 </style>

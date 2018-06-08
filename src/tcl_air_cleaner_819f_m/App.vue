@@ -1,179 +1,180 @@
 <template>
-<div id="app">
-    <div class="page-on" v-if="status == 'error' || model.switch_status == 'on'">
-        <div class="name">{{device_name}}</div>
-        <div class="tip">
-            <p v-show="tip">{{tip}}</p>
-            <p v-show="!tip && remain_tip">{{remain_tip}}</p>
-        </div>
-        <a v-if="ab.child_lock_switch || ab.negative_ion_switch" href="" class="btn-more" @click.prevent="moreModalVisible = true"></a>
-        <div class="pm25">
-            <div class="circle">
-                <span v-for="i in 5" :key="i" :class="'c'+i" v-show="i==(pm25_level>5?5:pm25_level)"></span>
+    <div id="app">
+        <div class="page-on" v-if="status == 'error' || model.switch_status == 'on'">
+            <div class="name">{{device_name}}</div>
+            <div class="tip">
+                <p v-show="tip">{{tip}}</p>
+                <p v-show="!tip && remain_tip">{{remain_tip}}</p>
             </div>
-            <div class="arrow" :style="{transform:'rotate('+ pm25_rotate +'deg)'}"></div>
-            <div class="value" v-html="pm25_text"></div>
-            <div class="pic" @click="togglePMPop">PM 2.5</div>
-        </div>
-        <div class="attrs">
-            <span v-if="model.temperature && model.temperature!='0'">温度：{{model.temperature}}℃</span>
-            <span v-if="model.humidity && model.humidity!='0'">湿度：{{model.humidity}}%</span>
-        </div>
-        <div class="btns btns-fn">
-            <a href="" class="btn-on" @click.prevent="setSwitch('off')">
-                <i></i> 开关
-            </a>
-            <a href="" class="btn-sleep" :class="{active:model.control_status == 'sleep'}" @click.prevent="setSleep">
-                <i></i> 睡眠
-            </a>
-            <!-- <a href="" class="btn-sleep"  @click.prevent="setControl('manual')">
+            <a v-if="ab.child_lock_switch || ab.negative_ion_switch" href="" class="btn-more" @click.prevent="moreModalVisible = true"></a>
+            <div class="pm25">
+                <div class="circle">
+                    <span v-for="i in 5" :key="i" :class="'c'+i" v-show="i==(pm25_level>5?5:pm25_level)"></span>
+                </div>
+                <div class="arrow" :style="{transform:'rotate('+ pm25_rotate +'deg)'}"></div>
+                <div class="value" v-html="pm25_text"></div>
+                <div class="pic" @click="togglePMPop">PM 2.5</div>
+            </div>
+            <div class="attrs">
+                <span v-if="model.temperature && model.temperature!='0'">温度：{{model.temperature}}℃</span>
+                <span v-if="model.humidity && model.humidity!='0'">湿度：{{model.humidity}}%</span>
+            </div>
+            <div class="btns btns-fn">
+                <a href="" class="btn-on" @click.prevent="setSwitch('off')">
+                    <i></i> 开关
+                </a>
+                <a href="" class="btn-sleep" :class="{active:model.control_status == 'sleep'}" @click.prevent="setSleep">
+                    <i></i> 睡眠
+                </a>
+                <!-- <a href="" class="btn-sleep"  @click.prevent="setControl('manual')">
                 <i></i> 手动
             </a> -->
-            <a href="" class="btn-auto active" @click.prevent="showSpeedModal" v-if="model.control_status == 'auto'">
-                <i></i> 自动
-            </a>
-            <a href="" :class="speedCss" @click.prevent="showSpeedModal" v-else-if="model.control_status == 'manual'">
-                <i></i> {{speedText}}
-            </a>
-            <a href="" class="btn-speed" @click.prevent="showSpeedModal" v-else>
-                <i></i> 风档
-            </a>
-        </div>
-
-        <modal title="风档" v-model="speedModalVisible">
-            <div class="btns btns-speed">
-                <a href="" v-for="item in speedItems" :key="item.value" :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]" @click.prevent="setSpeed(item.value)">
-                    <i></i> {{item.text}}
-                </a>
-                <a href="" class="btn1-auto" :class="{active: model.control_status == 'auto'}" @click.prevent="setControl('auto')">
+                <a href="" class="btn-auto active" @click.prevent="showSpeedModal" v-if="model.control_status == 'auto'">
                     <i></i> 自动
                 </a>
+                <a href="" :class="speedCss" @click.prevent="showSpeedModal" v-else-if="model.control_status == 'manual'">
+                    <i></i> {{speedText}}
+                </a>
+                <a href="" class="btn-speed" @click.prevent="showSpeedModal" v-else>
+                    <i></i> 风档
+                </a>
             </div>
-        </modal>
 
-        <modal title="更多" v-model="moreModalVisible">
-            <div class="btns btns-more">
-                <a v-if="ab.negative_ion_switch" href="" class="btn-ni" :class="{active:model.negative_ion_switch_status == 'on'}" @click.prevent="setNegativeIon">
-                    <i></i> 负离子
-                </a>
-                <a v-if="ab.child_lock_switch" href="" class="btn-cl" :class="{active:model.child_lock_switch_status == 'on'}" @click.prevent="setChildLock">
-                    <i></i> 童锁
-                </a>
-            </div>
-        </modal>
-        <sub-page title="PM2.5简介" class="modal-w" v-model="pmPopVisible" @click.prevent="toggleModePop">
-            <div class="intro-body">
-                <p class="main_text" >
-                    PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
-                </p>
-                <div class="pm-range">
-                    <img src="./assets/PM2.5_scale@3x.png"/>
+            <modal title="风档" v-model="speedModalVisible">
+                <div class="btns btns-speed">
+                    <a href="" v-for="item in speedItems" :key="item.value" :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]" @click.prevent="setSpeed(item.value)">
+                        <i></i> {{item.text}}
+                    </a>
+                    <a href="" class="btn1-auto" :class="{active: model.control_status == 'auto'}" @click.prevent="setControl('auto')">
+                        <i></i> 自动
+                    </a>
                 </div>
-            </div>
-        </sub-page>
+            </modal>
 
-    </div>
+            <modal title="更多" v-model="moreModalVisible">
+                <div class="btns btns-more">
+                    <a v-if="ab.negative_ion_switch" href="" class="btn-ni" :class="{active:model.negative_ion_switch_status == 'on'}" @click.prevent="setNegativeIon">
+                        <i></i> 负离子
+                    </a>
+                    <a v-if="ab.child_lock_switch" href="" class="btn-cl" :class="{active:model.child_lock_switch_status == 'on'}" @click.prevent="setChildLock">
+                        <i></i> 童锁
+                    </a>
+                </div>
+            </modal>
+            <sub-page title="PM2.5简介" class="modal-w" v-model="pmPopVisible" @click.prevent="toggleModePop">
+                <div class="intro-body">
+                    <p class="main_text">
+                        PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
+                    </p>
+                    <div class="pm-range">
+                        <img src="../../lib/base/air_cleaner/assets/PM2.5_scale@3x.png" />
+                    </div>
+                </div>
+            </sub-page>
 
-    <div class="page-off" v-if="model.switch_status == 'off'">
-        <div class="name">{{device_name}}</div>
-        <div class="tip">已关闭</div>
-        <div class="air_cleaner"></div>
-        <div class="btns btns-fn">
-            <a href="javascript:void(0)" class="btn-off" @click.prevent="setSwitch('on')">
-                <i></i> 开关
-            </a>
-            <a href="javascript:void(0)" class="btn-sleep disable">
-                <i></i> 睡眠
-            </a>
-            <a href="javascript:void(0)" class="btn-speed disable">
-                <i></i> 风档
-            </a>
         </div>
-    </div>
 
-    <!-- <error-tip v-if="status == 'error'" @click.native="getSnapShot" /> -->
-</div>
+        <div class="page-off" v-if="model.switch_status == 'off'">
+            <div class="name">{{device_name}}</div>
+            <div class="tip">已关闭</div>
+            <div class="air_cleaner"></div>
+            <div class="btns btns-fn">
+                <a href="javascript:void(0)" class="btn-off" @click.prevent="setSwitch('on')">
+                    <i></i> 开关
+                </a>
+                <a href="javascript:void(0)" class="btn-sleep disable">
+                    <i></i> 睡眠
+                </a>
+                <a href="javascript:void(0)" class="btn-speed disable">
+                    <i></i> 风档
+                </a>
+            </div>
+        </div>
+
+        <!-- <error-tip v-if="status == 'error'" @click.native="getSnapShot" /> -->
+    </div>
 </template>
 
 <style lang="less">
-*{
+* {
     padding: 0;
     margin: 0;
 }
-body{
+body {
     -webkit-tap-highlight-color: transparent;
 }
-a{
+a {
     text-decoration: none;
 }
 /**pm2.5介绍样式 start */
-.main_text{
-    width:100%;
-    box-sizing:border-box;
-    padding:34px 32px 0 32px;
-    color:#333333;
-    font-size:28px;
+.main_text {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 34px 32px 0 32px;
+    color: #333333;
+    font-size: 28px;
 }
-.pm-range{
-    width:100%;
-    height:auto;
-    margin-top:60px;
-    box-sizing:border-box;
-    padding:0 18px;
-    img{
-        width:100%;
-        height:auto;
-        display:block;
+.pm-range {
+    width: 100%;
+    height: auto;
+    margin-top: 60px;
+    box-sizing: border-box;
+    padding: 0 18px;
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
     }
 }
 /**pm2.5介绍样式 end */
-.page-on{
-    background:#46bcff;
+.page-on {
+    background: #46bcff;
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
 }
-.page-off{
-    background:#f2f2f2;
+.page-off {
+    background: #f2f2f2;
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
 }
-.name{
+.name {
     position: absolute;
     left: 0;
     top: 156px;
     width: 100%;
     text-align: center;
-    font-size:30px;
-    color:#ffffff;
+    font-size: 30px;
+    color: #ffffff;
 }
-.tip{
-   position: absolute;
+.tip {
+    position: absolute;
     left: 0;
     top: 200px;
     width: 100%;
     text-align: center;
-    font-size:30px;
-    color:#ffffff;
-    opacity:0.5;
+    font-size: 30px;
+    color: #ffffff;
+    opacity: 0.5;
 }
-.pm25{
+.pm25 {
     position: absolute;
     left: 50%;
     top: 280px;
-    transform: translate(-50%,0);
+    transform: translate(-50%, 0);
     width: 480px;
-    .circle{
+    .circle {
         width: 480px;
         height: 480px;
-        background: url(./assets/img_instrument_airquality.png) no-repeat;
+        background: url(../../lib/base/air_cleaner/assets/img_instrument_airquality.png)
+            no-repeat;
         background-size: 100% 100%;
-        span{
+        span {
             width: 480px;
             height: 480px;
             position: absolute;
@@ -182,63 +183,64 @@ a{
             background-repeat: no-repeat;
             background-size: 100% 100%;
         }
-        .c1{
-            background-image: url(./assets/img_instrument_airquality_1.png);
+        .c1 {
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_1.png);
         }
-        .c2{
-            background-image: url(./assets/img_instrument_airquality_2.png);
+        .c2 {
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_2.png);
         }
-        .c3{
-            background-image: url(./assets/img_instrument_airquality_3.png);
+        .c3 {
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_3.png);
         }
-        .c4{
-            background-image: url(./assets/img_instrument_airquality_4.png);
+        .c4 {
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_4.png);
         }
-        .c5{
-            background-image: url(./assets/img_instrument_airquality_5.png);
+        .c5 {
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_5.png);
         }
     }
-    .arrow{
+    .arrow {
         width: 480px;
         height: 480px;
         position: absolute;
         left: 0;
         top: 0;
-        background: url(./assets/img_instrument_airquality_pointer.png) no-repeat;
+        background: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_pointer.png)
+            no-repeat;
         background-size: 100% 100%;
         // transition: transform 1.5s;
     }
-    .value{
-        font-family:Roboto-Medium;;
-        font-size:120px;
-        color:#ffffff;
+    .value {
+        font-family: Roboto-Medium;
+        font-size: 120px;
+        color: #ffffff;
         position: absolute;
         left: 0px;
         top: 130px;
         width: 100%;
         text-align: center;
-        small{
+        small {
             font-size: 24px;
             position: absolute;
             // right: 60px;
             bottom: 26px;
         }
     }
-    .pic{
-        border:1px solid rgba(255,255,255,.5);
-        border-radius:24px;
-        width:122px;
-        color:#fff;
+    .pic {
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 24px;
+        width: 122px;
+        color: #fff;
         text-align: center;
-        font-family:Roboto-Regular;
-        font-size:24px;
+        font-family: Roboto-Regular;
+        font-size: 24px;
         line-height: 45px;
         position: absolute;
         left: 178px;
         top: 312px;
     }
 }
-.attrs{
+.attrs {
     position: absolute;
     left: 0;
     top: 666px;
@@ -246,35 +248,35 @@ a{
     text-align: center;
     color: #fff;
     font-size: 24px;
-    span{
+    span {
         margin: 0 16px;
     }
 }
-.btn-more{
+.btn-more {
     position: absolute;
     right: 40px;
     top: 132px;
     width: 96px;
     height: 96px;
-    background-image: url(./assets/more_normal.png);
+    background-image: url(../../lib/base/air_cleaner/assets/more_normal.png);
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    &:active{
-        background-image: url(./assets/more_active.png);
+    &:active {
+        background-image: url(../../lib/base/air_cleaner/assets/more_active.png);
     }
 }
-.btns{
+.btns {
     display: flex;
     justify-content: center;
 }
-.btns a{
+.btns a {
     display: block;
     width: 144px;
     height: 216px;
     font-size: 24px;
-    color:rgba(255,255,255,.5);
+    color: rgba(255, 255, 255, 0.5);
     text-align: center;
-    i{
+    i {
         display: block;
         width: 144px;
         height: 144px;
@@ -283,331 +285,331 @@ a{
         margin-bottom: 12px;
     }
 }
-.btn-on{
-    i{
-        background-image: url(./assets/btn_poweroff_m_normal.png);
+.btn-on {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweroff_m_normal.png);
     }
-    &:active i{
-        background-image: url(./assets/btn_poweroff_m_pressed.png);
-    }
-}
-.btn-off{
-    i{
-        background-image: url(./assets/btn_poweron_m_normal.png);
-    }
-    &:active i{
-        background-image: url(./assets/btn_poweron_m_pressed.png);
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweroff_m_pressed.png);
     }
 }
-.btn-sleep{
-    i{
-        background-image: url(./assets/btn_airpurifier_sleep_normal.png);
+.btn-off {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweron_m_normal.png);
     }
-    &:active i{
-        background-image: url(./assets/btn_airpurifier_sleep_pressed.png);
-    }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_sleep_active.png);
-    }
-    &.disable i{
-        background-image: url(./assets/btn_airpurifier_sleep_disable.png);
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweron_m_pressed.png);
     }
 }
-.btn-auto{
-    i{
-        background-image: url(./assets/btn_airpurifier_airvolume_6_normal.png);
+.btn-sleep {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_normal.png);
     }
-    &:active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_6_pressed.png);
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_pressed.png);
     }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_6_active.png);
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_active.png);
     }
-    &.disable i{
-        background-image: url(./assets/btn_airpurifier_airvolume_6_disable.png);
-    }
-}
-.btn-ni{
-    i{
-        background-image: url(./assets/btn_airpurifier_negative_normal.png);
-    }
-    &:active i{
-        background-image: url(./assets/btn_airpurifier_negative_pressed.png);
-    }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_negative_active.png);
+    &.disable i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_disable.png);
     }
 }
-.btn-cl{
-    i{
-        background-image: url(./assets/btn_airpurifier_lock_normal.png);
+.btn-auto {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_normal.png);
     }
-    &:active i{
-        background-image: url(./assets/btn_airpurifier_lock_pressed.png);
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_pressed.png);
     }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_lock_active.png);
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_active.png);
     }
-}
-.btn-speed{
-    i{
-        background-image: url(./assets/btn_airpurifier_airvolume_normal.png);
-    }
-    &:active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_pressed.png);
-    }
-    &.disable i{
-        background-image: url(./assets/btn_airpurifier_airvolume_disable.png);
+    &.disable i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_disable.png);
     }
 }
-.btn-speed1{
+.btn-ni {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_negative_normal.png);
+    }
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_negative_pressed.png);
+    }
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_negative_active.png);
+    }
+}
+.btn-cl {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_lock_normal.png);
+    }
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_lock_pressed.png);
+    }
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_lock_active.png);
+    }
+}
+.btn-speed {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_normal.png);
+    }
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_pressed.png);
+    }
+    &.disable i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_disable.png);
+    }
+}
+.btn-speed1 {
     // i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_1_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_normal.png);
     // }
     // &:active i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_1_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_pressed.png);
     // }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_1_active.png);
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_active.png);
     }
     // &.disable i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_1_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_disable.png);
     // }
 }
-.btn-speed2{
+.btn-speed2 {
     // i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_2_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_normal.png);
     // }
     // &:active i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_2_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_pressed.png);
     // }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_2_active.png);
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_active.png);
     }
     // &.disable i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_2_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_disable.png);
     // }
 }
-.btn-speed3{
+.btn-speed3 {
     // i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_3_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_normal.png);
     // }
     // &:active i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_3_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_pressed.png);
     // }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_3_active.png);
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_active.png);
     }
     // &.disable i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_3_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_disable.png);
     // }
 }
-.btn-speed4{
+.btn-speed4 {
     // i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_4_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_normal.png);
     // }
     // &:active i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_4_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_pressed.png);
     // }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_4_active.png);
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_active.png);
     }
     // &.disable i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_4_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_disable.png);
     // }
 }
-.btn-speed5{
+.btn-speed5 {
     // i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_5_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_normal.png);
     // }
     // &:active i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_5_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_pressed.png);
     // }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_5_active.png);
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_active.png);
     }
     // &.disable i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_5_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_disable.png);
     // }
 }
-.btn1-speed1{
-    i{
-        background-image: url(./assets/btn_airpurifier_airvolume_1a_normal.png);
+.btn1-speed1 {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1a_normal.png);
     }
-    &:active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_1a_pressed.png);
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1a_pressed.png);
     }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_1a_active.png);
-    }
-}
-.btn1-speed2{
-    i{
-        background-image: url(./assets/btn_airpurifier_airvolume_2a_normal.png);
-    }
-    &:active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_2a_pressed.png);
-    }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_2a_active.png);
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1a_active.png);
     }
 }
-.btn1-speed3{
-    i{
-        background-image: url(./assets/btn_airpurifier_airvolume_3a_normal.png);
+.btn1-speed2 {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2a_normal.png);
     }
-    &:active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_3a_pressed.png);
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2a_pressed.png);
     }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_3a_active.png);
-    }
-}
-.btn1-speed4{
-    i{
-        background-image: url(./assets/btn_airpurifier_airvolume_4a_normal.png);
-    }
-    &:active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_4a_pressed.png);
-    }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_4a_active.png);
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2a_active.png);
     }
 }
-.btn1-speed5{
-    i{
-        background-image: url(./assets/btn_airpurifier_airvolume_5a_normal.png);
+.btn1-speed3 {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3a_normal.png);
     }
-    &:active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_5a_pressed.png);
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3a_pressed.png);
     }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_5a_active.png);
-    }
-}
-.btn1-auto{
-    i{
-        background-image: url(./assets/btn_airpurifier_airvolume_6a_normal.png);
-    }
-    &:active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_6a_pressed.png);
-    }
-    &.active i{
-        background-image: url(./assets/btn_airpurifier_airvolume_6a_active.png);
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3a_active.png);
     }
 }
-.btns-fn{
+.btn1-speed4 {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4a_normal.png);
+    }
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4a_pressed.png);
+    }
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4a_active.png);
+    }
+}
+.btn1-speed5 {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5a_normal.png);
+    }
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5a_pressed.png);
+    }
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5a_active.png);
+    }
+}
+.btn1-auto {
+    i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6a_normal.png);
+    }
+    &:active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6a_pressed.png);
+    }
+    &.active i {
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6a_active.png);
+    }
+}
+.btns-fn {
     position: absolute;
     left: 0;
     top: 750px;
     width: 100%;
-    a{
-        margin:0 25px;
-        i{
+    a {
+        margin: 0 25px;
+        i {
             margin-bottom: 24px;
         }
     }
 }
-.btns-speed{
+.btns-speed {
     flex-wrap: wrap;
     justify-content: flex-start;
     margin: 0 20px;
-    a{
+    a {
         margin: 0 18px 0;
-        color:#76787a;
-        &.active{
-            color:#46bcff;
+        color: #76787a;
+        &.active {
+            color: #46bcff;
         }
     }
 }
-.btns-more{
-    a{
+.btns-more {
+    a {
         margin: 0 30px;
-        color:#76787a;
-        &.active{
-            color:#46bcff;
+        color: #76787a;
+        &.active {
+            color: #46bcff;
         }
     }
 }
-.page-off .name{
-    color:#76787a;
+.page-off .name {
+    color: #76787a;
 }
-.page-off .tip{
-    color:#c8cacc;
+.page-off .tip {
+    color: #c8cacc;
     opacity: 1;
 }
-.page-off .btns a{
-    color:#76787a;
+.page-off .btns a {
+    color: #76787a;
 }
-.air_cleaner{
+.air_cleaner {
     position: absolute;
     left: 50%;
     top: 260px;
     width: 420px;
     height: 420px;
-    transform: translate(-50%,0);
-    background: url(./assets/img_airpurifier_off.png) no-repeat;
+    transform: translate(-50%, 0);
+    background: url(../../lib/base/air_cleaner/assets/img_airpurifier_off.png)
+        no-repeat;
     background-size: 100% 100%;
 }
 </style>
 
 <script>
-import Modal from './components/Modal.vue'
-import ErrorTip from './components/ErrorTip.vue'
-import SubPage from './components/SubPage'
+import Modal from "./components/Modal.vue";
+import ErrorTip from "./components/ErrorTip.vue";
+import SubPage from "./components/SubPage";
 
 const SPEED_TEXT1 = [
-    {text: '低速', className: '1', value: 'low'},
-    {text: '中低速', className: '2', value: 'middle'},
-    {text: '中速', className: '3', value: 'high'},
-    {text: '中高速', className: '4', value: 'very_high'},
-    {text: '高速', className: '5', value: 'super_high'}
-]
+    { text: "低速", className: "1", value: "low" },
+    { text: "中低速", className: "2", value: "middle" },
+    { text: "中速", className: "3", value: "high" },
+    { text: "中高速", className: "4", value: "very_high" },
+    { text: "高速", className: "5", value: "super_high" }
+];
 const SPEED_TEXT2 = [
-    {text: '一档', className: '1', value: 'low'},
-    {text: '二档', className: '2', value: 'middle'},
-    {text: '三档', className: '3', value: 'high'},
-    {text: '四档', className: '4', value: 'very_high'}
-]
+    { text: "一档", className: "1", value: "low" },
+    { text: "二档", className: "2", value: "middle" },
+    { text: "三档", className: "3", value: "high" },
+    { text: "四档", className: "4", value: "very_high" }
+];
 const SPEED_TEXT3 = [
-    {text: '低速', className: '1', value: 'low'},
-    {text: '中速', className: '3', value: 'middle'},
-    {text: '高速', className: '5', value: 'high'}
-]
+    { text: "低速", className: "1", value: "low" },
+    { text: "中速", className: "3", value: "middle" },
+    { text: "高速", className: "5", value: "high" }
+];
 const DEVICE_MODEL = {
-    'KJ315F-A1': {
+    "KJ315F-A1": {
         child_lock_switch: false,
-        negative_ion_switch: false,
+        negative_ion_switch: false
     },
-    'KJ400F-A11': {
+    "KJ400F-A11": {
         child_lock_switch: false,
-        negative_ion_switch: false,
+        negative_ion_switch: false
     },
-    'KJ819F-B2': {
+    "KJ819F-B2": {
         speed: 5
     }
-}
+};
 const DEVICE_DEFAULT = {
     child_lock_switch: true,
     negative_ion_switch: true,
     speed: 3
-}
+};
 
-const PM25_VAL = [0, 35, 75, 115, 150, 250]
-const PM25_ANGLE = [-136, -84, -28, 28, 84, 136]
+const PM25_VAL = [0, 35, 75, 115, 150, 250];
+const PM25_ANGLE = [-136, -84, -28, 28, 84, 136];
 
 function getToggle(val) {
-    return val === 'on' ? 'off' : 'on'
+    return val === "on" ? "off" : "on";
 }
 
-function getRotate(val, start, end){
-    var min = PM25_VAL[start]
-    var max = PM25_VAL[end]
-    var min_r = PM25_ANGLE[start]
-    var max_r = PM25_ANGLE[end]
-    return min_r+(val-min)/(max-min)*(max_r-min_r)
+function getRotate(val, start, end) {
+    var min = PM25_VAL[start];
+    var max = PM25_VAL[end];
+    var min_r = PM25_ANGLE[start];
+    var max_r = PM25_ANGLE[end];
+    return min_r + (val - min) / (max - min) * (max_r - min_r);
 }
-
 
 /**
  * 创建并返回一个像节流阀一样的函数，当重复调用函数的时候，最多每隔 wait毫秒调用一次该函数
@@ -628,7 +630,7 @@ function throttle(func, wait, options) {
         result = func.apply(context, args);
         if (!timeout) context = args = null;
     };
-    var wait = wait || 500
+    var wait = wait || 500;
     return function() {
         var now = new Date().getTime();
         if (!previous && options.leading === false) previous = now;
@@ -658,232 +660,275 @@ export default {
     },
     data() {
         return {
-            status: '',
+            status: "",
             speedModalVisible: false,
             moreModalVisible: false,
-            device_name: '',
+            device_name: "",
             model: {},
-            tip: '',
-            remain_tip: '',
-            pm25: '',
+            tip: "",
+            remain_tip: "",
+            pm25: "",
             speedItems: SPEED_TEXT3,
             //功能能力判断
             ab: {},
             //前一个状态
             prevModel: {
-                control_status: 'auto',
-                speed: ''
+                control_status: "auto",
+                speed: ""
             },
-            pmPopVisible:false
-        }
+            pmPopVisible: false
+        };
     },
     computed: {
         currentSpeed() {
-            var item = this.speedItems.filter((item) => {
-                return item.value == this.model.speed
-            })
-            if(item.length){
-                return item[0]
+            var item = this.speedItems.filter(item => {
+                return item.value == this.model.speed;
+            });
+            if (item.length) {
+                return item[0];
             }
-            return {}
+            return {};
         },
         speedCss() {
-            return ['btn-speed' + this.currentSpeed.className, 'active']
+            return ["btn-speed" + this.currentSpeed.className, "active"];
         },
         speedText() {
-            return this.currentSpeed.text
+            return this.currentSpeed.text;
         },
         pm25_level() {
-            for(var i = PM25_VAL.length-1; i >= 0; i--){
-                if(this.pm25 > PM25_VAL[i]){
-                    return i + 1
+            for (var i = PM25_VAL.length - 1; i >= 0; i--) {
+                if (this.pm25 > PM25_VAL[i]) {
+                    return i + 1;
                 }
             }
-            return 1
+            return 1;
         },
         pm25_rotate() {
-            var level = this.pm25_level
-            if(level == 6){
-                return PM25_ANGLE[5]
+            var level = this.pm25_level;
+            if (level == 6) {
+                return PM25_ANGLE[5];
             }
-            return getRotate(this.pm25, level-1, level)
+            return getRotate(this.pm25, level - 1, level);
         },
         pm25_text() {
-            return this.pm25==0 ? '--' : this.pm25 + '<small>μg/m³</small>'
+            return this.pm25 == 0 ? "--" : this.pm25 + "<small>μg/m³</small>";
         }
     },
     methods: {
-        togglePMPop() {//pm2.5
-        console.log(99999999,this.pmPopVisible)
+        togglePMPop() {
+            //pm2.5
+            console.log(99999999, this.pmPopVisible);
             this.pmPopVisible = !this.pmPopVisible;
-            if(this.pmPopVisible){
-                HdSmart.UI.toggleHeadAndFoot(false)
-            }else{
-                HdSmart.UI.toggleHeadAndFoot(true)
+            if (this.pmPopVisible) {
+                HdSmart.UI.toggleHeadAndFoot(false);
+            } else {
+                HdSmart.UI.toggleHeadAndFoot(true);
             }
         },
         showTip(text) {
-            clearTimeout(this.tipTime)
-            this.tip = text
+            clearTimeout(this.tipTime);
+            this.tip = text;
             this.tipTime = setTimeout(() => {
-                this.tip = ''
-            },2000)
+                this.tip = "";
+            }, 2000);
         },
         controlDevice(attr, val, param, success, error) {
-            var fn = this.confirm
-            var params = Object.assign({
-                [attr]: val
-            }, param)
+            var fn = this.confirm;
+            var params = Object.assign(
+                {
+                    [attr]: val
+                },
+                param
+            );
 
-            if(attr == 'child_lock_switch'){
-                fn = function(cb){cb()}
+            if (attr == "child_lock_switch") {
+                fn = function(cb) {
+                    cb();
+                };
             }
 
             fn(() => {
-                HdSmart.Device.control({
-                    method: 'dm_set',
-                    nodeid: `air_filter.main.${attr}`,
-                    params: {
-                        attribute: params
+                HdSmart.Device.control(
+                    {
+                        method: "dm_set",
+                        nodeid: `air_filter.main.${attr}`,
+                        params: {
+                            attribute: params
+                        }
+                    },
+                    () => {
+                        success && success();
+                    },
+                    () => {
+                        error && error();
+                        this.showTip("操作失败");
                     }
-                }, () => {
-                    success && success()
-                }, ()=>{
-                    error && error()
-                    this.showTip('操作失败')
-                })
-            })
+                );
+            });
         },
         setSwitch(val) {
-            this.controlDevice('switch', val)
+            this.controlDevice("switch", val);
         },
-        setControl: throttle(function(val){
-            if(this.model.control_status == val){
-                return
+        setControl: throttle(function(val) {
+            if (this.model.control_status == val) {
+                return;
             }
-            this.controlDevice('control', val, () => {
-                this.model.control_status = val
-            })
+            this.controlDevice("control", val, () => {
+                this.model.control_status = val;
+            });
         }),
         setSleep() {
-            if(this.model.negative_ion_switch_status == 'on'){
-                this.controlDevice('negative_ion_switch', 'off', {control: 'sleep'}, () => {
-                    this.model.control_status = 'sleep'
-                })
-            }else{
-                this.setControl('sleep')
+            if (this.model.negative_ion_switch_status == "on") {
+                this.controlDevice(
+                    "negative_ion_switch",
+                    "off",
+                    { control: "sleep" },
+                    () => {
+                        this.model.control_status = "sleep";
+                    }
+                );
+            } else {
+                this.setControl("sleep");
             }
         },
-        setSpeed: throttle(function(val){
-            if(this.model.control_status == 'manual' && this.model.speed == val){
-                return
+        setSpeed: throttle(function(val) {
+            if (
+                this.model.control_status == "manual" &&
+                this.model.speed == val
+            ) {
+                return;
             }
-            this.controlDevice('speed', val, {control: 'manual'}, () => {
-                this.model.control_status = 'manual'
-                this.model.speed = val
-            })
+            this.controlDevice("speed", val, { control: "manual" }, () => {
+                this.model.control_status = "manual";
+                this.model.speed = val;
+            });
         }),
-        setNegativeIon: throttle(function(){
-            if(this.model.child_lock_switch_status == 'on'){
-                HdSmart.UI.toast('解除童锁后才能控制此设备')
-                return
+        setNegativeIon: throttle(function() {
+            if (this.model.child_lock_switch_status == "on") {
+                HdSmart.UI.toast("解除童锁后才能控制此设备");
+                return;
             }
-            var val = getToggle(this.model.negative_ion_switch_status)
-            this.controlDevice('negative_ion_switch', val, {control: this.model.control_status == 'sleep' ? this.prevModel.control_status : this.model.control_status}, () => {
-                this.model.negative_ion_switch_status = val
-            })
+            var val = getToggle(this.model.negative_ion_switch_status);
+            this.controlDevice(
+                "negative_ion_switch",
+                val,
+                {
+                    control:
+                        this.model.control_status == "sleep"
+                            ? this.prevModel.control_status
+                            : this.model.control_status
+                },
+                () => {
+                    this.model.negative_ion_switch_status = val;
+                }
+            );
         }),
-        setChildLock: throttle(function(){
+        setChildLock: throttle(function() {
             // if(this.model.control_status == 'sleep'){
             //     HdSmart.UI.toast('睡眠模式下不能开启童锁')
             //     return
             // }
-            var val = getToggle(this.model.child_lock_switch_status)
-            this.controlDevice('child_lock_switch', val, {control: this.model.control_status}, () => {
-                this.model.child_lock_switch_status = val
-            })
+            var val = getToggle(this.model.child_lock_switch_status);
+            this.controlDevice(
+                "child_lock_switch",
+                val,
+                { control: this.model.control_status },
+                () => {
+                    this.model.child_lock_switch_status = val;
+                }
+            );
         }),
         showSpeedModal() {
-            if(this.model.child_lock_switch_status == 'on'){
-                this.confirm()
-            }else{
-                this.speedModalVisible = true
+            if (this.model.child_lock_switch_status == "on") {
+                this.confirm();
+            } else {
+                this.speedModalVisible = true;
             }
         },
         getSnapShot(cb) {
-            HdSmart.Device.getSnapShot((data) => {
-                this.onSuccess(data)
-                cb && cb()
-            }, () => {
-                this.onError()
-                cb && cb()
-            })
+            HdSmart.Device.getSnapShot(
+                data => {
+                    this.onSuccess(data);
+                    cb && cb();
+                },
+                () => {
+                    this.onError();
+                    cb && cb();
+                }
+            );
         },
         onSuccess(data) {
-            this.status = 'success'
-            this.model = data.attribute
+            this.status = "success";
+            this.model = data.attribute;
 
-            if(this.model.filter_time_remaining <=0){
-                this.remain_tip = '需更换滤网'
-            }else if(this.model.filter_time_remaining <= 120){
-                this.remain_tip = `滤芯寿命剩余${this.model.filter_time_remaining}小时`
-            }else{
-                this.remain_tip = ''
+            if (this.model.filter_time_remaining <= 0) {
+                this.remain_tip = "需更换滤网";
+            } else if (this.model.filter_time_remaining <= 120) {
+                this.remain_tip = `滤芯寿命剩余${
+                    this.model.filter_time_remaining
+                }小时`;
+            } else {
+                this.remain_tip = "";
             }
 
-            var pm25 = this.model.air_filter_result.PM25
-            this.pm25 = pm25.length == 2 ? pm25[1] : pm25[0]
+            var pm25 = this.model.air_filter_result.PM25;
+            this.pm25 = pm25.length == 2 ? pm25[1] : pm25[0];
 
             // 根据设备型号判断功能点，后边从开放平台拉取
-            this.ab = Object.assign(DEVICE_DEFAULT, DEVICE_MODEL[this.model.deviceModel] || {})
-            if(this.ab.speed == 5){
-                this.speedItems = SPEED_TEXT1
-            }else if(this.ab.speed == 4){
-                this.speedItems = SPEED_TEXT2
-            }else{
-                this.speedItems = SPEED_TEXT3
+            this.ab = Object.assign(
+                DEVICE_DEFAULT,
+                DEVICE_MODEL[this.model.deviceModel] || {}
+            );
+            if (this.ab.speed == 5) {
+                this.speedItems = SPEED_TEXT1;
+            } else if (this.ab.speed == 4) {
+                this.speedItems = SPEED_TEXT2;
+            } else {
+                this.speedItems = SPEED_TEXT3;
             }
         },
         onError() {
-            this.status = 'error'
+            this.status = "error";
         },
         confirm(done) {
-            if(this.model.child_lock_switch_status == 'on'){
-                HdSmart.UI.alert({
-                    title: '解除童锁',
-                    message: '解除童锁后才能控制此设备，\n是否解除？',
-                    dialogStyle: 2
-                }, (val) => {
-                    if(val) this.setChildLock()
-                })
-            }else{
-                done()
+            if (this.model.child_lock_switch_status == "on") {
+                HdSmart.UI.alert(
+                    {
+                        title: "解除童锁",
+                        message: "解除童锁后才能控制此设备，\n是否解除？",
+                        dialogStyle: 2
+                    },
+                    val => {
+                        if (val) this.setChildLock();
+                    }
+                );
+            } else {
+                done();
             }
         }
     },
     created() {
+        this.$watch("model.control_status", (newVal, oldVal) => {
+            this.prevModel.control_status = oldVal;
+        });
 
-        this.$watch('model.control_status', (newVal, oldVal) => {
-            this.prevModel.control_status = oldVal
-        })
-
-        this.$watch('model.speed', (newVal, oldVal) => {
-            this.prevModel.speed = oldVal
-        })
+        this.$watch("model.speed", (newVal, oldVal) => {
+            this.prevModel.speed = oldVal;
+        });
 
         HdSmart.ready(() => {
-            if(window.device_name){
-                this.device_name = window.device_name
+            if (window.device_name) {
+                this.device_name = window.device_name;
             }
-            HdSmart.UI.showLoading()
+            HdSmart.UI.showLoading();
             this.getSnapShot(() => {
-                HdSmart.UI.hideLoading()
-            })
-        })
+                HdSmart.UI.hideLoading();
+            });
+        });
 
-        HdSmart.onDeviceStateChange((data) => {
-            this.onSuccess(data.result)
-        })
+        HdSmart.onDeviceStateChange(data => {
+            this.onSuccess(data.result);
+        });
     }
-}
+};
 </script>

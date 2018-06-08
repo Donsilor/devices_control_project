@@ -1,21 +1,21 @@
 <template>
-  <div class="door-log">
-    <template v-if="data.length">
-      <span class="which-day">{{dayText}}</span>
-      <ul>
-        <li v-for="(item,index) in data" :key="index">
-          <span class="line"></span>
-          <span class="dot"></span>
-          <span class="date">{{formatDate(item.updated_at)}}</span>
-          <span class="log">
-            <i v-if="item.isOpen" :class="`log-icon-${item.attribute.open_type}`"> </i>{{item.log}}</span>
-        </li>
-      </ul>
-    </template>
-    <div class="nodata" v-else>
-      <span></span> {{dayText}}暂无记录
+    <div class="door-log">
+        <template v-if="data.length">
+            <span class="which-day">{{dayText}}</span>
+            <ul>
+                <li v-for="(item,index) in data" :key="index">
+                    <span class="line"></span>
+                    <span class="dot"></span>
+                    <span class="date">{{formatDate(item.updated_at)}}</span>
+                    <span class="log">
+                        <i v-if="item.isOpen" :class="`log-icon-${item.attribute.open_type}`"> </i>{{item.log}}</span>
+                </li>
+            </ul>
+        </template>
+        <div class="nodata" v-else>
+            <span></span> {{dayText}}暂无记录
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -163,20 +163,25 @@ export default {
 */
 .log-icon-17 {
     background: url("../assets/code.png");
+    background-size: 100% 100%;
 }
 
 .log-icon-18 {
     background: url("../assets/fingerprint.png");
+    background-size: 100% 100%;
 }
 
 .log-icon-19 {
     background: url("../assets/card.png");
+    background-size: 100% 100%;
 }
 
 .log-icon-20 {
     background: url("../assets/key.png");
+    background-size: 100% 100%;
 }
 .log-icon-21 {
     background: url("../assets/phone.png");
+    background-size: 100% 100%;
 }
 </style>

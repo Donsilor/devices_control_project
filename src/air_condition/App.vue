@@ -4,17 +4,14 @@
         <p class="tip" v-show="params.switch === 'off'">已关闭</p>
 
         <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
-                <defs>
-                    <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509"
-                                    y2="1.0971">
-                        <stop offset="0" style="stop-color:#FFFFFF; stop-opacity:0"/>
-                        <stop offset="1" style="stop-color:#FFFFFF; stop-opacity:0.3"/>
-                    </linearGradient>
-                </defs>
-                <path
-                    d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z"
-                    style="fill:url(#lg1);"/>
-            </svg>
+            <defs>
+                <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="961.4509" y1="421.0971" x2="961.4509" y2="1.0971">
+                    <stop offset="0" style="stop-color:#FFFFFF; stop-opacity:0" />
+                    <stop offset="1" style="stop-color:#FFFFFF; stop-opacity:0.3" />
+                </linearGradient>
+            </defs>
+            <path d="M1321.5,121.1c-320,0-640-120-960-120c-120,0-240,16.9-360,38v382h1920v-382 C1721.5,74.2,1521.5,121.1,1321.5,121.1z" style="fill:url(#lg1);" />
+        </svg>
 
         <!--开机界面-->
         <div v-if="initErr || params.switch === 'on'">
@@ -85,9 +82,11 @@
 
         <!--初始化失败界面-->
         <div class="alert" v-if="initErr">
-            <p v-show="!loading" @click="init"><i class="error"></i>连接异常，请点击此处刷新</p>
-            <p v-show="loading"><i class="spin"></i>刷新中...</p>
-            <!-- <img src='./assets/init_err.png' />
+            <p v-show="!loading" @click="init">
+                <i class="error"></i>连接异常，请点击此处刷新</p>
+            <p v-show="loading">
+                <i class="spin"></i>刷新中...</p>
+            <!-- <img src='../../lib/base/air_condition/assets/init_err.png' />
             <p class="tip">加载失败，请点击屏幕刷新</p> -->
         </div>
     </div>
@@ -604,10 +603,12 @@ body,
     margin-bottom: 45px;
 }
 .hanging {
-    background: url(./assets/bg_off_hanging.png) no-repeat center;
+    background: url(../../lib/base/air_condition/assets/bg_off_hanging.png)
+        no-repeat center;
 }
 .package {
-    background: url(./assets/bg_off_package.png) no-repeat center;
+    background: url(../../lib/base/air_condition/assets/bg_off_package.png)
+        no-repeat center;
     background-size: 540px 360px;
 }
 
@@ -688,7 +689,8 @@ body,
 .more {
     width: 96px;
     height: 96px;
-    background: url(./assets/more_normal.png) no-repeat center;
+    background: url(../../lib/base/air_condition/assets/more_normal.png)
+        no-repeat center;
     background-size: 96px 96px;
     outline: 0;
     cursor: pointer;
@@ -698,7 +700,7 @@ body,
     right: 36px;
 }
 .more:hover {
-    background-image: url(./assets/more_active.png);
+    background-image: url(../../lib/base/air_condition/assets/more_active.png);
 }
 
 /*子菜单*/
@@ -741,7 +743,8 @@ body,
     left: 0;
     width: 144px;
     height: 144px;
-    background: url("./assets/buffering_mode_white.gif") no-repeat center;
+    background: url("../../lib/base/air_condition/assets/buffering_mode_white.gif")
+        no-repeat center;
     background-size: 100%;
     /*transform: translate3d(0,0,0);*/
     /*animation: circle 1s linear infinite;*/
@@ -753,15 +756,18 @@ body,
     height: 180px;
 }
 .page_on .switch.loading:before {
-    background: url("./assets/buffering_power_white.gif") no-repeat center;
+    background: url("../../lib/base/air_condition/assets/buffering_power_white.gif")
+        no-repeat center;
     background-size: 100%;
 }
 .page_off .switch.loading:before {
-    background: url("./assets/buffering_power_blue.gif") no-repeat center;
+    background: url("../../lib/base/air_condition/assets/buffering_power_blue.gif")
+        no-repeat center;
     background-size: 100%;
 }
 .subMenu .loading:before {
-    background: url("./assets/buffering_submenu_blue.gif") no-repeat center;
+    background: url("../../lib/base/air_condition/assets/buffering_submenu_blue.gif")
+        no-repeat center;
     background-size: 100%;
     width: 120px;
     height: 120px;
@@ -807,118 +813,118 @@ body,
 
 .cool {
     .imgWrapper {
-        background-image: url(./assets/cool_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/cool_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/cool_active.png);
+        background-image: url(../../lib/base/air_condition/assets/cool_active.png);
     }
 }
 .heat {
     .imgWrapper {
-        background-image: url(./assets/heat_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/heat_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/heat_active.png);
+        background-image: url(../../lib/base/air_condition/assets/heat_active.png);
     }
 }
 .dehumidify {
     .imgWrapper {
-        background-image: url(./assets/dehumidify_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/dehumidify_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/dehumidify_active.png);
+        background-image: url(../../lib/base/air_condition/assets/dehumidify_active.png);
     }
 }
 .on {
     .imgWrapper {
         width: 204px;
         height: 204px;
-        background-image: url(./assets/on_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/on_normal.png);
     }
     &:active .imgWrapper {
-        background-image: url(./assets/on_active.png);
+        background-image: url(../../lib/base/air_condition/assets/on_active.png);
     }
 }
 .off {
     .imgWrapper {
         width: 204px;
         height: 204px;
-        background-image: url(./assets/off_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/off_normal.png);
     }
     &:active .imgWrapper {
-        background-image: url(./assets/off_active.png);
+        background-image: url(../../lib/base/air_condition/assets/off_active.png);
     }
 }
 .low {
     .imgWrapper {
-        background-image: url(./assets/low_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/low_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/low_active.png);
+        background-image: url(../../lib/base/air_condition/assets/low_active.png);
     }
 }
 .normal {
     .imgWrapper {
-        background-image: url(./assets/medium_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/medium_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/medium_active.png);
+        background-image: url(../../lib/base/air_condition/assets/medium_active.png);
     }
 }
 .high {
     .imgWrapper {
-        background-image: url(./assets/high_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/high_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/high_active.png);
+        background-image: url(../../lib/base/air_condition/assets/high_active.png);
     }
 }
 .minus {
     .imgWrapper {
-        background-image: url(./assets/minus_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/minus_normal.png);
     }
     &:active .imgWrapper {
-        background-image: url(./assets/minus_pressed.png);
+        background-image: url(../../lib/base/air_condition/assets/minus_pressed.png);
     }
 }
 .plus {
     .imgWrapper {
-        background-image: url(./assets/plus_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/plus_normal.png);
     }
     &:active .imgWrapper {
-        background-image: url(./assets/plus_pressed.png);
+        background-image: url(../../lib/base/air_condition/assets/plus_pressed.png);
     }
 }
 .mode_auto {
     .imgWrapper {
-        background-image: url(./assets/mode_auto_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/mode_auto_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/mode_auto_active.png);
+        background-image: url(../../lib/base/air_condition/assets/mode_auto_active.png);
     }
 }
 .wind {
     .imgWrapper {
-        background-image: url(./assets/mode_air_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/mode_air_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/mode_air_active.png);
+        background-image: url(../../lib/base/air_condition/assets/mode_air_active.png);
     }
 }
 .lr {
     .imgWrapper {
-        background-image: url(./assets/vertical_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/vertical_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/vertical_active.png);
+        background-image: url(../../lib/base/air_condition/assets/vertical_active.png);
     }
 }
 .ud {
     .imgWrapper {
-        background-image: url(./assets/horizontal_normal.png);
+        background-image: url(../../lib/base/air_condition/assets/horizontal_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/horizontal_active.png);
+        background-image: url(../../lib/base/air_condition/assets/horizontal_active.png);
     }
 }
 
@@ -944,10 +950,10 @@ body,
         margin-right: 10px;
     }
     .error {
-        background-image: url(./assets/icn_warn_s.png);
+        background-image: url(../../lib/base/air_condition/assets/icn_warn_s.png);
     }
     .spin {
-        background-image: url(./assets/buffering_updating.png);
+        background-image: url(../../lib/base/air_condition/assets/buffering_updating.png);
         animation: rotate 1s linear infinite;
     }
 }

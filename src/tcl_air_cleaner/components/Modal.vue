@@ -1,16 +1,16 @@
 <template>
-<div :class="className">
-    <div class="overlay" v-show="visible" @click="close"></div>
-    <div class="modal" v-show="visible">
-        <div class="modal-header">
-            <div class="modal-title">{{title}}</div>
-            <div class="modal-close" @click="close"></div>
-        </div>
-        <div class="modal-body">
-            <slot />
+    <div :class="className">
+        <div class="overlay" v-show="visible" @click="close"></div>
+        <div class="modal" v-show="visible">
+            <div class="modal-header">
+                <div class="modal-title">{{title}}</div>
+                <div class="modal-close" @click="close"></div>
+            </div>
+            <div class="modal-body">
+                <slot />
+            </div>
         </div>
     </div>
-</div>
 </template>
 
 <style lang="less" scoped>
@@ -40,7 +40,8 @@
         right: 0px;
         width: 84px;
         height: 84px;
-        background: url(../assets/btn_close.png) no-repeat center center;
+        background: url(../../../lib/base/air_cleaner/assets/btn_close.png)
+            no-repeat center center;
         background-size: 30px 30px;
     }
     &-body {

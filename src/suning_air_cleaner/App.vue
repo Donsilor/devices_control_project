@@ -1,99 +1,99 @@
 <template>
-<div id="app">
-    <div class="page-on" v-if="status == 'error' || model.switch_status == 'on'">
-        <div class="name">{{device_name}}</div>
-        <div class="tip">
-            <p v-show="tip">{{tip}}</p>
-            <p v-show="!tip && remain_tip">{{remain_tip}}</p>
-        </div>
-        <a v-if="ab.child_lock_switch || ab.negative_ion_switch" href="" class="btn-more" @click.prevent="moreModalVisible = true"></a>
-        <div class="pm25">
-            <div class="circle">
-                <span v-for="i in 5" :key="i" :class="'c'+i" v-show="i==(pm25_level>5?5:pm25_level)"></span>
+    <div id="app">
+        <div class="page-on" v-if="status == 'error' || model.switch_status == 'on'">
+            <div class="name">{{device_name}}</div>
+            <div class="tip">
+                <p v-show="tip">{{tip}}</p>
+                <p v-show="!tip && remain_tip">{{remain_tip}}</p>
             </div>
-            <div class="arrow" :style="{transform:'rotate('+ pm25_rotate +'deg)'}"></div>
-            <div class="value" v-html="pm25_text"></div>
-            <div class="pic" @click="togglePMPop">PM 2.5</div>
-        </div>
-
-        <modal title="PM2.5简介" class="modal-w" v-model="pmPopVisible" @click.prevent="toggleModePop">
-            <div class="intro-body">
-                <p>
-                    PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
-                </p>
-                <div class="pm-range">
-                    <img src="./assets/PM2.5_scale@3x.png"/>
+            <a v-if="ab.child_lock_switch || ab.negative_ion_switch" href="" class="btn-more" @click.prevent="moreModalVisible = true"></a>
+            <div class="pm25">
+                <div class="circle">
+                    <span v-for="i in 5" :key="i" :class="'c'+i" v-show="i==(pm25_level>5?5:pm25_level)"></span>
                 </div>
+                <div class="arrow" :style="{transform:'rotate('+ pm25_rotate +'deg)'}"></div>
+                <div class="value" v-html="pm25_text"></div>
+                <div class="pic" @click="togglePMPop">PM 2.5</div>
             </div>
-        </modal>
-        <div class="attrs">
-            <span v-if="model.temperature && model.temperature!='0'">温度：{{model.temperature}}℃</span>
-            <span v-if="model.humidity && model.humidity!='0'">湿度：{{model.humidity}}%</span>
-        </div>
-        <div class="btns btns-fn">
-            <a href="" class="btn-on" @click.prevent="setSwitch('off')">
-                <i></i> 开关
-            </a>
-            <a href="" class="btn-sleep" :class="{active:model.control_status == 'sleep'}" @click.prevent="setControl('sleep')">
-                <i></i> 睡眠
-            </a>
-            <!-- <a href="" class="btn-sleep"  @click.prevent="setControl('manual')">
+
+            <modal title="PM2.5简介" class="modal-w" v-model="pmPopVisible" @click.prevent="toggleModePop">
+                <div class="intro-body">
+                    <p>
+                        PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
+                    </p>
+                    <div class="pm-range">
+                        <img src="../../lib/base/air_cleaner/assets/PM2.5_scale@3x.png" />
+                    </div>
+                </div>
+            </modal>
+            <div class="attrs">
+                <span v-if="model.temperature && model.temperature!='0'">温度：{{model.temperature}}℃</span>
+                <span v-if="model.humidity && model.humidity!='0'">湿度：{{model.humidity}}%</span>
+            </div>
+            <div class="btns btns-fn">
+                <a href="" class="btn-on" @click.prevent="setSwitch('off')">
+                    <i></i> 开关
+                </a>
+                <a href="" class="btn-sleep" :class="{active:model.control_status == 'sleep'}" @click.prevent="setControl('sleep')">
+                    <i></i> 睡眠
+                </a>
+                <!-- <a href="" class="btn-sleep"  @click.prevent="setControl('manual')">
                 <i></i> 手动
             </a> -->
-            <a href="" class="btn-auto active" @click.prevent="showSpeedModal" v-if="model.control_status == 'auto'">
-                <i></i> 自动
-            </a>
-            <a href="" :class="speedCss" @click.prevent="showSpeedModal" v-else-if="model.control_status == 'manual' && model.speed && model.speed != 'sleep'">
-                <i></i> {{speedText}}
-            </a>
-            <a href="" class="btn-speed" @click.prevent="showSpeedModal" v-else>
-                <i></i> 风档
-            </a>
-        </div>
-
-        <modal title="风档" v-model="speedModalVisible">
-            <div class="btns btns-speed">
-                <a href="" v-for="item in speedItems" :key="item.value" :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]" @click.prevent="setSpeed(item.value)">
-                    <i></i> {{item.text}}
-                </a>
-                <a href="" class="btn1-auto" :class="{active: model.control_status == 'auto'}" @click.prevent="setControl('auto')">
+                <a href="" class="btn-auto active" @click.prevent="showSpeedModal" v-if="model.control_status == 'auto'">
                     <i></i> 自动
                 </a>
-            </div>
-        </modal>
-
-        <modal title="更多" v-model="moreModalVisible">
-            <div class="btns btns-more">
-                <a v-if="ab.negative_ion_switch" href="" class="btn-ni" :class="{active:model.negative_ion_switch_status == 'on'}" @click.prevent="setNegativeIon">
-                    <i></i> 负离子
+                <a href="" :class="speedCss" @click.prevent="showSpeedModal" v-else-if="model.control_status == 'manual' && model.speed && model.speed != 'sleep'">
+                    <i></i> {{speedText}}
                 </a>
-                <a v-if="ab.child_lock_switch" href="" class="btn-cl" :class="{active:model.child_lock_switch_status == 'on'}" @click.prevent="setChildLock">
-                    <i></i> 童锁
+                <a href="" class="btn-speed" @click.prevent="showSpeedModal" v-else>
+                    <i></i> 风档
                 </a>
             </div>
-        </modal>
 
-    </div>
+            <modal title="风档" v-model="speedModalVisible">
+                <div class="btns btns-speed">
+                    <a href="" v-for="item in speedItems" :key="item.value" :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]" @click.prevent="setSpeed(item.value)">
+                        <i></i> {{item.text}}
+                    </a>
+                    <a href="" class="btn1-auto" :class="{active: model.control_status == 'auto'}" @click.prevent="setControl('auto')">
+                        <i></i> 自动
+                    </a>
+                </div>
+            </modal>
 
-    <div class="page-off" v-if="model.switch_status == 'off'">
-        <div class="name">{{device_name}}</div>
-        <div class="tip">已关闭</div>
-        <div class="air_cleaner"></div>
-        <div class="btns btns-fn">
-            <a href="javascript:void(0)" class="btn-off" @click.prevent="setSwitch('on')">
-                <i></i> 开关
-            </a>
-            <a href="javascript:void(0)" class="btn-sleep disable">
-                <i></i> 睡眠
-            </a>
-            <a href="javascript:void(0)" class="btn-speed disable">
-                <i></i> 风档
-            </a>
+            <modal title="更多" v-model="moreModalVisible">
+                <div class="btns btns-more">
+                    <a v-if="ab.negative_ion_switch" href="" class="btn-ni" :class="{active:model.negative_ion_switch_status == 'on'}" @click.prevent="setNegativeIon">
+                        <i></i> 负离子
+                    </a>
+                    <a v-if="ab.child_lock_switch" href="" class="btn-cl" :class="{active:model.child_lock_switch_status == 'on'}" @click.prevent="setChildLock">
+                        <i></i> 童锁
+                    </a>
+                </div>
+            </modal>
+
         </div>
-    </div>
 
-    <!-- <error-tip v-if="status == 'error'" @click.native="getSnapShot" /> -->
-</div>
+        <div class="page-off" v-if="model.switch_status == 'off'">
+            <div class="name">{{device_name}}</div>
+            <div class="tip">已关闭</div>
+            <div class="air_cleaner"></div>
+            <div class="btns btns-fn">
+                <a href="javascript:void(0)" class="btn-off" @click.prevent="setSwitch('on')">
+                    <i></i> 开关
+                </a>
+                <a href="javascript:void(0)" class="btn-sleep disable">
+                    <i></i> 睡眠
+                </a>
+                <a href="javascript:void(0)" class="btn-speed disable">
+                    <i></i> 风档
+                </a>
+            </div>
+        </div>
+
+        <!-- <error-tip v-if="status == 'error'" @click.native="getSnapShot" /> -->
+    </div>
 </template>
 
 <style lang="less">
@@ -151,7 +151,8 @@ a {
     .circle {
         width: 480px;
         height: 480px;
-        background: url(./assets/img_instrument_airquality.png) no-repeat;
+        background: url(../../lib/base/air_cleaner/assets/img_instrument_airquality.png)
+            no-repeat;
         background-size: 100% 100%;
         span {
             width: 480px;
@@ -163,19 +164,19 @@ a {
             background-size: 100% 100%;
         }
         .c1 {
-            background-image: url(./assets/img_instrument_airquality_1.png);
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_1.png);
         }
         .c2 {
-            background-image: url(./assets/img_instrument_airquality_2.png);
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_2.png);
         }
         .c3 {
-            background-image: url(./assets/img_instrument_airquality_3.png);
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_3.png);
         }
         .c4 {
-            background-image: url(./assets/img_instrument_airquality_4.png);
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_4.png);
         }
         .c5 {
-            background-image: url(./assets/img_instrument_airquality_5.png);
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_5.png);
         }
     }
     .arrow {
@@ -184,7 +185,7 @@ a {
         position: absolute;
         left: 0;
         top: 0;
-        background: url(./assets/img_instrument_airquality_pointer.png)
+        background: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_pointer.png)
             no-repeat;
         background-size: 100% 100%;
         // transition: transform 1.5s;
@@ -237,11 +238,11 @@ a {
     top: 132px;
     width: 96px;
     height: 96px;
-    background-image: url(./assets/more_normal.png);
+    background-image: url(../../lib/base/air_cleaner/assets/more_normal.png);
     background-size: 100% 100%;
     background-repeat: no-repeat;
     &:active {
-        background-image: url(./assets/more_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/more_active.png);
     }
 }
 .btns {
@@ -266,215 +267,215 @@ a {
 }
 .btn-on {
     i {
-        background-image: url(./assets/btn_poweroff_m_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweroff_m_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_poweroff_m_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweroff_m_pressed.png);
     }
 }
 .btn-off {
     i {
-        background-image: url(./assets/btn_poweron_m_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweron_m_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_poweron_m_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweron_m_pressed.png);
     }
 }
 .btn-sleep {
     i {
-        background-image: url(./assets/btn_airpurifier_sleep_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_airpurifier_sleep_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_sleep_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_active.png);
     }
     &.disable i {
-        background-image: url(./assets/btn_airpurifier_sleep_disable.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_disable.png);
     }
 }
 .btn-auto {
     i {
-        background-image: url(./assets/btn_airpurifier_airvolume_6_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_6_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_6_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_active.png);
     }
     &.disable i {
-        background-image: url(./assets/btn_airpurifier_airvolume_6_disable.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_disable.png);
     }
 }
 .btn-ni {
     i {
-        background-image: url(./assets/btn_airpurifier_negative_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_negative_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_airpurifier_negative_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_negative_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_negative_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_negative_active.png);
     }
 }
 .btn-cl {
     i {
-        background-image: url(./assets/btn_airpurifier_lock_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_lock_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_airpurifier_lock_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_lock_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_lock_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_lock_active.png);
     }
 }
 .btn-speed {
     i {
-        background-image: url(./assets/btn_airpurifier_airvolume_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_pressed.png);
     }
     &.disable i {
-        background-image: url(./assets/btn_airpurifier_airvolume_disable.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_disable.png);
     }
 }
 .btn-speed1 {
     // i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_1_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_normal.png);
     // }
     // &:active i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_1_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_pressed.png);
     // }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_1_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_active.png);
     }
     // &.disable i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_1_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_disable.png);
     // }
 }
 .btn-speed2 {
     // i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_2_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_normal.png);
     // }
     // &:active i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_2_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_pressed.png);
     // }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_2_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_active.png);
     }
     // &.disable i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_2_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_disable.png);
     // }
 }
 .btn-speed3 {
     // i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_3_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_normal.png);
     // }
     // &:active i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_3_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_pressed.png);
     // }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_3_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_active.png);
     }
     // &.disable i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_3_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_disable.png);
     // }
 }
 .btn-speed4 {
     // i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_4_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_normal.png);
     // }
     // &:active i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_4_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_pressed.png);
     // }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_4_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_active.png);
     }
     // &.disable i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_4_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_disable.png);
     // }
 }
 .btn-speed5 {
     // i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_5_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_normal.png);
     // }
     // &:active i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_5_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_pressed.png);
     // }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_5_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_active.png);
     }
     // &.disable i{
-    //     background-image: url(./assets/btn_airpurifier_airvolume_5_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_disable.png);
     // }
 }
 .btn1-speed1 {
     i {
-        background-image: url(./assets/btn_airpurifier_airvolume_1a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1a_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_1a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1a_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_1a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1a_active.png);
     }
 }
 .btn1-speed2 {
     i {
-        background-image: url(./assets/btn_airpurifier_airvolume_2a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2a_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_2a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2a_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_2a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2a_active.png);
     }
 }
 .btn1-speed3 {
     i {
-        background-image: url(./assets/btn_airpurifier_airvolume_3a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3a_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_3a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3a_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_3a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3a_active.png);
     }
 }
 .btn1-speed4 {
     i {
-        background-image: url(./assets/btn_airpurifier_airvolume_4a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4a_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_4a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4a_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_4a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4a_active.png);
     }
 }
 .btn1-speed5 {
     i {
-        background-image: url(./assets/btn_airpurifier_airvolume_5a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5a_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_5a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5a_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_5a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5a_active.png);
     }
 }
 .btn1-auto {
     i {
-        background-image: url(./assets/btn_airpurifier_airvolume_6a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6a_normal.png);
     }
     &:active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_6a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6a_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_airpurifier_airvolume_6a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6a_active.png);
     }
 }
 .btns-fn {
@@ -527,7 +528,8 @@ a {
     width: 420px;
     height: 420px;
     transform: translate(-50%, 0);
-    background: url(./assets/img_airpurifier_off.png) no-repeat;
+    background: url(../../lib/base/air_cleaner/assets/img_airpurifier_off.png)
+        no-repeat;
     background-size: 100% 100%;
 }
 

@@ -1,10 +1,10 @@
 <template>
-  <div class="wrap-error" @click="reload()">
-      <div class="error-tip">
-        <i></i>
-        加载失败，请点击屏幕刷新
-      </div>
-  </div>
+    <div class="wrap-error" @click="reload()">
+        <div class="error-tip">
+            <i></i>
+            加载失败，请点击屏幕刷新
+        </div>
+    </div>
 </template>
 
 <script>
@@ -14,28 +14,29 @@ export default {
             type: Function
         }
     }
-}
+};
 </script>
 
 <style lang="less" scoped>
-.wrap-error{
-    background:#f2f2f2;
+.wrap-error {
+    background: #f2f2f2;
 }
-.error-tip{
+.error-tip {
     text-align: center;
-    color:#c8cacc;
+    color: #c8cacc;
     font-size: 32px;
     position: absolute;
     left: 0%;
     top: 30%;
     width: 100%;
-    i{
+    i {
         display: block;
         width: 360px;
         height: 360px;
-        background: url(../assets/img_disconnection@2x.png) no-repeat;
+        background: url(../../../lib/base/air_condition/assets/img_disconnection@2x.png)
+            no-repeat;
         background-size: 100% 100%;
-        margin:0 auto 36px;
+        margin: 0 auto 36px;
     }
 }
 </style>
