@@ -8,6 +8,7 @@ import * as mockData from './mock';
 if (location.search.indexOf('env=desktop') != -1) {
 
     window.device_name = '智能门锁'
+    window.device_uuid = '112233'
 
     on(apiList.device_getsnapshot, function(data, done){
         done(mockData.generateSnapShot())

@@ -1,7 +1,7 @@
 <template>
     <div class="status_bar" v-if="visible">
         <div class="sp_status_bar" @click="goToScreenProjectionPage" v-if="spVisible">
-            <i class="ico"></i>正在投屏 {{spStatusText}}：{{tvStatus.screenProjectTitle}} <i class="arr"></i>
+            <i class="ico"></i>正在投屏 {{spStatusText}}：<span class="text">{{tvStatus.screenProjectTitle}}</span> <i class="arr"></i>
         </div>
         <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-1">
             <i class="wifi"></i>无法连接网络，请检查网络设置
@@ -26,6 +26,13 @@
     font-size: 25.2px;
     color:#13d5dc;
     overflow: hidden;
+}
+.sp_status_bar .text{
+    max-width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
 }
 .status_bar .link{
     color:#13d5dc;
@@ -64,11 +71,11 @@
 
 }
 .sp_status_detail{
-    /* background: #fff; */
+    background: #fff;
     flex-shrink: 0;
 }
 .sp_status_list{
-    /* background: #fff; */
+    background: #fff;
 }
 .sp_status_search{
     position: fixed;
@@ -81,7 +88,7 @@
     height: 72px;
 }
 .offline_bar{
-    background: rgba(51, 51, 51, 0.75);
+    background: rgb(51, 51, 51, .75);
     width: 100%;
     height: 72px;
     line-height: 72px;

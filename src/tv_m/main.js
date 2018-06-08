@@ -136,9 +136,9 @@ HdSmart.ready(() => {
 
     is_ready = true
 
-    HdSmart.Device.getSnapShot((data) => {
-        store.commit('setDeviceName', data.device_name)
-    })
+    // HdSmart.Device.getSnapShot((data) => {
+    //     store.commit('setDeviceName', data.device_name)
+    // })
 
     if(window.device_name){
         store.commit('setDeviceName', window.device_name)

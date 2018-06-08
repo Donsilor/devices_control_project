@@ -100,7 +100,7 @@
                     {{getUpdateSet(item.setCount,item.lastUpdateSet)}}
                 </span>
                 <div class="label">
-                    <span class="isvip" v-if="item.ispay && item.ispay !== '1'">收费</span>
+                    <span class="isvip" v-if="item.ispay && item.ispay !== '1'">付费</span>
                     <span class="score">{{item.score}}</span>
                 </div>
             </li>

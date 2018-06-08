@@ -32,7 +32,7 @@
                 </div>
             </div>
             <!-- 描述 -->
-            <div class="desc">
+            <div class="desc" v-show="cur.desc">
                 <div class="desc-cont" :class="{
                     'text-cut': isDescOverflow,
                     'text-show': isDescShow

@@ -64,7 +64,7 @@
     .page-index{
         background:#fafafa;
         padding-top: 116px;
-        padding-bottom: 120px;
+        padding-bottom: 220px;
     }
     .page-header{
         width: 100%;
@@ -248,6 +248,7 @@
 
     .isIOS .page-index{
         padding-top: 0;
+        padding-bottom: 120px;
     }
     .isIOS .page-header {
         display: none;
