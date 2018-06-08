@@ -29,7 +29,8 @@
 }
 
 .bg {
-    background: url("../assets/img_curtain_view@2x.png") center center no-repeat;
+    background: url("../../../lib/base/curtains/assets/img_curtain_view@2x.png")
+        center center no-repeat;
     width: 591px;
     height: 376px;
     background-size: 100% 100%;
@@ -60,16 +61,16 @@
 }
 
 .clothes {
-    background: url("../assets/img_curtain_clothes@2x.png") center center
-        no-repeat;
+    background: url("../../../lib/base/curtains/assets/img_curtain_clothes@2x.png")
+        center center no-repeat;
     width: 100%;
     height: 100%;
     background-size: 100% 100%;
 }
 
 .folding {
-    background: url("../assets/img_curtain_folding@2x.png") center center
-        no-repeat;
+    background: url("../../../lib/base/curtains/assets/img_curtain_folding@2x.png")
+        center center no-repeat;
     width: 100%;
     height: 100%;
     background-size: 100% 100%;

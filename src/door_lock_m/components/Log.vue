@@ -72,16 +72,16 @@
         background-position: center center;
     }
     .icon-arrow {
-        background-image: url(../assets/icn_topbar_back_normal.png);
+        background-image: url(../../../lib/base/door_lock/assets/icn_topbar_back_normal.png);
         &:active {
-            background-image: url(../assets/icn_topbar_back_pressed.png);
+            background-image: url(../../../lib/base/door_lock/assets/icn_topbar_back_pressed.png);
             -webkit-tap-highlight-color: transparent;
         }
     }
     .icon-del {
-        background-image: url(../assets/icn_topbar_delete_normal.png);
+        background-image: url(../../../lib/base/door_lock/assets/icn_topbar_delete_normal.png);
         &:active {
-            background-image: url(../assets/icn_topbar_delete_pressed.png);
+            background-image: url(../../../lib/base/door_lock/assets/icn_topbar_delete_pressed.png);
             -webkit-tap-highlight-color: transparent;
         }
     }
@@ -99,10 +99,11 @@
     bottom: 80px;
     width: 96px;
     height: 96px;
-    background: url(../assets/btn_calendar_normal.png) no-repeat;
+    background: url(../../../lib/base/door_lock/assets/btn_calendar_normal.png)
+        no-repeat;
     background-size: 100% 100%;
     &:active {
-        background-image: url(../assets/btn_calendar_pressed.png);
+        background-image: url(../../../lib/base/door_lock/assets/btn_calendar_pressed.png);
         -webkit-tap-highlight-color: transparent;
     }
 }
@@ -156,6 +157,7 @@ export default {
         return {
             device_id: query.device_id,
             family_id: query.family_id,
+            device_category_id: parseInt(query.category_id),
             date: now,
             startDate: new Date(
                 now.getFullYear() - 1,
@@ -355,7 +357,7 @@ export default {
                     dialogStyle: 2
                 },
                 val => {
-                    if (this.type == "warn") {
+                    if (this.type == "warn" && val) {
                         HdSmart.Device.control(
                             {
                                 method: "da_delete_dev_alert",
@@ -374,13 +376,15 @@ export default {
                                 this.getLogData(undefined, this.type);
                             }
                         );
-                    } else {
+                    } else if (val) {
                         HdSmart.Device.control(
                             {
                                 method: "dr_delete_dev_status",
                                 params: {
                                     device_id: this.device_id,
                                     family_id: this.family_id,
+                                    device_category_id:
+                                        this.device_category_id || "",
                                     del_time: Math.floor(+new Date() / 1000)
                                 }
                             },

@@ -1,69 +1,74 @@
 <template>
-<div id="app">
-    <div class="page-on" v-show="status =='error' || model.switch=='on'">
-        <div class="ani"></div>
-        <div class="inner">
-            <div class="device_name">{{device_name}}</div>
-            <div class="status">{{statusText}}</div>
-            <div class="current_temp">
-                <strong>{{model.temperature}}</strong>
-                <small>℃</small>
-                <p>当前温度</p>
-            </div>
-            <div class="set_temp">
-                <p><span>预设温度</span>{{temp}}℃</p>
-                <a href="" class="btn btn-reduce" :class="{disabled:tempDisabled}" @click.prevent="setTempDown"><i></i></a>
-                <a href="" class="btn btn-add" :class="{disabled:tempDisabled}" @click.prevent="setTempUp"><i></i></a>
-                <div class="slider">
-                    <slider ref="tempSlider" v-model="temp" :options="sliderOptions" @change="onTempChange" :disabled="tempDisabled" />
-                    <span class="min">{{sliderOptions.range.min}}℃</span>
-                    <span class="max">{{sliderOptions.range.max}}℃</span>
+    <div id="app">
+        <div class="page-on" v-show="status =='error' || model.switch=='on'">
+            <div class="ani"></div>
+            <div class="inner">
+                <div class="device_name">{{device_name}}</div>
+                <div class="status">{{statusText}}</div>
+                <div class="current_temp">
+                    <strong>{{model.temperature}}</strong>
+                    <small>℃</small>
+                    <p>当前温度</p>
+                </div>
+                <div class="set_temp">
+                    <p>
+                        <span>预设温度</span>{{temp}}℃</p>
+                    <a href="" class="btn btn-reduce" :class="{disabled:tempDisabled}" @click.prevent="setTempDown">
+                        <i></i>
+                    </a>
+                    <a href="" class="btn btn-add" :class="{disabled:tempDisabled}" @click.prevent="setTempUp">
+                        <i></i>
+                    </a>
+                    <div class="slider">
+                        <slider ref="tempSlider" v-model="temp" :options="sliderOptions" @change="onTempChange" :disabled="tempDisabled" />
+                        <span class="min">{{sliderOptions.range.min}}℃</span>
+                        <span class="max">{{sliderOptions.range.max}}℃</span>
+                    </div>
+                </div>
+
+                <a href="" class="btn btn-shut" @click.prevent="setSwitch('off')">
+                    <i></i>
+                </a>
+
+                <div class="btns">
+
+                    <a href="" class="btn btn-heating_half" :class="{active:model.mode=='half_tank'}" @click.prevent="setMode('half_tank')">
+                        <i></i>
+                        <span>半胆速热</span>
+                    </a>
+                    <a href="" class="btn btn-heating_whole" :class="{active:model.mode=='full_tank'}" @click.prevent="setMode('full_tank')">
+                        <i></i>
+                        <span>整胆加热</span>
+                    </a>
+                    <a href="" class="btn btn-heating_append" :class="{active:model.mode=='max_volume'}" @click.prevent="setMode('max_volume')">
+                        <i></i>
+                        <span>蓄热增容</span>
+                    </a>
+                    <a href="" class="btn btn-intelligentbath" :class="{active:model.mode=='smart'}" @click.prevent="setMode('smart')">
+                        <i></i>
+                        <span>智能沐浴</span>
+                    </a>
                 </div>
             </div>
+        </div>
 
-            <a href="" class="btn btn-shut" @click.prevent="setSwitch('off')">
-                <i></i>
-            </a>
-
+        <div class="page-off" v-show="model.switch=='off'">
+            <div class="device_name">{{device_name}}</div>
+            <div class="status">已关闭</div>
+            <div class="pic"></div>
             <div class="btns">
-
-                <a href="" class="btn btn-heating_half" :class="{active:model.mode=='half_tank'}" @click.prevent="setMode('half_tank')">
+                <a href="" class="btn btn-turnon" @click.prevent="setSwitch('on')">
                     <i></i>
-                    <span>半胆速热</span>
-                </a>
-                <a href="" class="btn btn-heating_whole" :class="{active:model.mode=='full_tank'}" @click.prevent="setMode('full_tank')">
-                    <i></i>
-                    <span>整胆加热</span>
-                </a>
-                <a href="" class="btn btn-heating_append" :class="{active:model.mode=='max_volume'}" @click.prevent="setMode('max_volume')">
-                    <i></i>
-                    <span>蓄热增容</span>
-                </a>
-                <a href="" class="btn btn-intelligentbath" :class="{active:model.mode=='smart'}" @click.prevent="setMode('smart')">
-                    <i></i>
-                    <span>智能沐浴</span>
                 </a>
             </div>
         </div>
-    </div>
 
-    <div class="page-off" v-show="model.switch=='off'">
-        <div class="device_name">{{device_name}}</div>
-        <div class="status">已关闭</div>
-        <div class="pic"></div>
-        <div class="btns">
-            <a href="" class="btn btn-turnon" @click.prevent="setSwitch('on')">
-                <i></i>
-            </a>
+        <div class="alert-wraper" v-if="model.fault && model.fault!='normal'">
+            <div class="alert">
+                <i></i> {{errorText}}
+            </div>
         </div>
     </div>
-
-    <div class="alert-wraper" v-if="model.fault && model.fault!='normal'">
-        <div class="alert">
-            <i></i> {{errorText}}
-        </div>
-    </div>
-</div>
 </template>
 
 <style lang="less">
@@ -111,7 +116,8 @@ a {
     .pic {
         width: 450px;
         height: 450px;
-        background: url(./assets/img_heater_off2.png) no-repeat;
+        background: url(../../lib/base/electric_water_heater/assets/img_heater_off2.png)
+            no-repeat;
         background-size: 100% 100%;
         margin: 0 auto;
     }
@@ -225,7 +231,7 @@ a {
     top: 40px;
     right: -130px;
     i {
-        background-image: url(./assets/icon_heater_increase.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/icon_heater_increase.png);
         width: 80px;
         height: 80px;
     }
@@ -241,7 +247,7 @@ a {
     top: 40px;
     left: -130px;
     i {
-        background-image: url(./assets/icon_heater_subtract.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/icon_heater_subtract.png);
         width: 80px;
         height: 80px;
     }
@@ -256,10 +262,10 @@ a {
     i {
         width: 144px;
         height: 144px;
-        background-image: url(./assets/washer_btn_poweron_normal.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/washer_btn_poweron_normal.png);
     }
     &:active i {
-        background-image: url(./assets/washer_btn_poweron_pressed.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/washer_btn_poweron_pressed.png);
     }
 }
 .btn-shut {
@@ -268,54 +274,54 @@ a {
     i {
         width: 144px;
         height: 144px;
-        background-image: url(./assets/washer_btn_poweroff_normal.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/washer_btn_poweroff_normal.png);
     }
     &:active i {
-        background-image: url(./assets/washer_btn_poweroff_pressed.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/washer_btn_poweroff_pressed.png);
     }
 }
 .btn-heating_half {
     i {
-        background-image: url(./assets/btn_heating_half.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_heating_half.png);
     }
     &:active i {
-        background-image: url(./assets/btn_heating_half_pressed.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_heating_half_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_heating_half_selected.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_heating_half_selected.png);
     }
 }
 .btn-heating_whole {
     i {
-        background-image: url(./assets/btn_heating_whole.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_heating_whole.png);
     }
     &:active i {
-        background-image: url(./assets/btn_heating_whole_pressed.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_heating_whole_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_heating_whole_selected.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_heating_whole_selected.png);
     }
 }
 .btn-heating_append {
     i {
-        background-image: url(./assets/btn_heating_append.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_heating_append.png);
     }
     &:active i {
-        background-image: url(./assets/btn_heating_append_pressed.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_heating_append_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_heating_append_selected.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_heating_append_selected.png);
     }
 }
 .btn-intelligentbath {
     i {
-        background-image: url(./assets/btn_intelligentbath.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_intelligentbath.png);
     }
     &:active i {
-        background-image: url(./assets/btn_intelligentbath_pressed.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_intelligentbath_pressed.png);
     }
     &.active i {
-        background-image: url(./assets/btn_intelligentbath_selected.png);
+        background-image: url(../../lib/base/electric_water_heater/assets/btn_intelligentbath_selected.png);
     }
 }
 .ani {
@@ -355,7 +361,8 @@ a {
             display: inline-block;
             width: 34px;
             height: 34px;
-            background: url(./assets/icn_notice_white_s.png) no-repeat;
+            background: url(../../lib/base/electric_water_heater/assets/icn_notice_white_s.png)
+                no-repeat;
             background-size: 34px;
             margin-right: 13px;
             vertical-align: text-bottom;
@@ -365,12 +372,13 @@ a {
             display: inline-block;
             width: 30px;
             height: 30px;
-            background: url(./assets/btn_close_white_normal.png) no-repeat;
+            background: url(../../lib/base/electric_water_heater/assets/btn_close_white_normal.png)
+                no-repeat;
             background-size: 30px;
             margin-top: 27px;
             margin-right: 26px;
             &:active {
-                background-image: url(./assets/btn_close_pressed.png);
+                background-image: url(../../lib/base/electric_water_heater/assets/btn_close_pressed.png);
             }
         }
         &.warn {
@@ -427,7 +435,7 @@ export default {
                 }
             },
             device_name: "",
-            status: ''
+            status: ""
         };
     },
     computed: {
@@ -526,18 +534,21 @@ export default {
             this.controlDevice("mode", val);
         },
         getSnapShot() {
-            HdSmart.Device.getSnapShot(data => {
-                HdSmart.UI.hideLoading();
-                this.onSuccess(data);
-                //初始化缓存温度
-                this.setOldTemperature(this.model.set_temperature);
-            }, () => {
-                this.status = 'error'
-                HdSmart.UI.hideLoading();
-            });
+            HdSmart.Device.getSnapShot(
+                data => {
+                    HdSmart.UI.hideLoading();
+                    this.onSuccess(data);
+                    //初始化缓存温度
+                    this.setOldTemperature(this.model.set_temperature);
+                },
+                () => {
+                    this.status = "error";
+                    HdSmart.UI.hideLoading();
+                }
+            );
         },
         onSuccess(data) {
-            this.status = 'success'
+            this.status = "success";
             this.model = data.attribute;
             if (!this.$refs.tempSlider.isUpdating) {
                 this.temp = this.model.set_temperature;

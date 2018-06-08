@@ -1,26 +1,26 @@
 <template>
-<div class="page-index">
+    <div class="page-index">
 
-    <div class="name">{{device_name}}</div>
-    <div class="lock-status">
-        <span class="status" :class="{red:lockedStatus,on:model.switch=='on'}">{{statusText}}</span>
-        <span class="battery" :class="{low:lowBattery}">{{model.battery_percentage}}%电量</span>
+        <div class="name">{{device_name}}</div>
+        <div class="lock-status">
+            <span class="status" :class="{red:lockedStatus,on:model.switch=='on'}">{{statusText}}</span>
+            <span class="battery" :class="{low:lowBattery}">{{model.battery_percentage}}%电量</span>
+        </div>
+        <div class="lock" :class="[model.switch]"></div>
+
+        <a href="#" class="btn-unlock" :class="{disabled:btnDisabled}" @click.prevent="showPwdInput">开锁</a>
+
+        <router-link :to="{name:'log',query:{device_id:device_id,family_id:family_id, category_id: device_category_id}}" class="btn-golog"></router-link>
+
+        <div class="alert-wraper">
+            <div class="alert" :class="{warn:item.key}" v-for="(item,index) in theUnclickAlert" :key="index" v-if="index==0">
+                <i></i>{{item.msg}}
+                <a class="close" href="javascript:void(0)" @click="closeAlert(item)"></a>
+            </div>
+        </div>
+        <password-input :visible="passwordInputVisible" v-on:close-dialog="passwordInputVisible=false" />
+
     </div>
-    <div class="lock" :class="[model.switch]"></div>
-
-    <a href="#" class="btn-unlock" :class="{disabled:btnDisabled}" @click.prevent="showPwdInput">开锁</a>
-
-    <router-link :to="{name:'log',query:{device_id:device_id,family_id:family_id}}" class="btn-golog"></router-link>
-
-    <div class="alert-wraper">
-      <div class="alert" :class="{warn:item.key}" v-for="(item,index) in theUnclickAlert" :key="index" v-if="index==0">
-        <i></i>{{item.msg}}
-        <a class="close" href="javascript:void(0)" @click="closeAlert(item)"></a>
-      </div>
-    </div>
-    <password-input :visible="passwordInputVisible" v-on:close-dialog="passwordInputVisible=false" />
-
-</div>
 </template>
 
 <style lang="less" scoped>
@@ -70,21 +70,23 @@
     width: 504px;
     height: 504px;
     margin: 24px auto 0;
-    background: url(../assets/img_lock_locked.png) no-repeat;
+    background: url(../../../lib/base/door_lock/assets/img_lock_locked.png)
+        no-repeat;
     background-size: 504px;
     text-align: center;
     &.on {
-        background-image: url(../assets/img_lock_unlocked.png);
+        background-image: url(../../../lib/base/door_lock/assets/img_lock_unlocked.png);
     }
     .pic {
         width: 96px;
         height: 96px;
-        background: url(../assets/icn_lock_locked.png) no-repeat;
+        background: url(../../../lib/base/door_lock/assets/icn_lock_locked.png)
+            no-repeat;
         background-size: 96px;
         margin: 132px auto 60px;
         display: inline-block;
         &.on {
-            background-image: url(../assets/icn_lock_unlocked.png);
+            background-image: url(../../../lib/base/door_lock/assets/icn_lock_unlocked.png);
         }
     }
 }
@@ -111,10 +113,11 @@
     top: 132px;
     width: 96px;
     height: 96px;
-    background: url(../assets/btn_record_normal.png) no-repeat;
+    background: url(../../../lib/base/door_lock/assets/btn_record_normal.png)
+        no-repeat;
     background-size: 100% 100%;
     &:active {
-        background-image: url(../assets/btn_record_pressed.png);
+        background-image: url(../../../lib/base/door_lock/assets/btn_record_pressed.png);
     }
 }
 .alert-wraper {
@@ -135,7 +138,8 @@
             display: inline-block;
             width: 34px;
             height: 34px;
-            background: url(../assets/icn_notice_white_s.png) no-repeat;
+            background: url(../../../lib/base/door_lock/assets/icn_notice_white_s.png)
+                no-repeat;
             background-size: 34px;
             margin-right: 13px;
             vertical-align: text-bottom;
@@ -145,12 +149,13 @@
             display: inline-block;
             width: 30px;
             height: 30px;
-            background: url(../assets/btn_close_white_normal.png) no-repeat;
+            background: url(../../../lib/base/door_lock/assets/btn_close_white_normal.png)
+                no-repeat;
             background-size: 30px;
             margin-top: 27px;
             margin-right: 26px;
             &:active {
-                background-image: url(../assets/btn_close_pressed.png);
+                background-image: url(../../../lib/base/door_lock/assets/btn_close_pressed.png);
             }
         }
         &.warn {
@@ -203,7 +208,8 @@ export default {
                 switch: "off",
                 battery_percentage: "--"
             },
-            errorStore: []
+            errorStore: [],
+            device_category_id: ""
         };
     },
     computed: {
@@ -389,6 +395,7 @@ export default {
             if (data.family_id) {
                 this.family_id = data.family_id;
             }
+            this.device_category_id = data.device_category_id;
             this.model = data.attribute;
             this.onAlarm(data.attribute);
         },

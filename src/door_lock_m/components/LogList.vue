@@ -135,7 +135,8 @@ export default {
     color: #c8cacc;
     text-align: center;
     span {
-        background: url(../assets/img_emptydata.png) no-repeat;
+        background: url(../../../lib/base/door_lock/assets/img_emptydata.png)
+            no-repeat;
         background-size: 100% 100%;
         display: block;
         width: 360px;
@@ -162,26 +163,26 @@ export default {
     日志图标
 */
 .log-icon-17 {
-    background: url("../assets/code.png");
+    background: url("../../../lib/base/door_lock/assets/code.png");
     background-size: 100% 100%;
 }
 
 .log-icon-18 {
-    background: url("../assets/fingerprint.png");
+    background: url("../../../lib/base/door_lock/assets/fingerprint.png");
     background-size: 100% 100%;
 }
 
 .log-icon-19 {
-    background: url("../assets/card.png");
+    background: url("../../../lib/base/door_lock/assets/card.png");
     background-size: 100% 100%;
 }
 
 .log-icon-20 {
-    background: url("../assets/key.png");
+    background: url("../../../lib/base/door_lock/assets/key.png");
     background-size: 100% 100%;
 }
 .log-icon-21 {
-    background: url("../assets/phone.png");
+    background: url("../../../lib/base/door_lock/assets/phone.png");
     background-size: 100% 100%;
 }
 </style>

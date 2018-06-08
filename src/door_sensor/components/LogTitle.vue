@@ -10,82 +10,82 @@
     </div>
 </template>
 <script>
-    export default {
-        props: {
-            device: Object
-        }
+export default {
+    props: {
+        device: Object
     }
+};
 </script>
 <style lang="less" scoped>
-    .log-title{
-        background: #f2f2f2;
-        width: 100%;
-        height: 84px;
-        line-height: 84px;
-        font-size:30px;
-        color:#333333;
-        margin-bottom: 36px;
-    }
-    .box{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content:center;
-        height: 100%;
-    }
-    .icon{
-        content: "";
-        background: url('../assets/icn_doorwindow_s.png')  no-repeat center center;
-        width: 36px;
-        height: 36px;
-        background-size: 100% 100%;
-        margin: 0 12px 0 30px;
-    }
-    .title{
-        flex: 1;
-    }
-    .status{
-        margin-right: 36px;
-        font-size: 24px;
-        color: #808080;
-        position: relative;
-        font-weight: normal;
-    }
-    .status:before{
-        content:'';
-        display: inline-block;
-        vertical-align: middle;
-        width: 12px;
-        height: 12px;
-        margin: -6px 12px 0 0;
-        line-height: 12px;
-        border-radius: 12px;
-        background: #808080;
-    }
-    .status.active{
-        color: #13d5dc;
-    }
-    .status.active:before{
-        background: #13d5dc;
-    }
+.log-title {
+    background: #f2f2f2;
+    width: 100%;
+    height: 84px;
+    line-height: 84px;
+    font-size: 30px;
+    color: #333333;
+    margin-bottom: 36px;
+}
+.box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.icon {
+    content: "";
+    background: url("../../../lib/base/door_sensor/assets/icn_doorwindow_s.png")
+        no-repeat center center;
+    width: 36px;
+    height: 36px;
+    background-size: 100% 100%;
+    margin: 0 12px 0 30px;
+}
+.title {
+    flex: 1;
+}
+.status {
+    margin-right: 36px;
+    font-size: 24px;
+    color: #808080;
+    position: relative;
+    font-weight: normal;
+}
+.status:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 12px;
+    height: 12px;
+    margin: -6px 12px 0 0;
+    line-height: 12px;
+    border-radius: 12px;
+    background: #808080;
+}
+.status.active {
+    color: #13d5dc;
+}
+.status.active:before {
+    background: #13d5dc;
+}
 
-
-    .power_status{
-        margin-right: 24px;
-        font-size: 24px;
-        color: #f26161;
-        position: relative;
-        font-weight: normal;
-    }
-    .power_status:before{
-        content:'';
-        display: inline-block;
-        vertical-align: middle;
-        width: 12px;
-        height: 12px;
-        margin: -6px 12px 0 0;
-        line-height: 12px;
-        border-radius: 12px;
-        background: #f26161;
-    }
+.power_status {
+    margin-right: 24px;
+    font-size: 24px;
+    color: #f26161;
+    position: relative;
+    font-weight: normal;
+}
+.power_status:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 12px;
+    height: 12px;
+    margin: -6px 12px 0 0;
+    line-height: 12px;
+    border-radius: 12px;
+    background: #f26161;
+}
 </style>
