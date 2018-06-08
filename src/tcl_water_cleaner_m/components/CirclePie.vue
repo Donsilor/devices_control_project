@@ -14,8 +14,8 @@
 
 <style lang="less" scoped>
 .circle-pie {
-    width:360px;
-    height:360px;
+    width:320px;
+    height:320px;
     border-radius: 50%;
     background: #f8f8f8;
     position: relative;
@@ -24,31 +24,31 @@
     position: absolute;
     top: 0;
     left: 0;
-    width:360px;
-    height:360px;
+    width:320px;
+    height:320px;
     border-radius: 50%;
 }
 .right, .left {
     position: absolute;
     top: 0;
     left: 0;
-    width:360px;
-    height:360px;
+    width:320px;
+    height:320px;
     border-radius: 50%;
     background:#46bcff;
 }
 .pie-right, .right {
-    clip: rect(0, auto, auto, 180px);
+    clip: rect(0, auto, auto, 160px);
 }
 .pie-left, .left {
-    clip: rect(0, 180px, auto, 0);
+    clip: rect(0, 160px, auto, 0);
 }
 .mask {
     position: absolute;
     top: 10px;
     left: 10px;
-    height: 340px;
-    width: 340px;
+    height: 300px;
+    width: 300px;
     background: #fff;
     border-radius: 50%;
     text-align: center;
@@ -61,6 +61,8 @@ export default {
     props: ['value'],
     computed: {
         rotate() {
+            console.log('this.value',this.value)
+            console.log("rotated",(100-this.value) * 3.6)
             return (100-this.value) * 3.6
         },
         rightPieStyle() {

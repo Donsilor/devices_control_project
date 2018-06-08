@@ -1,130 +1,140 @@
 <template>
-    <div id="app" :class="{warn:level>=4}">
-        <div class="water_wave ww1"></div>
-        <div class="water_wave ww2"></div>
-        <div class="water_wave ww3"></div>
+<div id="app" :class="{warn:level>=4}">
+    
 
-        <div class="page-on" :style="inPage('index')" v-if="isInit">
+    <div class="page-on" :style="inPage('index')" v-if="isInit && hasTDS">
+        <div class="mainTitle">
             <div class="name">{{device_name}}</div>
-
-            <div class="wash" :class="{washing:washing}">
-                <a href="#" @click.prevent="setClean">
-                    <i></i>一键冲洗</a>
-                <div class="progress"></div>
+            <div class="tip">
+                <p v-if="inError('E3')"><span @click="toggleErrorModal('E3', true)">漏水</span></p>
+                <p v-else-if="inError('E1')"><span>缺水</span></p>
+                <p v-else>{{statusTip}}</p>
             </div>
+        </div>
+        
 
-            <div class="record_panle" v-if="hasTDS" @click="tdsModalVisible = true">
-                <!-- <div class="circle">
+        <div class="wash" :class="{washing:washing}">
+            <a href="#" @click.prevent="setClean">一键冲洗</a>
+            <div class="progress"></div>
+        </div>
+
+        <div class="record_panle" v-if="hasTDS" @click="tdsModalVisible = true">
+            <!-- <div class="circle">
                 <span v-for="i in 4" :key="i" :class="'c'+i" v-show="i==(level>4?4:level)"></span>
             </div> -->
-                <!-- <div class="arrow" :style="{transform:'rotate('+ rotate +'deg)'}"></div> -->
-                <div class="value">{{nowTDS}}</div>
-                <div class="pic">TDS</div>
-                <!-- <div class="valueset" @click.stop="">
+            <!-- <div class="arrow" :style="{transform:'rotate('+ rotate +'deg)'}"></div> -->
+            <div class="value">{{nowTDS}}</div>
+            <div class ="pic" :class="{'pic_100':nowTDS>=100}">TDS</div>
+            <!-- <div class="valueset" @click.stop="">
                 <span>0</span>
                 <span>50</span>
                 <span>100</span>
                 <span>300</span>
                 <span>300+</span>
             </div> -->
-                <div class="text">
-                    <span v-if="level==1">过滤后水质可直接饮用</span>
-                    <span v-else-if="level==2">过滤后水质不建议直接饮用</span>
-                    <span v-else-if="level==3">过滤后水质不建议直接饮用</span>
-                    <span v-else>过滤后水质不可直接饮用</span>
-                </div>
+            <div class="text">
+                <span v-if="level==1">过滤后水质可直接饮用</span>
+                <span v-else-if="level==2">过滤后水质不建议直接饮用</span>
+                <span v-else-if="level==3">过滤后水质不建议直接饮用</span>
+                <span v-else>过滤后水质不可直接饮用</span>
             </div>
+        </div>
 
+        <div class="water_wave ww1"></div>
+        <div class="water_wave ww2"></div>
+        <div class="water_wave ww3"></div>
+        <a class="view" href="" @click.prevent="currentPage='list'" v-if="hasTDS">
+            <span v-if="expired_num > 0">{{expired_num}}个滤芯已过期，点击查看详情</span>
+            <span v-else-if="expiring_num > 0">{{expiring_num}}个滤芯将到期，点击查看详情</span>
+            <span v-else>查看滤芯寿命</span>
+        </a>
+        <!-- <filter-items v-if="!hasTDS" :items="filterItems" :view-filter="viewFilter"  /> -->
+    </div>
+    <!-- 没有TDS的机器的样式 -->
+    <div class="hasNotTDs" v-if="!hasTDS" :style="inPage('index')">
+        <div class="mainTitle">
+            <div class="name">{{device_name}}</div>
             <div class="tip">
-                <p v-if="inError('E3')">
-                    <span @click="toggleErrorModal('E3', true)">漏水</span>
-                </p>
-                <p v-else-if="inError('E1')">
-                    <span>缺水</span>
-                </p>
+                <p v-if="inError('E3')"><span @click="toggleErrorModal('E3', true)">漏水</span></p>
+                <p v-else-if="inError('E1')"><span>缺水</span></p>
                 <p v-else>{{statusTip}}</p>
             </div>
-
-            <a class="view" href="" @click.prevent="currentPage='list'" v-if="hasTDS">
-                <span v-if="expired_num > 0">{{expired_num}}个滤芯已过期，点击查看详情</span>
-                <span v-else-if="expiring_num > 0">{{expiring_num}}个滤芯将到期，点击查看详情</span>
-                <span v-else>查看滤芯寿命</span>
-            </a>
-
-            <filter-items v-if="!hasTDS" :items="filterItems" :view-filter="viewFilter" />
         </div>
-
-        <div class="page-sec" :style="inPage('list')" v-if="hasTDS">
-            <div class="topbar">
-                <div class="left">
-                    <a href="" class="arrow" @click.prevent="currentPage='index'"></a>
-                </div>
-                <div class="title">滤芯详情</div>
-            </div>
-            <filter-items :items="filterItems" :view-filter="viewFilter" />
+        <div class="wash" :class="{washing:washing}">
+            <a href="#" @click.prevent="setClean">一键冲洗</a>
+            <div class="progress"></div>
         </div>
-
-        <sub-page title="TDS简介" class="modal-w" v-model="tdsModalVisible">
-            <div class="tds">
-                <p>
-                    对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果， 数值越低代表过滤效果越好。但对于含有致病菌、悬浮物等有害物质的水源，TDS并不适用。
-                </p>
-                <img src="../../lib/base/water_cleaner/assets/waterpurifier_img_tdsppm.png" />
-            </div>
-        </sub-page>
-
-        <modal v-for="item in expiredFilter" :key="item" title="净水器滤芯到期" v-model="item.timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
-            <div class="alarm">
-                <div class="alert">
-                    <i></i>“净水器”的滤芯{{item.index+1}}已到期</div>
-                <div class="text">
-                    <p>{{getName(item.index)}}寿命已到期，请更换以保证饮水质量！</p>
-                    <p>请在更换滤芯后重置寿命</p>
-                </div>
-
-                <div class="btn">
-                    <a href="#" class="" @click.prevent="viewExpired(item)">查看详情</a>
-                    <a href="#" class="btn-default" @click.prevent="confirmExpired(item)">我知道了</a>
-                </div>
-            </div>
-        </modal>
-
-        <modal title="漏水警报" v-model="alarmModalVisible" :showCloseBtn="false" :overlayClickable="false">
-            <div class="alarm">
-                <div class="alert">
-                    <i></i>检测到净水器漏水！</div>
-                <div class="text">
-                    <p>请先排查管道、台盆、机器，确定漏水位置；</p>
-                    <p>非机器漏水，请擦干报警器并将净水器断电重启；</p>
-                    <p>若净水器漏水，请及时关闭电源和水源。</p>
-                </div>
-                <div class="btn">
-                    <a href="" class="btn-default" @click.prevent="confirmError('E3')">我知道了</a>
-                </div>
-            </div>
-        </modal>
-
-        <sub-page title="滤芯状态" class="modal-w" v-model="statusModalVisible">
-            <div class="lx_status">
-                <div class="p1">滤芯{{currentFilter.index+1}}</div>
-                <div class="p2">{{getName(currentFilter.index)}} </div>
-                <circle-pie class="pie" :value="toPercent(currentFilter.remaining, currentFilter.total)">
-                    <p class="p3">预计剩余寿命</p>
-                    <p class="p4">{{currentFilter.remaining | toDays}}天</p>
-                    <p class="p5">剩余{{toPercent(currentFilter.remaining, currentFilter.total)}}%</p>
-                </circle-pie>
-                <div class="btn">
-                    <div class="btn-block" :class="{active:isFilterResetActive}">
-                        <a href="" class="reset" @click.prevent="confirmFilterReset">重置剩余时间</a>
-                        <a href="" class="reset_submit" @click.prevent="submitFilterReset">确定重置</a>
-                    </div>
-                </div>
-
-                <div class="msg">更换滤芯后请重置剩余时间</div>
-            </div>
-        </sub-page>
-
+        <filter-items  :items="filterItems" :view-filter="viewFilter" :hasTDS="hasTDS" />
     </div>
+    <div class="page-sec" :style="inPage('list')" v-if="hasTDS">
+        <div class="topbar">
+            <div class="left"><a href="" class="arrow" @click.prevent="currentPage='index'"></a></div>
+            <div class="title">滤芯寿命</div>
+        </div>
+        <filter-items :items="filterItems" :view-filter="viewFilter" :nowTDS="nowTDS" :level="level" :hasTDS="hasTDS" v-model="tdsModalVisible" :toggle-modal-visible="toggleModalVisible" />
+    </div>
+
+    <sub-page title="TDS简介" class="modal-w" v-model="tdsModalVisible">
+        <div class="tds">
+            <p class="tds_text">
+                对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果，
+                数值越低代表过滤效果越好。但对于含有致病菌、悬浮物等有害物质的水源，TDS并不适用。
+            </p>
+            <img src="../../lib/base/water_cleaner/assets/waterpurifier_img_tdsppm.png"/>
+        </div>
+    </sub-page>
+
+    <modal v-for="item in expiredFilter" :key="item" title="净水器滤芯到期" v-model="item.timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
+        <div class="alarm">
+            <div class="alert"><i></i>“净水器”的滤芯{{item.index+1}}已到期</div>
+            <div class="text">
+                <p>{{getName(item.index)}}寿命已到期，请更换以保证饮水质量！</p>
+                <p>请在更换滤芯后重置寿命</p>
+            </div>
+
+            <div class="btn">
+                <a href="#" class="" @click.prevent="viewExpired(item)">查看详情</a>
+                <a href="#" class="btn-default" @click.prevent="confirmExpired(item)">我知道了</a>
+            </div>
+        </div>
+    </modal>
+
+    <modal title="漏水警报" v-model="alarmModalVisible" :showCloseBtn="false" :overlayClickable="false">
+        <div class="alarm">
+            <div class="alert"><i></i>检测到净水器漏水！</div>
+            <div class="text">
+                <p>请先排查管道、台盆、机器，确定漏水位置；</p>
+                <p>非机器漏水，请擦干报警器并将净水器断电重启；</p>
+                <p>若净水器漏水，请及时关闭电源和水源。</p>
+            </div>
+            <div class="btn">
+                <a href="" class="btn-default" @click.prevent="confirmError('E3')">我知道了</a>
+            </div>
+        </div>
+    </modal>
+
+    <sub-page title="滤芯状态" class="modal-w" v-model="statusModalVisible">
+        <div class="lx_status">
+            <div class="p1">滤芯{{currentFilter.index+1}}</div>
+            <div class="p2">{{getName(currentFilter.index)}} </div>
+            <circle-pie class="pie" :value="toPercent(currentFilter.remaining, currentFilter.total)">
+                <p class="p3">预计剩余寿命</p>
+                <p class="p4">{{currentFilter.remaining | toDays}}天</p>
+                <p class="p5">剩余{{toPercent(currentFilter.remaining, currentFilter.total)}}%</p>
+            </circle-pie>
+            <div class="msg">更换滤芯后请重置剩余时间</div>
+            <div class="btn">
+                <div class="btn-block" :class="{active:isFilterResetActive}">
+                    <a href="" class="reset" @click.prevent="confirmFilterReset">重置剩余时间</a>
+                    <a href="" class="reset_submit" @click.prevent="submitFilterReset">确定重置</a>
+                </div>
+            </div>
+
+            
+        </div>
+    </sub-page>
+
+</div>
 </template>
 
 <style lang="less">
@@ -132,7 +142,10 @@
     padding: 0;
     margin: 0;
 }
-body {
+body,html {
+    width:100%;
+    height: 100%;
+    overflow-y: auto;
     -webkit-tap-highlight-color: transparent;
     color: #fff;
     font-size: 30px;
@@ -141,16 +154,66 @@ a {
     text-decoration: none;
 }
 #app {
-    position: absolute;
-    left: 0;
-    top: 0;
+   
     width: 100%;
     height: 100%;
-    color: #1ea0ff;
+    color: #1EA0FF;
+    position: relative;
+    overflow: hidden;
     // background: #46bcff;
-    &.warn {
+    &.warn {//水质污染严重轻情况下的样式
         // background: #d04802;
+        .water_wave {
+            &.ww1 {
+                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_red1one@2x.png);
+                animation: wave1 5s linear infinite;
+            }
+            &.ww2 {
+                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_red1two@2x.png);
+                // animation: wave2 8s linear infinite;
+            }
+            &.ww3 {
+                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_red1there@2x.png);
+                // animation: wave3 10s linear infinite;
+            }
+        }
+        .mainTitle{
+            .name{
+                color: #D04802;
+            }
+            .tip{
+                color: #D04802;
+            }
+        }
+        .wash{
+            border: 1px solid #D04802;
+            border-right:none;
+            a{
+                color: #D04802;
+            }
+            
+        }
+        .record_panle{
+            .value{
+                color: #D04802;
+            }
+            .pic{
+                right:119px;
+                border: 1px solid #D04802;
+                color: #D04802;
+            }
+            .pic_100{
+                right:60px;
+                border: 1px solid #D04802;
+                color: #D04802;
+            }
+            .text{
+                color: #D04802;
+            }
+        }
+        
     }
+    
 }
 @keyframes wave1 {
     from {
@@ -183,44 +246,44 @@ a {
     width: 100%;
     background-size: 100% 100%;
     background-repeat: repeat-x;
-    background-color: red;
+    height:428px;
     &.ww1 {
-        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_one.png);
-        height: 800px;
+        background-image: url(../../lib/base/water_cleaner/assets/wave_level1.png);
         animation: wave1 5s linear infinite;
     }
     &.ww2 {
-        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_two.png);
-        height: 800px;
-        animation: wave2 8s linear infinite;
+        background-image: url(../../lib/base/water_cleaner/assets/wave_level2.png);
+        // animation: wave2 8s linear infinite;
     }
     &.ww3 {
-        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_three.png);
-        height: 800px;
-        animation: wave3 10s linear infinite;
+        background-image: url(../../lib/base/water_cleaner/assets/wave_level3.png);
+        // animation: wave3 10s linear infinite;
     }
 }
-.page-on,
-.page-sec {
+.page-on,.page-sec,.hasNotTDs{
     position: relative;
+    width:100%;
+    height: 100%;
+    overflow:hidden;
+    box-sizing:border-box;
+}
+.mainTitle{
+     position: absolute;
+    left: 0;
+    top: 18.93%;
+    width: 100%;
 }
 .name {
-    position: absolute;
-    left: 0;
-    top: 156px;
     width: 100%;
     text-align: center;
-    font-size: 30px;
-    color: #1ea0ff;
+    font-size: 32px;
+    color: #1EA0FF;
 }
 .tip {
-    position: absolute;
-    left: 0;
-    top: 200px;
     width: 100%;
     text-align: center;
-    font-size: 30px;
-    color: #1ea0ff;
+    font-size: 32px;
+    color: #1EA0FF;
     opacity: 0.5;
     height: 80px;
     span {
@@ -229,79 +292,43 @@ a {
     }
 }
 .record_panle {
+    width:100%;
+    height:auto;
     position: absolute;
-    left: 50%;
-    top: 304px;
-    transform: translate(-50%, 0);
-    width: 480px;
-    .circle {
-        width: 480px;
-        height: 480px;
-        span {
-            width: 480px;
-            height: 480px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-        }
-        .c1 {
-            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_img_pure.png);
-        }
-        .c2 {
-            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_img_purified.png);
-        }
-        .c3 {
-            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_img_tapwater.png);
-        }
-        .c4 {
-            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_img_pollutionwater.png);
-        }
-    }
-    .arrow {
-        width: 480px;
-        height: 480px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        background: url(../../lib/base/water_cleaner/assets/img_instrument_airquality_pointer.png)
-            no-repeat;
-        background-size: 100% 100%;
-        // transition: transform 1.5s;
-    }
+    left: 0;
+    top: 30.7%;
+    text-align:center;
     .value {
         font-family: AbwechselnschriftBold;
-        font-size: 144px;
-        color: #1ea0ff;
-        position: absolute;
-        left: 0px;
-        top: 120px;
+        font-size: 200px;
+        color: #1EA0FF;
+        height:240px;
+        line-height: 240px;
         width: 100%;
         text-align: center;
     }
     .pic {
-        border: 1px solid #1ea0ff;
+        border: 1px solid #1EA0FF;
         background: rgba(255, 255, 255, 0.2);
         border-radius: 43px;
         width: 122px;
-        color: #1ea0ff;
+        color: #1EA0FF;
         text-align: center;
         font-family: Roboto-Regular;
         font-size: 30px;
         line-height: 56px;
         position: absolute;
-        left: 178px;
-        top: 312px;
+        right: 119px;
+        top: 130px;
+    }
+    .pic_100{
+        right:60px;
     }
     .text {
-        font-size: 24px;
-        position: absolute;
-        left: 0;
         width: 100%;
-        top: 420px;
         text-align: center;
-        color: #1ea0ff;
+        font-size: 32px;
+        color: #1EA0FF;
     }
     .valueset {
         span {
@@ -334,37 +361,31 @@ a {
 
 .wash {
     position: absolute;
-    right: 60px;
-    top: 132px;
-    border: 1px solid #ffffff;
-    border-radius: 53px;
-    width: 207px;
-    height: 56px;
+    right:0px;
+    top: 19.3%;
+    width:158px;
+    height: 80px;
+    line-height: 80px;
+    border: 1px solid #1EA0FF;
+    border-right:none;
+    border-radius: 48px 0 0 48px;
     overflow: hidden;
+    text-align:center;
     a {
-        i {
-            background: url(../../lib/base/water_cleaner/assets/waterpurifier_icon_wash_normal.png)
-                no-repeat;
-            background-size: 100% 100%;
-            width: 30px;
-            height: 30px;
-            display: inline-block;
-            vertical-align: middle;
-        }
-        display: block;
-        font-size: 24px;
-        color: #ffffff;
-        line-height: 56px;
+        width:100%;
+        height: 80px;
+        line-height: 80px !important;
+        font-size: 28px;
+        color: #1EA0FF;
         text-align: center;
         background: rgba(255, 255, 255, 0.2);
-        display: block;
+        display:block;
     }
     .progress {
-        height: 57px;
+        height: 80px;
         width: 0;
-        background: url(../../lib/base/water_cleaner/assets/waterpurifier_img_wash.png)
-            no-repeat;
-        background-size: 207px 100%;
+        background: url(../../lib/base/water_cleaner/assets/waterpurifier_img_wash@2x.png) no-repeat;
+        background-size: 100% 100%;
     }
     &.washing {
         a {
@@ -372,6 +393,8 @@ a {
         }
         .progress {
             width: 100%;
+            height: 100%;
+            // background:
             transition-property: width;
             transition-duration: 30s;
         }
@@ -380,17 +403,18 @@ a {
 .view {
     position: absolute;
     left: 50%;
-    top: 824px;
+    bottom:173px;
     transform: translate(-50%, 0);
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid #ffffff;
-    border-radius: 39px;
-    width: 398px;
-    height: 58px;
-    font-size: 24px;
+    background: rgba(255,255,255,0.20);
+    border: 1px solid #FFFFFF;
+    border-radius: 40px;
+    width: 510px;
+    height: 80px;
+    font-size: 28px;
     color: #ffffff;
     text-align: center;
-    line-height: 58px;
+    line-height: 80px;
+    z-index: 9;
 }
 .topbar {
     position: relative;
@@ -416,76 +440,200 @@ a {
         }
     }
 }
-.lx_title {
-    // position: absolute;
-    // left: 0;
-    // top: 288px;
-    // width: 100%;
-    text-align: center;
-    font-size: 36px;
-    color: #ffffff;
-}
-.lx_wrap {
-    // position: absolute;
-    // left: 6%;
-    // top: 400px;
-    // width: 88%;
-    // display: flex;
-    // justify-content: space-around;
-}
-.lx_item {
-    // width: 302px;
-    // height: 302px;
-    // background-repeat: no-repeat;
-    // background-size: 100% 100%;
-    // background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_filter_normal.png);
-    // &:active {
-    //     background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_filter_pressed.png);
-    // }
-    &.active {
-        // background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_expiredfilter_normal.png);
-        // &:active {
-        //      background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_expiredfilter_pressed.png);
-        // }
-        .item-name {
-            color: rgba(74, 144, 226, 0.5);
-            i {
-                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_icon_nexttwo_normal.png);
-            }
-        }
-        .item-left {
-            color: #4a90e2;
-        }
-    }
-    .item-name {
-        margin-top: 100px;
-        text-align: center;
-        font-size: 30px;
-        // color: rgba(255, 255, 255, 0.5);
-        margin-bottom: 10px;
-        i {
-            width: 22px;
-            height: 22px;
-            display: inline-block;
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_icon_nextone_normal.png);
-        }
-    }
-    .item-left {
+.detail_content{
+    overflow-y:auto;
+    .lx_title {
         text-align: center;
         font-size: 36px;
+        color: #ffffff;
+        position: relative;
+        .main_tips{
+            width:100%;
+            height: 240px;
+            line-height:240px;
+            font-size: 200px;
+            color: #1EA0FF;
+        }
+        .levelTips{
+            font-size: 32px;
+            color: #1EA0FF;
+        }
+        .pic{
+            border: 1px solid #1EA0FF;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 43px;
+            width: 124px;
+            height:60px;
+            color: #1EA0FF;
+            text-align: center;
+            font-family: Roboto-Regular;
+            font-size: 30px;
+            line-height: 56px;
+            position: absolute;
+            right: 119px;
+            top: 134px;
+        }
+        .pic_100{
+            right:60px;
+        }
     }
+    .lx_wrap {
+        position: absolute;
+        bottom:0;
+        left:0;
+        z-index: 9;
+        width:100%;
+        height: 802px;
+        overflow: hidden;
+        box-sizing:border-box;
+        padding:46px 0 0 32px;
+        .time_tips{
+            width:100%;
+            height: 84px;
+            line-height: 84px;
+            color:#fff;
+            font-size:28px;
+            border-bottom:1px solid rgba(255,255,255,0.2);
+        }
+        .lx_item {
+            width:100%;
+            height:120px;
+            line-height:120px;
+            color:#fff;
+            border-bottom:1px solid rgba(255,255,255,0.2);
+            display:flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing:border-box;
+            padding-right:32px;
+            .list_button{
+                width:50px;
+                height:50px;
+                line-height: 50px;
+                text-align: center;
+                border-radius:50%;
+                background-color:#fff;
+                font-size: 32px;
+                color: #1EA0FF;
+            }
+            .item-name{
+                font-size: 32px;
+                color: #FFFFFF;
+            }
+            .item-right{
+                font-size: 32px;
+                color: #FFFFFF;
+                span.angle{
+                    display: inline-block;
+                    transform: rotate(45deg);
+                    height: 13px;
+                    width: 13px;
+                    border-width: 2px 2px 0 0;
+                    border-style: solid;
+                    position: relative;
+                    color:#fff;
+                    vertical-align: 1%;
+                }
+            }
+            &.active{
+                .list_button{
+                    background-color:rgba(255,255,255,0.50);
+                }
+                .item-name{
+                    color: rgba(255,255,255,0.50);
+                }
+                .item-right{
+                    color: rgba(255,255,255,0.50);
+                }
+            }
+        }
+        .lx_msg {
+            position: absolute;
+            bottom:0;
+            left:32px;
+            height: 70px;
+            line-height:70px;
+            text-align: left;
+            font-size: 24px;
+            color: rgba(255,255,255,0.50);
+        }
+    }
+    .wave_content{
+        width:100%;
+        height: 802px;
+        box-sizing:border-box;
+        position:absolute;
+        z-index: -1;
+        bottom:0;
+        left:0;
+        .waveHigh{
+            position: absolute;
+            left:0;
+            bottom:0;
+            width:100%;
+            height: 100%;
+            overflow: hidden;
+            background-size: 100% 100%;
+            background-repeat: repeat-x;
+            &.waveHigh1 {
+                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2one@2x.png);
+                animation: wave1 5s linear infinite;
+                z-index: -3;
+            }
+            &.waveHigh2 {
+                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2two@2x.png);
+                // animation: wave2 8s linear infinite;
+                z-index: -2;
+            }
+            &.waveHigh3 {
+                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2there@2x.png);
+                // animation: wave3 10s linear infinite;
+                z-index: -1;
+            } 
+        }
+    }
+    &.detailWaing{
+        .lx_title{
+            .main_tips{
+                color: #D04802;
+            }
+            .levelTips{
+                color: #D04802;
+            }
+            .pic {
+                border: 1px solid #D04802;
+                color: #D04802;
+            }
+            .pic_100{
+                border: 1px solid #D04802;
+                color: #D04802;
+            }
+        }
+        .lx_wrap{
+           .lx_item{
+               .list_button{
+                   color: #D04802;
+               }
+           } 
+        }
+        .wave_content{
+            .waveHigh{
+                &.waveHigh1 {
+                    background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_red2one@2x.png);
+                }
+                &.waveHigh2 {
+                    background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_red2two@2x.png);
+                }
+                &.waveHigh3 {
+                    background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_red2there@2x.png);
+                } 
+            }
+        }
+    }
+    
 }
-.lx_msg {
-    // position: absolute;
-    // left: 0;
-    // width: 100%;
-    // top: 832px;
-    text-align: center;
-    font-size: 30px;
-    color: #ffffff;
-}
+
 //弹窗
 .modal {
     color: #76787a;
@@ -494,17 +642,26 @@ a {
 .modal-w .modal {
     width: 1300px;
 }
-.tds {
-    padding: 0 46px;
-    text-align: left;
-    line-height: 1.6;
-    p {
-        margin-bottom: 30px;
+/**tds简介样式 start*/
+.tds{
+    width:100%;
+    p.tds_text{
+        width:100%;
+        color:#333;
+        font-size:28px; 
+        box-sizing:border-box;
+        padding:34px 30px 0 30px; 
     }
-    img {
-        width: 100%;
+    img{
+        display: block;
+        width:100%;
+        box-sizing:border-box;
+        height: auto;
+        margin-top:60px;
+        padding:0px 20px 0 20px;
     }
 }
+/**tds简介样式 end*/
 .alarm {
     .alert {
         i {
@@ -552,38 +709,64 @@ a {
 }
 .lx_status {
     .p1 {
-        font-size: 30px;
-        color: #76787a;
+        font-size: 28px;
+        height: 40px;
+        line-height: 40px;
+        color: #76787A;
         opacity: 0.5;
+        text-align:center;
+        margin-top:6.53%;
     }
     .p2 {
         font-size: 36px;
         color: #333333;
         margin-bottom: 30px;
+        font-size: 32px;
+        color: #333333;
+        text-align:center;
     }
     .p3 {
-        margin-top: 80px;
-        font-size: 30px;
-        color: #76787a;
         opacity: 0.5;
+        font-size: 28px;
+        color: #76787A;
+        text-align: center;
+        margin-top:62px;
+        height: 40px;
+        line-height:40px;
     }
     .p4 {
+        height: 86px;
+        line-height:86px;
         font-size: 72px;
         color: #333333;
-        line-height: 1.6;
     }
     .p5 {
-        font-size: 30px;
-        color: #76787a;
         opacity: 0.5;
+        font-size: 28px;
+        color: #76787A;
+        height: 40px;
+        line-height: 40px;
+        margin-top:10px;
     }
     .pie {
         margin: 0 auto 50px;
     }
+    .msg {
+        opacity: 0.5;
+        font-size: 28px;
+        color: #76787A;
+        margin-top:60px;
+        text-align: center;
+        height:40px;
+        line-height:40px;
+    }
     .btn {
-        width: 658px;
-        margin: 0 auto 20px;
+        width: 660px;
+        height: 84px;
+        line-height: 84px;
+        margin: 14px auto;
         overflow: hidden;
+        text-align:center;
         .btn-block {
             display: -webkit-box;
             transition: transform 400ms;
@@ -606,10 +789,10 @@ a {
             color: #ffffff;
         }
     }
-    .msg {
-        font-size: 30px;
-        color: rgba(118, 120, 122, 0.5);
-    }
+    
+}
+.subpage {
+    z-index:99;
 }
 </style>
 
@@ -618,7 +801,7 @@ a {
 import Modal from "./components/Modal.vue";
 import CirclePie from "./components/CirclePie.vue";
 import FilterItems from "./components/FilterItems.vue";
-import SubPage from "./components/SubPage.vue";
+import SubPage from './components/SubPage.vue'
 
 const TDS_VALUE = [0, 50, 100, 300, 500];
 const TDS_ANGLE = [-136, -74, 0, 74, 136];
@@ -669,8 +852,13 @@ export default {
     },
     computed: {
         level() {
+            var level;
             for (var i = TDS_VALUE.length - 1; i >= 0; i--) {
+                console.log(this.nowTDS)
                 if (this.nowTDS > TDS_VALUE[i]) {
+                    level=i + 1;
+                    console.log("level",level)
+                    // return 4;
                     return i + 1;
                 }
             }
@@ -699,6 +887,8 @@ export default {
         },
         currentFilter() {
             if (this.currentIndex == -1) return {};
+            console.log("this.filterItems",this.filterItems)
+            console.log("this.filterItems[this.currentIndex]",this.filterItems[this.currentIndex])
             return this.filterItems[this.currentIndex];
         },
         expiredFilter() {
@@ -716,6 +906,7 @@ export default {
             return result;
         },
         statusTip() {
+            console.log('this.model.status',this.model.status)
             if (this.model.status == "filter") {
                 return "制水中...";
             }
@@ -760,8 +951,11 @@ export default {
             return ["PP棉", "前置活性炭", "RO", "后置活性炭"][index];
         },
         inPage(page) {
+            console.log("page",page)
+            console.log("currentPage",this.currentPage)
             return {
-                visibility: this.currentPage == page ? "" : "hidden"
+                // visibility: this.currentPage == page ? "" : "hidden"
+                display: this.currentPage == page ? "" : "none"  
             };
         },
         controlDevice(attr, val, success) {
@@ -786,6 +980,7 @@ export default {
             );
         },
         setClean() {
+            console.log("意见冲洗")
             var el = this.$el.querySelector(".progress");
 
             var onWash = () => {
@@ -833,8 +1028,10 @@ export default {
             this.onAlarm(attrs.error);
 
             var tds = attrs.water_filter_result.TDS;
+            console.log("tds",tds)
             if (tds && tds[0] != 65535) {
-                this.hasTDS = true;
+                this.hasTDS = true;//Todo
+                // this.hasTDS =false;
                 this.oldTDS = tds[0];
                 this.nowTDS = tds[1];
             } else {
@@ -879,9 +1076,11 @@ export default {
                     this.filterItems[index].remaining = this.filterItems[
                         index
                     ].total;
+                    console.log("success",this.filterItems[index].total)
                 },
                 () => {
                     HdSmart.UI.toast("重置失败");
+                    console.log('error')
                 }
             );
         },
@@ -956,6 +1155,11 @@ export default {
         confirmExpired(item) {
             item.timeoutModalVisible = false;
             this.expiredStore = this.expiredStore.concat(item.index);
+        },
+        toggleModalVisible(str){
+            console.log("event",str)
+            // alert(1111111)
+            this.tdsModalVisible=true;
         }
     },
     created() {
@@ -974,6 +1178,7 @@ export default {
         });
 
         HdSmart.ready(() => {
+            console.log(99999,window.device_name)
             if (window.device_name) {
                 this.device_name = window.device_name;
             }
