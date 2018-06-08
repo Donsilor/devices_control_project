@@ -1,122 +1,130 @@
 <template>
-<div id="app" :class="{warn:level>=4}">
-    <div class="water_wave ww1"></div>
-    <div class="water_wave ww2"></div>
-    <div class="water_wave ww3"></div>
+    <div id="app" :class="{warn:level>=4}">
+        <div class="water_wave ww1"></div>
+        <div class="water_wave ww2"></div>
+        <div class="water_wave ww3"></div>
 
-    <div class="page-on" :style="inPage('index')" v-if="isInit">
-        <div class="name">{{device_name}}</div>
+        <div class="page-on" :style="inPage('index')" v-if="isInit">
+            <div class="name">{{device_name}}</div>
 
-        <div class="wash" :class="{washing:washing}">
-            <a href="#" @click.prevent="setClean"><i></i>一键冲洗</a>
-            <div class="progress"></div>
-        </div>
-
-        <div class="record_panle" v-if="hasTDS" @click="tdsModalVisible = true">
-            <div class="circle">
-                <span v-for="i in 4" :key="i" :class="'c'+i" v-show="i==(level>4?4:level)"></span>
-            </div>
-            <div class="arrow" :style="{transform:'rotate('+ rotate +'deg)'}"></div>
-            <div class="value">{{nowTDS}}</div>
-            <div class="pic">TDS</div>
-            <div class="valueset" @click.stop="">
-                <span>0</span>
-                <span>50</span>
-                <span>100</span>
-                <span>300</span>
-                <span>300+</span>
-            </div>
-            <div class="text">
-                <span v-if="level==1">过滤后水质可直接饮用</span>
-                <span v-else-if="level==2">过滤后水质不建议直接饮用</span>
-                <span v-else-if="level==3">过滤后水质不建议直接饮用</span>
-                <span v-else>过滤后水质不可直接饮用</span>
-            </div>
-        </div>
-
-        <div class="tip">
-            <p v-if="inError('E3')"><span @click="toggleErrorModal('E3', true)">漏水</span></p>
-            <p v-else-if="inError('E1')"><span>缺水</span></p>
-            <p v-else>{{statusTip}}</p>
-        </div>
-
-        <a class="view" href="" @click.prevent="currentPage='list'" v-if="hasTDS">
-            <span v-if="expired_num > 0">{{expired_num}}个滤芯已过期，点击查看详情</span>
-            <span v-else-if="expiring_num > 0">{{expiring_num}}个滤芯将到期，点击查看详情</span>
-            <span v-else>查看滤芯寿命</span>
-        </a>
-
-        <filter-items v-if="!hasTDS" :items="filterItems" :view-filter="viewFilter" />
-    </div>
-
-    <div class="page-sec" :style="inPage('list')" v-if="hasTDS">
-        <div class="topbar">
-            <div class="left"><a href="" class="arrow" @click.prevent="currentPage='index'"></a></div>
-            <div class="title">滤芯详情</div>
-        </div>
-        <filter-items :items="filterItems" :view-filter="viewFilter" />
-    </div>
-
-    <modal title="TDS简介" class="modal-w" v-model="tdsModalVisible">
-        <div class="tds">
-            <p>
-                对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果，
-                数值越低代表过滤效果越好。但对于含有致病菌、悬浮物等有害物质的水源，TDS并不适用。
-            </p>
-            <img src="./assets/waterpurifier_img_tdsppm.png"/>
-        </div>
-    </modal>
-
-    <modal v-for="item in expiredFilter" :key="item" title="净水器滤芯到期" v-model="item.timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
-        <div class="alarm">
-            <div class="alert"><i></i>“净水器”的滤芯{{item.index+1}}已到期</div>
-            <div class="text">
-                <p>{{getName(item.index)}}寿命已到期，请更换以保证饮水质量！</p>
-                <p>请在更换滤芯后重置寿命</p>
+            <div class="wash" :class="{washing:washing}">
+                <a href="#" @click.prevent="setClean">
+                    <i></i>一键冲洗</a>
+                <div class="progress"></div>
             </div>
 
-            <div class="btn">
-                <a href="#" class="" @click.prevent="viewExpired(item)">查看详情</a>
-                <a href="#" class="btn-default" @click.prevent="confirmExpired(item)">我知道了</a>
-            </div>
-        </div>
-    </modal>
-
-    <modal title="漏水警报" v-model="alarmModalVisible" :showCloseBtn="false" :overlayClickable="false">
-        <div class="alarm">
-            <div class="alert"><i></i>检测到净水器漏水！</div>
-            <div class="text">
-                <p>请先排查管道、台盆、机器，确定漏水位置；</p>
-                <p>非机器漏水，请擦干报警器并将净水器断电重启；</p>
-                <p>若净水器漏水，请及时关闭电源和水源。</p>
-            </div>
-            <div class="btn">
-                <a href="" class="btn-default" @click.prevent="confirmError('E3')">我知道了</a>
-            </div>
-        </div>
-    </modal>
-
-    <modal title="滤芯状态" class="modal-w" v-model="statusModalVisible">
-        <div class="lx_status">
-            <div class="p1">滤芯{{currentFilter.index+1}}</div>
-            <div class="p2">{{getName(currentFilter.index)}} </div>
-            <circle-pie class="pie" :value="toPercent(currentFilter.remaining, currentFilter.total)">
-                <p class="p3">预计剩余寿命</p>
-                <p class="p4">{{currentFilter.remaining | toDays}}天</p>
-                <p class="p5">剩余{{toPercent(currentFilter.remaining, currentFilter.total)}}%</p>
-            </circle-pie>
-            <div class="btn">
-                <div class="btn-block" :class="{active:isFilterResetActive}">
-                    <a href="" class="reset" @click.prevent="confirmFilterReset">重置剩余时间</a>
-                    <a href="" class="reset_submit" @click.prevent="submitFilterReset">确定重置</a>
+            <div class="record_panle" v-if="hasTDS" @click="tdsModalVisible = true">
+                <div class="circle">
+                    <span v-for="i in 4" :key="i" :class="'c'+i" v-show="i==(level>4?4:level)"></span>
+                </div>
+                <div class="arrow" :style="{transform:'rotate('+ rotate +'deg)'}"></div>
+                <div class="value">{{nowTDS}}</div>
+                <div class="pic">TDS</div>
+                <div class="valueset" @click.stop="">
+                    <span>0</span>
+                    <span>50</span>
+                    <span>100</span>
+                    <span>300</span>
+                    <span>300+</span>
+                </div>
+                <div class="text">
+                    <span v-if="level==1">过滤后水质可直接饮用</span>
+                    <span v-else-if="level==2">过滤后水质不建议直接饮用</span>
+                    <span v-else-if="level==3">过滤后水质不建议直接饮用</span>
+                    <span v-else>过滤后水质不可直接饮用</span>
                 </div>
             </div>
 
-            <div class="msg">更换滤芯后请重置剩余时间</div>
-        </div>
-    </modal>
+            <div class="tip">
+                <p v-if="inError('E3')">
+                    <span @click="toggleErrorModal('E3', true)">漏水</span>
+                </p>
+                <p v-else-if="inError('E1')">
+                    <span>缺水</span>
+                </p>
+                <p v-else>{{statusTip}}</p>
+            </div>
 
-</div>
+            <a class="view" href="" @click.prevent="currentPage='list'" v-if="hasTDS">
+                <span v-if="expired_num > 0">{{expired_num}}个滤芯已过期，点击查看详情</span>
+                <span v-else-if="expiring_num > 0">{{expiring_num}}个滤芯将到期，点击查看详情</span>
+                <span v-else>查看滤芯寿命</span>
+            </a>
+
+            <filter-items v-if="!hasTDS" :items="filterItems" :view-filter="viewFilter" />
+        </div>
+
+        <div class="page-sec" :style="inPage('list')" v-if="hasTDS">
+            <div class="topbar">
+                <div class="left">
+                    <a href="" class="arrow" @click.prevent="currentPage='index'"></a>
+                </div>
+                <div class="title">滤芯详情</div>
+            </div>
+            <filter-items :items="filterItems" :view-filter="viewFilter" />
+        </div>
+
+        <modal title="TDS简介" class="modal-w" v-model="tdsModalVisible">
+            <div class="tds">
+                <p>
+                    对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果， 数值越低代表过滤效果越好。但对于含有致病菌、悬浮物等有害物质的水源，TDS并不适用。
+                </p>
+                <img src="../../lib/base/water_cleaner/assets/waterpurifier_img_tdsppm.png" />
+            </div>
+        </modal>
+
+        <modal v-for="item in expiredFilter" :key="item" title="净水器滤芯到期" v-model="item.timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
+            <div class="alarm">
+                <div class="alert">
+                    <i></i>“净水器”的滤芯{{item.index+1}}已到期</div>
+                <div class="text">
+                    <p>{{getName(item.index)}}寿命已到期，请更换以保证饮水质量！</p>
+                    <p>请在更换滤芯后重置寿命</p>
+                </div>
+
+                <div class="btn">
+                    <a href="#" class="" @click.prevent="viewExpired(item)">查看详情</a>
+                    <a href="#" class="btn-default" @click.prevent="confirmExpired(item)">我知道了</a>
+                </div>
+            </div>
+        </modal>
+
+        <modal title="漏水警报" v-model="alarmModalVisible" :showCloseBtn="false" :overlayClickable="false">
+            <div class="alarm">
+                <div class="alert">
+                    <i></i>检测到净水器漏水！</div>
+                <div class="text">
+                    <p>请先排查管道、台盆、机器，确定漏水位置；</p>
+                    <p>非机器漏水，请擦干报警器并将净水器断电重启；</p>
+                    <p>若净水器漏水，请及时关闭电源和水源。</p>
+                </div>
+                <div class="btn">
+                    <a href="" class="btn-default" @click.prevent="confirmError('E3')">我知道了</a>
+                </div>
+            </div>
+        </modal>
+
+        <modal title="滤芯状态" class="modal-w" v-model="statusModalVisible">
+            <div class="lx_status">
+                <div class="p1">滤芯{{currentFilter.index+1}}</div>
+                <div class="p2">{{getName(currentFilter.index)}} </div>
+                <circle-pie class="pie" :value="toPercent(currentFilter.remaining, currentFilter.total)">
+                    <p class="p3">预计剩余寿命</p>
+                    <p class="p4">{{currentFilter.remaining | toDays}}天</p>
+                    <p class="p5">剩余{{toPercent(currentFilter.remaining, currentFilter.total)}}%</p>
+                </circle-pie>
+                <div class="btn">
+                    <div class="btn-block" :class="{active:isFilterResetActive}">
+                        <a href="" class="reset" @click.prevent="confirmFilterReset">重置剩余时间</a>
+                        <a href="" class="reset_submit" @click.prevent="submitFilterReset">确定重置</a>
+                    </div>
+                </div>
+
+                <div class="msg">更换滤芯后请重置剩余时间</div>
+            </div>
+        </modal>
+
+    </div>
 </template>
 
 <style lang="less">
@@ -175,17 +183,17 @@ a {
     background-size: 100% 100%;
     background-repeat: repeat-x;
     &.ww1 {
-        background-image: url(./assets/waterpurifier_bg_wave_one.png);
+        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_one.png);
         height: 185px;
         // animation: wave1 10s linear infinite;
     }
     &.ww2 {
-        background-image: url(./assets/waterpurifier_bg_wave_two.png);
+        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_two.png);
         height: 201px;
         // animation: wave2 15s linear infinite;
     }
     &.ww3 {
-        background-image: url(./assets/waterpurifier_bg_wave_three.png);
+        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_three.png);
         height: 226px;
         // animation: wave3 20s linear infinite;
     }
@@ -233,16 +241,16 @@ a {
             background-size: 100% 100%;
         }
         .c1 {
-            background-image: url(./assets/waterpurifier_img_pure.png);
+            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_img_pure.png);
         }
         .c2 {
-            background-image: url(./assets/waterpurifier_img_purified.png);
+            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_img_purified.png);
         }
         .c3 {
-            background-image: url(./assets/waterpurifier_img_tapwater.png);
+            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_img_tapwater.png);
         }
         .c4 {
-            background-image: url(./assets/waterpurifier_img_pollutionwater.png);
+            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_img_pollutionwater.png);
         }
     }
     .arrow {
@@ -251,7 +259,7 @@ a {
         position: absolute;
         left: 0;
         top: 0;
-        background: url(./assets/img_instrument_airquality_pointer.png)
+        background: url(../../lib/base/water_cleaner/assets/img_instrument_airquality_pointer.png)
             no-repeat;
         background-size: 100% 100%;
         // transition: transform 1.5s;
@@ -329,7 +337,7 @@ a {
     overflow: hidden;
     a {
         i {
-            background: url(./assets/waterpurifier_icon_wash_normal.png)
+            background: url(../../lib/base/water_cleaner/assets/waterpurifier_icon_wash_normal.png)
                 no-repeat;
             background-size: 100% 100%;
             width: 30px;
@@ -348,7 +356,8 @@ a {
     .progress {
         height: 57px;
         width: 0;
-        background: url(./assets/waterpurifier_img_wash.png) no-repeat;
+        background: url(../../lib/base/water_cleaner/assets/waterpurifier_img_wash.png)
+            no-repeat;
         background-size: 207px 100%;
     }
     &.washing {
@@ -395,9 +404,9 @@ a {
         background-repeat: no-repeat;
         background-size: 36px 36px;
         background-position: center center;
-        background-image: url(./assets/icn_topbar_back_normal.png);
+        background-image: url(../../lib/base/water_cleaner/assets/icn_topbar_back_normal.png);
         &:active {
-            background-image: url(./assets/icn_topbar_back_pressed.png);
+            background-image: url(../../lib/base/water_cleaner/assets/icn_topbar_back_pressed.png);
         }
     }
 }
@@ -423,19 +432,19 @@ a {
     height: 302px;
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    background-image: url(./assets/waterpurifier_btn_filter_normal.png);
+    background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_filter_normal.png);
     &:active {
-        background-image: url(./assets/waterpurifier_btn_filter_pressed.png);
+        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_filter_pressed.png);
     }
     &.active {
-        background-image: url(./assets/waterpurifier_btn_expiredfilter_normal.png);
+        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_expiredfilter_normal.png);
         &:active {
-            background-image: url(./assets/waterpurifier_btn_expiredfilter_pressed.png);
+            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_expiredfilter_pressed.png);
         }
         .item-name {
             color: rgba(74, 144, 226, 0.5);
             i {
-                background-image: url(./assets/waterpurifier_icon_nexttwo_normal.png);
+                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_icon_nexttwo_normal.png);
             }
         }
         .item-left {
@@ -454,7 +463,7 @@ a {
             display: inline-block;
             background-repeat: no-repeat;
             background-size: 100% 100%;
-            background-image: url(./assets/waterpurifier_icon_nextone_normal.png);
+            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_icon_nextone_normal.png);
         }
     }
     .item-left {
@@ -496,7 +505,7 @@ a {
             display: inline-block;
             width: 30px;
             height: 30px;
-            background: url(./assets/waterpurifier_icon_remind_normal.png)
+            background: url(../../lib/base/water_cleaner/assets/waterpurifier_icon_remind_normal.png)
                 no-repeat;
             background-size: 100% 100%;
             vertical-align: -5px;
