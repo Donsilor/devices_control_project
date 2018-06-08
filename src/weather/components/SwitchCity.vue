@@ -4985,7 +4985,8 @@ export default {
         display: inline-block;
         width: 54px;
         height: 54px;
-        background: url("../assets/icn_topbar_search_pressed.png") no-repeat;
+        background: url("../../../lib/base/weather/assets/icn_topbar_search_pressed.png")
+            no-repeat;
         background-size: 100% 100%;
     }
 }
@@ -5026,7 +5027,8 @@ export default {
     position: absolute;
     height: 144px;
     width: 144px;
-    background: url("../assets/icn_instructions.png") no-repeat;
+    background: url("../../../lib/base/weather/assets/icn_instructions.png")
+        no-repeat;
     background-size: 100% 100%;
     line-height: 144px;
     .scale-char-text {
@@ -5059,7 +5061,8 @@ export default {
         display: inline-block;
         width: 36px;
         height: 36px;
-        background: url("../assets/icn__positioning.png") no-repeat;
+        background: url("../../../lib/base/weather/assets/icn__positioning.png")
+            no-repeat;
         background-size: 100% 100%;
     }
     .location-text {
@@ -5121,9 +5124,9 @@ export default {
     top: 17px;
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    background-image: url(../assets/btn_input_delete_normal@2x.png);
+    background-image: url(../../../lib/base/weather/assets/btn_input_delete_normal@2x.png);
     &:active {
-        background-image: url(../assets/btn_input_delete_pressed@2x.png);
+        background-image: url(../../../lib/base/weather/assets/btn_input_delete_pressed@2x.png);
     }
 }
 </style>

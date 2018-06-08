@@ -6,7 +6,7 @@
         </template>
         <!--城市切换-->
         <template v-else>
-            <span class="switch" @click="showSwitchCity=true">
+            <span v-if="success" class="switch" @click="showSwitchCity=true">
                 <span class="s-icon"></span>
                 <span class="s-text">城市切换</span>
             </span>
@@ -54,7 +54,7 @@
 </template>
 <script>
 // import jsonp from 'jsonp'
-// import cityIdJson from './assets/cityId.json'
+// import cityIdJson from '../../lib/base/weather/assets/cityId.json'
 import getOldDate from "./getOldDate";
 // import remoteLoad from './loadscript'
 export default {
@@ -327,32 +327,38 @@ body {
 }
 /*多云*/
 .img_bg_weather_cloudy {
-    background: url("./assets/img_bg_weather_cloudy.png") no-repeat fixed;
+    background: url("../../lib/base/weather/assets/img_bg_weather_cloudy.png")
+        no-repeat fixed;
     background-size: 100% 100%;
 }
 /*下雨*/
 .img_bg_weather_rainy {
-    background: url("./assets/img_bg_weather_rainy.png") no-repeat fixed;
+    background: url("../../lib/base/weather/assets/img_bg_weather_rainy.png")
+        no-repeat fixed;
     background-size: 100% 100%;
 }
 /*下雪*/
 .img_bg_weather_snowy {
-    background: url("./assets/img_bg_weather_snowy.png") no-repeat fixed;
+    background: url("../../lib/base/weather/assets/img_bg_weather_snowy.png")
+        no-repeat fixed;
     background-size: 100% 100%;
 }
 /*晴朗*/
 .img_bg_weather_sunny {
-    background: url("./assets/img_bg_weather_sunny.png") no-repeat fixed;
+    background: url("../../lib/base/weather/assets/img_bg_weather_sunny.png")
+        no-repeat fixed;
     background-size: 100% 100%;
 }
 /*雷鸣*/
 .img_bg_weather_thuner {
-    background: url("./assets/img_bg_weather_thuner.png") no-repeat fixed;
+    background: url("../../lib/base/weather/assets/img_bg_weather_thuner.png")
+        no-repeat fixed;
     background-size: 100% 100%;
 }
 /*刮风*/
 .img_bg_weather_wind {
-    background: url("./assets/img_bg_weather_wind.png") no-repeat fixed;
+    background: url("../../lib/base/weather/assets/img_bg_weather_wind.png")
+        no-repeat fixed;
     background-size: 100% 100%;
 }
 .tip {
@@ -416,25 +422,25 @@ body {
         background-size: 100% 100%;
     }
     .icn_weather_sunny {
-        background-image: url("./assets/icn_weather_sunny_l.png");
+        background-image: url("../../lib/base/weather/assets/icn_weather_sunny_l.png");
     }
     .icn_weather_cloudy {
-        background-image: url("./assets/icn_weather_cloudy_l.png");
+        background-image: url("../../lib/base/weather/assets/icn_weather_cloudy_l.png");
     }
     .icn_weather_mostlycloudy {
-        background-image: url("./assets/icn_weather_mostlycloudy_l.png");
+        background-image: url("../../lib/base/weather/assets/icn_weather_mostlycloudy_l.png");
     }
     .icn_weather_rainy {
-        background-image: url("./assets/icn_weather_rainy_l.png");
+        background-image: url("../../lib/base/weather/assets/icn_weather_rainy_l.png");
     }
     .icn_weather_thuner {
-        background-image: url("./assets/icn_weather_thunder_l.png");
+        background-image: url("../../lib/base/weather/assets/icn_weather_thunder_l.png");
     }
     .icn_weather_wind {
-        background-image: url("./assets/icn_weather_wind_l.png");
+        background-image: url("../../lib/base/weather/assets/icn_weather_wind_l.png");
     }
     .icn_weather_snowy {
-        background-image: url("./assets/icn_weather_snow_l.png");
+        background-image: url("../../lib/base/weather/assets/icn_weather_snow_l.png");
     }
 }
 .weather-list-con {
@@ -454,47 +460,47 @@ body {
                 }
                 /*多云*/
                 .icn_weather_cloudy_m {
-                    background: url("./assets/icn_weather_cloudy_m.png");
+                    background: url("../../lib/base/weather/assets/icn_weather_cloudy_m.png");
                     background-size: 60px 60px;
                 }
                 /*大雨*/
                 .icn_weather_heavyrain_m {
-                    background: url("./assets/icn_weather_heavyrain_m.png");
+                    background: url("../../lib/base/weather/assets/icn_weather_heavyrain_m.png");
                     background-size: 60px 60px;
                 }
                 /*小雨*/
                 .icn_weather_rainy_m {
-                    background: url("./assets/icn_weather_rainy_m.png");
+                    background: url("../../lib/base/weather/assets/icn_weather_rainy_m.png");
                     background-size: 60px 60px;
                 }
                 /*大雪*/
                 .icn_weather_heavysnow_m {
-                    background: url("./assets/icn_weather_heavysnow_m.png");
+                    background: url("../../lib/base/weather/assets/icn_weather_heavysnow_m.png");
                     background-size: 60px 60px;
                 }
                 /*小雪*/
                 .icn_weather_snow_m {
-                    background: url("./assets/icn_weather_snow_m.png");
+                    background: url("../../lib/base/weather/assets/icn_weather_snow_m.png");
                     background-size: 60px 60px;
                 }
                 /*大部多云 阴天*/
                 .icn_weather_mostlycloudy_m {
-                    background: url("./assets/icn_weather_mostlycloudy_m.png");
+                    background: url("../../lib/base/weather/assets/icn_weather_mostlycloudy_m.png");
                     background-size: 60px 60px;
                 }
                 /*晴*/
                 .icn_weather_sunny_m {
-                    background: url("./assets/icn_weather_sunny_m.png");
+                    background: url("../../lib/base/weather/assets/icn_weather_sunny_m.png");
                     background-size: 60px 60px;
                 }
                 /*打雷*/
                 .icn_weather_thunder_m {
-                    background: url("./assets/icn_weather_thunder_m.png");
+                    background: url("../../lib/base/weather/assets/icn_weather_thunder_m.png");
                     background-size: 60px 60px;
                 }
                 /*刮风*/
                 .icn_weather_wind_m {
-                    background: url("./assets/icn_weather_wind_m.png");
+                    background: url("../../lib/base/weather/assets/icn_weather_wind_m.png");
                     background-size: 60px 60px;
                 }
             }
@@ -521,7 +527,8 @@ body {
     .icon {
         width: 240px;
         height: 240px;
-        background: url(./assets/icon_net.png) no-repeat center bottom;
+        background: url(../../lib/base/weather/assets/icon_net.png) no-repeat
+            center bottom;
         background-size: 232px 210px;
         margin: 380px auto 80px;
     }
@@ -549,7 +556,7 @@ body {
         width: 36px;
         height: 36px;
         display: inline-block;
-        background: url(./assets/icn_switch.png) no-repeat;
+        background: url(../../lib/base/weather/assets/icn_switch.png) no-repeat;
         background-size: 100% 100%;
     }
     .s-text {
