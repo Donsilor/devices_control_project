@@ -69,7 +69,7 @@
                 <p>
                     对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果， 数值越低代表过滤效果越好。但对于含有致病菌、悬浮物等有害物质的水源，TDS并不适用。
                 </p>
-                <img src="../../lib/base/water_cleaner/assets/waterpurifier_img_tdsppm.png" />
+                <img src="../../lib/base/water_cleaner/assets/waterpurifier_img_tdsppm@2x.png" />
             </div>
         </modal>
 

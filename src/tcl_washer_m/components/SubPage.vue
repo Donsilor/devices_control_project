@@ -23,7 +23,7 @@
 }
 .topbar {
     background: #f2f2f2;
-    height: 100px;
+    height: 88px;
     border-bottom: 1px solid #dbdbdb;
     position: relative;
     .left {
@@ -38,12 +38,12 @@
     }
     .title {
         text-align: center;
-        line-height: 100px;
+        line-height: 88px;
         font-size: 36px;
     }
     .icon {
         width: 84px;
-        height: 100px;
+        height: 88px;
         display: inline-block;
         background-repeat: no-repeat;
         background-size: 36px 36px;
@@ -59,7 +59,7 @@
 
 @media only screen and (-webkit-min-device-pixel-ratio: 3),
     only screen and (min-device-pixel-ratio: 3) {
-    .topbar {
+    .android .topbar {
         height: 116px;
         .title {
             line-height: 116px;
@@ -70,15 +70,6 @@
     }
 }
 
-.isIOS .topbar {
-    height: 88px;
-    .title {
-        line-height: 95px;
-    }
-    .icon {
-        height: 88px;
-    }
-}
 </style>
 
 
