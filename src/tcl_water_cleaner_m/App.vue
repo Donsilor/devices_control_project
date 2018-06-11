@@ -154,7 +154,7 @@ a {
     text-decoration: none;
 }
 #app {
-   
+    position: relative;
     width: 100%;
     height: 100%;
     color: #1EA0FF;
@@ -170,11 +170,11 @@ a {
             }
             &.ww2 {
                 background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_red1two@2x.png);
-                // animation: wave2 8s linear infinite;
+                animation: wave2 8s linear infinite;
             }
             &.ww3 {
                 background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_red1there@2x.png);
-                // animation: wave3 10s linear infinite;
+                animation: wave3 10s linear infinite;
             }
         }
         .mainTitle{
@@ -253,15 +253,15 @@ a {
     }
     &.ww2 {
         background-image: url(../../lib/base/water_cleaner/assets/wave_level2.png);
-        // animation: wave2 8s linear infinite;
+        animation: wave2 8s linear infinite;
     }
     &.ww3 {
         background-image: url(../../lib/base/water_cleaner/assets/wave_level3.png);
-        // animation: wave3 10s linear infinite;
+        animation: wave3 10s linear infinite;
     }
 }
 .page-on,.page-sec,.hasNotTDs{
-    position: relative;
+    position: absolute;
     width:100%;
     height: 100%;
     overflow:hidden;
@@ -520,6 +520,10 @@ a {
             .item-name{
                 font-size: 32px;
                 color: #FFFFFF;
+                flex-grow: 1;
+                box-sizing:border-box;
+                padding-left:30px; 
+                text-align: left;
             }
             .item-right{
                 font-size: 32px;
@@ -583,12 +587,12 @@ a {
             }
             &.waveHigh2 {
                 background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2two@2x.png);
-                // animation: wave2 8s linear infinite;
+                animation: wave2 8s linear infinite;
                 z-index: -2;
             }
             &.waveHigh3 {
                 background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2there@2x.png);
-                // animation: wave3 10s linear infinite;
+                animation: wave3 10s linear infinite;
                 z-index: -1;
             } 
         }
@@ -708,6 +712,8 @@ a {
     }
 }
 .lx_status {
+    height: auto;
+    overflow:auto;
     .p1 {
         font-size: 28px;
         height: 40px;
@@ -765,9 +771,13 @@ a {
         height: 84px;
         line-height: 84px;
         margin: 14px auto;
-        overflow: hidden;
+        overflow-x: hidden;
         text-align:center;
+        box-sizing: border-box;
+        border: 1px solid #46bcff;
+        border-radius: 6px;
         .btn-block {
+            box-sizing: border-box;
             display: -webkit-box;
             transition: transform 400ms;
             &.active {
@@ -775,10 +785,8 @@ a {
             }
         }
         a {
-            border: 1px solid #46bcff;
-            border-radius: 6px;
-            width: 656px;
-            height: 82px;
+            width:100%;
+            height: 100%;
             display: block;
             line-height: 82px;
             font-size: 36px;
@@ -794,14 +802,17 @@ a {
 .subpage {
     z-index:99;
 }
+.overlay{
+    z-index:10;
+}
 </style>
 
 
 <script>
-import Modal from "./components/Modal.vue";
+import Modal from "../../lib/components/Modal";
 import CirclePie from "./components/CirclePie.vue";
 import FilterItems from "./components/FilterItems.vue";
-import SubPage from './components/SubPage.vue'
+import SubPage from './components/SubPage.vue';
 
 const TDS_VALUE = [0, 50, 100, 300, 500];
 const TDS_ANGLE = [-136, -74, 0, 74, 136];
@@ -945,8 +956,8 @@ export default {
         },
         inPage(page) {
             return {
-                // visibility: this.currentPage == page ? "" : "hidden"
-                display: this.currentPage == page ? "" : "none"  
+                visibility: this.currentPage == page ? "" : "hidden"
+                // display: this.currentPage == page ? "" : "none"  
             };
         },
         controlDevice(attr, val, success) {
