@@ -80,11 +80,11 @@
                 对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果，
                 数值越低代表过滤效果越好。但对于含有致病菌、悬浮物等有害物质的水源，TDS并不适用。
             </p>
-            <img src="../../lib/base/water_cleaner/assets/waterpurifier_img_tdsppm.png"/>
+            <img src="../../lib/base/water_cleaner/assets/waterpurifier_img_tdsppm@2x.png"/>
         </div>
     </sub-page>
 
-    <modal v-for="item in expiredFilter" :key="item" title="净水器滤芯到期" v-model="item.timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
+    <modal v-for="item in expiredFilter" :key="item.index" title="净水器滤芯到期" v-model="item.timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
         <div class="alarm">
             <div class="alert"><i></i>“净水器”的滤芯{{item.index+1}}已到期</div>
             <div class="text">
@@ -808,13 +808,13 @@ const TDS_ANGLE = [-136, -74, 0, 74, 136];
 const ERROR_STORE_KEY = "water_cleaner_error";
 const EXPIRED_STORE_KEY = "water_cleaner_expired";
 
-function getRotate(val, start, end) {
-    var min = TDS_VALUE[start];
-    var max = TDS_VALUE[end];
-    var min_r = TDS_ANGLE[start];
-    var max_r = TDS_ANGLE[end];
-    return min_r + (val - min) / (max - min) * (max_r - min_r);
-}
+// function getRotate(val, start, end) {
+//     var min = TDS_VALUE[start];
+//     var max = TDS_VALUE[end];
+//     var min_r = TDS_ANGLE[start];
+//     var max_r = TDS_ANGLE[end];
+//     return min_r + (val - min) / (max - min) * (max_r - min_r);
+// }
 
 function getDays(hour) {
     return Math.ceil(hour / 24);
@@ -830,10 +830,10 @@ export default {
     data() {
         return {
             device_name: "",
-            tdsModalVisible: false,
-            timeoutModalVisible: false,
-            alarmModalVisible: false,
-            statusModalVisible: false,
+            tdsModalVisible: false,//是否显示“TDS简介”
+            timeoutModalVisible: false,//是否显示滤芯过期弹窗
+            alarmModalVisible: false,//是否展示报警弹窗
+            statusModalVisible: false,//滤芯状态Subpage蒙层
             model: {},
             hasTDS: true,
             oldTDS: "",
@@ -854,23 +854,19 @@ export default {
         level() {
             var level;
             for (var i = TDS_VALUE.length - 1; i >= 0; i--) {
-                console.log(this.nowTDS)
                 if (this.nowTDS > TDS_VALUE[i]) {
-                    level=i + 1;
-                    console.log("level",level)
-                    // return 4;
                     return i + 1;
                 }
             }
             return 1;
         },
-        rotate() {
-            var level = this.level;
-            if (level == 5) {
-                return TDS_ANGLE[4];
-            }
-            return getRotate(this.nowTDS, level - 1, level);
-        },
+        // rotate() {
+        //     var level = this.level;
+        //     if (level == 5) {
+        //         return TDS_ANGLE[4];
+        //     }
+        //     return getRotate(this.nowTDS, level - 1, level);
+        // },
         //已过期
         expired_num() {
             if (!this.model.filter_time_remaining) return 0;
@@ -885,13 +881,11 @@ export default {
                 return getDays(item) <= 30;
             }).length;
         },
-        currentFilter() {
+        currentFilter() {//当前正在查看状态的某个滤芯的状态
             if (this.currentIndex == -1) return {};
-            console.log("this.filterItems",this.filterItems)
-            console.log("this.filterItems[this.currentIndex]",this.filterItems[this.currentIndex])
             return this.filterItems[this.currentIndex];
         },
-        expiredFilter() {
+        expiredFilter() {//净水器滤芯到期
             var result = [];
             if (!this.model.filter_time_remaining) return result;
             this.model.filter_time_remaining.forEach((item, index) => {
@@ -905,8 +899,7 @@ export default {
             });
             return result;
         },
-        statusTip() {
-            console.log('this.model.status',this.model.status)
+        statusTip() {//净水器状态
             if (this.model.status == "filter") {
                 return "制水中...";
             }
@@ -951,8 +944,6 @@ export default {
             return ["PP棉", "前置活性炭", "RO", "后置活性炭"][index];
         },
         inPage(page) {
-            console.log("page",page)
-            console.log("currentPage",this.currentPage)
             return {
                 // visibility: this.currentPage == page ? "" : "hidden"
                 display: this.currentPage == page ? "" : "none"  
@@ -979,10 +970,8 @@ export default {
                 () => {}
             );
         },
-        setClean() {
-            console.log("意见冲洗")
+        setClean() {//一键冲洗
             var el = this.$el.querySelector(".progress");
-
             var onWash = () => {
                 this.washing = false;
                 el.washing = false;
@@ -1015,6 +1004,7 @@ export default {
             );
         },
         onSuccess(result) {
+            console.log("resultall",result)
             HdSmart.UI.hideLoading();
 
             if (!this.isInit) {
@@ -1028,7 +1018,7 @@ export default {
             this.onAlarm(attrs.error);
 
             var tds = attrs.water_filter_result.TDS;
-            console.log("tds",tds)
+           
             if (tds && tds[0] != 65535) {
                 this.hasTDS = true;//Todo
                 // this.hasTDS =false;
@@ -1055,17 +1045,17 @@ export default {
                 }
             );
         },
-        toPercent(remaining, total) {
+        toPercent(remaining, total) {//剩余寿命百分比转化
             return Math.ceil(remaining / total * 100);
         },
-        viewFilter(index) {
+        viewFilter(index) {//点击滤芯列表查看某个滤芯的状态
             this.currentIndex = index;
             this.statusModalVisible = true;
         },
-        confirmFilterReset() {
+        confirmFilterReset() {//点击“重置剩余时间”按钮
             this.isFilterResetActive = true;
         },
-        submitFilterReset() {
+        submitFilterReset() {//点击“确认重置”
             var index = this.currentIndex;
             this.controlDevice(
                 "reset_filter",
@@ -1142,23 +1132,21 @@ export default {
         toggleErrorModal(error, visible) {
             switch (error) {
                 case "E3":
-                    this.alarmModalVisible = visible;
+                    this.alarmModalVisible = visible;//显示报警模块
                     break;
                 default:
                     break;
             }
         },
-        viewExpired(item) {
+        viewExpired(item) {//点击查看详情
             this.viewFilter(item.index);
             this.confirmExpired(item);
         },
-        confirmExpired(item) {
+        confirmExpired(item) {//点击“知道了”
             item.timeoutModalVisible = false;
             this.expiredStore = this.expiredStore.concat(item.index);
         },
-        toggleModalVisible(str){
-            console.log("event",str)
-            // alert(1111111)
+        toggleModalVisible(str){//滤芯列表页点击“TDS按钮”展示TDS介绍页面
             this.tdsModalVisible=true;
         }
     },
@@ -1178,7 +1166,7 @@ export default {
         });
 
         HdSmart.ready(() => {
-            console.log(99999,window.device_name)
+            
             if (window.device_name) {
                 this.device_name = window.device_name;
             }

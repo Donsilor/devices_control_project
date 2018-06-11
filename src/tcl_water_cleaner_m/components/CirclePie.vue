@@ -61,8 +61,6 @@ export default {
     props: ['value'],
     computed: {
         rotate() {
-            console.log('this.value',this.value)
-            console.log("rotated",(100-this.value) * 3.6)
             return (100-this.value) * 3.6
         },
         rightPieStyle() {
