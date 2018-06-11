@@ -59,7 +59,7 @@
 
 @media only screen and (-webkit-min-device-pixel-ratio: 3),
     only screen and (min-device-pixel-ratio: 3) {
-    .topbar {
+    .android .topbar {
         height: 116px;
         .title {
             line-height: 116px;
