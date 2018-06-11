@@ -714,15 +714,19 @@ export default {
             return this.pm25 == 0 ? "--" : this.pm25 + "<small>μg/m³</small>";
         }
     },
-    methods: {
-        togglePMPop() {
-            //pm2.5
-            this.pmPopVisible = !this.pmPopVisible;
+    watch: {
+        pmPopVisible(val) {
             if (this.pmPopVisible) {
                 HdSmart.UI.toggleHeadAndFoot(false);
             } else {
                 HdSmart.UI.toggleHeadAndFoot(true);
             }
+        }
+    },
+    methods: {
+        togglePMPop() {
+            //pm2.5
+            this.pmPopVisible = !this.pmPopVisible;
         },
         showTip(text) {
             clearTimeout(this.tipTime);

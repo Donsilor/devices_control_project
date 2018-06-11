@@ -173,6 +173,7 @@
 }
 .detail-info {
     margin: 0 32px;
+    border-bottom: 1px solid #dbdbdb;
     .info-inner {
         position: relative;
         overflow: hidden;
@@ -344,7 +345,6 @@
 
 .detail-playlist {
     margin-left: 32px;
-    border-top: 1px solid #dbdbdb;
     padding-top: 30px;
     .hd {
         margin-bottom: 30px;
@@ -529,6 +529,7 @@ export default {
                     }
                 };
                 this.history = false;
+                this.isShowAll = false;
             }
             toggleBoayScroll(val);
         },
