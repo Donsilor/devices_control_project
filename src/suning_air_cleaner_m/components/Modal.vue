@@ -40,7 +40,7 @@
         right: 0px;
         width: 84px;
         height: 84px;
-        background: url(../../../lib/base/air_condition/assets/btn_close.png)
+        background: url(../../../lib/base/air_cleaner/assets/btn_close.png)
             no-repeat center center;
         background-size: 30px 30px;
     }

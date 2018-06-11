@@ -50,9 +50,9 @@
         background-position: center center;
     }
     .icon-arrow {
-        background-image: url(../../../lib/base/air_condition/assets/icn_topbar_back_normal@2x.png);
+        background-image: url(../../../lib/base/air_cleaner/assets/icn_topbar_back_normal@2x.png);
         &:active {
-            background-image: url(../../../lib/base/air_condition/assets/icn_topbar_back_pressed@2x.png);
+            background-image: url(../../../lib/base/air_cleaner/assets/icn_topbar_back_pressed@2x.png);
         }
     }
 }

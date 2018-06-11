@@ -617,10 +617,10 @@ a {
         i {
             width: 96px;
             height: 96px;
-            background-image: url(../../lib/base/washer/assets/more_normal.png);
+            background-image: url(../../lib/base/washer/assets/btn_aircon_more_normal@2x.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/more_active.png);
+            background-image: url(../../lib/base/washer/assets/btn_aircon_more_pressed@2x.png);
         }
     }
     //关机

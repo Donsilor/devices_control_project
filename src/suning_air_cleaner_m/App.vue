@@ -67,7 +67,7 @@
                         PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
                     </p>
                     <div class="pm-range">
-                        <img src="../../lib/base/air_condition/assets/PM2.5_scale@3x.png" />
+                        <img src="../../lib/base/air_cleaner/assets/PM2.5_scale@3x.png" />
                     </div>
                 </div>
             </sub-page>
@@ -171,7 +171,7 @@ a {
     .circle {
         width: 480px;
         height: 480px;
-        background: url(../../lib/base/air_condition/assets/img_instrument_airquality.png)
+        background: url(../../lib/base/air_cleaner/assets/img_instrument_airquality.png)
             no-repeat;
         background-size: 100% 100%;
         span {
@@ -184,19 +184,19 @@ a {
             background-size: 100% 100%;
         }
         .c1 {
-            background-image: url(../../lib/base/air_condition/assets/img_instrument_airquality_1.png);
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_1.png);
         }
         .c2 {
-            background-image: url(../../lib/base/air_condition/assets/img_instrument_airquality_2.png);
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_2.png);
         }
         .c3 {
-            background-image: url(../../lib/base/air_condition/assets/img_instrument_airquality_3.png);
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_3.png);
         }
         .c4 {
-            background-image: url(../../lib/base/air_condition/assets/img_instrument_airquality_4.png);
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_4.png);
         }
         .c5 {
-            background-image: url(../../lib/base/air_condition/assets/img_instrument_airquality_5.png);
+            background-image: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_5.png);
         }
     }
     .arrow {
@@ -205,7 +205,7 @@ a {
         position: absolute;
         left: 0;
         top: 0;
-        background: url(../../lib/base/air_condition/assets/img_instrument_airquality_pointer.png)
+        background: url(../../lib/base/air_cleaner/assets/img_instrument_airquality_pointer.png)
             no-repeat;
         background-size: 100% 100%;
         // transition: transform 1.5s;
@@ -258,11 +258,11 @@ a {
     top: 132px;
     width: 96px;
     height: 96px;
-    background-image: url(../../lib/base/air_condition/assets/more_normal.png);
+    background-image: url(../../lib/base/air_cleaner/assets/btn_aircon_more_normal@2x.png);
     background-size: 100% 100%;
     background-repeat: no-repeat;
     &:active {
-        background-image: url(../../lib/base/air_condition/assets/more_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_aircon_more_pressed@2x.png);
     }
 }
 .btns {
@@ -287,215 +287,215 @@ a {
 }
 .btn-on {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_poweroff_m_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweroff_m_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_poweroff_m_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweroff_m_pressed.png);
     }
 }
 .btn-off {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_poweron_m_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweron_m_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_poweron_m_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_poweron_m_pressed.png);
     }
 }
 .btn-sleep {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_sleep_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_sleep_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_pressed.png);
     }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_sleep_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_active.png);
     }
     &.disable i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_sleep_disable.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_sleep_disable.png);
     }
 }
 .btn-auto {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_6_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_6_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_pressed.png);
     }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_6_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_active.png);
     }
     &.disable i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_6_disable.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6_disable.png);
     }
 }
 .btn-ni {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_negative_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_negative_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_negative_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_negative_pressed.png);
     }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_negative_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_negative_active.png);
     }
 }
 .btn-cl {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_lock_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_lock_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_lock_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_lock_pressed.png);
     }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_lock_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_lock_active.png);
     }
 }
 .btn-speed {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_pressed.png);
     }
     &.disable i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_disable.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_disable.png);
     }
 }
 .btn-speed1 {
     // i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_1_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_normal.png);
     // }
     // &:active i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_1_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_pressed.png);
     // }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_1_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_active.png);
     }
     // &.disable i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_1_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1_disable.png);
     // }
 }
 .btn-speed2 {
     // i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_2_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_normal.png);
     // }
     // &:active i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_2_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_pressed.png);
     // }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_2_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_active.png);
     }
     // &.disable i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_2_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2_disable.png);
     // }
 }
 .btn-speed3 {
     // i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_3_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_normal.png);
     // }
     // &:active i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_3_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_pressed.png);
     // }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_3_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_active.png);
     }
     // &.disable i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_3_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3_disable.png);
     // }
 }
 .btn-speed4 {
     // i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_4_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_normal.png);
     // }
     // &:active i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_4_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_pressed.png);
     // }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_4_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_active.png);
     }
     // &.disable i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_4_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4_disable.png);
     // }
 }
 .btn-speed5 {
     // i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_5_normal.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_normal.png);
     // }
     // &:active i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_5_pressed.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_pressed.png);
     // }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_5_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_active.png);
     }
     // &.disable i{
-    //     background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_5_disable.png);
+    //     background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5_disable.png);
     // }
 }
 .btn1-speed1 {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_1a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1a_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_1a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1a_pressed.png);
     }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_1a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_1a_active.png);
     }
 }
 .btn1-speed2 {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_2a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2a_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_2a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2a_pressed.png);
     }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_2a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_2a_active.png);
     }
 }
 .btn1-speed3 {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_3a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3a_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_3a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3a_pressed.png);
     }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_3a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_3a_active.png);
     }
 }
 .btn1-speed4 {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_4a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4a_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_4a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4a_pressed.png);
     }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_4a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_4a_active.png);
     }
 }
 .btn1-speed5 {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_5a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5a_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_5a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5a_pressed.png);
     }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_5a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_5a_active.png);
     }
 }
 .btn1-auto {
     i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_6a_normal.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6a_normal.png);
     }
     &:active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_6a_pressed.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6a_pressed.png);
     }
     &.active i {
-        background-image: url(../../lib/base/air_condition/assets/btn_airpurifier_airvolume_6a_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_airpurifier_airvolume_6a_active.png);
     }
 }
 .btns-fn {
@@ -548,7 +548,7 @@ a {
     width: 420px;
     height: 420px;
     transform: translate(-50%, 0);
-    background: url(../../lib/base/air_condition/assets/img_airpurifier_off.png)
+    background: url(../../lib/base/air_cleaner/assets/img_airpurifier_off.png)
         no-repeat;
     background-size: 100% 100%;
 }

@@ -258,11 +258,11 @@ a {
     top: 132px;
     width: 96px;
     height: 96px;
-    background-image: url(../../lib/base/air_cleaner/assets/more_normal.png);
+    background-image: url(../../lib/base/air_cleaner/assets/btn_aircon_more_normal@2x.png);
     background-size: 100% 100%;
     background-repeat: no-repeat;
     &:active {
-        background-image: url(../../lib/base/air_cleaner/assets/more_active.png);
+        background-image: url(../../lib/base/air_cleaner/assets/btn_aircon_more_pressed@2x.png);
     }
 }
 .btns {

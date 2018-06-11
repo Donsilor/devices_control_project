@@ -548,7 +548,7 @@ a {
     }
 }
 
-.modal {
+.modal-w .modal {
     width: 75% !important;
 }
 </style>
