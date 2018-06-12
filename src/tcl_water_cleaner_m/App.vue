@@ -1,6 +1,6 @@
 <template>
 <div id="app" :class="{warn:level>=4}">
-    
+
 
     <div class="page-on" :style="inPage('index')" v-if="isInit && hasTDS">
         <div class="mainTitle">
@@ -11,7 +11,7 @@
                 <p v-else>{{statusTip}}</p>
             </div>
         </div>
-        
+
 
         <div class="wash" :class="{washing:washing}">
             <a href="#" @click.prevent="setClean">一键冲洗</a>
@@ -130,7 +130,7 @@
                 </div>
             </div>
 
-            
+
         </div>
     </sub-page>
 
@@ -195,7 +195,7 @@ a {
                 background: url(../../lib/base/water_cleaner/assets/btn_aircon_moreorange@2x.png) no-repeat left;
                 background-size:auto 100%;
             }
-            
+
         }
         .record_panle{
             .value{
@@ -215,10 +215,10 @@ a {
                 color: #D04802;
             }
         }
-        
-        
+
+
     }
-    
+
 }
 @keyframes wave1 {
     from {
@@ -526,7 +526,7 @@ a {
                 color: #FFFFFF;
                 flex-grow: 1;
                 box-sizing:border-box;
-                padding-left:30px; 
+                padding-left:30px;
                 text-align: left;
             }
             .item-right{
@@ -598,7 +598,7 @@ a {
                 background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2there@2x.png);
                 animation: wave3 10s linear infinite;
                 z-index: -1;
-            } 
+            }
         }
     }
     &.detailWaing{
@@ -623,7 +623,7 @@ a {
                .list_button{
                    color: #D04802;
                }
-           } 
+           }
         }
         .wave_content{
             .waveHigh{
@@ -635,11 +635,11 @@ a {
                 }
                 &.waveHigh3 {
                     background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_red2there@2x.png);
-                } 
+                }
             }
         }
     }
-    
+
 }
 
 //弹窗
@@ -656,9 +656,9 @@ a {
     p.tds_text{
         width:100%;
         color:#333;
-        font-size:28px; 
+        font-size:28px;
         box-sizing:border-box;
-        padding:34px 30px 0 30px; 
+        padding:34px 30px 0 30px;
     }
     img{
         display: block;
@@ -801,7 +801,7 @@ a {
             color: #ffffff;
         }
     }
-    
+
 }
 .subpage {
     z-index:99;
@@ -933,16 +933,14 @@ export default {
     watch: {
         statusModalVisible(val) {//单个滤芯的详情页的显隐控制
             if (!val) {
-                this.isFilterResetActive = false; 
+                this.isFilterResetActive = false;
             }
         },
         currentPage(page) {
             if (page == "index") {
                 HdSmart.UI.toggleHeadAndFoot(true);
-                console.log("current=index",true)
             } else if (page == "list") {
                 HdSmart.UI.toggleHeadAndFoot(false);
-                console.log("current=list",false)                
             }
         },
         "model.status"(newVal, oldVal) {
@@ -956,20 +954,19 @@ export default {
             }
         },
         tdsModalVisible(val){
-            if (this.tdsModalVisible) {
-                HdSmart.UI.toggleHeadAndFoot(false);
-                console.log("tds--false")
+            if(this.currentPage == 'index'){
+                HdSmart.UI.toggleHeadAndFoot(!val);
             }
-            // } else {
-            //     HdSmart.UI.toggleHeadAndFoot(true);
-            //     console.log("tds--true")
-            // }
+        },
+        statusModalVisible(val){
+            if(this.currentPage == 'index'){
+                HdSmart.UI.toggleHeadAndFoot(!val);
+            }
         }
     },
     methods: {
         tdsModalVisibleControl() {//点击TDS按钮
             this.tdsModalVisible = !this.tdsModalVisible;
-            HdSmart.UI.toggleHeadAndFoot(false);//把app的头藏起来
         },
         getName(index) {
             return ["PP棉", "前置活性炭", "RO", "后置活性炭"][index];
@@ -977,7 +974,7 @@ export default {
         inPage(page) {
             return {
                 visibility: this.currentPage == page ? "" : "hidden"
-                // display: this.currentPage == page ? "" : "none"  
+                // display: this.currentPage == page ? "" : "none"
             };
         },
         controlDevice(attr, val, success) {
@@ -1049,10 +1046,10 @@ export default {
             this.onAlarm(attrs.error);
 
             var tds = attrs.water_filter_result.TDS;
-           
+
             if (tds && tds[0] != 65535) {
-                this.hasTDS = true;//Todo
-                // this.hasTDS =false;
+                // this.hasTDS = true;//Todo
+                this.hasTDS =false;
                 this.oldTDS = tds[0];
                 this.nowTDS = tds[1];
             } else {
@@ -1082,7 +1079,6 @@ export default {
         viewFilter(index) {//点击滤芯列表查看某个滤芯的状态
             this.currentIndex = index;
             this.statusModalVisible = true;
-            HdSmart.UI.toggleHeadAndFoot(false);//把app的头藏起来
         },
         confirmFilterReset() {//点击“重置剩余时间”按钮
             this.isFilterResetActive = true;
@@ -1148,15 +1144,6 @@ export default {
         },
         confirmError(error) {
             if (this.errorStore.indexOf(error) < 0) {
-                // HdSmart.Device.control({
-                //     method: 'dm_set',
-                //     "nodeid": "wifi.main.alarm_confirm",
-                //     "params": {
-                //         "attribute": {
-                //             "error_code": error
-                //         }
-                //     }
-                // }, () => {})
                 this.errorStore.push(error);
             }
             this.toggleErrorModal(error, false);
@@ -1198,7 +1185,7 @@ export default {
         });
 
         HdSmart.ready(() => {
-            
+
             if (window.device_name) {
                 this.device_name = window.device_name;
             }
