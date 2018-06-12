@@ -191,6 +191,10 @@ a {
             a{
                 color: #D04802;
             }
+            .progress{
+                background: url(../../lib/base/water_cleaner/assets/btn_aircon_moreorange@2x.png) no-repeat left;
+                background-size:auto 100%;
+            }
             
         }
         .record_panle{
@@ -211,6 +215,7 @@ a {
                 color: #D04802;
             }
         }
+        
         
     }
     
@@ -394,7 +399,6 @@ a {
         .progress {
             width: 100%;
             height: 100%;
-            // background:
             transition-property: width;
             transition-duration: 30s;
         }
