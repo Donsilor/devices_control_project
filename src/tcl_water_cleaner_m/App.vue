@@ -18,7 +18,7 @@
             <div class="progress"></div>
         </div>
 
-        <div class="record_panle" v-if="hasTDS" @click="tdsModalVisible = true">
+        <div class="record_panle" v-if="hasTDS" @click="tdsModalVisibleControl">
             <!-- <div class="circle">
                 <span v-for="i in 4" :key="i" :class="'c'+i" v-show="i==(level>4?4:level)"></span>
             </div> -->
@@ -64,7 +64,7 @@
             <a href="#" @click.prevent="setClean">一键冲洗</a>
             <div class="progress"></div>
         </div>
-        <filter-items  :items="filterItems" :view-filter="viewFilter" :hasTDS="hasTDS" />
+        <filter-items  :items="filterItems" :view-filter="viewFilter" :hasTDS="hasTDS" :toggle-modal-visible="toggleModalVisible" />
     </div>
     <div class="page-sec" :style="inPage('list')" v-if="hasTDS">
         <div class="topbar">
@@ -927,16 +927,18 @@ export default {
         }
     },
     watch: {
-        statusModalVisible(val) {
+        statusModalVisible(val) {//单个滤芯的详情页的显隐控制
             if (!val) {
-                this.isFilterResetActive = false;
+                this.isFilterResetActive = false; 
             }
         },
         currentPage(page) {
             if (page == "index") {
                 HdSmart.UI.toggleHeadAndFoot(true);
+                console.log("current=index",true)
             } else if (page == "list") {
                 HdSmart.UI.toggleHeadAndFoot(false);
+                console.log("current=list",false)                
             }
         },
         "model.status"(newVal, oldVal) {
@@ -948,9 +950,23 @@ export default {
                     el.style.cssText = "";
                 }, 1500);
             }
+        },
+        tdsModalVisible(val){
+            if (this.tdsModalVisible) {
+                HdSmart.UI.toggleHeadAndFoot(false);
+                console.log("tds--false")
+            }
+            // } else {
+            //     HdSmart.UI.toggleHeadAndFoot(true);
+            //     console.log("tds--true")
+            // }
         }
     },
     methods: {
+        tdsModalVisibleControl() {//点击TDS按钮
+            this.tdsModalVisible = !this.tdsModalVisible;
+            HdSmart.UI.toggleHeadAndFoot(false);//把app的头藏起来
+        },
         getName(index) {
             return ["PP棉", "前置活性炭", "RO", "后置活性炭"][index];
         },
@@ -1062,6 +1078,7 @@ export default {
         viewFilter(index) {//点击滤芯列表查看某个滤芯的状态
             this.currentIndex = index;
             this.statusModalVisible = true;
+            HdSmart.UI.toggleHeadAndFoot(false);//把app的头藏起来
         },
         confirmFilterReset() {//点击“重置剩余时间”按钮
             this.isFilterResetActive = true;
