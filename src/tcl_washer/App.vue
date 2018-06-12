@@ -1298,34 +1298,30 @@ export default {
             this.status = "success";
 
             this.model = data.attribute;
-
-            this.onAlarm(data.attribute.error);
+            this.getAlertList(data.attribute.error);
         },
         onError() {
             this.status = "error";
         },
-        onAlarm(errors) {
+        getAlertList(errors) {
             errors = errors || [];
             this.errors = errors.filter(item => {
                 return item.status == 1;
             });
         },
-        doAlarm(attr) {
-            var code = attr.error_code;
-            // var index = this.errors.indexOf(code)
-            var index = findIndex(this.errors, item => {
-                return item.code == code;
-            });
-
-            if (index >= 0) {
-                this.errors.splice(index, 1);
-            }
-
-            if (attr.error_status == "open") {
-                this.errors.push({
-                    code: code,
-                    status: attr.error_status
+        onAlert(errors) {
+            errors = errors || [];
+            for (var i = 0; i < errors.length; i++) {
+                var el = errors[i];
+                var index = findIndex(this.errors, item => {
+                    return item.code == el.code;
                 });
+                if (index >= 0) {
+                    this.errors.splice(index, 1);
+                }
+                if (el.status == 1) {
+                    this.errors.push(el);
+                }
             }
         },
         showAlarmTip(err) {
@@ -1338,17 +1334,7 @@ export default {
                     onText: "知道了"
                 },
                 val => {
-                    if (val) {
-                        // HdSmart.Device.control({
-                        //     method: 'dm_set',
-                        //     "nodeid": "wifi.main.alarm_confirm",
-                        //     "params": {
-                        //         "attribute": {
-                        //             "error_code": err.code
-                        //         }
-                        //     }
-                        // }, () => {})
-                    }
+                    if (val) {}
                 }
             );
         },
@@ -1372,31 +1358,8 @@ export default {
             this.onSuccess(data.result);
         });
         HdSmart.onDeviceAlert(data => {
-            this.onAlarm(data.result.attribute.error);
+            this.onAlert(data.result.attribute.error);
         });
-        /*
-        HdSmart.onDeviceListen((data) => {
-            switch (data.method) {
-                case 'dm_set':
-                    if(data.code !== 0){
-                        this.getSnapShot()
-                    }
-                    break
-                case 'dr_report_dev_alert':
-                    if(data.result.attribute.error){
-                        this.onAlarm(data.result.attribute.error)
-                    }else{
-                        this.doAlarm(data.result.attribute)
-                    }
-                    break;
-                case 'da_report_dev_alert':
-                    break;
-                default:
-
-                    break
-            }
-        })
-        */
     }
 };
 </script>

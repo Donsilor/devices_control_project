@@ -630,6 +630,15 @@ function getDays(hour) {
     return Math.ceil(hour / 24);
 }
 
+function findIndex(array, fn) {
+    for (var i = 0; i < array.length; i++) {
+        if (fn(array[i])) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 export default {
     components: {
         Modal,
@@ -822,7 +831,7 @@ export default {
 
             this.model = attrs;
 
-            this.onAlarm(attrs.error);
+            this.getAlertList(attrs.error);
 
             var tds = attrs.water_filter_result.TDS;
             if (tds && tds[0] != 65535) {
@@ -877,7 +886,7 @@ export default {
                 }
             );
         },
-        onAlarm(errors) {
+        getAlertList(errors) {
             errors = errors || [];
             for (var i = 0; i < this.errorStore.length; i++) {
                 var item = errors.filter(el => {
@@ -889,7 +898,7 @@ export default {
                 }
             }
 
-            this.errors = errors.map(el => {
+            this.errors = errors.filter(el => {
                 if (el.status == 1) {
                     if (this.errorStore.indexOf(el.code) < 0) {
                         this.toggleErrorModal(el.code, true);
@@ -898,36 +907,37 @@ export default {
                 }
             });
         },
-        doAlarm(attr) {
-            var code = attr.error_code;
-            var index = this.errors.indexOf(code);
-            // var storeIndex = this.errorStore.indexOf(code)
-
-            if (index >= 0) {
-                this.errors.splice(index, 1);
+        onAlert(errors) {
+            errors = errors || [];
+            for (var i = 0; i < this.errorStore.length; i++) {
+                var item = errors.filter(el => {
+                    return el.code == this.errorStore[i];
+                });
+                if (item.length == 0 || item[0].status == 0) {
+                    this.errorStore.splice(i, 1);
+                    i--;
+                }
             }
 
-            if (attr.error_status == "open") {
-                this.errors.push(code);
-                // if(storeIndex < 0){
-                //     this.toggleErrorModal(code, true)
-                // }
+            for (var i = 0; i < errors.length; i++) {
+                var el = errors[i];
+                var index = findIndex(this.errors, item => {
+                    return item.code == el.code;
+                });
+                if (index >= 0) {
+                    this.errors.splice(index, 1);
+                }
+                if (el.status == 1) {
+                    this.errors.push(el);
+                }
             }
+
         },
         inError(error) {
             return this.errors.indexOf(error) >= 0;
         },
         confirmError(error) {
             if (this.errorStore.indexOf(error) < 0) {
-                // HdSmart.Device.control({
-                //     method: 'dm_set',
-                //     "nodeid": "wifi.main.alarm_confirm",
-                //     "params": {
-                //         "attribute": {
-                //             "error_code": error
-                //         }
-                //     }
-                // }, () => {})
                 this.errorStore.push(error);
             }
             this.toggleErrorModal(error, false);
@@ -977,31 +987,8 @@ export default {
             this.onSuccess(data.result);
         });
         HdSmart.onDeviceAlert(data => {
-            this.onAlarm(data.result.attribute.error);
+            this.onAlert(data.result.attribute.error);
         });
-        /*
-        HdSmart.onDeviceListen((data) => {
-            switch (data.method) {
-                case 'dm_set':
-                    if(data.code !== 0){
-                        this.getSnapShot()
-                    }
-                    break
-                case 'dr_report_dev_alert':
-                    if(data.result.attribute.error){
-                        this.onAlarm(data.result.attribute.error)
-                    }else{
-                        this.doAlarm(data.result.attribute)
-                    }
-                    break;
-                case 'da_report_dev_alert':
-                    break;
-                default:
-                    this.onSuccess(data.result)
-                    break
-            }
-        })
-        */
     }
 };
 </script>
