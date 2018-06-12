@@ -88,9 +88,9 @@
                 </div>
             </sub-page>
             <!-- 更多 -->
-            <sub-page title="更多" class="modal-w modal-more" v-model="moreModalVisible">
+            <sub-page title="更多" class="modal-w modal-more backControl" v-model="moreModalVisible">
                 <div class="more-wrap">
-                    <div class="group">
+                    <div class="group group-one">
                         <div class="title">更多模式</div>
                         <div class="btns btns-more_model">
                             <mode-button mode="strong_wash">强力</mode-button>
@@ -101,10 +101,10 @@
                             <mode-button mode="antimite">除螨</mode-button>
                         </div>
                     </div>
-                    <div class="group">
+                    <div class="group group-two">
                         <div class="title">高级设置</div>
                         <div class="selectbox" :class="{active:currentSet==0,disable:isRun||isPause}" v-show="temperatureOptions.length">
-                            <div class="hd" @click="toggleSet(0)">
+                            <div class="hd" @click="toggleSet(0)" style="border-top:none">
                                 <div class="left">水温</div>
                                 <div class="right">
                                     <span class="value">{{currentTemperature.text}}</span>
@@ -139,7 +139,8 @@
                                 <span class="option" v-for="item in dryingOptions" :key="item.value" @click="setDrying(item)" :class="{selected:currentDrying.value==item.value}">{{item.text}}</span>
                             </div>
                         </div>
-                        <div class="selectbox" :class="{disable:!isRun}">
+                    </div>
+                    <div class="selectbox lockDetail" :class="{disable:!isRun}">
                             <div class="hd">
                                 <div class="left">童锁</div>
                                 <div class="right sb-wrap">
@@ -155,7 +156,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </div>
             </sub-page>
             <!-- 预约 -->
@@ -175,7 +175,7 @@
             <div class="name">{{device_name}}</div>
             <div class="tip">已关闭</div>
             <div class="washer"></div>
-            <div class="btns btns-fn">
+            <div class="off_button">
                 <a href="" class="btn btn-off" @click.prevent="setSwitch('on')">
                     <i></i>
                 </a>
@@ -211,6 +211,9 @@ a {
     top: 0;
     width: 100%;
     height: 100%;
+    .name{
+        color:#fff;
+    }
 }
 .page-off {
     background: #f2f2f2;
@@ -219,15 +222,60 @@ a {
     top: 0;
     width: 100%;
     height: 100%;
+    .name{
+        color: #76787A;
+    }
+    .tip{
+        position: absolute;
+        left: 0;
+        top: 17.7%;
+        width: 100%;
+        text-align: center;
+        font-size: 30px;
+        // opacity: 0.5;
+        font-size: 28px;
+        color: #C8CACC;
+    }
+    //关机样式
+    .washer {
+        width: 243px;
+        height: 395px;
+        position: absolute;
+        left: 50%;
+        top: 33.6%;
+        transform: translate(-50%, 0);
+        background: url(../../lib/base/washer/assets_m/img_washer_off@2x.png) no-repeat;
+        background-size: 100% 100%;
+    }
+    .off_button{
+        position:absolute;
+        bottom:18%;
+        left:50%;
+        transform: translateX(-50%);
+        width:144px;
+        height: 144px;
+
+        a{
+            width:100%;
+            height: 100%;
+            display: block;
+            i{
+                width:100%;
+                height: 100%;
+                display: block;
+            }
+        }
+    }
 }
 .name {
     position: absolute;
     left: 0;
-    top: 156px;
+    top: 10.7%;
     width: 100%;
+    height: 45px;
+    line-height: 45px;
     text-align: center;
-    font-size: 30px;
-    color: #ffffff;
+    font-size: 32px;
 }
 .tip {
     position: absolute;
@@ -283,7 +331,7 @@ a {
     height: 460px;
     position: absolute;
     left: 50%;
-    top: 220px;
+    top: 25%;
     transform: translate(-50%, 0);
     color: #46bcff;
     background-image: url(../../lib/base/washer/assets/washer_bg_initial.png);
@@ -380,27 +428,12 @@ a {
         background-size: 100% 100%;
     }
 }
-//关机样式
-.page-off .name {
-    color: #76787a;
-}
-.page-off .tip {
-    color: #c8cacc;
-}
-.washer {
-    width: 420px;
-    height: 420px;
-    position: absolute;
-    left: 50%;
-    top: 252px;
-    transform: translate(-50%, 0);
-    background: url(../../lib/base/washer/assets/washer_bg_img.png) no-repeat;
-    background-size: 100% 100%;
-}
+
 //弹框样式
 
 .model-wrap {
     .group {
+        background-color: #fff;
         .title {
             text-align: center;
             font-size: 28px;
@@ -412,28 +445,55 @@ a {
 }
 .more-wrap {
     .group {
+        background-color: #fff;
+        overflow: hidden;
         .title {
             text-align: center;
             font-size: 28px;
             color: #76787a;
-            margin: 60px 0 24px;
             font-weight: bold;
+            height: 40px;
+            line-height: 40px;
         }
     }
+    .group-one{
+            margin-bottom:16px;
+            .title {
+                margin: 52px 0 24px;
+            }
+    }
+    .group-two{
+            margin-bottom:16px;
+            .title {
+                margin: 24px 0 0 0;
+    
+            }
+     }
 }
 .selectbox {
+    &.lockDetail{
+        margin: 20px auto 83px;
+        background-color: #fff;
+        .hd .left{
+            font-size: 32px;
+            color: #2F3133; 
+        }
+    }
     .hd {
+        padding:20px 0;
         margin: 0 32px;
-        padding: 20px 0px;
-        height: 40px;
-        line-height: 40px;
+        height: 80px;
+        line-height: 80px;
         border-top: 1px solid #f5f5f5;
         .left {
             float: left;
+            font-size:32px;
+            color: #2F3133;
         }
         .right {
             float: right;
             color: #333333;
+            font-size:32px;
         }
         .arrow {
             display: inline-block;
@@ -480,7 +540,7 @@ a {
         }
     }
     &.disable {
-        opacity: 0.5;
+        opacity: 0.5;//todo
     }
 }
 .sb-wrap {
@@ -570,7 +630,7 @@ a {
     &-fn {
         position: absolute;
         left: 0;
-        top: 720px;
+        bottom: 13.3%;
         width: 100%;
         justify-content: center;
         .btn {
@@ -581,7 +641,7 @@ a {
             }
         }
     }
-    &-model {
+    &-model {//模式选择样式
         flex-wrap: wrap;
         padding-left: 20px;
         .btn {
@@ -602,10 +662,11 @@ a {
     font-size: 28px;
     color: #76787a;
     i {
+        // border:1px solid red;//todo
         width: 120px;
         height: 120px;
         display: block;
-        margin: 0 auto 12px;
+        margin: 0 auto 20px;
         background-repeat: no-repeat;
         background-size: 100% 100%;
     }
@@ -613,328 +674,328 @@ a {
     &-more {
         position: absolute;
         right: 40px;
-        top: 132px;
+        top: 8.5%;
         i {
             width: 96px;
             height: 96px;
-            background-image: url(../../lib/base/washer/assets/btn_aircon_more_normal@2x.png);
+            background-image: url(../../lib/base/washer/assets_m/btn_aircon_more_normal@2x.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/btn_aircon_more_pressed@2x.png);
+            background-image: url(../../lib/base/washer/assets_m/btn_aircon_more_pressed@2x.png);
         }
     }
     //关机
     &-on {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_poweroff_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_poweroff_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_poweroff_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_poweroff_pressed.png);
         }
     }
     //开机
     &-off {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_poweron_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_poweron_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_poweron_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_poweron_pressed.png);
         }
     }
     //启动
     &-start {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_start_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_start_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_start_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_start_pressed.png);
         }
         &.disable i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_start_disable.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_start_disable.png);
         }
     }
     //暂停
     &-pause {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_pause_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_pause_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_pause_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_pause_pressed.png);
         }
     }
     //模式选择
     &-mode {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_mode_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_mode_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_mode_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_mode_pressed.png);
         }
     }
     //预约
     &-reserve {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_reservation_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_reservation_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_reservation_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_reservation_pressed.png);
         }
         &.disable i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_reservation_disable.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_reservation_disable.png);
         }
     }
     //混合
     &-mode-mix {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_mixwashing_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_mixwashing_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_mixwashing_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_mixwashing_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_mixwashing_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_mixwashing_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_mixwashing_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_mixwashing_normal.png);
         }
     }
     //棉麻
     &-mode-cotton {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_cotton_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_cotton_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_cotton_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_cotton_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_cotton_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_cotton_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_cotton_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_cotton_normal.png);
         }
     }
     //化纤
     &-mode-synthetic {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_chemicalfiber_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_chemicalfiber_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_chemicalfiber_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_chemicalfiber_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_chemicalfiber_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_chemicalfiber_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_chemicalfiber_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_chemicalfiber_normal.png);
         }
     }
     //羊毛衫
     &-mode-cardigan {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_wool_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_wool_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_wool_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_wool_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_wool_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_wool_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_wool_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_wool_normal.png);
         }
     }
     //羽绒服
     &-mode-down_coat {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_eiderdown_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_eiderdown_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_eiderdown_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_eiderdown_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_eiderdown_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_eiderdown_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_eiderdown_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_eiderdown_normal.png);
         }
     }
     //婴儿服
     &-mode-baby_clothes {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_baby_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_baby_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_baby_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_baby_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_baby_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_baby_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_baby_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_baby_normal.png);
         }
     }
     //内衣
     &-mode-underwear {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_underwear_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_underwear_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_underwear_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_underwear_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_underwear_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_underwear_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_underwear_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_underwear_normal.png);
         }
     }
     //牛仔
     &-mode-cowboy_suit {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_jeans_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_jeans_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_jeans_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_jeans_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_jeans_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_jeans_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_jeans_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_jeans_normal.png);
         }
     }
     //漂洗+脱水
     &-mode-rinse_spin {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_rinseanddehydration_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_rinseanddehydration_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_rinseanddehydration_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_rinseanddehydration_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_rinseanddehydration_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_rinseanddehydration_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_rinseanddehydration_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_rinseanddehydration_normal.png);
         }
     }
     //单脱水
     &-mode-spin {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_dehydration_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_dehydration_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_dehydration_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_dehydration_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_dehydration_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_dehydration_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_dehydration_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_dehydration_normal.png);
         }
     }
     //强力洗
     &-mode-strong_wash {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_strongwash_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_strongwash_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_strongwash_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_strongwash_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_strongwash_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_strongwash_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_strongwash_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_strongwash_normal.png);
         }
     }
     //极速15'(15min快速烘干)
     &-mode-high_speed_15m {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_quickwash_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_quickwash_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_quickwash_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_quickwash_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_quickwash_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_quickwash_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_quickwash_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_quickwash_normal.png);
         }
     }
     //除螨
     &-mode-antimite {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_acaruskilling_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_acaruskilling_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_acaruskilling_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_acaruskilling_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_acaruskilling_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_acaruskilling_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_acaruskilling_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_acaruskilling_normal.png);
         }
     }
     //除味
     &-mode-odor_removal {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_deodorize_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_deodorize_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_deodorize_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_deodorize_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_deodorize_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_deodorize_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_deodorize_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_deodorize_normal.png);
         }
     }
     //快速洗烘
     &-mode-speed_wash_drying {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_fashdrying_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_fashdrying_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_fashdrying_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_fashdrying_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_fashdrying_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_fashdrying_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_fashdrying_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_fashdrying_normal.png);
         }
     }
     //标准烘干
     &-mode-only_drying {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_drysigle_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_drysigle_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_drysigle_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_drysigle_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_drysigle_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_drysigle_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_drysigle_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_drysigle_normal.png);
         }
     }
     &-mode-normal_drying {
         i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_drysigle_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_drysigle_normal.png);
         }
         &:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_drysigle_pressed.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_drysigle_pressed.png);
         }
         &.active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_drysigle_selected.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_drysigle_selected.png);
         }
         &.disable:active i {
-            background-image: url(../../lib/base/washer/assets/washer_btn_drysigle_normal.png);
+            background-image: url(../../lib/base/washer/assets_m/washer_btn_drysigle_normal.png);
         }
     }
     &.disable {
@@ -964,6 +1025,24 @@ a {
     opacity: 1;
     position: relative;
 }
+#app .backControl{
+    background-color: #f4f4f8;
+    height: auto;
+    min-height: 100%;
+    position: absolute;
+    // padding-top: 90px;
+    .topbar{
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+    }
+    .subpage-body{
+        margin-top: 90px;
+    }
+    
+}
+
 </style>
 
 
@@ -1287,6 +1366,7 @@ export default {
             );
         },
         onSuccess(data) {
+            console.log("data",data)
             HdSmart.UI.hideLoading();
             this.status = "success";
 
