@@ -254,7 +254,6 @@ a {
         transform: translateX(-50%);
         width:144px;
         height: 144px;
-
         a{
             width:100%;
             height: 100%;
@@ -263,6 +262,8 @@ a {
                 width:100%;
                 height: 100%;
                 display: block;
+                background:url(../../lib/base/washer/assets_m/btn_power@2x.png) no-repeat center;
+                background-size:100% 100%;
             }
         }
     }
@@ -392,22 +393,30 @@ a {
     }
     .title {
         font-size: 36px;
-        top: 66px;
+        top: 79px;
+        height: 50px;
+        line-height:50px;
     }
     .sub_title {
         font-size: 24px;
-        top: 150px;
+        top: 160px;
+        height:33px;
+        line-height:33px;
     }
     .timeleft {
-        font-size: 144px;
-        top: 160px;
+        font-size: 120px;
+        top: 172px;
+        height:168px;
+        line-height:168px;
         small {
             font-size: 24px;
         }
     }
     .status {
         font-size: 24px;
-        top: 350px;
+        top: 339px;
+        height:33px;
+        line-height:33px;
     }
     .lock {
         background: url(../../lib/base/washer/assets/washer_icon_childlock_normal.png)
@@ -662,7 +671,6 @@ a {
     font-size: 28px;
     color: #76787a;
     i {
-        // border:1px solid red;//todo
         width: 120px;
         height: 120px;
         display: block;
@@ -1036,6 +1044,7 @@ a {
         top:0;
         left:0;
         width:100%;
+        z-index:1;
     }
     .subpage-body{
         margin-top: 90px;
@@ -1366,7 +1375,6 @@ export default {
             );
         },
         onSuccess(data) {
-            console.log("data",data)
             HdSmart.UI.hideLoading();
             this.status = "success";
 
