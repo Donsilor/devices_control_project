@@ -1051,6 +1051,10 @@ a {
     }
 
 }
+    .android .backControl{
+        box-sizing:border-box;
+        padding-bottom: 120px;
+    }
 
 </style>
 
@@ -1129,12 +1133,21 @@ export default {
             if (val) {
                 this.currentSet = -1;
             }
+        },
+        moreModalVisible(val){
+            if(val){
+                HdSmart.UI.toggleHeadAndFoot(false);//隐藏app头部
+            }else{
+                HdSmart.UI.toggleHeadAndFoot(true);//显示app头部
+            }
+        },
+        modeModalVisible(val){
+            if(val){
+                HdSmart.UI.toggleHeadAndFoot(false);//隐藏app头部
+            }else{
+                HdSmart.UI.toggleHeadAndFoot(true);//显示app头部
+            }
         }
-        // 'model.mode'(nowval, prevval) {
-        //     if(this.isPause && prevval){
-        //         this.model.operation = 'none'
-        //     }
-        // }
     },
     computed: {
         isRun() {
@@ -1264,7 +1277,7 @@ export default {
         },
         setSwitch(val) {
             this.controlDevice("switch", val);
-        },
+        }, 
         setControl(val) {
             if (this.model.operation == "drying" && val == "halt") {
                 HdSmart.UI.toast("烘干时不可暂停");

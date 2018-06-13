@@ -1,9 +1,16 @@
 <template>
     <div id="app">
-        <div class="wapper-off" v-if="allAttribute.status==='stop'">
-            关机状态
+        <div class="page-off" v-if="model.switch==='off'">
+            <div class="name">{{device_name}}</div>
+                <div class="tip">已关闭</div>
+                <div class="oven"></div>
+                <div class="off_button">
+                    <a href="" class="btn btn-off" @click.prevent="setSwitch('on')">
+                        <i></i>
+                    </a>
+            </div>
         </div>
-        <div class="wrapper wapper-on" v-if="allAttribute.status==='start'">
+        <div class="page-on wrapper" v-if="model.switch==='on'">
             <h3 class="main-title">{{device_name}}</h3>
             <div class="pannel">
                 <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
@@ -27,8 +34,10 @@
                 <button @click="showModelLayer">
                     <i class="c-model"></i>模式</button>
             </div>
+            <!-- 查看更多的按钮 -->
+            <span class="more-btn" @click="showMoreLayer"></span>
         </div>
-        <span class="more-btn" @click="showMoreLayer"></span>
+       
         <sub-page class="model-select-layer" v-model="modelLayerShow" title="模式">
             <div class="layer-body" :class="allAttribute.status === 'start' ? 'disable' : ''">
                 <ul class="model-list">
@@ -125,6 +134,7 @@ export default {
     },
     data() {
         return {
+            model:{},//数据
             //状态集合
             allAttribute: {
                 mode: "", //模式
@@ -283,6 +293,43 @@ export default {
         });
     },
     methods: {
+        setSwitch(val) {//烤箱开关的控制
+            console.log("开关",val)
+            this.controlDevice("switch", val);
+        }, 
+        controlDevice(attr, val, success, error) {
+            if (
+                this.model.child_lock_switch == "on" &&
+                attr != "child_lock_switch"
+            ) {
+                HdSmart.UI.toast("请先关闭童锁");
+                return;
+            }
+
+            var params = {
+                [attr]: val
+            };
+
+            if (attr == "mode") {
+                //要切到待机模式
+            }
+
+            HdSmart.Device.control(
+                {
+                    method: "dm_set",
+                    nodeid: `oven.main.custom.${attr}`,
+                    params: {
+                        attribute: params
+                    }
+                },
+                () => {
+                    success && success();
+                },
+                () => {
+                    error && error();
+                }
+            );
+        },
         closeMoreLayer() {
             this.moreLayerShow = false;
         },
@@ -357,8 +404,10 @@ export default {
             );
         },
         onSuccess(data) {
+            console.log("dataall",data);
             HdSmart.UI.hideLoading();
             let attributes = data.attribute;
+            this.model = attributes;
             let curAttributes = this.allAttribute;
             let config = AllConfig[attributes.mode || "barbecues"];
             //剩余时间设置为烘干时间，避免没有该字段显示异常
@@ -376,23 +425,23 @@ export default {
                 }
             }
         },
-        controlDevice(paramObj, success, error) {
-            HdSmart.Device.control(
-                {
-                    method: "dm_set",
-                    nodeid: `oven.main.custom`,
-                    params: {
-                        attribute: paramObj
-                    }
-                },
-                () => {
-                    success && success();
-                },
-                () => {
-                    error && error();
-                }
-            );
-        },
+        // controlDevice(paramObj, success, error) {
+        //     HdSmart.Device.control(
+        //         {
+        //             method: "dm_set",
+        //             nodeid: `oven.main.custom`,
+        //             params: {
+        //                 attribute: paramObj
+        //             }
+        //         },
+        //         () => {
+        //             success && success();
+        //         },
+        //         () => {
+        //             error && error();
+        //         }
+        //     );
+        // },
         // 启动
         startOven() {
             const obj = this;
@@ -455,7 +504,69 @@ ul {
 }
 #app {
 }
-
+.page-off {
+    background: #f2f2f2;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    .name{
+        color: #76787A;
+    }
+    .tip{
+        position: absolute;
+        left: 0;
+        top: 17.7%;
+        width: 100%;
+        text-align: center;
+        font-size: 30px;
+        // opacity: 0.5;
+        font-size: 28px;
+        color: #C8CACC;
+    }
+    //关机样式
+    .oven {
+        width: 360px;
+        height: 360px;
+        position: absolute;
+        left: 50%;
+        top: 33.6%;
+        transform: translate(-50%, 0);
+        background: url(../../lib/base/haier_oven/assets/img_ovenline@2x.png) no-repeat;
+        background-size: 100% 100%;
+    }
+    .off_button{
+        position:absolute;
+        bottom:18%;
+        left:50%;
+        transform: translateX(-50%);
+        width:144px;
+        height: 144px;
+        a{
+            width:100%;
+            height: 100%;
+            display: block;
+            i{
+                width:100%;
+                height: 100%;
+                display: block;
+                background:url(../../lib/base/washer/assets_m/btn_power@2x.png) no-repeat center;
+                background-size:100% 100%;
+            }
+        }
+    }
+}
+.name {
+    position: absolute;
+    left: 0;
+    top: 10.7%;
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    font-size: 32px;
+}
 .more-btn {
     position: absolute;
     right: 65px;
