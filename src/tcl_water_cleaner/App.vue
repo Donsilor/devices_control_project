@@ -888,6 +888,7 @@ export default {
         },
         getAlertList(errors) {
             errors = errors || [];
+            //本地缓存处理
             for (var i = 0; i < this.errorStore.length; i++) {
                 var item = errors.filter(el => {
                     return el.code == this.errorStore[i];
@@ -897,44 +898,42 @@ export default {
                     i--;
                 }
             }
-
-            this.errors = errors.filter(el => {
-                if (el.status == 1) {
-                    if (this.errorStore.indexOf(el.code) < 0) {
-                        this.toggleErrorModal(el.code, true);
+            //当前故障
+            this.errors = errors.filter(item => {
+                if (item.status == 1) {
+                    if (this.errorStore.indexOf(item.code) < 0) {
+                        this.toggleErrorModal(item.code, true);
                     }
-                    return el.code;
+                    return true;
                 }
             });
         },
-        onAlert(errors) {
-            errors = errors || [];
-            for (var i = 0; i < this.errorStore.length; i++) {
-                var item = errors.filter(el => {
-                    return el.code == this.errorStore[i];
-                });
-                if (item.length == 0 || item[0].status == 0) {
-                    this.errorStore.splice(i, 1);
-                    i--;
+        onDaAlert(errors) {
+            var error = errors[0]
+            //本地缓存处理
+            this.errorStore = this.errorStore.filter(item => {
+                return !(item == error.code && error.status == 0);
+            })
+
+            //当前故障
+            var index = findIndex(this.errors, item => {
+                return item.code == error.code;
+            });
+            if (index >= 0) {
+                this.errors.splice(index, 1);
+            }
+            if (error.status == 1) {
+                this.errors.push(error);
+                if (this.errorStore.indexOf(error.code) < 0) {
+                    this.toggleErrorModal(error.code, true);
                 }
             }
-
-            for (var i = 0; i < errors.length; i++) {
-                var el = errors[i];
-                var index = findIndex(this.errors, item => {
-                    return item.code == el.code;
-                });
-                if (index >= 0) {
-                    this.errors.splice(index, 1);
-                }
-                if (el.status == 1) {
-                    this.errors.push(el);
-                }
-            }
-
         },
         inError(error) {
-            return this.errors.indexOf(error) >= 0;
+            return findIndex(this.errors, item => {
+                return item.code == error
+            }) >= 0
+            // return this.errors.indexOf(error) >= 0;
         },
         confirmError(error) {
             if (this.errorStore.indexOf(error) < 0) {
@@ -987,7 +986,11 @@ export default {
             this.onSuccess(data.result);
         });
         HdSmart.onDeviceAlert(data => {
-            this.onAlert(data.result.attribute.error);
+            if(data.method == 'dr_report_dev_alert'){
+                this.getAlertList(data.result.attribute.error);
+            }else{
+                this.onDaAlert(data.result.attribute.error);
+            }
         });
     }
 };

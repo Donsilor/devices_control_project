@@ -475,7 +475,7 @@ a {
             margin-bottom:16px;
             .title {
                 margin: 24px 0 0 0;
-    
+
             }
      }
 }
@@ -485,7 +485,7 @@ a {
         background-color: #fff;
         .hd .left{
             font-size: 32px;
-            color: #2F3133; 
+            color: #2F3133;
         }
     }
     .hd {
@@ -1049,7 +1049,7 @@ a {
     .subpage-body{
         margin-top: 90px;
     }
-    
+
 }
 
 </style>
@@ -1391,19 +1391,17 @@ export default {
                 return item.status == 1;
             });
         },
-        onAlert(errors) {
-            errors = errors || [];
-            for (var i = 0; i < errors.length; i++) {
-                var el = errors[i];
-                var index = findIndex(this.errors, item => {
-                    return item.code == el.code;
-                });
-                if (index >= 0) {
-                    this.errors.splice(index, 1);
-                }
-                if (el.status == 1) {
-                    this.errors.push(el);
-                }
+        onDaAlert(errors) {
+            var error = errors[0]
+            //当前故障
+            var index = findIndex(this.errors, item => {
+                return item.code == error.code;
+            });
+            if (index >= 0) {
+                this.errors.splice(index, 1);
+            }
+            if (error.status == 1) {
+                this.errors.push(error);
             }
         },
         showAlarmTip(err) {
@@ -1450,7 +1448,11 @@ export default {
             this.onSuccess(data.result);
         });
         HdSmart.onDeviceAlert(data => {
-            this.onAlert(data.result.attribute.error);
+            if(data.method == 'dr_report_dev_alert'){
+                this.getAlertList(data.result.attribute.error);
+            }else{
+                this.onDaAlert(data.result.attribute.error);
+            }
         });
     }
 };
