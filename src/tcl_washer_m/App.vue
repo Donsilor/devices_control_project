@@ -228,7 +228,7 @@ a {
     .tip{
         position: absolute;
         left: 0;
-        top: 17.7%;
+        top: 15%;
         width: 100%;
         text-align: center;
         font-size: 30px;
@@ -242,14 +242,14 @@ a {
         height: 395px;
         position: absolute;
         left: 50%;
-        top: 33.6%;
+        top: 300px;
         transform: translate(-50%, 0);
         background: url(../../lib/base/washer/assets_m/img_washer_off@2x.png) no-repeat;
         background-size: 100% 100%;
     }
     .off_button{
         position:absolute;
-        bottom:18%;
+        top:780px;
         left:50%;
         transform: translateX(-50%);
         width:144px;
@@ -295,15 +295,15 @@ a {
 
     span {
         box-sizing: border-box;
-        border-radius: 0 48px 48px 0;
-        width: 252px;
-        height: 78px;
-        line-height: 78px;
+        border-radius: 0 45px 45px 0;
+        width: 200px;
+        height: 70px;
+        line-height: 70px;
         font-size: 30px;
         color: #333333;
-        padding-left: 100px;
+        padding-left: 60px;
         background: #fff url(../../lib/base/washer/assets/washer_icon_msg.png)
-            no-repeat 60px center;
+            no-repeat 20px center;
         background-size: 30px 30px;
         display: block;
         margin-bottom: 5px;
@@ -332,7 +332,7 @@ a {
     height: 460px;
     position: absolute;
     left: 50%;
-    top: 25%;
+    top: 230px;
     transform: translate(-50%, 0);
     color: #46bcff;
     background-image: url(../../lib/base/washer/assets/washer_bg_initial.png);
@@ -639,7 +639,7 @@ a {
     &-fn {
         position: absolute;
         left: 0;
-        bottom: 13.3%;
+        top: 750px;
         width: 100%;
         justify-content: center;
         .btn {
@@ -1277,7 +1277,7 @@ export default {
         },
         setSwitch(val) {
             this.controlDevice("switch", val);
-        }, 
+        },
         setControl(val) {
             if (this.model.operation == "drying" && val == "halt") {
                 HdSmart.UI.toast("烘干时不可暂停");

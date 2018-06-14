@@ -809,6 +809,22 @@ a {
 .overlay{
     z-index:10;
 }
+
+.android {
+    .water_wave{
+        bottom: 120px;
+    }
+    .view{
+        bottom: 293px;
+    }
+    .lx_wrap{
+        bottom: 120px;
+    }
+    .wave_content{
+        bottom: 120px;
+    }
+}
+
 </style>
 
 
