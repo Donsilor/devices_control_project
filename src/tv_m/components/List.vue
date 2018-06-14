@@ -19,7 +19,7 @@
             <topbar :title="title"></topbar>
             <status-tip class="sp_status_list" />
             <!-- 条件 -->
-            <div class="filters" v-if="!error">
+            <div class="filters" v-if="!error" :class="{active:filterVisible}">
                 <!-- 地区 -->
                 <dl class="row" v-show="filterVisible">
                     <dt>
@@ -110,14 +110,20 @@
     height: 200px;
 }
 .filters {
-    padding: 32px 32px 8px;
+    padding: 28px 28px 12px;
     background: rgba(255, 255, 255, 0.98);
     box-shadow: inset 0 -1px 0 0 #dbdbdb;
     position: relative;
+    &.active{
+        padding: 32px 32px 16px 32px;
+        .toggle {
+            bottom: 22px;
+        }
+    }
     .toggle {
         position: absolute;
         right: 0px;
-        bottom: 4px;
+        bottom: 15px;
         line-height: 42px;
         color: #75787a;
         padding: 20px;
@@ -137,7 +143,7 @@
     }
     .row {
         overflow: hidden;
-        height: 66px;
+        height: auto;
         display: flex;
         width: 100%;
     }
@@ -151,10 +157,12 @@
         }
     }
     .row a {
+        height: 56px;
+        line-height:56px;
         display: block;
-        margin-right: 16px;
+        margin-right: 32px;
+        margin-bottom:16px;
         color: #7f8082;
-        padding: 0 10px;
         height: 56px;
         line-height: 56px;
         white-space: nowrap;

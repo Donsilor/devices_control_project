@@ -17,7 +17,7 @@
         <!-- 搜索建议 -->
         <div class="search_suggest" v-show="curpage===2">
             <ul>
-                <li @click="doSearch(item.text)" v-for="item in suggestData" v-html="item.html"></li>
+                <li @click="doSearch(item.text)" v-for="item in suggestData" v-html="item.html" :key="`${item.index}`"></li>
             </ul>
         </div>
         <!-- 搜搜历史 -->
@@ -27,7 +27,7 @@
                 搜索记录
             </div>
             <ul class="bd clearfix">
-                <li @click="doSearch(item)" v-for="item in historyData">
+                <li @click="doSearch(item)" v-for="item in historyData" :key="`${item.index}`">
                     {{item}}
                 </li>
             </ul>
@@ -167,7 +167,8 @@
     }
     .bd {
         li {
-            width: 330px;
+            width: 50%;
+            box-sizing: border-box;
             height: 56px;
             line-height: 56px;
             margin-bottom: 16px;
@@ -175,6 +176,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             float: left;
+            padding-right:26px;
         }
     }
 }
