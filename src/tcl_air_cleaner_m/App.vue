@@ -40,7 +40,7 @@
                 </a>
             </div>
 
-            <modal title="风档" v-model="speedModalVisible">
+            <modal title="风档" v-model="speedModalVisible" class="windControl">
                 <div class="btns btns-speed">
                     <a href="" v-for="item in speedItems" :key="item.value" :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]" @click.prevent="setSpeed(item.value)">
                         <i></i> {{item.text}}
@@ -515,6 +515,9 @@ a {
     justify-content: flex-start;
     margin: 0 20px;
     a {
+        // display: block;
+        height: auto;
+        padding-bottom: 46px;
         margin: 0 18px 0;
         color: #76787a;
         &.active {
@@ -551,6 +554,11 @@ a {
     background: url(../../lib/base/air_cleaner/assets/img_airpurifier_off.png)
         no-repeat;
     background-size: 100% 100%;
+}
+#app .windControl{
+    .modal-body{
+        padding:48px 0 0 0;
+    }
 }
 </style>
 

@@ -42,7 +42,7 @@
         height: 84px;
         background: url(../../../lib/base/air_cleaner/assets/btn_close.png)
             no-repeat center center;
-        background-size: 30px 30px;
+        background-size: 36px 36px;
     }
     &-body {
         padding: 48px 0;

@@ -37,8 +37,6 @@
             <div class="controls">
                 <button @click="startOven" v-if="allAttribute.status==='stop'">
                     <i class="c-firing"></i>启动</button>
-                <!-- <button @click="stopOven" v-if="allAttribute.status==='start'">
-                    <i class="c-stop"></i>停止</button> -->
                 <button @click="showModelLayer">
                     <i class="c-model"></i>模式设定</button>
                 <button @click="showModelLayer">
@@ -50,14 +48,14 @@
             <span class="more-btn" @click="showMoreLayer"></span>
         </div>
        
-        <sub-page class="model-select-layer" v-model="modelLayerShow" title="模式">
+        <sub-page class="model-select-layer backControl" v-model="modelLayerShow" title="模式">
             <div class="layer-body" :class="allAttribute.status === 'start' ? 'disable' : ''">
                 <ul class="model-list">
-                    <li @click="seleteMode(item)" v-for="item in modeList">
+                    <li @click="seleteMode(item)" v-for="item in modeList" :key="`${item.name}`">
                         <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
                         <div class="mode-name">{{item.name}}</div>
                     </li>
-                    <li @click="seleteMode(item)" v-for="item in elseModeList">
+                    <li @click="seleteMode(item)" v-for="item in elseModeList" :key="`${item.name}`">
                         <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
                         <div class="mode-name">{{item.name}}</div>
                     </li>
@@ -165,7 +163,7 @@ export default {
                 timeList: []
             },
             //模式选择层
-            modelLayerShow: false,
+            modelLayerShow: true,//todo
             //更多选择层
             moreLayerShow: false,
             wenduSelectFlag: false,
@@ -173,42 +171,54 @@ export default {
             //模式列表
             modeList: [
                 {
-                    name: "面包",
-                    icon: "ico-bread",
+                    name: "传统烘焙",
+                    icon: "traditional-baking",
                     mode: "bread"
                 },
                 {
-                    name: "饼干",
+                    name: "3D热风",
                     icon: "ico-biscuit",
                     mode: "biscuit"
                 },
                 {
-                    name: "蛋糕",
+                    name: "对流烘焙",
                     icon: "ico-cake",
                     mode: "cake"
                 },
                 {
-                    name: "披萨",
+                    name: "烘焙",
                     icon: "ico-pizza",
                     mode: "pizza"
                 },
                 {
-                    name: "烤肉",
+                    name: "热风烧烤",
                     icon: "ico-barbecue",
                     mode: "barbecues"
                 },
                 {
-                    name: "鱼虾",
+                    name: "上烧烤",
                     icon: "ico-fish",
                     mode: "fish_shrimp"
                 },
                 {
-                    name: "地瓜",
+                    name: "全烧烤",
                     icon: "ico-sweet-potato",
                     mode: "sweet_potato"
                 },
                 {
-                    name: "全鸡",
+                    name: "披萨模式",
+                    icon: "ico-chicken",
+                    mode: "chicken"
+                },
+                {
+                
+                    name: "上发酵",
+                    icon: "ico-chicken",
+                    mode: "chicken"
+                },
+                {
+                
+                    name: "解冻",
                     icon: "ico-chicken",
                     mode: "chicken"
                 }
@@ -345,6 +355,7 @@ export default {
             );
         },
         setMode(mode) {
+            console.log("mode",mode)
             if (this.isRun || this.isPause) {
                 return;
             }
@@ -749,12 +760,14 @@ strong{
         }
         li {
             div.mode-name {
+                font-size: 28px;
+                color: #76787A;
                 opacity: 0.3;
             }
             a.active {
                 opacity: 0.3;
             }
-            a.ico-bread {
+            a.traditional-baking {
                 background-image: url("../../lib/base/oven/assets/btn_bread_g.png");
             }
             a.ico-biscuit {
@@ -792,6 +805,8 @@ strong{
             padding-bottom: 54px;
             div {
                 margin-top: 5px;
+                font-size: 28px;
+                color: #76787A;
             }
             a {
                 display: block;
@@ -799,7 +814,7 @@ strong{
                 height: 120px;
                 background-size: 100% 100%;
             }
-            .ico-bread {
+            .traditional-baking {
                 background-image: url("../../lib/base/oven/assets/btn_bread.png");
                 &.active {
                     background-image: url("../../lib/base/oven/assets/btn_bread_selected.png");
@@ -993,4 +1008,28 @@ strong{
 .noborder {
     border-top: 0;
 }
+//subpage样式的特殊处理
+#app .backControl{
+    background-color: #f4f4f8;
+    height: auto;
+    min-height: 100%;
+    position: absolute;
+    // padding-top: 90px;
+    .topbar{
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        z-index:1;
+    }
+    .subpage-body{
+        margin-top: 90px;
+        background-color: #fff;
+    }
+
+}
+    .android .backControl{
+        box-sizing:border-box;
+        padding-bottom: 120px;
+    }
 </style>
