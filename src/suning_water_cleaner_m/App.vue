@@ -2,21 +2,18 @@
     <div id="app">
 
         <div class="page-on" v-if="isInit && success">
-
-            <div class="water_wave ww1"></div>
-            <div class="water_wave ww2"></div>
-            <div class="water_wave ww3"></div>
-
-            <div class="name">{{device_name}}</div>
-            <div class="tip">
-                <p v-if="model.water_leakage=='on'">
-                    <span @click="toggleErrorModal(true)">漏水</span>
-                </p>
-                <p v-else-if="model.water_shortage=='on'">缺水</p>
-                <p v-else-if="model.status=='standby'">待机</p>
-                <p v-else-if="model.status=='filter'">制水中...</p>
-                <p v-else-if="model.status=='clean'">冲洗中...</p>
-                <p v-else-if="model.status=='protect'">保护</p>
+            <div class="mainTitle">
+                <div class="name">{{device_name}}</div>
+                <div class="tip">
+                    <p v-if="model.water_leakage=='on'">
+                        <span @click="toggleErrorModal(true)">漏水</span>
+                    </p>
+                    <p v-else-if="model.water_shortage=='on'">缺水</p>
+                    <p v-else-if="model.status=='standby'">待机</p>
+                    <p v-else-if="model.status=='filter'">制水中...</p>
+                    <p v-else-if="model.status=='clean'">冲洗中...</p>
+                    <p v-else-if="model.status=='protect'">保护</p>
+                </div>
             </div>
 
             <filter-items :items="filterItems" :view-filter="viewFilter" />
@@ -27,8 +24,7 @@
             <div class="name">{{device_name}}</div>
             <div class="pic1"></div>
         </div>
-
-        <modal title="滤芯状态" class="modal-w" v-model="statusModalVisible">
+        <sub-page title="滤芯状态" class="modal-w" v-model="statusModalVisible">
             <div class="lx_status">
                 <div class="p1">滤芯{{currentFilter.index+1}}</div>
                 <div class="p2">{{getName(currentFilter.index)}} </div>
@@ -37,7 +33,7 @@
                     <p class="p4">{{currentFilter.remaining}}%</p>
                 </circle-pie>
             </div>
-        </modal>
+        </sub-page>
 
         <modal title="漏水警报" v-model="alarmModalVisible" :showCloseBtn="false" :overlayClickable="false">
             <div class="alarm">
@@ -62,10 +58,12 @@
     padding: 0;
     margin: 0;
 }
-body {
+body,html {
     -webkit-tap-highlight-color: transparent;
     color: #fff;
     font-size: 30px;
+    width:100%;
+    height: 100%;
 }
 a {
     text-decoration: none;
@@ -97,10 +95,10 @@ a {
     }
 }
 .page-on {
-    background: #46bcff;
-    &.warn {
-        background: #d04802;
-    }
+    // background: #46bcff;
+    // &.warn {
+    //     background: #d04802;
+    // }
 }
 @keyframes wave1 {
     from {
@@ -126,47 +124,29 @@ a {
         background-position-x: -1320px;
     }
 }
-.water_wave {
-    position: absolute;
+.mainTitle{
+     position: absolute;
     left: 0;
-    bottom: 170px;
+    top: 18.93%;
     width: 100%;
-    background-size: 100% 100%;
-    background-repeat: repeat-x;
-    &.ww1 {
-        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_one.png);
-        height: 185px;
-        animation: wave1 10s linear infinite;
-    }
-    &.ww2 {
-        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_two.png);
-        height: 201px;
-        animation: wave2 15s linear infinite;
-    }
-    &.ww3 {
-        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_three.png);
-        height: 226px;
-        animation: wave3 20s linear infinite;
-    }
 }
 .name {
-    position: absolute;
-    left: 0;
-    top: 156px;
     width: 100%;
     text-align: center;
-    font-size: 30px;
-    color: #ffffff;
+    font-size: 32px;
+    color: #1EA0FF;
 }
 .tip {
-    position: absolute;
-    left: 0;
-    top: 200px;
     width: 100%;
     text-align: center;
-    font-size: 30px;
-    color: #ffffff;
+    font-size: 32px;
+    color: #1EA0FF;
     opacity: 0.5;
+    height: 80px;
+    span {
+        display: inline-block;
+        height: 80px;
+    }
 }
 .record_panle {
     position: absolute;
@@ -355,76 +335,6 @@ a {
         }
     }
 }
-.lx_title {
-    position: absolute;
-    left: 0;
-    top: 288px;
-    width: 100%;
-    text-align: center;
-    font-size: 36px;
-    color: #ffffff;
-}
-.lx_wrap {
-    position: absolute;
-    left: 6%;
-    top: 400px;
-    width: 88%;
-    display: flex;
-    justify-content: space-around;
-}
-.lx_item {
-    width: 302px;
-    height: 302px;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_filter_normal.png);
-    &:active {
-        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_filter_pressed.png);
-    }
-    &.active {
-        background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_expiredfilter_normal.png);
-        &:active {
-            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_btn_expiredfilter_pressed.png);
-        }
-        .item-name {
-            color: rgba(74, 144, 226, 0.5);
-            i {
-                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_icon_nexttwo_normal.png);
-            }
-        }
-        .item-left {
-            color: #4a90e2;
-        }
-    }
-    .item-name {
-        margin-top: 100px;
-        text-align: center;
-        font-size: 30px;
-        color: rgba(255, 255, 255, 0.5);
-        margin-bottom: 10px;
-        i {
-            width: 22px;
-            height: 22px;
-            display: inline-block;
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_icon_nextone_normal.png);
-        }
-    }
-    .item-left {
-        text-align: center;
-        font-size: 36px;
-    }
-}
-.lx_msg {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    top: 832px;
-    text-align: center;
-    font-size: 30px;
-    color: #ffffff;
-}
 //弹窗
 .modal {
     color: #76787a;
@@ -489,72 +399,193 @@ a {
         }
     }
 }
-.lx_status {
-    .p1 {
-        font-size: 30px;
-        color: #76787a;
-        opacity: 0.5;
-    }
-    .p2 {
-        font-size: 36px;
-        color: #333333;
-        margin-bottom: 30px;
-    }
-    .p3 {
-        margin-top: 80px;
-        font-size: 30px;
-        color: #76787a;
-        opacity: 0.5;
-    }
-    .p4 {
-        font-size: 72px;
-        color: #333333;
-        line-height: 1.6;
-    }
-    .p5 {
-        font-size: 30px;
-        color: #76787a;
-        opacity: 0.5;
-    }
-    .pie {
-        margin: 0 auto 50px;
-    }
-    .btn {
-        width: 658px;
-        margin: 0 auto 20px;
-        overflow: hidden;
-        .btn-block {
-            display: -webkit-box;
-            transition: transform 400ms;
-            &.active {
-                transform: translate(-100%, 0);
+
+ .detail_content{
+        width:100%;
+        height: 100%;
+        overflow-y:auto;
+        .lx_wrap {
+            position: absolute;
+            bottom:0;
+            left:0;
+            z-index: 9;
+            width:100%;
+            height: 802px;
+            overflow: hidden;
+            box-sizing:border-box;
+            padding:46px 0 0 32px;
+            .time_tips{
+                width:100%;
+                height: 84px;
+                line-height: 84px;
+                color:#fff;
+                font-size:28px;
+                border-bottom:1px solid rgba(255,255,255,0.2);
+            }
+            .lx_item {
+                width:100%;
+                height:120px;
+                line-height:120px;
+                color:#fff;
+                border-bottom:1px solid rgba(255,255,255,0.2);
+                display:flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                box-sizing:border-box;
+                padding-right:32px;
+                .list_button{
+                    width:50px;
+                    height:50px;
+                    line-height: 50px;
+                    text-align: center;
+                    border-radius:50%;
+                    background-color:#fff;
+                    font-size: 32px;
+                    color: #1EA0FF;
+                }
+                .item-name{
+                    font-size: 32px;
+                    color: #FFFFFF;
+                    flex-grow: 1;
+                    box-sizing:border-box;
+                    padding-left:30px;
+                    text-align: left;
+                }
+                .item-right{
+                    font-size: 32px;
+                    color: #FFFFFF;
+                    span.angle{
+                        display: inline-block;
+                        transform: rotate(45deg);
+                        height: 13px;
+                        width: 13px;
+                        border-width: 2px 2px 0 0;
+                        border-style: solid;
+                        position: relative;
+                        color:#fff;
+                        vertical-align: 1%;
+                    }
+                }
+                &.active{
+                    .list_button{
+                        background-color:rgba(255,255,255,0.50);
+                    }
+                    .item-name{
+                        color: rgba(255,255,255,0.50);
+                    }
+                    .item-right{
+                        color: rgba(255,255,255,0.50);
+                    }
+                }
+            }
+            .lx_msg {
+                position: absolute;
+                bottom:0;
+                left:32px;
+                height: 70px;
+                line-height:70px;
+                text-align: left;
+                font-size: 24px;
+                color: rgba(255,255,255,0.50);
             }
         }
-        a {
-            border: 1px solid #46bcff;
-            border-radius: 6px;
-            width: 656px;
-            height: 82px;
-            display: block;
-            line-height: 82px;
+        .wave_content{
+            width:100%;
+            height: 802px;
+            box-sizing:border-box;
+            position:absolute;
+            z-index: -1;
+            bottom:0;
+            left:0;
+            .waveHigh{
+                position: absolute;
+                left:0;
+                bottom:0;
+                width:100%;
+                height: 100%;
+                overflow: hidden;
+                background-size: 100% 100%;
+                background-repeat: repeat-x;
+                &.waveHigh1 {
+                    background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2one@2x.png);
+                    animation: wave1 5s linear infinite;
+                    z-index: -3;
+                }
+                &.waveHigh2 {
+                    background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2two@2x.png);
+                    animation: wave2 8s linear infinite;
+                    z-index: -2;
+                }
+                &.waveHigh3 {
+                    background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2there@2x.png);
+                    animation: wave3 10s linear infinite;
+                    z-index: -1;
+                }
+            }
+        }
+    }
+    .lx_status {
+        height: auto;
+        overflow:auto;
+        .p1 {
+            font-size: 28px;
+            height: 40px;
+            line-height: 40px;
+            color: #76787A;
+            opacity: 0.5;
+            text-align:center;
+            margin-top:6.53%;
+        }
+        .p2 {
             font-size: 36px;
-            color: #46bcff;
+            color: #333333;
+            margin-bottom: 30px;
+            font-size: 32px;
+            color: #333333;
+            text-align:center;
         }
-        .reset_submit {
-            background: #46bcff;
-            color: #ffffff;
+        .p3 {
+            opacity: 0.5;
+            font-size: 28px;
+            color: #76787A;
+            text-align: center;
+            margin-top:72px;
+            height: 40px;
+            line-height:40px;
+        }
+        .p4 {
+            height: 86px;
+            line-height:86px;
+            font-size: 72px;
+            color: #333333;
+            margin-top:20px;
+        }
+        .pie {
+            margin: 0 auto 50px;
+        }
+        .msg {
+            opacity: 0.5;
+            font-size: 28px;
+            color: #76787A;
+            margin-top:60px;
+            text-align: center;
+            height:40px;
+            line-height:40px;
         }
     }
-    .msg {
-        font-size: 30px;
-        color: rgba(118, 120, 122, 0.5);
+    .subpage {
+        z-index:99;
     }
-}
+    .overlay{
+        z-index:10;
+    }
 </style>
 
 
 <script>
-import Modal from "./components/Modal.vue";
+import Modal from "../../lib/components/Modal.vue";
+import SubPage from "../../lib/components/SubPage";
 import CirclePie from "./components/CirclePie.vue";
 import FilterItems from "./components/FilterItems.vue";
 
@@ -579,7 +610,8 @@ export default {
     components: {
         Modal,
         CirclePie,
-        FilterItems
+        FilterItems,
+        SubPage
     },
     data() {
         return {
@@ -593,6 +625,15 @@ export default {
             alarmModalVisible: false,
             errorStore: JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || []
         };
+    },
+    watch:{
+        statusModalVisible(val){
+            if(val){
+                HdSmart.UI.toggleHeadAndFoot(false);
+            }else{
+                HdSmart.UI.toggleHeadAndFoot(true);
+            }
+        }
     },
     computed: {
         currentFilter() {

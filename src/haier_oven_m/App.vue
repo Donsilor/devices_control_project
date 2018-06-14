@@ -1,6 +1,7 @@
 <template>
     <div id="app">
-        <div class="page-off" v-if="model.switch==='off'">
+        <!-- off -->
+        <div class="page-off" v-if="model.switch==='on'">
             <div class="name">{{device_name}}</div>
                 <div class="tip">已关闭</div>
                 <div class="oven"></div>
@@ -10,29 +11,40 @@
                     </a>
             </div>
         </div>
-        <div class="page-on wrapper" v-if="model.switch==='on'">
+        <!-- on -->
+        <div class="page-on wrapper" v-if="model.switch==='off'">
             <h3 class="main-title">{{device_name}}</h3>
             <div class="pannel">
                 <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
                 <p class="color-gray p-status">
-                    <span v-if="allAttribute.status==='start'">({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span>
+                    <!-- <span v-if="allAttribute.status==='start'">({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span> -->
+                    <span>({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span>                    
                 </p>
                 <div class="p-main-time">
                     <p class="p-num" v-html="remainingText"></p>
-                    <p class="color-gray">{{allAttribute.status==='start'? '剩余时间' : '总时间'}}</p>
+                    <!-- <p class="color-gray">{{allAttribute.status==='start'? '剩余时间' : '总时间'}}</p> -->
                 </div>
-                <p class="color-gray">
+                <p class="color-gray tempDetail">
                     <span>{{allAttribute.fire}}</span>
                     设定温度
-                    <span class="p-wendu">{{allAttribute.temperature}}</span>℃</p>
+                    <span class="p-wendu">{{allAttribute.temperature}}</span>℃
+                </p>
+            </div>
+            <div class="offButton">
+                 <button @click="stopOven" >
+                    <i class="c-stop"></i>停止</button>
             </div>
             <div class="controls">
                 <button @click="startOven" v-if="allAttribute.status==='stop'">
                     <i class="c-firing"></i>启动</button>
-                <button @click="stopOven" v-if="allAttribute.status==='start'">
-                    <i class="c-stop"></i>停止</button>
+                <!-- <button @click="stopOven" v-if="allAttribute.status==='start'">
+                    <i class="c-stop"></i>停止</button> -->
                 <button @click="showModelLayer">
-                    <i class="c-model"></i>模式</button>
+                    <i class="c-model"></i>模式设定</button>
+                <button @click="showModelLayer">
+                    <i class="c-preheat"></i>辅助预热</button>
+                <button @click="showModelLayer">
+                    <i class="c-barbicue"></i>预约烧烤</button>
             </div>
             <!-- 查看更多的按钮 -->
             <span class="more-btn" @click="showMoreLayer"></span>
@@ -122,6 +134,7 @@ import Picker from "./components/Picker/picker.vue";
 import AllConfig from "./config";
 // import SubPage from "./components/SubPage.vue";
 import SubPage from "../../lib/components/SubPage";
+import ModeButton from "./components/ModeButton.vue";
 
 // import IScroll from 'iscroll/build/iscroll-lite';
 
@@ -130,7 +143,8 @@ export default {
     components: {
         SwitchButton,
         Picker,
-        SubPage
+        SubPage,
+        ModeButton
     },
     data() {
         return {
@@ -330,6 +344,17 @@ export default {
                 }
             );
         },
+        setMode(mode) {
+            if (this.isRun || this.isPause) {
+                return;
+            }
+            if (this.model.mode == mode) {
+                return;
+            }
+            this.controlDevice("mode", mode, () => {
+                this.model.mode = mode;
+            });
+        },
         closeMoreLayer() {
             this.moreLayerShow = false;
         },
@@ -395,6 +420,7 @@ export default {
         getSnapShot(cb) {
             HdSmart.Device.getSnapShot(
                 data => {
+                    console.log(1111)
                     this.onSuccess(data);
                     cb && cb();
                 },
@@ -481,9 +507,10 @@ export default {
 };
 </script>
 <style lang="less">
-body {
+html,body {
     margin: 0;
-    height: 600px;
+    height: 100%;
+    overflow-y: auto;
     font-size: 30px;
     /*-webkit-tap-highlight-color: transparent;*/
     /*-webkit-user-select: none;*/
@@ -502,7 +529,15 @@ body {
 ul {
     list-style: none;
 }
+strong{
+    font-weight:normal;
+}
 #app {
+    width:100%;
+    min-height:100%;
+    height: auto;
+    overflow:auto;
+    position: relative;
 }
 .page-off {
     background: #f2f2f2;
@@ -572,23 +607,28 @@ ul {
     right: 65px;
     width: 36px;
     height: 36px;
-    top: 132px;
+    top: 6.4%;
     background-image: url("../../lib/base/oven/assets/btn_more@2x.png");
     background-size: 100% 100%;
 }
 .wrapper {
+    width:100%;
+    min-height: 100%;
+    height: auto;
+    overflow-y: auto;
     text-align: center;
-    margin: 120px auto 0;
-
-    position: relative;
+    margin: 0 auto;
+    padding:10.7% 0 0 0;
+    box-sizing: border-box;
+    position: absolute;
     .color-gray {
         color: #999;
     }
     .main-title {
         font-weight: normal;
-        margin-bottom: 80px;
+        margin-bottom:10%;
         font-size: 32px;
-        color: #76787a;
+        color: #76787A;
     }
     .pannel {
         height: 480px;
@@ -596,31 +636,47 @@ ul {
         margin: 0 auto;
         background: #fff;
         border-radius: 38px;
+        overflow: hidden;
+        position: relative;
         .p-main-time {
-            padding: 50px 0;
+            height: 120px;
+            line-height: 120px;
+            color: #46BCFF;
+            margin:118px 0 0 0;
+            font-size: 36px;
+            text-align: center;
             .p-num {
                 color: #46bcff;
                 strong {
                     font-family: Roboto-Medium;
                     position: relative;
                     left: -15px;
-                    font-size: 100px;
+                    font-size: 120px;
                 }
             }
-            .color-gray {
-                position: relative;
-                top: -10px;
-            }
         }
-
+        .tempDetail {
+            font-size: 30px;
+            color: #B5B5B5;
+            margin-top:72px;
+        }   
         .p-model {
-            padding-top: 20px;
-            height: 60px;
-            line-height: 60px;
-            font-size: 36px;
+            padding-top: 48px;
+            height:32px;
+            line-height: 32px;
+            color: #2F3133;
+            font-size:32px;
         }
         .p-status {
-            height: 30px;
+            position: absolute;
+            width:100%;
+            top:101px;
+            left:0;
+            text-align: center;
+            height: 28px;
+            line-height: 28px;
+            font-size: 28px;
+            color: #B5B5B5;
         }
         .p-wendu {
             font-weight: bold;
@@ -628,35 +684,55 @@ ul {
             color: #46bcff;
         }
     }
-    .controls {
-        padding-top: 80px;
+    .controls{
+        width:100%;
+        box-sizing: border-box;
+        padding:0 60px;
+        justify-content:space-between;
+    }
+    .offButton{
+        justify-content: center;
+    }
+    .controls,.offButton {
+        display:flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        padding-top: 8%;
+        align-items: center;
         button {
+            // flex-grow: 1;
             outline: none;
             width: 140px;
-            height: 140px;
+            height: auto;
             display: inline-block;
             background: none;
             border: 0;
             color: #76787a;
-            margin: 0 18px;
-            // border-radius: 16px;
-            // background: #fff;
-            // border: 0;
-            // box-shadow:0 6px 10px 0 rgba(0,0,0,0.04);
+            text-align:center;
+            // margin: 0 25px;
             i {
                 display: inline-block;
-                width: 140px;
-                height: 140px;
+                width:120px;
+                height: 120px;
                 background-size: 100% 100%;
             }
             .c-stop {
-                background-image: url("../../lib/base/oven/assets/btn-stop-normal@2x.png");
+                background-image: url("../../lib/base/haier_oven/assets/icn_shutdown_active@2x.png");
+                &.disable{
+                    background-image: url("../../lib/base/haier_oven/assets/icn_shutdown_disabled@2x.png");
+                }
             }
             .c-model {
-                background-image: url("../../lib/base/oven/assets/btn-mode-normal@2x.png");
+                background-image: url("../../lib/base/haier_oven/assets/icn_modepreset_active@2x.png");
             }
             .c-firing {
-                background-image: url("../../lib/base/oven/assets/btn-start-normal@2x.png");
+                background-image: url("../../lib/base/haier_oven/assets/icn_open_active@2x.png");
+            }
+            .c-preheat{
+                background-image: url("../../lib/base/haier_oven/assets/icn_Auxiliarywa-up_active@2x.png");
+            }
+            .c-barbicue{
+                background-image: url("../../lib/base/haier_oven/assets/icn_reservebaking_active@2x.png");
             }
         }
     }
