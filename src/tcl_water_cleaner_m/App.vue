@@ -273,7 +273,7 @@ a {
     box-sizing:border-box;
 }
 .mainTitle{
-     position: absolute;
+    position: absolute;
     left: 0;
     top: 18.93%;
     width: 100%;
