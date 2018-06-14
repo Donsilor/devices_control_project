@@ -47,7 +47,7 @@
         text-align: center;
         font-size: 28px;
         line-height: 24px;
-        color: #ffffff;
+        color: rgba(255,255,255,.5);
         font-family: NotoSansHans-DemiLight;
     }
     .device_name{

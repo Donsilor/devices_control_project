@@ -34,7 +34,7 @@
         </div>
         <!-- 搜索结果 -->
         <div class="search_result" v-show="curpage===3">
-            <div class="hd clearfix">
+            <div class="hd clearfix" v-show="resultData.length && loadState !== 'NO_DATA'">
                 <div class="tab">
                     <a href="#" @click.prevent="setParam('current_channel','')" :class="{active:current_channel==''}">
                         全部
