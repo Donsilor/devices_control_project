@@ -215,8 +215,8 @@ export default {
                             family_id: this.family_id,
                             date_start: getDateStr(this.date),
                             date_end: getDateStr(this.date),
-                            level: 1,
-                            status: [0, 1, 2, 3, 4],
+                            // level: 1,
+                            status: [1],
                             page: {
                                 size: this.size,
                                 begin: this.begin

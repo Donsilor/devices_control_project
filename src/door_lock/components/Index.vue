@@ -113,7 +113,7 @@
     top: 132px;
     width: 96px;
     height: 96px;
-    background: url(../../../lib/base/door_lock/assets/btn_record_normal.png)
+    background: url(../../../lib/base/door_lock/assets/btn_record_normal1.png)
         no-repeat;
     background-size: 100% 100%;
     &:active {
