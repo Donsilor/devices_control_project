@@ -240,7 +240,7 @@ export default {
                         this.currentDate = this.date;
                         if (data && data.code == -15032) {
                             this.firstLoad = false;
-                            this.list = [];
+                            // this.list = [];
                         } else {
                             HdSmart.UI.toast(JSON.stringify(data));
                         }
@@ -286,7 +286,7 @@ export default {
                         this.currentDate = this.date;
                         if (data && data.code == -15032) {
                             this.firstLoad = false;
-                            this.list = [];
+                            // this.list = [];
                         } else {
                             HdSmart.UI.toast(JSON.stringify(data));
                         }
@@ -311,7 +311,11 @@ export default {
                 return list.map(item => {
                     return {
                         log: `${
-                            item.attribute.user_identify
+                            item.attribute.user_name
+                                ? item.attribute.user_name
+                                : item.attribute.user_identify == 255
+                                    ? ""
+                                    : item.attribute.user_identify
                         } 通过${this.getOpenType(item.attribute.open_type)}`,
                         isOpen: true,
                         ...item

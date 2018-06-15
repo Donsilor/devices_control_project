@@ -6,6 +6,7 @@
         </template>
         <!--城市切换-->
         <template v-else>
+            <span class="weather-close" @click.prevent="close">关闭</span>
             <span v-if="success" class="switch" @click="showSwitchCity=true">
                 <span class="s-icon"></span>
                 <span class="s-text">城市切换</span>
@@ -300,6 +301,10 @@ export default {
         getCityWeather(weathercnid) {
             //TODO
             this.getWeatherData(weathercnid);
+        },
+        //关闭天气预报,替代原生安卓的关闭，需调用原生的方法实现
+        close() {
+            HdSmart.UI.toggleHeadAndFoot(false);
         }
     }
 };
@@ -569,5 +574,12 @@ body {
         top: 9px;
         right: 16px;
     }
+}
+
+.weather-close {
+    position: absolute;
+    top: 22px;
+    left: 35px;
+    font-size: 28px;
 }
 </style>

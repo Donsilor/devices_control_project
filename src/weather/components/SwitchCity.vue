@@ -59,8 +59,7 @@
     </div>
 </template>
 <script>
-
-import { ALPHA_CITIES, HOTCITIES } from './const';
+import { ALPHA_CITIES, HOTCITIES } from "./const";
 
 export default {
     data() {
@@ -121,6 +120,7 @@ export default {
                 .filter(x => x);
         },
         getWeather(weathercnid) {
+            location.hash = `weather_${weathercnid}`;
             this.back();
             //缓存至下次登陆展示
             localStorage.setItem("weathercnid", weathercnid);
@@ -360,7 +360,7 @@ export default {
 }
 
 .sc-city {
-    padding: 10px;
+    padding: 10px 30px 10px 10px;
     margin: 0px 0 0 8px;
     .city-list {
         margin-top: 39px;

@@ -309,7 +309,11 @@ export default {
                 return list.map(item => {
                     return {
                         log: `${
-                            item.attribute.user_identify
+                            item.attribute.user_name
+                                ? item.attribute.user_name
+                                : item.attribute.user_identify == 255
+                                    ? ""
+                                    : item.attribute.user_identify
                         } 通过${this.getOpenType(item.attribute.open_type)}`,
                         isOpen: true,
                         ...item
