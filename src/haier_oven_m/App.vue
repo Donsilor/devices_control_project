@@ -17,11 +17,13 @@
             <div class="pannel">
                 <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
                 <p class="color-gray p-status">
+                    <!-- todo back -->
                     <!-- <span v-if="allAttribute.status==='start'">({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span> -->
                     <span>({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span>                    
                 </p>
                 <div class="p-main-time">
                     <p class="p-num" v-html="remainingText"></p>
+                    <!-- todo cut -->
                     <!-- <p class="color-gray">{{allAttribute.status==='start'? '剩余时间' : '总时间'}}</p> -->
                 </div>
                 <p class="color-gray tempDetail">
@@ -55,47 +57,66 @@
                         <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
                         <div class="mode-name">{{item.name}}</div>
                     </li>
-                    <li @click="seleteMode(item)" v-for="item in elseModeList" :key="`${item.name}`">
-                        <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
-                        <div class="mode-name">{{item.name}}</div>
-                    </li>
                 </ul>
                 <div class="select-param" @click="toggleShowSlider('wendu')">
                     <div class="hasDisable">
                         <p>烘烤温度</p>
                         <span class="value-wendu">{{allAttribute.temperature}}℃
-                            <i :class="wenduSelectFlag?'icon-arrow-up':'icon-arrow-down'"></i>
+                            <i class="icon-arrow-down"></i>
                         </span>
                     </div>
                 </div>
-                <div class="slide-list" v-show="wenduSelectFlag">
+                <modal title="烘烤温度" class="modalControl" v-model="wenduSelectFlag" >
+                    <picker :slots="wenduSlot" @change="selectWendu" :valueKey="'value'" :item-height="40" :visible-item-count="7"></picker>
+                    <div class="button_temperature" @click="wenduSelectFlag = false">完成</div>
+                </modal>
+                <!-- <div class="slide-list" v-show="wenduSelectFlag">
                     <picker :slots="wenduSlot" @change="selectWendu" :valueKey="'value'" :item-height="30" :visible-item-count="3"></picker>
-                </div>
+                </div> -->
                 <div class="select-param" @click="toggleShowSlider('time')">
                     <div class="hasDisable">
                         <p>烘烤时长</p>
                         <span class="value-wendu">{{allAttribute.bake_duration}}分钟
-                            <i :class="timeSelectFlag?'icon-arrow-up':'icon-arrow-down'"></i>
+                            <i class="icon-arrow-down"></i>
                         </span>
                     </div>
                 </div>
-                <div class="slide-list" v-show="timeSelectFlag">
+                <modal title="烘烤时长" class="modalControl" v-model="timeSelectFlag" >
+                    <picker :slots="timeSlot" @change="selectTime" :valueKey="'value'" :item-height="40" :visible-item-count="7"></picker>
+                    <div class="button_temperature" @click="timeSelectFlag = false">预约</div>
+                </modal>
+                <!-- <div class="slide-list" v-show="timeSelectFlag">
                     <picker :slots="timeSlot" @change="selectTime" :valueKey="'value'" :item-height="30" :visible-item-count="3"></picker>
+                </div> -->
+                <div class="sureButtongroup">
+                    <div class="cancle">取消</div>
+                    <div class="sure">确定</div>
                 </div>
             </div>
         </sub-page>
 
-        <sub-page v-model="moreLayerShow" title="更多">
-            <div class="layer-body">
-                <div class="main-select-con" :class="{disable:allAttribute.status!='start'}">
-                    <div class="select-param noborder hasDisable">
-                        <p>热风对流</p>
-                        <switch-button :sync="true" :disabled="allAttribute.status!='start'" :value="allAttribute.convection==='on'" @change="changeConvection" />
+        <sub-page v-model="moreLayerShow" title="更多" class="subpagebakControl">
+            <div class="buttonchoose">
+                <div class="chooseTitle">更多模式</div>
+                <div class="pattern">
+                    <!-- 照明模式 -->
+                    <div @click="lighting" class="lighting">
+                        <i class="c-lighting"></i>
+                        <span>照明</span>
                     </div>
-                    <div class="select-param hasDisable">
-                        <p>烤叉旋转</p>
-                        <switch-button :sync="true" :disabled="allAttribute.status!='start'" :value="allAttribute.rotisserie==='on'" @change="changeRotisserie" />
-                        <i class="switch off"></i>
+                    <!-- 时间同步 -->
+                    <div @click="timeSynchronization">
+                        <i class="c-time"></i>
+                        <span>时间同步</span>
+                    </div>
+                </div>
+            </div>
+            <div class="selectbox lockDetail" :class="{disable:!isRun}">
+                <div class="hd">
+                    <div class="left">童锁</div>
+                    <div class="right sb-wrap">
+                        <switch-button :value="childLockSwitch" :sync="true" :disabled="!isRun" />
+                        <div class="sb-btn" @click="confirmChildLock"></div>
                     </div>
                 </div>
             </div>
@@ -127,12 +148,12 @@ function findIndex(array, fn) {
     return -1;
 }
 
-import SwitchButton from "./components/SwitchButton.vue";
+import SwitchButton from "../../lib/components/SwitchButton.vue";
 import Picker from "./components/Picker/picker.vue";
 import AllConfig from "./config";
-// import SubPage from "./components/SubPage.vue";
 import SubPage from "../../lib/components/SubPage";
 import ModeButton from "./components/ModeButton.vue";
+import Modal from "../../lib/components/Modal";
 
 // import IScroll from 'iscroll/build/iscroll-lite';
 
@@ -142,7 +163,8 @@ export default {
         SwitchButton,
         Picker,
         SubPage,
-        ModeButton
+        ModeButton,
+        Modal
     },
     data() {
         return {
@@ -163,13 +185,13 @@ export default {
                 timeList: []
             },
             //模式选择层
-            modelLayerShow: true,//todo
+            modelLayerShow: false,//todo
             //更多选择层
-            moreLayerShow: false,
+            moreLayerShow: true,//todo
             wenduSelectFlag: false,
             timeSelectFlag: false,
             //模式列表
-            modeList: [
+            modeList: [//todo.mode的名称还待定
                 {
                     name: "传统烘焙",
                     icon: "traditional-baking",
@@ -177,67 +199,50 @@ export default {
                 },
                 {
                     name: "3D热风",
-                    icon: "ico-biscuit",
+                    icon: "ico-3d",
                     mode: "biscuit"
                 },
                 {
                     name: "对流烘焙",
-                    icon: "ico-cake",
+                    icon: "ico-convective-baking",
                     mode: "cake"
                 },
                 {
                     name: "烘焙",
-                    icon: "ico-pizza",
-                    mode: "pizza"
+                    icon: "ico-barking",
+                    mode: "barking"
                 },
                 {
                     name: "热风烧烤",
-                    icon: "ico-barbecue",
+                    icon: "ico-hot-air-barbecue",
                     mode: "barbecues"
                 },
                 {
                     name: "上烧烤",
-                    icon: "ico-fish",
+                    icon: "ico-up-barbecue",
                     mode: "fish_shrimp"
                 },
                 {
                     name: "全烧烤",
-                    icon: "ico-sweet-potato",
+                    icon: "ico-whole-barbecue",
                     mode: "sweet_potato"
                 },
                 {
                     name: "披萨模式",
-                    icon: "ico-chicken",
-                    mode: "chicken"
+                    icon: "ico-pizza",
+                    mode: "pizza"
                 },
                 {
                 
                     name: "上发酵",
-                    icon: "ico-chicken",
-                    mode: "chicken"
+                    icon: "ico-upper-fermentation",
+                    mode: "fermentation"
                 },
                 {
                 
                     name: "解冻",
-                    icon: "ico-chicken",
-                    mode: "chicken"
-                }
-            ],
-            elseModeList: [
-                {
-                    name: "上火",
-                    icon: "up-fire",
-                    mode: "broil"
-                },
-                {
-                    name: "下火",
-                    icon: "down-fire",
-                    mode: "bake"
-                },
-                {
-                    name: "上下火",
-                    icon: "both-fire",
-                    mode: "roast"
+                    icon: "icon-thaw",
+                    mode: "thaw"
                 }
             ],
             device_name: ""
@@ -255,6 +260,13 @@ export default {
         }
     },
     computed: {
+        isRun() {
+            console.log('run',this.model.status == "run")
+            return this.model.status == "run";//正在运行
+        },
+        childLockSwitch() {
+            return this.model.child_lock_switch == "on" ? true : false;
+        },
         wenduSlot() {
             var current = findIndex(this.allAttribute.wenduList, item => {
                 return this.allAttribute.temperature == item.value;
@@ -366,6 +378,26 @@ export default {
                 this.model.mode = mode;
             });
         },
+        confirmChildLock() {//童锁的设置
+        console.log("童锁设置")
+            if (this.childLockSwitch) {
+                // this.confirmChildLockVisible = true;
+            } else {
+                if (this.isRun) {
+                    this.setChildLock("on", () => {
+                        this.model.child_lock_switch = "on";
+                    });
+                } else {
+                    HdSmart.UI.toast("运行中才能开启童锁");
+                }
+            }
+        },
+        lighting(){
+            console.log("lighting")
+        },
+        timeSynchronization(){
+            console.log('timeSynchronization')
+        },
         closeMoreLayer() {
             this.moreLayerShow = false;
         },
@@ -407,11 +439,13 @@ export default {
             }
         },
         selectWendu(picker, values) {
+            console.log('wendu',values);
             if (values.length && values[0] && this.wenduSelectFlag) {
                 this.allAttribute.temperature = values[0].value;
             }
         },
         selectTime(picker, values) {
+             console.log('time',values);
             if (values.length && values[0] && this.timeSelectFlag) {
                 this.allAttribute.bake_duration = values[0].value;
                 this.allAttribute.remaining = values[0].value;
@@ -419,7 +453,8 @@ export default {
         },
         getModeName(val) {
             let text = "";
-            var modeList = this.modeList.concat(this.elseModeList);
+            // var modeList = this.modeList.concat(this.elseModeList);
+            var modeList = this.modeList;
             var currentMode = modeList.filter(item => {
                 return item.mode == val;
             });
@@ -770,32 +805,33 @@ strong{
             a.traditional-baking {
                 background-image: url("../../lib/base/oven/assets/btn_bread_g.png");
             }
-            a.ico-biscuit {
+            a.ico-3d {
                 background-image: url("../../lib/base/oven/assets/btn_biscuits_g.png");
             }
-            a.ico-cake {
+            a.ico-convective-baking {
                 background-image: url("../../lib/base/oven/assets/btn_cake_g.png");
             }
-            a.ico-pizza {
+            a.ico-barking {
                 background-image: url("../../lib/base/oven/assets/btn_pizza_g.png");
             }
-            a.ico-barbecue {
+            a.ico-hot-air-barbecue {
                 background-image: url("../../lib/base/oven/assets/btn_barbecue_g.png");
             }
-            a.ico-fish {
+            a.ico-up-barbecue {
                 background-image: url("../../lib/base/oven/assets/btn_fishandshrimp_g.png");
             }
-            a.ico-sweet-potato {
+            a.ico-whole-barbecue {
                 background-image: url("../../lib/base/oven/assets/btn_pachyrhizus_g.png");
             }
-            a.ico-chicken {
+            a.ico-pizza {
                 background-image: url("../../lib/base/oven/assets/btn_chicken_g.png");
             }
         }
     }
     .model-list {
-        padding: 79px 0 0 20px;
+        padding: 79px 0 0 23px;
         overflow: hidden;
+        margin-bottom:26px;
         li {
             list-style: none;
             text-align: center;
@@ -804,7 +840,7 @@ strong{
             margin: 0 28px;
             padding-bottom: 54px;
             div {
-                margin-top: 5px;
+                margin-top: 20px;
                 font-size: 28px;
                 color: #76787A;
             }
@@ -815,70 +851,75 @@ strong{
                 background-size: 100% 100%;
             }
             .traditional-baking {
-                background-image: url("../../lib/base/oven/assets/btn_bread.png");
+                background-image: url("../../lib/base/haier_oven/assets/icn_traditionalbaking_norma.png");
                 &.active {
-                    background-image: url("../../lib/base/oven/assets/btn_bread_selected.png");
+                    background-image: url("../../lib/base/haier_oven/assets/icn_traditionalbaking_active@2x.png");
                 }
             }
-            .ico-biscuit {
-                background-image: url("../../lib/base/oven/assets/btn_biscuits.png");
+            .ico-3d {
+                background-image: url("../../lib/base/haier_oven/assets/icn_3Dhotair_normal@2x.png");
                 &.active {
-                    background-image: url("../../lib/base/oven/assets/btn_biscuits_selected.png");
+                    background-image: url("../../lib/base/haier_oven/assets/icn_3Dhotair_active@2x.png");
                 }
             }
-            .ico-cake {
-                background-image: url("../../lib/base/oven/assets/btn_cake.png");
+            .ico-convective-baking {
+                background-image: url("../../lib/base/haier_oven/assets/icn_convectionbake_normal@2x.png");
                 &.active {
-                    background-image: url("../../lib/base/oven/assets/btn_cake_selected.png");
+                    background-image: url("../../lib/base/haier_oven/assets/icn_convectionbake_active@2x.png");
+                }
+            }
+            .ico-barking {
+                background-image: url("../../lib/base/haier_oven/assets/icn_baking_normal@2x.png");
+                &.active {
+                    background-image: url("../../lib/base/haier_oven/assets/icn_baking_active@2x.png");
+                }
+            }
+            .ico-hot-air-barbecue {
+                background-image: url("../../lib/base/haier_oven/assets/icn_hotairbarbecue_normal@2x.png");
+                &.active {
+                    background-image: url("../../lib/base/haier_oven/assets/icn_hotairbarbecue_active@2x.png");
+                }
+            }
+            .ico-up-barbecue {
+                background-image: url("../../lib/base/haier_oven/assets/icn_upthebarbecue_normal@2x.png");
+                &.active {
+                    background-image: url("../../lib/base/haier_oven/assets/icn_upthebarbecue_active@2x.png");
+                }
+            }
+            .ico-whole-barbecue {
+                background-image: url("../../lib/base/haier_oven/assets/icn_wholebarbecue_normal@2x.png");
+                &.active {
+                    background-image: url("../../lib/base/haier_oven/assets/icn_wholebarbecue_active@2x.png");
                 }
             }
             .ico-pizza {
-                background-image: url("../../lib/base/oven/assets/btn_pizza.png");
+                background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png");
                 &.active {
-                    background-image: url("../../lib/base/oven/assets/btn_pizza_selected.png");
+                    background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png");
                 }
             }
-            .ico-barbecue {
-                background-image: url("../../lib/base/oven/assets/btn_barbecue.png");
+            .ico-pizza {
+                background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png");
                 &.active {
-                    background-image: url("../../lib/base/oven/assets/btn_barbecue_selected.png");
+                    background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png");
                 }
             }
-            .ico-fish {
-                background-image: url("../../lib/base/oven/assets/btn_fishandshrimp.png");
+            .ico-pizza {
+                background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png");
                 &.active {
-                    background-image: url("../../lib/base/oven/assets/btn_fishandshrimp_selected.png");
+                    background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png");
                 }
             }
-            .ico-sweet-potato {
-                background-image: url("../../lib/base/oven/assets/btn_pachyrhizus.png");
+            .ico-upper-fermentation{
+                background-image: url("../../lib/base/haier_oven/assets/icn_fermentation_normal@2x.png");
                 &.active {
-                    background-image: url("../../lib/base/oven/assets/btn_pachyrhizus_selected.png");
+                    background-image: url("../../lib/base/haier_oven/assets/icn_fermentation_active@2x.png");
                 }
             }
-            .ico-chicken {
-                background-image: url("../../lib/base/oven/assets/btn_chicken.png");
+            .icon-thaw{
+                background-image: url("../../lib/base/haier_oven/assets/icn_thaw_normal@2x.png");
                 &.active {
-                    background-image: url("../../lib/base/oven/assets/btn_chicken_selected.png");
-                }
-            }
-
-            .up-fire {
-                background-image: url("../../lib/base/oven/assets/btn_up_fire.png");
-                &.active {
-                    background-image: url("../../lib/base/oven/assets/btn_up_fire_selected.png");
-                }
-            }
-            .down-fire {
-                background-image: url("../../lib/base/oven/assets/btn_down_fire.png");
-                &.active {
-                    background-image: url("../../lib/base/oven/assets/btn_down_fire_selected.png");
-                }
-            }
-            .both-fire {
-                background-image: url("../../lib/base/oven/assets/btn_conflagration.png");
-                &.active {
-                    background-image: url("../../lib/base/oven/assets/btn_conflagration_selected.png");
+                    background-image: url("../../lib/base/haier_oven/assets/icn_thaw_active@2x.png");
                 }
             }
         }
@@ -900,47 +941,36 @@ strong{
         height: 90px;
         background-size: 100% 100%;
     }
-    .up-fire {
-        background-image: url("../../lib/base/oven/assets/btn_up_fire.png");
-        &.active {
-            background-image: url("../../lib/base/oven/assets/btn_up_fire_selected.png");
-        }
-    }
-    .down-fire {
-        background-image: url("../../lib/base/oven/assets/btn_down_fire.png");
-        &.active {
-            background-image: url("../../lib/base/oven/assets/btn_down_fire_selected.png");
-        }
-    }
-    .both-fire {
-        background-image: url("../../lib/base/oven/assets/btn_conflagration.png");
-        &.active {
-            background-image: url("../../lib/base/oven/assets/btn_conflagration_selected.png");
-        }
-    }
 }
 
 .select-param {
-    border-top: 1px solid #dbdbdb;
+    height: 120px;
+    line-height:120px;
+    box-sizing:border-box;
+    border-bottom: 1px solid #dbdbdb;
     position: relative;
-    margin: 0 32px;
-    padding: 30px 0;
-    line-height: 2;
+    margin: 0  0  0 32px;
+    padding:0 32px 0 0;
     overflow: hidden;
     p {
         float: left;
+        font-size: 32px;
+        color: #2F3133;
     }
     .value-wendu {
         color: #46bcff;
         float: right;
+        font-size: 32px;
         i {
             display: inline-block;
             width: 24px;
             height: 13px;
             background-size: 100% 100%;
-            margin-left: 20px;
+            margin-left: 5px;
+            vertical-align: 5%;
         }
         .icon-arrow-down {
+            transform: rotate(-90deg);
             background-image: url("../../lib/base/oven/assets/arrow_down.png");
         }
         .icon-arrow-up {
@@ -952,38 +982,6 @@ strong{
         margin-top: 8px;
     }
 }
-.slide-list {
-    padding: 0px 45px;
-    background: #fafafa;
-    .slide-scroller {
-        position: relative;
-        // height: 60px;
-        // overflow: hidden;
-    }
-    .slide-list-inner {
-        margin: 0 auto;
-        width: 150px;
-        height: 150px;
-        overflow-y: auto;
-        // display: -webkit-box;
-        // -webkit-box-orient: horizontal;
-        // overflow: auto;
-        li {
-            display: block;
-            // float: left;
-            width: 90px;
-            height: 50px;
-            text-align: center;
-            line-height: 50px;
-            &.active {
-                background: #46bcff;
-                border: 1px solid #46bcff;
-                color: #fff;
-                border-radius: 3px;
-            }
-        }
-    }
-}
 
 .model-select-layer .disable li {
     .hasDisable {
@@ -992,25 +990,13 @@ strong{
             color: #76787a;
         }
     }
-    a.up-fire {
-        background-image: url("../../lib/base/oven/assets/btn_up_fire_g.png");
-    }
-    a.down-fire {
-        background-image: url("../../lib/base/oven/assets/btn_down_fire_g.png");
-    }
-    a.both-fire {
-        background-image: url("../../lib/base/oven/assets/btn_conflagration_g.png");
-    }
-    .up-down-fire {
-        color: #ccc;
-    }
 }
 .noborder {
     border-top: 0;
 }
 //subpage样式的特殊处理
 #app .backControl{
-    background-color: #f4f4f8;
+    // background-color: #f4f4f8;
     height: auto;
     min-height: 100%;
     position: absolute;
@@ -1023,13 +1009,193 @@ strong{
         z-index:1;
     }
     .subpage-body{
-        margin-top: 90px;
+        margin-top: 100px;
         background-color: #fff;
     }
 
 }
-    .android .backControl{
-        box-sizing:border-box;
-        padding-bottom: 120px;
+.android .backControl{
+    box-sizing:border-box;
+    padding-bottom: 120px;
+}
+#app .subpagebakControl{
+     background-color: #f4f4f8;
+     .buttonchoose{
+         width:100%;
+         height: 322px;
+         background-color: #fff;
+         margin-bottom:16px;
+         box-sizing:border-box;
+         text-align: center;
+         overflow: hidden;
+         .chooseTitle{
+             width:100%;
+             height:40px;
+             line-height: 40px;
+             font-size: 28px;
+             color: #76787A;
+             margin:52px 0 24px 0;
+         }
+         .pattern{
+             width:100%;
+             display: flex;
+             height:auto;
+             justify-content: center;
+             div{
+                 width:auto; 
+             }
+             .lighting{
+                 margin-right:56px; 
+             }
+             i {
+                 display: block;
+                 width:120px;
+                 height: 120px;
+                 overflow: hidden;
+                 margin-bottom:20px;
+             }
+             span{
+                display: block;
+                font-size: 28px;
+                color: #76787A;
+             }
+             .c-lighting{
+                background:url(../../lib/base/haier_oven/assets/icn_illumination_normal@2x.png) no-repeat center center;
+                background-size:100% 100%;
+             }
+             .c-time{
+                background:url(../../lib/base/haier_oven/assets/icn_timesynchronization_normal@2x.png) no-repeat center center;
+                background-size:100% 100%;
+             }
+         }
+     }
+     .selectbox {
+        &.lockDetail{
+            margin: 20px auto 83px;
+            background-color: #fff;
+            .hd .left{
+                font-size: 32px;
+                color: #2F3133;
+            }
+        }
+        .hd {
+            padding:20px 0;
+            margin: 0 32px;
+            height: 80px;
+            line-height: 80px;
+            border-top: 1px solid #f5f5f5;
+            .left {
+                float: left;
+                font-size:32px;
+                color: #2F3133;
+            }
+            .right {
+                float: right;
+                color: #333333;
+                font-size:32px;
+            }
+            .arrow {
+                display: inline-block;
+                width: 30px;
+                height: 30px;
+                background: url(../../lib/base/washer/assets/arrow_down.png)
+                    no-repeat;
+                background-size: 100% 100%;
+                vertical-align: -6px;
+                margin-left: 10px;
+            }
+        }
+        .bd {
+            display: none;
+            overflow: hidden;
+            padding: 31px 32px;
+            background: #fafafa;
+            .option {
+                display: block;
+                padding: 12px 36px;
+                color: #76787a;
+                &.selected {
+                    background: #46bcff;
+                    // border:1px solid #46bcff;
+                    border-radius: 3px;
+                    color: #fff;
+                }
+            }
+        }
+        .bd1 {
+            overflow: hidden;
+            padding: 20px 92px;
+            background: #fafafa;
+            text-align: left;
+        }
+        &.active {
+            .hd {
+                .arrow {
+                    transform: rotate(-180deg);
+                }
+            }
+            .bd {
+                display: flex;
+            }
+        }
+        &.disable {
+            opacity: 0.5;//todo
+        }
     }
+}
+//modal特殊样式处理
+.modal {
+    .picker-item{
+        font-size: 30px;
+        color: #C8CACC;
+        margin-left:60px;
+        margin-right:60px;
+        width:auto;
+        &.picker-selected{
+            // border-top:1px solid  #DBDBDB;
+            // border-bottom:1px solid  #DBDBDB;
+            font-size: 36px;
+            color: #000000;
+        }
+    }
+    .button_temperature{
+        width:240px;
+        height: 84px;
+        line-height: 84px;
+        text-align: center;
+        color:#fff;
+        font-size: 36px;
+        background: #46BCFF;
+        border-radius: 6px;
+        margin:55px auto 0;
+    }
+}
+.sureButtongroup{
+    width:100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    margin: 60px auto;
+    .cancle,.sure{
+        width:240px;
+        height: 84px;
+        line-height: 84px;
+        text-align: center;
+        border-radius: 6px;
+        font-size: 36px;
+    }
+    .cancle{
+        background: #FFFFFF;
+        border: 1px solid #76787A;
+        color: #76787A;
+        margin-right:24px;
+    }
+    .sure{
+        background: #46BCFF;
+        color: #FFFFFF;
+    }
+}
+.disable{
+    opacity: 0.5;
+}
 </style>

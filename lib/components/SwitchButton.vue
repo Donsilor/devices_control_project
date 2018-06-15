@@ -115,7 +115,7 @@ export default {
         height: px(this.buttonRadius),
         transition: `transform ${this.speed}ms`,
         transform: this.toggled
-          ? `translate3d(${this.distance}, 3px, 0px)`
+          ? `translate3d(${this.distance}, 2px, 0px)`
           : null
       }
     },

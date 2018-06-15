@@ -155,7 +155,7 @@
                                     <a href="" class="submit" @click.prevent="submitChildLock">关闭</a>
                                 </div>
                             </div>
-                        </div>
+                    </div>
                 </div>
             </sub-page>
             <!-- 预约 -->

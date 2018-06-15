@@ -27,6 +27,15 @@
         height: 84px;
         border-bottom: 1px solid #dbdbdb;
         position: relative;
+        .modal-close{
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width:84px;
+            height: 84px;
+            background: url(../base/air_cleaner/assets/btn_close.png) no-repeat center center;
+            background-size:36px 36px;
+        }
     }
     &-title {
         font-size: 30px;
@@ -56,6 +65,7 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
+    z-index:9;
 }
 </style>
 

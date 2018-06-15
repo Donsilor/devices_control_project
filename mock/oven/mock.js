@@ -30,7 +30,8 @@ let res = {
     rotisserie: 'off',
     fire: '上下火',
     wenduList: getWenduList(100,230),
-    timeList: getTimeList(1,60)
+    timeList: getTimeList(1,60),
+    child_lock_switch:'off'//todo
 }
 
 export function generateSnapShot() {
