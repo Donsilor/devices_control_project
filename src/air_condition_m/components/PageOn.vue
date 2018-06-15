@@ -5,6 +5,11 @@
 
         <div class="header">
             <span class="name">{{device.name}}</span>
+            <span class="status">
+                {{modeText}}
+                {{speedText}}
+                {{ac.env_temperature ? '环境温度' + ac.env_temperature + '℃' : ''}}
+            </span>
         </div>
 
         <div class="current_temp">
@@ -68,10 +73,10 @@
                     <a href="#" class="btn-vertical" :class="{on:ac.wind_up_down==='on'}" @click.prevent="setWind('wind_up_down', $event)"></a>
                     上下
                 </li>
-                <li :class="{on:ac.wind_left_right==='on'}">
+                <!-- <li :class="{on:ac.wind_left_right==='on'}">
                     <a href="#" class="btn-horizontal" :class="{on:ac.wind_left_right==='on'}" @click.prevent="setWind('wind_left_right', $event)"></a>
                     左右
-                </li>
+                </li> -->
             </ul>
         </div>
 
@@ -123,6 +128,27 @@ export default {
             tipVisible: false,
             tip: ""
         };
+    },
+    computed: {
+        modeText() {
+            return {
+                cold: "制冷模式",
+                heat: "制热模式",
+                dehumidify: "除湿模式",
+                auto: "智能模式",
+                wind: "送风模式"
+            }[this.ac.mode];
+        },
+        speedText() {
+            return {
+                low: "低风",
+                overlow: "低风",
+                normal: "中风",
+                overnormal: "中风",
+                high: "高风"
+                // 'auto': '自动风'
+            }[this.ac.speed];
+        }
     },
     methods: {
         //同步
@@ -283,6 +309,12 @@ export default {
     top: 200px;
     .name {
         font-size: 32px;
+        display: block;
+        margin-bottom: 12px;
+    }
+    .status {
+        font-size: 28px;
+        color: rgba(255,255,255,.5);
         display: block;
     }
 }

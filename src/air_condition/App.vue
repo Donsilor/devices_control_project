@@ -1,6 +1,11 @@
 <template>
     <div id="app" :class="appClassObj" @click="screenClick">
         <p class="title">{{ deviceName }}</p>
+        <p class="status" v-show="params.switch === 'on'">
+            {{modeText}}
+            {{speedText}}
+            {{params.env_temperature ? '环境温度' + params.env_temperature + '℃' : ''}}
+        </p>
         <p class="tip" v-show="params.switch === 'off'">已关闭</p>
 
         <svg class="bg" xmlns="http://www.w3.org/2000/svg" width="1920" heigth="420" viewBox="0 0 1920 420">
@@ -53,7 +58,7 @@
                     </div>
                     <devider :content="'摆风'"></devider>
                     <div class="more-wind-direction">
-                        <ac-button class="lr" :class="{active:params.wind_left_right=='on'}" :info="buttonList.lrBtn" @tap="toggle"></ac-button>
+                        <!-- <ac-button class="lr" :class="{active:params.wind_left_right=='on'}" :info="buttonList.lrBtn" @tap="toggle"></ac-button> -->
                         <ac-button class="ud" :class="{active:params.wind_up_down=='on'}" :info="buttonList.udBtn" @tap="toggle"></ac-button>
                     </div>
                 </div>
@@ -64,8 +69,8 @@
         <!--关机界面-->
         <div v-if="params.switch === 'off'">
 
-            <!-- <div v-if="deviceCategory === 0" class="hanging"></div> -->
-            <div class="package"></div>
+            <div class="hanging"></div>
+            <!-- <div class="package"></div> -->
 
             <div class="bottom">
 
@@ -241,6 +246,25 @@ export default {
                 page_on: this.params.switch == "on" || this.initErr,
                 page_off: this.params.switch == "off"
             };
+        },
+        modeText() {
+            return {
+                cold: "制冷模式",
+                heat: "制热模式",
+                dehumidify: "除湿模式",
+                auto: "智能模式",
+                wind: "送风模式"
+            }[this.params.mode];
+        },
+        speedText() {
+            return {
+                low: "低风",
+                overlow: "低风",
+                normal: "中风",
+                overnormal: "中风",
+                high: "高风"
+                // 'auto': '自动风'
+            }[this.params.speed];
         }
     },
     watch: {
@@ -615,11 +639,9 @@ body,
 /*title样式*/
 .title {
     font-size: 30px;
-    margin-bottom: 78px;
 }
 .page_off .title {
     color: #75787a;
-    margin-bottom: 0;
 }
 
 /*温度*/
@@ -657,6 +679,11 @@ body,
     color: #46bcff;
     margin: 24px 0;
     /*margin: 25px 0 37px 0;*/
+}
+.page_on .status {
+    color: rgba(255, 255, 255, 0.6);
+    margin: 24px 0 30px;
+    font-size: 30px;
 }
 .err .tip {
     margin-top: 36px;

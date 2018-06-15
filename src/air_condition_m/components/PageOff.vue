@@ -8,8 +8,8 @@
             <span class="status">已关闭</span>
         </div>
 
-        <div class="ac1" v-if="device.category_id===0"></div>
-        <div class="ac2" v-else></div>
+        <div class="ac1"></div>
+        <!-- <div class="ac2" v-else></div> -->
 
         <a href="#" class="btn-on" @click.prevent="setOn($event)"></a>
 

@@ -107,7 +107,7 @@
     z-index: 2;
 }
 .filters-placeholder {
-    height: 200px;
+    height: 230px;
 }
 .filters {
     padding: 28px 28px 12px;
@@ -344,9 +344,6 @@
 
 .isIOS .page-list {
     padding-top: 200px;
-}
-.isIOS .filters-placeholder {
-    height: 198px;
 }
 
 @media (min-device-width: 414px) {
