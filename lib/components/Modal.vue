@@ -49,9 +49,8 @@
         right: 0px;
         width: 84px;
         height: 84px;
-        background: url(../base/water_cleaner/assets/btn_close.png) no-repeat
-            center center;
-        background-size: 30px 30px;
+        background: url(../base/air_cleaner/assets/btn_close.png) no-repeat center center;
+        background-size: 36px 36px;
     }
     &-body {
         padding: 48px 0;
