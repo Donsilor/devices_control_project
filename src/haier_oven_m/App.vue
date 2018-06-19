@@ -3,12 +3,12 @@
         <!-- off -->
         <div class="page-off" v-if="model.switch==='on'">
             <div class="name">{{device_name}}</div>
-                <div class="tip">已关闭</div>
-                <div class="oven"></div>
-                <div class="off_button">
-                    <a href="" class="btn btn-off" @click.prevent="setSwitch('on')">
-                        <i></i>
-                    </a>
+            <div class="tip">已关闭</div>
+            <div class="oven"></div>
+            <div class="off_button">
+                <a href="" class="btn btn-off" @click.prevent="setSwitch('on')">
+                    <i></i>
+                </a>
             </div>
         </div>
         <!-- on -->
@@ -19,7 +19,7 @@
                 <p class="color-gray p-status">
                     <!-- todo back -->
                     <!-- <span v-if="allAttribute.status==='start'">({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span> -->
-                    <span>({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span>                    
+                    <span>({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span>
                 </p>
                 <div class="p-main-time">
                     <p class="p-num" v-html="remainingText"></p>
@@ -33,7 +33,7 @@
                 </p>
             </div>
             <div class="offButton">
-                 <button @click="stopOven" >
+                <button @click="stopOven">
                     <i class="c-stop"></i>停止</button>
             </div>
             <div class="controls">
@@ -49,7 +49,7 @@
             <!-- 查看更多的按钮 -->
             <span class="more-btn" @click="showMoreLayer"></span>
         </div>
-       
+
         <sub-page class="model-select-layer backControl" v-model="modelLayerShow" title="模式">
             <div class="layer-body" :class="allAttribute.status === 'start' ? 'disable' : ''">
                 <ul class="model-list">
@@ -66,7 +66,7 @@
                         </span>
                     </div>
                 </div>
-                <modal title="烘烤温度" class="modalControl" v-model="wenduSelectFlag" >
+                <modal title="烘烤温度" class="modalControl" v-model="wenduSelectFlag">
                     <picker :slots="wenduSlot" @change="selectWendu" :valueKey="'value'" :item-height="40" :visible-item-count="7"></picker>
                     <div class="button_temperature" @click="wenduSelectFlag = false">完成</div>
                 </modal>
@@ -81,7 +81,7 @@
                         </span>
                     </div>
                 </div>
-                <modal title="烘烤时长" class="modalControl" v-model="timeSelectFlag" >
+                <modal title="烘烤时长" class="modalControl" v-model="timeSelectFlag">
                     <picker :slots="timeSlot" @change="selectTime" :valueKey="'value'" :item-height="40" :visible-item-count="7"></picker>
                     <div class="button_temperature" @click="timeSelectFlag = false">预约</div>
                 </modal>
@@ -168,7 +168,7 @@ export default {
     },
     data() {
         return {
-            model:{},//数据
+            model: {}, //数据
             //状态集合
             allAttribute: {
                 mode: "", //模式
@@ -185,13 +185,14 @@ export default {
                 timeList: []
             },
             //模式选择层
-            modelLayerShow: false,//todo
+            modelLayerShow: false, //todo
             //更多选择层
-            moreLayerShow: true,//todo
+            moreLayerShow: true, //todo
             wenduSelectFlag: false,
             timeSelectFlag: false,
             //模式列表
-            modeList: [//todo.mode的名称还待定
+            modeList: [
+                //todo.mode的名称还待定
                 {
                     name: "传统烘焙",
                     icon: "traditional-baking",
@@ -233,13 +234,11 @@ export default {
                     mode: "pizza"
                 },
                 {
-                
                     name: "上发酵",
                     icon: "ico-upper-fermentation",
                     mode: "fermentation"
                 },
                 {
-                
                     name: "解冻",
                     icon: "icon-thaw",
                     mode: "thaw"
@@ -261,8 +260,8 @@ export default {
     },
     computed: {
         isRun() {
-            console.log('run',this.model.status == "run")
-            return this.model.status == "run";//正在运行
+            console.log("run", this.model.status == "run");
+            return this.model.status == "run"; //正在运行
         },
         childLockSwitch() {
             return this.model.child_lock_switch == "on" ? true : false;
@@ -329,10 +328,11 @@ export default {
         });
     },
     methods: {
-        setSwitch(val) {//烤箱开关的控制
-            console.log("开关",val)
+        setSwitch(val) {
+            //烤箱开关的控制
+            console.log("开关", val);
             this.controlDevice("switch", val);
-        }, 
+        },
         controlDevice(attr, val, success, error) {
             if (
                 this.model.child_lock_switch == "on" &&
@@ -367,7 +367,7 @@ export default {
             );
         },
         setMode(mode) {
-            console.log("mode",mode)
+            console.log("mode", mode);
             if (this.isRun || this.isPause) {
                 return;
             }
@@ -378,8 +378,9 @@ export default {
                 this.model.mode = mode;
             });
         },
-        confirmChildLock() {//童锁的设置
-        console.log("童锁设置")
+        confirmChildLock() {
+            //童锁的设置
+            console.log("童锁设置");
             if (this.childLockSwitch) {
                 // this.confirmChildLockVisible = true;
             } else {
@@ -392,11 +393,11 @@ export default {
                 }
             }
         },
-        lighting(){
-            console.log("lighting")
+        lighting() {
+            console.log("lighting");
         },
-        timeSynchronization(){
-            console.log('timeSynchronization')
+        timeSynchronization() {
+            console.log("timeSynchronization");
         },
         closeMoreLayer() {
             this.moreLayerShow = false;
@@ -439,13 +440,13 @@ export default {
             }
         },
         selectWendu(picker, values) {
-            console.log('wendu',values);
+            console.log("wendu", values);
             if (values.length && values[0] && this.wenduSelectFlag) {
                 this.allAttribute.temperature = values[0].value;
             }
         },
         selectTime(picker, values) {
-             console.log('time',values);
+            console.log("time", values);
             if (values.length && values[0] && this.timeSelectFlag) {
                 this.allAttribute.bake_duration = values[0].value;
                 this.allAttribute.remaining = values[0].value;
@@ -466,7 +467,7 @@ export default {
         getSnapShot(cb) {
             HdSmart.Device.getSnapShot(
                 data => {
-                    console.log(1111)
+                    console.log(1111);
                     this.onSuccess(data);
                     cb && cb();
                 },
@@ -476,7 +477,7 @@ export default {
             );
         },
         onSuccess(data) {
-            console.log("dataall",data);
+            console.log("dataall", data);
             HdSmart.UI.hideLoading();
             let attributes = data.attribute;
             this.model = attributes;
@@ -553,7 +554,8 @@ export default {
 };
 </script>
 <style lang="less">
-html,body {
+html,
+body {
     margin: 0;
     height: 100%;
     overflow-y: auto;
@@ -575,14 +577,14 @@ html,body {
 ul {
     list-style: none;
 }
-strong{
-    font-weight:normal;
+strong {
+    font-weight: normal;
 }
 #app {
-    width:100%;
-    min-height:100%;
+    width: 100%;
+    min-height: 100%;
     height: auto;
-    overflow:auto;
+    overflow: auto;
     position: relative;
 }
 .page-off {
@@ -592,10 +594,10 @@ strong{
     top: 0;
     width: 100%;
     height: 100%;
-    .name{
-        color: #76787A;
+    .name {
+        color: #76787a;
     }
-    .tip{
+    .tip {
         position: absolute;
         left: 0;
         top: 17.7%;
@@ -604,7 +606,7 @@ strong{
         font-size: 30px;
         // opacity: 0.5;
         font-size: 28px;
-        color: #C8CACC;
+        color: #c8cacc;
     }
     //关机样式
     .oven {
@@ -614,26 +616,28 @@ strong{
         left: 50%;
         top: 33.6%;
         transform: translate(-50%, 0);
-        background: url(../../lib/base/haier_oven/assets/img_ovenline@2x.png) no-repeat;
+        background: url(../../lib/base/haier_oven/assets/img_ovenline@2x.png)
+            no-repeat;
         background-size: 100% 100%;
     }
-    .off_button{
-        position:absolute;
-        bottom:18%;
-        left:50%;
+    .off_button {
+        position: absolute;
+        bottom: 18%;
+        left: 50%;
         transform: translateX(-50%);
-        width:144px;
+        width: 144px;
         height: 144px;
-        a{
-            width:100%;
+        a {
+            width: 100%;
             height: 100%;
             display: block;
-            i{
-                width:100%;
+            i {
+                width: 100%;
                 height: 100%;
                 display: block;
-                background:url(../../lib/base/washer/assets_m/btn_power@2x.png) no-repeat center;
-                background-size:100% 100%;
+                background: url(../../lib/base/washer/assets_m/btn_power@2x.png)
+                    no-repeat center;
+                background-size: 100% 100%;
             }
         }
     }
@@ -658,13 +662,13 @@ strong{
     background-size: 100% 100%;
 }
 .wrapper {
-    width:100%;
+    width: 100%;
     min-height: 100%;
     height: auto;
     overflow-y: auto;
     text-align: center;
     margin: 0 auto;
-    padding:10.7% 0 0 0;
+    padding: 10.7% 0 0 0;
     box-sizing: border-box;
     position: absolute;
     .color-gray {
@@ -672,9 +676,9 @@ strong{
     }
     .main-title {
         font-weight: normal;
-        margin-bottom:10%;
+        margin-bottom: 10%;
         font-size: 32px;
-        color: #76787A;
+        color: #76787a;
     }
     .pannel {
         height: 480px;
@@ -687,8 +691,8 @@ strong{
         .p-main-time {
             height: 120px;
             line-height: 120px;
-            color: #46BCFF;
-            margin:118px 0 0 0;
+            color: #46bcff;
+            margin: 118px 0 0 0;
             font-size: 36px;
             text-align: center;
             .p-num {
@@ -703,26 +707,26 @@ strong{
         }
         .tempDetail {
             font-size: 30px;
-            color: #B5B5B5;
-            margin-top:72px;
-        }   
+            color: #b5b5b5;
+            margin-top: 72px;
+        }
         .p-model {
             padding-top: 48px;
-            height:32px;
+            height: 32px;
             line-height: 32px;
-            color: #2F3133;
-            font-size:32px;
+            color: #2f3133;
+            font-size: 32px;
         }
         .p-status {
             position: absolute;
-            width:100%;
-            top:101px;
-            left:0;
+            width: 100%;
+            top: 101px;
+            left: 0;
             text-align: center;
             height: 28px;
             line-height: 28px;
             font-size: 28px;
-            color: #B5B5B5;
+            color: #b5b5b5;
         }
         .p-wendu {
             font-weight: bold;
@@ -730,17 +734,18 @@ strong{
             color: #46bcff;
         }
     }
-    .controls{
-        width:100%;
+    .controls {
+        width: 100%;
         box-sizing: border-box;
-        padding:0 60px;
-        justify-content:space-between;
+        padding: 0 60px;
+        justify-content: space-between;
     }
-    .offButton{
+    .offButton {
         justify-content: center;
     }
-    .controls,.offButton {
-        display:flex;
+    .controls,
+    .offButton {
+        display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
         padding-top: 8%;
@@ -754,17 +759,17 @@ strong{
             background: none;
             border: 0;
             color: #76787a;
-            text-align:center;
+            text-align: center;
             // margin: 0 25px;
             i {
                 display: inline-block;
-                width:120px;
+                width: 120px;
                 height: 120px;
                 background-size: 100% 100%;
             }
             .c-stop {
                 background-image: url("../../lib/base/haier_oven/assets/icn_shutdown_active@2x.png");
-                &.disable{
+                &.disable {
                     background-image: url("../../lib/base/haier_oven/assets/icn_shutdown_disabled@2x.png");
                 }
             }
@@ -774,10 +779,10 @@ strong{
             .c-firing {
                 background-image: url("../../lib/base/haier_oven/assets/icn_open_active@2x.png");
             }
-            .c-preheat{
+            .c-preheat {
                 background-image: url("../../lib/base/haier_oven/assets/icn_Auxiliarywa-up_active@2x.png");
             }
-            .c-barbicue{
+            .c-barbicue {
                 background-image: url("../../lib/base/haier_oven/assets/icn_reservebaking_active@2x.png");
             }
         }
@@ -796,7 +801,7 @@ strong{
         li {
             div.mode-name {
                 font-size: 28px;
-                color: #76787A;
+                color: #76787a;
                 opacity: 0.3;
             }
             a.active {
@@ -831,7 +836,7 @@ strong{
     .model-list {
         padding: 79px 0 0 23px;
         overflow: hidden;
-        margin-bottom:26px;
+        margin-bottom: 26px;
         li {
             list-style: none;
             text-align: center;
@@ -842,7 +847,7 @@ strong{
             div {
                 margin-top: 20px;
                 font-size: 28px;
-                color: #76787A;
+                color: #76787a;
             }
             a {
                 display: block;
@@ -910,13 +915,13 @@ strong{
                     background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png");
                 }
             }
-            .ico-upper-fermentation{
+            .ico-upper-fermentation {
                 background-image: url("../../lib/base/haier_oven/assets/icn_fermentation_normal@2x.png");
                 &.active {
                     background-image: url("../../lib/base/haier_oven/assets/icn_fermentation_active@2x.png");
                 }
             }
-            .icon-thaw{
+            .icon-thaw {
                 background-image: url("../../lib/base/haier_oven/assets/icn_thaw_normal@2x.png");
                 &.active {
                     background-image: url("../../lib/base/haier_oven/assets/icn_thaw_active@2x.png");
@@ -945,17 +950,17 @@ strong{
 
 .select-param {
     height: 120px;
-    line-height:120px;
-    box-sizing:border-box;
+    line-height: 120px;
+    box-sizing: border-box;
     border-bottom: 1px solid #dbdbdb;
     position: relative;
-    margin: 0  0  0 32px;
-    padding:0 32px 0 0;
+    margin: 0 0 0 32px;
+    padding: 0 32px 0 0;
     overflow: hidden;
     p {
         float: left;
         font-size: 32px;
-        color: #2F3133;
+        color: #2f3133;
     }
     .value-wendu {
         color: #46bcff;
@@ -995,104 +1000,105 @@ strong{
     border-top: 0;
 }
 //subpage样式的特殊处理
-#app .backControl{
+#app .backControl {
     // background-color: #f4f4f8;
     height: auto;
     min-height: 100%;
     position: absolute;
     // padding-top: 90px;
-    .topbar{
-        position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        z-index:1;
+    .topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1;
     }
-    .subpage-body{
+    .subpage-body {
         margin-top: 100px;
         background-color: #fff;
     }
-
 }
-.android .backControl{
-    box-sizing:border-box;
+.android .backControl {
+    box-sizing: border-box;
     padding-bottom: 120px;
 }
-#app .subpagebakControl{
-     background-color: #f4f4f8;
-     .buttonchoose{
-         width:100%;
-         height: 322px;
-         background-color: #fff;
-         margin-bottom:16px;
-         box-sizing:border-box;
-         text-align: center;
-         overflow: hidden;
-         .chooseTitle{
-             width:100%;
-             height:40px;
-             line-height: 40px;
-             font-size: 28px;
-             color: #76787A;
-             margin:52px 0 24px 0;
-         }
-         .pattern{
-             width:100%;
-             display: flex;
-             height:auto;
-             justify-content: center;
-             div{
-                 width:auto; 
-             }
-             .lighting{
-                 margin-right:56px; 
-             }
-             i {
-                 display: block;
-                 width:120px;
-                 height: 120px;
-                 overflow: hidden;
-                 margin-bottom:20px;
-             }
-             span{
+#app .subpagebakControl {
+    background-color: #f4f4f8;
+    .buttonchoose {
+        width: 100%;
+        height: 322px;
+        background-color: #fff;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+        text-align: center;
+        overflow: hidden;
+        .chooseTitle {
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            font-size: 28px;
+            color: #76787a;
+            margin: 52px 0 24px 0;
+        }
+        .pattern {
+            width: 100%;
+            display: flex;
+            height: auto;
+            justify-content: center;
+            div {
+                width: auto;
+            }
+            .lighting {
+                margin-right: 56px;
+            }
+            i {
+                display: block;
+                width: 120px;
+                height: 120px;
+                overflow: hidden;
+                margin-bottom: 20px;
+            }
+            span {
                 display: block;
                 font-size: 28px;
-                color: #76787A;
-             }
-             .c-lighting{
-                background:url(../../lib/base/haier_oven/assets/icn_illumination_normal@2x.png) no-repeat center center;
-                background-size:100% 100%;
-             }
-             .c-time{
-                background:url(../../lib/base/haier_oven/assets/icn_timesynchronization_normal@2x.png) no-repeat center center;
-                background-size:100% 100%;
-             }
-         }
-     }
-     .selectbox {
-        &.lockDetail{
+                color: #76787a;
+            }
+            .c-lighting {
+                background: url(../../lib/base/haier_oven/assets/icn_illumination_normal@2x.png)
+                    no-repeat center center;
+                background-size: 100% 100%;
+            }
+            .c-time {
+                background: url(../../lib/base/haier_oven/assets/icn_timesynchronization_normal@2x.png)
+                    no-repeat center center;
+                background-size: 100% 100%;
+            }
+        }
+    }
+    .selectbox {
+        &.lockDetail {
             margin: 20px auto 83px;
             background-color: #fff;
-            .hd .left{
+            .hd .left {
                 font-size: 32px;
-                color: #2F3133;
+                color: #2f3133;
             }
         }
         .hd {
-            padding:20px 0;
+            padding: 20px 0;
             margin: 0 32px;
             height: 80px;
             line-height: 80px;
             border-top: 1px solid #f5f5f5;
             .left {
                 float: left;
-                font-size:32px;
-                color: #2F3133;
+                font-size: 32px;
+                color: #2f3133;
             }
             .right {
                 float: right;
                 color: #333333;
-                font-size:32px;
+                font-size: 32px;
             }
             .arrow {
                 display: inline-block;
@@ -1139,63 +1145,64 @@ strong{
             }
         }
         &.disable {
-            opacity: 0.5;//todo
+            opacity: 0.5; //todo
         }
     }
 }
 //modal特殊样式处理
 .modal {
-    .picker-item{
+    .picker-item {
         font-size: 30px;
-        color: #C8CACC;
-        margin-left:60px;
-        margin-right:60px;
-        width:auto;
-        &.picker-selected{
+        color: #c8cacc;
+        margin-left: 60px;
+        margin-right: 60px;
+        width: auto;
+        &.picker-selected {
             // border-top:1px solid  #DBDBDB;
             // border-bottom:1px solid  #DBDBDB;
             font-size: 36px;
             color: #000000;
         }
     }
-    .button_temperature{
-        width:240px;
+    .button_temperature {
+        width: 240px;
         height: 84px;
         line-height: 84px;
         text-align: center;
-        color:#fff;
+        color: #fff;
         font-size: 36px;
-        background: #46BCFF;
+        background: #46bcff;
         border-radius: 6px;
-        margin:55px auto 0;
+        margin: 55px auto 0;
     }
 }
-.sureButtongroup{
-    width:100%;
+.sureButtongroup {
+    width: 100%;
     overflow: hidden;
     display: flex;
     justify-content: center;
     margin: 60px auto;
-    .cancle,.sure{
-        width:240px;
+    .cancle,
+    .sure {
+        width: 240px;
         height: 84px;
         line-height: 84px;
         text-align: center;
         border-radius: 6px;
         font-size: 36px;
     }
-    .cancle{
-        background: #FFFFFF;
-        border: 1px solid #76787A;
-        color: #76787A;
-        margin-right:24px;
+    .cancle {
+        background: #ffffff;
+        border: 1px solid #76787a;
+        color: #76787a;
+        margin-right: 24px;
     }
-    .sure{
-        background: #46BCFF;
-        color: #FFFFFF;
+    .sure {
+        background: #46bcff;
+        color: #ffffff;
     }
 }
-.disable{
+.disable {
     opacity: 0.5;
 }
 </style>

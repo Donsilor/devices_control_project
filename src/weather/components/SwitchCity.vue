@@ -21,7 +21,7 @@
 
             <div class="hot-city-text">热门城市</div>
             <div class="city-list">
-                <span v-for="(item, index) in hotCities" :key="index" @click="getWeather(item.city_id)" class="sc-hot-city">{{item.name}}</span>
+                <span v-for="(item, index) in hotCities" :key="index" @click="getWeather(item)" class="sc-hot-city">{{item.name}}</span>
             </div>
 
             <div>
@@ -32,7 +32,7 @@
                             <div class="sc-line-location"></div>
                             <template v-for="(child, childindex) in item.list">
                                 <div :key="`${index}` + `${childindex}`">
-                                    <div class="alpah-city-text" @click="getWeather(child.city_id)">{{child.name}}</div>
+                                    <div class="alpah-city-text" @click="getWeather(child)">{{child.name}}</div>
                                     <div class="sc-line-location"></div>
                                 </div>
                             </template>
@@ -119,12 +119,12 @@ export default {
                 })
                 .filter(x => x);
         },
-        getWeather(weathercnid) {
-            location.hash = `weather_${weathercnid}`;
+        getWeather(item) {
+            location.hash = `weather_${item.city_id}`;
             this.back();
             //缓存至下次登陆展示
-            localStorage.setItem("weathercnid", weathercnid);
-            this.getCityWeather(weathercnid);
+            localStorage.setItem("city", JSON.stringify(item));
+            this.getCityWeather(item);
         },
 
         jump(e) {

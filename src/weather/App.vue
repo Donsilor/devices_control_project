@@ -92,11 +92,11 @@ export default {
     },
     mounted() {
         HdSmart.ready(() => {
-            let weathercnid = localStorage.getItem("weathercnid");
-            HdSmart.UI.showLoading();
-            if (weathercnid) {
+            let city = JSON.parse(localStorage.getItem("city"));
+            if (city) this.city.name = city.name;
+            if (city && city.city_id) {
                 //走缓存
-                this.getWeatherData(weathercnid);
+                this.getWeatherData(city.city_id);
             } else this.getWeatherData();
             // remoteLoad('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', false).then((result) => {
             //     if (remote_ip_info.ret === 1) {
@@ -249,6 +249,7 @@ export default {
                 1}-${now.getDate()}`;
             this.currentOldDay = getOldDate(); //获取农历日期
             let self = this;
+            HdSmart.UI.showLoading();
             HdSmart.Device.control(
                 {
                     method: "3d_get_moji_weather",
@@ -279,9 +280,9 @@ export default {
                         self.actrulTemp = "0";
                     }
                     //城市信息
-                    if (innerData && innerData.city) {
+                    if (!city_id && innerData && innerData.city) {
                         self.city = innerData.city;
-                    } else {
+                    } else if (!city_id) {
                         self.city = {
                             name: innerData.cityName
                         };
@@ -298,9 +299,11 @@ export default {
         hideSwitchCity() {
             this.showSwitchCity = false;
         },
-        getCityWeather(weathercnid) {
+        getCityWeather(city) {
             //TODO
-            this.getWeatherData(weathercnid);
+            console.log(city);
+            this.city.name = city.name;
+            this.getWeatherData(city.city_id);
         },
         //关闭天气预报,替代原生安卓的关闭，需调用原生的方法实现
         close() {
