@@ -34,7 +34,7 @@
         </div>
         <!-- 搜索结果 -->
         <div class="search_result" v-show="curpage===3">
-            <div class="hd clearfix">
+            <div class="hd clearfix" v-show="resultData.length && loadState !== 'NO_DATA' || current_channel!=''">
                 <div class="tab">
                     <a href="#" @click.prevent="setParam('current_channel','')" :class="{active:current_channel==''}">
                         全部
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <ul class="vlist clearfix">
-                <li class="vitem" v-for="item in resultData" :key="item.vid" @click="showDetailInfo(item)">
+                <li class="vitem" v-for="item in resultData" :key="item.vid" @click="showDetailInfo(item)" :class="['item-'+item.channelId]">
                     <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
                     <div class="name">{{item.title}}</div>
                     <span class="update" v-if="item.channelId!='001'">

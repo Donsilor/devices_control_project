@@ -68,8 +68,8 @@
             </div>
         </div>
         <!-- 列表 -->
-        <ul class="vlist list-m60" :class="['list-'+channelId]">
-            <li class="vitem" v-for="item in list" :key="item.vid" @click="showDetailInfo(item)">
+        <ul class="vlist list-m60">
+            <li class="vitem" v-for="item in list" :key="item.vid" @click="showDetailInfo(item)" :class="['item-'+channelId]">
                 <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
                 <div class="name">{{item.title}}</div>
                 <span class="update">
@@ -245,7 +245,7 @@
     }
 }
 /* 根据栏目控制样式显示 */
-.list-001 {
+.item-001 {
     .score {
         display: block;
     }
@@ -253,7 +253,7 @@
         background-image: url(../../../lib/base/tv/assets/icn_TV_movie_white@2x.png);
     }
 }
-.list-002 {
+.item-002 {
     .update {
         display: block;
     }
@@ -261,7 +261,7 @@
         background-image: url(../../../lib/base/tv/assets/icn_TV_tvshow_white@2x.png);
     }
 }
-.list-003 {
+.item-003 {
     .update {
         display: block;
     }
@@ -269,7 +269,7 @@
         background-image: url(../../../lib/base/tv/assets/icn_TV_comic_white@2x.png);
     }
 }
-.list-004 {
+.item-004 {
     .update {
         display: block;
     }

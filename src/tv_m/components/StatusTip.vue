@@ -32,13 +32,16 @@
     font-size: 25.2px;
     color: #13d5dc;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .sp_status_bar .text {
     max-width: 50%;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: inline-block;
-    vertical-align: middle;
+    /* display: inline-block;
+    vertical-align: middle; */
 }
 .status_bar .link {
     color: #13d5dc;

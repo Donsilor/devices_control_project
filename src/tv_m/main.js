@@ -162,6 +162,7 @@ HdSmart.ready(() => {
         }
         if(to.name === 'index' || to.name === 'error'){
           thaf_timer = setTimeout(()=>{
+            docEl.scrollTop = 0
             HdSmart.UI.toggleHeadAndFoot(true)
           },200)
         }else{
