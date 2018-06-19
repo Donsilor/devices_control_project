@@ -148,13 +148,13 @@
                                     <div class="sb-btn" @click="confirmChildLock"></div>
                                 </div>
                             </div>
-                            <div class="bd1 childlock_confirm" v-show="confirmChildLockVisible">
+                            <!-- <div class="bd1 childlock_confirm" v-show="confirmChildLockVisible">
                                 关闭童锁后，所有按键可正常使用。确定关闭？
                                 <div class="right">
                                     <a href="" class="cancel" @click.prevent="confirmChildLockVisible = false">取消</a>
                                     <a href="" class="submit" @click.prevent="submitChildLock">关闭</a>
                                 </div>
-                            </div>
+                            </div> -->
                     </div>
                 </div>
             </sub-page>
@@ -1352,7 +1352,14 @@ export default {
         },
         confirmChildLock() {
             if (this.childLockSwitch) {
-                this.confirmChildLockVisible = true;
+                // this.confirmChildLockVisible = true;
+                HdSmart.UI.alert({
+                    message: '关闭童锁后，所有按键可正常使用。确定关闭？'
+                }, val => {
+                    if(val){
+                        this.submitChildLock()
+                    }
+                })
             } else {
                 if (this.isRun) {
                     this.setChildLock("on", () => {
@@ -1365,7 +1372,7 @@ export default {
         },
         submitChildLock() {
             this.setChildLock("off", () => {
-                this.confirmChildLockVisible = false;
+                // this.confirmChildLockVisible = false;
                 this.model.child_lock_switch = "off";
             });
         },
