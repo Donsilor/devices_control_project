@@ -1,10 +1,12 @@
 <template>
     <div id="app">
         <div class="page-on" v-if="status == 'error' || model.switch_status == 'on'">
-            <div class="name">{{device_name}}</div>
-            <div class="tip">
-                <p v-show="tip">{{tip}}</p>
-                <p v-show="!tip && remain_tip">{{remain_tip}}</p>
+            <div class="mainTitle">
+                <div class="name">{{device_name}}</div>
+                <div class="tip">
+                    <p v-show="tip">{{tip}}</p>
+                    <p v-show="!tip && remain_tip">{{remain_tip}}</p>
+                </div>
             </div>
             <a v-if="ab.child_lock_switch || ab.negative_ion_switch" href="" class="btn-more" @click.prevent="moreModalVisible = true"></a>
             <div class="pm25">
@@ -14,11 +16,12 @@
                 <div class="arrow" :style="{transform:'rotate('+ pm25_rotate +'deg)'}"></div>
                 <div class="value" v-html="pm25_text"></div>
                 <div class="pic" @click="togglePMPop">PM 2.5</div>
+                <div class="attrs">
+                    <span v-if="model.temperature && model.temperature!='0'">温度：{{model.temperature}}℃</span>
+                    <span v-if="model.humidity && model.humidity!='0'">湿度：{{model.humidity}}%</span>
+                </div>
             </div>
-            <div class="attrs">
-                <span v-if="model.temperature && model.temperature!='0'">温度：{{model.temperature}}℃</span>
-                <span v-if="model.humidity && model.humidity!='0'">湿度：{{model.humidity}}%</span>
-            </div>
+            
             <div class="btns btns-fn">
                 <a href="" class="btn-on" @click.prevent="setSwitch('off')">
                     <i></i> 开关
@@ -40,7 +43,7 @@
                 </a>
             </div>
 
-            <modal title="风档" v-model="speedModalVisible">
+            <modal title="风档" v-model="speedModalVisible" class="windControl">
                 <div class="btns btns-speed">
                     <a href="" v-for="item in speedItems" :key="item.value" :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]" @click.prevent="setSpeed(item.value)">
                         <i></i> {{item.text}}
@@ -143,29 +146,30 @@ a {
     width: 100%;
     height: 100%;
 }
-.name {
+.mainTitle{
     position: absolute;
     left: 0;
-    top: 156px;
+    top: 11%;
+    width: 100%;
+}
+.name {
     width: 100%;
     text-align: center;
-    font-size: 30px;
+    font-size: 32px;
     color: #ffffff;
 }
 .tip {
-    position: absolute;
-    left: 0;
-    top: 200px;
     width: 100%;
     text-align: center;
     font-size: 30px;
     color: #ffffff;
     opacity: 0.5;
+    margin-top:10px;
 }
 .pm25 {
     position: absolute;
     left: 50%;
-    top: 280px;
+    top: 25%;
     transform: translate(-50%, 0);
     width: 480px;
     .circle {
@@ -243,7 +247,7 @@ a {
 .attrs {
     position: absolute;
     left: 0;
-    top: 666px;
+    top:410px;
     width: 100%;
     text-align: center;
     color: #fff;
@@ -255,7 +259,7 @@ a {
 .btn-more {
     position: absolute;
     right: 40px;
-    top: 132px;
+    top: 9.5%;
     width: 96px;
     height: 96px;
     background-image: url(../../lib/base/air_cleaner/assets/btn_aircon_more_normal@2x.png);
@@ -501,7 +505,7 @@ a {
 .btns-fn {
     position: absolute;
     left: 0;
-    top: 750px;
+    top: 70%;
     width: 100%;
     a {
         margin: 0 25px;
@@ -513,8 +517,10 @@ a {
 .btns-speed {
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin: 0 20px;
+    margin: 0 30px;
     a {
+        height:auto;
+        padding-bottom: 46px;
         margin: 0 18px 0;
         color: #76787a;
         &.active {
@@ -533,10 +539,19 @@ a {
 }
 .page-off .name {
     color: #76787a;
+    position:absolute;
+    width:100%;
+    left:0;
+    top: 11%;
+    text-align: center;
 }
 .page-off .tip {
     color: #c8cacc;
     opacity: 1;
+    position:absolute;
+    width:100%;
+    left:0;
+    top: 17%;
 }
 .page-off .btns a {
     color: #76787a;
@@ -544,7 +559,7 @@ a {
 .air_cleaner {
     position: absolute;
     left: 50%;
-    top: 260px;
+    top: 25.6%;
     width: 420px;
     height: 420px;
     transform: translate(-50%, 0);
@@ -552,10 +567,15 @@ a {
         no-repeat;
     background-size: 100% 100%;
 }
+#app .windControl{
+    .modal-body{
+        padding:48px 0 0 0;
+    }
+}
 </style>
 
 <script>
-import Modal from "./components/Modal.vue";
+import Modal from "../../lib/components/Modal";
 import ErrorTip from "./components/ErrorTip.vue";
 import SubPage from "./components/SubPage";
 

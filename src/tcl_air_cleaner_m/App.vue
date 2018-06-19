@@ -517,7 +517,7 @@ a {
 .btns-speed {
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin: 0 20px;
+    margin: 0 30px;
     a {
         // display: block;
         height: auto;
@@ -540,10 +540,19 @@ a {
 }
 .page-off .name {
     color: #76787a;
+    position:absolute;
+    width:100%;
+    left:0;
+    top: 11%;
+    text-align: center;
 }
 .page-off .tip {
     color: #c8cacc;
     opacity: 1;
+    position:absolute;
+    width:100%;
+    left:0;
+    top: 17%;
 }
 .page-off .btns a {
     color: #76787a;
@@ -551,7 +560,7 @@ a {
 .air_cleaner {
     position: absolute;
     left: 50%;
-    top: 260px;
+    top: 25.6%;
     width: 420px;
     height: 420px;
     transform: translate(-50%, 0);
