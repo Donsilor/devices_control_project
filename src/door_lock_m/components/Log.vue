@@ -189,7 +189,7 @@ export default {
             this.$refs.picker2.open();
         },
         handleChange(value) {
-            this.getLogData();
+            this.getLogData(undefined, this.type);
         },
         // loadMore() {
         //     this.getLogData(true);
