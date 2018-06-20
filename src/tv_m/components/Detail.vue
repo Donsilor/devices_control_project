@@ -116,8 +116,8 @@
     // z-index: 9;
     color: #75787a;
     background: #fafafa;
-    display: flex;
-    flex-direction: column;
+    // display: flex;
+    // flex-direction: column;
     // padding-top: 124px;
 }
 .detail-hd {
@@ -129,7 +129,7 @@
     height: 124px;
     width: 100%;
     background: #fafafa;
-    flex-shrink: 0;
+    // flex-shrink: 0;
     border-bottom: 1px solid #dbdbdb;
 
     .isvip {
@@ -171,10 +171,10 @@
     }
 }
 .detail-bd {
-    height: 100%;
+    // height: 100%;
     padding-top: 32px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    // overflow-y: auto;
+    // -webkit-overflow-scrolling: touch;
 }
 .detail-info {
     margin: 0 32px;
@@ -461,6 +461,10 @@
         right: 0;
         top: 0;
     }
+}
+
+.detail-hd-placeholder{
+    height: 124px;
 }
 
 .isIOS {

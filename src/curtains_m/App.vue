@@ -36,7 +36,7 @@
     }
 
     .curtain {
-        margin: 4px auto 102px auto;
+        margin: 4px auto 90px auto;
     }
 
     .tip {
