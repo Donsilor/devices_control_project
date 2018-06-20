@@ -53,8 +53,8 @@ const store = new Vuex.Store({
         device_name: "",
         tvStatus: {
             tvOnlineStatus: 1,
-            screenProjectType: 1,
-            screenProjectTitle: "xxxxxxxxxxxxxxxxxxxx"
+            screenProjectType: 0,
+            screenProjectTitle: ``
         }
     },
     mutations: {
