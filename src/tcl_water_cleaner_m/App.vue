@@ -956,11 +956,6 @@ export default {
         }
     },
     watch: {
-        statusModalVisible(val) {//单个滤芯的详情页的显隐控制
-            if (!val) {
-                this.isFilterResetActive = false;
-            }
-        },
         currentPage(page) {
             if (page == "index") {
                 HdSmart.UI.toggleHeadAndFoot(true);
@@ -984,6 +979,9 @@ export default {
             }
         },
         statusModalVisible(val){
+            if (!val) {
+                this.isFilterResetActive = false;
+            }
             if(this.currentPage == 'index'){
                 HdSmart.UI.toggleHeadAndFoot(!val);
             }

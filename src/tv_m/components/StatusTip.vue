@@ -83,6 +83,11 @@
 .sp_status_detail {
     background: #fff;
     flex-shrink: 0;
+    position: fixed;
+    left: 0;
+    width: 100%;
+    top: 100px;
+    z-index: 2;
 }
 .sp_status_list {
     background: #fff;
@@ -120,6 +125,7 @@
 @media only screen and (-webkit-min-device-pixel-ratio: 3),
     only screen and (min-device-pixel-ratio: 3) {
     .sp_status_home,
+    .sp_status_detail,
     .sp_status_search {
         top: 116px;
     }
@@ -129,6 +135,9 @@
     top: 0;
 }
 .isIOS .sp_status_search {
+    top: 88px;
+}
+.isIOS .sp_status_detail {
     top: 88px;
 }
 </style>

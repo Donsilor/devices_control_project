@@ -11,7 +11,10 @@
                 <span class="isvip" v-show="!loading && ispay && ispay !== '1'">付费</span>
             </div>
         </div>
+        <div class="detail-hd-placeholder"></div>
         <status-tip class="sp_status_detail" />
+        <div class="status-tip-placeholder" v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"></div>
+
         <div class="detail-bd">
             <div class="detail-info clearfix" v-show="cur.title">
                 <div class="info-inner">
@@ -104,13 +107,13 @@
     opacity: 0;
 }
 .page-detail {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow-y: hidden;
-    z-index: 9;
+    // position: absolute;
+    // left: 0;
+    // top: 0;
+    // width: 100%;
+    // height: 100%;
+    // overflow-y: hidden;
+    // z-index: 9;
     color: #75787a;
     background: #fafafa;
     display: flex;
@@ -118,15 +121,17 @@
     // padding-top: 124px;
 }
 .detail-hd {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9;
+
     height: 124px;
     width: 100%;
     background: #fafafa;
     flex-shrink: 0;
     border-bottom: 1px solid #dbdbdb;
-    // position: fixed;
-    // top: 0;
-    // left: 0;
-    // z-index: 9;
+
     .isvip {
         background: #f26161;
         width: 60px;
@@ -458,13 +463,18 @@
     }
 }
 
-.isIOS .detail-hd {
-    height: 96px;
-    .back {
+.isIOS {
+    .detail-hd-placeholder{
         height: 96px;
     }
-    .title {
-        line-height: 96px;
+    .detail-hd {
+        height: 96px;
+        .back {
+            height: 96px;
+        }
+        .title {
+            line-height: 96px;
+        }
     }
 }
 </style>

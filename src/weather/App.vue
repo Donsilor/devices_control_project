@@ -584,5 +584,7 @@ body {
     top: 22px;
     left: 35px;
     font-size: 28px;
+    z-index: 999;
+    cursor: pointer;
 }
 </style>
