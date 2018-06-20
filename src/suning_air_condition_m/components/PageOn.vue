@@ -141,6 +141,12 @@ export default {
             );
         },
         setTemperature(val, event) {
+
+            if (this.ac.mode === "auto") {
+                this.showTip("智能模式下不能设置温度");
+                return;
+            }
+
             var temp = this.temperature + val;
 
             if (temp < MIN_TEMP) {
@@ -164,10 +170,7 @@ export default {
             if (this.checkCmd("temperature", temp)) {
                 return;
             }
-            if (this.ac.mode === "auto") {
-                this.showTip("智能模式下不能设置温度");
-                return;
-            }
+
             this.temperature = temp;
             clearTimeout(tempDelay);
             tempFlag = false;

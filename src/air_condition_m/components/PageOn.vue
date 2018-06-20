@@ -167,6 +167,12 @@ export default {
             );
         },
         setTemperature(val, event) {
+
+            if (this.ac.mode === "wind") {
+                this.showTip(tips.err_temp1);
+                return;
+            }
+
             var temp = this.temperature + val;
 
             if (temp < MIN_TEMP) {
@@ -190,10 +196,7 @@ export default {
             if (this.checkCmd("temperature", temp)) {
                 return;
             }
-            if (this.ac.mode === "wind") {
-                this.showTip(tips.err_temp1);
-                return;
-            }
+
             this.temperature = temp;
             clearTimeout(tempDelay);
             tempFlag = false;

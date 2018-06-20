@@ -141,6 +141,20 @@ export default {
             );
         },
         setTemperature(val, event) {
+
+            if (this.ac.mode === "wind") {
+                this.showTip("送风模式下不能设置温度");
+                return;
+            }
+            if (this.ac.mode === "auto") {
+                this.showTip("智能模式下不能设置温度");
+                return;
+            }
+            if (this.ac.mode == "dehumidify") {
+                this.showTip("除湿模式下不能设置温度");
+                return;
+            }
+
             var temp = this.temperature + val;
 
             if (temp < MIN_TEMP) {
@@ -165,18 +179,6 @@ export default {
                 return;
             }
 
-            if (this.ac.mode === "wind") {
-                this.showTip("送风模式下不能设置温度");
-                return;
-            }
-            if (this.ac.mode === "auto") {
-                this.showTip("智能模式下不能设置温度");
-                return;
-            }
-            if (this.ac.mode == "dehumidify") {
-                this.showTip("除湿模式下不能设置温度");
-                return;
-            }
 
             this.temperature = temp;
             clearTimeout(tempDelay);
