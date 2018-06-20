@@ -323,13 +323,7 @@ export default {
 
         switchLog(type) {
             this.type = type;
-            if (type == "warn") {
-                this.getLogData(undefined, type);
-            }
-
-            if (type == "open") {
-                this.getLogData(undefined, type);
-            }
+            this.getLogData(undefined, type);
         },
         loadMore: _.debounce(function() {
             var scrollTop =
