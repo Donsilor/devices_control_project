@@ -58,11 +58,12 @@
     padding: 0;
     margin: 0;
 }
-body,html {
+body,
+html {
     -webkit-tap-highlight-color: transparent;
     color: #fff;
     font-size: 30px;
-    width:100%;
+    width: 100%;
     height: 100%;
 }
 a {
@@ -124,23 +125,23 @@ a {
         background-position-x: -1320px;
     }
 }
-.mainTitle{
-     position: absolute;
+.mainTitle {
+    position: absolute;
     left: 0;
-    top: 18.93%;
+    top: 15%;
     width: 100%;
 }
 .name {
     width: 100%;
     text-align: center;
     font-size: 32px;
-    color: #1EA0FF;
+    color: #1ea0ff;
 }
 .tip {
     width: 100%;
     text-align: center;
     font-size: 32px;
-    color: #1EA0FF;
+    color: #1ea0ff;
     opacity: 0.5;
     height: 80px;
     span {
@@ -252,50 +253,6 @@ a {
     }
 }
 
-.wash {
-    position: absolute;
-    right: 60px;
-    top: 132px;
-    border: 1px solid #ffffff;
-    border-radius: 53px;
-    width: 207px;
-    height: 56px;
-    overflow: hidden;
-    a {
-        i {
-            background: url(../../lib/base/water_cleaner/assets/waterpurifier_icon_wash_normal.png)
-                no-repeat;
-            background-size: 100% 100%;
-            width: 30px;
-            height: 30px;
-            display: inline-block;
-            vertical-align: middle;
-        }
-        display: block;
-        font-size: 24px;
-        color: #ffffff;
-        line-height: 56px;
-        text-align: center;
-        background: rgba(255, 255, 255, 0.2);
-        display: block;
-    }
-    .progress {
-        height: 57px;
-        width: 0;
-        background: url(../../lib/base/water_cleaner/assets/waterpurifier_img_wash.png)
-            no-repeat;
-        background-size: 207px 100%;
-    }
-    &.washing {
-        a {
-            display: none;
-        }
-        .progress {
-            width: 100%;
-            transition: width 30s;
-        }
-    }
-}
 .view {
     position: absolute;
     left: 50%;
@@ -374,7 +331,7 @@ a {
         font-size: 24px;
         color: #76787a;
         line-height: 36px;
-        margin-bottom: 80px;
+        margin-bottom: 42px;
     }
     .btn {
         width: 504px;
@@ -400,186 +357,187 @@ a {
     }
 }
 
- .detail_content{
-        width:100%;
-        height: 100%;
-        overflow-y:auto;
-        .lx_wrap {
-            position: absolute;
-            bottom:0;
-            left:0;
-            z-index: 9;
-            width:100%;
-            height: 802px;
-            overflow: hidden;
-            box-sizing:border-box;
-            padding:46px 0 0 32px;
-            .time_tips{
-                width:100%;
-                height: 84px;
-                line-height: 84px;
-                color:#fff;
-                font-size:28px;
-                border-bottom:1px solid rgba(255,255,255,0.2);
+.detail_content {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    .lx_wrap {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 9;
+        width: 100%;
+        height: 802px;
+        overflow: hidden;
+        box-sizing: border-box;
+        padding: 46px 0 0 32px;
+        .time_tips {
+            width: 100%;
+            height: 84px;
+            line-height: 84px;
+            color: #fff;
+            font-size: 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .lx_item {
+            width: 100%;
+            height: 120px;
+            line-height: 120px;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            padding-right: 32px;
+            .list_button {
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                border-radius: 50%;
+                background-color: #fff;
+                font-size: 32px;
+                color: #1ea0ff;
             }
-            .lx_item {
-                width:100%;
-                height:120px;
-                line-height:120px;
-                color:#fff;
-                border-bottom:1px solid rgba(255,255,255,0.2);
-                display:flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                box-sizing:border-box;
-                padding-right:32px;
-                .list_button{
-                    width:50px;
-                    height:50px;
-                    line-height: 50px;
-                    text-align: center;
-                    border-radius:50%;
-                    background-color:#fff;
-                    font-size: 32px;
-                    color: #1EA0FF;
-                }
-                .item-name{
-                    font-size: 32px;
-                    color: #FFFFFF;
-                    flex-grow: 1;
-                    box-sizing:border-box;
-                    padding-left:30px;
-                    text-align: left;
-                }
-                .item-right{
-                    font-size: 32px;
-                    color: #FFFFFF;
-                    span.angle{
-                        display: inline-block;
-                        transform: rotate(45deg);
-                        height: 13px;
-                        width: 13px;
-                        border-width: 2px 2px 0 0;
-                        border-style: solid;
-                        position: relative;
-                        color:#fff;
-                        vertical-align: 1%;
-                    }
-                }
-                &.active{
-                    .list_button{
-                        background-color:rgba(255,255,255,0.50);
-                    }
-                    .item-name{
-                        color: rgba(255,255,255,0.50);
-                    }
-                    .item-right{
-                        color: rgba(255,255,255,0.50);
-                    }
-                }
-            }
-            .lx_msg {
-                position: absolute;
-                bottom:0;
-                left:32px;
-                height: 70px;
-                line-height:70px;
+            .item-name {
+                font-size: 32px;
+                color: #ffffff;
+                flex-grow: 1;
+                box-sizing: border-box;
+                padding-left: 30px;
                 text-align: left;
-                font-size: 24px;
-                color: rgba(255,255,255,0.50);
             }
-        }
-        .wave_content{
-            width:100%;
-            height: 802px;
-            box-sizing:border-box;
-            position:absolute;
-            z-index: -1;
-            bottom:0;
-            left:0;
-            .waveHigh{
-                position: absolute;
-                left:0;
-                bottom:0;
-                width:100%;
-                height: 100%;
-                overflow: hidden;
-                background-size: 100% 100%;
-                background-repeat: repeat-x;
-                &.waveHigh1 {
-                    background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2one@2x.png);
-                    animation: wave1 5s linear infinite;
-                    z-index: -3;
+            .item-right {
+                font-size: 32px;
+                color: #ffffff;
+                span.angle {
+                    display: inline-block;
+                    transform: rotate(45deg);
+                    height: 13px;
+                    width: 13px;
+                    border-width: 2px 2px 0 0;
+                    border-style: solid;
+                    position: relative;
+                    color: #fff;
+                    vertical-align: 1%;
                 }
-                &.waveHigh2 {
-                    background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2two@2x.png);
-                    animation: wave2 8s linear infinite;
-                    z-index: -2;
+            }
+            &.active {
+                .list_button {
+                    background-color: rgba(255, 255, 255, 0.5);
                 }
-                &.waveHigh3 {
-                    background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2there@2x.png);
-                    animation: wave3 10s linear infinite;
-                    z-index: -1;
+                .item-name {
+                    color: rgba(255, 255, 255, 0.5);
+                }
+                .item-right {
+                    color: rgba(255, 255, 255, 0.5);
                 }
             }
         }
-    }
-    .lx_status {
-        height: auto;
-        overflow:auto;
-        .p1 {
-            font-size: 28px;
-            height: 40px;
-            line-height: 40px;
-            color: #76787A;
-            opacity: 0.5;
-            text-align:center;
-            margin-top:6.53%;
-        }
-        .p2 {
-            font-size: 36px;
-            color: #333333;
-            margin-bottom: 30px;
-            font-size: 32px;
-            color: #333333;
-            text-align:center;
-        }
-        .p3 {
-            opacity: 0.5;
-            font-size: 28px;
-            color: #76787A;
-            text-align: center;
-            margin-top:72px;
-            height: 40px;
-            line-height:40px;
-        }
-        .p4 {
-            height: 86px;
-            line-height:86px;
-            font-size: 72px;
-            color: #333333;
-            margin-top:20px;
-        }
-        .pie {
-            margin: 0 auto 50px;
-        }
-        .msg {
-            opacity: 0.5;
-            font-size: 28px;
-            color: #76787A;
-            margin-top:60px;
-            text-align: center;
-            height:40px;
-            line-height:40px;
+        .lx_msg {
+            position: absolute;
+            bottom: 0;
+            left: 32px;
+            height: 70px;
+            line-height: 70px;
+            text-align: left;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.5);
         }
     }
-    .subpage {
-        z-index:99;
+    .wave_content {
+        width: 100%;
+        height: 802px;
+        box-sizing: border-box;
+        position: absolute;
+        z-index: -1;
+        bottom: 0;
+        left: 0;
+        .waveHigh {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-size: 100% 100%;
+            background-repeat: repeat-x;
+            &.waveHigh1 {
+                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2one@2x.png);
+                animation: wave1 5s linear infinite;
+                z-index: -3;
+            }
+            &.waveHigh2 {
+                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2two@2x.png);
+                animation: wave2 8s linear infinite;
+                z-index: -2;
+            }
+            &.waveHigh3 {
+                background-image: url(../../lib/base/water_cleaner/assets/waterpurifier_bg_wave_blue2there@2x.png);
+                animation: wave3 10s linear infinite;
+                z-index: -1;
+            }
+        }
     }
-    .overlay{
-        z-index:10;
+}
+.lx_status {
+    height: auto;
+    overflow: auto;
+    .p1 {
+        font-size: 28px;
+        height: 40px;
+        line-height: 40px;
+        color: #76787a;
+        opacity: 0.5;
+        text-align: center;
+        margin-top: 6.53%;
     }
+    .p2 {
+        font-size: 36px;
+        color: #333333;
+        margin-bottom: 30px;
+        font-size: 32px;
+        color: #333333;
+        text-align: center;
+    }
+    .p3 {
+        opacity: 0.5;
+        font-size: 28px;
+        color: #76787a;
+        text-align: center;
+        margin-top: 72px;
+        height: 40px;
+        line-height: 40px;
+    }
+    .p4 {
+        height: 86px;
+        line-height: 86px;
+        font-size: 72px;
+        color: #333333;
+        margin-top: 20px;
+        font-family: Helvetica;
+    }
+    .pie {
+        margin: 0 auto 50px;
+    }
+    .msg {
+        opacity: 0.5;
+        font-size: 28px;
+        color: #76787a;
+        margin-top: 60px;
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+    }
+}
+.subpage {
+    z-index: 99;
+}
+.overlay {
+    z-index: 10;
+}
 </style>
 
 
@@ -626,11 +584,11 @@ export default {
             errorStore: JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || []
         };
     },
-    watch:{
-        statusModalVisible(val){
-            if(val){
+    watch: {
+        statusModalVisible(val) {
+            if (val) {
                 HdSmart.UI.toggleHeadAndFoot(false);
-            }else{
+            } else {
                 HdSmart.UI.toggleHeadAndFoot(true);
             }
         }

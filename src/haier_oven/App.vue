@@ -3,12 +3,12 @@
         <!-- off -->
         <div class="page-off" v-if="model.switch==='on'">
             <div class="name">{{device_name}}</div>
-                <!-- <div class="tip">已关闭</div> -->
-                <div class="oven"></div>
-                <div class="off_button">
-                    <a href="" class="btn btn-off" @click.prevent="setSwitch('on')">
-                        <i></i>
-                    </a>
+            <!-- <div class="tip">已关闭</div> -->
+            <div class="oven"></div>
+            <div class="off_button">
+                <a href="" class="btn btn-off" @click.prevent="setSwitch('on')">
+                    <i></i>
+                </a>
             </div>
         </div>
         <!-- on -->
@@ -19,7 +19,7 @@
                 <p class="color-gray p-status">
                     <!-- todo back -->
                     <!-- <span v-if="allAttribute.status==='start'">({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span> -->
-                    <span>({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span>                    
+                    <span>({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span>
                 </p>
                 <div class="p-main-time">
                     <p class="p-num" v-html="remainingText"></p>
@@ -33,7 +33,7 @@
                 </p>
             </div>
             <div class="controls">
-                <button @click="stopOven" >
+                <button @click="stopOven">
                     <i class="c-stop"></i>停止</button>
                 <button @click="startOven" v-if="allAttribute.status==='stop'">
                     <i class="c-firing"></i>启动</button>
@@ -41,13 +41,13 @@
                     <i class="c-model"></i>模式设定</button>
                 <button @click="showModelLayer">
                     <i class="c-preheat"></i>辅助预热</button>
-                <button @click="showModelLayer">
+                <button @click="showModelBarbicueTime">
                     <i class="c-barbicue"></i>预约烧烤</button>
             </div>
             <!-- 查看更多的按钮 -->
             <span class="more-btn" @click="showMoreLayer"></span>
         </div>
-       
+
         <modal class="model-select-layer backControl" v-model="modelLayerShow" title="模式选择">
             <div class="layer-body" :class="allAttribute.status === 'start' ? 'disable' : ''">
                 <ul class="model-list">
@@ -116,6 +116,10 @@
                 <div class="locktips">开启童锁后除照明和开机外其他操作均不可用</div>
             </div>
         </modal>
+        <!-- 预约烘烤时间弹窗 -->
+        <modal v-model="barbicueTimeAlert" title="预约烧烤结束时间" class="subpagebakControl2">
+            <picker :slots="barbicueTimeSlot" @change="selectBarbicueTime" :valueKey="'value'" :item-height="60" :visible-item-count="5"></picker>
+        </modal>
     </div>
 </template>
 <script>
@@ -182,9 +186,11 @@ export default {
             //模式选择层
             modelLayerShow: false, //todo
             //更多选择层
-            moreLayerShow: true, //todo
+            moreLayerShow: false, //todo
             wenduSelectFlag: false,
             timeSelectFlag: false,
+            barbicueTimeAlert: false, //预约烧烤结束时间弹窗
+            list2: [],
             //模式列表
             modeList: [
                 //todo.mode的名称还待定
@@ -279,13 +285,32 @@ export default {
             var current = findIndex(this.allAttribute.timeList, item => {
                 return this.allAttribute.bake_duration == item.value;
             });
-
+            console.log(current);
+            console.log(99999999999999999, [
+                {
+                    flex: 1,
+                    defaultIndex: current,
+                    values: this.allAttribute.timeList,
+                    className: "slot2"
+                }
+            ]);
             return [
                 {
                     flex: 1,
                     defaultIndex: current,
                     values: this.allAttribute.timeList,
                     className: "slot2"
+                }
+            ];
+        },
+        barbicueTimeSlot() {
+            //todo
+            return [
+                {
+                    flex: 1,
+                    defaultIndex: 1,
+                    values: this.list2,
+                    className: "slot3"
                 }
             ];
         },
@@ -406,6 +431,31 @@ export default {
         showModelLayer() {
             this.modelLayerShow = true;
         },
+        showModelBarbicueTime() {
+            //todo
+            this.barbicueTimeAlert = true;
+            var timeNow = new Date().getTime(); //当前时间戳
+            var total = this.allAttribute.remaining; //单位：分钟
+            var totalChange = total * 60 * 1000; //将当前模式时间转化为毫秒
+            var startTime = timeNow + totalChange; //预约开始时间节点
+            var endTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 当前时间+24小时
+            var list = [];
+            console.log(1, startTime);
+            console.log(2, endTime);
+            while (startTime < endTime) {
+                startTime += 60 * 1000; //调整幅度为一分钟
+                var hour = new Date(startTime).getHours();
+                var minutes = new Date(startTime).getMinutes();
+                var value = hour + "时" + " " + minutes + "分";
+                list.push({
+                    active: false,
+                    value: value,
+                    name: value
+                });
+            }
+            console.log("list", list);
+            this.list2 = list;
+        },
         seleteMode(item) {
             // 如果正在工作 不能选模式
             if (this.allAttribute.status === "start") {
@@ -435,13 +485,19 @@ export default {
             }
         },
         selectWendu(picker, values) {
-            console.log("wendu", values);
             if (values.length && values[0] && this.wenduSelectFlag) {
                 this.allAttribute.temperature = values[0].value;
             }
         },
         selectTime(picker, values) {
-            console.log("time", values);
+            if (values.length && values[0] && this.timeSelectFlag) {
+                this.allAttribute.bake_duration = values[0].value;
+                this.allAttribute.remaining = values[0].value;
+            }
+        },
+        selectBarbicueTime(picker, values) {
+            //预约烧烤结束时间
+            console.log("barbicuetime", values);
             if (values.length && values[0] && this.timeSelectFlag) {
                 this.allAttribute.bake_duration = values[0].value;
                 this.allAttribute.remaining = values[0].value;
@@ -936,10 +992,10 @@ strong {
     p {
         float: left;
         font-size: 24px;
-        color: #76787A;
+        color: #76787a;
     }
     .value-wendu {
-        color: #46BCFF;
+        color: #46bcff;
         float: right;
         font-size: 24px;
         i {
@@ -963,8 +1019,8 @@ strong {
         margin-top: 8px;
     }
 }
-.slide-list{
-    border-top:1px solid #dbdbdb;
+.slide-list {
+    border-top: 1px solid #dbdbdb;
     margin: 0 39px 0 53px;
 }
 .model-select-layer .disable li {
@@ -988,12 +1044,12 @@ strong {
         width: 1300px;
         height: 906px;
         overflow: hidden;
-        box-zizing:border-box;
+        box-zizing: border-box;
     }
-    .modal-body{
-        height:824px;
+    .modal-body {
+        height: 824px;
         overflow-y: auto;
-        padding:0;
+        padding: 0;
         // border:1px solid red;
     }
     .topbar {
@@ -1018,10 +1074,10 @@ strong {
         width: 1300px;
         height: 728px;
         overflow: hidden;
-        box-zizing:border-box;
+        box-zizing: border-box;
     }
-    .modal-body{
-        padding:24px 46px;
+    .modal-body {
+        padding: 24px 46px;
     }
     .buttonchoose {
         width: 100%;
@@ -1036,7 +1092,7 @@ strong {
             height: 40px;
             line-height: 40px;
             font-size: 24px;
-            color: #C8CACC;
+            color: #c8cacc;
             margin: 0 auto 24px;
         }
         .pattern {
@@ -1060,7 +1116,7 @@ strong {
             span {
                 display: block;
                 font-size: 24px;
-                color: #76787A;
+                color: #76787a;
             }
             .c-lighting {
                 background: url(../../lib/base/haier_oven/assets/icn_illumination_normal.png)
@@ -1078,15 +1134,15 @@ strong {
         &.lockDetail {
             // margin: 20px auto 83px;
             background-color: #fff;
-            border-top:2px solid #DBDBDB;
+            border-top: 2px solid #dbdbdb;
             .hd .left {
                 font-size: 24px;
-                color: #76787A;
+                color: #76787a;
             }
-            .locktips{
+            .locktips {
                 font-size: 24px;
-                color: #C8CACC;
-                margin-top:24px;
+                color: #c8cacc;
+                margin-top: 24px;
             }
         }
         .hd {
@@ -1152,6 +1208,14 @@ strong {
         &.disable {
             opacity: 0.5; //todo
         }
+    }
+}
+#app .subpagebakControl2 {
+    .modal {
+        width: 1300px;
+        height: 675px;
+        overflow: hidden;
+        box-zizing: border-box;
     }
 }
 //modal特殊样式处理
