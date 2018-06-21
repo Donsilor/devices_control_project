@@ -120,7 +120,6 @@ export default {
                 .filter(x => x);
         },
         getWeather(item) {
-            location.hash = `weather_${item.city_id}`;
             this.back();
             //缓存至下次登陆展示
             localStorage.setItem("city", JSON.stringify(item));
