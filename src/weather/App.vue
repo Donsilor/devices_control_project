@@ -107,6 +107,11 @@ export default {
             //     }
             // })
         });
+
+        window.addEventListener("hashchange", this.hashChange, false);
+    },
+    destroyed() {
+        window.removeEventListener("hashchange", this.hashChange, false);
     },
     methods: {
         // 空气质量
@@ -312,6 +317,9 @@ export default {
         //关闭天气预报,替代原生安卓的关闭，需调用原生的方法实现
         close() {
             HdSmart.UI.toggleHeadAndFoot(false);
+        },
+        hashChange(e) {
+            if (location.hash.indexOf("switch") === -1) this.hideSwitchCity();
         }
     }
 };
