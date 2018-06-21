@@ -118,7 +118,19 @@
         </modal>
         <!-- 预约烘烤时间弹窗 -->
         <modal v-model="barbicueTimeAlert" title="预约烧烤结束时间" class="subpagebakControl2">
-            <picker :slots="barbicueTimeSlot" @change="selectBarbicueTime" :valueKey="'value'" :item-height="60" :visible-item-count="5"></picker>
+            <!-- <picker :slots="barbicueTimeSlot" @change="selectBarbicueTime" :valueKey="'value'" :item-height="60" :visible-item-count="5"></picker> -->
+            <!-- <mt-datetime-picker v-model="barbicueTimeSlot" type="time" @change="selectBarbicueTime"></mt-datetime-picker> -->
+            <!-- <mt-datetime-picker
+                v-model="barbicueTimeSlot" ref='picker'
+                type="time"
+                startDate={start}
+                endDate={end}
+                dateFormat="{value}今天"
+                hourFormat="{value}时"
+                minuteFormat="{value}分">
+            </mt-datetime-picker> -->
+            <mt-datetime-picker ref='picker' type="date" v-model="barbicueTimeSlot" :start-date="start" :end-date="end"  @change="selectBarbicueTime">
+            </mt-datetime-picker>
         </modal>
     </div>
 </template>
@@ -153,8 +165,12 @@ import AllConfig from "./config";
 import SubPage from "../../lib/components/SubPage";
 import ModeButton from "./components/ModeButton.vue";
 import Modal from "../../lib/components/Modal";
+// import { DatetimePicker } from 'mint-ui';
+import Vue from 'vue';
+import DatetimePicker from './components/DatePicker';
 
 // import IScroll from 'iscroll/build/iscroll-lite';
+Vue.component(DatetimePicker.name, DatetimePicker);
 
 export default {
     name: "app",
@@ -163,11 +179,13 @@ export default {
         Picker,
         SubPage,
         ModeButton,
-        Modal
+        Modal,
+        DatetimePicker
     },
     data() {
         return {
             model: {}, //数据
+            value: new Date(),
             //状态集合
             allAttribute: {
                 mode: "", //模式
@@ -191,6 +209,8 @@ export default {
             timeSelectFlag: false,
             barbicueTimeAlert: false, //预约烧烤结束时间弹窗
             list2: [],
+            start:'',
+            end:'',
             //模式列表
             modeList: [
                 //todo.mode的名称还待定
@@ -304,15 +324,16 @@ export default {
             ];
         },
         barbicueTimeSlot() {
+            return new Date();
             //todo
-            return [
-                {
-                    flex: 1,
-                    defaultIndex: 1,
-                    values: this.list2,
-                    className: "slot3"
-                }
-            ];
+            // return [
+            //     {
+            //         flex: 1,
+            //         defaultIndex: 1,
+            //         values: this.list2,
+            //         className: "slot3"
+            //     }
+            // ];
         },
         remainingText() {
             var total = this.allAttribute.remaining;
@@ -433,6 +454,7 @@ export default {
         },
         showModelBarbicueTime() {
             //todo
+            this.$refs.picker.open();//显示时间控件
             this.barbicueTimeAlert = true;
             var timeNow = new Date().getTime(); //当前时间戳
             var total = this.allAttribute.remaining; //单位：分钟
@@ -440,6 +462,9 @@ export default {
             var startTime = timeNow + totalChange; //预约开始时间节点
             var endTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 当前时间+24小时
             var list = [];
+            this.start=new Date(startTime);
+            thi.end=new date(endTime);
+
             console.log(1, startTime);
             console.log(2, endTime);
             while (startTime < endTime) {

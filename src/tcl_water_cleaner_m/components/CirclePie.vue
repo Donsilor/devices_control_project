@@ -39,6 +39,7 @@
 }
 .pie-right, .right {
     clip: rect(0, auto, auto, 160px);
+    left:-1px;
 }
 .pie-left, .left {
     clip: rect(0, 160px, auto, 0);
