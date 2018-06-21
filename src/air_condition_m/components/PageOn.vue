@@ -8,7 +8,7 @@
             <span class="status">
                 {{modeText}}
                 {{speedText}}
-                {{ac.env_temperature ? '环境温度' + ac.env_temperature + '℃' : ''}}
+                {{ac.env_temperature ? '环境温度' + ac.env_temperature/10 + '℃' : ''}}
             </span>
         </div>
 

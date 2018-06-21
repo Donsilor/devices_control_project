@@ -522,6 +522,8 @@ function setPosition(el, pos) {
     }
 }
 
+let pauseTipTimer
+
 export default {
     data() {
         return {
@@ -655,6 +657,10 @@ export default {
             });
         },
         setMoveTip(attrs) {
+            if(pauseTipTimer){
+                clearTimeout(pauseTipTimer)
+            }
+
             if (attrs.status == "up") {
                 this.showTip2(tips.moving_up);
                 return;
@@ -675,7 +681,9 @@ export default {
                 attrs.status == "pause" &&
                 (this.status == "up" || this.status == "down")
             ) {
-                this.showTip2(tips.move_pause, true);
+                pauseTipTimer = setTimeout(() => {
+                    this.showTip2(tips.move_pause, true);
+                }, 500)
                 return;
             }
         },

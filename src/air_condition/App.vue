@@ -4,7 +4,7 @@
         <p class="status" v-show="params.switch === 'on'">
             {{modeText}}
             {{speedText}}
-            {{params.env_temperature ? '环境温度' + params.env_temperature + '℃' : ''}}
+            {{params.env_temperature ? '环境温度' + params.env_temperature/10 + '℃' : ''}}
         </p>
         <p class="tip" v-show="params.switch === 'off'">已关闭</p>
 
@@ -265,6 +265,9 @@ export default {
                 high: "高风"
                 // 'auto': '自动风'
             }[this.params.speed];
+        },
+        envTempText() {
+            return
         }
     },
     watch: {

@@ -100,7 +100,7 @@ const tips = {
     err_temp3: "温度已调至最低"
 };
 const SPEED = ["low", "normal", "high"];
-const [MIN_TEMP, MAX_TEMP] = [16, 30];
+const [MIN_TEMP, MAX_TEMP] = [16, 31];
 let tempDelay,
     tempFlag = true;
 
