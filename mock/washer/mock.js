@@ -4,19 +4,20 @@
 import Mock from 'mockjs';
 
 let res = {
-    control: '',
-    'switch': 'on',
-    status: 'standby',
-    operation: 'finish',
-    child_lock_switch: 'off',
-    auto_detergent_switch: '',
-    add_laundry_switch: '',
-    mode: 'mix',
-    time_use: '100',
-    time_left: '80',
-    reserve_wash: 8,
-    temperature: 0,
-    drying: ''
+    "add_laundry_switch": "off",
+    "auto_detergent_switch": "off",
+    "child_lock_switch": "off",
+    "drying": "no_drying",
+    "drying_duration": 15,
+    "mode": "mix",
+    "operation": "spin",
+    "reserve_wash": 24,
+    "spin": 0,
+    "status": "standby",
+    "sterilization": "off",
+    "switch": "on",
+    "temperature": 28,
+    "time_left": 10
 }
 
 export function generateSnapShot() {

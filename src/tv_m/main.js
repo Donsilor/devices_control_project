@@ -143,9 +143,11 @@ HdSmart.ready(() => {
             store.commit("setDeviceName", window.device_name);
         }
 
-        service.getScreenProjectionStatus((error, data) => {
-            store.commit("setScreenProjectionStatus", data);
-        });
+        setTimeout(() => {
+            service.getScreenProjectionStatus((error, data) => {
+                store.commit("setScreenProjectionStatus", data);
+            });
+        }, 150)
 
         window.onScreenProjectStatusChanged = function(data) {
             store.commit("setScreenProjectionStatus", data);
