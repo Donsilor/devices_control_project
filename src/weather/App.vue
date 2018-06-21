@@ -7,7 +7,7 @@
         <!--城市切换-->
         <template v-else>
             <span class="weather-close" @click.prevent="close">关闭</span>
-            <span v-if="success" class="switch" @click="showSwitchCity=true">
+            <span v-if="success" class="switch" @click="switchCity">
                 <span class="s-icon"></span>
                 <span class="s-text">城市切换</span>
             </span>
@@ -295,6 +295,10 @@ export default {
                     HdSmart.UI.hideLoading();
                 }
             );
+        },
+        switchCity() {
+            location.hash = "switch";
+            this.showSwitchCity = true;
         },
         hideSwitchCity() {
             this.showSwitchCity = false;
