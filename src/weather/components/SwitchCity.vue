@@ -123,7 +123,9 @@ export default {
             this.back();
             //缓存至下次登陆展示
             localStorage.setItem("city", JSON.stringify(item));
-            this.getCityWeather(item);
+            setTimeout(() => {
+                this.getCityWeather(item);
+            }, 150)
         },
 
         jump(e) {

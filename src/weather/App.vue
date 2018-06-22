@@ -306,7 +306,7 @@ export default {
             this.showSwitchCity = true;
         },
         hideSwitchCity() {
-            this.showSwitchCity = false;
+            history.go(-1)
         },
         getCityWeather(city) {
             //TODO
@@ -319,7 +319,7 @@ export default {
             HdSmart.UI.toggleHeadAndFoot(false);
         },
         hashChange(e) {
-            if (location.hash.indexOf("switch") === -1) this.hideSwitchCity();
+            if (location.hash.indexOf("switch") === -1) this.showSwitchCity = false;;
         }
     }
 };
@@ -598,5 +598,7 @@ body {
     font-size: 28px;
     z-index: 999;
     cursor: pointer;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0);
 }
 </style>
