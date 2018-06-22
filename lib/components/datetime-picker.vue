@@ -91,6 +91,10 @@
         type: String,
         default: '{value}'
       },
+      dayFormat: {
+        type: String,
+        default: '{value}'
+      },
       visibleItemCount: {
         type: Number,
         default: 7
@@ -155,13 +159,11 @@
 
       getTrueValue(formattedValue) {
         console.log(formattedValue,9999999999999999)
+        if(this.type == "clock" && (formattedValue === '今天' || formattedValue === '明天')) return formattedValue;
         if (!formattedValue) return;
-        if(formattedValue === '今天' || '明天'){//todo
-          return formattedValue;
-        }else{
-          while (isNaN(parseInt(formattedValue, 10))) {//todo
-            formattedValue = formattedValue.slice(1);
-          }
+ 
+        while (isNaN(parseInt(formattedValue, 10))) {//todo
+          formattedValue = formattedValue.slice(1);
         }
         
         return parseInt(formattedValue, 10);
@@ -172,10 +174,15 @@
         let value;
         if (this.type === 'time') {
           value = values.map(value => ('0' + this.getTrueValue(value)).slice(-2)).join(':');
+          console.log("times",value)
         } else if(this.type === 'clock'){
           console.log("clock")
-          value = values.map(value => ('0' + this.getTrueValue(value)).slice(-2)).join(':');
-          console.log("999999",value)
+          value = values.map(value => ("0" +this.getTrueValue(value)).slice(-2)).join(':');
+          // let day=values[0];
+          // let hour=values[1];
+          // let minute=values[2];
+          // value=[day,hour,minute].join(" ")
+          // console.log()
         }else {
           let year = this.getTrueValue(values[0]);
           let month = this.getTrueValue(values[1]);
@@ -194,11 +201,12 @@
 
       onChange(picker) {
         console.log("change7777777777777")
-        let values = picker.$children.filter(child => child.currentValue !== undefined).map(child => child.currentValue);
+        let values = picker.$children.filter(child => {console.log('ssssssssss',child.currentValue);return child.currentValue !== undefined}).map(child => child.currentValue);
         if (this.selfTriggered) {
           this.selfTriggered = false;
           return;
         }
+         console.log("onChamge",values)
         if (values.length !== 0) {
           this.currentValue = this.getValue(values);
           this.handleValueChange();
@@ -277,8 +285,9 @@
         }else if(this.type === 'clock'){
           const currentValue = this.currentValue.split(':');
           values = [
-            this.hourFormat.replace('{value}', currentValue[0]),
-            this.minuteFormat.replace('{value}', currentValue[1])
+            this.dayFormat.replace('{value}', currentValue[0]),
+            this.hourFormat.replace('{value}', currentValue[1]),
+            this.minuteFormat.replace('{value}', currentValue[2])
           ];
         } else {
           values = [
@@ -309,6 +318,7 @@
         if (this.type === 'time' || this.type === 'clock') {//todo
           setSlotValue(0, values[0]);
           setSlotValue(1, values[1]);
+          setSlotValue(2, values[2]);
         }
         if (this.type !== 'time') {
           setSlotValue(0, values[0]);

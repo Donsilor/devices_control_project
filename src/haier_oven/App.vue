@@ -135,7 +135,7 @@
             </mt-datetime-picker> -->
             <mt-datetime-picker year-format="{value} 年"
                 hour-format="{value} 时"
-                minute-format="{value} 分" ref='picker' type="clock" :start-hour="start" :end-hour="end"  @change="selectBarbicueTime">
+                minute-format="{value} 分" ref='picker' type="clock" :start-hour="start" :end-hour="end"  @confirm="selectBarbicueTime">
             </mt-datetime-picker>
         </modal>
     </div>
@@ -530,13 +530,14 @@ export default {
                 this.allAttribute.remaining = values[0].value;
             }
         },
-        selectBarbicueTime(picker, values) {
+        selectBarbicueTime(value) {
+            console.log(value,88888888888)
             //预约烧烤结束时间
-            console.log("barbicuetime", values);
-            if (values.length && values[0] && this.timeSelectFlag) {
-                this.allAttribute.bake_duration = values[0].value;
-                this.allAttribute.remaining = values[0].value;
-            }
+            // console.log("barbicuetime", values);
+            // if (values.length && values[0] && this.timeSelectFlag) {
+            //     this.allAttribute.bake_duration = values[0].value;
+            //     this.allAttribute.remaining = values[0].value;
+            // }
         },
         getModeName(val) {
             let text = "";
