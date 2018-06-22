@@ -129,7 +129,13 @@
                 hourFormat="{value}时"
                 minuteFormat="{value}分">
             </mt-datetime-picker> -->
-            <mt-datetime-picker ref='picker' type="date" v-model="barbicueTimeSlot" :start-date="start" :end-date="end"  @change="selectBarbicueTime">
+            <!-- <mt-datetime-picker year-format="{value} 年"
+                hour-format="{value} 时"
+                minute-format="{value} 分" ref='picker' type="clock" v-model="barbicueTimeSlot" :start-hour="start" :end-hour="end"  @change="selectBarbicueTime">
+            </mt-datetime-picker> -->
+            <mt-datetime-picker year-format="{value} 年"
+                hour-format="{value} 时"
+                minute-format="{value} 分" ref='picker' type="clock" :start-hour="start" :end-hour="end"  @change="selectBarbicueTime">
             </mt-datetime-picker>
         </modal>
     </div>
@@ -167,7 +173,7 @@ import ModeButton from "./components/ModeButton.vue";
 import Modal from "../../lib/components/Modal";
 // import { DatetimePicker } from 'mint-ui';
 import Vue from 'vue';
-import DatetimePicker from './components/DatePicker';
+import DatetimePicker from '../../lib/components/datetime-picker';
 
 // import IScroll from 'iscroll/build/iscroll-lite';
 Vue.component(DatetimePicker.name, DatetimePicker);
@@ -265,7 +271,8 @@ export default {
                     mode: "thaw"
                 }
             ],
-            device_name: ""
+            device_name: "",
+            barbicueTimeSlot:false,//todo
         };
     },
     watch: {
@@ -306,14 +313,14 @@ export default {
                 return this.allAttribute.bake_duration == item.value;
             });
             console.log(current);
-            console.log(99999999999999999, [
-                {
-                    flex: 1,
-                    defaultIndex: current,
-                    values: this.allAttribute.timeList,
-                    className: "slot2"
-                }
-            ]);
+            // console.log(99999999999999999, [
+            //     {
+            //         flex: 1,
+            //         defaultIndex: current,
+            //         values: this.allAttribute.timeList,
+            //         className: "slot2"
+            //     }
+            // ]);
             return [
                 {
                     flex: 1,
@@ -323,18 +330,18 @@ export default {
                 }
             ];
         },
-        barbicueTimeSlot() {
-            return new Date();
-            //todo
-            // return [
-            //     {
-            //         flex: 1,
-            //         defaultIndex: 1,
-            //         values: this.list2,
-            //         className: "slot3"
-            //     }
-            // ];
-        },
+        // barbicueTimeSlot() {
+        //     // return new Date();
+        //     //todo
+        //     // return [
+        //     //     {
+        //     //         flex: 1,
+        //     //         defaultIndex: 1,
+        //     //         values: this.list2,
+        //     //         className: "slot3"
+        //     //     }
+        //     // ];
+        // },
         remainingText() {
             var total = this.allAttribute.remaining;
             if (
@@ -456,14 +463,17 @@ export default {
             //todo
             this.$refs.picker.open();//显示时间控件
             this.barbicueTimeAlert = true;
+            this.barbicueTimeSlot = true;
             var timeNow = new Date().getTime(); //当前时间戳
             var total = this.allAttribute.remaining; //单位：分钟
             var totalChange = total * 60 * 1000; //将当前模式时间转化为毫秒
             var startTime = timeNow + totalChange; //预约开始时间节点
             var endTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 当前时间+24小时
             var list = [];
-            this.start=new Date(startTime);
-            thi.end=new date(endTime);
+            var endTimestamp = new Date().setDate(new Date().getDate() + 1)
+            console.log('test',~~new Date(startTime).getHours(),~~(new Date(endTimestamp).getHours()))
+            this.start=~~new Date(startTime).getHours();
+            this.end=24;
 
             console.log(1, startTime);
             console.log(2, endTime);

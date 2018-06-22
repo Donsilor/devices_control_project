@@ -1,103 +1,43 @@
 <template>
-  <mt-popup v-model="visible" :closeOnClickModal="false" position="center" class="mint-datetime2">
-    <div class="dp-header">选择日期</div>
-    <div class="dp-body">
-        <mt-picker
-        :slots="dateSlots"
-        @change="onChange"
-        :visible-item-count="visibleItemCount"
-        class="datetime-picker"
-        :item-height="itemHeight"
-        ref="picker">
-        </mt-picker>
-        <div class="dp-unit">
-            <span>年</span>
-            <span>月</span>
-            <span>日</span>
-        </div>
-    </div>
-    <div class="dp-footer">
-        <span class="btn btn-cancel" @click="visible = false;$emit('cancel')">{{ cancelText }}</span>
-        <span class="btn btn-confirm" @click="confirm">{{ confirmText }}</span>
-    </div>
+  <mt-popup v-model="visible" :closeOnClickModal="closeOnClickModal" position="bottom" class="mint-datetime">
+    <mt-picker
+      :slots="dateSlots"
+      @change="onChange"
+      :visible-item-count="visibleItemCount"
+      class="mint-datetime-picker"
+      ref="picker"
+      show-toolbar>
+      <span class="mint-datetime-action mint-datetime-cancel" @click="visible = false;$emit('cancel')">{{ cancelText }}</span>
+      <span class="mint-datetime-action mint-datetime-confirm" @click="confirm">{{ confirmText }}</span>
+    </mt-picker>
   </mt-popup>
 </template>
 
-<style lang="css">
-.mint-datetime2{
-    width: 960px;
-    border-radius:6px;
-}
-.dp-header{
-    text-align: center;
-    font-size:30px;
-    color:#76787a;
-    box-shadow:inset 0 -1px 0 0 #dbdbdb;
-    height:84px;
-    line-height: 84px;
-}
-.dp-footer{
-    display: flex;
-    justify-content: center;
-    height: 120px;
-}
-.dp-body{
-    margin: 60px;
-    position: relative;
-}
-.dp-unit{
-    position: absolute;
-    left: 0;
-    width: 100%;
-    top: 50%;
-    pointer-events: none;
-    margin-top: -30px;
-    line-height: 60px;
-    display: flex;
-}
-.dp-unit span{
-    display: block;
-    text-align: center;
-    text-indent: 5em;
-    flex: 1 1 0%;
-    color:#76787a;
-}
-.picker-item.picker-selected{
-    color:#13d5dc !important;
-}
-.btn{
-    display: block;
-    border-radius:6px;
-    font-size:36px;
-    width:238px;
-    height:84px;
-    text-align: center;
-    line-height: 84px;
-    box-sizing: border-box;
-    margin: 0 12px;
-}
-.btn-cancel{
-    background:#ffffff;
-    color:#76787a;
-    border:1px solid #76787a;
-}
-.btn-confirm{
-    background:#13d5dc;
-    color:#fff;
-}
-</style>
 
 <script type="text/babel">
+  import picker from 'mint-ui/packages/picker/index.js';
+  import popup from 'mint-ui/packages/popup/index.js';
+  // import picker from './Picker/picker.vue';
+  // import popup from './popup.vue';
+  import 'mint-ui/lib/style.css';
+  import './style.css';
+  // if (process.env.NODE_ENV === 'component') {
+  //   require('mint-ui/packages/picker/style.css');
+  //   require('mint-ui/packages/popup/style.css');
+  // }
 
   const FORMAT_MAP = {
     Y: 'year',
     M: 'month',
     D: 'date',
     H: 'hour',
-    m: 'minute'
+    m: 'minute',
+    d:'day'
   };
+
   export default {
     name: 'mt-datetime-picker',
+
     props: {
       cancelText: {
         type: String,
@@ -153,11 +93,7 @@
       },
       visibleItemCount: {
         type: Number,
-        default: 3
-      },
-      itemHeight: {
-        type: Number,
-        default: 60
+        default: 7
       },
       closeOnClickModal: {
         type: Boolean,
@@ -165,6 +101,7 @@
       },
       value: null
     },
+
     data() {
       return {
         visible: false,
@@ -183,19 +120,29 @@
         leapFebDates: []
       };
     },
+
+    components: {
+      'mt-picker': picker,
+      'mt-popup': popup
+    },
+
     methods: {
       open() {
         this.visible = true;
       },
+
       close() {
         this.visible = false;
       },
+
       isLeapYear(year) {
         return (year % 400 === 0) || (year % 100 !== 0 && year % 4 === 0);
       },
+
       isShortMonth(month) {
         return [4, 6, 9, 11].indexOf(month) > -1;
       },
+
       getMonthEndDay(year, month) {
         if (this.isShortMonth(month)) {
           return 30;
@@ -205,18 +152,31 @@
           return 31;
         }
       },
+
       getTrueValue(formattedValue) {
+        console.log(formattedValue,9999999999999999)
         if (!formattedValue) return;
-        while (isNaN(parseInt(formattedValue, 10))) {
-          formattedValue = formattedValue.slice(1);
+        if(formattedValue === '今天' || '明天'){//todo
+          return formattedValue;
+        }else{
+          while (isNaN(parseInt(formattedValue, 10))) {//todo
+            formattedValue = formattedValue.slice(1);
+          }
         }
+        
         return parseInt(formattedValue, 10);
       },
+
       getValue(values) {
+        console.log("values",values)
         let value;
         if (this.type === 'time') {
           value = values.map(value => ('0' + this.getTrueValue(value)).slice(-2)).join(':');
-        } else {
+        } else if(this.type === 'clock'){
+          console.log("clock")
+          value = values.map(value => ('0' + this.getTrueValue(value)).slice(-2)).join(':');
+          console.log("999999",value)
+        }else {
           let year = this.getTrueValue(values[0]);
           let month = this.getTrueValue(values[1]);
           let date = this.getTrueValue(values[2]);
@@ -231,7 +191,9 @@
         }
         return value;
       },
+
       onChange(picker) {
+        console.log("change7777777777777")
         let values = picker.$children.filter(child => child.currentValue !== undefined).map(child => child.currentValue);
         if (this.selfTriggered) {
           this.selfTriggered = false;
@@ -242,23 +204,41 @@
           this.handleValueChange();
         }
       },
+
       fillValues(type, start, end) {
+        console.log(1111,type)
+        console.log(start,end)
         let values = [];
-        for (let i = start; i <= end; i++) {
-          if (i < 10) {
-            values.push(this[`${FORMAT_MAP[type]}Format`].replace('{value}', ('0' + i).slice(-2)));
-          } else {
-            values.push(this[`${FORMAT_MAP[type]}Format`].replace('{value}', i));
+        if(type === 'd'){
+          console.log(777777777777777777)
+          values.push(start);
+          values.push(end);
+        }else{
+          for (let i = start; i <= end; i++) {
+            if (i < 10) {
+              values.push(this[`${FORMAT_MAP[type]}Format`].replace('{value}', ('0' + i).slice(-2)));
+            } else {
+              values.push(this[`${FORMAT_MAP[type]}Format`].replace('{value}', i));
+            }
           }
         }
+        // for (let i = start; i <= end; i++) {
+        //     if (i < 10) {
+        //       values.push(this[`${FORMAT_MAP[type]}Format`].replace('{value}', ('0' + i).slice(-2)));
+        //     } else {
+        //       values.push(this[`${FORMAT_MAP[type]}Format`].replace('{value}', i));
+        //     }
+        //   }
         return values;
       },
+
       pushSlots(slots, type, start, end) {
         slots.push({
           flex: 1,
           values: this.fillValues(type, start, end)
         });
       },
+
       generateSlots() {
         let dateSlots = [];
         const INTERVAL_MAP = {
@@ -266,7 +246,8 @@
           M: this.rims.month,
           D: this.rims.date,
           H: this.rims.hour,
-          m: this.rims.min
+          m: this.rims.min,
+          d: this.rims.day//todo
         };
         let typesArr = this.typeStr.split('');
         typesArr.forEach(type => {
@@ -282,10 +263,18 @@
         }
         this.dateSlots = dateSlots;
         this.handleExceededValue();
+        console.log("this.dateSlots",this.dateSlots)
       },
+
       handleExceededValue() {
         let values = [];
         if (this.type === 'time') {
+          const currentValue = this.currentValue.split(':');
+          values = [
+            this.hourFormat.replace('{value}', currentValue[0]),
+            this.minuteFormat.replace('{value}', currentValue[1])
+          ];
+        }else if(this.type === 'clock'){
           const currentValue = this.currentValue.split(':');
           values = [
             this.hourFormat.replace('{value}', currentValue[0]),
@@ -314,9 +303,10 @@
           this.setSlotsByValues(values);
         });
       },
+
       setSlotsByValues(values) {
         const setSlotValue = this.$refs.picker.setSlotValue;
-        if (this.type === 'time') {
+        if (this.type === 'time' || this.type === 'clock') {//todo
           setSlotValue(0, values[0]);
           setSlotValue(1, values[1]);
         }
@@ -331,6 +321,7 @@
         }
         [].forEach.call(this.$refs.picker.$children, child => child.doOnValueChange());
       },
+
       rimDetect(result, rim) {
         let position = rim === 'start' ? 0 : 1;
         let rimDate = rim === 'start' ? this.startDate : this.endDate;
@@ -347,18 +338,23 @@
           }
         }
       },
+
       isDateString(str) {
         return /\d{4}(\-|\/|.)\d{1,2}\1\d{1,2}/.test(str);
       },
+
       getYear(value) {
         return this.isDateString(value) ? value.split(' ')[0].split(/-|\/|\./)[0] : value.getFullYear();
       },
+
       getMonth(value) {
         return this.isDateString(value) ? value.split(' ')[0].split(/-|\/|\./)[1] : value.getMonth() + 1;
       },
+
       getDate(value) {
         return this.isDateString(value) ? value.split(' ')[0].split(/-|\/|\./)[2] : value.getDate();
       },
+
       getHour(value) {
         if (this.isDateString(value)) {
           const str = value.split(' ')[1] || '00:00:00';
@@ -366,6 +362,7 @@
         }
         return value.getHours();
       },
+
       getMinute(value) {
         if (this.isDateString(value)) {
           const str = value.split(' ')[1] || '00:00:00';
@@ -373,14 +370,17 @@
         }
         return value.getMinutes();
       },
+
       confirm() {
         this.visible = false;
         this.$emit('confirm', this.currentValue);
       },
+
       handleValueChange() {
         this.$emit('input', this.currentValue);
       }
     },
+
     computed: {
       rims() {
         if (!this.currentValue) return { year: [], month: [], date: [], hour: [], min: [] };
@@ -390,6 +390,16 @@
             hour: [this.startHour, this.endHour],
             min: [0, 59]
           };
+          console.log("resulttime",result)
+          return result;
+        }
+        if (this.type === 'clock') {//todo
+          result = {
+            day:['今天','明天'],
+            hour: [this.startHour, this.endHour],
+            min: [0, 59]
+          };
+          console.log("resultclock",result)
           return result;
         }
         result = {
@@ -403,9 +413,12 @@
         this.rimDetect(result, 'end');
         return result;
       },
+
       typeStr() {
         if (this.type === 'time') {
           return 'Hm';
+        }else if(this.type === 'clock'){//tod0
+          return 'dHm';
         } else if (this.type === 'date') {
           return 'YMD';
         } else {
@@ -413,17 +426,21 @@
         }
       }
     },
+
     watch: {
       value(val) {
         this.currentValue = val;
       },
+
       rims() {
         this.generateSlots();
       },
+
       visible(val) {
         this.$emit('visible-change', val);
       }
     },
+
     mounted() {
       this.currentValue = this.value;
       if (!this.value) {
