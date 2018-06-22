@@ -1,11 +1,13 @@
 <template>
     <div class="page-index">
-
-        <div class="name">{{device_name}}</div>
-        <div class="lock-status">
-            <span class="status" :class="{red:lockedStatus,on:model.switch=='on'}">{{statusText}}</span>
-            <span class="battery" :class="{low:lowBattery}">{{model.battery_percentage}}%电量</span>
+        <div class="mainTitle">
+            <div class="name">{{device_name}}</div>
+            <div class="lock-status">
+                <span class="status" :class="{red:lockedStatus,on:model.switch=='on'}">{{statusText}}</span>
+                <span class="battery" :class="{low:lowBattery}">{{model.battery_percentage}}%电量</span>
+            </div>
         </div>
+        
         <div class="lock" :class="[model.switch]"></div>
 
         <a href="#" class="btn-unlock" :class="{disabled:btnDisabled}" @click.prevent="showPwdInput">开锁</a>
@@ -28,20 +30,25 @@
     -webkit-tap-highlight-color: transparent;
 }
 .page-index {
-    padding-top: 96px;
+    padding-top: 88px;//导航栏的高度
     background: #f2f2f2;
-    position: fixed;
+    position: absolute;
     left: 0;
     top: 0;
     height: 100%;
     width: 100%;
+    overflow-y: auto;
+    box-sizing:border-box;
     user-select: none;
+}
+.mainTitle{
+    margin:80px auto 0;//距离顶部导航80px
 }
 .name {
     font-size: 30px;
     color: #808080;
     text-align: center;
-    margin: 60px auto 6px;
+    margin: 0px auto 6px;
     height: 40px;
 }
 .lock-status {
@@ -68,12 +75,12 @@
     }
 }
 .lock {
-    width: 504px;
-    height: 504px;
-    margin: 24px auto 0;
+    width: 360px;
+    height: 360px;
+    margin:11% auto 0;
     background: url(../../../lib/base/door_lock/assets/img_lock_locked.png)
         no-repeat;
-    background-size: 504px;
+    background-size: 100% 100%;
     text-align: center;
     &.on {
         background-image: url(../../../lib/base/door_lock/assets/img_lock_unlocked.png);
@@ -92,11 +99,15 @@
     }
 }
 .btn-unlock {
+    position: absolute;
+    bottom:20%;
+    left:50%;
+    transform: translateX(-50%);
     background: #46bcff;
     width: 144px;
     height: 144px;
     border-radius: 100%;
-    margin: 24px auto 0;
+    // margin: 22% auto 0;
     display: block;
     text-align: center;
     line-height: 144px;
@@ -108,10 +119,10 @@
     }
 }
 .btn-golog {
-    position: fixed;
+    position: absolute;
     display: inline-block;
     right: 40px;
-    top: 132px;
+    top: 150px;
     width: 96px;
     height: 96px;
     background: url(../../../lib/base/door_lock/assets/btn_record_normal.png)
@@ -126,7 +137,7 @@
     left: 0;
     width: 100%;
     // top: 96px;
-    top: 130px;
+    top:88px;//导航栏的高度；
     .alert {
         background: rgba(51, 51, 51, 0.75);
         width: 100%;

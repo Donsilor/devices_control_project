@@ -14,9 +14,22 @@
             </div>
         </div>
 
-        <mt-datetime-picker ref="picker2" type="date" v-model="date" :start-date="startDate" :end-date="endDate" @confirm="handleChange">
-        </mt-datetime-picker>
-
+        <div class="pickerContent" v-show="dateModalVisible">
+            <div id="dataPicker" title="选择日期" >
+                <div class="modal-header">
+                    <div class="modal-title">选择日期</div>
+                    <div class="modal-close"  @click="close"></div>
+                </div>
+                <div class="modal-body">
+                    <mt-datetime-picker ref="picker2" type="date" v-model="date" :start-date="startDate" :end-date="endDate" :visible-item-count='3' @confirm="handleChange">
+                    </mt-datetime-picker>
+                    <div class="buttongroup">
+                        <div class="cancle" @click="close">取消</div>
+                        <div class="sure" @click="handleChange2">确定</div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <log-list :current-date="currentDate" :data="list" v-show="!firstLoad" />
         <div class="loadmore" v-if="!isLoading && more">
             <a href="" @click.prevent="loadMore">加载更多</a>
@@ -119,6 +132,111 @@
 .nomore {
     color: #ccc;
 }
+/**picker样式整改 start*/
+.pickerContent{
+    width:100%;
+    height: 100%;
+    position: fixed;
+    top:0;
+    left:0;
+    background:rgba(0,0,0,0.5);
+    z-index: 9;
+}
+#dataPicker{
+    width:600px;
+    height: 582px;
+    overflow:hidden;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    border-radius:2px;
+    .modal-header {
+        top:0;
+        left:0;
+        z-index: 9999999999;
+        height: 84px;
+        border-bottom: 1px solid #dbdbdb;
+        position: relative;
+        background: #fff;
+        .modal-close{
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width:84px;
+            height: 84px;
+            background: url(../../../lib/base/air_cleaner/assets/btn_close.png) no-repeat center center;
+            background-size:36px 36px;
+        }
+    }
+    .modal-title {
+        font-size: 30px;
+        color: #76787a;
+        text-align: center;
+        line-height: 84px;
+    }
+    .modal-close {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 84px;
+        height: 84px;
+        background: url(../../../lib/base/air_cleaner/assets/btn_close.png) no-repeat center center;
+        background-size: 36px 36px;
+    }
+    .mint-popup-bottom{
+        position: absolute;
+        top:0px;
+        left:0;
+        right:auto;
+        bottom:auto;
+        width:100%;
+        box-sizing:border-box;
+        padding:53px 70px 50px 70px;
+        transform: translate(0,0);
+    
+    }
+    .modal-body{
+        position: absolute;
+        width:100%;
+        height:498px;
+        top:84px;
+        left:0;
+        overflow-y:auto;
+        background-color:#fff;
+        padding:0;
+        box-sizing:border-box;
+       .buttongroup{
+           position: absolute;
+           bottom:50px;
+           left:0;
+           width:100%;
+           height:auto;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           .cancle,.sure{
+               width:240px;
+               height: 84px;
+               line-height:84px;
+               text-align: center;
+               font-size: 36px;
+               border-radius: 6px;
+           }
+           .cancle{
+               color: #76787A;
+               border: 1px solid #76787A;
+               margin-right:24px;
+               box-sizing:border-box;
+           }
+           .sure{
+                background: #13D5DC;
+                color:#fff;
+           }
+       }
+    }
+}
+/**picker样式整改 end*/
 </style>
 
 <script>
@@ -148,7 +266,7 @@ function getDateStr(date) {
 
 export default {
     components: {
-        LogList
+        LogList,
     },
     data() {
         var now = new Date();
@@ -172,7 +290,8 @@ export default {
             size: 20,
             begin: 0,
             more: 0,
-            type: "open"
+            type: "open",
+            dateModalVisible:false,//日历modal显示控制
         };
     },
     watch: {
@@ -186,10 +305,19 @@ export default {
     },
     methods: {
         showCalendar() {
+            this.dateModalVisible = true;
             this.$refs.picker2.open();
+        },
+        close(){//关闭日历空间
+            this.dateModalVisible = false;
         },
         handleChange(value) {
             this.getLogData(undefined, this.type);
+        },
+        handleChange2() {
+            this.$refs.picker2.confirm();
+            // this.$refs.picker2.confirm.call(this.$refs.picker2, this.$refs.picker2.currentValue);
+            this.dateModalVisible = false;
         },
         // loadMore() {
         //     this.getLogData(true);
@@ -387,12 +515,10 @@ export default {
                             },
                             data => {
                                 HdSmart.UI.toast("删除成功");
-                                // console.log(data);
                                 this.getLogData(undefined, this.type);
                             },
                             data => {
                                 HdSmart.UI.toast("删除失败");
-                                // console.log(data);
                                 this.getLogData(undefined, this.type);
                             }
                         );

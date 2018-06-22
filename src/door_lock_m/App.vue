@@ -4,7 +4,7 @@
 </div>
 </template>
 
-<style>
+<style lang='less'>
     *{
         padding: 0;
         margin: 0;
@@ -18,6 +18,14 @@
     html{
         padding-bottom: 2px;
     }
+    .picker-toolbar{
+        display: none !important;
+        border:1px solid red;
+    }
+    .v-modal{
+        display:none;
+    }
+
 </style>
 
 <script>
