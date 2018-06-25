@@ -6,34 +6,3 @@
         </div>
     </div>
 </template>
-
-<style lang="less" scoped>
-.page-error {
-    height: 100%;
-    background: #f2f2f2;
-    text-align: center;
-    width: 100%;
-    position: fixed;
-    left: 0;
-    top: 0;
-}
-.error-tip {
-    left: 50%;
-    top: 50%;
-    position: absolute;
-    transform: translate(-50%, -50%);
-}
-.error-tip p {
-    min-height: 30px;
-    font-size: 30px;
-    margin: 24px 0 110px 0;
-    opacity: 1;
-    position: relative;
-}
-</style>
-
-
-<script>
-export default {};
-</script>
-

@@ -222,31 +222,3 @@ export default {
 };
 </script>
 
-<style lang="less">
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-ul {
-    list-style: none;
-}
-body {
-    line-height: 1;
-}
-a {
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
-}
-.wrap-off,
-.wrap-on,
-.wrap-error {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-</style>
-
-

@@ -10,57 +10,6 @@
     </div>
 </template>
 
-
-<style lang="less">
-    body {
-        margin: 0;
-        height: 100%;
-        -webkit-tap-highlight-color: transparent;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        background-image: linear-gradient(-180deg, #2499ff 0%, #13d5dc 100%);
-    }
-
-    #app {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-    }
-
-    .navigator {
-        margin: 200px auto 0 auto;
-    }
-
-    .curtain {
-        margin: 4px auto 12px auto;
-    }
-
-    .tip {
-        position: absolute;
-        left: 0;
-        top: 150px;
-        width: 100%;
-        text-align: center;
-        font-size: 24px;
-        line-height: 24px;
-        color: rgba(255,255,255,.5);
-        font-family: NotoSansHans-DemiLight;
-    }
-    .device_name{
-        position: absolute;
-        left: 0;
-        top: 100px;
-        width: 100%;
-        text-align: center;
-        text-align: center;
-        color:#fff;
-        font-size: 30px;
-    }
-</style>
 <script>
     import watermark from '../../lib/watermark'
 
