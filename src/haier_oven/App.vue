@@ -118,25 +118,16 @@
         </modal>
         <!-- 预约烘烤时间弹窗 -->
         <modal v-model="barbicueTimeAlert" title="预约烧烤结束时间" class="subpagebakControl2">
-            <!-- <picker :slots="barbicueTimeSlot" @change="selectBarbicueTime" :valueKey="'value'" :item-height="60" :visible-item-count="5"></picker> -->
-            <!-- <mt-datetime-picker v-model="barbicueTimeSlot" type="time" @change="selectBarbicueTime"></mt-datetime-picker> -->
-            <!-- <mt-datetime-picker
-                v-model="barbicueTimeSlot" ref='picker'
-                type="time"
-                startDate={start}
-                endDate={end}
-                dateFormat="{value}今天"
-                hourFormat="{value}时"
-                minuteFormat="{value}分">
-            </mt-datetime-picker> -->
-            <!-- <mt-datetime-picker year-format="{value} 年"
-                hour-format="{value} 时"
-                minute-format="{value} 分" ref='picker' type="clock" v-model="barbicueTimeSlot" :start-hour="start" :end-hour="end"  @change="selectBarbicueTime">
-            </mt-datetime-picker> -->
             <mt-datetime-picker day-format="{value}"
                 hour-format="{value} 时"
-                minute-format="{value} 分" ref='picker' type="clock" :clockStartData="start" :clockEndData="end"  @confirm="selectBarbicueTime">
+                minute-format="{value} 分" ref='picker' type="clock" :clockStartData="start" :clockEndData="end"  :item-height="60"
+                :visible-item-count="5" 
+                @confirm="selectBarbicueTime">
             </mt-datetime-picker>
+            <div class="buttongroup">
+                <div class="cancle" @click="barbicueTimeAlert = false">取消</div>
+                <div class="sure" @click="handleChange">确定</div>
+            </div>
         </modal>
     </div>
 </template>
@@ -214,7 +205,6 @@ export default {
             wenduSelectFlag: false,
             timeSelectFlag: false,
             barbicueTimeAlert: false, //预约烧烤结束时间弹窗
-            list2: [],
             start:'',
             end:'',
             //模式列表
@@ -312,15 +302,6 @@ export default {
             var current = findIndex(this.allAttribute.timeList, item => {
                 return this.allAttribute.bake_duration == item.value;
             });
-            console.log(current);
-            // console.log(99999999999999999, [
-            //     {
-            //         flex: 1,
-            //         defaultIndex: current,
-            //         values: this.allAttribute.timeList,
-            //         className: "slot2"
-            //     }
-            // ]);
             return [
                 {
                     flex: 1,
@@ -540,6 +521,11 @@ export default {
             //     this.allAttribute.remaining = values[0].value;
             // }
         },
+        handleChange(){
+            this.$refs.picker.confirm();
+            // this.$refs.picker.confirm.call(this.$refs.picker2, this.$refs.picker2.currentValue);
+            this.barbicueTimeAlert = false;
+        },
         getModeName(val) {
             let text = "";
             // var modeList = this.modeList.concat(this.elseModeList);
@@ -662,6 +648,11 @@ body {
     margin: 0;
     padding: 0;
 }
+::-webkit-scrollbar    
+{    
+    width: 1px;    
+    height: 1px;    
+}    
 ul {
     list-style: none;
 }
@@ -672,8 +663,10 @@ strong {
     width: 100%;
     min-height: 100%;
     height: auto;
-    overflow: auto;
+    overflow: hidden;
     position: relative;
+    box-sizing:border-box;
+    padding-top:88px;
 }
 .page-off {
     background: #f2f2f2;
@@ -830,7 +823,7 @@ strong {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        padding-top: 8%;
+        padding-top: 6%;
         align-items: center;
         button {
             outline: none;
@@ -1081,13 +1074,13 @@ strong {
         width: 1300px;
         height: 906px;
         overflow: hidden;
-        box-zizing: border-box;
+        box-sizing: border-box;
     }
     .modal-body {
         height: 824px;
         overflow-y: auto;
-        padding: 0;
-        // border:1px solid red;
+        padding: 0 0px 0 0;
+        box-sizing: border-box;
     }
     .topbar {
         position: fixed;
@@ -1250,9 +1243,59 @@ strong {
 #app .subpagebakControl2 {
     .modal {
         width: 1300px;
-        height: 675px;
-        overflow: hidden;
-        box-zizing: border-box;
+        height: auto;
+        overflow-y:auto;
+        box-sizing: border-box;
+    }
+    .modal-body{
+        position: relative;
+        width:100%;
+        height:auto;
+        // min-height: 591px;
+        overflow-y:auto;
+        top:0;
+        left:0;
+        overflow-y:auto;
+        background-color:#fff;
+        padding:0 0 48px 0;
+        box-sizing:border-box;
+        .mint-popup-bottom{
+            position: relative;
+            top:0;
+            left:0;
+            right:auto;
+            bottom:auto;
+            width:100%;
+            box-sizing:border-box;
+            padding:84px 250px 84px 250px;
+            transform: translate3d(0,0,0);
+
+        }
+        .buttongroup{
+            width:100%;
+            height:auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .cancle,.sure{
+                width:240px;
+                height: 84px;
+                line-height:84px;
+                text-align: center;
+                font-size: 36px;
+                border-radius: 6px;
+                box-sizing:border-box;
+            }
+            .cancle{
+                background: #FFFFFF;
+                border: 1px solid #76787A;
+                margin-right: 24px;
+            }
+            .sure{
+                background: #46BCFF;
+                color:#fff;
+            }
+        }
     }
 }
 //modal特殊样式处理
@@ -1311,4 +1354,13 @@ strong {
 .disable {
     opacity: 0.5;
 }
+// 日期组件样式调整
+.picker-toolbar{
+    display: none !important;
+}
+.v-modal{
+    display:none;
+}
+
+
 </style>

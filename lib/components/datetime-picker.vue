@@ -4,6 +4,7 @@
       :slots="dateSlots"
       @change="onChange"
       :visible-item-count="visibleItemCount"
+      :item-height="itemHeight"
       class="mint-datetime-picker"
       ref="picker"
       show-toolbar>
@@ -15,9 +16,9 @@
 
 
 <script type="text/babel">
-  import picker from 'mint-ui/packages/picker/index.js';
+  // import picker from 'mint-ui/packages/picker/index.js';
   import popup from 'mint-ui/packages/popup/index.js';
-  // import picker from './Picker/picker.vue';
+  import picker from './Picker/picker.vue';
   // import popup from './popup.vue';
   import 'mint-ui/lib/style.css';
   // if (process.env.NODE_ENV === 'component') {
@@ -97,6 +98,10 @@
       visibleItemCount: {
         type: Number,
         default: 7
+      },
+      itemHeight:{
+        type: Number,
+        default: 36
       },
       closeOnClickModal: {
         type: Boolean,

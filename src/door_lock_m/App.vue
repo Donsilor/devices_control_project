@@ -20,7 +20,6 @@
     }
     .picker-toolbar{
         display: none !important;
-        border:1px solid red;
     }
     .v-modal{
         display:none;
