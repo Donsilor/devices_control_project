@@ -20,7 +20,6 @@
   // import picker from './Picker/picker.vue';
   // import popup from './popup.vue';
   import 'mint-ui/lib/style.css';
-  import './style.css';
   // if (process.env.NODE_ENV === 'component') {
   //   require('mint-ui/packages/picker/style.css');
   //   require('mint-ui/packages/popup/style.css');
@@ -103,7 +102,15 @@
         type: Boolean,
         default: true
       },
-      value: null
+      value: null,
+      clockStartData:{//clock模式下设置的开始时间
+        type:String,
+        default:0
+      },
+      clockEndData:{//clock模式下设置的结束时间
+        type:String,
+        default:0
+      },
     },
 
     data() {
@@ -158,7 +165,6 @@
       },
 
       getTrueValue(formattedValue) {
-        console.log(formattedValue,9999999999999999)
         if(this.type == "clock" && (formattedValue === '今天' || formattedValue === '明天')) return formattedValue;
         if (!formattedValue) return;
  
@@ -170,19 +176,11 @@
       },
 
       getValue(values) {
-        console.log("values",values)
         let value;
         if (this.type === 'time') {
           value = values.map(value => ('0' + this.getTrueValue(value)).slice(-2)).join(':');
-          console.log("times",value)
         } else if(this.type === 'clock'){
-          console.log("clock")
           value = values.map(value => ("0" +this.getTrueValue(value)).slice(-2)).join(':');
-          // let day=values[0];
-          // let hour=values[1];
-          // let minute=values[2];
-          // value=[day,hour,minute].join(" ")
-          // console.log()
         }else {
           let year = this.getTrueValue(values[0]);
           let month = this.getTrueValue(values[1]);
@@ -200,13 +198,11 @@
       },
 
       onChange(picker) {
-        console.log("change7777777777777")
-        let values = picker.$children.filter(child => {console.log('ssssssssss',child.currentValue);return child.currentValue !== undefined}).map(child => child.currentValue);
+        let values = picker.$children.filter(child => { return child.currentValue !== undefined}).map(child => child.currentValue);
         if (this.selfTriggered) {
           this.selfTriggered = false;
           return;
         }
-         console.log("onChamge",values)
         if (values.length !== 0) {
           this.currentValue = this.getValue(values);
           this.handleValueChange();
@@ -214,11 +210,8 @@
       },
 
       fillValues(type, start, end) {
-        console.log(1111,type)
-        console.log(start,end)
         let values = [];
         if(type === 'd'){
-          console.log(777777777777777777)
           values.push(start);
           values.push(end);
         }else{
@@ -245,6 +238,7 @@
           flex: 1,
           values: this.fillValues(type, start, end)
         });
+        
       },
 
       generateSlots() {
@@ -257,10 +251,11 @@
           m: this.rims.min,
           d: this.rims.day//todo
         };
+       
         let typesArr = this.typeStr.split('');
         typesArr.forEach(type => {
           if (INTERVAL_MAP[type]) {
-            this.pushSlots.apply(null, [dateSlots, type].concat(INTERVAL_MAP[type]));
+              this.pushSlots.apply(null, [dateSlots, type].concat(INTERVAL_MAP[type]));
           }
         });
         if (this.typeStr === 'Hm') {
@@ -271,7 +266,6 @@
         }
         this.dateSlots = dateSlots;
         this.handleExceededValue();
-        console.log("this.dateSlots",this.dateSlots)
       },
 
       handleExceededValue() {
@@ -315,10 +309,9 @@
 
       setSlotsByValues(values) {
         const setSlotValue = this.$refs.picker.setSlotValue;
-        if (this.type === 'time' || this.type === 'clock') {//todo
+        if (this.type === 'time') {
           setSlotValue(0, values[0]);
           setSlotValue(1, values[1]);
-          setSlotValue(2, values[2]);
         }
         if (this.type !== 'time') {
           setSlotValue(0, values[0]);
@@ -388,9 +381,29 @@
 
       handleValueChange() {
         this.$emit('input', this.currentValue);
-      }
+      },
+      clockDeal(){
+        var startTime=new Date(Number(this.clockStartData));
+        var endTime=new Date(Number(this.clockEndData));
+        //今天
+        var todayhour = new Date(startTime).getHours();
+        var todayminutes = new Date(startTime).getMinutes();
+        var today={
+          day:['今天','明天'],
+          hour:[todayhour,23],
+          min:[todayminutes,59]
+        }
+        //明天
+        var tomorrowhour = new Date(endTime).getHours();
+        var tomorrowminutes = new Date(endTime).getMinutes();
+        var tomorrow={
+          day:['今天','明天'],
+          hour:[0,tomorrowhour],
+          min:[0,tomorrowminutes]
+        }
+        return [today,tomorrow];
+      },
     },
-
     computed: {
       rims() {
         if (!this.currentValue) return { year: [], month: [], date: [], hour: [], min: [] };
@@ -400,17 +413,15 @@
             hour: [this.startHour, this.endHour],
             min: [0, 59]
           };
-          console.log("resulttime",result)
           return result;
         }
         if (this.type === 'clock') {//todo
-          result = {
-            day:['今天','明天'],
-            hour: [this.startHour, this.endHour],
-            min: [0, 59]
-          };
-          console.log("resultclock",result)
-          return result;
+          var resultAll=this.clockDeal();
+          if(this.currentValue.split(':')[0]=='明天'){
+            return resultAll[1];
+          }
+          return resultAll[0];
+          
         }
         result = {
           year: [this.startDate.getFullYear(), this.endDate.getFullYear()],
@@ -427,7 +438,7 @@
       typeStr() {
         if (this.type === 'time') {
           return 'Hm';
-        }else if(this.type === 'clock'){//tod0
+        }else if(this.type === 'clock'){//todo
           return 'dHm';
         } else if (this.type === 'date') {
           return 'YMD';

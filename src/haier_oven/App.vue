@@ -133,9 +133,9 @@
                 hour-format="{value} 时"
                 minute-format="{value} 分" ref='picker' type="clock" v-model="barbicueTimeSlot" :start-hour="start" :end-hour="end"  @change="selectBarbicueTime">
             </mt-datetime-picker> -->
-            <mt-datetime-picker year-format="{value} 年"
+            <mt-datetime-picker day-format="{value}"
                 hour-format="{value} 时"
-                minute-format="{value} 分" ref='picker' type="clock" :start-hour="start" :end-hour="end"  @confirm="selectBarbicueTime">
+                minute-format="{value} 分" ref='picker' type="clock" :clockStartData="start" :clockEndData="end"  @confirm="selectBarbicueTime">
             </mt-datetime-picker>
         </modal>
     </div>
@@ -472,24 +472,25 @@ export default {
             var list = [];
             var endTimestamp = new Date().setDate(new Date().getDate() + 1)
             console.log('test',~~new Date(startTime).getHours(),~~(new Date(endTimestamp).getHours()))
-            this.start=~~new Date(startTime).getHours();
-            this.end=24;
-
+            // this.start=~~new Date(startTime).getHours();
+            // this.end=24;
+            this.start=String(startTime);
+            this.end=String(endTime);
             console.log(1, startTime);
             console.log(2, endTime);
-            while (startTime < endTime) {
-                startTime += 60 * 1000; //调整幅度为一分钟
-                var hour = new Date(startTime).getHours();
-                var minutes = new Date(startTime).getMinutes();
-                var value = hour + "时" + " " + minutes + "分";
-                list.push({
-                    active: false,
-                    value: value,
-                    name: value
-                });
-            }
-            console.log("list", list);
-            this.list2 = list;
+            // while (startTime < endTime) {
+            //     startTime += 60 * 1000; //调整幅度为一分钟
+            //     var hour = new Date(startTime).getHours();
+            //     var minutes = new Date(startTime).getMinutes();
+            //     var value = hour + "时" + " " + minutes + "分";
+            //     list.push({
+            //         active: false,
+            //         value: value,
+            //         name: value
+            //     });
+            // }
+            // console.log("list", list);
+            // this.list2 = list;
         },
         seleteMode(item) {
             // 如果正在工作 不能选模式
