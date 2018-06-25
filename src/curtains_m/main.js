@@ -4,6 +4,9 @@ if(process.env.NODE_ENV == 'development'){
 
 import Vue from 'vue'
 import App from './App.vue'
+
+import '../../lib/base/curtains/index_m.less'
+
 import FastClick from 'fastclick'
 
 import Navigator from './components/Navigator.vue';

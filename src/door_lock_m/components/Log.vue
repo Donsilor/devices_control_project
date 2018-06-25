@@ -194,7 +194,7 @@
         box-sizing:border-box;
         padding:53px 70px 50px 70px;
         transform: translate(0,0);
-    
+
     }
     .modal-body{
         position: absolute;
@@ -494,11 +494,15 @@ export default {
                             },
                             data => {
                                 HdSmart.UI.toast("删除成功");
-                                this.getLogData(undefined, this.type);
+                                setTimeout(() => {
+                                    this.getLogData(undefined, this.type);
+                                }, 1000)
                             },
                             data => {
                                 HdSmart.UI.toast("删除失败");
-                                this.getLogData(undefined, this.type);
+                                setTimeout(() => {
+                                    this.getLogData(undefined, this.type);
+                                }, 1000)
                             }
                         );
                     } else if (val) {

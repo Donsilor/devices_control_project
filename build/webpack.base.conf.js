@@ -2,8 +2,6 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf');
-var autoprefixer = require('autoprefixer');
-var pxtorem = require('postcss-pxtorem');
 var webpack = require('webpack');
 var util = require('./util');
 
@@ -65,19 +63,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.LoaderOptionsPlugin({
-            vue: {
-                postcss: [autoprefixer({
-                    remove: false
-                }), pxtorem({
-                    rootValue: 75, //30
-                    unitPrecision: 3,
-                    propList: ['*', '!border', '!border-radius'],
-                    minPixelValue: 3,
-                    selectorBlackList: ['html']
-                })]
-            }
-        }),
         new webpack.optimize.ModuleConcatenationPlugin()
     ]
 }

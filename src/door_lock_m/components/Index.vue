@@ -7,7 +7,7 @@
                 <span class="battery" :class="{low:lowBattery}">{{model.battery_percentage}}%电量</span>
             </div>
         </div>
-        
+
         <div class="lock" :class="[model.switch]"></div>
 
         <a href="#" class="btn-unlock" :class="{disabled:btnDisabled}" @click.prevent="showPwdInput">开锁</a>
