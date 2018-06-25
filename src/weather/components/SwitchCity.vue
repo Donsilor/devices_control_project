@@ -7,11 +7,11 @@
         </div>
 
         <div class="sc-city">
-            <div class="input">
+            <form class="input" @submit.prevent="onSubmit">
                 <span class="input-ico"></span>
                 <input v-model="userinput" placeholder="请输入城市名称搜索" ref="input" />
                 <a href="#" class="i-del" v-show="userinput !== ''" @click.prevent="clearUserInput"></a>
-            </div>
+            </form>
             <div class="sc-location">
                 <span class="location-ico"></span>
                 <span class='location-text'>当前城市：&nbsp; {{city.name || ""}}</span>
@@ -100,6 +100,9 @@ export default {
     },
 
     methods: {
+        onSubmit(){
+            this.$refs.input.blur();
+        },
         //返回
         back() {
             this.$emit("hideswitch");
