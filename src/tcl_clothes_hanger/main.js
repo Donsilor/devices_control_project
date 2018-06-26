@@ -4,6 +4,9 @@ if(process.env.NODE_ENV == 'development'){
 
 import Vue from 'vue'
 import App from './App.vue'
+
+import '../../lib/base/clothes_hanger/index.less'
+
 import FastClick from 'fastclick'
 
 FastClick.attach(document.body)
