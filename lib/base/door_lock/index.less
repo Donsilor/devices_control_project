@@ -1,0 +1,566 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+a{
+    text-decoration: none;
+}
+body{
+    font-size: 30px;
+}
+html{
+    padding-bottom: 2px;
+}
+
+/* index.vue */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+.page-index {
+    padding-top: 96px;
+    background: #f2f2f2;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    user-select: none;
+}
+.name {
+    font-size: 30px;
+    color: #808080;
+    text-align: center;
+    margin: 60px auto 6px;
+    height: 40px;
+}
+.lock-status {
+    text-align: center;
+    font-size: 0;
+    .status {
+        font-size: 30px;
+        margin-right: 12px;
+        color: #c8cacc;
+        &.red {
+            color: #f26161;
+        }
+        &.on {
+            color: #46bcff;
+        }
+    }
+    .battery {
+        font-size: 30px;
+        color: #c8cacc;
+        margin-left: 12px;
+        &.low {
+            color: #f26161;
+        }
+    }
+}
+.lock {
+    width: 504px;
+    height: 504px;
+    margin: 24px auto 0;
+    background: url(./assets/img_lock_locked.png)
+        no-repeat;
+    background-size: 504px;
+    text-align: center;
+    &.on {
+        background-image: url(./assets/img_lock_unlocked.png);
+    }
+    .pic {
+        width: 96px;
+        height: 96px;
+        background: url(./assets/icn_lock_locked.png)
+            no-repeat;
+        background-size: 96px;
+        margin: 132px auto 60px;
+        display: inline-block;
+        &.on {
+            background-image: url(./assets/icn_lock_unlocked.png);
+        }
+    }
+}
+.btn-unlock {
+    background: #46bcff;
+    width: 144px;
+    height: 144px;
+    border-radius: 100%;
+    margin: 24px auto 0;
+    display: block;
+    text-align: center;
+    line-height: 144px;
+    color: #ffffff;
+    font-size: 36px;
+    &.disabled {
+        background: #ffffff;
+        color: #c8cacc;
+    }
+}
+.btn-golog {
+    position: fixed;
+    display: inline-block;
+    right: 60px;
+    top: 132px;
+    width: 96px;
+    height: 96px;
+    background: url(./assets/btn_record_normal1.png)
+        no-repeat;
+    background-size: 100% 100%;
+    &:active {
+        background-image: url(./assets/btn_record_pressed.png);
+    }
+}
+.alert-wraper {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    top: 96px;
+    .alert {
+        background: rgba(51, 51, 51, 0.75);
+        width: 100%;
+        height: 84px;
+        line-height: 84px;
+        text-align: center;
+        color: #fff;
+        font-size: 30px;
+        margin-bottom: 4px;
+        i {
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            background: url(./assets/icn_notice_white_s.png)
+                no-repeat;
+            background-size: 34px;
+            margin-right: 13px;
+            vertical-align: text-bottom;
+        }
+        .close {
+            float: right;
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: url(./assets/btn_close_white_normal.png)
+                no-repeat;
+            background-size: 30px;
+            margin-top: 27px;
+            margin-right: 26px;
+            &:active {
+                background-image: url(./assets/btn_close_pressed.png);
+            }
+        }
+        &.warn {
+            background: rgba(242, 97, 97, 0.9);
+        }
+    }
+}
+
+/* log.vue */
+
+.page-log {
+    padding-top: 96px;
+}
+.topbar {
+    background: #f2f2f2;
+    height: 95px;
+    border-bottom: 1px solid #dbdbdb;
+    position: relative;
+    .left {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .right {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    .title {
+        text-align: center;
+        line-height: 95px;
+        font-size: 0;
+        a {
+            font-size: 30px;
+            color: #2f3133;
+            letter-spacing: 0;
+            font-weight: 400;
+            margin-left: 60px;
+            margin-right: 60px;
+            &.active {
+                color: #13d5dc;
+            }
+        }
+    }
+    .icon {
+        width: 100px;
+        height: 96px;
+        display: inline-block;
+        background-repeat: no-repeat;
+        background-size: 36px 36px;
+        background-position: center center;
+    }
+    .icon-arrow {
+        background-image: url(./assets/icn_topbar_back_normal.png);
+        &:active {
+            background-image: url(./assets/icn_topbar_back_pressed.png);
+            -webkit-tap-highlight-color: transparent;
+        }
+    }
+    .icon-del {
+        background-image: url(./assets/icn_topbar_delete_normal.png);
+        &:active {
+            background-image: url(./assets/icn_topbar_delete_pressed.png);
+            -webkit-tap-highlight-color: transparent;
+        }
+    }
+}
+.topbar-fixed {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+.btn-cale {
+    position: fixed;
+    right: 60px;
+    bottom: 80px;
+    width: 96px;
+    height: 96px;
+    background: url(./assets/btn_calendar_normal.png)
+        no-repeat;
+    background-size: 100% 100%;
+    &:active {
+        background-image: url(./assets/btn_calendar_pressed.png);
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+.loadmore,
+.nomore {
+    text-align: center;
+    font-size: 24px;
+    padding: 30px 0;
+}
+.loadmore a {
+    color: #2f3133;
+}
+.nomore {
+    color: #ccc;
+}
+
+/* loglist.vue */
+.door-log {
+    position: relative;
+
+    .which-day {
+        position: absolute;
+        font-size: 30px;
+        color: #2f3133;
+        letter-spacing: 0;
+        text-align: right;
+        z-index: 10;
+        top: 28px;
+        left: 490px;
+        width: 230px;
+        padding-right: 30px;
+        box-sizing: border-box;
+    }
+
+    li {
+        line-height: 96px;
+        padding-left: 744px;
+        position: relative;
+        list-style: none;
+
+        .line {
+            background: #f2f2f2;
+            width: 2px;
+            height: 96px;
+            position: absolute;
+            left: 718px;
+        }
+
+        .dot {
+            background: #13d5dc;
+            width: 12px;
+            height: 12px;
+            border-radius: 100%;
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 714px;
+            margin-top: -6px;
+        }
+
+        .date {
+            font-size: 30px;
+            color: #2f3133;
+            letter-spacing: 0;
+            text-align: left;
+            display: inline-block;
+            margin-right: 48px;
+        }
+
+        .log {
+            font-size: 30px;
+            color: #76787a;
+            letter-spacing: 0;
+            text-align: left;
+            i {
+                display: inline-block;
+                width: 36px;
+                height: 36px;
+                margin: 0 24px 0 0px;
+                line-height: 36px;
+                vertical-align: -7px;
+            }
+        }
+    }
+}
+.nodata {
+    font-size: 30px;
+    color: #c8cacc;
+    text-align: center;
+    span {
+        background: url(./assets/img_emptydata.png)
+            no-repeat;
+        background-size: 100% 100%;
+        display: block;
+        width: 360px;
+        height: 360px;
+        margin: 250px auto 36px;
+    }
+}
+
+.door-log li:first-child .line {
+    height: 48px;
+    bottom: 0;
+}
+
+.door-log li:last-child .line {
+    height: 48px;
+    top: 0;
+}
+
+.door-log li:nth-child(odd) {
+    background: #fafafa;
+}
+
+/*
+    日志图标
+*/
+.log-icon-17 {
+    background: url("./assets/code.png");
+    background-size: 100% 100%;
+}
+
+.log-icon-18 {
+    background: url("./assets/fingerprint.png");
+    background-size: 100% 100%;
+}
+
+.log-icon-19 {
+    background: url("./assets/card.png");
+    background-size: 100% 100%;
+}
+
+.log-icon-20 {
+    background: url("./assets/key.png");
+    background-size: 100% 100%;
+}
+.log-icon-21 {
+    background: url("./assets/phone.png");
+    background-size: 100% 100%;
+}
+
+/* password-input.vue */
+.password-input {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    .password-input-container {
+        background: #ffffff;
+        // box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+        width: 600px;
+        padding-bottom: 15px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate3d(-300px, -450px, 0);
+
+        .password-input-title {
+            box-shadow: inset 0 -1px 0 0 #dbdbdb;
+            width: 100%;
+            height: 84px;
+            line-height: 84px;
+            text-align: center;
+            position: relative;
+            font-size: 30px;
+            color: #76787a;
+            .close {
+                width: 30px;
+                height: 30px;
+                display: inline-block;
+                position: absolute;
+                top: 27px;
+                right: 26px;
+                background: url(./assets/btn_close_normal.png)
+                    no-repeat;
+                background-size: 30px;
+                &:active {
+                    background-image: url(./assets/btn_close_pressed.png);
+                }
+            }
+        }
+        .password-input-content {
+            padding: 30px 48px 0;
+            position: relative;
+            input {
+                width: 504px;
+                height: 96px;
+                font-size: 54px;
+                letter-spacing: 12px;
+                background: #f2f2f2;
+                border-radius: 6px;
+                outline: none;
+                text-indent: 36px;
+                -webkit-appearance: none;
+                border: none;
+            }
+            .del {
+                position: absolute;
+                width: 48px;
+                height: 48px;
+                right: 84px;
+                top: 54px;
+                background: url(./assets/btn_input_back_normal.png)
+                    no-repeat;
+                background-size: 48px;
+                &:active {
+                    background-image: url(./assets/btn_input_back_pressed.png);
+                }
+            }
+            .password-input-btns {
+                padding-left: 12px;
+                position: relative;
+                .btn-item {
+                    width: 120px;
+                    height: 120px;
+                    line-height: 120px;
+                    display: inline-block;
+                    text-align: center;
+                    font-size: 42px;
+                    color: #46bcff;
+                    margin-top: 26px;
+                    margin-right: 60px;
+                    background: #ffffff;
+                    border-radius: 100%;
+                    &.item-wrap {
+                        margin-right: 0;
+                    }
+                    &:active {
+                        background: rgba(70, 188, 255, 0.3);
+                    }
+                }
+                .unlock {
+                    width: 120px;
+                    height: 120px;
+                    line-height: 120px;
+                    display: inline-block;
+                    text-align: center;
+                    background: #ffffff;
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    .unlock-btn {
+                        background: #46bcff;
+                        border-radius: 6px;
+                        display: inline-block;
+                        width: 120px;
+                        height: 84px;
+                        line-height: 84px;
+                        font-size: 36px;
+                        color: #ffffff;
+                        &.unlock-disabled {
+                            background: rgba(70, 188, 255, 0.3);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* datetime-picker.vue */
+
+.mint-datetime2{
+    width: 960px;
+    border-radius:6px;
+}
+.dp-header{
+    text-align: center;
+    font-size:30px;
+    color:#76787a;
+    box-shadow:inset 0 -1px 0 0 #dbdbdb;
+    height:84px;
+    line-height: 84px;
+}
+.dp-footer{
+    display: flex;
+    justify-content: center;
+    height: 120px;
+}
+.dp-body{
+    margin: 60px;
+    position: relative;
+}
+.dp-unit{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 50%;
+    pointer-events: none;
+    margin-top: -30px;
+    line-height: 60px;
+    display: flex;
+}
+.dp-unit span{
+    display: block;
+    text-align: center;
+    text-indent: 5em;
+    flex: 1 1 0%;
+    color:#76787a;
+}
+.picker-item.picker-selected{
+    color:#13d5dc !important;
+}
+.btn{
+    display: block;
+    border-radius:6px;
+    font-size:36px;
+    width:238px;
+    height:84px;
+    text-align: center;
+    line-height: 84px;
+    box-sizing: border-box;
+    margin: 0 12px;
+}
+.btn-cancel{
+    background:#ffffff;
+    color:#76787a;
+    border:1px solid #76787a;
+}
+.btn-confirm{
+    background:#13d5dc;
+    color:#fff;
+}
+
+.picker-item{
+    font-size: 30px;
+}
+.picker-selected{
+    font-size: 36px;
+}

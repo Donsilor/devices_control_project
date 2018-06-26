@@ -6,6 +6,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
 
+import '../../lib/base/door_lock/index.less'
+
 import App from './App.vue'
 import Index from './components/Index.vue'
 import Log from './components/Log.vue'
