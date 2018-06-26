@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <!-- off -->
-        <div class="page-off" v-if="model.switch==='on'">
+        <div class="page-off wrapper" v-if="model.switch==='off'">
             <div class="name">{{device_name}}</div>
             <div class="tip">已关闭</div>
             <div class="oven"></div>
@@ -12,7 +12,7 @@
             </div>
         </div>
         <!-- on -->
-        <div class="page-on wrapper" v-if="model.switch==='off'">
+        <div class="page-on wrapper" v-if="model.switch==='on'">
             <h3 class="main-title">{{device_name}}</h3>
             <div class="pannel">
                 <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
@@ -43,11 +43,24 @@
                     <i class="c-model"></i>模式设定</button>
                 <button @click="showModelLayer">
                     <i class="c-preheat"></i>辅助预热</button>
-                <button @click="showModelLayer">
+                <button @click="showModelBarbicueTime">
                     <i class="c-barbicue"></i>预约烧烤</button>
             </div>
             <!-- 查看更多的按钮 -->
             <span class="more-btn" @click="showMoreLayer"></span>
+             <!-- 预约烘烤时间弹窗 -->
+            <modal v-model="barbicueTimeAlert" title="预约烧烤结束时间" class="subpagebakControl2">
+                <mt-datetime-picker day-format="{value}"
+                    hour-format="{value} 时"
+                    minute-format="{value} 分" ref='picker' type="clock" :clockStartData="barbicueTimestart" :clockEndData="barbicueTimeend"  :item-height="50"
+                    :visible-item-count="5" 
+                    @confirm="selectBarbicueTime">
+                </mt-datetime-picker>
+                <div class="buttongroup">
+                    <div class="cancle" @click="barbicueTimeAlert = false">取消</div>
+                    <div class="sure" @click="handleChange">确定</div>
+                </div>
+            </modal>
         </div>
 
         <sub-page class="model-select-layer backControl" v-model="modelLayerShow" title="模式">
@@ -149,13 +162,16 @@ function findIndex(array, fn) {
 }
 
 import SwitchButton from "../../lib/components/SwitchButton.vue";
-import Picker from "./components/Picker/picker.vue";
+import Picker from "../../lib/components/Picker/picker";
 import AllConfig from "./config";
 import SubPage from "../../lib/components/SubPage";
 import ModeButton from "./components/ModeButton.vue";
 import Modal from "../../lib/components/Modal";
+import Vue from 'vue';
+import DatetimePicker from '../../lib/components/datetime-picker';
 
-// import IScroll from 'iscroll/build/iscroll-lite';
+Vue.component(DatetimePicker.name, DatetimePicker);
+
 
 export default {
     name: "app",
@@ -164,7 +180,8 @@ export default {
         Picker,
         SubPage,
         ModeButton,
-        Modal
+        Modal,
+        DatetimePicker
     },
     data() {
         return {
@@ -186,8 +203,11 @@ export default {
             },
             //模式选择层
             modelLayerShow: false, //todo
+            barbicueTimeAlert:false,//烘烤预约时间蒙层，
+            barbicueTimestart:'',
+            barbicueTimeend:'',
             //更多选择层
-            moreLayerShow: true, //todo
+            moreLayerShow: false, //todo
             wenduSelectFlag: false,
             timeSelectFlag: false,
             //模式列表
@@ -411,6 +431,32 @@ export default {
         showModelLayer() {
             this.modelLayerShow = true;
         },
+        showModelBarbicueTime() {//预约烘烤时间
+            //todo
+            this.$refs.picker.open();//显示时间控件
+            this.barbicueTimeAlert = true;
+            this.barbicueTimeSlot = true;
+            var timeNow = new Date().getTime(); //当前时间戳
+            var total = this.allAttribute.remaining; //单位：分钟
+            var totalChange = total * 60 * 1000; //将当前模式时间转化为毫秒
+            var startTime = timeNow + totalChange; //预约开始时间节点
+            var endTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 当前时间+24小时
+            var list = [];
+            var endTimestamp = new Date().setDate(new Date().getDate() + 1)
+        
+            this.barbicueTimestart=String(startTime);
+            this.barbicueTimeend=String(endTime);
+            console.log(1, startTime);
+            console.log(2, endTime);
+        },
+        selectBarbicueTime(value) {
+            console.log(value,88888888888)
+        },
+        handleChange(){
+            this.$refs.picker.confirm();
+            // this.$refs.picker.confirm.call(this.$refs.picker2, this.$refs.picker2.currentValue);
+            this.barbicueTimeAlert = false;
+        },
         seleteMode(item) {
             // 如果正在工作 不能选模式
             if (this.allAttribute.status === "start") {
@@ -595,12 +641,20 @@ strong {
     width: 100%;
     height: 100%;
     .name {
+        position: absolute;
+        left: 0;
+        top: 168px;
+        width: 100%;
+        height: 45px;
+        line-height: 45px;
+        text-align: center;
+        font-size: 32px;
         color: #76787a;
     }
     .tip {
         position: absolute;
         left: 0;
-        top: 17.7%;
+        top: 212px;
         width: 100%;
         text-align: center;
         font-size: 30px;
@@ -642,22 +696,13 @@ strong {
         }
     }
 }
-.name {
-    position: absolute;
-    left: 0;
-    top: 10.7%;
-    width: 100%;
-    height: 45px;
-    line-height: 45px;
-    text-align: center;
-    font-size: 32px;
-}
+
 .more-btn {
     position: absolute;
     right: 65px;
     width: 36px;
     height: 36px;
-    top: 6.4%;
+    top: 166px;
     background-image: url("../../lib/base/oven/assets/btn_more@2x.png");
     background-size: 100% 100%;
 }
@@ -668,7 +713,7 @@ strong {
     overflow-y: auto;
     text-align: center;
     margin: 0 auto;
-    padding: 10.7% 0 0 0;
+    padding:88px 0 0 0;
     box-sizing: border-box;
     position: absolute;
     .color-gray {
@@ -676,6 +721,7 @@ strong {
     }
     .main-title {
         font-weight: normal;
+        margin:80px auto 10%;
         margin-bottom: 10%;
         font-size: 32px;
         color: #76787a;
@@ -739,6 +785,7 @@ strong {
         box-sizing: border-box;
         padding: 0 60px;
         justify-content: space-between;
+        margin-bottom: 42px;
     }
     .offButton {
         justify-content: center;
@@ -748,7 +795,7 @@ strong {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        padding-top: 8%;
+        padding-top: 6%;
         align-items: center;
         button {
             // flex-grow: 1;
@@ -1018,9 +1065,15 @@ strong {
         background-color: #fff;
     }
 }
-.android .backControl {
-    box-sizing: border-box;
-    padding-bottom: 120px;
+.android {
+    .backControl {
+        box-sizing: border-box;
+        padding-bottom: 120px;
+    }
+    #app{
+        padding-bottom: 120px;
+        box-sizing: border-box;
+    }
 }
 #app .subpagebakControl {
     background-color: #f4f4f8;
@@ -1149,6 +1202,67 @@ strong {
         }
     }
 }
+#app .subpagebakControl2 {
+    .modal {
+        width: 600px;
+        height: auto;
+        overflow-y:auto;
+        box-sizing: border-box;
+        .picker-item{
+            margin-left:0;
+            margin-right:0;
+        }
+    }
+    .modal-body{
+        position: relative;
+        width:100%;
+        height:auto;
+        overflow-y:auto;
+        top:0;
+        left:0;
+        overflow-y:auto;
+        background-color:#fff;
+        padding:0 0 36px 0;
+        box-sizing:border-box;
+        .mint-popup-bottom{
+            position: relative;
+            top:0;
+            left:0;
+            right:auto;
+            bottom:auto;
+            width:100%;
+            box-sizing:border-box;
+            padding:50px 0px 60px 0px;
+            transform: translate3d(0,0,0);
+
+        }
+        .buttongroup{
+            width:100%;
+            height:auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .cancle,.sure{
+                width:240px;
+                height: 84px;
+                line-height:84px;
+                text-align: center;
+                font-size: 36px;
+                border-radius: 6px;
+                box-sizing:border-box;
+            }
+            .cancle{
+                background: #FFFFFF;
+                border: 1px solid #76787A;
+                margin-right: 24px;
+            }
+            .sure{
+                background: #46BCFF;
+                color:#fff;
+            }
+        }
+    }
+}
 //modal特殊样式处理
 .modal {
     .picker-item {
@@ -1196,6 +1310,7 @@ strong {
         border: 1px solid #76787a;
         color: #76787a;
         margin-right: 24px;
+        box-sizing:border-box;
     }
     .sure {
         background: #46bcff;
@@ -1205,4 +1320,12 @@ strong {
 .disable {
     opacity: 0.5;
 }
+// 日期组件样式调整
+.picker-toolbar{
+    display: none !important;
+}
+.v-modal{
+    display:none;
+}
+
 </style>

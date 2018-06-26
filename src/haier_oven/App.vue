@@ -157,7 +157,7 @@ function findIndex(array, fn) {
 }
 
 import SwitchButton from "../../lib/components/SwitchButton.vue";
-import Picker from "./components/Picker/picker.vue";
+import Picker from "../../lib/components/Picker/picker";
 import AllConfig from "./config";
 import SubPage from "../../lib/components/SubPage";
 import ModeButton from "./components/ModeButton.vue";
@@ -1104,7 +1104,7 @@ strong {
         width: 1300px;
         height: 728px;
         overflow: hidden;
-        box-zizing: border-box;
+        box-sizing: border-box;
     }
     .modal-body {
         padding: 24px 46px;
