@@ -27,9 +27,9 @@
     background: rgba(255, 255, 255, 0.98);
     box-shadow: inset 0 -1px 0 0 #dbdbdb;
     text-align: center;
-    height: 72px;
-    line-height: 72px;
-    font-size: 25.2px;
+    height: 80px;
+    line-height: 80px;
+    font-size: 28px;
     color: #13d5dc;
     overflow: hidden;
     display: flex;
@@ -48,8 +48,8 @@
     color: #13d5dc;
 }
 .status_bar .ico {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     background: url(../../../lib/base/tv/assets/icn_sync_blue.png) no-repeat;
     background-size: 100% 100%;
     display: inline-block;
@@ -67,8 +67,8 @@
     vertical-align: 4px;
 }
 .status_bar .wifi {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     background: url(../../../lib/base/tv/assets/ico_wifi.png) no-repeat;
     background-size: 100% 100%;
     display: inline-block;
@@ -100,16 +100,16 @@
     z-index: 9;
 }
 .status-tip-placeholder {
-    height: 72px;
+    height: 80px;
 }
 .offline_bar {
-    background: rgb(51, 51, 51, 0.75);
+    background: rgb(51, 51, 51, 0.9);
     width: 100%;
-    height: 72px;
-    line-height: 72px;
+    height: 80px;
+    line-height: 80px;
     text-align: center;
     color: #fff;
-    font-size: 25.2px;
+    font-size: 28px;
 }
 .offline_bar i {
     display: inline-block;
