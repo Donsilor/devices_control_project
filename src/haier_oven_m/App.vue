@@ -689,7 +689,7 @@ strong {
                 width: 100%;
                 height: 100%;
                 display: block;
-                background: url(../../lib/base/washer/assets_m/btn_power@2x.png)
+                background: url(../../lib/base/washer/assets/btn_power@2x.png)
                     no-repeat center;
                 background-size: 100% 100%;
             }

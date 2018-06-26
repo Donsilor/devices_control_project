@@ -1,7 +1,7 @@
 <template>
   <div class="picker-slot" :class="classNames" :style="flexStyle">
     <div v-if="!divider" ref="wrapper" class="picker-slot-wrapper" :class="{ dragging: dragging }" :style="{ height: contentHeight + 'px' }">
-      <div class="picker-item" v-for="(itemValue,index) in mutatingValues" :class="{ 'picker-selected': itemValue === currentValue }" :key="String(index)"
+      <div class="picker-item" v-for="(itemValue,index) in mutatingValues" :class="{ 'picker-selected': JSON.stringify(itemValue) === JSON.stringify(currentValue) }" :key="String(index)"
       :style="{ height: itemHeight + 'px', lineHeight: itemHeight + 'px'}">
         {{ typeof itemValue === 'object' && itemValue[valueKey] ? itemValue[valueKey] : itemValue }}
       </div>
