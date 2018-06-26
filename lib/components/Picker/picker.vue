@@ -2,7 +2,7 @@
   <div class="picker" :class="{ 'picker-3d': rotateEffect }">
     <div class="picker-toolbar" v-if="showToolbar"><slot></slot></div>
     <div class="picker-items">
-      <picker-slot v-for="slot in slots" :key="slot.value" :valueKey="valueKey"
+      <picker-slot v-for="slot in slots" :key="slot.values" :valueKey="valueKey"
         :values="slot.values || []" 
         :text-align="slot.textAlign || 'center'" 
         :visible-item-count="visibleItemCount" 
