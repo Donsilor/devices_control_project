@@ -5,6 +5,8 @@ if (process.env.NODE_ENV == "development") {
 import Vue from "vue";
 import App from "./App.vue";
 
+import '../../lib/base/weather/index.less'
+
 import AlloyFinger from "alloyfinger/alloy_finger";
 import AlloyFingerVue from "alloyfinger/vue/alloy_finger.vue";
 
