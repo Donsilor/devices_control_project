@@ -1,0 +1,718 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+body,
+html {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-tap-highlight-color: transparent;
+    color: #fff;
+    font-size: 30px;
+}
+a {
+    text-decoration: none;
+}
+#app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    color: #1ea0ff;
+    position: relative;
+    overflow: hidden;
+    // background: #46bcff;
+    &.warn {
+        //水质污染严重轻情况下的样式
+        // background: #d04802;
+        .water_wave {
+            &.ww1 {
+                background-image: url(./assets/waterpurifier_bg_wave_red1one@2x.png);
+                animation: wave1 5s linear infinite;
+            }
+            &.ww2 {
+                background-image: url(./assets/waterpurifier_bg_wave_red1two@2x.png);
+                animation: wave2 8s linear infinite;
+            }
+            &.ww3 {
+                background-image: url(./assets/waterpurifier_bg_wave_red1there@2x.png);
+                animation: wave3 10s linear infinite;
+            }
+        }
+        .mainTitle {
+            .name {
+                color: #d04802;
+            }
+            .tip {
+                color: #d04802;
+            }
+        }
+        .wash {
+            border: 1px solid #d04802;
+            border-right: none;
+            a {
+                color: #d04802;
+            }
+            .progress {
+                background: url(./assets/btn_aircon_moreorange@2x.png)
+                    no-repeat left;
+                background-size: auto 100%;
+            }
+        }
+        .record_panle {
+            .value {
+                color: #d04802;
+            }
+            .pic {
+                right: 119px;
+                border: 1px solid #d04802;
+                color: #d04802;
+            }
+            .pic_100 {
+                right: 60px;
+                border: 1px solid #d04802;
+                color: #d04802;
+            }
+            .text {
+                color: #d04802;
+            }
+        }
+    }
+}
+@keyframes wave1 {
+    from {
+        background-position-x: 0;
+    }
+    to {
+        background-position-x: -750px;
+    }
+}
+@keyframes wave2 {
+    from {
+        background-position-x: 300px;
+    }
+    to {
+        background-position-x: -450px;
+    }
+}
+@keyframes wave3 {
+    from {
+        background-position-x: 600px;
+    }
+    to {
+        background-position-x: -150px;
+    }
+}
+.water_wave {
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    width: 100%;
+    background-size: 100% 100%;
+    background-repeat: repeat-x;
+    height: 428px;
+    &.ww1 {
+        background-image: url(./assets/wave_level1.png);
+        animation: wave1 5s linear infinite;
+    }
+    &.ww2 {
+        background-image: url(./assets/wave_level2.png);
+        animation: wave2 8s linear infinite;
+    }
+    &.ww3 {
+        background-image: url(./assets/wave_level3.png);
+        animation: wave3 10s linear infinite;
+    }
+}
+.page-on,
+.page-sec,
+.hasNotTDs {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+.mainTitle {
+    position: absolute;
+    left: 0;
+    top: 15%;
+    width: 100%;
+}
+.name {
+    width: 100%;
+    text-align: center;
+    font-size: 32px;
+    color: #1ea0ff;
+}
+.tip {
+    width: 100%;
+    text-align: center;
+    font-size: 32px;
+    color: #1ea0ff;
+    opacity: 0.5;
+    height: 80px;
+    span {
+        display: inline-block;
+        height: 80px;
+    }
+}
+.record_panle {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    left: 0;
+    top: 30.7%;
+    text-align: center;
+    .value {
+        font-family: AbwechselnschriftBold;
+        font-size: 200px;
+        color: #1ea0ff;
+        height: 240px;
+        line-height: 240px;
+        width: 100%;
+        text-align: center;
+    }
+    .pic {
+        border: 1px solid #1ea0ff;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 43px;
+        width: 122px;
+        color: #1ea0ff;
+        text-align: center;
+        font-family: Roboto-Regular;
+        font-size: 30px;
+        line-height: 56px;
+        position: absolute;
+        right: 119px;
+        top: 130px;
+    }
+    .pic_100 {
+        right: 60px;
+    }
+    .text {
+        width: 100%;
+        text-align: center;
+        font-size: 32px;
+        color: #1ea0ff;
+    }
+    .valueset {
+        span {
+            color: #fff;
+            font-size: 24px;
+            position: absolute;
+        }
+        :nth-child(1) {
+            left: 40px;
+            top: 400px;
+        }
+        :nth-child(2) {
+            left: -30px;
+            top: 150px;
+        }
+        :nth-child(3) {
+            left: 218px;
+            top: -35px;
+        }
+        :nth-child(4) {
+            right: -42px;
+            top: 150px;
+        }
+        :nth-child(5) {
+            right: 0px;
+            top: 400px;
+        }
+    }
+}
+
+.wash {
+    position: absolute;
+    right: 0px;
+    top: 15%;
+    width: 158px;
+    height: 80px;
+    line-height: 80px;
+    border: 1px solid #1ea0ff;
+    border-right: none;
+    border-radius: 48px 0 0 48px;
+    overflow: hidden;
+    text-align: center;
+    a {
+        width: 100%;
+        height: 80px;
+        line-height: 80px !important;
+        font-size: 28px;
+        color: #1ea0ff;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.2);
+        display: block;
+    }
+    .progress {
+        height: 80px;
+        width: 0;
+        background: url(./assets/waterpurifier_img_wash@2x.png)
+            no-repeat;
+        background-size: 100% 100%;
+    }
+    &.washing {
+        a {
+            display: none;
+        }
+        .progress {
+            width: 100%;
+            height: 100%;
+            transition-property: width;
+            transition-duration: 30s;
+        }
+    }
+}
+.view {
+    position: absolute;
+    left: 50%;
+    bottom: 173px;
+    transform: translate(-50%, 0);
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid #ffffff;
+    border-radius: 40px;
+    width: 510px;
+    height: 80px;
+    font-size: 28px;
+    color: #ffffff;
+    text-align: center;
+    line-height: 80px;
+    z-index: 9;
+}
+.topbar {
+    position: relative;
+    .left {
+        position: absolute;
+    }
+    .title {
+        text-align: center;
+        font-size: 36px;
+        color: #2f3133;
+        line-height: 96px;
+    }
+    .arrow {
+        width: 100px;
+        height: 96px;
+        display: inline-block;
+        background-repeat: no-repeat;
+        background-size: 36px 36px;
+        background-position: center center;
+        background-image: url(./assets/icn_topbar_back_normal.png);
+        &:active {
+            background-image: url(./assets/icn_topbar_back_pressed.png);
+        }
+    }
+}
+.detail_content {
+    overflow-y: auto;
+    .lx_title {
+        text-align: center;
+        font-size: 36px;
+        color: #ffffff;
+        position: relative;
+        .main_tips {
+            width: 100%;
+            height: 240px;
+            line-height: 240px;
+            font-size: 200px;
+            color: #1ea0ff;
+        }
+        .levelTips {
+            font-size: 32px;
+            color: #1ea0ff;
+        }
+        .pic {
+            border: 1px solid #1ea0ff;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 43px;
+            width: 124px;
+            height: 60px;
+            color: #1ea0ff;
+            text-align: center;
+            font-family: Roboto-Regular;
+            font-size: 30px;
+            line-height: 56px;
+            position: absolute;
+            right: 119px;
+            top: 134px;
+        }
+        .pic_100 {
+            right: 60px;
+        }
+    }
+    .lx_wrap {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 9;
+        width: 100%;
+        height: 802px;
+        overflow: hidden;
+        box-sizing: border-box;
+        padding: 46px 0 0 32px;
+        .time_tips {
+            width: 100%;
+            height: 84px;
+            line-height: 84px;
+            color: #fff;
+            font-size: 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .lx_item {
+            width: 100%;
+            height: 120px;
+            line-height: 120px;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            padding-right: 32px;
+            .list_button {
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                border-radius: 50%;
+                background-color: #fff;
+                font-size: 32px;
+                color: #1ea0ff;
+            }
+            .item-name {
+                font-size: 32px;
+                color: #ffffff;
+                flex-grow: 1;
+                box-sizing: border-box;
+                padding-left: 30px;
+                text-align: left;
+            }
+            .item-right {
+                font-size: 32px;
+                color: #ffffff;
+                span.angle {
+                    display: inline-block;
+                    transform: rotate(45deg);
+                    height: 13px;
+                    width: 13px;
+                    border-width: 2px 2px 0 0;
+                    border-style: solid;
+                    position: relative;
+                    color: #fff;
+                    vertical-align: 1%;
+                }
+            }
+            &.active {
+                .list_button {
+                    background-color: rgba(255, 255, 255, 0.5);
+                }
+                .item-name {
+                    color: rgba(255, 255, 255, 0.5);
+                }
+                .item-right {
+                    color: rgba(255, 255, 255, 0.5);
+                }
+            }
+        }
+        .lx_msg {
+            position: absolute;
+            bottom: 0;
+            left: 32px;
+            height: 70px;
+            line-height: 70px;
+            text-align: left;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+    }
+    .wave_content {
+        width: 100%;
+        height: 802px;
+        box-sizing: border-box;
+        position: absolute;
+        z-index: -1;
+        bottom: 0;
+        left: 0;
+        .waveHigh {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-size: 100% 100%;
+            background-repeat: repeat-x;
+            &.waveHigh1 {
+                background-image: url(./assets/waterpurifier_bg_wave_blue2one@2x.png);
+                animation: wave1 5s linear infinite;
+                z-index: -3;
+            }
+            &.waveHigh2 {
+                background-image: url(./assets/waterpurifier_bg_wave_blue2two@2x.png);
+                animation: wave2 8s linear infinite;
+                z-index: -2;
+            }
+            &.waveHigh3 {
+                background-image: url(./assets/waterpurifier_bg_wave_blue2there@2x.png);
+                animation: wave3 10s linear infinite;
+                z-index: -1;
+            }
+        }
+    }
+    &.detailWaing {
+        .lx_title {
+            .main_tips {
+                color: #d04802;
+            }
+            .levelTips {
+                color: #d04802;
+            }
+            .pic {
+                border: 1px solid #d04802;
+                color: #d04802;
+            }
+            .pic_100 {
+                border: 1px solid #d04802;
+                color: #d04802;
+            }
+        }
+        .lx_wrap {
+            .lx_item {
+                .list_button {
+                    color: #d04802;
+                }
+            }
+        }
+        .wave_content {
+            .waveHigh {
+                &.waveHigh1 {
+                    background-image: url(./assets/waterpurifier_bg_wave_red2one@2x.png);
+                }
+                &.waveHigh2 {
+                    background-image: url(./assets/waterpurifier_bg_wave_red2two@2x.png);
+                }
+                &.waveHigh3 {
+                    background-image: url(./assets/waterpurifier_bg_wave_red2there@2x.png);
+                }
+            }
+        }
+    }
+}
+
+//弹窗
+.modal {
+    color: #76787a;
+    z-index: 9;
+}
+.modal-w .modal {
+    width: 1300px;
+}
+/**tds简介样式 start*/
+.tds {
+    width: 100%;
+    p.tds_text {
+        width: 100%;
+        color: #333;
+        font-size: 28px;
+        box-sizing: border-box;
+        padding: 34px 30px 0 30px;
+    }
+    img {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        height: auto;
+        margin-top: 60px;
+        padding: 0px 20px 0 20px;
+    }
+}
+/**tds简介样式 end*/
+.alarm {
+    .alert {
+        i {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: url(./assets/waterpurifier_icon_remind_normal.png)
+                no-repeat;
+            background-size: 100% 100%;
+            vertical-align: -5px;
+            margin-right: 10px;
+        }
+        font-size: 30px;
+        color: #333333;
+        margin-bottom: 42px;
+    }
+    .text {
+        font-size: 24px;
+        color: #76787a;
+        line-height: 36px;
+        margin-bottom: 42px;
+    }
+    .btn {
+        width: 504px;
+        display: flex;
+        justify-content: space-between;
+        margin: 0 auto;
+        a {
+            flex: 1;
+            border: 1px solid #76787a;
+            border-radius: 6px;
+            height: 84px;
+            margin: 0 12px;
+            display: block;
+            line-height: 82px;
+            font-size: 36px;
+            color: #76787a;
+        }
+        .btn-default {
+            border: 1px solid #46bcff;
+            background: #46bcff;
+            color: #ffffff;
+        }
+    }
+}
+.lx_status {
+    height: auto;
+    overflow: auto;
+    .p1 {
+        font-size: 28px;
+        height: 40px;
+        line-height: 40px;
+        color: #76787a;
+        opacity: 0.5;
+        text-align: center;
+        margin-top: 6.53%;
+    }
+    .p2 {
+        font-size: 36px;
+        color: #333333;
+        margin-bottom: 30px;
+        font-size: 32px;
+        color: #333333;
+        text-align: center;
+    }
+    .p3 {
+        opacity: 0.5;
+        font-size: 28px;
+        color: #76787a;
+        text-align: center;
+        margin-top: 62px;
+        height: 40px;
+        line-height: 40px;
+    }
+    .p4 {
+        height: 86px;
+        line-height: 86px;
+        font-size: 72px;
+        color: #333333;
+        font-family: Helvetica;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        span {
+            font-size: 28px;
+        }
+    }
+    .p5 {
+        opacity: 0.5;
+        font-size: 28px;
+        color: #76787a;
+        height: 40px;
+        line-height: 40px;
+        margin-top: 10px;
+    }
+    .pie {
+        margin: 0 auto 50px;
+    }
+    .msg {
+        opacity: 0.5;
+        font-size: 28px;
+        color: #76787a;
+        margin-top: 60px;
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+    }
+    .btn {
+        width: 660px;
+        height: 84px;
+        line-height: 84px;
+        margin: 14px auto;
+        overflow-x: hidden;
+        text-align: center;
+        box-sizing: border-box;
+        border: 1px solid #46bcff;
+        border-radius: 6px;
+        .btn-block {
+            box-sizing: border-box;
+            display: -webkit-box;
+            transition: transform 400ms;
+            &.active {
+                transform: translate(-100%, 0);
+            }
+        }
+        a {
+            width: 100%;
+            height: 100%;
+            display: block;
+            line-height: 82px;
+            font-size: 36px;
+            color: #46bcff;
+        }
+        .reset_submit {
+            background: #46bcff;
+            color: #ffffff;
+        }
+    }
+}
+.subpage {
+    z-index: 99;
+}
+.overlay {
+    z-index: 10;
+}
+
+.android {
+    .water_wave {
+        bottom: 120px;
+    }
+    .view {
+        bottom: 293px;
+    }
+    .lx_wrap {
+        bottom: 120px;
+    }
+    .wave_content {
+        bottom: 120px;
+    }
+}
+/* error */
+.page-nodata {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.page-nodata {
+    background-image: linear-gradient(-180deg, #fafafa 0%, #f2f2f2 100%);
+    .name {
+        color: #76787a;
+    }
+    .pic1 {
+        position: absolute;
+        top: 320px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 420px;
+        height: 420px;
+        background: url(./assets/waterpurifier_img_offline.png)
+            no-repeat;
+        background-size: 100% 100%;
+    }
+}
