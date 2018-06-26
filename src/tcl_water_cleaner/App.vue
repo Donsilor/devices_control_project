@@ -1,10 +1,14 @@
 <template>
     <div id="app" :class="{warn:level>=4}">
-        <div class="water_wave ww1"></div>
-        <div class="water_wave ww2"></div>
-        <div class="water_wave ww3"></div>
 
-        <div class="page-on" :style="inPage('index')" v-if="isInit">
+        <template  v-if="success">
+
+        <div class="page-on" :style="inPage('index')">
+
+            <div class="water_wave ww1"></div>
+            <div class="water_wave ww2"></div>
+            <div class="water_wave ww3"></div>
+
             <div class="name">{{device_name}}</div>
 
             <div class="wash" :class="{washing:washing}">
@@ -62,6 +66,13 @@
                 <div class="title">滤芯详情</div>
             </div>
             <filter-items :items="filterItems" :view-filter="viewFilter" />
+        </div>
+
+        </template>
+
+        <div class="page-nodata" v-if="!success">
+            <div class="name">{{device_name}}</div>
+            <div class="pic1"></div>
         </div>
 
         <modal title="TDS简介" class="modal-w" v-model="tdsModalVisible">
@@ -181,11 +192,11 @@ export default {
             filterItems: [],
             washing: false,
             isFilterResetActive: false,
-            isInit: false,
             errors: [],
             errorStore: JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || [],
             expiredStore:
-                JSON.parse(localStorage.getItem(EXPIRED_STORE_KEY)) || []
+                JSON.parse(localStorage.getItem(EXPIRED_STORE_KEY)) || [],
+            success: true
         };
     },
     computed: {
@@ -336,17 +347,17 @@ export default {
             HdSmart.Device.getSnapShot(
                 data => {
                     this.onSuccess(data);
+                    HdSmart.UI.hideLoading();
                 },
-                () => {}
+                () => {
+                    this.success = false
+                    HdSmart.UI.hideLoading();
+                }
             );
         },
         onSuccess(result) {
-            HdSmart.UI.hideLoading();
 
-            if (!this.isInit) {
-                this.isInit = true;
-            }
-
+            this.success = true
             var attrs = result.attribute;
 
             this.model = attrs;

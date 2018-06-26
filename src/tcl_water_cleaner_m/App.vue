@@ -1,7 +1,9 @@
 <template>
     <div id="app" :class="{warn:level>=4}">
 
-        <div class="page-on" :style="inPage('index')" v-if="isInit && hasTDS">
+        <template v-if="success">
+
+        <div class="page-on" :style="inPage('index')" v-if="hasTDS">
             <div class="mainTitle">
                 <div class="name">{{device_name}}</div>
                 <div class="tip">
@@ -21,19 +23,10 @@
             </div>
 
             <div class="record_panle" v-if="hasTDS" @click="tdsModalVisibleControl">
-                <!-- <div class="circle">
-                <span v-for="i in 4" :key="i" :class="'c'+i" v-show="i==(level>4?4:level)"></span>
-            </div> -->
-                <!-- <div class="arrow" :style="{transform:'rotate('+ rotate +'deg)'}"></div> -->
+
                 <div class="value">{{nowTDS}}</div>
                 <div class="pic" :class="{'pic_100':nowTDS>=100}">TDS</div>
-                <!-- <div class="valueset" @click.stop="">
-                <span>0</span>
-                <span>50</span>
-                <span>100</span>
-                <span>300</span>
-                <span>300+</span>
-            </div> -->
+
                 <div class="text">
                     <span v-if="level==1">过滤后水质可直接饮用</span>
                     <span v-else-if="level==2">过滤后水质不建议直接饮用</span>
@@ -50,7 +43,6 @@
                 <span v-else-if="expiring_num > 0">{{expiring_num}}个滤芯将到期，点击查看详情</span>
                 <span v-else>查看滤芯寿命</span>
             </a>
-            <!-- <filter-items v-if="!hasTDS" :items="filterItems" :view-filter="viewFilter"  /> -->
         </div>
         <!-- 没有TDS的机器的样式 -->
         <div class="hasNotTDs" v-if="!hasTDS" :style="inPage('index')">
@@ -80,6 +72,15 @@
                 <div class="title">滤芯寿命</div>
             </div>
             <filter-items :items="filterItems" :view-filter="viewFilter" :nowTDS="nowTDS" :level="level" :hasTDS="hasTDS" v-model="tdsModalVisible" :toggle-modal-visible="toggleModalVisible" />
+        </div>
+
+        </template>
+
+        <div class="page-nodata" v-if="!success">
+            <div class="mainTitle">
+                <div class="name">{{device_name}}</div>
+            </div>
+            <div class="pic1"></div>
         </div>
 
         <sub-page title="TDS简介" class="modal-w" v-model="tdsModalVisible">
@@ -200,11 +201,11 @@ export default {
             filterItems: [],
             washing: false,
             isFilterResetActive: false,
-            isInit: false,
             errors: [],
             errorStore: JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || [],
             expiredStore:
-                JSON.parse(localStorage.getItem(EXPIRED_STORE_KEY)) || []
+                JSON.parse(localStorage.getItem(EXPIRED_STORE_KEY)) || [],
+            success: true
         };
     },
     computed: {
@@ -372,18 +373,17 @@ export default {
             HdSmart.Device.getSnapShot(
                 data => {
                     this.onSuccess(data);
+                    HdSmart.UI.hideLoading();
                 },
-                () => {}
+                () => {
+                    this.success = false
+                    HdSmart.UI.hideLoading();
+                }
             );
         },
         onSuccess(result) {
-            console.log("resultall", result);
-            HdSmart.UI.hideLoading();
 
-            if (!this.isInit) {
-                this.isInit = true;
-            }
-
+            this.success = true
             var attrs = result.attribute;
 
             this.model = attrs;

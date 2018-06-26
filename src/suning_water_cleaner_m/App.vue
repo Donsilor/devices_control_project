@@ -1,7 +1,7 @@
 <template>
     <div id="app">
 
-        <div class="page-on" v-if="isInit && success">
+        <div class="page-on" v-if="success">
             <div class="mainTitle">
                 <div class="name">{{device_name}}</div>
                 <div class="tip">
@@ -20,7 +20,7 @@
 
         </div>
 
-        <div class="page-nodata" v-if="isInit && !success">
+        <div class="page-nodata" v-if="!success">
             <div class="mainTitle">
                 <div class="name">{{device_name}}</div>
             </div>
@@ -93,8 +93,7 @@ export default {
             model: {},
             currentIndex: -1,
             filterItems: [],
-            isInit: false,
-            success: false,
+            success: true,
             alarmModalVisible: false,
             errorStore: JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || []
         };
@@ -121,19 +120,17 @@ export default {
         getSnapShot() {
             HdSmart.Device.getSnapShot(
                 data => {
-                    this.isInit = true;
-                    this.success = true;
                     this.onSuccess(data);
+                    HdSmart.UI.hideLoading();
                 },
                 () => {
-                    this.isInit = true;
                     this.success = false;
+                    HdSmart.UI.hideLoading();
                 }
             );
         },
         onSuccess(result) {
-            HdSmart.UI.hideLoading();
-
+            this.success = true;
             var attrs = result.attribute;
 
             if (result.device_name) {
