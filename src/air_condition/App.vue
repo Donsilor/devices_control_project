@@ -363,13 +363,14 @@ export default {
                         break;
                 }
             }
-
+            /*
             if (this.params.mode == "wind" && attr.env_temperature) {
                 this.fakeTemp =
                     attr.env_temperature >= 100
                         ? attr.env_temperature / 10
                         : attr.env_temperature;
             }
+            */
         },
         toggle(type, value, tip, el) {
             let str = "";

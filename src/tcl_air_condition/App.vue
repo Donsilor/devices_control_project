@@ -375,13 +375,14 @@ export default {
                         break;
                 }
             }
-
+            /*
             if (this.params.mode == "wind" && attr.env_temperature) {
                 this.fakeTemp =
                     attr.env_temperature >= 100
                         ? attr.env_temperature / 10
                         : attr.env_temperature;
-            } else if (this.params.mode == "dehumidify") {
+            } else */
+            if (this.params.mode == "dehumidify") {
                 this.params.speed = "auto";
             }
         },
