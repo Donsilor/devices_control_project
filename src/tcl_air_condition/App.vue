@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="appClassObj" @click="screenClick">
+  <div id="app" :class="appClassObj">
     <p class="title">{{ deviceName }}</p>
     <p class="status" v-show="params.switch === 'on'">
             {{modeText}}
@@ -48,10 +48,9 @@
       </div>
       <!--底部按钮End-->
 
-      <div class="more" v-show="!showMore" @click.stop="showMore=true;"></div>
+      <div class="more"  @click.stop="showMore=true;"></div>
       <!--更多子菜单Start-->
-      <transition name="fade-in">
-        <div class="subMenu" v-show="showMore" @click.stop="">
+        <modal class="subMenu" v-model="showMore" title="更多">
           <devider :content="'模式'"></devider>
           <div class="more-mode">
             <ac-button class="mode_auto" :class="{active:params.mode=='auto'}" :info="buttonList.mode_auto" @tap="setParam"></ac-button>
@@ -62,8 +61,7 @@
             <ac-button class="lr" v-if="deviceCategory === 1" :class="{active:params.wind_left_right=='on'}" :info="buttonList.lrBtn" @tap="toggle"></ac-button>
             <ac-button class="ud" :class="{active:params.wind_up_down=='on'}" :info="buttonList.udBtn" @tap="toggle"></ac-button>
           </div>
-        </div>
-      </transition>
+        </modal>
 
     </div>
 
@@ -99,6 +97,7 @@
 </template>
 
 <script>
+import Modal from '../../lib/components/Modal.vue'
 import AcButton from "./components/AcButton.vue";
 import Devider from "./components/Devider.vue";
 
@@ -162,7 +161,11 @@ function setStore(json) {
 }
 
 export default {
-    components: { AcButton, Devider },
+    components: {
+        AcButton,
+        Devider,
+        Modal
+    },
     data() {
         return {
             buttonList: {
@@ -444,8 +447,6 @@ export default {
 
             let store = getStore();
 
-            // alert(JSON.stringify(store))
-
             if (type == "switch" && value == "on") {
                 if (store.mode) {
                     attr.mode = store.mode;
@@ -485,7 +486,9 @@ export default {
                 },
                 () => {
                     that.removeLoading();
-                    that.params[type] = attr[type];
+                    if(type != 'temperature'){
+                        that.params[type] = attr[type];
+                    }
                     that.setTip(tip);
 
                     if (!store[that.params.mode]) {

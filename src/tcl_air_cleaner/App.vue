@@ -96,8 +96,7 @@
 </template>
 
 <script>
-import Modal from "./components/Modal.vue";
-import ErrorTip from "./components/ErrorTip.vue";
+import Modal from "../../lib/components/Modal.vue";
 
 const SPEED_TEXT1 = [
     { text: "低速", className: "1", value: "low" },
@@ -194,8 +193,7 @@ function throttle(func, wait, options) {
 
 export default {
     components: {
-        Modal,
-        ErrorTip
+        Modal
     },
     data() {
         return {

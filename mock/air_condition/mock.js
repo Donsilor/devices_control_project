@@ -19,9 +19,9 @@ let res = {
     "attribute": {
       "switchStatus": "off",
       "temperature": 165,
-      "env_temperature": 24,
-      "mode": "auto",
-      "speed": "auto",
+      "env_temperature": 240,
+      "mode": "cold",
+      "speed": "low",
       "wind_up_down": "off",
       "wind_left_right": "off",
       "sleep_mode": "on",

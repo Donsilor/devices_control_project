@@ -1,5 +1,5 @@
 <template>
-    <div id="app" :class="appClassObj" @click="screenClick">
+    <div id="app" :class="appClassObj">
         <p class="title">{{ deviceName }}</p>
         <p class="status" v-show="params.switch === 'on'">
             {{modeText}}
@@ -49,15 +49,9 @@
             </div>
             <!--底部按钮End-->
 
-            <div class="more" v-show="!showMore" @click.stop="showMore=true;"></div>
+            <div class="more" @click.stop="showMore=true;"></div>
             <!--更多子菜单Start-->
-            <!-- <div class="overlay" v-show="showMore"></div> -->
-            <transition name="fade-in">
-                <div class="subMenu" v-show="showMore" @click.stop="">
-                    <!-- <div class="subHeader">
-                        更多
-                        <span class="sub-close" @click.stop="showMore=false;"></span>
-                    </div> -->
+                <modal class="subMenu" v-model="showMore" title="更多">
                     <devider :content="'模式'"></devider>
                     <div class="more-mode">
                         <ac-button class="mode_auto" :class="{active:params.mode=='auto'}" :info="buttonList.mode_auto" @tap="setParam"></ac-button>
@@ -69,8 +63,7 @@
                         <ac-button class="lr" :class="{active:params.wind_left_right=='on'}" :info="buttonList.lrBtn" @tap="toggle"></ac-button>
                         <ac-button class="ud" :class="{active:params.wind_up_down=='on'}" :info="buttonList.udBtn" @tap="toggle"></ac-button>
                     </div>
-                </div>
-            </transition>
+                </modal>
 
         </div>
 
@@ -107,6 +100,7 @@
 </template>
 
 <script>
+import Modal from '../../lib/components/Modal.vue'
 import AcButton from "./components/AcButton.vue";
 import Devider from "./components/Devider.vue";
 
@@ -158,7 +152,7 @@ function Button(title, type, value, tip) {
 var temperatureRadio = 1;
 
 export default {
-    components: { AcButton, Devider },
+    components: { AcButton, Devider, Modal },
     data() {
         return {
             buttonList: {
@@ -450,8 +444,9 @@ export default {
                 },
                 () => {
                     that.removeLoading();
-
-                    that.params[type] = value;
+                    if(type != 'temperature'){
+                        that.params[type] = value;
+                    }
                     that.setTip(tip);
                 },
                 data => {

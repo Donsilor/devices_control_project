@@ -18,7 +18,8 @@
     position: fixed;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -58%);
+    transform: translate(-50%, -50%);
+    margin-top: -100px;
     background: #fff;
     width: 600px;
     border-radius: 6px;
@@ -27,15 +28,6 @@
         height: 84px;
         border-bottom: 1px solid #dbdbdb;
         position: relative;
-        .modal-close{
-            position: absolute;
-            top: 0px;
-            right: 0px;
-            width:84px;
-            height: 84px;
-            background: url(../base/air_cleaner/assets/btn_close.png) no-repeat center center;
-            background-size:36px 36px;
-        }
     }
     &-title {
         font-size: 30px;
@@ -49,7 +41,7 @@
         right: 0px;
         width: 84px;
         height: 84px;
-        background: url(../base/air_cleaner/assets/btn_close.png) no-repeat center center;
+        background: url(./assets/btn_close.png) no-repeat center center;
         background-size: 36px 36px;
     }
     &-body {

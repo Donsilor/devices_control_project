@@ -53,9 +53,7 @@
 
         </div>
 
-        <div class="mask" v-show="toggle" @click="showMore()"></div>
-
-        <div class="btns-more" v-show="toggle">
+        <modal class="btns-more" v-model="toggle" title="更多">
             <p>模式</p>
             <ul class="btns">
                 <li :class="{on:ac.mode==='auto'}">
@@ -78,12 +76,15 @@
                     左右
                 </li> -->
             </ul>
-        </div>
+        </modal>
 
     </div>
 </template>
 
 <script>
+
+import Modal from '../../../lib/components/Modal.vue'
+
 const tips = {
     fail: "设置失败",
     temperature: "温度设置成功",
@@ -110,6 +111,9 @@ let tempDelay,
     tempFlag = true;
 
 export default {
+    components: {
+        Modal
+    },
     props: {
         control: {
             type: Function

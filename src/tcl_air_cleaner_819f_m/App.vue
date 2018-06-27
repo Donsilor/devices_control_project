@@ -100,8 +100,7 @@
 
 <script>
 import Modal from "../../lib/components/Modal";
-import ErrorTip from "./components/ErrorTip.vue";
-import SubPage from "./components/SubPage";
+import SubPage from "../../lib/components/SubPage";
 
 const SPEED_TEXT1 = [
     { text: "低速", className: "1", value: "low" },
@@ -199,7 +198,6 @@ function throttle(func, wait, options) {
 export default {
     components: {
         Modal,
-        ErrorTip,
         SubPage
     },
     data() {
