@@ -187,6 +187,9 @@
         line-height: 120px;
         border-bottom: 1px solid #dbdbdb;
         font-size: 32px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         strong {
             color: #13d5dc;
             font-weight: normal;
