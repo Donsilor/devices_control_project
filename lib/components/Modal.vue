@@ -58,7 +58,7 @@
     z-index:9;
 }
 .android .modal{
-    margin-top: -100px;
+    margin-top: -80px;
 }
 </style>
 
