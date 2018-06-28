@@ -56,7 +56,7 @@
             </div>
 
             <!-- 模式 -->
-            <sub-page title="模式选择" class="modal-w" v-model="modeModalVisible">
+            <sub-page title="模式选择" class="modal-w backControl2" v-model="modeModalVisible">
                 <div class="model-wrap">
                     <div class="group">
                         <div class="title">快洗</div>
@@ -194,11 +194,11 @@
 
 
 <script>
-import Modal from "./components/Modal.vue";
-import SwitchButton from "./components/SwitchButton.vue";
-import Picker from "./components/Picker/picker.vue";
+import Modal from "../../lib/components/Modal.vue";
+import SwitchButton from "../../lib/components/SwitchButton.vue";
+import Picker from "../../lib/components/Picker/picker.vue";
 import ModeButton from "./components/ModeButton.vue";
-import SubPage from "./components/SubPage.vue";
+import SubPage from "../../lib/components/SubPage.vue";
 
 import {
     MODE_OPTIONS,

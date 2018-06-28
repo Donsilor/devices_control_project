@@ -76,7 +76,7 @@ a {
 .name {
     position: absolute;
     left: 0;
-    top: 10.7%;
+    top: 168px;
     width: 100%;
     height: 45px;
     line-height: 45px;
@@ -137,7 +137,7 @@ a {
     height: 460px;
     position: absolute;
     left: 50%;
-    top: 230px;
+    top: 25%;
     transform: translate(-50%, 0);
     color: #46bcff;
     background-image: url(./assets/washer_bg_initial.png);
@@ -444,7 +444,7 @@ a {
     &-fn {
         position: absolute;
         left: 0;
-        top: 750px;
+        top: 70%;
         width: 100%;
         justify-content: center;
         .btn {
@@ -487,7 +487,7 @@ a {
     &-more {
         position: absolute;
         right: 40px;
-        top: 8.5%;
+        top: 136px;
         i {
             width: 96px;
             height: 96px;
@@ -859,7 +859,29 @@ a {
     }
 
 }
-    .android .backControl{
-        box-sizing:border-box;
-        padding-bottom: 120px;
+#app .backControl2{
+    height: auto;
+    min-height: 100%;
+    position: absolute;
+    .topbar{
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        z-index:1;
     }
+    .subpage-body{
+        margin-top: 90px;
+    }
+    .model-wrap{
+        overflow: hidden;
+    }
+}
+.android .backControl{
+    box-sizing:border-box;
+    padding-bottom: 120px;
+}
+.android .backControl2{
+    box-sizing:border-box;
+    padding-bottom: 120px;
+}
