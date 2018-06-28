@@ -140,7 +140,7 @@
 
 
 <script>
-import Modal from "./components/Modal.vue";
+import Modal from '../../lib/components/Modal.vue'
 import CirclePie from "./components/CirclePie.vue";
 import FilterItems from "./components/FilterItems.vue";
 
