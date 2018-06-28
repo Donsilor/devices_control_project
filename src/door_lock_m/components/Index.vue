@@ -250,6 +250,7 @@ export default {
             HdSmart.Device.getSnapShot(
                 data => {
                     this.onSuccess(data);
+                    HdSmart.UI.hideLoading();
                 },
                 () => {
                     HdSmart.UI.hideLoading();
@@ -257,7 +258,6 @@ export default {
             );
         },
         onSuccess(data) {
-            HdSmart.UI.hideLoading();
             if (data.device_id) {
                 this.device_id = data.device_id;
             }

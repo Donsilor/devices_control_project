@@ -19,7 +19,6 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    margin-top: -100px;
     background: #fff;
     width: 600px;
     border-radius: 6px;
@@ -57,6 +56,9 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index:9;
+}
+.android .modal{
+    margin-top: -100px;
 }
 </style>
 
