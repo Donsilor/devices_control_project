@@ -620,6 +620,7 @@ export default {
         },
         getData() {
             this.loading = true;
+            this.setHistory();
             service.getDetaileData(
                 {
                     channelId: this.channelId,
@@ -643,7 +644,6 @@ export default {
                         item => item.states != "1"
                     );
                     this.cur = Object.freeze(temp);
-                    this.setHistory();
                 }
             );
         },
@@ -689,11 +689,12 @@ export default {
         },
         close() {
             if (this.visible) {
+                this.hideDetail();
                 if (this.history) {
                     this.$router.go(-1);
                 }
-                this.hideDetail();
             }
+            this.loading = false
         },
         toHTML(str) {
             if (!str) return "";
