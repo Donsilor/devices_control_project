@@ -30,11 +30,11 @@
         <sub-page class="model-select-layer" v-model="modelLayerShow" title="模式">
             <div class="layer-body" :class="allAttribute.status === 'start' ? 'disable' : ''">
                 <ul class="model-list">
-                    <li @click="seleteMode(item)" v-for="item in modeList">
+                    <li @click="seleteMode(item)" v-for="item in modeList" :key="item.mode">
                         <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
                         <div class="mode-name">{{item.name}}</div>
                     </li>
-                    <li @click="seleteMode(item)" v-for="item in elseModeList">
+                    <li @click="seleteMode(item)" v-for="item in elseModeList" :key="item.mode">
                         <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
                         <div class="mode-name">{{item.name}}</div>
                     </li>
@@ -106,10 +106,10 @@ function findIndex(array, fn) {
     return -1;
 }
 
-import SwitchButton from "./components/SwitchButton.vue";
-import Picker from "./components/Picker/picker.vue";
+import SwitchButton from "../../lib/components/SwitchButton.vue";
+import Picker from "../../lib/components/Picker/picker.vue";
 import AllConfig from "./config";
-import SubPage from "./components/SubPage.vue";
+import SubPage from "../../lib/components/SubPage";
 // import IScroll from 'iscroll/build/iscroll-lite';
 
 export default {
@@ -353,6 +353,7 @@ export default {
             );
         },
         onSuccess(data) {
+            console.log("data66666666",data)
             HdSmart.UI.hideLoading();
             let attributes = data.attribute;
             let curAttributes = this.allAttribute;
