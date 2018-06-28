@@ -88,7 +88,7 @@
                 </div>
             </modal>
             <!-- 更多 -->
-            <modal title="更多" class="modal-w modal-more" v-model="moreModalVisible">
+            <modal title="更多" class="modal-w" v-model="moreModalVisible">
                 <div class="more-wrap">
                     <div class="group">
                         <div class="title">更多模式</div>
@@ -193,9 +193,9 @@
 </template>
 
 <script>
-import Modal from "./components/Modal.vue";
-import SwitchButton from "./components/SwitchButton.vue";
-import Picker from "./components/Picker/picker.vue";
+import Modal from "../../lib/components/Modal.vue";
+import SwitchButton from "../../lib/components/SwitchButton.vue";
+import Picker from "../../lib/components/Picker/picker.vue";
 import ModeButton from "./components/ModeButton.vue";
 import {
     MODE_OPTIONS,
@@ -511,7 +511,6 @@ export default {
         onSuccess(data) {
             HdSmart.UI.hideLoading();
             this.status = "success";
-
             this.model = data.attribute;
             this.getAlertList(data.attribute.error);
         },
