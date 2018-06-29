@@ -125,8 +125,8 @@
     top: 0;
     left: 0;
     z-index: 9;
-
-    height: 124px;
+    height: 116px;
+    // height:100px;
     width: 100%;
     background: #fafafa;
     // flex-shrink: 0;
@@ -481,6 +481,12 @@
         }
     }
 }
+.andriod #app{
+    height:auto;
+    overflow-y:auto;
+    box-sizing:border-box;
+    padding-bottom:120px;
+}
 </style>
 
 <script>
@@ -489,7 +495,13 @@ import * as service from "../service";
 
 //隐藏body滚动条
 function toggleBoayScroll(val) {
-    document.documentElement.className = val ? "hidescroll" : "";
+    var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    if(!iOS){
+        document.documentElement.className = val ? "andriod hidescroll" : "";
+    }else{
+        document.documentElement.className = val ? "hidescroll" : "";
+    }
+    
 }
 
 export default {

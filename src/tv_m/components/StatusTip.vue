@@ -103,7 +103,7 @@
     height: 80px;
 }
 .offline_bar {
-    background: rgb(51, 51, 51, 0.9);
+    background: rgba(51, 51, 51, 0.9);
     width: 100%;
     height: 80px;
     line-height: 80px;

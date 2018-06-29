@@ -27,8 +27,10 @@
         <div class="control">
             <a href="#" class="shut" :class="{spec:!$store.state.online && !$store.state.detailVisible}" @click.prevent="cmd('rcPower')"></a>
             <a href="#" class="home" @click.prevent="cmd('rcHome')"></a>
-            <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
-            <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>
+            <!--// <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
+            // <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>-->
+            <a href="#" class="volup" v-finger:touch-end="volupEnd" v-finger:touch-move="touchMove" v-finger:long-tap="volupStart"></a>
+            <a href="#" class="voldown" v-finger:touch-end="voldownEnd" v-finger:touch-move="touchMove" v-finger:long-tap="voldownStart"></a>
             <a href="#" class="back" @click.prevent="cmd('rcBack')"></a>
         </div>
 
@@ -307,6 +309,33 @@ export default {
         }
     },
     methods: {
+        touchMove(e) {
+            e.preventDefault();
+        },
+        volupStart() {
+            this.timeOutEventUp = 1;
+            this.cmd("rcVolumeUpStart");
+        },
+        voldownStart() {
+            this.timeOutEventDown = 1;
+            this.cmd("rcVolumeDownStart");
+        },
+        volupEnd() {
+            if (this.timeOutEventUp) {
+                this.cmd("rcVolumeUpStop");
+                this.timeOutEventUp = 0;
+            } else {
+                this.cmd("rcVolumeUp");
+            }
+        },
+        voldownEnd() {
+            if (this.timeOutEventDown) {
+                this.cmd("rcVolumeDownStop");
+                this.timeOutEventDown = 0;
+            } else {
+                this.cmd("rcVolumeDown");
+            }
+        },
         cmd(name) {
             service.onClickEvent(name);
         },

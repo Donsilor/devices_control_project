@@ -21,6 +21,8 @@ import ErrorView from "./components/Error.vue";
 import OfflineMask from "./components/OfflineMask.vue";
 //import Statusbar from './components/Statusbar.vue'
 import StatusTip from "./components/StatusTip.vue";
+import AlloyFinger from 'alloyfinger/alloy_finger'
+import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue'
 
 import * as service from "./service";
 
@@ -31,6 +33,9 @@ Vue.use(VueLazyload, {
     preLoad: 1.3,
     attempt: 1
 });
+Vue.use(AlloyFingerVue, {
+    AlloyFinger
+})
 
 Vue.component("detail", Detail);
 Vue.component("topbar", Topbar);
