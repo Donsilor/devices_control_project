@@ -144,7 +144,7 @@ function Button(title, type, value, tip) {
     };
 }
 
-let temperatureRadio = 1;
+let temperatureRadio = 10;
 
 let store = {};
 
@@ -353,35 +353,27 @@ export default {
                 return;
             }
 
-            if (attr.temperature > 100) {
-                temperatureRadio = 10;
-            }
-
             for (var k in attr) {
-                if (this.operationFlag && k == this.operationKey) {
-                    continue;
-                }
+                // if (this.operationFlag && k == this.operationKey) {
+                //     continue;
+                // }
                 switch (k) {
                     case "switchStatus":
                         this.params.switch = attr.switchStatus;
                         break;
                     case "temperature":
-                        this.params.temperature =
-                            attr.temperature / temperatureRadio;
-                        this.fakeTemp = attr.temperature / temperatureRadio;
+                        this.params.temperature = attr.temperature / temperatureRadio;
                         break;
                     default:
                         this.params[k] = attr[k];
                         break;
                 }
             }
-            /*
-            if (this.params.mode == "wind" && attr.env_temperature) {
-                this.fakeTemp =
-                    attr.env_temperature >= 100
-                        ? attr.env_temperature / 10
-                        : attr.env_temperature;
-            } else */
+
+            if(!this.tempFlag){
+                this.fakeTemp = this.params.temperature;
+            }
+
             if (this.params.mode == "dehumidify") {
                 this.params.speed = "auto";
             }
@@ -425,10 +417,7 @@ export default {
 
             //判断是否为重置命令
             if (that.isResetCommand(type, value)) {
-                //如果当前设置的是温度，需要改回去
-                if (type === TEMPERATURE) {
-                    that.fakeTemp = that.params.temperature;
-                }
+                this.setTip("低风、制冷模式下不支持此温度，请调整后重试");
                 return;
             }
 
@@ -469,13 +458,13 @@ export default {
                 }
             }
 
-            clearTimeout(this.operationDelay);
-            this.operationFlag = true;
-            this.operationKey = type;
-            this.operationValue = attr[type];
-            this.operationDelay = setTimeout(() => {
-                this.operationFlag = false;
-            }, 1500);
+            // clearTimeout(this.operationDelay);
+            // this.operationFlag = true;
+            // this.operationKey = type;
+            // this.operationValue = attr[type];
+            // this.operationDelay = setTimeout(() => {
+            //     this.operationFlag = false;
+            // }, 1500);
             //发送指令
             HdSmart.Device.control(
                 {
@@ -627,11 +616,18 @@ export default {
             obj[MODE] = this.params[MODE];
             obj[type] = value;
 
+            if(type != TEMPERATURE){
+                obj[TEMPERATURE] = this.fakeTemp
+            }
+
             if (
                 obj[TEMPERATURE] === MAX_TEMP &&
                 obj[SPEED] === "low" &&
                 obj[MODE] === "cold"
             ) {
+                if(type == TEMPERATURE){
+                    this.fakeTemp = this.params[TEMPERATURE]
+                }
                 return true;
             }
 

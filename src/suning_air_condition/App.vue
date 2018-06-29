@@ -149,7 +149,7 @@ function Button(title, type, value, tip) {
     };
 }
 
-var temperatureRadio = 1;
+var temperatureRadio = 10;
 
 export default {
     components: { AcButton, Devider, Modal },
@@ -344,27 +344,25 @@ export default {
                 return;
             }
 
-            if (attr.temperature > 100) {
-                temperatureRadio = 10;
-            }
-
             for (var k in attr) {
-                if (this.operationFlag && k == this.operationKey) {
-                    continue;
-                }
+                // if (this.operationFlag && k == this.operationKey) {
+                //     continue;
+                // }
                 switch (k) {
                     case "switchStatus":
                         this.params.switch = attr.switchStatus;
                         break;
                     case "temperature":
-                        this.params.temperature =
-                            attr.temperature / temperatureRadio;
-                        this.fakeTemp = attr.temperature / temperatureRadio;
+                        this.params.temperature = attr.temperature / temperatureRadio;
                         break;
                     default:
                         this.params[k] = attr[k];
                         break;
                 }
+            }
+
+            if(!this.tempFlag){
+                this.fakeTemp = this.params.temperature;
             }
 
             if (attr.enforce_mode == "on") {
@@ -425,13 +423,13 @@ export default {
             let attr = {};
             attr[type] = type == TEMPERATURE ? value * temperatureRadio : value;
 
-            clearTimeout(this.operationDelay);
-            this.operationFlag = true;
-            this.operationKey = type;
-            this.operationValue = attr[type];
-            this.operationDelay = setTimeout(() => {
-                this.operationFlag = false;
-            }, 1500);
+            // clearTimeout(this.operationDelay);
+            // this.operationFlag = true;
+            // this.operationKey = type;
+            // this.operationValue = attr[type];
+            // this.operationDelay = setTimeout(() => {
+            //     this.operationFlag = false;
+            // }, 1500);
 
             //发送指令
             HdSmart.Device.control(
@@ -557,11 +555,18 @@ export default {
             obj[MODE] = this.params[MODE];
             obj[type] = value;
 
+            if(type != TEMPERATURE){
+                obj[TEMPERATURE] = this.fakeTemp
+            }
+
             if (
                 obj[TEMPERATURE] === MAX_TEMP &&
                 obj[SPEED] === "low" &&
                 obj[MODE] === "cold"
             ) {
+                if(type == TEMPERATURE){
+                    this.fakeTemp = this.params[TEMPERATURE]
+                }
                 return true;
             }
 

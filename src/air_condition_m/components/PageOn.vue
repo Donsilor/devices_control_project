@@ -280,11 +280,17 @@ export default {
         checkCmd(attr, val) {
             var ac = JSON.parse(JSON.stringify(this.ac));
             ac[attr] = val;
+
+            if(attr != 'temperature'){
+                ac.temperature = this.temperature
+            }
+
             if (
                 ac.temperature == MAX_TEMP &&
                 ac.speed == "low" &&
                 ac.mode == "cold"
             ) {
+                this.showTip("低风、制冷模式下不支持此温度，请调整后重试");
                 return true;
             }
             return false;

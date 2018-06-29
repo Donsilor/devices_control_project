@@ -13,7 +13,7 @@ import PageError from "./components/PageError.vue";
 
 const DefaultSpin = require("../../lib/base/air_condition/assets/buffering_power_white.gif");
 const BlueSpin = require("../../lib/base/air_condition/assets/buffering_power_blue.gif");
-let tempRadio = 1;
+let tempRadio = 10;
 
 let store = {};
 
@@ -162,10 +162,7 @@ export default {
             // for(var p in attrs){
             //     this.ac[p==='switch'?'switchStatus':p] = attrs[p]
             // }
-            if (attrs.temperature > 100) {
-                tempRadio = 10;
-                attrs.temperature = attrs.temperature / tempRadio;
-            }
+            attrs.temperature = attrs.temperature / tempRadio;
             this.ac = attrs;
         },
         init() {

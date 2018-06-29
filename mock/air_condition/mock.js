@@ -48,7 +48,7 @@ export function set(data){
     if(attr.switch){
         res.attribute.switchStatus = attr.switch
     }else if(attr.temperature){
-        res.attribute.temperature = 230
+        res.attribute.temperature = attr.temperature
     }else{
         res.attribute = Object.assign({}, res.attribute, attr)
     }
