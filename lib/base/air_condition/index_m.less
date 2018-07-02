@@ -69,6 +69,12 @@ a {
         font-size: 60px;
         font-family: PingFangSC-Regular;
     }
+    .line{
+        border-bottom:2px solid #fff;
+        width: 80px;
+        display: inline-block;
+        height: 100px;
+    }
 }
 .btn-minus,
 .btn-add {
@@ -78,6 +84,9 @@ a {
     height: 96px;
     background-size: 100% 100%;
     background-repeat: no-repeat;
+    &.disabled{
+        opacity: .5;
+    }
 }
 .btn-minus {
     background-repeat: no-repeat;
@@ -138,6 +147,9 @@ a {
         width: 120px;
         height: 200px;
         font-size: 28px;
+        &.disabled{
+            opacity: .5;
+        }
     }
     a {
         width: 120px;

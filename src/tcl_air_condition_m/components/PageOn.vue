@@ -13,16 +13,22 @@
         </div>
 
         <div class="current_temp">
-            <span class="num">{{temperature}}</span>
-            <span class="unit">℃</span>
+            <template v-if="temperature">
+                <span class="num">{{temperature}}</span>
+                <span class="unit">℃</span>
+            </template>
+            <template v-else>
+                <span class="line"></span>
+                <span class="line"></span>
+            </template>
         </div>
 
         <transition name="fade">
             <div class="tip" v-show="tipVisible">{{tip}}</div>
         </transition>
 
-        <a href="#" class="btn-minus" @click.prevent="setTemperature(-1, $event)"></a>
-        <a href="#" class="btn-add" @click.prevent="setTemperature(1, $event)"></a>
+        <a href="#" class="btn-minus" :class="{disabled:ac.mode=='wind'||ac.mode=='auto'||ac.mode=='dehumidify'}" @click.prevent="setTemperature(-1, $event)"></a>
+        <a href="#" class="btn-add" :class="{disabled:ac.mode=='wind'||ac.mode=='auto'||ac.mode=='dehumidify'}" @click.prevent="setTemperature(1, $event)"></a>
 
         <a href="#" class="btn-off" @click.prevent="setOff($event)"></a>
 
@@ -188,7 +194,7 @@ export default {
             var temp = this.temperature + val;
 
             if (temp < MIN_TEMP) {
-                if (this.temperature == MIN_TEMP) {
+                if (this.ac.temperature == MIN_TEMP) {
                     this.showTip(tips.err_temp3);
                     return;
                 } else {
@@ -197,7 +203,7 @@ export default {
             }
 
             if (temp > MAX_TEMP) {
-                if (this.temperature == MAX_TEMP) {
+                if (this.ac.temperature == MAX_TEMP) {
                     this.showTip(tips.err_temp2);
                     return;
                 } else {
@@ -205,16 +211,15 @@ export default {
                 }
             }
 
-            if (this.checkCmd("temperature", temp)) {
-                return;
-            }
-
-
             this.temperature = temp;
             clearTimeout(tempDelay);
             tempFlag = false;
             tempDelay = setTimeout(() => {
                 tempFlag = true;
+                if (this.checkCmd("temperature", temp)) {
+                    this.syncTemp()
+                    return;
+                }
                 this.control(
                     "temperature",
                     this.temperature,

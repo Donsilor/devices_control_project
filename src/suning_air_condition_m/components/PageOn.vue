@@ -13,16 +13,22 @@
         </div>
 
         <div class="current_temp">
-            <span class="num">{{temperature}}</span>
-            <span class="unit">℃</span>
+            <template v-if="temperature">
+                <span class="num">{{temperature}}</span>
+                <span class="unit">℃</span>
+            </template>
+            <template v-else>
+                <span class="line"></span>
+                <span class="line"></span>
+            </template>
         </div>
 
         <transition name="fade">
             <div class="tip" v-show="tipVisible">{{tip}}</div>
         </transition>
 
-        <a href="#" class="btn-minus" @click.prevent="setTemperature(-1, $event)"></a>
-        <a href="#" class="btn-add" @click.prevent="setTemperature(1, $event)"></a>
+        <a href="#" class="btn-minus" :class="{disabled:ac.mode=='auto'}" @click.prevent="setTemperature(-1, $event)"></a>
+        <a href="#" class="btn-add" :class="{disabled:ac.mode=='auto'}" @click.prevent="setTemperature(1, $event)"></a>
 
         <a href="#" class="btn-off" @click.prevent="setOff($event)"></a>
 

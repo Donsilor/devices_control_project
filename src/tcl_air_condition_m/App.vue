@@ -1,8 +1,8 @@
 <template>
     <div class="wrap">
-        <page-on v-if="status==='SUCCESS' && ac.switchStatus==='on'" :control="controlDevice" :device="device" :ac="ac" ref="airon" />
-        <page-off v-if="status==='SUCCESS' && ac.switchStatus==='off'" :control="controlDevice" :device="device" />
-        <page-error v-if="status==='ERROR'" :reload="init" />
+        <page-on v-if="ac.switchStatus==='on'" :control="controlDevice" :device="device" :ac="ac" ref="airon" />
+        <page-off v-if="ac.switchStatus==='off'" :control="controlDevice" :device="device" />
+        <!-- <page-error v-if="status==='ERROR'" :reload="init" /> -->
     </div>
 </template>
 
@@ -40,7 +40,7 @@ export default {
             status: "", //SUCCESS,ERROR
             ac: {
                 temperature: 0, //[16,30]
-                switchStatus: "", //on,off(发送指令为switch)
+                switchStatus: "on", //on,off(发送指令为switch)
                 mode: "", //auto,cold,heat,dehumidify,wind
                 speed: "", //low,normal,high,auto
                 wind_up_down: "", //on,off
@@ -208,6 +208,13 @@ export default {
         },
         onError() {
             this.status = "ERROR";
+            this.ac.switchStatus = 'on'
+            this.ac.temperature = 0
+            this.$nextTick(() => {
+                try {
+                    this.$refs.airon.syncTemp();
+                } catch (e) {}
+            });
         }
     },
     created() {

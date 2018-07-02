@@ -19,17 +19,17 @@
     </svg>
 
     <!--开机界面-->
-    <div v-if="initErr || params.switch === 'on'">
+    <div v-if="params.switch === 'on'">
 
       <!--温度Start-->
       <div class="temp">
 
-        <ac-button class="minus" :info="buttonList.minusBtn" @tap="setTemperature"></ac-button>
+        <ac-button class="minus" :class="{disabled:params.mode=='wind'||params.mode=='auto'||params.mode=='dehumidify'}" :info="buttonList.minusBtn" @tap="setTemperature"></ac-button>
         <div class="temp-show">
           <label class="temp-number">{{ fakeTemp }}</label>
           <label class="temp-unit">℃</label>
         </div>
-        <ac-button class="plus" :info="buttonList.plusBtn" @tap="setTemperature"></ac-button>
+        <ac-button class="plus" :class="{disabled:params.mode=='wind'||params.mode=='auto'||params.mode=='dehumidify'}" :info="buttonList.plusBtn" @tap="setTemperature"></ac-button>
       </div>
       <!--温度End-->
 
@@ -167,45 +167,51 @@ export default {
         Modal
     },
     data() {
-        return {
-            buttonList: {
-                //模式
-                cool: Button("制冷", MODE, "cold", "制冷模式切换成功"),
-                heat: Button("制热", MODE, "heat", "制热模式切换成功"),
-                dehumidify: Button(
-                    "除湿",
-                    MODE,
-                    "dehumidify",
-                    "除湿模式切换成功"
-                ),
-                mode_auto: Button("智能", MODE, "auto", "智能模式切换成功"),
-                wind: Button("送风", MODE, "wind", "送风模式切换成功"),
 
-                //风速
-                low: Button("低风", SPEED, "low", "低风切换成功"),
-                normal: Button("中风", SPEED, "normal", "中风切换成功"),
-                high: Button("高风", SPEED, "high", "高风切换成功"),
+        this.buttonList = {
+            //模式
+            cool: Button("制冷", MODE, "cold", "制冷模式切换成功"),
+            heat: Button("制热", MODE, "heat", "制热模式切换成功"),
+            dehumidify: Button(
+                "除湿",
+                MODE,
+                "dehumidify",
+                "除湿模式切换成功"
+            ),
+            mode_auto: Button("智能", MODE, "auto", "智能模式切换成功"),
+            wind: Button("送风", MODE, "wind", "送风模式切换成功"),
 
-                //电源开关
-                on: Button("", POWER, "", ""),
-                off: Button("", POWER, "", ""),
+            //风速
+            low: Button("低风", SPEED, "low", "低风切换成功"),
+            normal: Button("中风", SPEED, "normal", "中风切换成功"),
+            high: Button("高风", SPEED, "high", "高风切换成功"),
 
-                //扫风
-                lrBtn: Button("左右", WIND_LEFT_RIGHT, ""),
-                udBtn: Button("上下", WIND_UP_DOWN, ""),
+            //电源开关
+            on: Button("", POWER, "", ""),
+            off: Button("", POWER, "", ""),
 
-                //温度
-                minusBtn: {
-                    type: TEMPERATURE,
-                    value: -1,
-                    continuousClick: true
-                },
-                plusBtn: {
-                    type: TEMPERATURE,
-                    value: 1,
-                    continuousClick: true
-                }
+            //扫风
+            lrBtn: Button("左右", WIND_LEFT_RIGHT, ""),
+            udBtn: Button("上下", WIND_UP_DOWN, ""),
+
+            //温度
+            minusBtn: {
+                type: TEMPERATURE,
+                value: -1,
+                continuousClick: true
             },
+            plusBtn: {
+                type: TEMPERATURE,
+                value: 1,
+                continuousClick: true
+            }
+        }
+
+        this.loadingTimer = null;
+        this.loadingElement = null;
+        this.curButton = null;
+
+        return {
             //设备名称
             deviceName: "",
             //空调类型，0：挂机，1：柜机
@@ -237,17 +243,9 @@ export default {
             tipTimer: "",
             //更多菜单是否可见
             showMore: false,
-            //开机时间选择器是否可见
-            bootTpVisible: false,
-            //关机时间选择器是否可见
-            offTpVisible: false,
             tempFlag: false,
             tempTimer: null,
-            fakeTemp: null,
-            loadingTimer: null,
-            loadingElement: null,
-            //当前点击的按钮
-            curButton: null,
+            fakeTemp: '--',
             //页面初始化失败
             initErr: false,
             loading: false
@@ -257,7 +255,7 @@ export default {
         appClassObj: function() {
             return {
                 main: true,
-                page_on: this.params.switch == "on" || this.initErr,
+                page_on: this.params.switch == "on",
                 page_off: this.params.switch == "off"
             };
         },
@@ -344,6 +342,7 @@ export default {
         },
         onError() {
             this.initErr = true;
+            this.params.switch = 'on';
             this.fakeTemp = "--";
         },
         //设置全量状态
