@@ -341,7 +341,9 @@ export default {
             if(pauseTipTimer){
                 clearTimeout(pauseTipTimer)
             }
-
+            if(attrs.connectivity==='offline'){
+                sttrs.status='pause';
+            }
             if (attrs.status == "up") {
                 this.showTip2(tips.moving_up);
                 return;
@@ -426,6 +428,8 @@ export default {
 
             this.setModeTip(attrs);
             this.setMoveTip(attrs);
+            
+            // connectivity
 
             this.light = attrs.light;
             this.air_drying = attrs.air_drying;
