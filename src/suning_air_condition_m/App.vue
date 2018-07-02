@@ -26,7 +26,7 @@ export default {
             status: "", //SUCCESS,ERROR
             ac: {
                 temperature: 0, //[16,30]
-                switchStatus: "on", //on,off(发送指令为switch)
+                switchStatus: "", //on,off(发送指令为switch)
                 mode: "", //auto,cold,heat,dehumidify,wind
                 speed: "", //low,normal,high,auto
                 wind_up_down: "", //on,off

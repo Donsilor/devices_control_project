@@ -202,7 +202,7 @@ export default {
             deviceCategory: -1,
             params: {
                 //开关
-                switch: "on",
+                switch: "",
                 //温度
                 temperature: null,
                 //模式
