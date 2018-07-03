@@ -341,7 +341,7 @@ export default {
             if(pauseTipTimer){
                 clearTimeout(pauseTipTimer)
             }
-            if(attrs.connectivity==='offline'){
+            if(attrs.connectivity && attrs.connectivity==='offline'){
                 attrs.status='pause';
             }
             if (attrs.status == "up") {
