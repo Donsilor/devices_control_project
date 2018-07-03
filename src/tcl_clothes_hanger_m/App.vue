@@ -342,7 +342,7 @@ export default {
                 clearTimeout(pauseTipTimer)
             }
             if(attrs.connectivity==='offline'){
-                sttrs.status='pause';
+                attrs.status='pause';
             }
             if (attrs.status == "up") {
                 this.showTip2(tips.moving_up);
