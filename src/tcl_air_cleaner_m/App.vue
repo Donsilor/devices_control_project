@@ -354,6 +354,7 @@ export default {
                 return;
             }
             var val = getToggle(this.model.negative_ion_switch_status);
+            
             this.controlDevice(
                 "negative_ion_switch",
                 val,
@@ -454,11 +455,11 @@ export default {
     },
     created() {
         this.$watch("model.control_status", (newVal, oldVal) => {
-            this.prevModel.control_status = oldVal;
+            this.prevModel.control_status = oldVal || 'auto';
         });
 
         this.$watch("model.speed", (newVal, oldVal) => {
-            this.prevModel.speed = oldVal;
+            this.prevModel.speed = oldVal || '';
         });
 
         HdSmart.ready(() => {
