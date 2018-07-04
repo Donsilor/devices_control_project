@@ -439,11 +439,11 @@ export default {
     },
     created() {
         this.$watch("model.control_status", (newVal, oldVal) => {
-            this.prevModel.control_status = oldVal;
+            this.prevModel.control_status = oldVal || 'auto';
         });
 
         this.$watch("model.speed", (newVal, oldVal) => {
-            this.prevModel.speed = oldVal;
+            this.prevModel.speed = oldVal || '';
         });
 
         HdSmart.ready(() => {
