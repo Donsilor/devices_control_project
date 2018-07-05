@@ -19,7 +19,7 @@
             <div class="detail-info clearfix" v-show="cur.title">
                 <div class="info-inner">
                     <div class="pic">
-                        <img v-lazy="cur.pictureUrl" :class="['pic-'+channelId]">
+                        <img v-lazy="cur.pictureUrl" :class="['pic-'+channelId]" :key="cur.pictureUrl">
                     </div>
                     <div class="text">
                         <div class="shortinfo">
@@ -60,7 +60,7 @@
                 </div>
                 <ul class="bd" v-if="channelId==='001' || channelId==='004'">
                     <li class="item-haspic" v-for="item in cur.playlist2.list" :key="item.index" @click="play(item)">
-                        <img v-lazy="item.pictureUrl">
+                        <img v-lazy="item.pictureUrl" :key="item.pictureUrl">
                         <p>{{item.name}}</p>
                         <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
                         <span class="tag_pay" v-show="item.drm && item.drm!='0'"></span>
@@ -75,7 +75,7 @@
                 <div class="hd" style="clear:both" v-if="cur.playlist2.list2.length">相关视频</div>
                 <ul class="bd">
                     <li class="item-haspic" v-for="item in cur.playlist2.list2" :key="item.index" @click="play(item)">
-                        <img v-lazy="item.pictureUrl">
+                        <img v-lazy="item.pictureUrl" :key="item.pictureUrl">
                         <p>{{item.name}}</p>
                         <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
                         <span class="tag_pay" v-show="item.drm && item.drm!='0'"></span>
