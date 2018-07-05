@@ -58,7 +58,7 @@
           </div>
           <devider :content="'摆风'"></devider>
           <div class="more-wind-direction">
-            <ac-button class="lr" v-if="deviceCategory === 1" :class="{active:params.wind_left_right=='on'}" :info="buttonList.lrBtn" @tap="toggle"></ac-button>
+            <ac-button class="lr" v-if="deviceCategory === 1 || deviceCategory == 5001" :class="{active:params.wind_left_right=='on'}" :info="buttonList.lrBtn" @tap="toggle"></ac-button>
             <ac-button class="ud" :class="{active:params.wind_up_down=='on'}" :info="buttonList.udBtn" @tap="toggle"></ac-button>
           </div>
         </modal>
@@ -68,8 +68,8 @@
     <!--关机界面-->
     <div v-if="params.switch === 'off'">
 
-      <div v-if="deviceCategory === 0" class="hanging"></div>
-      <div v-if="deviceCategory === 1" class="package"></div>
+      <div v-if="deviceCategory == 1 || deviceCategory == 5001" class="package"></div>
+      <div v-else class="hanging"></div>
 
       <div class="bottom">
 
