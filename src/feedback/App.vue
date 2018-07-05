@@ -205,6 +205,7 @@
     }
 </style>
 <script>
+import axios from 'axios';
 export default {
     name: "app",
     components: {
@@ -224,7 +225,27 @@ export default {
         
     },
     mounted() {
-       
+        axios({
+            method: 'post',
+            url: 'http://beeossdev.egtest.cn:7777/api/index.php/feedback/add',
+            data: {
+                "uname": "13691666741",
+                "title": "用户反馈",
+                "terminal_name": "Zac's iPhone",
+                "terminal_type": "iPhone iOS",
+                "client_version": "1.0.2",
+                "app_version": "10.3.3",
+                "content": "内容用户反馈详细内容",
+                "img_list": [
+                    "aww",
+                    "bss",
+                    "cxx"
+                ],
+                "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vYmVlb3NzZGV2LmVndGVzdC5jbi50ZXN0L2F1dGgvbG9naW4iLCJpYXQiOjE1MzAxNzIyNjIsImV4cCI6MTUzMTM4MTg2MiwibmJmIjoxNTMwMTcyMjYyLCJqdGkiOiJkaUxzOFM3MmVZT01tUVFmIiwic3ViIjoxLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wf54QUO2cN5XukRjYnxdlDlgeqBABr4LdD1Svse3lTw"
+            }
+        }).then(function(x){
+            console.log(8888888,x)
+        });
     },
     methods: {
         dealContent(e){
