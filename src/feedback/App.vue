@@ -2,9 +2,9 @@
     <div id="app">
         <div class="wapper">
             <div class="contentWapper">
-                <textarea id="content" placeholder="请输入反馈内容"></textarea>
-                <div class="tips">内容超过200字</div>
-                <div class="emptyButton">清空</div>
+                <textarea  @input="dealContent" ref="content" id="content" placeholder="请输入反馈内容" maxlength="200"></textarea>
+                <div class="tips" v-show="overLength">内容超过200字</div>
+                <div class="emptyButton" v-show="emptyTipsShow" @click="emptyContent">清空</div>
             </div>
             <div class="picGroup">
                 <div class="picAll">
@@ -14,8 +14,9 @@
                     </div>
                 </div>
                 <div class="addButton">
-                    <input type="file"  @change="getFile" ref="file" id="file">
+                    <input type="file"  @change="getFile" ref="file" id="file"  accept="image/*">
                 </div>
+                <!-- capture="camera" -->
             </div>
             <div class="picTips">最多上传5张照片，每张照片不超过5MB</div>
         </div>
@@ -35,7 +36,6 @@
         height: 100%;
         overflow-y:auto;
         box-sizing: border-box;
-        border:1px solid red;
         padding-top:96px;
         background-color: #F2F2F2;
     }
@@ -48,7 +48,7 @@
             font-size: 30px;
             color: #DA3F3F;
             box-sizing: border-box;
-            padding-left:48px;
+            padding-left:32px;
             height: 30px;
             line-height: 30px;
         }
@@ -68,7 +68,9 @@
         #content{
             margin: 32px 0 0 0;
             width:100%;
-            height: 240px;
+            min-height: 240px;
+            height: auto;
+            overflow-y: auto;
             border:none;
             box-sizing: border-box;
             padding:32px;
@@ -125,17 +127,41 @@
                 }
             }
         }
+        .picTips{
+            font-family:PingFangSC-Regular;
+            font-size:28px;
+            color:#c8cacc;
+            margin-top:20px;
+            padding-left:32px;
+            box-sizing: border-box;
+        }
        
     }
     @media screen and (min-width: 768px) {
         #app{
+            padding-top:88px;   
+        }
+        .contentWapper{
             width:100%;
-            height: 100%;
-            overflow-y:auto;
-            box-sizing: border-box;
-            border:1px solid red;
-            padding-top:96px;
-            background-color: #F2F2F2;
+            height: auto;
+            position: relative;
+            .tips{
+                font-family: NotoSansHans-Regular;
+                font-size: 30px;
+                color: #DA3F3F;
+                box-sizing: border-box;
+                padding-left:48px;
+                height: 30px;
+                line-height: 30px;
+            }
+            .emptyButton{
+                font-family: NotoSansHans-Regular;
+                font-size: 30px;
+                color: #DA3F3F;
+                position: absolute;
+                top:174px;
+                right:48px;
+            }
         }
         .wapper{
             width:100%;
@@ -143,24 +169,39 @@
             overflow: hidden;
             #content{
                 margin-top: 24px;
-                width:100%;
-                height: 210px;
-                border:none;
-                box-sizing: border-box;
+                min-height: 210px;
                 padding:48px;
                 font-size: 30px;
-                font-family: NotoSansHans-Regular;
-                position: relative;
-                &::-webkit-input-placeholder{
-                    color: #CACACA;
-                    color:red;
+            }
+            .picGroup{
+                padding-left:48px;
+                .picAll{
+                    .picOne{
+                        width:180px;
+                        height: 180px;
+                        margin-right: 24px;
+                        margin-top:40px;
+                    }
                 }
-                &:focus{
-                    outline: none;
+                .addButton{
+                    margin-top:40px;
+                    width:180px;
+                    height:180px;
+                    background:url('../../lib/base/feedback/assets/add_pad.png') no-repeat center;
+                    background-size:100% 100%;
                 }
+            }
+            .picTips{
+                font-size:28px;
+                color:#c8cacc;
+                margin-top:24px;
+                padding-left:30px;
+                box-sizing: border-box;
             }
         
         }
+        
+    
     }
 </style>
 <script>
@@ -171,11 +212,13 @@ export default {
     },
     data() {
         return {
-            imgsrc:[]
+            imgsrc:[],//图片上传列表
+            emptyTipsShow:false,
+            overLength:false,
         };
     },
     watch: {
-        
+
     },
     computed: {
         
@@ -184,18 +227,41 @@ export default {
        
     },
     methods: {
-       getFile:function(e){
+        dealContent(e){
+           console.log(1111111111,e.target.value)
+           if(e.target.value.length>=1){
+               this.emptyTipsShow=true;
+           }else{
+               this.emptyTipsShow=false;
+           }
+           if(e.target.value.length>=200){
+                this.overLength=true;
+           }
+        
+       },
+       emptyContent(){
+           this.$refs.content.value='';
+           this.emptyTipsShow=false;
+            this.overLength=false;
+       },
+       getFile(e){
            if(this.imgsrc.length>=5){
                alert('最多可添加5张图片')
                return
            }
             console.log(999,e.target.files[0])
-            let _this = this
-            var files = e.target.files[0]
+            let _this = this;
             if (!e || !window.FileReader){
                 return  // 看支持不支持FileReader
             } 
-            let reader = new FileReader()
+            var files = e.target.files[0];
+            var fileSize=(files.size/1024/1024).toFixed(2);//将文件大小转换为MB，并保留两位小数
+            //对文件大小进行检查
+            if(fileSize>5){
+                alert("文件大小超过了5MB")
+                return
+            }
+            let reader = new FileReader();
             reader.readAsDataURL(files) // 这里是最关键的一步，转换就在这里
             reader.onloadend = function () {
                  _this.imgsrc.push(this.result)
