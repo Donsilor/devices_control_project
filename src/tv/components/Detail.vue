@@ -726,6 +726,11 @@ export default {
                 // this.visible = false
             }
         });
+       
+    },
+    mounted(){
+        console.log('进入详情页了')
+        service.RemoteController(false);
     }
 };
 </script>
