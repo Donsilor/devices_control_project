@@ -62,18 +62,18 @@ export function getInitData(){
  * 获取channel所有数据接口
  */
 export function getChannelData(channelId, callback){
-    setTimeout(()=>{
+    // setTimeout(()=>{
         sendApp('getChannelData', {channelId}, callback)
-    }, 150);
+    // }, 150);
 }
 
 /**
  * 取得视频详情
  */
 export function getDetaileData(params, callback){
-    setTimeout(()=>{
+    // setTimeout(()=>{
         sendApp('getDetaileData', params, callback)
-    }, 150);
+    // }, 150);
 }
 
 /**
@@ -94,9 +94,9 @@ export function fuzzySearch(keyword, callback){
  * 搜索历史记录
  */
 export function getSearchHistory(callback){
-    setTimeout(()=>{
+    // setTimeout(()=>{
         sendApp('getSearchHistory', '', callback)
-    }, 150);
+    // }, 150);
 }
 
 /**

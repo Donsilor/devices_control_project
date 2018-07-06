@@ -142,9 +142,9 @@ HdSmart.ready(() => {
             clearTimeout(thaf_timer)
         }
         if(to.name === 'index' || to.name === 'error'){
-          thaf_timer = setTimeout(()=>{
+        //   thaf_timer = setTimeout(()=>{
             HdSmart.UI.toggleHeadAndFoot(true)
-          },200)
+        //   },200)
         }else{
           HdSmart.UI.toggleHeadAndFoot(false)
         }
