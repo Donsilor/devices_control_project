@@ -71,8 +71,8 @@
         <div v-if="params.switch === 'off'">
 
             <div class="ac_img">
-                <div v-if="deviceCategory === 0" class="hanging"></div>
-                <div v-if="deviceCategory === 1" class="package"></div>
+                <div v-if="deviceCategory == 1 || deviceCategory == 5001" class="package"></div>
+                <div v-else class="hanging"></div>
             </div>
             <div class="bottom">
 

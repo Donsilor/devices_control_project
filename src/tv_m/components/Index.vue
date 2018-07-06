@@ -312,15 +312,18 @@ export default {
         touchMove(e) {
             e.preventDefault();
         },
-        volupStart() {
+        volupStart(e) {
             this.timeOutEventUp = 1;
+            e.preventDefault();
             this.cmd("rcVolumeUpStart");
         },
-        voldownStart() {
+        voldownStart(e) {
             this.timeOutEventDown = 1;
+            e.preventDefault();
             this.cmd("rcVolumeDownStart");
         },
-        volupEnd() {
+        volupEnd(e) {
+             e.preventDefault();
             if (this.timeOutEventUp) {
                 this.cmd("rcVolumeUpStop");
                 this.timeOutEventUp = 0;
@@ -328,7 +331,9 @@ export default {
                 this.cmd("rcVolumeUp");
             }
         },
-        voldownEnd() {
+        voldownEnd(e) {
+            e.preventDefault();
+
             if (this.timeOutEventDown) {
                 this.cmd("rcVolumeDownStop");
                 this.timeOutEventDown = 0;

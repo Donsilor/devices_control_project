@@ -199,7 +199,7 @@ export default {
             //设备名称
             deviceName: "",
             //空调类型，0：挂机，1：柜机
-            deviceCategory: -1,
+            // deviceCategory: -1,
             params: {
                 //开关
                 switch: "",
@@ -319,7 +319,6 @@ export default {
                 } else {
                     this.initErr = false;
                     this.setState(data.attribute);
-                    this.deviceCategory = data.attribute.deviceSubCategory;
                 }
             }
         },

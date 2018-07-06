@@ -139,11 +139,6 @@ export default {
                             this.$refs.airon.syncTemp();
                         } catch (e) {}
                     });
-
-                    if (data.attribute.deviceSubCategory != undefined) {
-                        this.device.category_id =
-                            data.attribute.deviceSubCategory;
-                    }
                 }
             }
         },
