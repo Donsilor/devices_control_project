@@ -249,7 +249,6 @@ export default {
     },
     methods: {
         dealContent(e){
-           console.log(1111111111,e.target.value)
            if(e.target.value.length>=1){
                this.emptyTipsShow=true;
            }else{

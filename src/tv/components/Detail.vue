@@ -729,7 +729,6 @@ export default {
        
     },
     mounted(){
-        console.log('进入详情页了')
         service.RemoteController({'show':false});
     }
 };

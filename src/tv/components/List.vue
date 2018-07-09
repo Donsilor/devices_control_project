@@ -535,7 +535,6 @@ export default {
         }
     },
     mounted() {
-        console.log('进入列表页list')
         service.RemoteController({'show':true});
         this.onPageInit();
         this.$Lazyload.$on("error", function({ el, src, loading }) {

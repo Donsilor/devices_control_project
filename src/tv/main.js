@@ -60,7 +60,6 @@ const store = new Vuex.Store({
         showDetail(state, payload) {
             state.detailVisible = true
             state.activeDetail = payload
-            console.log(8888888888888888888,"main")
             service.RemoteController({'show':false});
         },
         hideDetail(state) {
