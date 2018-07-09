@@ -60,9 +60,11 @@ const store = new Vuex.Store({
         showDetail(state, payload) {
             state.detailVisible = true
             state.activeDetail = payload
+            service.RemoteController({'show':false});
         },
         hideDetail(state) {
             state.detailVisible = false
+            service.RemoteController({'show':true});
         },
         setDeviceName(state, payload) {
             state.device_name = payload

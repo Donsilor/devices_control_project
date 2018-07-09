@@ -456,8 +456,7 @@ export default {
         }
     },
     mounted() {
-        console.log('进入search页')
-        service.RemoteController(true);
+        service.RemoteController({'show':true});
         this.getHistory();
 
         setTimeout(() => {

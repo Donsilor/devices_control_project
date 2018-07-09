@@ -108,7 +108,7 @@
                         display: block;
                         width:100%;
                         height: 100%;
-                        
+
                     }
                 }
             }
@@ -135,11 +135,11 @@
             padding-left:32px;
             box-sizing: border-box;
         }
-       
+
     }
     @media screen and (min-width: 768px) {
         #app{
-            padding-top:88px;   
+            padding-top:88px;
         }
         .contentWapper{
             width:100%;
@@ -198,10 +198,10 @@
                 padding-left:30px;
                 box-sizing: border-box;
             }
-        
+
         }
-        
-    
+
+
     }
 </style>
 <script>
@@ -209,7 +209,7 @@ import axios from 'axios';
 export default {
     name: "app",
     components: {
-        
+
     },
     data() {
         return {
@@ -222,9 +222,34 @@ export default {
 
     },
     computed: {
-        
+
     },
     mounted() {
+
+        HdSmart.ready(() => {
+
+            HdSmart.Util.getAppInfo((res) => {
+                alert(JSON.stringify(res))
+            })
+
+            HdSmart.UI.setNavigationBarLeft({
+                text: '取消'
+            })
+
+            HdSmart.UI.setNavigationBarTitle({
+                text: '用户反馈'
+            })
+
+            HdSmart.UI.setNavigationBarRight({
+                text: '提交',
+                color: '#cccccc',
+                onClick: function() {
+                    alert('我点击了提交按钮')
+                }
+            })
+
+        })
+
         axios({
             method: 'post',
             url: 'http://beeossdev.egtest.cn:7777/api/index.php/feedback/add',
@@ -249,7 +274,6 @@ export default {
     },
     methods: {
         dealContent(e){
-           console.log(1111111111,e.target.value)
            if(e.target.value.length>=1){
                this.emptyTipsShow=true;
            }else{
@@ -258,7 +282,7 @@ export default {
            if(e.target.value.length>=200){
                 this.overLength=true;
            }
-        
+
        },
        emptyContent(){
            this.$refs.content.value='';
@@ -274,7 +298,7 @@ export default {
             let _this = this;
             if (!e || !window.FileReader){
                 return  // 看支持不支持FileReader
-            } 
+            }
             var files = e.target.files[0];
             var fileSize=(files.size/1024/1024).toFixed(2);//将文件大小转换为MB，并保留两位小数
             //对文件大小进行检查
