@@ -693,6 +693,12 @@ export default {
                 if (this.history) {
                     this.$router.go(-1);
                 }
+                var path=this.$router.history.current.name;
+                if(path==='index'){
+                    service.RemoteController({'show':false});
+                }else{
+                     service.RemoteController({'show':true});
+                }
             }
             this.loading = false
         },
@@ -729,7 +735,6 @@ export default {
        
     },
     mounted(){
-        service.RemoteController({'show':false});
     }
 };
 </script>

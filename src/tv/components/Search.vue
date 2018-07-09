@@ -456,9 +456,8 @@ export default {
         }
     },
     mounted() {
-        service.RemoteController({'show':true});
         this.getHistory();
-
+        service.RemoteController({'show':true});
         setTimeout(() => {
             this.$el.querySelector(".search_input input").focus();
         }, 500);
