@@ -416,7 +416,7 @@ export default {
     },
     mounted() {
         console.log('Index23333333333333333')
-        service.RemoteController(false);
+        service.RemoteController({'show':false});
         if (!infoCache.length) {
             this.pageInit();
         } else {
