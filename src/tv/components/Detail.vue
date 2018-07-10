@@ -689,15 +689,10 @@ export default {
         },
         close() {
             if (this.visible) {
-                this.hideDetail();
                 if (this.history) {
                     this.$router.go(-1);
-                }
-                var path=this.$router.history.current.name;
-                if(path==='index'){
-                    service.RemoteController({'show':false});
                 }else{
-                     service.RemoteController({'show':true});
+                    this.hideDetail();
                 }
             }
             this.loading = false
@@ -732,7 +727,7 @@ export default {
                 // this.visible = false
             }
         });
-       
+
     },
     mounted(){
     }

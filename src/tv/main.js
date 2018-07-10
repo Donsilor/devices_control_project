@@ -64,6 +64,12 @@ const store = new Vuex.Store({
         },
         hideDetail(state) {
             state.detailVisible = false
+            var path = router.history.current.name;
+            if(path==='index'){
+                service.RemoteController({'show':false});
+            }else{
+                service.RemoteController({'show':true});
+            }
         },
         setDeviceName(state, payload) {
             state.device_name = payload
@@ -104,23 +110,13 @@ const router =  new Router({
     }
   ]
 })
-//hack: app多次执行ready
-let is_ready = false
-let current_page = 'index'
-let thaf_timer
+
+let current_page = ''
 
 //app jsbridge ready
 HdSmart.ready(() => {
   //HdSmart.UI.setWebViewTouchRect(0,0,'100%','100%')
   HdSmart.UI.showLoading()
-
-  if(!is_ready){
-
-    is_ready = true
-
-    HdSmart.Device.getSnapShot((data) => {
-        store.commit('setDeviceName', data.device_name)
-    })
 
     if(window.device_name){
         store.commit('setDeviceName', window.device_name)
@@ -139,13 +135,8 @@ HdSmart.ready(() => {
 
     router.beforeEach((to,from,next) => {
       if(current_page !== to.name){
-        if(thaf_timer){
-            clearTimeout(thaf_timer)
-        }
         if(to.name === 'index' || to.name === 'error'){
-        //   thaf_timer = setTimeout(()=>{
             HdSmart.UI.toggleHeadAndFoot(true)
-        //   },200)
         }else{
           HdSmart.UI.toggleHeadAndFoot(false)
         }
@@ -167,8 +158,6 @@ HdSmart.ready(() => {
         watermark({el:'.page-index2'})
         watermark({el:'.page-detail'})
     }
-
-  }
 
 })
 
