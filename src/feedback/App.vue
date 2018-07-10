@@ -273,6 +273,11 @@ export default {
         });
     },
     methods: {
+        chooseImage() {
+            HdSmart.UI.chooseImage({}, (res) => {
+                alert(JSON.stringify(res))
+            })
+        },
         dealContent(e){
            if(e.target.value.length>=1){
                this.emptyTipsShow=true;
