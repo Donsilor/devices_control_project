@@ -8,13 +8,14 @@
             </div>
             <div class="picGroup">
                 <div class="picAll">
-                    <div class="picOne" v-for="item in imgsrc" :key="item.name">
+                    <div class="picOne" v-for="(item,index) in imgsrc" :key="item.name">
                         <img :src="item"/>
-                        <p @click="cutImg(item)"></p>
+                        <p @click="cutImg(index)">x</p>
                     </div>
                 </div>
-                <div class="addButton">
+                <div class="addButton" v-show="imgsrc.length<5">
                     <input type="file"  @change="getFile" ref="file" id="file"  accept="image/*">
+                    <span @click="chooseImage">调用APP图片接口</span>
                 </div>
                 <!-- capture="camera" -->
             </div>
@@ -109,6 +110,19 @@
                         width:100%;
                         height: 100%;
 
+                    }
+                    p{
+                        width:30px;
+                        height:30px;
+                        position:absolute;
+                        top:3px;
+                        right:3px;
+                        border-radius:50%;
+                        background:rgba(0,0,0,0.8);
+                        color:white;
+                        font-size:14px;
+                        text-align:center;
+                        line-height:30px;
                     }
                 }
             }
@@ -216,6 +230,18 @@ export default {
             imgsrc:[],//图片上传列表
             emptyTipsShow:false,
             overLength:false,
+            params:{
+                "uname": "",
+                "title": "用户反馈",
+                "terminal_name": "",
+                "terminal_type": "",
+                "client_version": "",
+                "app_version": "",
+                "content": "",//内容用户反馈详细内容
+                "img_list": [],
+                "token":''
+            }
+            
         };
     },
     watch: {
@@ -229,7 +255,16 @@ export default {
         HdSmart.ready(() => {
 
             HdSmart.Util.getAppInfo((res) => {
-                alert(JSON.stringify(res))
+                console.log('appInfo',res)
+                // alert(JSON.stringify(res)) 
+                this.params.uname = res.uname;
+                this.params.terminal_name = res.terminal_name;
+                this.params.terminal_type = res.terminal_type;
+                this.params.client_version=res.client_version;
+                this.params.app_version=res.app_version;
+                this.params.token = res.token;
+                console.log("参数",this.params)
+
             })
 
             HdSmart.UI.setNavigationBarLeft({
@@ -244,35 +279,33 @@ export default {
                 text: '提交',
                 color: '#cccccc',
                 onClick: function() {
-                    alert('我点击了提交按钮')
+                    console.log('我点击了提交按钮')
+                    axios({
+                        method: 'post',
+                        url: 'dev-hpcore.egtest.cn:18088/api/feedback/add',
+                        data: this.params
+                    }).then(function(data){
+                        console.log(8888888,x)
+                    });
                 }
             })
 
         })
 
-        axios({
-            method: 'post',
-            url: 'http://beeossdev.egtest.cn:7777/api/index.php/feedback/add',
-            data: {
-                "uname": "13691666741",
-                "title": "用户反馈",
-                "terminal_name": "Zac's iPhone",
-                "terminal_type": "iPhone iOS",
-                "client_version": "1.0.2",
-                "app_version": "10.3.3",
-                "content": "内容用户反馈详细内容",
-                "img_list": [
-                    "aww",
-                    "bss",
-                    "cxx"
-                ],
-                "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vYmVlb3NzZGV2LmVndGVzdC5jbi50ZXN0L2F1dGgvbG9naW4iLCJpYXQiOjE1MzAxNzIyNjIsImV4cCI6MTUzMTM4MTg2MiwibmJmIjoxNTMwMTcyMjYyLCJqdGkiOiJkaUxzOFM3MmVZT01tUVFmIiwic3ViIjoxLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wf54QUO2cN5XukRjYnxdlDlgeqBABr4LdD1Svse3lTw"
-            }
-        }).then(function(x){
-            console.log(8888888,x)
-        });
+        
     },
     methods: {
+        chooseImage() {
+            HdSmart.UI.chooseImage({count:5}, (res) => {
+                console.log(JSON.stringify(res))
+                if(code === 0){
+                    this.params.img_list = res.localds;
+                    this.imgsrc = res.localds;
+                }else{
+                    HdSmart.UI.toast('照片添加失败')
+                }
+            })
+        },
         dealContent(e){
            if(e.target.value.length>=1){
                this.emptyTipsShow=true;
@@ -289,6 +322,13 @@ export default {
            this.emptyTipsShow=false;
             this.overLength=false;
        },
+       cutImg(index){
+           console.log('cutindex',index)
+           this.imgsrc.splice(index,1);
+           console.log('this.imgSrc',this.imgsrc)
+           this.params.img_list.splice(index,1);
+           console.log("lllllllllll",this.params.img_list)
+       },
        getFile(e){
            if(this.imgsrc.length>=5){
                alert('最多可添加5张图片')
@@ -300,6 +340,7 @@ export default {
                 return  // 看支持不支持FileReader
             }
             var files = e.target.files[0];
+            console.log('files',files)
             var fileSize=(files.size/1024/1024).toFixed(2);//将文件大小转换为MB，并保留两位小数
             //对文件大小进行检查
             if(fileSize>5){

@@ -689,9 +689,10 @@ export default {
         },
         close() {
             if (this.visible) {
-                this.hideDetail();
                 if (this.history) {
                     this.$router.go(-1);
+                }else{
+                    this.hideDetail();
                 }
             }
             this.loading = false
@@ -726,10 +727,9 @@ export default {
                 // this.visible = false
             }
         });
-       
+
     },
     mounted(){
-        service.RemoteController({'show':false});
     }
 };
 </script>

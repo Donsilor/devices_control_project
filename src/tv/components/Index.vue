@@ -422,5 +422,6 @@ export default {
             this.homePageInfo = infoCache;
         }
     }
+
 };
 </script>
