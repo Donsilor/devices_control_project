@@ -15,6 +15,7 @@
                 </div>
                 <div class="addButton">
                     <input type="file"  @change="getFile" ref="file" id="file"  accept="image/*">
+                    <span @click="chooseImage">调用APP图片接口</span>
                 </div>
                 <!-- capture="camera" -->
             </div>
