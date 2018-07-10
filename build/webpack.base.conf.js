@@ -1,12 +1,12 @@
-var path = require('path')
-var utils = require('./utils')
-var config = require('../config')
+var path = require('path');
+var utils = require('./utils');
+var config = require('../config');
 var vueLoaderConfig = require('./vue-loader.conf');
 var webpack = require('webpack');
 var util = require('./util');
 
 function resolve(dir) {
-    return path.join(__dirname, '..', dir)
+    return path.join(__dirname, '..', dir);
 }
 
 var isProduction = process.env.NODE_ENV === 'production';
@@ -14,20 +14,18 @@ var app = util.getInputName();
 
 module.exports = {
     entry: {
-        sdk: './lib/hdsmart.js',
+        // sdk: './lib/hdsmart.js',
         app: [`./src/${app}/main.js`]
     },
     output: {
         path: config.build.assetsRoot,
         filename: '[name].js',
-        publicPath: isProduction
-            ? config.build.assetsPublicPath
-            : config.dev.assetsPublicPath
+        publicPath: isProduction ? config.build.assetsPublicPath : config.dev.assetsPublicPath
     },
     resolve: {
         extensions: ['.js', '.vue', '.json'],
         alias: {
-            'vue$': 'vue/dist/vue.esm.js',
+            vue$: 'vue/dist/vue.esm.js',
             '@': resolve('./src'),
             '~': resolve('./')
         }
@@ -48,7 +46,7 @@ module.exports = {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
                 options: {
-                    limit: 1,  // 页面内置到APP，没必要减少请求数，反而会增加代码大小
+                    limit: 1, // 页面内置到APP，没必要减少请求数，反而会增加代码大小
                     name: isProduction ? 'images/[name].[hash:7].[ext]' : utils.assetsPath(`images/[name].[hash:7].[ext]`)
                 }
             },
@@ -62,7 +60,5 @@ module.exports = {
             }
         ]
     },
-    plugins: [
-        new webpack.optimize.ModuleConcatenationPlugin()
-    ]
-}
+    plugins: [new webpack.optimize.ModuleConcatenationPlugin()]
+};

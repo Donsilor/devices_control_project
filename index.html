@@ -1,78 +1,86 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <title>
+        <%= htmlWebpackPlugin.options.title %>
+    </title>
     <style>
         html {
             height: 100%;
         }
-        .android body{
-            font-family: 'Roboto','Noto Sans S Chines'
+
+        .android body {
+            font-family: 'Roboto', 'Noto Sans S Chines'
         }
-        .ios body{
-            font-family: 'Roboto','PingFangSC-Regular'
+
+        .ios body {
+            font-family: 'Roboto', 'PingFangSC-Regular'
         }
     </style>
     <script>
-    (function () {
-        //px2rem的rootValue=30
-        //移动端，设计稿750
-        //PAD版，设计稿1920
+        (function () {
+            //px2rem的rootValue=30
+            //移动端，设计稿750
+            //PAD版，设计稿1920
 
-        var tid;
-        var rem;
-        var radio = 75;
-        var docEl = document.documentElement;
+            var tid;
+            var rem;
+            var radio = 75;
+            var docEl = document.documentElement;
 
-        var set = function () {
-          var clientWidth = docEl.getBoundingClientRect().width;
-          if(clientWidth <= 800){
-            rem = clientWidth * radio / 750;
-          }else{
-            rem = clientWidth * radio / 1920;
-          }
-        //   if(window.devicePixelRatio == 2.625 && /SM-N9500/.test(navigator.userAgent)){
-        //       rem = '37.45'
-        //   }
-          document.querySelector('html').style.fontSize = rem + 'px';
-        }
+            var set = function () {
+                var clientWidth = docEl.getBoundingClientRect().width;
+                if (clientWidth <= 800) {
+                    rem = clientWidth * radio / 750;
+                } else {
+                    rem = clientWidth * radio / 1920;
+                }
+                //   if(window.devicePixelRatio == 2.625 && /SM-N9500/.test(navigator.userAgent)){
+                //       rem = '37.45'
+                //   }
+                document.querySelector('html').style.fontSize = rem + 'px';
+            }
 
-        set();
+            set();
 
-        window.addEventListener('resize', function() {
-            clearTimeout(tid);
-            tid = setTimeout(set, 300);
-        }, false);
-
-        window.addEventListener('pageshow', function(e) {
-            if (e.persisted) {
+            window.addEventListener('resize', function () {
                 clearTimeout(tid);
                 tid = setTimeout(set, 300);
-            }
-        }, false);
+            }, false);
 
-    }());
+            window.addEventListener('pageshow', function (e) {
+                if (e.persisted) {
+                    clearTimeout(tid);
+                    tid = setTimeout(set, 300);
+                }
+            }, false);
+
+        }());
     </script>
     <script>
-            (function(){
-                var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-                document.documentElement.classList = iOS ? 'ios' : 'android'
-            })();
-            </script>
+        (function () {
+            var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+            document.documentElement.classList = iOS ? 'ios' : 'android'
+        })();
+    </script>
     <script>
         var BUILD_TIME = "<%= buildTime %>"
         console.log('productName: <%= htmlWebpackPlugin.options.title %>')
         console.log('buildTime: ' + BUILD_TIME)
     </script>
-
+    <script src="http://devfcsr.evergrande.cn/dist/third-party-plugin/jsbridge/hdsmart.js"></script>
 </head>
-<body>
-<div id="app"></div>
 
-<!-- <% if(process.env.NODE_ENV == 'production') { %>
+<body>
+    <div id="app"></div>
+
+    <!-- <% if(process.env.NODE_ENV == 'production') { %>
     <script src="../static/js/hdsmart.js"></script>
 <% } %> -->
+
 </body>
+
 </html>
