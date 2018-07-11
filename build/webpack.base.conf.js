@@ -14,7 +14,7 @@ var app = util.getInputName();
 
 module.exports = {
     entry: {
-        // sdk: './lib/hdsmart.js',
+        sdk: './lib/hdsmart.js',
         app: [`./src/${app}/main.js`]
     },
     output: {
