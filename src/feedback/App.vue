@@ -14,8 +14,9 @@
                     </div>
                 </div>
                 <div class="addButton" v-show="imgsrc.length<5">
-                    <!-- <input type="file"  @change="getFile" ref="file" id="file"  accept="image/*">-->
-                    <span @click="chooseImage">调用APP图片接口</span>
+                    
+                    <!--<input type="file"  @change="getFile" ref="file" id="file"  accept="image/*">-->
+                        <span @click="chooseImage">调用APP图片接口</span>
                 </div>
                 <!-- capture="camera" -->
             </div>
@@ -252,6 +253,7 @@ export default {
 
     },
     mounted() {
+        document.title="用户反馈"
         // var that=this;
         // axios({
         //                 method: 'post',
@@ -260,6 +262,7 @@ export default {
         //             }).then(function(data){
         //                 console.log(8888888,data)
         //             });
+        console.log(2333,this.sumitImageFile)
         HdSmart.ready(() => {
             var that=this;
             console.log(9999,this)
@@ -277,12 +280,13 @@ export default {
             })
 
             HdSmart.UI.setNavigationBarLeft({
-                text: '取消'
+                text: '取消',
+                icon:''
             })
 
-            HdSmart.UI.setNavigationBarTitle({
-                text: '用户反馈'
-            })
+            // HdSmart.UI.setNavigationBarTitle({
+            //     text: '用户反馈'
+            // })
             console.log('that.params',that.params)
             HdSmart.UI.setNavigationBarRight({
                 text: '提交',
@@ -290,6 +294,7 @@ export default {
                 onClick: function() {
                     console.log('我点击了提交按钮')
                     console.log(JSON.stringify(that.params))
+                    that.params.content = that.$refs.content.value;
                     axios({
                         method: 'post',
                         url: 'http://dev-hpcore.egtest.cn:18088/api/feedback/add',
@@ -314,14 +319,34 @@ export default {
             HdSmart.UI.chooseImage({count:5-countNow}, (res) => {
                 // console.log(JSON.stringify(res))
                 console.log("res",res)
-                
+                var fileArry;
                 if(res.code == 0){
+                    var formData = new FormData()
                     var dataGet=res.localIds;
                     console.log(123,dataGet.length)
                     for(var i=0;i<dataGet.length;i++){
-                        that.params.img_list.push(dataGet[i]);
+                        console.log('that',that)
+                        var blob=that.convertBase64UrlToBlob('data:image/png;base64,'+dataGet[i])
+                        
+                        var files=new File([blob], "name123.png",{type:blob.type});
+                        console.log('files',this.params.img_list)
                         that.imgsrc.push(dataGet[i]);
+                        formData.append('files['+i+']',files)
                     }
+                    console.log(11111,formData.get('files[0]'))
+                   console.log(12222221,formData.get('files[1]')) 
+                     //将从手机获得的图片上传到云端
+                        axios({
+                            method: 'post',
+                            url: 'http://dev-hpcore.egtest.cn:18088/api/ossUpload',
+                            data:formData
+                        }).then(function(data){
+                            console.log('参数',i)
+                            // console.log(888999,JSON.stringify(that.params))
+                            console.log(99999999,data)
+                            //将返回的链接返回给img_list,提交
+
+                        });
                 }else{
                     HdSmart.UI.toast('照片添加失败')
                 }
@@ -337,21 +362,21 @@ export default {
                 this.overLength=true;
            }
 
-       },
-       emptyContent(){
+        },
+        emptyContent(){
            this.$refs.content.value='';
            this.emptyTipsShow=false;
             this.overLength=false;
-       },
-       cutImg(index){
+        },
+        cutImg(index){
            
            console.log('cutindex',index)
            this.imgsrc.splice(index,1);
            console.log('this.imgSrc',this.imgsrc)
            this.params.img_list.splice(index,1);
            console.log("lllllllllll",this.params.img_list)
-       },
-       getFile(e){
+        },
+        getFile(e){
            if(this.imgsrc.length>=5){
                alert('最多可添加5张图片')
                return
@@ -375,8 +400,24 @@ export default {
                  _this.imgsrc.push(this.result)
             }
             console.log( _this.imgsrc)
-       }
-    }
+        },
+        convertBase64UrlToBlob(urlData){  //将以base64的图片url数据转换为Blob  
+            var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte  
+            //处理异常,将ascii码小于0的转换为大于0  
+            var ab = new ArrayBuffer(bytes.length);  
+            var ia = new Uint8Array(ab);  
+            for (var i = 0; i < bytes.length; i++) {  
+                ia[i] = bytes.charCodeAt(i);  
+            }  
+
+            return new Blob( [ab] , {type : 'image/png'});  
+        },
+        sumitImageFile(base64Codes){  //图片的base64编码 
+           
+            
+        }  
+    },
+        
 };
 </script>
 
