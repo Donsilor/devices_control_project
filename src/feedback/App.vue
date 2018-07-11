@@ -9,17 +9,18 @@
             <div class="picGroup">
                 <div class="picAll">
                     <div class="picOne" v-for="(item,index) in imgsrc" :key="item.name">
-                        <img :src="item"/>
+                        <img :src="'data:image/png;base64,'+item"/>
                         <p @click="cutImg(index)">x</p>
                     </div>
                 </div>
                 <div class="addButton" v-show="imgsrc.length<5">
-                    <input type="file"  @change="getFile" ref="file" id="file"  accept="image/*">
+                    <!-- <input type="file"  @change="getFile" ref="file" id="file"  accept="image/*">-->
                     <span @click="chooseImage">调用APP图片接口</span>
                 </div>
                 <!-- capture="camera" -->
             </div>
             <div class="picTips">最多上传5张照片，每张照片不超过5MB</div>
+            
         </div>
     </div>
 </template>
@@ -132,7 +133,7 @@
                 height:120px;
                 background:url('../../lib/base/feedback/assets/add_phone.png') no-repeat center;
                 background-size:100% 100%;
-                input{
+                span{
                     display: block;
                     opacity: 0;
                     width:100%;
@@ -251,9 +252,17 @@ export default {
 
     },
     mounted() {
-
+        // var that=this;
+        // axios({
+        //                 method: 'post',
+        //                 url: 'http://dev-hpcore.egtest.cn:18088/api/feedback/add',
+        //                 data: that.params
+        //             }).then(function(data){
+        //                 console.log(8888888,data)
+        //             });
         HdSmart.ready(() => {
-
+            var that=this;
+            console.log(9999,this)
             HdSmart.Util.getAppInfo((res) => {
                 console.log('appInfo',res)
                 // alert(JSON.stringify(res)) 
@@ -274,18 +283,20 @@ export default {
             HdSmart.UI.setNavigationBarTitle({
                 text: '用户反馈'
             })
-
+            console.log('that.params',that.params)
             HdSmart.UI.setNavigationBarRight({
                 text: '提交',
                 color: '#cccccc',
                 onClick: function() {
                     console.log('我点击了提交按钮')
+                    console.log(JSON.stringify(that.params))
                     axios({
                         method: 'post',
-                        url: 'dev-hpcore.egtest.cn:18088/api/feedback/add',
-                        data: this.params
+                        url: 'http://dev-hpcore.egtest.cn:18088/api/feedback/add',
+                        data: JSON.stringify(that.params)
                     }).then(function(data){
-                        console.log(8888888,x)
+                        console.log(888999,JSON.stringify(that.params))
+                        console.log(8888888,data)
                     });
                 }
             })
@@ -296,11 +307,21 @@ export default {
     },
     methods: {
         chooseImage() {
-            HdSmart.UI.chooseImage({count:5}, (res) => {
-                console.log(JSON.stringify(res))
-                if(code === 0){
-                    this.params.img_list = res.localds;
-                    this.imgsrc = res.localds;
+            var that=this;
+            var countNow=this.params.img_list.length;
+
+            console.log(23333,5-countNow)
+            HdSmart.UI.chooseImage({count:5-countNow}, (res) => {
+                // console.log(JSON.stringify(res))
+                console.log("res",res)
+                
+                if(res.code == 0){
+                    var dataGet=res.localIds;
+                    console.log(123,dataGet.length)
+                    for(var i=0;i<dataGet.length;i++){
+                        that.params.img_list.push(dataGet[i]);
+                        that.imgsrc.push(dataGet[i]);
+                    }
                 }else{
                     HdSmart.UI.toast('照片添加失败')
                 }
@@ -323,6 +344,7 @@ export default {
             this.overLength=false;
        },
        cutImg(index){
+           
            console.log('cutindex',index)
            this.imgsrc.splice(index,1);
            console.log('this.imgSrc',this.imgsrc)
