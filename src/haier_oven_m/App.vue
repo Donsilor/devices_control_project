@@ -2,7 +2,9 @@
     <div id="app">
         <!-- off -->
         <div class="page-off wrapper" v-if="model.switch==='off'">
-            <div class="name">{{device_name}}</div>
+            <div class="name">{{device_name}}
+                <icon />
+            </div>
             <div class="tip">已关闭</div>
             <div class="oven"></div>
             <div class="off_button">
@@ -13,7 +15,9 @@
         </div>
         <!-- on -->
         <div class="page-on wrapper" v-if="model.switch==='on'">
-            <h3 class="main-title">{{device_name}}</h3>
+            <h3 class="main-title">{{device_name}}
+                <icon />
+            </h3>
             <div class="pannel">
                 <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
                 <p class="color-gray p-status">
@@ -48,13 +52,9 @@
             </div>
             <!-- 查看更多的按钮 -->
             <span class="more-btn" @click="showMoreLayer"></span>
-             <!-- 预约烘烤时间弹窗 -->
+            <!-- 预约烘烤时间弹窗 -->
             <modal v-model="barbicueTimeAlert" title="预约烧烤结束时间" class="subpagebakControl2">
-                <mt-datetime-picker day-format="{value}"
-                    hour-format="{value} 时"
-                    minute-format="{value} 分" ref='picker' type="clock" :clockStartData="barbicueTimestart" :clockEndData="barbicueTimeend"  :item-height="50"
-                    :visible-item-count="5" 
-                    @confirm="selectBarbicueTime">
+                <mt-datetime-picker day-format="{value}" hour-format="{value} 时" minute-format="{value} 分" ref='picker' type="clock" :clockStartData="barbicueTimestart" :clockEndData="barbicueTimeend" :item-height="50" :visible-item-count="5" @confirm="selectBarbicueTime">
                 </mt-datetime-picker>
                 <div class="buttongroup">
                     <div class="cancle" @click="barbicueTimeAlert = false">取消</div>
@@ -161,51 +161,52 @@ function findIndex(array, fn) {
     return -1;
 }
 
-import SwitchButton from "../../lib/components/SwitchButton.vue";
-import Picker from "../../lib/components/Picker/picker";
-import AllConfig from "./config";
-import SubPage from "../../lib/components/SubPage";
-import ModeButton from "./components/ModeButton.vue";
-import Modal from "../../lib/components/Modal";
+import SwitchButton from '../../lib/components/SwitchButton.vue';
+import Picker from '../../lib/components/Picker/picker';
+import AllConfig from './config';
+import SubPage from '../../lib/components/SubPage';
+import ModeButton from './components/ModeButton.vue';
+import Modal from '../../lib/components/Modal';
 import Vue from 'vue';
 import DatetimePicker from '../../lib/components/datetime-picker';
+import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
 
 Vue.component(DatetimePicker.name, DatetimePicker);
 
-
 export default {
-    name: "app",
+    name: 'app',
     components: {
         SwitchButton,
         Picker,
         SubPage,
         ModeButton,
         Modal,
-        DatetimePicker
+        DatetimePicker,
+        Icon
     },
     data() {
         return {
             model: {}, //数据
             //状态集合
             allAttribute: {
-                mode: "", //模式
+                mode: '', //模式
                 temperature: 0, //温度
                 bake_duration: 0, //时长
-                step: "", // 模式是烘烤中(bake)还是预约中(reserve)
-                switch: "off",
-                status: "stop", //开关机状态，stop或者start
+                step: '', // 模式是烘烤中(bake)还是预约中(reserve)
+                switch: 'off',
+                status: 'stop', //开关机状态，stop或者start
                 reserve_bake: 0, //预约时间
-                convection: "on", // 热风对流
-                rotisserie: "on", //烤叉
+                convection: 'on', // 热风对流
+                rotisserie: 'on', //烤叉
                 remaining: 0, //剩余总时间
                 wenduList: [],
                 timeList: []
             },
             //模式选择层
             modelLayerShow: false, //todo
-            barbicueTimeAlert:false,//烘烤预约时间蒙层，
-            barbicueTimestart:'',
-            barbicueTimeend:'',
+            barbicueTimeAlert: false, //烘烤预约时间蒙层，
+            barbicueTimestart: '',
+            barbicueTimeend: '',
             //更多选择层
             moreLayerShow: false, //todo
             wenduSelectFlag: false,
@@ -214,62 +215,62 @@ export default {
             modeList: [
                 //todo.mode的名称还待定
                 {
-                    name: "传统烘焙",
-                    icon: "traditional-baking",
-                    mode: "bread"
+                    name: '传统烘焙',
+                    icon: 'traditional-baking',
+                    mode: 'bread'
                 },
                 {
-                    name: "3D热风",
-                    icon: "ico-3d",
-                    mode: "biscuit"
+                    name: '3D热风',
+                    icon: 'ico-3d',
+                    mode: 'biscuit'
                 },
                 {
-                    name: "对流烘焙",
-                    icon: "ico-convective-baking",
-                    mode: "cake"
+                    name: '对流烘焙',
+                    icon: 'ico-convective-baking',
+                    mode: 'cake'
                 },
                 {
-                    name: "烘焙",
-                    icon: "ico-barking",
-                    mode: "barking"
+                    name: '烘焙',
+                    icon: 'ico-barking',
+                    mode: 'barking'
                 },
                 {
-                    name: "热风烧烤",
-                    icon: "ico-hot-air-barbecue",
-                    mode: "barbecues"
+                    name: '热风烧烤',
+                    icon: 'ico-hot-air-barbecue',
+                    mode: 'barbecues'
                 },
                 {
-                    name: "上烧烤",
-                    icon: "ico-up-barbecue",
-                    mode: "fish_shrimp"
+                    name: '上烧烤',
+                    icon: 'ico-up-barbecue',
+                    mode: 'fish_shrimp'
                 },
                 {
-                    name: "全烧烤",
-                    icon: "ico-whole-barbecue",
-                    mode: "sweet_potato"
+                    name: '全烧烤',
+                    icon: 'ico-whole-barbecue',
+                    mode: 'sweet_potato'
                 },
                 {
-                    name: "披萨模式",
-                    icon: "ico-pizza",
-                    mode: "pizza"
+                    name: '披萨模式',
+                    icon: 'ico-pizza',
+                    mode: 'pizza'
                 },
                 {
-                    name: "上发酵",
-                    icon: "ico-upper-fermentation",
-                    mode: "fermentation"
+                    name: '上发酵',
+                    icon: 'ico-upper-fermentation',
+                    mode: 'fermentation'
                 },
                 {
-                    name: "解冻",
-                    icon: "icon-thaw",
-                    mode: "thaw"
+                    name: '解冻',
+                    icon: 'icon-thaw',
+                    mode: 'thaw'
                 }
             ],
-            device_name: ""
+            device_name: ''
         };
     },
     watch: {
-        "allAttribute.status"(val) {
-            if (val == "start") {
+        'allAttribute.status'(val) {
+            if (val == 'start') {
                 this.wenduSelectFlag = false;
                 this.timeSelectFlag = false;
                 if (this.modelLayerShow) {
@@ -280,11 +281,11 @@ export default {
     },
     computed: {
         isRun() {
-            console.log("run", this.model.status == "run");
-            return this.model.status == "run"; //正在运行
+            console.log('run', this.model.status == 'run');
+            return this.model.status == 'run'; //正在运行
         },
         childLockSwitch() {
-            return this.model.child_lock_switch == "on" ? true : false;
+            return this.model.child_lock_switch == 'on' ? true : false;
         },
         wenduSlot() {
             var current = findIndex(this.allAttribute.wenduList, item => {
@@ -296,7 +297,7 @@ export default {
                     flex: 1,
                     defaultIndex: current,
                     values: this.allAttribute.wenduList,
-                    className: "slot1"
+                    className: 'slot1'
                 }
             ];
         },
@@ -310,21 +311,18 @@ export default {
                     flex: 1,
                     defaultIndex: current,
                     values: this.allAttribute.timeList,
-                    className: "slot2"
+                    className: 'slot2'
                 }
             ];
         },
         remainingText() {
             var total = this.allAttribute.remaining;
-            if (
-                this.allAttribute.status == "start" &&
-                this.allAttribute.step == "reserve"
-            ) {
+            if (this.allAttribute.status == 'start' && this.allAttribute.step == 'reserve') {
                 total = total - this.allAttribute.bake_duration;
             }
             var h = Math.floor(total / 60);
             var m = total % 60;
-            var s = "";
+            var s = '';
             if (h > 0) {
                 s += `<strong>${h}</strong>小时 &nbsp;&nbsp;`;
             }
@@ -350,15 +348,12 @@ export default {
     methods: {
         setSwitch(val) {
             //烤箱开关的控制
-            console.log("开关", val);
-            this.controlDevice("switch", val);
+            console.log('开关', val);
+            this.controlDevice('switch', val);
         },
         controlDevice(attr, val, success, error) {
-            if (
-                this.model.child_lock_switch == "on" &&
-                attr != "child_lock_switch"
-            ) {
-                HdSmart.UI.toast("请先关闭童锁");
+            if (this.model.child_lock_switch == 'on' && attr != 'child_lock_switch') {
+                HdSmart.UI.toast('请先关闭童锁');
                 return;
             }
 
@@ -366,13 +361,13 @@ export default {
                 [attr]: val
             };
 
-            if (attr == "mode") {
+            if (attr == 'mode') {
                 //要切到待机模式
             }
 
             HdSmart.Device.control(
                 {
-                    method: "dm_set",
+                    method: 'dm_set',
                     nodeid: `oven.main.custom.${attr}`,
                     params: {
                         attribute: params
@@ -387,37 +382,37 @@ export default {
             );
         },
         setMode(mode) {
-            console.log("mode", mode);
+            console.log('mode', mode);
             if (this.isRun || this.isPause) {
                 return;
             }
             if (this.model.mode == mode) {
                 return;
             }
-            this.controlDevice("mode", mode, () => {
+            this.controlDevice('mode', mode, () => {
                 this.model.mode = mode;
             });
         },
         confirmChildLock() {
             //童锁的设置
-            console.log("童锁设置");
+            console.log('童锁设置');
             if (this.childLockSwitch) {
                 // this.confirmChildLockVisible = true;
             } else {
                 if (this.isRun) {
-                    this.setChildLock("on", () => {
-                        this.model.child_lock_switch = "on";
+                    this.setChildLock('on', () => {
+                        this.model.child_lock_switch = 'on';
                     });
                 } else {
-                    HdSmart.UI.toast("运行中才能开启童锁");
+                    HdSmart.UI.toast('运行中才能开启童锁');
                 }
             }
         },
         lighting() {
-            console.log("lighting");
+            console.log('lighting');
         },
         timeSynchronization() {
-            console.log("timeSynchronization");
+            console.log('timeSynchronization');
         },
         closeMoreLayer() {
             this.moreLayerShow = false;
@@ -431,9 +426,10 @@ export default {
         showModelLayer() {
             this.modelLayerShow = true;
         },
-        showModelBarbicueTime() {//预约烘烤时间
+        showModelBarbicueTime() {
+            //预约烘烤时间
             //todo
-            this.$refs.picker.open();//显示时间控件
+            this.$refs.picker.open(); //显示时间控件
             this.barbicueTimeAlert = true;
             this.barbicueTimeSlot = true;
             var timeNow = new Date().getTime(); //当前时间戳
@@ -442,24 +438,24 @@ export default {
             var startTime = timeNow + totalChange; //预约开始时间节点
             var endTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 当前时间+24小时
             var list = [];
-            var endTimestamp = new Date().setDate(new Date().getDate() + 1)
-        
-            this.barbicueTimestart=String(startTime);
-            this.barbicueTimeend=String(endTime);
+            var endTimestamp = new Date().setDate(new Date().getDate() + 1);
+
+            this.barbicueTimestart = String(startTime);
+            this.barbicueTimeend = String(endTime);
             console.log(1, startTime);
             console.log(2, endTime);
         },
         selectBarbicueTime(value) {
-            console.log(value,88888888888)
+            console.log(value, 88888888888);
         },
-        handleChange(){
+        handleChange() {
             this.$refs.picker.confirm();
             // this.$refs.picker.confirm.call(this.$refs.picker2, this.$refs.picker2.currentValue);
             this.barbicueTimeAlert = false;
         },
         seleteMode(item) {
             // 如果正在工作 不能选模式
-            if (this.allAttribute.status === "start") {
+            if (this.allAttribute.status === 'start') {
                 return;
             }
             this.allAttribute.mode = item.mode;
@@ -470,10 +466,10 @@ export default {
             this.allAttribute.remaining = this.allAttribute.bake_duration;
         },
         toggleShowSlider(val) {
-            if (this.allAttribute.status === "start") {
+            if (this.allAttribute.status === 'start') {
                 return;
             }
-            if (val === "wendu") {
+            if (val === 'wendu') {
                 this.wenduSelectFlag = !this.wenduSelectFlag;
                 if (this.wenduSelectFlag && this.timeSelectFlag) {
                     this.timeSelectFlag = false;
@@ -486,20 +482,20 @@ export default {
             }
         },
         selectWendu(picker, values) {
-            console.log("wendu", values);
+            console.log('wendu', values);
             if (values.length && values[0] && this.wenduSelectFlag) {
                 this.allAttribute.temperature = values[0].value;
             }
         },
         selectTime(picker, values) {
-            console.log("time", values);
+            console.log('time', values);
             if (values.length && values[0] && this.timeSelectFlag) {
                 this.allAttribute.bake_duration = values[0].value;
                 this.allAttribute.remaining = values[0].value;
             }
         },
         getModeName(val) {
-            let text = "";
+            let text = '';
             // var modeList = this.modeList.concat(this.elseModeList);
             var modeList = this.modeList;
             var currentMode = modeList.filter(item => {
@@ -508,7 +504,7 @@ export default {
             if (currentMode.length) {
                 return currentMode[0].name;
             }
-            return "";
+            return '';
         },
         getSnapShot(cb) {
             HdSmart.Device.getSnapShot(
@@ -523,12 +519,12 @@ export default {
             );
         },
         onSuccess(data) {
-            console.log("dataall", data);
+            console.log('dataall', data);
             HdSmart.UI.hideLoading();
             let attributes = data.attribute;
             this.model = attributes;
             let curAttributes = this.allAttribute;
-            let config = AllConfig[attributes.mode || "barbecues"];
+            let config = AllConfig[attributes.mode || 'barbecues'];
             //剩余时间设置为烘干时间，避免没有该字段显示异常
             config.remaining = config.bake_duration;
 
@@ -566,7 +562,7 @@ export default {
             const obj = this;
             let curParam = this.allAttribute;
             let paramObj = {
-                control: "start",
+                control: 'start',
                 mode: curParam.mode,
                 bake_duration: curParam.bake_duration * 60,
                 temperature: curParam.temperature
@@ -580,20 +576,20 @@ export default {
         // 停止
         stopOven() {
             const obj = this;
-            this.controlDevice({ control: "stop" });
+            this.controlDevice({ control: 'stop' });
         },
         // 设置热风对流
         changeConvection(obj) {
             let self = this;
-            this.controlDevice({ convection: obj.value ? "on" : "off" }, () => {
-                self.allAttribute.convection = self.value ? "on" : "off";
+            this.controlDevice({ convection: obj.value ? 'on' : 'off' }, () => {
+                self.allAttribute.convection = self.value ? 'on' : 'off';
             });
         },
         // 设置转叉
         changeRotisserie(obj) {
             let self = this;
-            this.controlDevice({ rotisserie: obj.value ? "on" : "off" }, () => {
-                self.allAttribute.rotisserie = self.value ? "on" : "off";
+            this.controlDevice({ rotisserie: obj.value ? 'on' : 'off' }, () => {
+                self.allAttribute.rotisserie = self.value ? 'on' : 'off';
             });
         }
     }
@@ -670,8 +666,7 @@ strong {
         left: 50%;
         top: 33.6%;
         transform: translate(-50%, 0);
-        background: url(../../lib/base/haier_oven/assets/img_ovenline@2x.png)
-            no-repeat;
+        background: url(../../lib/base/haier_oven/assets/img_ovenline@2x.png) no-repeat;
         background-size: 100% 100%;
     }
     .off_button {
@@ -689,8 +684,7 @@ strong {
                 width: 100%;
                 height: 100%;
                 display: block;
-                background: url(../../lib/base/washer/assets/btn_power@2x.png)
-                    no-repeat center;
+                background: url(../../lib/base/washer/assets/btn_power@2x.png) no-repeat center;
                 background-size: 100% 100%;
             }
         }
@@ -703,7 +697,7 @@ strong {
     width: 36px;
     height: 36px;
     top: 166px;
-    background-image: url("../../lib/base/oven/assets/btn_more@2x.png");
+    background-image: url('../../lib/base/oven/assets/btn_more@2x.png');
     background-size: 100% 100%;
 }
 .wrapper {
@@ -713,7 +707,7 @@ strong {
     overflow-y: auto;
     text-align: center;
     margin: 0 auto;
-    padding:88px 0 0 0;
+    padding: 88px 0 0 0;
     box-sizing: border-box;
     position: absolute;
     .color-gray {
@@ -721,7 +715,7 @@ strong {
     }
     .main-title {
         font-weight: normal;
-        margin:80px auto 10%;
+        margin: 80px auto 10%;
         margin-bottom: 10%;
         font-size: 32px;
         color: #76787a;
@@ -815,22 +809,22 @@ strong {
                 background-size: 100% 100%;
             }
             .c-stop {
-                background-image: url("../../lib/base/haier_oven/assets/icn_shutdown_active@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_shutdown_active@2x.png');
                 &.disable {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_shutdown_disabled@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_shutdown_disabled@2x.png');
                 }
             }
             .c-model {
-                background-image: url("../../lib/base/haier_oven/assets/icn_modepreset_active@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_modepreset_active@2x.png');
             }
             .c-firing {
-                background-image: url("../../lib/base/haier_oven/assets/icn_open_active@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_open_active@2x.png');
             }
             .c-preheat {
-                background-image: url("../../lib/base/haier_oven/assets/icn_Auxiliarywa-up_active@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_Auxiliarywa-up_active@2x.png');
             }
             .c-barbicue {
-                background-image: url("../../lib/base/haier_oven/assets/icn_reservebaking_active@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_reservebaking_active@2x.png');
             }
         }
     }
@@ -855,28 +849,28 @@ strong {
                 opacity: 0.3;
             }
             a.traditional-baking {
-                background-image: url("../../lib/base/oven/assets/btn_bread_g.png");
+                background-image: url('../../lib/base/oven/assets/btn_bread_g.png');
             }
             a.ico-3d {
-                background-image: url("../../lib/base/oven/assets/btn_biscuits_g.png");
+                background-image: url('../../lib/base/oven/assets/btn_biscuits_g.png');
             }
             a.ico-convective-baking {
-                background-image: url("../../lib/base/oven/assets/btn_cake_g.png");
+                background-image: url('../../lib/base/oven/assets/btn_cake_g.png');
             }
             a.ico-barking {
-                background-image: url("../../lib/base/oven/assets/btn_pizza_g.png");
+                background-image: url('../../lib/base/oven/assets/btn_pizza_g.png');
             }
             a.ico-hot-air-barbecue {
-                background-image: url("../../lib/base/oven/assets/btn_barbecue_g.png");
+                background-image: url('../../lib/base/oven/assets/btn_barbecue_g.png');
             }
             a.ico-up-barbecue {
-                background-image: url("../../lib/base/oven/assets/btn_fishandshrimp_g.png");
+                background-image: url('../../lib/base/oven/assets/btn_fishandshrimp_g.png');
             }
             a.ico-whole-barbecue {
-                background-image: url("../../lib/base/oven/assets/btn_pachyrhizus_g.png");
+                background-image: url('../../lib/base/oven/assets/btn_pachyrhizus_g.png');
             }
             a.ico-pizza {
-                background-image: url("../../lib/base/oven/assets/btn_chicken_g.png");
+                background-image: url('../../lib/base/oven/assets/btn_chicken_g.png');
             }
         }
     }
@@ -903,75 +897,75 @@ strong {
                 background-size: 100% 100%;
             }
             .traditional-baking {
-                background-image: url("../../lib/base/haier_oven/assets/icn_traditionalbaking_norma.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_traditionalbaking_norma.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_traditionalbaking_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_traditionalbaking_active@2x.png');
                 }
             }
             .ico-3d {
-                background-image: url("../../lib/base/haier_oven/assets/icn_3Dhotair_normal@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_3Dhotair_normal@2x.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_3Dhotair_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_3Dhotair_active@2x.png');
                 }
             }
             .ico-convective-baking {
-                background-image: url("../../lib/base/haier_oven/assets/icn_convectionbake_normal@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_convectionbake_normal@2x.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_convectionbake_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_convectionbake_active@2x.png');
                 }
             }
             .ico-barking {
-                background-image: url("../../lib/base/haier_oven/assets/icn_baking_normal@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_baking_normal@2x.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_baking_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_baking_active@2x.png');
                 }
             }
             .ico-hot-air-barbecue {
-                background-image: url("../../lib/base/haier_oven/assets/icn_hotairbarbecue_normal@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_hotairbarbecue_normal@2x.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_hotairbarbecue_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_hotairbarbecue_active@2x.png');
                 }
             }
             .ico-up-barbecue {
-                background-image: url("../../lib/base/haier_oven/assets/icn_upthebarbecue_normal@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_upthebarbecue_normal@2x.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_upthebarbecue_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_upthebarbecue_active@2x.png');
                 }
             }
             .ico-whole-barbecue {
-                background-image: url("../../lib/base/haier_oven/assets/icn_wholebarbecue_normal@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_wholebarbecue_normal@2x.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_wholebarbecue_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_wholebarbecue_active@2x.png');
                 }
             }
             .ico-pizza {
-                background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png');
                 }
             }
             .ico-pizza {
-                background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png');
                 }
             }
             .ico-pizza {
-                background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png');
                 }
             }
             .ico-upper-fermentation {
-                background-image: url("../../lib/base/haier_oven/assets/icn_fermentation_normal@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_fermentation_normal@2x.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_fermentation_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_fermentation_active@2x.png');
                 }
             }
             .icon-thaw {
-                background-image: url("../../lib/base/haier_oven/assets/icn_thaw_normal@2x.png");
+                background-image: url('../../lib/base/haier_oven/assets/icn_thaw_normal@2x.png');
                 &.active {
-                    background-image: url("../../lib/base/haier_oven/assets/icn_thaw_active@2x.png");
+                    background-image: url('../../lib/base/haier_oven/assets/icn_thaw_active@2x.png');
                 }
             }
         }
@@ -1023,10 +1017,10 @@ strong {
         }
         .icon-arrow-down {
             transform: rotate(-90deg);
-            background-image: url("../../lib/base/oven/assets/arrow_down.png");
+            background-image: url('../../lib/base/oven/assets/arrow_down.png');
         }
         .icon-arrow-up {
-            background-image: url("../../lib/base/oven/assets/arrow_up.png");
+            background-image: url('../../lib/base/oven/assets/arrow_up.png');
         }
     }
     .vue-js-switch {
@@ -1070,7 +1064,7 @@ strong {
         box-sizing: border-box;
         padding-bottom: 120px;
     }
-    #app{
+    #app {
         padding-bottom: 120px;
         box-sizing: border-box;
     }
@@ -1117,13 +1111,11 @@ strong {
                 color: #76787a;
             }
             .c-lighting {
-                background: url(../../lib/base/haier_oven/assets/icn_illumination_normal@2x.png)
-                    no-repeat center center;
+                background: url(../../lib/base/haier_oven/assets/icn_illumination_normal@2x.png) no-repeat center center;
                 background-size: 100% 100%;
             }
             .c-time {
-                background: url(../../lib/base/haier_oven/assets/icn_timesynchronization_normal@2x.png)
-                    no-repeat center center;
+                background: url(../../lib/base/haier_oven/assets/icn_timesynchronization_normal@2x.png) no-repeat center center;
                 background-size: 100% 100%;
             }
         }
@@ -1157,8 +1149,7 @@ strong {
                 display: inline-block;
                 width: 30px;
                 height: 30px;
-                background: url(../../lib/base/washer/assets/arrow_down.png)
-                    no-repeat;
+                background: url(../../lib/base/washer/assets/arrow_down.png) no-repeat;
                 background-size: 100% 100%;
                 vertical-align: -6px;
                 margin-left: 10px;
@@ -1206,59 +1197,59 @@ strong {
     .modal {
         width: 600px;
         height: auto;
-        overflow-y:auto;
+        overflow-y: auto;
         box-sizing: border-box;
-        .picker-item{
-            margin-left:0;
-            margin-right:0;
+        .picker-item {
+            margin-left: 0;
+            margin-right: 0;
         }
     }
-    .modal-body{
+    .modal-body {
         position: relative;
-        width:100%;
-        height:auto;
-        overflow-y:auto;
-        top:0;
-        left:0;
-        overflow-y:auto;
-        background-color:#fff;
-        padding:0 0 36px 0;
-        box-sizing:border-box;
-        .mint-popup-bottom{
+        width: 100%;
+        height: auto;
+        overflow-y: auto;
+        top: 0;
+        left: 0;
+        overflow-y: auto;
+        background-color: #fff;
+        padding: 0 0 36px 0;
+        box-sizing: border-box;
+        .mint-popup-bottom {
             position: relative;
-            top:0;
-            left:0;
-            right:auto;
-            bottom:auto;
-            width:100%;
-            box-sizing:border-box;
-            padding:50px 0px 60px 0px;
-            transform: translate3d(0,0,0);
-
+            top: 0;
+            left: 0;
+            right: auto;
+            bottom: auto;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 50px 0px 60px 0px;
+            transform: translate3d(0, 0, 0);
         }
-        .buttongroup{
-            width:100%;
-            height:auto;
+        .buttongroup {
+            width: 100%;
+            height: auto;
             display: flex;
             justify-content: center;
             align-items: center;
-            .cancle,.sure{
-                width:240px;
+            .cancle,
+            .sure {
+                width: 240px;
                 height: 84px;
-                line-height:84px;
+                line-height: 84px;
                 text-align: center;
                 font-size: 36px;
                 border-radius: 6px;
-                box-sizing:border-box;
+                box-sizing: border-box;
             }
-            .cancle{
-                background: #FFFFFF;
-                border: 1px solid #76787A;
+            .cancle {
+                background: #ffffff;
+                border: 1px solid #76787a;
                 margin-right: 24px;
             }
-            .sure{
-                background: #46BCFF;
-                color:#fff;
+            .sure {
+                background: #46bcff;
+                color: #fff;
             }
         }
     }
@@ -1310,7 +1301,7 @@ strong {
         border: 1px solid #76787a;
         color: #76787a;
         margin-right: 24px;
-        box-sizing:border-box;
+        box-sizing: border-box;
     }
     .sure {
         background: #46bcff;
@@ -1321,11 +1312,10 @@ strong {
     opacity: 0.5;
 }
 // 日期组件样式调整
-.picker-toolbar{
+.picker-toolbar {
     display: none !important;
 }
-.v-modal{
-    display:none;
+.v-modal {
+    display: none;
 }
-
 </style>

@@ -4,11 +4,11 @@
         <div class="bg"></div>
 
         <div class="header">
-            <span class="name">{{device.name}}</span>
+            <span class="name">{{device.name}}
+                <icon />
+            </span>
             <span class="status">
-                {{modeText}}
-                {{speedText}}
-                {{ac.env_temperature ? '环境温度' + ac.env_temperature/10 + '℃' : ''}}
+                {{modeText}} {{speedText}} {{ac.env_temperature ? '环境温度' + ac.env_temperature/10 + '℃' : ''}}
             </span>
         </div>
 
@@ -88,37 +88,38 @@
 </template>
 
 <script>
-
-import Modal from '../../../lib/components/Modal.vue'
+import Modal from '../../../lib/components/Modal.vue';
+import Icon from '../../../lib/components/ToAppDeviceDetailIcon.vue';
 
 const tips = {
-    fail: "设置失败",
-    temperature: "温度设置成功",
-    speed_low: "低风切换成功",
-    speed_normal: "中风切换成功",
-    speed_high: "高风切换成功",
-    speed_auto: "自动风速切换成功",
-    mode_cold: "制冷模式切换成功",
-    mode_auto: "智能模式切换成功",
-    mode_heat: "制热模式切换成功",
-    mode_dehumidify: "除湿模式切换成功",
-    mode_wind: "送风模式切换成功",
-    wind_up_down_on: "上下扫风已启动",
-    wind_up_down_off: "上下扫风已关闭",
-    wind_left_right_on: "左右扫风已启动",
-    wind_left_right_off: "左右扫风已关闭",
-    err_temp1: "送风模式下不能设置温度",
-    err_temp2: "温度已调至最高",
-    err_temp3: "温度已调至最低"
+    fail: '设置失败',
+    temperature: '温度设置成功',
+    speed_low: '低风切换成功',
+    speed_normal: '中风切换成功',
+    speed_high: '高风切换成功',
+    speed_auto: '自动风速切换成功',
+    mode_cold: '制冷模式切换成功',
+    mode_auto: '智能模式切换成功',
+    mode_heat: '制热模式切换成功',
+    mode_dehumidify: '除湿模式切换成功',
+    mode_wind: '送风模式切换成功',
+    wind_up_down_on: '上下扫风已启动',
+    wind_up_down_off: '上下扫风已关闭',
+    wind_left_right_on: '左右扫风已启动',
+    wind_left_right_off: '左右扫风已关闭',
+    err_temp1: '送风模式下不能设置温度',
+    err_temp2: '温度已调至最高',
+    err_temp3: '温度已调至最低'
 };
-const SPEED = ["low", "normal", "high"];
+const SPEED = ['low', 'normal', 'high'];
 const [MIN_TEMP, MAX_TEMP] = [16, 30];
 let tempDelay,
     tempFlag = true;
 
 export default {
     components: {
-        Modal
+        Modal,
+        Icon
     },
     props: {
         control: {
@@ -136,26 +137,26 @@ export default {
             temperature: this.ac.temperature,
             toggle: false,
             tipVisible: false,
-            tip: ""
+            tip: ''
         };
     },
     computed: {
         modeText() {
             return {
-                cold: "制冷模式",
-                heat: "制热模式",
-                dehumidify: "除湿模式",
-                auto: "智能模式",
-                wind: "送风模式"
+                cold: '制冷模式',
+                heat: '制热模式',
+                dehumidify: '除湿模式',
+                auto: '智能模式',
+                wind: '送风模式'
             }[this.ac.mode];
         },
         speedText() {
             return {
-                low: "低风",
-                overlow: "低风",
-                normal: "中风",
-                overnormal: "中风",
-                high: "高风"
+                low: '低风',
+                overlow: '低风',
+                normal: '中风',
+                overnormal: '中风',
+                high: '高风'
                 // 'auto': '自动风'
             }[this.ac.speed];
         }
@@ -168,18 +169,11 @@ export default {
             }
         },
         setOff(event) {
-            this.control(
-                "switch",
-                "off",
-                event.target,
-                () => {},
-                this.onSetError()
-            );
+            this.control('switch', 'off', event.target, () => {}, this.onSetError());
         },
         setTemperature(val, event) {
-
-            if (this.ac.mode === "auto") {
-                this.showTip("智能模式下不能设置温度");
+            if (this.ac.mode === 'auto') {
+                this.showTip('智能模式下不能设置温度');
                 return;
             }
 
@@ -203,7 +197,7 @@ export default {
                 }
             }
 
-            if (this.checkCmd("temperature", temp)) {
+            if (this.checkCmd('temperature', temp)) {
                 return;
             }
 
@@ -213,7 +207,7 @@ export default {
             tempDelay = setTimeout(() => {
                 tempFlag = true;
                 this.control(
-                    "temperature",
+                    'temperature',
                     this.temperature,
                     event.target,
                     this.onSetSuccess(tips.temperature),
@@ -222,46 +216,28 @@ export default {
             }, 500);
         },
         setSpeed(event) {
-            if (this.ac.mode == "dehumidify") {
-                this.showTip("除湿模式下不可设置风速");
+            if (this.ac.mode == 'dehumidify') {
+                this.showTip('除湿模式下不可设置风速');
                 return;
             }
 
             var index = SPEED.indexOf(this.ac.speed);
             var next = index === SPEED.length - 1 ? 0 : index + 1;
             var speed = SPEED[next];
-            if (this.checkCmd("speed", speed)) {
+            if (this.checkCmd('speed', speed)) {
                 return;
             }
-            this.control(
-                "speed",
-                speed,
-                event.target,
-                this.onSetSuccess(tips["speed_" + speed]),
-                this.onSetError()
-            );
+            this.control('speed', speed, event.target, this.onSetSuccess(tips['speed_' + speed]), this.onSetError());
         },
         setMode(mode, event) {
-            if (this.checkCmd("mode", mode)) {
+            if (this.checkCmd('mode', mode)) {
                 return;
             }
-            this.control(
-                "mode",
-                mode,
-                event.target,
-                this.onSetSuccess(tips["mode_" + mode]),
-                this.onSetError()
-            );
+            this.control('mode', mode, event.target, this.onSetSuccess(tips['mode_' + mode]), this.onSetError());
         },
         setWind(attr, event) {
-            var val = this.ac[attr] === "on" ? "off" : "on";
-            this.control(
-                attr,
-                val,
-                event.target,
-                this.onSetSuccess(tips[attr + "_" + val]),
-                this.onSetError()
-            );
+            var val = this.ac[attr] === 'on' ? 'off' : 'on';
+            this.control(attr, val, event.target, this.onSetSuccess(tips[attr + '_' + val]), this.onSetError());
         },
         showMore() {
             this.toggle = !this.toggle;
@@ -291,11 +267,7 @@ export default {
         checkCmd(attr, val) {
             var ac = JSON.parse(JSON.stringify(this.ac));
             ac[attr] = val;
-            if (
-                ac.temperature == MAX_TEMP &&
-                ac.speed == "low" &&
-                ac.mode == "cold"
-            ) {
+            if (ac.temperature == MAX_TEMP && ac.speed == 'low' && ac.mode == 'cold') {
                 return true;
             }
             return false;

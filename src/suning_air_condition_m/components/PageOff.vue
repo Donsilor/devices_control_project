@@ -4,7 +4,9 @@
         <div class="bg"></div>
 
         <div class="header">
-            <span class="name">{{device.name}}</span>
+            <span class="name">{{device.name}}
+                <icon />
+            </span>
             <span class="status">已关闭</span>
         </div>
 
@@ -17,7 +19,11 @@
 </template>
 
 <script>
+import Icon from '../../../lib/components/ToAppDeviceDetailIcon.vue';
 export default {
+    components: {
+        Icon
+    },
     props: {
         control: {
             type: Function
@@ -31,7 +37,7 @@ export default {
     },
     methods: {
         setOn(event) {
-            this.control("switch", "on", event.target);
+            this.control('switch', 'on', event.target);
         }
     }
 };

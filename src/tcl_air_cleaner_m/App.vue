@@ -2,7 +2,9 @@
     <div id="app">
         <div class="page-on" v-if="status == 'error' || model.switch_status == 'on'">
             <div class="mainTitle">
-                <div class="name">{{device_name}}</div>
+                <div class="name">{{device_name}}
+                    <icon className="redact-white" />
+                </div>
                 <div class="tip">
                     <p v-show="tip">{{tip}}</p>
                     <p v-show="!tip && remain_tip">{{remain_tip}}</p>
@@ -99,37 +101,38 @@
 </template>
 
 <script>
-import Modal from "../../lib/components/Modal.vue";
-import SubPage from "../../lib/components/SubPage";
+import Modal from '../../lib/components/Modal.vue';
+import SubPage from '../../lib/components/SubPage';
+import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
 
 const SPEED_TEXT1 = [
-    { text: "低速", className: "1", value: "low" },
-    { text: "中低速", className: "2", value: "middle" },
-    { text: "中速", className: "3", value: "high" },
-    { text: "中高速", className: "4", value: "very_high" },
-    { text: "高速", className: "5", value: "super_high" }
+    { text: '低速', className: '1', value: 'low' },
+    { text: '中低速', className: '2', value: 'middle' },
+    { text: '中速', className: '3', value: 'high' },
+    { text: '中高速', className: '4', value: 'very_high' },
+    { text: '高速', className: '5', value: 'super_high' }
 ];
 const SPEED_TEXT2 = [
-    { text: "一档", className: "1", value: "low" },
-    { text: "二档", className: "2", value: "middle" },
-    { text: "三档", className: "3", value: "high" },
-    { text: "四档", className: "4", value: "very_high" }
+    { text: '一档', className: '1', value: 'low' },
+    { text: '二档', className: '2', value: 'middle' },
+    { text: '三档', className: '3', value: 'high' },
+    { text: '四档', className: '4', value: 'very_high' }
 ];
 const SPEED_TEXT3 = [
-    { text: "低速", className: "1", value: "low" },
-    { text: "中速", className: "3", value: "middle" },
-    { text: "高速", className: "5", value: "high" }
+    { text: '低速', className: '1', value: 'low' },
+    { text: '中速', className: '3', value: 'middle' },
+    { text: '高速', className: '5', value: 'high' }
 ];
 const DEVICE_MODEL = {
-    "KJ315F-A1": {
+    'KJ315F-A1': {
         child_lock_switch: false,
         negative_ion_switch: false
     },
-    "KJ400F-A11": {
+    'KJ400F-A11': {
         child_lock_switch: false,
         negative_ion_switch: false
     },
-    "KJ819F-B2": {
+    'KJ819F-B2': {
         speed: 5
     }
 };
@@ -143,7 +146,7 @@ const PM25_VAL = [0, 35, 75, 115, 150, 250];
 const PM25_ANGLE = [-136, -84, -28, 28, 84, 136];
 
 function getToggle(val) {
-    return val === "on" ? "off" : "on";
+    return val === 'on' ? 'off' : 'on';
 }
 
 function getRotate(val, start, end) {
@@ -198,25 +201,26 @@ function throttle(func, wait, options) {
 export default {
     components: {
         Modal,
-        SubPage
+        SubPage,
+        Icon
     },
     data() {
         return {
-            status: "",
+            status: '',
             speedModalVisible: false,
             moreModalVisible: false,
-            device_name: "",
+            device_name: '',
             model: {},
-            tip: "",
-            remain_tip: "",
-            pm25: "",
+            tip: '',
+            remain_tip: '',
+            pm25: '',
             speedItems: SPEED_TEXT3,
             //功能能力判断
             ab: {},
             //前一个状态
             prevModel: {
-                control_status: "auto",
-                speed: ""
+                control_status: 'auto',
+                speed: ''
             },
             pmPopVisible: false
         };
@@ -232,7 +236,7 @@ export default {
             return {};
         },
         speedCss() {
-            return ["btn-speed" + this.currentSpeed.className, "active"];
+            return ['btn-speed' + this.currentSpeed.className, 'active'];
         },
         speedText() {
             return this.currentSpeed.text;
@@ -253,7 +257,7 @@ export default {
             return getRotate(this.pm25, level - 1, level);
         },
         pm25_text() {
-            return this.pm25 == 0 ? "--" : this.pm25 + "<small>μg/m³</small>";
+            return this.pm25 == 0 ? '--' : this.pm25 + '<small>μg/m³</small>';
         }
     },
     watch: {
@@ -274,7 +278,7 @@ export default {
             clearTimeout(this.tipTime);
             this.tip = text;
             this.tipTime = setTimeout(() => {
-                this.tip = "";
+                this.tip = '';
             }, 2000);
         },
         controlDevice(attr, val, param, success, error) {
@@ -286,7 +290,7 @@ export default {
                 param
             );
 
-            if (attr == "child_lock_switch") {
+            if (attr == 'child_lock_switch') {
                 fn = function(cb) {
                     cb();
                 };
@@ -295,7 +299,7 @@ export default {
             fn(() => {
                 HdSmart.Device.control(
                     {
-                        method: "dm_set",
+                        method: 'dm_set',
                         nodeid: `air_filter.main.${attr}`,
                         params: {
                             attribute: params
@@ -306,63 +310,52 @@ export default {
                     },
                     () => {
                         error && error();
-                        this.showTip("操作失败");
+                        this.showTip('操作失败');
                     }
                 );
             });
         },
         setSwitch(val) {
-            this.controlDevice("switch", val);
+            this.controlDevice('switch', val);
         },
         setControl: throttle(function(val) {
             if (this.model.control_status == val) {
                 return;
             }
-            this.controlDevice("control", val, () => {
+            this.controlDevice('control', val, () => {
                 this.model.control_status = val;
             });
         }),
         setSleep() {
-            if (this.model.negative_ion_switch_status == "on") {
-                this.controlDevice(
-                    "negative_ion_switch",
-                    "off",
-                    { control: "sleep" },
-                    () => {
-                        this.model.control_status = "sleep";
-                    }
-                );
+            if (this.model.negative_ion_switch_status == 'on') {
+                this.controlDevice('negative_ion_switch', 'off', { control: 'sleep' }, () => {
+                    this.model.control_status = 'sleep';
+                });
             } else {
-                this.setControl("sleep");
+                this.setControl('sleep');
             }
         },
         setSpeed: throttle(function(val) {
-            if (
-                this.model.control_status == "manual" &&
-                this.model.speed == val
-            ) {
+            if (this.model.control_status == 'manual' && this.model.speed == val) {
                 return;
             }
-            this.controlDevice("speed", val, { control: "manual" }, () => {
-                this.model.control_status = "manual";
+            this.controlDevice('speed', val, { control: 'manual' }, () => {
+                this.model.control_status = 'manual';
                 this.model.speed = val;
             });
         }),
         setNegativeIon: throttle(function() {
-            if (this.model.child_lock_switch_status == "on") {
-                HdSmart.UI.toast("解除童锁后才能控制此设备");
+            if (this.model.child_lock_switch_status == 'on') {
+                HdSmart.UI.toast('解除童锁后才能控制此设备');
                 return;
             }
             var val = getToggle(this.model.negative_ion_switch_status);
-            
+
             this.controlDevice(
-                "negative_ion_switch",
+                'negative_ion_switch',
                 val,
                 {
-                    control:
-                        this.model.control_status == "sleep"
-                            ? this.prevModel.control_status
-                            : this.model.control_status
+                    control: this.model.control_status == 'sleep' ? this.prevModel.control_status : this.model.control_status
                 },
                 () => {
                     this.model.negative_ion_switch_status = val;
@@ -370,22 +363,17 @@ export default {
             );
         }),
         setChildLock: throttle(function() {
-            if (this.model.control_status == "sleep") {
-                HdSmart.UI.toast("睡眠模式下不能开启童锁");
+            if (this.model.control_status == 'sleep') {
+                HdSmart.UI.toast('睡眠模式下不能开启童锁');
                 return;
             }
             var val = getToggle(this.model.child_lock_switch_status);
-            this.controlDevice(
-                "child_lock_switch",
-                val,
-                { control: this.model.control_status },
-                () => {
-                    this.model.child_lock_switch_status = val;
-                }
-            );
+            this.controlDevice('child_lock_switch', val, { control: this.model.control_status }, () => {
+                this.model.child_lock_switch_status = val;
+            });
         }),
         showSpeedModal() {
-            if (this.model.child_lock_switch_status == "on") {
+            if (this.model.child_lock_switch_status == 'on') {
                 this.confirm();
             } else {
                 this.speedModalVisible = true;
@@ -404,27 +392,22 @@ export default {
             );
         },
         onSuccess(data) {
-            this.status = "success";
+            this.status = 'success';
             this.model = data.attribute;
 
             if (this.model.filter_time_remaining <= 0) {
-                this.remain_tip = "需更换滤网";
+                this.remain_tip = '需更换滤网';
             } else if (this.model.filter_time_remaining <= 120) {
-                this.remain_tip = `滤芯寿命剩余${
-                    this.model.filter_time_remaining
-                }小时`;
+                this.remain_tip = `滤芯寿命剩余${this.model.filter_time_remaining}小时`;
             } else {
-                this.remain_tip = "";
+                this.remain_tip = '';
             }
 
             var pm25 = this.model.air_filter_result.PM25;
             this.pm25 = pm25.length == 2 ? pm25[1] : pm25[0];
 
             // 根据设备型号判断功能点，后边从开放平台拉取
-            this.ab = Object.assign(
-                DEVICE_DEFAULT,
-                DEVICE_MODEL[this.model.deviceModel] || {}
-            );
+            this.ab = Object.assign(DEVICE_DEFAULT, DEVICE_MODEL[this.model.deviceModel] || {});
             if (this.ab.speed == 5) {
                 this.speedItems = SPEED_TEXT1;
             } else if (this.ab.speed == 4) {
@@ -434,14 +417,14 @@ export default {
             }
         },
         onError() {
-            this.status = "error";
+            this.status = 'error';
         },
         confirm(done) {
-            if (this.model.child_lock_switch_status == "on") {
+            if (this.model.child_lock_switch_status == 'on') {
                 HdSmart.UI.alert(
                     {
-                        title: "解除童锁",
-                        message: "解除童锁后才能控制此设备，\n是否解除？",
+                        title: '解除童锁',
+                        message: '解除童锁后才能控制此设备，\n是否解除？',
                         dialogStyle: 2
                     },
                     val => {
@@ -454,11 +437,11 @@ export default {
         }
     },
     created() {
-        this.$watch("model.control_status", (newVal, oldVal) => {
+        this.$watch('model.control_status', (newVal, oldVal) => {
             this.prevModel.control_status = oldVal || 'auto';
         });
 
-        this.$watch("model.speed", (newVal, oldVal) => {
+        this.$watch('model.speed', (newVal, oldVal) => {
             this.prevModel.speed = oldVal || '';
         });
 

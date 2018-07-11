@@ -1,7 +1,10 @@
 <template>
     <div class="page-index">
 
-        <div class="name">{{device_name}}</div>
+        <div class="name">{{device_name}}
+            <icon />
+        </div>
+
         <div class="lock-status">
             <span class="status" :class="{red:lockedStatus,on:model.switch=='on'}">{{statusText}}</span>
             <span class="battery" :class="{low:lowBattery}">{{model.battery_percentage}}%电量</span>
@@ -24,8 +27,9 @@
 </template>
 
 <script>
-import PasswordInput from "./PasswordInput.vue";
-import { WARN_CODE } from "./const";
+import PasswordInput from './PasswordInput.vue';
+import Icon from '../../../lib/components/ToAppDeviceDetailIcon.vue';
+import { WARN_CODE } from './const';
 /**
  *  {0, "e0", "not fully locked"}, // 未锁好
     {1, "e3", "tamper alarm: "},   // 防拆
@@ -38,7 +42,7 @@ import { WARN_CODE } from "./const";
  */
 //switch理解为disabled
 
-let ERROR_STORE_KEY = "";
+let ERROR_STORE_KEY = '';
 let isInit = false;
 
 function findIndex(array, fn) {
@@ -52,22 +56,23 @@ function findIndex(array, fn) {
 
 export default {
     components: {
-        PasswordInput
+        PasswordInput,
+        Icon
     },
     data() {
         return {
             hasSnapShot: false,
-            device_name: "",
-            device_id: "",
-            family_id: "",
+            device_name: '',
+            device_id: '',
+            family_id: '',
             passwordInputVisible: false,
             alertModel: [],
             model: {
-                switch: "off",
-                battery_percentage: "--"
+                switch: 'off',
+                battery_percentage: '--'
             },
             errorStore: [],
-            device_category_id: ""
+            device_category_id: ''
         };
     },
     computed: {
@@ -75,7 +80,7 @@ export default {
             return this.model.battery_percentage <= 15;
         },
         btnDisabled() {
-            let status = this.model.switch == "on" ? true : false;
+            let status = this.model.switch == 'on' ? true : false;
             this.alertModel.forEach(function(v, i) {
                 status = v.switch || status;
             });
@@ -83,16 +88,16 @@ export default {
         },
         theUnclickAlert() {
             var hasE5 = findIndex(this.alertModel, item => {
-                return item.code == "e5";
+                return item.code == 'e5';
             });
             var result = this.alertModel.filter(item => {
                 if (item.clicked) {
                     return false;
                 }
-                if (item.code == "e6") {
+                if (item.code == 'e6') {
                     return false;
                 }
-                if (item.code == "e2" && hasE5 >= 0) {
+                if (item.code == 'e2' && hasE5 >= 0) {
                     return false;
                 }
                 return true;
@@ -101,18 +106,18 @@ export default {
         },
         lockedStatus() {
             var hasE6 = findIndex(this.alertModel, item => {
-                return item.code == "e6";
+                return item.code == 'e6';
             });
             return hasE6 >= 0;
         },
         statusText() {
             if (this.lockedStatus) {
-                return "已反锁";
+                return '已反锁';
             }
-            if (this.model.switch == "on") {
-                return "已打开";
+            if (this.model.switch == 'on') {
+                return '已打开';
             }
-            return "已关闭";
+            return '已关闭';
         }
     },
     watch: {
@@ -131,15 +136,15 @@ export default {
         },
         closeAlert(error) {
             let code = error.code;
-            if (code == "e4") {
+            if (code == 'e4') {
                 HdSmart.Device.control({
-                    method: "dm_set",
-                    nodeid: "doorlock.main.error",
+                    method: 'dm_set',
+                    nodeid: 'doorlock.main.error',
                     params: {
                         attribute: {
                             error: [
                                 {
-                                    code: "e4",
+                                    code: 'e4',
                                     status: error.status
                                 }
                             ]

@@ -1,7 +1,9 @@
 <template>
     <div class="page-index">
         <div class="mainTitle">
-            <div class="name">{{device_name}}</div>
+            <div class="name">{{device_name}}
+                <icon />
+            </div>
             <div class="lock-status">
                 <span class="status" :class="{red:lockedStatus,on:model.switch=='on'}">{{statusText}}</span>
                 <span class="battery" :class="{low:lowBattery}">{{model.battery_percentage}}%电量</span>
@@ -26,7 +28,8 @@
 </template>
 
 <script>
-import PasswordInput from "./PasswordInput.vue";
+import PasswordInput from './PasswordInput.vue';
+import Icon from '../../../lib/components/ToAppDeviceDetailIcon.vue';
 
 /**
  *  {0, "e0", "not fully locked"}, // 未锁好
@@ -40,16 +43,16 @@ import PasswordInput from "./PasswordInput.vue";
  */
 //switch理解为disabled
 const WARN_CODE = {
-    e0: { msg: "门未关好!", switch: false },
-    e1: { msg: "智能门锁电池电量不足，请及时更换电池！", switch: false },
-    e2: { msg: "密码错误超过限制，请2分钟后再试", switch: true },
-    e3: { msg: "有人强行拆门锁！", switch: false },
-    e4: { msg: "家庭成员触发被挟持报警！", switch: false },
-    e5: { msg: "门锁已被锁死，无法手机开锁", switch: true },
-    e6: { msg: "门锁已被反锁，无法手机开锁", switch: true },
-    e7: { msg: "密码错误超过限制，无法远程开锁", switch: true }
+    e0: { msg: '门未关好!', switch: false },
+    e1: { msg: '智能门锁电池电量不足，请及时更换电池！', switch: false },
+    e2: { msg: '密码错误超过限制，请2分钟后再试', switch: true },
+    e3: { msg: '有人强行拆门锁！', switch: false },
+    e4: { msg: '家庭成员触发被挟持报警！', switch: false },
+    e5: { msg: '门锁已被锁死，无法手机开锁', switch: true },
+    e6: { msg: '门锁已被反锁，无法手机开锁', switch: true },
+    e7: { msg: '密码错误超过限制，无法远程开锁', switch: true }
 };
-let ERROR_STORE_KEY = "";
+let ERROR_STORE_KEY = '';
 let isInit = false;
 
 function findIndex(array, fn) {
@@ -63,22 +66,23 @@ function findIndex(array, fn) {
 
 export default {
     components: {
-        PasswordInput
+        PasswordInput,
+        Icon
     },
     data() {
         return {
             hasSnapShot: false,
-            device_name: "",
-            device_id: "",
-            family_id: "",
+            device_name: '',
+            device_id: '',
+            family_id: '',
             passwordInputVisible: false,
             alertModel: [],
             model: {
-                switch: "off",
-                battery_percentage: "--"
+                switch: 'off',
+                battery_percentage: '--'
             },
             errorStore: [],
-            device_category_id: ""
+            device_category_id: ''
         };
     },
     computed: {
@@ -86,7 +90,7 @@ export default {
             return this.model.battery_percentage <= 15;
         },
         btnDisabled() {
-            let status = this.model.switch == "on" ? true : false;
+            let status = this.model.switch == 'on' ? true : false;
             this.alertModel.forEach(function(v, i) {
                 status = v.switch || status;
             });
@@ -94,16 +98,16 @@ export default {
         },
         theUnclickAlert() {
             var hasE5 = findIndex(this.alertModel, item => {
-                return item.code == "e5";
+                return item.code == 'e5';
             });
             var result = this.alertModel.filter(item => {
                 if (item.clicked) {
                     return false;
                 }
-                if (item.code == "e6") {
+                if (item.code == 'e6') {
                     return false;
                 }
-                if (item.code == "e2" && hasE5 >= 0) {
+                if (item.code == 'e2' && hasE5 >= 0) {
                     return false;
                 }
                 return true;
@@ -112,18 +116,18 @@ export default {
         },
         lockedStatus() {
             var hasE6 = findIndex(this.alertModel, item => {
-                return item.code == "e6";
+                return item.code == 'e6';
             });
             return hasE6 >= 0;
         },
         statusText() {
             if (this.lockedStatus) {
-                return "已反锁";
+                return '已反锁';
             }
-            if (this.model.switch == "on") {
-                return "已打开";
+            if (this.model.switch == 'on') {
+                return '已打开';
             }
-            return "已关闭";
+            return '已关闭';
         }
     },
     watch: {
@@ -142,15 +146,15 @@ export default {
         },
         closeAlert(error) {
             let code = error.code;
-            if (code == "e4") {
+            if (code == 'e4') {
                 HdSmart.Device.control({
-                    method: "dm_set",
-                    nodeid: "doorlock.main.error",
+                    method: 'dm_set',
+                    nodeid: 'doorlock.main.error',
                     params: {
                         attribute: {
                             error: [
                                 {
-                                    code: "e4",
+                                    code: 'e4',
                                     status: error.status
                                 }
                             ]

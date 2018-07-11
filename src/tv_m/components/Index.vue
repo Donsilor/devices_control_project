@@ -5,7 +5,9 @@
     <div class="page-index">
         <div class="page-header"></div>
         <!-- <div class="page-body"> -->
-        <div class="device_name" v-if="$store.state.device_name">{{$store.state.device_name}}</div>
+        <div class="device_name" v-if="$store.state.device_name">{{$store.state.device_name}}
+            <icon />
+        </div>
         <!-- <div class="status-tip-placeholder" v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"></div> -->
         <status-tip class="sp_status_home" />
         <router-link to="/search" class="search">输入片名、导演、演员搜索</router-link>
@@ -80,9 +82,7 @@
     padding: 30px 0 20px;
 }
 .search {
-    background: #ffffff
-        url(../../../lib/base/tv/assets/icn_topbar_search_pressed@2x.png)
-        no-repeat 25px center;
+    background: #ffffff url(../../../lib/base/tv/assets/icn_topbar_search_pressed@2x.png) no-repeat 25px center;
     background-size: 36px 36px;
     border: 1px solid #dbdbdb;
     border-radius: 32px;
@@ -146,8 +146,7 @@
     .swiper-slide {
         width: 750px;
         height: 368px;
-        background: url(../../../lib/base/tv/assets/img_default_recommend.png)
-            no-repeat;
+        background: url(../../../lib/base/tv/assets/img_default_recommend.png) no-repeat;
         background-size: 100%;
     }
     a {
@@ -171,11 +170,7 @@
         width: 100%;
         padding-top: 50px;
         padding-left: 30px;
-        background-image: linear-gradient(
-            -180deg,
-            rgba(47, 49, 51, 0) 0%,
-            #2f3133 100%
-        );
+        background-image: linear-gradient(-180deg, rgba(47, 49, 51, 0) 0%, #2f3133 100%);
     }
     .swiper-container-horizontal > .swiper-pagination-bullets {
         width: auto;
@@ -240,8 +235,7 @@
     }
 }
 
-@media only screen and (-webkit-min-device-pixel-ratio: 3),
-    only screen and (min-device-pixel-ratio: 3) {
+@media only screen and (-webkit-min-device-pixel-ratio: 3), only screen and (min-device-pixel-ratio: 3) {
     .page-header {
         height: 116px;
     }
@@ -257,15 +251,17 @@
 </style>
 
 <script>
-import * as service from "../service";
+import * as service from '../service';
+import Icon from '../../../lib/components/ToAppDeviceDetailIcon.vue';
 let infoCache = [];
 
 export default {
+    components: { Icon },
     data() {
         let self = this;
         return {
-            channelId: "",
-            vid: "",
+            channelId: '',
+            vid: '',
             swiperOption: {
                 loop: true,
                 autoplay: {
@@ -273,7 +269,7 @@ export default {
                     disableOnInteraction: false
                 },
                 pagination: {
-                    el: ".swiper-pagination"
+                    el: '.swiper-pagination'
                 },
                 on: {
                     tap() {
@@ -315,37 +311,37 @@ export default {
         volupStart(e) {
             this.timeOutEventUp = 1;
             e.preventDefault();
-            this.cmd("rcVolumeUpStart");
+            this.cmd('rcVolumeUpStart');
         },
         voldownStart(e) {
             this.timeOutEventDown = 1;
             e.preventDefault();
-            this.cmd("rcVolumeDownStart");
+            this.cmd('rcVolumeDownStart');
         },
         volupEnd(e) {
-             e.preventDefault();
+            e.preventDefault();
             if (this.timeOutEventUp) {
-                this.cmd("rcVolumeUpStop");
+                this.cmd('rcVolumeUpStop');
                 this.timeOutEventUp = 0;
             } else {
-                this.cmd("rcVolumeUp");
+                this.cmd('rcVolumeUp');
             }
         },
         voldownEnd(e) {
             e.preventDefault();
 
             if (this.timeOutEventDown) {
-                this.cmd("rcVolumeDownStop");
+                this.cmd('rcVolumeDownStop');
                 this.timeOutEventDown = 0;
             } else {
-                this.cmd("rcVolumeDown");
+                this.cmd('rcVolumeDown');
             }
         },
         cmd(name) {
             service.onClickEvent(name);
         },
         showDetailInfo(item) {
-            this.$store.dispatch("showDetail", item);
+            this.$store.dispatch('showDetail', item);
         },
         pageInit() {
             service.getHomePageInfo(data => {

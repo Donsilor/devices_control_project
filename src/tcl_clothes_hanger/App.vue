@@ -5,7 +5,9 @@
                 <div class="cloud"></div>
             </div>
 
-            <div class="name">{{device_name}}</div>
+            <div class="name">{{device_name}}
+                <icon className="redact-white" />
+            </div>
 
             <div class="tip">
                 <p>
@@ -69,32 +71,33 @@
 
 
 <script>
+import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
+
 const tips = {
-    moving_up: "正在上升",
-    moved_up: "已上升至顶部",
-    moving_down: "正在下降",
-    moved_down: "已下降至底部",
-    move_pause: "已暂停",
+    moving_up: '正在上升',
+    moved_up: '已上升至顶部',
+    moving_down: '正在下降',
+    moved_down: '已下降至底部',
+    move_pause: '已暂停',
     // wind_drying: '正在风干',
     // wind_drying_finish: '风干 将于{time}分钟后结束',
-    wind_dryed: "风干已完成",
-    wind_dry_cancle: "风干已取消",
+    wind_dryed: '风干已完成',
+    wind_dry_cancle: '风干已取消',
     // bake_drying: '正在烘干',
     // bake_drying_finish: '烘干 将于{time}分钟后结束',
-    bake_dryed: "烘干已完成",
-    bake_dry_cancle: "烘干已取消",
+    bake_dryed: '烘干已完成',
+    bake_dry_cancle: '烘干已取消',
     // sterilize_will: '杀菌 将于{time}分钟后开始',
     // sterilize_finish: '杀菌 将于{time}分钟后结束',
     // sterilizing: '正在杀菌',
-    sterilized: "杀菌已完成",
-    sterilize_cancle: "杀菌已取消"
+    sterilized: '杀菌已完成',
+    sterilize_cancle: '杀菌已取消'
 };
 
-const radio =
-    (document.documentElement.clientWidth || window.innerWidth) / 1920 * 75;
+const radio = (document.documentElement.clientWidth || window.innerWidth) / 1920 * 75;
 
 function getToggle(val) {
-    return val === "on" ? "off" : "on";
+    return val === 'on' ? 'off' : 'on';
 }
 
 const duration = 28000;
@@ -114,17 +117,17 @@ function setMove(el, dir) {
         var p = (end - start) / 20;
         if (p == 0) p = 1;
         start = end;
-        if (dir == "up") {
+        if (dir == 'up') {
             height -= speed * p;
-            el.style.height = height + "rem";
+            el.style.height = height + 'rem';
             if (height > start_pos) {
                 moveRAF = requestAnimationFrame(move);
             } else {
                 cancelAnimationFrame(moveRAF);
             }
-        } else if (dir == "down") {
+        } else if (dir == 'down') {
             height += speed * p;
-            el.style.height = height + "rem";
+            el.style.height = height + 'rem';
             if (height < end_pos) {
                 moveRAF = requestAnimationFrame(move);
             } else {
@@ -143,10 +146,10 @@ function setStop(el, height) {
 }
 
 function getHeight(height) {
-    if (height.indexOf("px") >= 0) {
-        height = height.replace("px", "") * 1 / radio;
+    if (height.indexOf('px') >= 0) {
+        height = height.replace('px', '') * 1 / radio;
     } else {
-        height = height.replace("rem", "") * 1;
+        height = height.replace('rem', '') * 1;
     }
     return height;
 }
@@ -154,41 +157,41 @@ function getHeight(height) {
 function setDuration(el, dir) {
     var percentage;
     var height = el.style.height;
-    if (height.indexOf("px") >= 0) {
-        height = height.replace("px", "") * 1 / radio;
+    if (height.indexOf('px') >= 0) {
+        height = height.replace('px', '') * 1 / radio;
     } else {
-        height = height.replace("rem", "") * 1;
+        height = height.replace('rem', '') * 1;
     }
-    if (dir == "up") {
+    if (dir == 'up') {
         percentage = (height - start_pos) / ch_height * duration;
     } else {
         percentage = (end_pos - height) / ch_height * duration;
     }
-    el.style.transitionDuration = percentage + "ms";
+    el.style.transitionDuration = percentage + 'ms';
 }
 
 function setPosition(el, pos) {
     if (!el) return;
     switch (pos) {
-        case "top":
-            setStop(el, start_pos + "01rem");
+        case 'top':
+            setStop(el, start_pos + '01rem');
             // el.style.height = start_pos+'01rem'
             // el.style.transitionDuration = '1000ms'
             break;
-        case "up":
-            setMove(el, "up");
+        case 'up':
+            setMove(el, 'up');
             // el.style.height = start_pos+'rem'
             break;
-        case "bottom":
-            setStop(el, end_pos + "01rem");
+        case 'bottom':
+            setStop(el, end_pos + '01rem');
             // el.style.height = end_pos+'01rem'
             // el.style.transitionDuration = '1000ms'
             break;
-        case "down":
-            setMove(el, "down");
+        case 'down':
+            setMove(el, 'down');
             // el.style.height = end_pos+'rem'
             break;
-        case "pause":
+        case 'pause':
             setStop();
             // var computedStyle = document.defaultView.getComputedStyle( el, null )
             // el.style.height = computedStyle.getPropertyValue( "height" )
@@ -196,28 +199,29 @@ function setPosition(el, pos) {
     }
     if (!el.init) {
         el.init = true;
-        if (pos == "pause") {
-            el.style.height = "2rem";
+        if (pos == 'pause') {
+            el.style.height = '2rem';
         }
         // el.style.transitionDuration = '0ms'
     }
 }
 
-let pauseTipTimer
+let pauseTipTimer;
 
 export default {
+    components: { Icon },
     data() {
         return {
-            device_name: "",
-            tip: "",
-            tip2: "",
+            device_name: '',
+            tip: '',
+            tip2: '',
             modal_visible: false,
             timeleft: 0,
-            light: "", //on/off
-            sterilization: "",
-            drying: "",
-            air_drying: "",
-            status: "", //top/bottom/up/down/pause
+            light: '', //on/off
+            sterilization: '',
+            drying: '',
+            air_drying: '',
+            status: '', //top/bottom/up/down/pause
             drying_remain: 0,
             air_drying_remain: 0,
             sterilization_remain: 0
@@ -225,9 +229,9 @@ export default {
     },
     watch: {
         status(cur, prev) {
-            if (cur == "up") {
+            if (cur == 'up') {
                 // setDuration(this.$refs.ani, 'up')
-            } else if (cur == "down") {
+            } else if (cur == 'down') {
                 // setDuration(this.$refs.ani, 'down')
             }
         }
@@ -238,7 +242,7 @@ export default {
             clearTimeout(this.tipTime);
             if (fade) {
                 this.tipTime = setTimeout(() => {
-                    this.tip = "";
+                    this.tip = '';
                 }, 2000);
             }
         },
@@ -247,7 +251,7 @@ export default {
             clearTimeout(this.tipTime2);
             if (fade) {
                 this.tipTime2 = setTimeout(() => {
-                    this.tip2 = "";
+                    this.tip2 = '';
                 }, 2000);
             }
         },
@@ -257,7 +261,7 @@ export default {
         controlDevice(attr, val, success) {
             HdSmart.Device.control(
                 {
-                    method: "dm_set",
+                    method: 'dm_set',
                     nodeid: `clothes_hanger.main.${attr}`,
                     params: {
                         attribute: {
@@ -269,111 +273,101 @@ export default {
                     success && success();
                 },
                 () => {
-                    this.showTip("操作失败", true);
+                    this.showTip('操作失败', true);
                 }
             );
         },
         setUp() {
-            if (this.status == "top" || this.status == "up") {
-                if (this.status == "top") {
-                    this.showTip2("已上升至顶部", true);
+            if (this.status == 'top' || this.status == 'up') {
+                if (this.status == 'top') {
+                    this.showTip2('已上升至顶部', true);
                 }
                 return;
             }
-            this.controlDevice("control", "up", () => {
+            this.controlDevice('control', 'up', () => {
                 // this.status = 'up'
             });
         },
         setDown() {
-            if (this.status == "bottom" || this.status == "down") {
-                if (this.status == "bottom") {
-                    this.showTip2("已下降至底部", true);
+            if (this.status == 'bottom' || this.status == 'down') {
+                if (this.status == 'bottom') {
+                    this.showTip2('已下降至底部', true);
                 }
                 return;
             }
-            this.controlDevice("control", "down", () => {
+            this.controlDevice('control', 'down', () => {
                 // this.status = 'down'
             });
         },
         setPause() {
-            if (
-                this.status == "pause" ||
-                this.status == "top" ||
-                this.status == "bottom"
-            ) {
+            if (this.status == 'pause' || this.status == 'top' || this.status == 'bottom') {
                 return;
             }
-            this.controlDevice("control", "pause", () => {
+            this.controlDevice('control', 'pause', () => {
                 // this.status = 'pause'
                 // this.showTip2(tips.move_pause, true)
             });
         },
         setLight() {
             var val = getToggle(this.light);
-            this.controlDevice("light", val, () => {
+            this.controlDevice('light', val, () => {
                 this.light = val;
             });
         },
         setWind() {
             var val = getToggle(this.air_drying);
-            this.controlDevice("air_drying", val, () => {
+            this.controlDevice('air_drying', val, () => {
                 this.air_drying = val;
             });
         },
         setBake() {
             var val = getToggle(this.drying);
-            this.controlDevice("drying", val, () => {
+            this.controlDevice('drying', val, () => {
                 this.drying = val;
             });
         },
         setSterilize() {
             var val = getToggle(this.sterilization);
-            if (val == "on" && this.status != "top") {
-                HdSmart.UI.toast("请先将晾衣机升至顶部，再进行杀菌");
+            if (val == 'on' && this.status != 'top') {
+                HdSmart.UI.toast('请先将晾衣机升至顶部，再进行杀菌');
                 // this.showTip('请先将晾衣机升至顶部，再进行杀菌', true)
                 return;
             }
-            this.controlDevice("sterilization", val, () => {
+            this.controlDevice('sterilization', val, () => {
                 this.sterilization = val;
             });
         },
         setMoveTip(attrs) {
-            if(pauseTipTimer){
-                clearTimeout(pauseTipTimer)
+            if (pauseTipTimer) {
+                clearTimeout(pauseTipTimer);
             }
 
-            if (attrs.status == "up") {
+            if (attrs.status == 'up') {
                 this.showTip2(tips.moving_up);
                 return;
             }
-            if (attrs.status == "top" && this.status == "up") {
+            if (attrs.status == 'top' && this.status == 'up') {
                 this.showTip2(tips.moved_up, true);
                 return;
             }
-            if (attrs.status == "down") {
+            if (attrs.status == 'down') {
                 this.showTip2(tips.moving_down);
                 return;
             }
-            if (attrs.status == "bottom" && this.status == "down") {
+            if (attrs.status == 'bottom' && this.status == 'down') {
                 this.showTip2(tips.moved_down, true);
                 return;
             }
-            if (
-                attrs.status == "pause" &&
-                (this.status == "up" || this.status == "down")
-            ) {
+            if (attrs.status == 'pause' && (this.status == 'up' || this.status == 'down')) {
                 pauseTipTimer = setTimeout(() => {
                     this.showTip2(tips.move_pause, true);
-                }, 500)
+                }, 500);
                 return;
             }
         },
         setModeTip(attrs) {
-            if (attrs.air_drying == "off" && this.air_drying == "on") {
-                if (
-                    attrs.air_drying_remain == 0 &&
-                    this.air_drying_remain == 1
-                ) {
+            if (attrs.air_drying == 'off' && this.air_drying == 'on') {
+                if (attrs.air_drying_remain == 0 && this.air_drying_remain == 1) {
                     this.showTip(tips.wind_dryed, true);
                 } else {
                     this.showTip(tips.wind_dry_cancle, true);
@@ -381,7 +375,7 @@ export default {
                 return;
             }
 
-            if (attrs.drying == "off" && this.drying == "on") {
+            if (attrs.drying == 'off' && this.drying == 'on') {
                 if (attrs.drying_remain == 0 && this.drying_remain == 1) {
                     this.showTip(tips.bake_dryed, true);
                 } else {
@@ -390,11 +384,8 @@ export default {
                 return;
             }
 
-            if (attrs.sterilization == "off" && this.sterilization == "on") {
-                if (
-                    attrs.sterilization_remain == 0 &&
-                    this.sterilization_remain == 1
-                ) {
+            if (attrs.sterilization == 'off' && this.sterilization == 'on') {
+                if (attrs.sterilization_remain == 0 && this.sterilization_remain == 1) {
                     this.showTip(tips.sterilized, true);
                 } else {
                     this.showTip(tips.sterilize_cancle, true);

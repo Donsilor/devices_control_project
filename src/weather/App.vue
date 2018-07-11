@@ -14,7 +14,9 @@
             <div class="title">{{currentDate}}&nbsp;&nbsp;{{currentWeek}}&nbsp;&nbsp;{{currentOldDay}}</div>
             <template v-if="success">
                 <div class="city">
-                    <div class="city-name" style="margin-top: 10px">{{city.name}}</div>
+                    <div class="city-name" style="margin-top: 10px">{{city.name}}
+                        <icon className="redact-white" />
+                    </div>
                     <div>
                         <span class="img" :class="curMinBg"></span>
                     </div>
@@ -56,35 +58,37 @@
 <script>
 // import jsonp from 'jsonp'
 // import cityIdJson from '../../lib/base/weather/assets/cityId.json'
-import getOldDate from "./getOldDate";
+import getOldDate from './getOldDate';
 // import remoteLoad from './loadscript'
+import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
 export default {
-    name: "app",
+    components: { Icon },
+    name: 'app',
     data() {
         return {
             success: true,
             city: {
-                name: ""
+                name: ''
             },
-            todyClass: "",
+            todyClass: '',
             wList: [],
-            acturlCondition: "", //实时天气
-            acturlTemp: "-- ", //实时温度
-            curMinBg: "", //当天天气对应的大图标
-            airLevel: "", //空气质量指数
-            airLevelText: "", //空气质量描述
-            curAQIvalue: "", //实时空气质量
-            currentDate: "",
-            currentWeek: "", //当天为星期几
-            currentOldDay: "", //农历日期
+            acturlCondition: '', //实时天气
+            acturlTemp: '-- ', //实时温度
+            curMinBg: '', //当天天气对应的大图标
+            airLevel: '', //空气质量指数
+            airLevelText: '', //空气质量描述
+            curAQIvalue: '', //实时空气质量
+            currentDate: '',
+            currentWeek: '', //当天为星期几
+            currentOldDay: '', //农历日期
             allWeekDays: [
-                { name: "周日", value: 0 },
-                { name: "周一", value: 1 },
-                { name: "周二", value: 2 },
-                { name: "周三", value: 3 },
-                { name: "周四", value: 4 },
-                { name: "周五", value: 5 },
-                { name: "周六", value: 6 }
+                { name: '周日', value: 0 },
+                { name: '周一', value: 1 },
+                { name: '周二', value: 2 },
+                { name: '周三', value: 3 },
+                { name: '周四', value: 4 },
+                { name: '周五', value: 5 },
+                { name: '周六', value: 6 }
             ],
 
             showSwitchCity: false
@@ -92,7 +96,7 @@ export default {
     },
     mounted() {
         HdSmart.ready(() => {
-            let city = JSON.parse(localStorage.getItem("city"));
+            let city = JSON.parse(localStorage.getItem('city'));
             if (city) this.city.name = city.name;
             if (city && city.city_id) {
                 //走缓存
@@ -108,120 +112,120 @@ export default {
             // })
         });
 
-        window.addEventListener("hashchange", this.hashChange, false);
+        window.addEventListener('hashchange', this.hashChange, false);
     },
     destroyed() {
-        window.removeEventListener("hashchange", this.hashChange, false);
+        window.removeEventListener('hashchange', this.hashChange, false);
     },
     methods: {
         // 空气质量
         renderAQI(val) {
             this.curAQIvalue = val;
             if (val < 50) {
-                this.airLevel = "air-level-1";
-                this.airLevelText = "优";
+                this.airLevel = 'air-level-1';
+                this.airLevelText = '优';
             } else if (val >= 50 && val < 100) {
-                this.airLevel = "air-level-2";
-                this.airLevelText = "良";
+                this.airLevel = 'air-level-2';
+                this.airLevelText = '良';
             } else if (val >= 100 && val < 150) {
-                this.airLevel = "air-level-3";
-                this.airLevelText = "轻度污染";
+                this.airLevel = 'air-level-3';
+                this.airLevelText = '轻度污染';
             } else if (val >= 150 && val < 200) {
-                this.airLevel = "air-level-4";
-                this.airLevelText = "中度污染";
+                this.airLevel = 'air-level-4';
+                this.airLevelText = '中度污染';
             } else if (val >= 200 && val < 300) {
-                this.airLevel = "air-level-5";
-                this.airLevelText = "重度污染";
+                this.airLevel = 'air-level-5';
+                this.airLevelText = '重度污染';
             } else {
-                this.airLevel = "air-level-6";
-                this.airLevelText = "严重污染";
+                this.airLevel = 'air-level-6';
+                this.airLevelText = '严重污染';
             }
         },
         // 渲染背景图片(对应阴,晴,下雨..等)
         renderTodayClass(val) {
             switch (val) {
-                case "0":
-                    this.todyClass = "img_bg_weather_sunny";
-                    this.curMinBg = "icn_weather_sunny";
+                case '0':
+                    this.todyClass = 'img_bg_weather_sunny';
+                    this.curMinBg = 'icn_weather_sunny';
                     break;
-                case "1":
-                    this.todyClass = "img_bg_weather_cloudy";
-                    this.curMinBg = "icn_weather_cloudy";
+                case '1':
+                    this.todyClass = 'img_bg_weather_cloudy';
+                    this.curMinBg = 'icn_weather_cloudy';
                     break;
-                case "2":
-                    this.todyClass = "img_bg_weather_cloudy";
-                    this.curMinBg = "icn_weather_mostlycloudy";
+                case '2':
+                    this.todyClass = 'img_bg_weather_cloudy';
+                    this.curMinBg = 'icn_weather_mostlycloudy';
                     break;
-                case "3":
-                case "7":
-                case "8":
-                case "9":
-                case "10":
-                    this.todyClass = "img_bg_weather_rainy";
-                    this.curMinBg = "icn_weather_rainy";
+                case '3':
+                case '7':
+                case '8':
+                case '9':
+                case '10':
+                    this.todyClass = 'img_bg_weather_rainy';
+                    this.curMinBg = 'icn_weather_rainy';
                     break;
-                case "4":
-                    this.todyClass = "img_bg_weather_thuner";
-                    this.curMinBg = "icn_weather_thuner";
+                case '4':
+                    this.todyClass = 'img_bg_weather_thuner';
+                    this.curMinBg = 'icn_weather_thuner';
                     break;
-                case "20":
-                case "29":
-                    this.todyClass = "img_bg_weather_wind";
-                    this.curMinBg = "icn_weather_wind";
+                case '20':
+                case '29':
+                    this.todyClass = 'img_bg_weather_wind';
+                    this.curMinBg = 'icn_weather_wind';
                     break;
-                case "13":
-                case "14":
-                case "15":
-                case "16":
-                case "17":
-                    this.todyClass = "img_bg_weather_snowy";
-                    this.curMinBg = "icn_weather_snowy";
+                case '13':
+                case '14':
+                case '15':
+                case '16':
+                case '17':
+                    this.todyClass = 'img_bg_weather_snowy';
+                    this.curMinBg = 'icn_weather_snowy';
                     break;
                 default:
-                    this.todyClass = "img_bg_weather_cloudy";
-                    this.curMinBg = "icn_weather_cloudy";
+                    this.todyClass = 'img_bg_weather_cloudy';
+                    this.curMinBg = 'icn_weather_cloudy';
                     break;
             }
         },
         // 渲染6天天气对应的图标图像
         renderClass(val) {
-            let curClass = "";
+            let curClass = '';
             switch (val) {
-                case "0":
-                    curClass = "icn_weather_sunny_m";
+                case '0':
+                    curClass = 'icn_weather_sunny_m';
                     break;
-                case "1":
-                    curClass = "icn_weather_cloudy_m";
+                case '1':
+                    curClass = 'icn_weather_cloudy_m';
                     break;
-                case "2":
-                    curClass = "icn_weather_mostlycloudy_m";
+                case '2':
+                    curClass = 'icn_weather_mostlycloudy_m';
                     break;
-                case "4":
-                    curClass = "icn_weather_thunder_m";
+                case '4':
+                    curClass = 'icn_weather_thunder_m';
                     break;
-                case "3":
-                case "7":
-                    curClass = "icn_weather_rainy_m";
+                case '3':
+                case '7':
+                    curClass = 'icn_weather_rainy_m';
                     break;
-                case "9":
-                case "10":
-                    curClass = "icn_weather_heavyrain_m";
+                case '9':
+                case '10':
+                    curClass = 'icn_weather_heavyrain_m';
                     break;
-                case "20":
-                case "29":
-                    curClass = "icn_weather_wind_m";
+                case '20':
+                case '29':
+                    curClass = 'icn_weather_wind_m';
                     break;
-                case "13":
-                case "14":
-                case "15":
-                    curClass = "icn_weather_snow_m";
+                case '13':
+                case '14':
+                case '15':
+                    curClass = 'icn_weather_snow_m';
                     break;
-                case "16":
-                case "17":
-                    curClass = "icn_weather_heavysnow_m";
+                case '16':
+                case '17':
+                    curClass = 'icn_weather_heavysnow_m';
                     break;
                 default:
-                    curClass = "icn_weather_cloudy_m";
+                    curClass = 'icn_weather_cloudy_m';
                     break;
             }
             return curClass;
@@ -250,18 +254,17 @@ export default {
                 currentWeekArr.push(awds[curIndex].name);
                 curIndex++;
             }
-            this.currentDate = `${now.getFullYear()}-${now.getMonth() +
-                1}-${now.getDate()}`;
+            this.currentDate = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
             this.currentOldDay = getOldDate(); //获取农历日期
             let self = this;
             HdSmart.UI.showLoading();
             HdSmart.Device.control(
                 {
-                    method: "3d_get_moji_weather",
+                    method: '3d_get_moji_weather',
                     params
                 },
                 res => {
-                    let innerData = (res.result && res.result.data) || "";
+                    let innerData = (res.result && res.result.data) || '';
                     // 空气质量
                     if (innerData && innerData.aqi) {
                         self.renderAQI(innerData.aqi.value);
@@ -282,7 +285,7 @@ export default {
                         self.acturlTemp = innerData.condition.temp;
                         self.acturlCondition = innerData.condition.condition;
                     } else {
-                        self.actrulTemp = "0";
+                        self.actrulTemp = '0';
                     }
                     //城市信息
                     if (!city_id && innerData && innerData.city) {
@@ -302,11 +305,11 @@ export default {
             );
         },
         switchCity() {
-            location.hash = "switch";
+            location.hash = 'switch';
             this.showSwitchCity = true;
         },
         hideSwitchCity() {
-            history.go(-1)
+            history.go(-1);
         },
         getCityWeather(city) {
             //TODO
@@ -319,7 +322,7 @@ export default {
             HdSmart.UI.toggleHeadAndFoot(false);
         },
         hashChange(e) {
-            if (location.hash.indexOf("switch") === -1) this.showSwitchCity = false;;
+            if (location.hash.indexOf('switch') === -1) this.showSwitchCity = false;
         }
     }
 };
