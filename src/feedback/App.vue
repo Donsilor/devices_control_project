@@ -9,7 +9,8 @@
             <div class="picGroup">
                 <div class="picAll">
                     <div class="picOne" v-for="(item,index) in imgsrc" :key="item.name">
-                        <img :src="'data:image/png;base64,'+item"/>
+                        <img v-if="phoneType === 'ios'" :src="'data:image/png;base64,'+item"/>
+                        <img v-else :src="'data:image/png;base64,'+item"/> 
                         <p @click="cutImg(index)">x</p>
                     </div>
                 </div>
@@ -232,6 +233,7 @@ export default {
             imgsrc:[],//图片上传列表
             emptyTipsShow:false,
             overLength:false,
+            phoneType:'',//手机类型，是android还是ios
             params:{
                 "uname": "",
                 "title": "用户反馈",
@@ -243,7 +245,6 @@ export default {
                 "img_list": [],
                 "token":''
             }
-            
         };
     },
     watch: {
@@ -253,15 +254,10 @@ export default {
 
     },
     mounted() {
-        document.title="用户反馈"
+        document.title="用户反馈";
         // var that=this;
-        // axios({
-        //                 method: 'post',
-        //                 url: 'http://dev-hpcore.egtest.cn:18088/api/feedback/add',
-        //                 data: that.params
-        //             }).then(function(data){
-        //                 console.log(8888888,data)
-        //             });
+        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+        this.phoneType = iOS ? 'ios' : 'android'
         console.log(2333,this.sumitImageFile)
         HdSmart.ready(() => {
             var that=this;
@@ -292,16 +288,30 @@ export default {
                 text: '提交',
                 color: '#cccccc',
                 onClick: function() {
+                    HdSmart.UI.showLoading();
                     console.log('我点击了提交按钮')
-                    console.log(JSON.stringify(that.params))
+                    // console.log(JSON.stringify(that.params))
                     that.params.content = that.$refs.content.value;
+                    console.log(that.params.content)
                     axios({
                         method: 'post',
                         url: 'http://dev-hpcore.egtest.cn:18088/api/feedback/add',
-                        data: JSON.stringify(that.params)
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data:JSON.stringify(that.params),
                     }).then(function(data){
+                        HdSmart.UI.hideLoading();
                         console.log(888999,JSON.stringify(that.params))
                         console.log(8888888,data)
+                        if(data.data.code === 0){
+                            console.log('success')
+                           HdSmart.UI.popWindow(); 
+                        }else{
+                           console.log('fail');
+                           HdSmart.UI.toast(data.data.message,2000) 
+                        }
+                       
                     });
                 }
             })
@@ -313,40 +323,42 @@ export default {
     methods: {
         chooseImage() {
             var that=this;
-            var countNow=this.params.img_list.length;
-
-            console.log(23333,5-countNow)
+            var countNow=this.imgsrc.length;// 剩余的可提交图片
+            console.log('剩余的可提交图片',5-countNow)
             HdSmart.UI.chooseImage({count:5-countNow}, (res) => {
-                // console.log(JSON.stringify(res))
-                console.log("res",res)
+                console.log("chooseImage 返回图片",res)
                 var fileArry;
                 if(res.code == 0){
-                    var formData = new FormData()
-                    var dataGet=res.localIds;
-                    console.log(123,dataGet.length)
-                    for(var i=0;i<dataGet.length;i++){
-                        console.log('that',that)
-                        var blob=that.convertBase64UrlToBlob('data:image/png;base64,'+dataGet[i])
+                    if(that.phoneType==='ios'){//ios的数据处理
+                        var formData = new FormData()
+                        var dataGetIos=res.imgData;
+                        console.log('ios返回的图片长度',dataGetIos.length)
                         
-                        var files=new File([blob], "name123.png",{type:blob.type});
-                        console.log('files',this.params.img_list)
-                        that.imgsrc.push(dataGet[i]);
-                        formData.append('files['+i+']',files)
-                    }
-                    console.log(11111,formData.get('files[0]'))
-                   console.log(12222221,formData.get('files[1]')) 
-                     //将从手机获得的图片上传到云端
+                        for(var i=0;i<dataGetIos.length;i++){
+                            var blob=that.convertBase64UrlToBlob('data:image/png;base64,'+dataGetIos[i])
+                            var files=new File([blob], "name123.png",{type:blob.type});
+                            that.imgsrc.push(dataGetIos[i]);
+                            formData.append('files['+i+']',files)
+                        }
+                        formData.append('token',that.params.token)
+                        //将从手机获得的图片上传到云端,并取得obj
                         axios({
                             method: 'post',
                             url: 'http://dev-hpcore.egtest.cn:18088/api/ossUpload',
                             data:formData
                         }).then(function(data){
-                            console.log('参数',i)
+                            console.log('oss图片上传反馈',data);
+                            var results=data.data.result;
+                            for(var i=0;i<results.length;i++){
+                                that.params.img_list.push(results[i].object)//将返回的object返回给img_list
+                            }
+                            console.log('img_list',that.params.img_list)
                             // console.log(888999,JSON.stringify(that.params))
-                            console.log(99999999,data)
-                            //将返回的链接返回给img_list,提交
-
                         });
+                    }else{//android的数据处理
+                        var dataGetAndroid=res.localIds;
+                        console.log('androidData',dataGetAndroid);
+                    }
                 }else{
                     HdSmart.UI.toast('照片添加失败')
                 }
