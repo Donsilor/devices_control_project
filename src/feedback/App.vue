@@ -254,11 +254,14 @@ export default {
 
     },
     mounted() {
-        document.title="用户反馈";
+        
+        // document.title=decodeURI(this.getQueryValue('title'));
+        document.title='用户反馈'
+        console.log('title',this.getQueryValue('title'))
         // var that=this;
         var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
         this.phoneType = iOS ? 'ios' : 'android'
-        console.log(2333,this.sumitImageFile)
+    
         HdSmart.ready(() => {
             var that=this;
             console.log(9999,this)
@@ -424,13 +427,20 @@ export default {
 
             return new Blob( [ab] , {type : 'image/png'});  
         },
-        sumitImageFile(base64Codes){  //图片的base64编码 
-           
-            
-        }  
+        getQueryValue(name) {
+            console.log(name)
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)",'i');
+            var res = window.location.search.substr(1).match(reg);
+            if(res && res[2]){
+            return res[2];
+            }else{
+                return null;
+            }
+        }
     },
         
 };
 </script>
 
 
+ 
