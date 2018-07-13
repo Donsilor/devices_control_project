@@ -199,7 +199,7 @@ export default {
             alarmModalVisible: false, //是否展示报警弹窗
             statusModalVisible: false, //滤芯状态Subpage蒙层
             model: {},
-            hasTDS: true,
+            hasTDS: false,
             oldTDS: '',
             nowTDS: '',
             currentPage: 'index',

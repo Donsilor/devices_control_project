@@ -39,13 +39,8 @@
 
             <a href="#" class="btn-mode" @click.prevent="toggleModal(true)"></a>
 
-            <div class="modal" v-show="modal_visible">
-                <div class="modal-header">
-                    <div class="modal-title">模式</div>
-                    <span class="modal-close" @click="toggleModal(false)"></span>
-                </div>
-                <div class="modal-body">
-                    <a href="#" class="btn-wind" :class="{'on':air_drying == 'on'}" @click.prevent="setWind">
+            <modal title="模式" v-model="modal_visible">
+                <a href="#" class="btn-wind" :class="{'on':air_drying == 'on'}" @click.prevent="setWind">
                         <i></i> 风干
                     </a>
                     <a href="#" class="btn-bake" :class="{'on':drying == 'on'}" @click.prevent="setBake">
@@ -54,10 +49,7 @@
                     <a href="#" class="btn-sterilize" :class="{'on':sterilization == 'on'}" @click.prevent="setSterilize">
                         <i></i> 杀菌
                     </a>
-                </div>
-            </div>
-
-            <div class="overlay" v-show="modal_visible" @click.prevent="toggleModal(false)"></div>
+            </modal>
         </div>
 
         <!-- <div class="page-error" v-if="0">
@@ -71,6 +63,7 @@
 
 
 <script>
+import Modal from '../../lib/components/Modal.vue'
 import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
 
 const tips = {
@@ -209,7 +202,7 @@ function setPosition(el, pos) {
 let pauseTipTimer;
 
 export default {
-    components: { Icon },
+    components: { Icon , Modal},
     data() {
         return {
             device_name: '',

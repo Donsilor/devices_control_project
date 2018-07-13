@@ -188,7 +188,7 @@ export default {
             alarmModalVisible: false,
             statusModalVisible: false,
             model: {},
-            hasTDS: true,
+            hasTDS: false,
             oldTDS: '',
             nowTDS: '',
             currentPage: 'index',

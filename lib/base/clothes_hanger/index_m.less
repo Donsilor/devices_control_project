@@ -173,112 +173,51 @@ a {
         }
     }
 }
-.modal {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    width: 600px;
-    border-radius: 6px;
-    z-index: 99;
-    &-header {
-        height: 84px;
-        border-bottom: 1px solid #dbdbdb;
-        position: relative;
+
+.btn-wind {
+    i {
+        background-image: url(./assets/btn_clothes_hanger_hotdry_normal1.png);
     }
-    &-title {
-        font-size: 30px;
-        color: #76787a;
-        text-align: center;
-        line-height: 84px;
-    }
-    &-close {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        width: 84px;
-        height: 84px;
-        background: url(./assets/btn_close.png)
-            no-repeat center center;
-        background-size: 20px 20px;
-    }
-    &-body {
-        padding: 50px 0;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        a {
-            display: block;
-            font-size: 24px;
-            color: #000305;
-            margin: 0 25px;
-            i {
-                width: 120px;
-                height: 120px;
-                display: block;
-                margin-bottom: 18px;
-                background-size: 100% 100%;
-                background-repeat: no-repeat;
-            }
-            &.on {
-                color: #46bcff;
-            }
-        }
-    }
-    .btn-wind {
+    &:active {
         i {
-            background-image: url(./assets/btn_clothes_hanger_hotdry_normal1.png);
-        }
-        &:active {
-            i {
-                background-image: url(./assets/btn_clothes_hanger_hotdry_disable2.png);
-            }
-        }
-        &.on {
-            i {
-                background-image: url(./assets/btn_clothes_hanger_hotdry_active3.png);
-            }
+            background-image: url(./assets/btn_clothes_hanger_hotdry_disable2.png);
         }
     }
-    .btn-bake {
+    &.on {
         i {
-            background-image: url(./assets/btn_clothes_hanger_hotdry_normal4.png);
-        }
-        &:active {
-            i {
-                background-image: url(./assets/btn_clothes_hanger_hotdry_disable5.png);
-            }
-        }
-        &.on {
-            i {
-                background-image: url(./assets/btn_clothes_hanger_hotdry_active6.png);
-            }
-        }
-    }
-    .btn-sterilize {
-        i {
-            background-image: url(./assets/btn_clothes_hanger_hotdry_normal7.png);
-        }
-        &:active {
-            i {
-                background-image: url(./assets/btn_clothes_hanger_hotdry_disable8.png);
-            }
-        }
-        &.on {
-            i {
-                background-image: url(./assets/btn_clothes_hanger_hotdry_active9.png);
-            }
+            background-image: url(./assets/btn_clothes_hanger_hotdry_active3.png);
         }
     }
 }
-.overlay {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+.btn-bake {
+    i {
+        background-image: url(./assets/btn_clothes_hanger_hotdry_normal4.png);
+    }
+    &:active {
+        i {
+            background-image: url(./assets/btn_clothes_hanger_hotdry_disable5.png);
+        }
+    }
+    &.on {
+        i {
+            background-image: url(./assets/btn_clothes_hanger_hotdry_active6.png);
+        }
+    }
+}
+.btn-sterilize {
+    i {
+        background-image: url(./assets/btn_clothes_hanger_hotdry_normal7.png);
+    }
+    &:active {
+        i {
+            background-image: url(./assets/btn_clothes_hanger_hotdry_disable8.png);
+        }
+    }
+    &.on {
+        i {
+            background-image: url(./assets/btn_clothes_hanger_hotdry_active9.png);
+        }
+    }
 }
 .btn-mode {
     position: absolute;
