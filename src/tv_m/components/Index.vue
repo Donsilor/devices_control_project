@@ -6,7 +6,7 @@
         <div class="page-header"></div>
         <!-- <div class="page-body"> -->
         <div class="device_name" v-if="$store.state.device_name">{{$store.state.device_name}}
-            <icon />
+            <!-- <icon /> -->
         </div>
         <!-- <div class="status-tip-placeholder" v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"></div> -->
         <status-tip class="sp_status_home" />
@@ -350,9 +350,9 @@ export default {
             });
         }
     },
-    created() {
+    mounted() {
+        service.RemoteController({ show: false });
         if (!infoCache.length) {
-            // this.$nextTick(this.pageInit)
             this.pageInit();
         } else {
             this.homePageInfo = infoCache;

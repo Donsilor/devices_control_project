@@ -66,9 +66,16 @@ const store = new Vuex.Store({
         showDetail(state, payload) {
             state.detailVisible = true;
             state.activeDetail = payload;
+            service.RemoteController({'show':true});
         },
         hideDetail(state) {
             state.detailVisible = false;
+            var path = router.history.current.name;
+            if(path==='index'){
+                service.RemoteController({'show':false});
+            }else{
+                service.RemoteController({'show':true});
+            }
         },
         setOnline(state, payload) {
             state.online = payload;

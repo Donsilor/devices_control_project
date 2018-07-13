@@ -15,7 +15,7 @@
             <template v-if="success">
                 <div class="city">
                     <div class="city-name" style="margin-top: 10px">{{city.name}}
-                        <icon className="redact-white" />
+                        <!-- <icon className="redact-white" /> -->
                     </div>
                     <div>
                         <span class="img" :class="curMinBg"></span>

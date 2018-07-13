@@ -123,3 +123,9 @@ export function getScreenProjectionStatus(callback) {
 export function goToScreenProjectionPage(){
     sendApp('screenProjectionStatusClick', '')
 }
+/**
+ * 遥控器控制显隐
+ */
+export function RemoteController(ifShow){
+    sendApp('RemoteController',ifShow)
+}

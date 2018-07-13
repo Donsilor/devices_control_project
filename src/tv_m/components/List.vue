@@ -551,6 +551,7 @@ export default {
         }
     },
     mounted() {
+        service.RemoteController({'show':true});
         this.onPageInit();
         this.$Lazyload.$on("error", function({ el, src, loading }) {
             el.src = el.dataset.src1;
