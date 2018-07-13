@@ -255,8 +255,8 @@ export default {
     },
     mounted() {
         
-        // document.title=decodeURI(this.getQueryValue('title'));
-        document.title='用户反馈'
+        document.title=decodeURI(this.getQueryValue('title'));
+        // document.title='用户反馈'
         console.log('title',this.getQueryValue('title'))
         // var that=this;
         var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
