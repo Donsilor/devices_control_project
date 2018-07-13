@@ -9,8 +9,7 @@
             <div class="picGroup">
                 <div class="picAll">
                     <div class="picOne" v-for="(item,index) in imgsrc" :key="item.name">
-                        <img v-if="phoneType === 'ios'" :src="'data:image/png;base64,'+item"/>
-                        <img v-else :src="'data:image/png;base64,'+item"/> 
+                        <img :src="'data:image/png;base64,'+item"/>
                         <p @click="cutImg(index)">x</p>
                     </div>
                 </div>
@@ -112,7 +111,7 @@
                         display: block;
                         width:100%;
                         height: 100%;
-
+                        object-fit: cover;
                     }
                     p{
                         width:30px;
@@ -233,7 +232,6 @@ export default {
             imgsrc:[],//图片上传列表
             emptyTipsShow:false,
             overLength:false,
-            phoneType:'',//手机类型，是android还是ios
             params:{
                 "uname": "",
                 "title": "用户反馈",
@@ -255,13 +253,10 @@ export default {
     },
     mounted() {
         
-        document.title=decodeURI(this.getQueryValue('title'));
-        // document.title='用户反馈'
-        console.log('title',this.getQueryValue('title'))
+        document.title=this.getQueryValue('title') ? decodeURI(this.getQueryValue('title')) : '用户反馈';
+        console.log('title',this.getQueryValue('title') ? decodeURI(this.getQueryValue('title')) : '用户反馈')
         // var that=this;
-        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-        this.phoneType = iOS ? 'ios' : 'android'
-    
+       
         HdSmart.ready(() => {
             var that=this;
             console.log(9999,this)
@@ -332,36 +327,32 @@ export default {
                 console.log("chooseImage 返回图片",res)
                 var fileArry;
                 if(res.code == 0){
-                    if(that.phoneType==='ios'){//ios的数据处理
-                        var formData = new FormData()
-                        var dataGetIos=res.imgData;
-                        console.log('ios返回的图片长度',dataGetIos.length)
-                        
-                        for(var i=0;i<dataGetIos.length;i++){
-                            var blob=that.convertBase64UrlToBlob('data:image/png;base64,'+dataGetIos[i])
-                            var files=new File([blob], "name123.png",{type:blob.type});
-                            that.imgsrc.push(dataGetIos[i]);
-                            formData.append('files['+i+']',files)
-                        }
-                        formData.append('token',that.params.token)
-                        //将从手机获得的图片上传到云端,并取得obj
-                        axios({
-                            method: 'post',
-                            url: 'http://dev-hpcore.egtest.cn:18088/api/ossUpload',
-                            data:formData
-                        }).then(function(data){
-                            console.log('oss图片上传反馈',data);
-                            var results=data.data.result;
-                            for(var i=0;i<results.length;i++){
-                                that.params.img_list.push(results[i].object)//将返回的object返回给img_list
-                            }
-                            console.log('img_list',that.params.img_list)
-                            // console.log(888999,JSON.stringify(that.params))
-                        });
-                    }else{//android的数据处理
-                        var dataGetAndroid=res.localIds;
-                        console.log('androidData',dataGetAndroid);
+                    var formData = new FormData()
+                    var dataGetIos=res.imgData;
+                    console.log('返回的图片长度',dataGetIos.length)
+                    
+                    for(var i=0;i<dataGetIos.length;i++){
+                        var blob=that.convertBase64UrlToBlob('data:image/png;base64,'+dataGetIos[i])
+                        var files=new File([blob], "name123.png",{type:blob.type});
+                        console.log("files9999",files.size/1024/1024)
+                        that.imgsrc.push(dataGetIos[i]);
+                        formData.append('files['+i+']',files)
                     }
+                    formData.append('token',that.params.token)
+                    //将从手机获得的图片上传到云端,并取得obj
+                    axios({
+                        method: 'post',
+                        url: 'http://dev-hpcore.egtest.cn:18088/api/ossUpload',
+                        data:formData
+                    }).then(function(data){
+                        console.log('oss图片上传反馈',data);
+                        var results=data.data.result;
+                        for(var i=0;i<results.length;i++){
+                            that.params.img_list.push(results[i].object)//将返回的object返回给img_list
+                        }
+                        console.log('img_list',that.params.img_list)
+                        // console.log(888999,JSON.stringify(that.params))
+                    });
                 }else{
                     HdSmart.UI.toast('照片添加失败')
                 }
