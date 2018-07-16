@@ -3,22 +3,21 @@
         <div class="wapper">
             <div class="contentWapper">
                 <textarea  @input="dealContent" ref="content" id="content" placeholder="请输入反馈内容" maxlength="200"></textarea>
-                <div class="tips" v-show="overLength">内容超过200字</div>
                 <div class="emptyButton" v-show="emptyTipsShow" @click="emptyContent">清空</div>
             </div>
-            <div class="picGroup">
-                <div class="picAll">
-                    <div class="picOne" v-for="(item,index) in imgsrc" :key="item.name">
-                        <img :src="'data:image/png;base64,'+item"/>
-                        <p @click="cutImg(index)">x</p>
-                    </div>
+            <div class="tips" v-show="overLength">内容超过200字</div>
+            <div class="concactWay">
+                <input ref="contact" id="contact" type="text" placeholder="输入联系方式，方便伙同与你联系"/>
+            </div>
+            <div class="picGroup">  
+                <div class="picOne" v-for="(item,index) in imgsrc" :key="item.name">
+                    <img :src="'data:image/png;base64,'+item"/>
+                    <a @click="cutImg(index)"></a>
                 </div>
-                <div class="addButton" v-show="imgsrc.length<5">
-                    
+                <a class="addButton" v-show="imgsrc.length<5">
                     <!--<input type="file"  @change="getFile" ref="file" id="file"  accept="image/*">-->
-                        <span @click="chooseImage">调用APP图片接口</span>
-                </div>
-                <!-- capture="camera" -->
+                    <span @click="chooseImage">调用APP图片接口</span>
+                </a>
             </div>
             <div class="picTips">最多上传5张照片，每张照片不超过5MB</div>
             
@@ -34,19 +33,35 @@
         width:100%;
         height: 100%;
     }
+    a{
+        text-decoration : none;
+        -webkit-tap-highlight-color:rgba(0,0,0,0);
+    }
     #app{
         width:100%;
         height: 100%;
         overflow-y:auto;
         box-sizing: border-box;
-        padding-top:96px;
+        padding-top:0px;
         background-color: #F2F2F2;
     }
     .contentWapper{
         width:100%;
-        height: auto;
+        height: 240px;
+        padding:0;
+        overflow: hidden;
         position: relative;
-        .tips{
+         margin: 32px 0 0 0;
+        .emptyButton{
+            font-family: NotoSansHans-Regular;
+            font-size: 30px;
+            color: #DA3F3F;
+            position: absolute;
+            top:190px;
+            right:32px;
+        }
+    }
+    .tips{
             font-family: NotoSansHans-Regular;
             font-size: 30px;
             color: #DA3F3F;
@@ -54,14 +69,29 @@
             padding-left:32px;
             height: 30px;
             line-height: 30px;
+            margin-top:21px;
         }
-        .emptyButton{
-            font-family: NotoSansHans-Regular;
-            font-size: 30px;
-            color: #DA3F3F;
-            position: absolute;
-            top:208px;
-            right:32px;
+    .concactWay{
+        width:100%;
+        height: 120px;
+        line-height: 120px;
+        font-size:32px;
+        box-sizing:border-box;
+        margin-top:32px;
+        
+        input{
+            width:100%;
+            height: 100%;
+            border:none;
+            box-sizing:border-box;
+            padding:0 32px;
+            font-size:32px;
+            &::-webkit-input-placeholder{
+                color:#c8cacc;  
+            }
+            &:focus{
+                outline: none;
+            }
         }
     }
     .wapper{
@@ -69,7 +99,6 @@
         height: 100%;
         overflow: hidden;
         #content{
-            margin: 32px 0 0 0;
             width:100%;
             min-height: 240px;
             height: auto;
@@ -93,47 +122,53 @@
             overflow: hidden;
             box-sizing: border-box;
             padding-left:32px;
-            .picAll,.addButton{
+            .addButton{
+                display: block;
                 float:left;
             }
-            .picAll{
-                width:auto;
-                height: auto;
-                .picOne{
-                    width:120px;
-                    height: 120px;
-                    overflow: hidden;
-                    position: relative;
-                    margin-right: 19px;
-                    float:left;
-                    margin-top:32px;
-                    img{
-                        display: block;
-                        width:100%;
-                        height: 100%;
-                        object-fit: cover;
-                    }
-                    p{
-                        width:30px;
-                        height:30px;
-                        position:absolute;
-                        top:3px;
-                        right:3px;
-                        border-radius:50%;
-                        background:rgba(0,0,0,0.8);
-                        color:white;
-                        font-size:14px;
-                        text-align:center;
-                        line-height:30px;
+            .picOne{
+                width:120px;
+                height: 120px;
+                overflow: hidden;
+                position: relative;
+                margin-right: 19px;
+                float:left;
+                margin-top:40px;
+                img{
+                    display: block;
+                    width:100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+                a{
+                    width:40px;
+                    height:40px;
+                    display: block;
+                    position:absolute;
+                    top:5px;
+                    right:3px;
+                    border-radius:50%;
+                    // background:rgba(0,0,0,0.8);
+                    background: url('../../lib/base/feedback/assets/btn_input_delete_normal@2x.png') no-repeat center;
+                    color:white;
+                    background-size:100% 100%;
+                    &:active{
+                        background: url('../../lib/base/feedback/assets/btn_input_delete_pressed@2x.png') no-repeat center;
+                        background-size:100% 100%;
                     }
                 }
             }
             .addButton{
-                margin-top:32px;
+                display: block;
+                margin-top:40px;
                 width:120px;
                 height:120px;
                 background:url('../../lib/base/feedback/assets/add_phone.png') no-repeat center;
                 background-size:100% 100%;
+                &:active{
+                    background:url('../../lib/base/feedback/assets/btn_add_pressed@2x.png') no-repeat center;
+                    background-size:100% 100%;
+                }
                 span{
                     display: block;
                     opacity: 0;
@@ -155,28 +190,52 @@
     }
     @media screen and (min-width: 768px) {
         #app{
-            padding-top:88px;
+            padding-top:0px;
         }
         .contentWapper{
             width:100%;
-            height: auto;
+            height: 210px;
             position: relative;
-            .tips{
-                font-family: NotoSansHans-Regular;
-                font-size: 30px;
-                color: #DA3F3F;
-                box-sizing: border-box;
-                padding-left:48px;
-                height: 30px;
-                line-height: 30px;
-            }
+            margin-top: 24px;
             .emptyButton{
                 font-family: NotoSansHans-Regular;
                 font-size: 30px;
                 color: #DA3F3F;
                 position: absolute;
-                top:174px;
+                top:156px;
                 right:48px;
+            }
+        }
+        .tips{
+            font-family: NotoSansHans-Regular;
+            font-size: 30px;
+            color: #DA3F3F;
+            box-sizing: border-box;
+            padding-left:48px;
+            height: 30px;
+            line-height: 30px;
+            margin-top:21px;
+        }
+        .concactWay{
+            width:100%;
+            height: 120px;
+            line-height: 120px;
+            font-size:30px;
+            box-sizing:border-box;
+            margin-top:32px;
+            input{
+                width:100%;
+                height: 100%;
+                border:none;
+                box-sizing:border-box;
+                padding:0 48px;
+                font-size:30px;
+                &::-webkit-input-placeholder{
+                    color:#c8cacc;  
+                }
+                &:focus{
+                    outline: none;
+                }
             }
         }
         .wapper{
@@ -184,20 +243,17 @@
             height: 100%;
             overflow: hidden;
             #content{
-                margin-top: 24px;
                 min-height: 210px;
                 padding:48px;
                 font-size: 30px;
             }
             .picGroup{
                 padding-left:48px;
-                .picAll{
-                    .picOne{
-                        width:180px;
-                        height: 180px;
-                        margin-right: 24px;
-                        margin-top:40px;
-                    }
+                .picOne{
+                    width:180px;
+                    height: 180px;
+                    margin-right: 24px;
+                    margin-top:40px;
                 }
                 .addButton{
                     margin-top:40px;
@@ -205,6 +261,10 @@
                     height:180px;
                     background:url('../../lib/base/feedback/assets/add_pad.png') no-repeat center;
                     background-size:100% 100%;
+                    &:active{
+                        background:url('../../lib/base/feedback/assets/btn_add_presse.png') no-repeat center;
+                        background-size:100% 100%;
+                    }
                 }
             }
             .picTips{
@@ -240,6 +300,7 @@ export default {
                 "client_version": "",
                 "app_version": "",
                 "content": "",//内容用户反馈详细内容
+                "contact":"",//联系方式
                 "img_list": [],
                 "token":''
             }
@@ -270,7 +331,6 @@ export default {
                 this.params.app_version=res.app_version;
                 this.params.token = res.token;
                 console.log("参数",this.params)
-
             })
 
             HdSmart.UI.setNavigationBarLeft({
@@ -284,13 +344,18 @@ export default {
             console.log('that.params',that.params)
             HdSmart.UI.setNavigationBarRight({
                 text: '提交',
-                color: '#cccccc',
+                color: '#13d5dc',
                 onClick: function() {
-                    HdSmart.UI.showLoading();
+                    
                     console.log('我点击了提交按钮')
-                    // console.log(JSON.stringify(that.params))
+                    if(!that.$refs.content.value){
+                        HdSmart.UI.toast('反馈内容不能为空',1000);
+                        return;
+                    }
+                    HdSmart.UI.showLoading();
                     that.params.content = that.$refs.content.value;
-                    console.log(that.params.content)
+                    that.params.contact = that.$refs.contact.value;
+                    console.log(that.params.contact)
                     axios({
                         method: 'post',
                         url: 'http://dev-hpcore.egtest.cn:18088/api/feedback/add',
@@ -300,11 +365,14 @@ export default {
                         data:JSON.stringify(that.params),
                     }).then(function(data){
                         HdSmart.UI.hideLoading();
-                        console.log(888999,JSON.stringify(that.params))
+                        console.log(888999,that.params)
                         console.log(8888888,data)
                         if(data.data.code === 0){
                             console.log('success')
-                           HdSmart.UI.popWindow(); 
+                            HdSmart.UI.toast('提交成功',1000)
+                            setTimeout(()=>{
+                                HdSmart.UI.popWindow(); 
+                            },1500)
                         }else{
                            console.log('fail');
                            HdSmart.UI.toast(data.data.message,2000) 
@@ -333,7 +401,7 @@ export default {
                     
                     for(var i=0;i<dataGetIos.length;i++){
                         var blob=that.convertBase64UrlToBlob('data:image/png;base64,'+dataGetIos[i])
-                        var files=new File([blob], "name123.png",{type:blob.type});
+                        var files=new File([blob], "oss_load"+i+".png",{type:blob.type});
                         console.log("files9999",files.size/1024/1024)
                         that.imgsrc.push(dataGetIos[i]);
                         formData.append('files['+i+']',files)
@@ -365,13 +433,14 @@ export default {
                this.emptyTipsShow=false;
            }
            if(e.target.value.length>=200){
+               console.log('overLength1100000000000000')
                 this.overLength=true;
            }
 
         },
         emptyContent(){
-           this.$refs.content.value='';
-           this.emptyTipsShow=false;
+            this.$refs.content.value='';
+            this.emptyTipsShow=false;
             this.overLength=false;
         },
         cutImg(index){
@@ -381,31 +450,6 @@ export default {
            console.log('this.imgSrc',this.imgsrc)
            this.params.img_list.splice(index,1);
            console.log("lllllllllll",this.params.img_list)
-        },
-        getFile(e){
-           if(this.imgsrc.length>=5){
-               alert('最多可添加5张图片')
-               return
-           }
-            console.log(999,e.target.files[0])
-            let _this = this;
-            if (!e || !window.FileReader){
-                return  // 看支持不支持FileReader
-            }
-            var files = e.target.files[0];
-            console.log('files',files)
-            var fileSize=(files.size/1024/1024).toFixed(2);//将文件大小转换为MB，并保留两位小数
-            //对文件大小进行检查
-            if(fileSize>5){
-                alert("文件大小超过了5MB")
-                return
-            }
-            let reader = new FileReader();
-            reader.readAsDataURL(files) // 这里是最关键的一步，转换就在这里
-            reader.onloadend = function () {
-                 _this.imgsrc.push(this.result)
-            }
-            console.log( _this.imgsrc)
         },
         convertBase64UrlToBlob(urlData){  //将以base64的图片url数据转换为Blob  
             var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte  
