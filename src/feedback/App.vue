@@ -7,7 +7,7 @@
             </div>
             <div class="tips" v-show="overLength">内容超过200字</div>
             <div class="concactWay">
-                <input ref="contact" id="contact" type="text" placeholder="输入联系方式，方便伙同与你联系"/>
+                <input ref="contact" id="contact" type="text" placeholder="输入联系方式，方便伙同与你联系" maxlength="30"/>
             </div>
             <div class="picGroup">  
                 <div class="picOne" v-for="(item,index) in imgsrc" :key="item.name">
@@ -294,7 +294,7 @@ export default {
             overLength:false,
             params:{
                 "uname": "",
-                "title": "用户反馈",
+                "title":"",
                 "terminal_name": "",
                 "terminal_type": "",
                 "client_version": "",
@@ -317,7 +317,7 @@ export default {
         document.title=this.getQueryValue('title') ? decodeURI(this.getQueryValue('title')) : '用户反馈';
         console.log('title',this.getQueryValue('title') ? decodeURI(this.getQueryValue('title')) : '用户反馈')
         // var that=this;
-       
+        this.params.title = document.title;
         HdSmart.ready(() => {
             var that=this;
             console.log(9999,this)
@@ -346,7 +346,6 @@ export default {
                 text: '提交',
                 color: '#13d5dc',
                 onClick: function() {
-                    
                     console.log('我点击了提交按钮')
                     if(!that.$refs.content.value){
                         HdSmart.UI.toast('反馈内容不能为空',1000);
