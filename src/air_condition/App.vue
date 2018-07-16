@@ -1,7 +1,7 @@
 <template>
     <div id="app" :class="appClassObj">
         <p class="title">{{ deviceName }}
-            <icon />
+            <icon :class="[params.switch==='on'?'redact-white':'']" />
         </p>
         <p class="status" v-show="params.switch === 'on'">
             {{modeText}} {{speedText}} {{params.env_temperature ? '环境温度' + params.env_temperature/10 + '℃' : ''}}

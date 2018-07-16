@@ -6,7 +6,7 @@
         <div class="page-index2">
             <status-tip class="sp_status_home" />
             <div class="device_name">{{$store.state.device_name}}
-                <icon className="redact-white" />
+                <icon />
             </div>
             <div class="grid">
                 <div class="content-con">

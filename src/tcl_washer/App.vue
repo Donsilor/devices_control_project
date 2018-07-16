@@ -2,7 +2,7 @@
     <div id="app">
         <div class="page-on" v-if="model.switch=='on'">
             <div class="name">{{device_name}}
-                <icon className="redact-white" />
+                <icon class="redact-white" />
             </div>
             <div class="fault" v-if="errors.length">
                 <span v-for="item in errors" :key="item.code" @click="showAlarmTip(item)">{{item.code}}故障</span>
@@ -174,7 +174,9 @@
             </modal>
         </div>
         <div class="page-off" v-if="model.switch=='off'">
-            <div class="name">{{device_name}}</div>
+            <div class="name">{{device_name}}
+                <icon />
+            </div>
             <div class="tip">已关闭</div>
             <div class="washer"></div>
             <div class="btns btns-fn">

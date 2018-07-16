@@ -10,7 +10,7 @@
                 <div class="water_wave ww3"></div>
 
                 <div class="name">{{device_name}}
-                    <icon className="redact-white" />
+                    <icon class="redact-white" />
                 </div>
 
                 <div class="wash" :class="{washing:washing}">
@@ -73,7 +73,9 @@
         </template>
 
         <div class="page-nodata" v-if="!success">
-            <div class="name">{{device_name}}</div>
+            <div class="name">{{device_name}}
+                <icon />
+            </div>
             <div class="pic1"></div>
         </div>
 

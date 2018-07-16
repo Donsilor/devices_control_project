@@ -49,7 +49,9 @@
             <!-- 没有TDS的机器的样式 -->
             <div class="hasNotTDs" v-if="!hasTDS" :style="inPage('index')">
                 <div class="mainTitle">
-                    <div class="name">{{device_name}}</div>
+                    <div class="name">{{device_name}}
+                        <icon />
+                    </div>
                     <div class="tip">
                         <p v-if="inError('E3')">
                             <span @click="toggleErrorModal('E3', true)">漏水</span>
@@ -80,7 +82,9 @@
 
         <div class="page-nodata" v-if="!success">
             <div class="mainTitle">
-                <div class="name">{{device_name}}</div>
+                <div class="name">{{device_name}}
+                    <icon />
+                </div>
             </div>
             <div class="pic1"></div>
         </div>

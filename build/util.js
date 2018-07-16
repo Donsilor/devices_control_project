@@ -23,5 +23,5 @@ exports.getInputName = function(){
 var now = new Date()
 
 exports.getBuildTime = function(){
-    return now.getFullYear() + fillz(now.getMonth()+1) + fillz(now.getDate()) + '_' + fillz(now.getHours()) + fillz(now.getMinutes())
+    return now.getFullYear() + fillz(now.getMonth()+1) + fillz(now.getDate()); //+ '_' + fillz(now.getHours()) + fillz(now.getMinutes())
 }
