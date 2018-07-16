@@ -2,12 +2,12 @@
     <div id="app">
         <div class="wapper">
             <div class="contentWapper">
-                <textarea  @input="dealContent" ref="content" id="content" placeholder="请输入反馈内容" maxlength="200"></textarea>
+                <textarea  @input="dealContent" ref="content" id="content" placeholder="输入反馈内容" maxlength="200"></textarea>
                 <div class="emptyButton" v-show="emptyTipsShow" @click="emptyContent">清空</div>
             </div>
             <div class="tips" v-show="overLength">内容超过200字</div>
             <div class="concactWay">
-                <input ref="contact" id="contact" type="text" placeholder="输入联系方式，方便伙同与你联系" maxlength="30"/>
+                <input ref="contact" id="contact" type="text" placeholder="输入联系方式，便于我们与你联系" maxlength="30"/>
             </div>
             <div class="picGroup">  
                 <div class="picOne" v-for="(item,index) in imgsrc" :key="item.name">
@@ -20,7 +20,6 @@
                 </a>
             </div>
             <div class="picTips">最多上传5张照片，每张照片不超过5MB</div>
-            
         </div>
     </div>
 </template>
@@ -255,8 +254,8 @@
                     margin-right: 24px;
                     margin-top:40px;
                     a{
-                        width:40px;
-                        height: 40px;
+                        width:35px;
+                        height: 35px;
                     }
                 }
                 .addButton{
@@ -319,38 +318,30 @@ export default {
     mounted() {
         
         document.title=this.getQueryValue('title') ? decodeURI(this.getQueryValue('title')) : '用户反馈';
-        console.log('title',this.getQueryValue('title') ? decodeURI(this.getQueryValue('title')) : '用户反馈')
-        // var that=this;
         this.params.title = document.title;
         HdSmart.ready(() => {
             var that=this;
-            console.log(9999,this)
             HdSmart.Util.getAppInfo((res) => {
                 console.log('appInfo',res)
-                // alert(JSON.stringify(res)) 
                 this.params.uname = res.uname;
                 this.params.terminal_name = res.terminal_name;
                 this.params.terminal_type = res.terminal_type;
                 this.params.client_version=res.client_version;
                 this.params.app_version=res.app_version;
                 this.params.token = res.token;
-                console.log("参数",this.params)
             })
 
             HdSmart.UI.setNavigationBarLeft({
                 text: '取消',
                 icon:''
             })
-
             // HdSmart.UI.setNavigationBarTitle({
             //     text: '用户反馈'
             // })
-            console.log('that.params',that.params)
             HdSmart.UI.setNavigationBarRight({
                 text: '提交',
                 color: '#13d5dc',
                 onClick: function() {
-                    console.log('我点击了提交按钮')
                     if(!that.$refs.content.value){
                         HdSmart.UI.toast('反馈内容不能为空',1000);
                         return;
@@ -358,7 +349,6 @@ export default {
                     HdSmart.UI.showLoading();
                     that.params.content = that.$refs.content.value;
                     that.params.contact = that.$refs.contact.value;
-                    console.log(that.params.contact)
                     axios({
                         method: 'post',
                         url: 'http://dev-hpcore.egtest.cn:18088/api/feedback/add',
@@ -368,44 +358,33 @@ export default {
                         data:JSON.stringify(that.params),
                     }).then(function(data){
                         HdSmart.UI.hideLoading();
-                        console.log(888999,that.params)
-                        console.log(8888888,data)
                         if(data.data.code === 0){
-                            console.log('success')
                             HdSmart.UI.toast('提交成功',1000)
                             setTimeout(()=>{
                                 HdSmart.UI.popWindow(); 
                             },1500)
                         }else{
-                           console.log('fail');
                            HdSmart.UI.toast(data.data.message,2000) 
                         }
                        
                     });
                 }
             })
-
         })
-
-        
     },
     methods: {
         chooseImage() {
             var that=this;
             var countNow=this.imgsrc.length;// 剩余的可提交图片
-            console.log('剩余的可提交图片',5-countNow)
             HdSmart.UI.chooseImage({count:5-countNow}, (res) => {
-                console.log("chooseImage 返回图片",res)
                 var fileArry;
                 if(res.code == 0){
                     var formData = new FormData()
                     var dataGetIos=res.imgData;
-                    console.log('返回的图片长度',dataGetIos.length)
                     
                     for(var i=0;i<dataGetIos.length;i++){
                         var blob=that.convertBase64UrlToBlob('data:image/png;base64,'+dataGetIos[i])
                         var files=new File([blob], "oss_load"+i+".png",{type:blob.type});
-                        console.log("files9999",files.size/1024/1024)
                         that.imgsrc.push(dataGetIos[i]);
                         formData.append('files['+i+']',files)
                     }
@@ -416,13 +395,10 @@ export default {
                         url: 'http://dev-hpcore.egtest.cn:18088/api/ossUpload',
                         data:formData
                     }).then(function(data){
-                        console.log('oss图片上传反馈',data);
                         var results=data.data.result;
                         for(var i=0;i<results.length;i++){
                             that.params.img_list.push(results[i].object)//将返回的object返回给img_list
                         }
-                        console.log('img_list',that.params.img_list)
-                        // console.log(888999,JSON.stringify(that.params))
                     });
                 }else{
                     HdSmart.UI.toast('照片添加失败')
@@ -436,7 +412,6 @@ export default {
                this.emptyTipsShow=false;
            }
            if(e.target.value.length>=200){
-               console.log('overLength1100000000000000')
                 this.overLength=true;
            }
 
@@ -447,12 +422,8 @@ export default {
             this.overLength=false;
         },
         cutImg(index){
-           
-           console.log('cutindex',index)
            this.imgsrc.splice(index,1);
-           console.log('this.imgSrc',this.imgsrc)
            this.params.img_list.splice(index,1);
-           console.log("lllllllllll",this.params.img_list)
         },
         convertBase64UrlToBlob(urlData){  //将以base64的图片url数据转换为Blob  
             var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte  
@@ -466,7 +437,6 @@ export default {
             return new Blob( [ab] , {type : 'image/png'});  
         },
         getQueryValue(name) {
-            console.log(name)
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)",'i');
             var res = window.location.search.substr(1).match(reg);
             if(res && res[2]){
