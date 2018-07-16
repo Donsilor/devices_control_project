@@ -141,8 +141,8 @@
                     object-fit: cover;
                 }
                 a{
-                    width:40px;
-                    height:40px;
+                    width:30px;
+                    height:30px;
                     display: block;
                     position:absolute;
                     top:5px;
@@ -254,6 +254,10 @@
                     height: 180px;
                     margin-right: 24px;
                     margin-top:40px;
+                    a{
+                        width:40px;
+                        height: 40px;
+                    }
                 }
                 .addButton{
                     margin-top:40px;
