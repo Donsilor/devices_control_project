@@ -88,7 +88,9 @@ export default {
                 data => {
                     if (data.code == -16005) {
                         HdSmart.UI.toast("密码错误，请重新输入");
-                    } else {
+                    } else if(data.code == -1) {
+                       HdSmart.UI.toast("请求超时，请稍后重试");
+                    }  else {
                         HdSmart.UI.toast("开锁失败！");
                     }
                 }
