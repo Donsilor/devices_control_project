@@ -4,7 +4,7 @@
         <div class="page-on" v-if="success">
             <div class="mainTitle">
                 <div class="name">{{device_name}}
-                    <icon className="redact" />
+                    <icon class="redact" />
                 </div>
                 <div class="tip">
                     <p v-if="model.water_leakage=='on'">

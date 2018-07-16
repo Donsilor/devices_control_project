@@ -5,7 +5,7 @@
 
         <div class="header">
             <span class="name">{{device.name}}
-                <icon />
+                <icon class="redact-white" />
             </span>
             <span class="status">
                 {{modeText}} {{speedText}} {{ac.env_temperature ? '环境温度' + ac.env_temperature/10 + '℃' : ''}}
