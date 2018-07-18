@@ -63,7 +63,7 @@
     <script>
         (function () {
             var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-            document.documentElement.classList = iOS ? 'ios' : 'android'
+            document.documentElement.classList.add(iOS ? 'ios' : 'android')
         })();
     </script>
     <script>
