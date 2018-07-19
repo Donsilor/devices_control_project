@@ -14,22 +14,9 @@
             </div>
         </div>
 
-        <div class="pickerContent" v-show="dateModalVisible">
-            <div id="dataPicker" title="选择日期" >
-                <div class="modal-header">
-                    <div class="modal-title">选择日期</div>
-                    <div class="modal-close"  @click="close"></div>
-                </div>
-                <div class="modal-body">
-                    <mt-datetime-picker ref="picker2" type="date" v-model="date" :start-date="startDate" :end-date="endDate" :visible-item-count='3' @confirm="handleChange">
-                    </mt-datetime-picker>
-                    <div class="buttongroup">
-                        <div class="cancle" @click="close">取消</div>
-                        <div class="sure" @click="handleChange2">确定</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <mt-datetime-picker ref="picker2" type="date" v-model="date" :start-date="startDate" :end-date="endDate" :visible-item-count='3'  @confirm="handleChange">
+        </mt-datetime-picker>
+
         <log-list :current-date="currentDate" :data="list" v-show="!firstLoad" />
         <div class="loadmore" v-if="!isLoading && more">
             <a href="" @click.prevent="loadMore">加载更多</a>
@@ -45,8 +32,8 @@
 <script>
 import Vue from "vue";
 import LogList from "./LogList";
-// import DatetimePicker from './DatePicker'
-import { Popup, Picker, DatetimePicker } from "mint-ui";
+import { Popup,Picker } from "mint-ui";
+import DatetimePicker from './DatePicker'
 import "mint-ui/lib/style.css";
 
 import { WARN_CODE, OPEN_TYPE } from "./const";
@@ -94,7 +81,6 @@ export default {
             begin: 0,
             more: 0,
             type: "open",
-            dateModalVisible:false,//日历modal显示控制
         };
     },
     watch: {
@@ -108,19 +94,10 @@ export default {
     },
     methods: {
         showCalendar() {
-            this.dateModalVisible = true;
             this.$refs.picker2.open();
-        },
-        close(){//关闭日历空间
-            this.dateModalVisible = false;
         },
         handleChange(value) {
             this.getLogData(undefined, this.type);
-        },
-        handleChange2() {
-            this.$refs.picker2.confirm();
-            // this.$refs.picker2.confirm.call(this.$refs.picker2, this.$refs.picker2.currentValue);
-            this.dateModalVisible = false;
         },
         // loadMore() {
         //     this.getLogData(true);
