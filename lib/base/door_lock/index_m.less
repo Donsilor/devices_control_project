@@ -1,21 +1,26 @@
-*{
+* {
     padding: 0;
     margin: 0;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
-a{
+
+a {
     text-decoration: none;
 }
-body{
+
+body {
     font-size: 30px;
 }
-html{
+
+html {
     padding-bottom: 2px;
 }
+
 /* index.vue */
+
 .page-index {
-    padding-top: 88px;//导航栏的高度
+    padding-top: 88px; //导航栏的高度
     background: #f2f2f2;
     position: absolute;
     left: 0;
@@ -23,11 +28,13 @@ html{
     height: 100%;
     width: 100%;
     overflow-y: auto;
-    box-sizing:border-box;
+    box-sizing: border-box;
 }
-.mainTitle{
-    margin:80px auto 0;//距离顶部导航80px
+
+.mainTitle {
+    margin: 80px auto 0; //距离顶部导航80px
 }
+
 .name {
     font-size: 30px;
     color: #808080;
@@ -35,6 +42,7 @@ html{
     margin: 0px auto 6px;
     height: 40px;
 }
+
 .lock-status {
     text-align: center;
     font-size: 0;
@@ -58,12 +66,12 @@ html{
         }
     }
 }
+
 .lock {
     width: 360px;
     height: 360px;
-    margin:11% auto 0;
-    background: url(./assets/img_lock_locked.png)
-        no-repeat;
+    margin: 11% auto 0;
+    background: url(./assets/img_lock_locked.png) no-repeat;
     background-size: 100% 100%;
     text-align: center;
     &.on {
@@ -72,8 +80,7 @@ html{
     .pic {
         width: 96px;
         height: 96px;
-        background: url(./assets/icn_lock_locked.png)
-            no-repeat;
+        background: url(./assets/icn_lock_locked.png) no-repeat;
         background-size: 96px;
         margin: 132px auto 60px;
         display: inline-block;
@@ -82,16 +89,16 @@ html{
         }
     }
 }
+
 .btn-unlock {
     position: absolute;
-    bottom:20%;
-    left:50%;
+    bottom: 15%;
+    left: 50%;
     transform: translateX(-50%);
     background: #46bcff;
     width: 144px;
     height: 144px;
-    border-radius: 100%;
-    // margin: 22% auto 0;
+    border-radius: 100%; // margin: 22% auto 0;
     display: block;
     text-align: center;
     line-height: 144px;
@@ -102,6 +109,7 @@ html{
         color: #c8cacc;
     }
 }
+
 .btn-golog {
     position: absolute;
     display: inline-block;
@@ -109,19 +117,18 @@ html{
     top: 150px;
     width: 96px;
     height: 96px;
-    background: url(./assets/btn_record_normal.png)
-        no-repeat;
+    background: url(./assets/btn_record_normal.png) no-repeat;
     background-size: 100% 100%;
     &:active {
         background-image: url(./assets/btn_record_pressed.png);
     }
 }
+
 .alert-wraper {
     position: fixed;
     left: 0;
-    width: 100%;
-    // top: 96px;
-    top:88px;//导航栏的高度；
+    width: 100%; // top: 96px;
+    top: 88px; //导航栏的高度；
     .alert {
         background: rgba(51, 51, 51, 0.75);
         width: 100%;
@@ -135,8 +142,7 @@ html{
             display: inline-block;
             width: 34px;
             height: 34px;
-            background: url(./assets/icn_notice_white_s.png)
-                no-repeat;
+            background: url(./assets/icn_notice_white_s.png) no-repeat;
             background-size: 34px;
             margin-right: 13px;
             vertical-align: text-bottom;
@@ -146,8 +152,7 @@ html{
             display: inline-block;
             width: 30px;
             height: 30px;
-            background: url(./assets/btn_close_white_normal.png)
-                no-repeat;
+            background: url(./assets/btn_close_white_normal.png) no-repeat;
             background-size: 30px;
             margin-top: 27px;
             margin-right: 26px;
@@ -162,9 +167,11 @@ html{
 }
 
 /* log.vue */
+
 .page-log {
     padding-top: 96px;
 }
+
 .topbar {
     background: #f2f2f2;
     height: 95px;
@@ -218,6 +225,7 @@ html{
         }
     }
 }
+
 .topbar-fixed {
     position: fixed;
     left: 0;
@@ -225,32 +233,36 @@ html{
     width: 100%;
     z-index: 100;
 }
+
 .btn-cale {
     position: fixed;
     right: 60px;
     bottom: 80px;
     width: 96px;
     height: 96px;
-    background: url(./assets/btn_calendar_normal.png)
-        no-repeat;
+    background: url(./assets/btn_calendar_normal.png) no-repeat;
     background-size: 100% 100%;
     &:active {
         background-image: url(./assets/btn_calendar_pressed.png);
         -webkit-tap-highlight-color: transparent;
     }
 }
+
 .loadmore,
 .nomore {
     text-align: center;
     font-size: 24px;
     padding: 30px 0;
 }
+
 .loadmore a {
     color: #2f3133;
 }
+
 .nomore {
     color: #ccc;
 }
+
 // /**picker样式整改 start*/
 // .pickerContent{
 //     width:100%;
@@ -313,7 +325,6 @@ html{
 //         box-sizing:border-box;
 //         padding:53px 70px 50px 70px;
 //         transform: translate(0,0);
-
 //     }
 //     .modal-body{
 //         position: absolute;
@@ -357,9 +368,9 @@ html{
 // }
 // /**picker样式整改 end*/
 /* loglist.vue */
+
 .door-log {
     position: relative;
-
     .which-day {
         font-size: 30px;
         line-height: 96px;
@@ -367,14 +378,12 @@ html{
         color: #2f3133;
         box-sizing: border-box;
     }
-
     li {
         position: relative;
         list-style: none;
         padding-left: 90px;
         height: 96px;
         line-height: 96px;
-
         .line {
             background: #f2f2f2;
             width: 2px;
@@ -382,7 +391,6 @@ html{
             position: absolute;
             left: 58px;
         }
-
         .dot {
             background: #13d5dc;
             width: 12px;
@@ -394,7 +402,6 @@ html{
             left: 54px;
             margin-top: -6px;
         }
-
         .date {
             font-size: 30px;
             color: #2f3133;
@@ -403,7 +410,6 @@ html{
             display: inline-block;
             margin-right: 48px;
         }
-
         .log {
             font-size: 30px;
             color: #76787a;
@@ -420,13 +426,13 @@ html{
         }
     }
 }
+
 .nodata {
     font-size: 30px;
     color: #c8cacc;
     text-align: center;
     span {
-        background: url(./assets/img_emptydata.png)
-            no-repeat;
+        background: url(./assets/img_emptydata.png) no-repeat;
         background-size: 100% 100%;
         display: block;
         width: 360px;
@@ -452,6 +458,7 @@ html{
 /*
     日志图标
 */
+
 .log-icon-17 {
     background: url("./assets/code.png");
     background-size: 100% 100%;
@@ -471,12 +478,14 @@ html{
     background: url("./assets/key.png");
     background-size: 100% 100%;
 }
+
 .log-icon-21 {
     background: url("./assets/phone.png");
     background-size: 100% 100%;
 }
 
 /* password-input.vue */
+
 .password-input {
     position: fixed;
     left: 0;
@@ -485,8 +494,7 @@ html{
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     .password-input-container {
-        background: #ffffff;
-        // box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.1);
+        background: #ffffff; // box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.1);
         border-radius: 6px;
         width: 600px;
         padding-bottom: 15px;
@@ -494,7 +502,6 @@ html{
         left: 50%;
         top: 50%;
         transform: translate3d(-50%, -50%, 0);
-
         .password-input-title {
             box-shadow: inset 0 -1px 0 0 #dbdbdb;
             width: 100%;
@@ -511,8 +518,7 @@ html{
                 position: absolute;
                 top: 27px;
                 right: 26px;
-                background: url(./assets/btn_close_normal.png)
-                    no-repeat;
+                background: url(./assets/btn_close_normal.png) no-repeat;
                 background-size: 30px;
                 &:active {
                     background-image: url(./assets/btn_close_pressed.png);
@@ -540,8 +546,7 @@ html{
                 height: 48px;
                 right: 84px;
                 top: 54px;
-                background: url(./assets/btn_input_back_normal.png)
-                    no-repeat;
+                background: url(./assets/btn_input_back_normal.png) no-repeat;
                 background-size: 48px;
                 &:active {
                     background-image: url(./assets/btn_input_back_pressed.png);
@@ -598,31 +603,34 @@ html{
     }
 }
 
-
 /* datetime-picker.vue */
 
-.mint-datetime2{
+.mint-datetime2 {
     width: 600px;
-    border-radius:6px;
+    border-radius: 6px;
 }
-.dp-header{
+
+.dp-header {
     text-align: center;
-    font-size:30px;
-    color:#76787a;
-    box-shadow:inset 0 -1px 0 0 #dbdbdb;
-    height:84px;
+    font-size: 30px;
+    color: #76787a;
+    box-shadow: inset 0 -1px 0 0 #dbdbdb;
+    height: 84px;
     line-height: 84px;
 }
-.dp-footer{
+
+.dp-footer {
     display: flex;
     justify-content: center;
     height: 120px;
 }
-.dp-body{
+
+.dp-body {
     margin: 60px;
     position: relative;
 }
-.dp-unit{
+
+.dp-unit {
     position: absolute;
     left: 0;
     width: 100%;
@@ -632,40 +640,46 @@ html{
     line-height: 60px;
     display: flex;
 }
-.dp-unit span{
+
+.dp-unit span {
     display: block;
     text-align: right;
     flex: 1 1 auto;
-    color:#76787a;
+    color: #76787a;
 }
-.picker-item.picker-selected{
-    color:#13d5dc !important;
+
+.picker-item.picker-selected {
+    color: #13d5dc !important;
 }
-.btn{
+
+.btn {
     display: block;
-    border-radius:6px;
-    font-size:36px;
-    width:238px;
-    height:84px;
+    border-radius: 6px;
+    font-size: 36px;
+    width: 238px;
+    height: 84px;
     text-align: center;
     line-height: 84px;
     box-sizing: border-box;
     margin: 0 12px;
 }
-.btn-cancel{
-    background:#ffffff;
-    color:#76787a;
-    border:1px solid #76787a;
-}
-.btn-confirm{
-    background:#13d5dc;
-    color:#fff;
+
+.btn-cancel {
+    background: #ffffff;
+    color: #76787a;
+    border: 1px solid #76787a;
 }
 
-.picker-item{
+.btn-confirm {
+    background: #13d5dc;
+    color: #fff;
+}
+
+.picker-item {
     font-size: 30px;
     padding-right: 30px !important;
 }
-.picker-selected{
+
+.picker-selected {
     font-size: 36px;
 }
