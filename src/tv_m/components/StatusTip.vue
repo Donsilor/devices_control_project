@@ -5,19 +5,22 @@
             <span class="text">{{tvStatus.screenProjectTitle}}</span>
             <i class="arr"></i>
         </div>
-        <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-1">
-            <i class="wifi"></i>无法连接网络，请检查网络设置
+        <div v-show="ios">
+            <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-1">
+                <i class="wifi"></i>无法连接网络，请检查网络设置
+            </div>
+            <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-2">
+                <i class="error"></i>路由器已离线 &nbsp;
+                <span class="link">查看帮助</span>
+                <i class="arr"></i>
+            </div>
+            <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-3">
+                <i class="error"></i>设备已离线 &nbsp;
+                <span class="link">查看帮助</span>
+                <i class="arr"></i>
+            </div>
         </div>
-        <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-2">
-            <i class="error"></i>路由器已离线 &nbsp;
-            <span class="link">查看帮助</span>
-            <i class="arr"></i>
-        </div>
-        <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-3">
-            <i class="error"></i>设备已离线 &nbsp;
-            <span class="link">查看帮助</span>
-            <i class="arr"></i>
-        </div>
+        <div class="offline_bar_blank" v-if="tvStatus.tvOnlineStatus < 0 && !ios"></div>
     </div>
 </template>
 
@@ -111,6 +114,9 @@
     color: #fff;
     font-size: 28px;
 }
+.offline_bar_blank {
+    height: 84px;
+}
 .offline_bar i {
     display: inline-block;
     width: 30px;
@@ -147,7 +153,9 @@
 import * as service from "../service";
 export default {
     data() {
-        return {};
+        return {
+            ios: true
+        };
     },
     computed: {
         tvStatus() {
@@ -177,6 +185,14 @@ export default {
             service.onClickEvent("tvOnlineStatusClick", {
                 tvOnlineStatus: this.tvStatus.tvOnlineStatus
             });
+        }
+    },
+    mounted() {
+        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if (iOS) {
+            this.ios = true;
+        } else {
+            this.ios = false;
         }
     }
 };

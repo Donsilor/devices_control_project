@@ -66,15 +66,21 @@ const store = new Vuex.Store({
         showDetail(state, payload) {
             state.detailVisible = true;
             state.activeDetail = payload;
-            service.RemoteController({'show':true});
+            service.RemoteController({
+                'show': true
+            });
         },
         hideDetail(state) {
             state.detailVisible = false;
             var path = router.history.current.name;
-            if(path==='index'){
-                service.RemoteController({'show':false});
-            }else{
-                service.RemoteController({'show':true});
+            if (path === 'index') {
+                service.RemoteController({
+                    'show': false
+                });
+            } else {
+                service.RemoteController({
+                    'show': true
+                });
             }
         },
         setOnline(state, payload) {
@@ -88,26 +94,31 @@ const store = new Vuex.Store({
         }
     },
     actions: {
-        showDetail({ commit }, item) {
+        showDetail({
+            commit
+        }, item) {
             scrollTop = docEl.scrollTop;
             docEl.scrollTop = 0;
             commit("showDetail", item);
         },
-        hideDetail: ({ commit }) => {
+        hideDetail: ({
+            commit
+        }) => {
             commit("hideDetail");
             setTimeout(() => {
                 docEl.scrollTop = scrollTop;
             }, 50);
         },
-        setOnline({ commit }, onlineStr) {
+        setOnline({
+            commit
+        }, onlineStr) {
             commit("setOnline", onlineStr == "online" ? true : false);
         }
     }
 });
 
 const router = new Router({
-    routes: [
-        {
+    routes: [{
             path: "/",
             name: "index",
             component: Index
@@ -135,7 +146,7 @@ let current_page = "index";
 let thaf_timer;
 
 //app jsbridge ready
-HdSmart.onDeviceListen(function(data) {
+HdSmart.onDeviceListen(function (data) {
     if (data && data.result) {
         store.dispatch("setOnline", data.result.attribute.connectivity);
     }
@@ -161,7 +172,7 @@ HdSmart.ready(() => {
             });
         }, 150)
 
-        window.onScreenProjectStatusChanged = function(data) {
+        window.onScreenProjectStatusChanged = function (data) {
             store.commit("setScreenProjectionStatus", data);
         };
 
@@ -191,7 +202,9 @@ HdSmart.ready(() => {
             store,
             router,
             template: "<App />",
-            components: { App }
+            components: {
+                App
+            }
         });
     }
 });
