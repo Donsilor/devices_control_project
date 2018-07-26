@@ -237,7 +237,7 @@
 
 @media only screen and (-webkit-min-device-pixel-ratio: 3), only screen and (min-device-pixel-ratio: 3) {
     .page-header {
-        height: 116px;
+        height: 136px;
     }
 }
 

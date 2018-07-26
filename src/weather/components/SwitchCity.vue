@@ -1,12 +1,10 @@
 <template>
     <div class="scbody">
-
-        <div class="nav">
-            <span class="back" @click="back"></span>
-            <span class="text">切换城市</span>
-        </div>
-
-        <div class="sc-city">
+        <div class="fixed" :class="todyClass+2">
+            <div class="nav">
+                <span class="back" @click="back"></span>
+                <span class="text">切换城市</span>
+            </div>
             <form class="input" @submit.prevent="onSubmit">
                 <span class="input-ico"></span>
                 <input v-model="userinput" placeholder="请输入城市名称搜索" ref="input" />
@@ -18,6 +16,8 @@
             </div>
 
             <div class="sc-line-location"></div>
+        </div>
+        <div class="sc-city">
 
             <div class="hot-city-text">热门城市</div>
             <div class="city-list">
@@ -90,7 +90,7 @@ export default {
         // let myScroll = new IScroll("#wrapper", { useTransition: false });
     },
 
-    props: ["getCityWeather", "city"],
+    props: ["getCityWeather", "city","todyClass"],
     watch: {
         //用户过滤
         userinput(val, oldVal) {
@@ -131,6 +131,11 @@ export default {
             }, 150)
         },
 
+        scroll(el, offset=0) {
+            var topOfElement = el.offsetTop - offset;
+            document.querySelector('#app').scrollTop = topOfElement;
+        },
+
         jump(e) {
             //防止滑动时输入法弹出
             this.$refs.input.blur();
@@ -141,12 +146,12 @@ export default {
                     target.clientY
                 );
                 //热门处理
+                let headerOffset = document.querySelector(`.fixed`).clientHeight || 0
                 if (fromel && fromel.className === "filter-hot-text") {
                     this.current_filterchar = `${fromel.innerHTML}`;
                     let toel = document.querySelector(`.hot-city-text`);
-                    // console.log("toel", toel);
                     if (toel) {
-                        toel.scrollIntoView();
+                        this.scroll(toel, headerOffset);
                     }
                 }
                 // console.log("jump", fromel, target.clientX, target.clientY);
@@ -158,9 +163,13 @@ export default {
                     let toel = document.querySelector(
                         `.alpha-city-list #${fromel.innerHTML}`
                     );
-                    // console.log("toel", toel);
+                    // if (document.querySelector(`.alpha-city-list #${fromel.innerHTML}`)) {
+                    //     this.scroll(document.querySelector(
+                    //         `.alpha-city-list #${fromel.innerHTML}`
+                    //     ), headerOffset);
+                    // }
                     if (toel) {
-                        toel.scrollIntoView();
+                        this.scroll(toel, headerOffset);
                     }
                 }
             }
@@ -196,7 +205,6 @@ export default {
                     return 0;
                 }
             });
-            // console.log(res);
             return res;
         },
         finishFiler() {

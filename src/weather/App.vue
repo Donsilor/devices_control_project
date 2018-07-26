@@ -2,7 +2,7 @@
     <div id="app" :class="todyClass">
         <!--城市切换-->
         <template v-if="showSwitchCity">
-            <switchCity @hideswitch="hideSwitchCity" :city="city" :getCityWeather="getCityWeather"></switchCity>
+            <switchCity @hideswitch="hideSwitchCity" :city="city" :getCityWeather="getCityWeather" :todyClass="todyClass"></switchCity>
         </template>
         <!--城市切换-->
         <template v-else>

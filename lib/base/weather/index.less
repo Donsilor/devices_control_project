@@ -17,6 +17,7 @@ body {
     height: 100%;
     width: 100%;
     overflow-y: auto;
+    // padding-top: 230px;
 }
 /*多云*/
 .img_bg_weather_cloudy {
@@ -53,6 +54,44 @@ body {
     background: url("./assets/img_bg_weather_wind.png")
         no-repeat fixed;
     background-size: 100% 100%;
+}
+
+
+/*多云*/
+.img_bg_weather_cloudy2 {
+    background: url("./assets/img_bg_weather_cloudy.png")
+        no-repeat fixed;
+    background-size: 100% auto;
+}
+/*下雨*/
+.img_bg_weather_rainy2 {
+    background: url("./assets/img_bg_weather_rainy.png")
+        no-repeat fixed;
+    background-size: 100% auto;
+}
+/*下雪*/
+.img_bg_weather_snowy2 {
+    background: url("./assets/img_bg_weather_snowy.png")
+        no-repeat fixed;
+    background-size: 100% auto;
+}
+/*晴朗*/
+.img_bg_weather_sunny2 {
+    background: url("./assets/img_bg_weather_sunny.png")
+        no-repeat fixed;
+    background-size: 100% auto;
+}
+/*雷鸣*/
+.img_bg_weather_thuner2 {
+    background: url("./assets/img_bg_weather_thuner.png")
+        no-repeat fixed;
+    background-size: 100% auto;
+}
+/*刮风*/
+.img_bg_weather_wind2 {
+    background: url("./assets/img_bg_weather_wind.png")
+        no-repeat fixed;
+    background-size: 100% auto;
 }
 .tip {
     position: absolute;
@@ -279,7 +318,8 @@ body {
 .scbody {
     font-size: 30px;
     font-family: NotoSansHans-Regular;
-    padding: 0 50px;
+    padding: 230px 50px 0px;
+    position: relative;
 }
 .nav {
     height: 96px;
@@ -341,7 +381,7 @@ body {
     top: 50%;
     transform: translate(0, -50%);
     right: 0px;
-    z-index: 10;
+    z-index: 100;
     .filter-hot-text {
         font-size: 24px;
     }
@@ -429,10 +469,23 @@ body {
     padding: 0;
     opacity: 0.5;
 }
-
+.fixed{
+    // background-color:#fff;
+    padding: 0px 60px 0 68px;
+    position:fixed;
+    top:0;
+    width:100%;
+    left:0;
+    box-sizing: border-box;
+    // border:1px solid red;
+    overflow: hidden;
+    opacity: 1;
+    z-index: 99;
+}
 .sc-city {
     padding: 10px 30px 10px 10px;
     margin: 0px 0 0 8px;
+    padding-top:100px;
     .city-list {
         margin-top: 39px;
     }
