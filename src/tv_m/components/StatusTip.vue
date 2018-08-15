@@ -15,7 +15,7 @@
                 <i class="arr"></i>
             </div>
             <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-3">
-                <i class="error"></i>设备已离线 &nbsp;
+                <i class="error"></i>电视离线或关机 &nbsp;
                 <span class="link">查看帮助</span>
                 <i class="arr"></i>
             </div>
@@ -154,7 +154,7 @@ import * as service from "../service";
 export default {
     data() {
         return {
-            ios: true
+            ios: /iPad|iPhone|iPod/.test(navigator.userAgent)
         };
     },
     computed: {
@@ -188,12 +188,6 @@ export default {
         }
     },
     mounted() {
-        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        if (iOS) {
-            this.ios = true;
-        } else {
-            this.ios = false;
-        }
     }
 };
 </script>

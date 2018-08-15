@@ -19,12 +19,12 @@
 
         <log-list :current-date="currentDate" :data="list" v-show="!firstLoad" />
         <div class="loadmore" v-if="!isLoading && more">
-            <a href="" @click.prevent="loadMore">加载更多</a>
+            <a href="" @click.prevent="loadMore2">加载更多</a>
         </div>
         <div class="loadmore" v-if="isLoading && more">
             <a href="">加载中</a>
         </div>
-        <div class="nomore" v-if="list.length && !more">已加载完全部</div>
+        <div class="nomore" v-if="!isLoading && list.length && !more">已加载完全部</div>
         <a href="javascript:void(0)" class="btn-cale" @click.prevent="showCalendar"></a>
     </div>
 </template>
@@ -44,15 +44,18 @@ Vue.component(DatetimePicker.name, DatetimePicker);
 Vue.component(Popup.name, Popup);
 Vue.component(Picker.name, Picker);
 
+var isDatePicked = false
+
 function fillz(num) {
     num = "" + num;
     return num.length == 1 ? "0" + num : num;
 }
 
-function getDateStr(date) {
-    return (
-        date.getFullYear() + fillz(1 + date.getMonth()) + fillz(date.getDate())
-    );
+function getDateParam(date) {
+    if(isDatePicked){
+        return date.getFullYear() + fillz(1 + date.getMonth()) + fillz(date.getDate());
+    }
+    return undefined
 }
 
 export default {
@@ -98,11 +101,12 @@ export default {
             this.$refs.picker2.open();
         },
         handleChange(value) {
+            isDatePicked = true
             this.getLogData(undefined, this.type);
         },
-        // loadMore() {
-        //     this.getLogData(true);
-        // },
+        loadMore2() {
+            this.getLogData(true, this.type);
+        },
         getLogData(more, type) {
             if (!more) {
                 this.begin = 0;
@@ -117,13 +121,11 @@ export default {
                 HdSmart.Device.control(
                     {
                         method: "da_get_dev_alert_list",
-                        // timestamp: Math.floor(+new Date() / 1000),
                         params: {
                             device_id: this.device_id,
                             family_id: this.family_id,
-                            date_start: getDateStr(this.date),
-                            date_end: getDateStr(this.date),
-                            // level: 1,
+                            date_start: getDateParam(this.date),
+                            date_end: getDateParam(this.date),
                             status: [1],
                             page: {
                                 size: this.size,
@@ -161,7 +163,7 @@ export default {
                         params: {
                             device_id: this.device_id,
                             family_id: this.family_id,
-                            date: getDateStr(this.date),
+                            date: getDateParam(this.date),
                             type: "switch",
                             page: {
                                 size: this.size,
@@ -172,14 +174,7 @@ export default {
                     data => {
                         this.isLoading = false;
                         this.firstLoad = false;
-                        // data.result.list.forEach(item => {
-                        //     if(item.report_msg){
-                        //         item.attribute = item.report_msg
-                        //     }
-                        // });
-                        // var list = data.result.list.filter((item) => {
-                        //     return item.attribute && item.attribute.switch == 'on' && item.attribute.is_user_operate == 1
-                        // })
+
                         var list = this.formatListData(data.result.list, type);
                         if (!more) {
                             this.list = list;
@@ -320,6 +315,7 @@ export default {
             }, 300);
         });
         window.addEventListener("scroll", this.loadMore);
+        isDatePicked = false;
     },
     destroyed() {
         window.removeEventListener("scroll", this.loadMore);

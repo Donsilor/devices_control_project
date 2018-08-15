@@ -2,7 +2,6 @@
 <div id="app" :class="{isIOS:isIOS}">
     <router-view v-show="!$store.state.detailVisible"></router-view>
     <detail></detail>
-    <offline-mask v-if="isNotIndex" />
 </div>
 </template>
 

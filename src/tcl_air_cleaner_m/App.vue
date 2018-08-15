@@ -370,9 +370,11 @@ export default {
                 return;
             }
             var val = getToggle(this.model.child_lock_switch_status);
-            this.controlDevice('child_lock_switch', val, { control: this.model.control_status }, () => {
-                this.model.child_lock_switch_status = val;
+            this.controlDevice('child_lock_switch', val, { control: this.model.control_status }, () => {}, () => {
+                this.model.child_lock_switch_status = getToggle(val);
             });
+            //http://jira.evergrande.me/browse/HAALPHA-47
+            this.model.child_lock_switch_status = val;
         }),
         showSpeedModal() {
             if (this.model.child_lock_switch_status == 'on') {
