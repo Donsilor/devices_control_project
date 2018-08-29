@@ -1,5 +1,5 @@
 <template>
-    <icon :className="className" :styleObj="{marginLeft: '10px'}" :onClick="toAppDeviceDetail" />
+    <icon :className="className" :onClick="toAppDeviceDetail" />
 </template>
 
 <style lang="less">
@@ -9,6 +9,7 @@
     height: 24px;
     background: url(./assets/icn_redact@2x.png) no-repeat;
     background-size: 100% 100%;
+    margin-left: 5px;
 }
 .redact-white {
     display: inline-block;
@@ -16,11 +17,12 @@
     height: 24px;
     background: url(./assets/icn_redact_white@2x.png) no-repeat;
     background-size: 100% 100%;
+    margin-left: 5px;
 }
 </style>
 
 <script>
-import Icon from './Icon.vue';
+import Icon from "./Icon.vue";
 export default {
     components: {
         Icon
@@ -28,7 +30,7 @@ export default {
     props: {
         className: {
             type: String,
-            default: 'redact'
+            default: "redact"
         }
     },
     data() {
