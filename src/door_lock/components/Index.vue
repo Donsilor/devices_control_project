@@ -1,9 +1,7 @@
 <template>
     <div class="page-index">
-
-        <div class="name">{{device_name}}
-            <icon />
-        </div>
+        <icon />
+        <div class="name">{{device_name}}</div>
 
         <div class="lock-status">
             <span class="status" :class="{red:lockedStatus,on:model.switch=='on'}">{{statusText}}</span>
@@ -27,9 +25,9 @@
 </template>
 
 <script>
-import PasswordInput from './PasswordInput.vue';
-import Icon from '../../../lib/components/ToAppDeviceDetailIcon.vue';
-import { WARN_CODE } from './const';
+import PasswordInput from "./PasswordInput.vue";
+import Icon from "../../../lib/components/SettingIcon.vue";
+import { WARN_CODE } from "./const";
 /**
  *  {0, "e0", "not fully locked"}, // 未锁好
     {1, "e3", "tamper alarm: "},   // 防拆
@@ -42,7 +40,7 @@ import { WARN_CODE } from './const';
  */
 //switch理解为disabled
 
-let ERROR_STORE_KEY = '';
+let ERROR_STORE_KEY = "";
 let isInit = false;
 
 function findIndex(array, fn) {
@@ -62,17 +60,17 @@ export default {
     data() {
         return {
             hasSnapShot: false,
-            device_name: '',
-            device_id: '',
-            family_id: '',
+            device_name: "",
+            device_id: "",
+            family_id: "",
             passwordInputVisible: false,
             alertModel: [],
             model: {
-                switch: 'off',
-                battery_percentage: '--'
+                switch: "off",
+                battery_percentage: "--"
             },
             errorStore: [],
-            device_category_id: ''
+            device_category_id: ""
         };
     },
     computed: {
@@ -80,7 +78,7 @@ export default {
             return this.model.battery_percentage <= 15;
         },
         btnDisabled() {
-            let status = this.model.switch == 'on' ? true : false;
+            let status = this.model.switch == "on" ? true : false;
             this.alertModel.forEach(function(v, i) {
                 status = v.switch || status;
             });
@@ -88,16 +86,16 @@ export default {
         },
         theUnclickAlert() {
             var hasE5 = findIndex(this.alertModel, item => {
-                return item.code == 'e5';
+                return item.code == "e5";
             });
             var result = this.alertModel.filter(item => {
                 if (item.clicked) {
                     return false;
                 }
-                if (item.code == 'e6') {
+                if (item.code == "e6") {
                     return false;
                 }
-                if (item.code == 'e2' && hasE5 >= 0) {
+                if (item.code == "e2" && hasE5 >= 0) {
                     return false;
                 }
                 return true;
@@ -106,24 +104,33 @@ export default {
         },
         lockedStatus() {
             var hasE6 = findIndex(this.alertModel, item => {
-                return item.code == 'e6';
+                return item.code == "e6";
             });
             return hasE6 >= 0;
         },
         statusText() {
             if (this.lockedStatus) {
-                return '已反锁';
+                return "已反锁";
             }
-            if (this.model.switch == 'on') {
-                return '已打开';
+            if (this.model.switch == "on") {
+                return "已打开";
             }
-            return '已关闭';
+            return "已关闭";
         }
     },
     watch: {
         btnDisabled(val) {
             if (val) {
                 this.passwordInputVisible = false;
+            }
+        },
+        //JOINT-1195：门锁在线，门锁页面一直显示门锁已打开状态。小概率出现
+        "model.switch"(val) {
+            clearTimeout(this.switchTimer);
+            if (val == "on") {
+                this.switchTimer = setTimeout(() => {
+                    this.model.switch = "off";
+                }, 8000);
             }
         }
     },
@@ -136,15 +143,15 @@ export default {
         },
         closeAlert(error) {
             let code = error.code;
-            if (code == 'e4') {
+            if (code == "e4") {
                 HdSmart.Device.control({
-                    method: 'dm_set',
-                    nodeid: 'doorlock.main.error',
+                    method: "dm_set",
+                    nodeid: "doorlock.main.error",
                     params: {
                         attribute: {
                             error: [
                                 {
-                                    code: 'e4',
+                                    code: "e4",
                                     status: error.status
                                 }
                             ]
@@ -215,31 +222,6 @@ export default {
                 }
             }
         },
-        onDaAlert(error) {
-            var index1 = findIndex(this.errorStore, item => {
-                return item == error.code && error.status == 0;
-            });
-            if (index1 >= 0) {
-                this.errorStore.splice(index1, 1);
-            }
-            //
-            var index = findIndex(this.alertModel, item => {
-                return item.code == error.code;
-            });
-            if (index >= 0) {
-                this.alertModel.splice(index, 1);
-            }
-            if (error.status != 0) {
-                this.alertModel.push({
-                    msg: WARN_CODE[error.code].msg,
-                    code: error.code,
-                    key: 1,
-                    switch: WARN_CODE[error.code].switch,
-                    clicked: false,
-                    status: error.status
-                });
-            }
-        },
         getSnapShot(cb) {
             HdSmart.Device.getSnapShot(
                 data => {
@@ -265,12 +247,7 @@ export default {
         onError() {}
     },
     created() {
-        // this.$watch('errorStore', () => {
-        //     localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
-        // })
         HdSmart.ready(() => {
-            //   ERROR_STORE_KEY = window.device_uuid
-            //   this.errorStore = JSON.parse(localStorage.getItem(ERROR_STORE_KEY)) || []
             if (window.device_name) {
                 this.device_name = window.device_name;
             }
@@ -280,32 +257,12 @@ export default {
             }, 150);
         });
 
-        // if(!isInit){
-        // isInit = true
         HdSmart.onDeviceStateChange(data => {
             this.onSuccess(data.result);
         });
         HdSmart.onDeviceAlert(data => {
             this.onAlert(data.result.attribute.error);
         });
-        /*
-        HdSmart.onDeviceListen(data => {
-            switch (data.method) {
-                case "dm_set":
-                break;
-                case "dr_report_dev_alert":
-                    this.onAlert(data.result.attribute.error)
-                break;
-                case "da_report_dev_alert":
-                    this.onDaAlert(data.result.attribute)
-                break;
-                default:
-                    this.onSuccess(data.result);
-                break;
-            }
-        });
-        */
-        // }
     }
 };
 </script>

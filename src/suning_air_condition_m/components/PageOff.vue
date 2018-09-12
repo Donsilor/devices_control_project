@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Icon from '../../../lib/components/ToAppDeviceDetailIcon.vue';
+import Icon from "../../../lib/components/SettingIconMobile.vue";
 export default {
     components: {
         Icon
@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         setOn(event) {
-            this.control('switch', 'on', event.target);
+            this.control("switch", "on", event.target);
         }
     }
 };

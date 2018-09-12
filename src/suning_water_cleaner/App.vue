@@ -6,10 +6,8 @@
             <div class="water_wave ww1"></div>
             <div class="water_wave ww2"></div>
             <div class="water_wave ww3"></div>
-
-            <div class="name">{{device_name}}
-                <icon className="redact-white" />
-            </div>
+            <icon class="redact-white" />
+            <div class="name">{{device_name}} </div>
             <div class="tip">
                 <p v-if="model.water_leakage=='on'">
                     <span @click="toggleErrorModal(true)">漏水</span>
@@ -61,15 +59,15 @@
 
 
 <script>
-import Modal from '../../lib/components/Modal.vue';
-import CirclePie from './components/CirclePie.vue';
-import FilterItems from './components/FilterItems.vue';
-import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
+import Modal from "../../lib/components/Modal.vue";
+import CirclePie from "./components/CirclePie.vue";
+import FilterItems from "./components/FilterItems.vue";
+import Icon from "../../lib/components/SettingIcon.vue";
 
 const TDS_VALUE = [0, 50, 100, 300, 500];
 const TDS_ANGLE = [-136, -74, 0, 74, 136];
-const ERROR_STORE_KEY = 'water_cleaner_error';
-const EXPIRED_STORE_KEY = 'water_cleaner_expired';
+const ERROR_STORE_KEY = "water_cleaner_error";
+const EXPIRED_STORE_KEY = "water_cleaner_expired";
 
 function getRotate(val, start, end) {
     var min = TDS_VALUE[start];
@@ -92,7 +90,7 @@ export default {
     },
     data() {
         return {
-            device_name: '',
+            device_name: "",
             statusModalVisible: false,
             model: {},
             currentIndex: -1,
@@ -110,7 +108,7 @@ export default {
     },
     methods: {
         getName(index) {
-            return ['PP棉', '前置活性炭', 'PP棉', 'RO', '后置活性炭'][index];
+            return ["PP棉", "前置活性炭", "PP棉", "RO", "后置活性炭"][index];
         },
         getSnapShot() {
             HdSmart.Device.getSnapShot(
@@ -141,15 +139,15 @@ export default {
                 };
             });
 
-            var errIndex = this.errorStore.indexOf('water_leakage');
+            var errIndex = this.errorStore.indexOf("water_leakage");
 
             switch (this.model.water_leakage) {
-                case 'on':
+                case "on":
                     if (errIndex < 0) {
                         this.toggleErrorModal(true);
                     }
                     break;
-                case 'off':
+                case "off":
                     if (errIndex >= 0) {
                         this.errorStore.splice(errIndex, 1);
                     }
@@ -170,8 +168,8 @@ export default {
         },
         confirmError() {
             this.toggleErrorModal(false);
-            if (this.errorStore.indexOf('water_leakage') < 0) {
-                this.errorStore.push('water_leakage');
+            if (this.errorStore.indexOf("water_leakage") < 0) {
+                this.errorStore.push("water_leakage");
             }
         }
     },

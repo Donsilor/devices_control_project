@@ -1,11 +1,10 @@
 <template>
     <div id="app">
         <div class="page-on" v-show="status =='error' || model.switch=='on'">
+            <icon class="redact-white" />
             <div class="ani"></div>
             <div class="inner">
-                <div class="device_name">{{device_name}}
-                    <icon class="redact-white" />
-                </div>
+                <div class="device_name">{{device_name}}</div>
                 <div class="mode-status">{{`当前模式 : ${modelText}`}}
                     <a href="" class="intro-helper" @click.prevent="toggleModePop">
                         <i></i>
@@ -74,9 +73,8 @@
         </div>
 
         <div class="page-off" v-show="model.switch=='off'">
-            <div class="device_name">{{device_name}}
-                <icon />
-            </div>
+            <icon />
+            <div class="device_name">{{device_name}}</div>
             <div class="status">已关闭</div>
             <div class="pic"></div>
             <div class="btns">
@@ -95,32 +93,32 @@
 </template>
 
 <script>
-import Slider from './components/Slider.vue';
+import Slider from "./components/Slider.vue";
 //TODO可能要从公共组件中引用
-import Modal from '../../lib/components/Modal.vue';
-import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
+import Modal from "../../lib/components/Modal.vue";
+import Icon from "../../lib/components/SettingIcon.vue";
 
 const [TEMP_MIN, TEMP_MAX] = [30, 75];
 const MODEL_MAP = {
-    half_tank: '半胆速热',
-    full_tank: '整胆加热',
-    max_volume: '蓄热增容',
-    smart: '智能沐浴'
+    half_tank: "半胆速热",
+    full_tank: "整胆加热",
+    max_volume: "蓄热增容",
+    smart: "智能沐浴"
 };
 
 function createBubble(container, option) {
     if (!container) return;
 
-    var el = document.createElement('div');
-    el.className = 'bubble';
-    el.style.left = option.left + 'px';
-    el.style.top = option.top + 'px';
-    el.style.width = el.style.height = '50px';
+    var el = document.createElement("div");
+    el.className = "bubble";
+    el.style.left = option.left + "px";
+    el.style.top = option.top + "px";
+    el.style.width = el.style.height = "50px";
 
     container.appendChild(el);
 
     el.addEventListener(
-        'transitionend',
+        "transitionend",
         function() {
             container.removeChild(container.firstChild);
         },
@@ -128,8 +126,8 @@ function createBubble(container, option) {
     );
 
     setTimeout(function() {
-        el.style.top = '-200px';
-        el.style.width = el.style.height = '100px';
+        el.style.top = "-200px";
+        el.style.width = el.style.height = "100px";
     }, 100);
 }
 
@@ -151,64 +149,64 @@ export default {
                     max: TEMP_MAX
                 }
             },
-            device_name: '',
-            status: '',
+            device_name: "",
+            status: "",
             modePopVisible: false
         };
     },
     computed: {
         statusText() {
             switch (this.model.heat_status) {
-                case 'heat':
-                    return '正在加热';
-                case 'keep_warm':
-                    return '保温';
-                case 'reserve':
-                    return '预约';
+                case "heat":
+                    return "正在加热";
+                case "keep_warm":
+                    return "保温";
+                case "reserve":
+                    return "预约";
                 default:
-                    return '';
+                    return "";
             }
         },
         modelText() {
             return MODEL_MAP[this.model.mode];
         },
         tempDisabled() {
-            return this.model.mode == 'max_volume';
+            return this.model.mode == "max_volume";
         },
         errorText() {
             switch (this.model.fault) {
-                case 'normal':
-                    return '正常';
-                case 'dry_heat':
-                    return '热水器干烧，请检查设备';
-                case 'sensor_error':
-                    return '热水器传感器故障，请检查设备';
-                case 'over_temperature':
-                    return '热水器超温，请检查设备';
+                case "normal":
+                    return "正常";
+                case "dry_heat":
+                    return "热水器干烧，请检查设备";
+                case "sensor_error":
+                    return "热水器传感器故障，请检查设备";
+                case "over_temperature":
+                    return "热水器超温，请检查设备";
                 default:
-                    return '热水器故障，请检查设备';
+                    return "热水器故障，请检查设备";
             }
         }
     },
     watch: {
-        'model.set_temperature'(val) {}
+        "model.set_temperature"(val) {}
     },
     methods: {
         controlDevice(attr, value) {
-            if (this.model.fault && this.model.fault != 'normal') {
+            if (this.model.fault && this.model.fault != "normal") {
                 HdSmart.UI.toast(this.errorText);
                 return;
             }
             //切换模式的时候加上温度字段
             let temperature = {};
-            if (attr === 'mode') {
+            if (attr === "mode") {
                 let oldVal = this.getOldTemperature(value);
                 temperature = oldVal ? { set_temperature: oldVal } : {};
             }
 
             HdSmart.Device.control(
                 {
-                    nodeid: `water_heater.main.${attr === 'mode' ? 'custom' : attr}`,
+                    nodeid: `water_heater.main.${attr === "mode" ? "custom" : attr}`,
                     params: {
                         attribute: {
                             [attr]: value,
@@ -243,14 +241,14 @@ export default {
 
             //缓存设置的温度到本地
             this.setOldTemperature(val);
-            this.controlDevice('set_temperature', val);
+            this.controlDevice("set_temperature", val);
         },
         setSwitch(val) {
-            this.controlDevice('switch', val);
+            this.controlDevice("switch", val);
         },
         setMode(val) {
             this.$refs.tempSlider.isUpdating = false;
-            this.controlDevice('mode', val);
+            this.controlDevice("mode", val);
         },
         getSnapShot() {
             HdSmart.Device.getSnapShot(
@@ -261,13 +259,13 @@ export default {
                     this.setOldTemperature(this.model.set_temperature);
                 },
                 () => {
-                    this.status = 'error';
+                    this.status = "error";
                     HdSmart.UI.hideLoading();
                 }
             );
         },
         onSuccess(data) {
-            this.status = 'success';
+            this.status = "success";
             this.model = data.attribute;
             if (!this.$refs.tempSlider.isUpdating) {
                 this.temp = this.model.set_temperature;
@@ -279,7 +277,9 @@ export default {
         },
         //获取当前device_uuid的缓存object
         getCurrentStorage() {
-            return (localStorage.getItem(window.device_uuid) && JSON.parse(localStorage.getItem(window.device_uuid))) || {};
+            return (
+                (localStorage.getItem(window.device_uuid) && JSON.parse(localStorage.getItem(window.device_uuid))) || {}
+            );
         },
         setOldTemperature(val) {
             if (this.model.mode && window.device_uuid) {
@@ -311,11 +311,11 @@ export default {
         });
     },
     mounted() {
-        var el = this.$el.querySelector('.ani');
+        var el = this.$el.querySelector(".ani");
         var top = document.documentElement.offsetHeight;
         var width = document.documentElement.offsetWidth;
         setInterval(() => {
-            if (this.model.switch == 'on') {
+            if (this.model.switch == "on") {
                 createBubble(el, {
                     left: Math.random() * width,
                     top: top

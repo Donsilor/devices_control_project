@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Icon from '../../../lib/components/ToAppDeviceDetailIcon.vue';
+import Icon from '../../../lib/components/SettingIconMobile.vue';
 export default {
     components: {
         Icon

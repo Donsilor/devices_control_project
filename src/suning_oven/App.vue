@@ -2,10 +2,9 @@
     <div id="app">
         <div class="mask" v-show="maskLyerShow" @click="maskLayerClick"></div>
         <span class="more-btn" @click="showMoreLayer"></span>
+        <icon />
         <div class="wrapper">
-            <h3 class="main-title">{{device_name}}
-                <icon />
-            </h3>
+            <h3 class="main-title">{{device_name}} </h3>
             <div class="pannel">
                 <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
                 <p class="color-gray p-status">
@@ -120,14 +119,14 @@ function findIndex(array, fn) {
     return -1;
 }
 
-import SwitchButton from '../../lib/components/SwitchButton.vue';
-import Picker from '../../lib/components/Picker/picker.vue';
-import AllConfig from './config';
-import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
+import SwitchButton from "../../lib/components/SwitchButton.vue";
+import Picker from "../../lib/components/Picker/picker.vue";
+import AllConfig from "./config";
+import Icon from "../../lib/components/SettingIcon.vue";
 // import IScroll from 'iscroll/build/iscroll-lite';
 
 export default {
-    name: 'app',
+    name: "app",
     components: {
         SwitchButton,
         Picker,
@@ -137,15 +136,15 @@ export default {
         return {
             //状态集合
             allAttribute: {
-                mode: '', //模式
+                mode: "", //模式
                 temperature: 0, //温度
                 bake_duration: 0, //时长
-                step: '', // 模式是烘烤中(bake)还是预约中(reserve)
-                switch: 'off',
-                status: 'stop', //开关机状态
+                step: "", // 模式是烘烤中(bake)还是预约中(reserve)
+                switch: "off",
+                status: "stop", //开关机状态
                 reserve_bake: 0, //预约时间
-                convection: 'on', // 热风对流
-                rotisserie: 'on', //烤叉
+                convection: "on", // 热风对流
+                rotisserie: "on", //烤叉
                 remaining: 0, //剩余总时间
                 wenduList: [],
                 timeList: []
@@ -161,69 +160,69 @@ export default {
             //模式列表
             modeList: [
                 {
-                    name: '面包',
-                    icon: 'ico-bread',
-                    mode: 'bread'
+                    name: "面包",
+                    icon: "ico-bread",
+                    mode: "bread"
                 },
                 {
-                    name: '饼干',
-                    icon: 'ico-biscuit',
-                    mode: 'biscuit'
+                    name: "饼干",
+                    icon: "ico-biscuit",
+                    mode: "biscuit"
                 },
                 {
-                    name: '蛋糕',
-                    icon: 'ico-cake',
-                    mode: 'cake'
+                    name: "蛋糕",
+                    icon: "ico-cake",
+                    mode: "cake"
                 },
                 {
-                    name: '披萨',
-                    icon: 'ico-pizza',
-                    mode: 'pizza'
+                    name: "披萨",
+                    icon: "ico-pizza",
+                    mode: "pizza"
                 },
                 {
-                    name: '烤肉',
-                    icon: 'ico-barbecue',
-                    mode: 'barbecues'
+                    name: "烤肉",
+                    icon: "ico-barbecue",
+                    mode: "barbecues"
                 },
                 {
-                    name: '鱼虾',
-                    icon: 'ico-fish',
-                    mode: 'fish_shrimp'
+                    name: "鱼虾",
+                    icon: "ico-fish",
+                    mode: "fish_shrimp"
                 },
                 {
-                    name: '地瓜',
-                    icon: 'ico-sweet-potato',
-                    mode: 'sweet_potato'
+                    name: "地瓜",
+                    icon: "ico-sweet-potato",
+                    mode: "sweet_potato"
                 },
                 {
-                    name: '全鸡',
-                    icon: 'ico-chicken',
-                    mode: 'chicken'
+                    name: "全鸡",
+                    icon: "ico-chicken",
+                    mode: "chicken"
                 }
             ],
             elseModeList: [
                 {
-                    name: '上火',
-                    icon: 'up-fire',
-                    mode: 'broil'
+                    name: "上火",
+                    icon: "up-fire",
+                    mode: "broil"
                 },
                 {
-                    name: '下火',
-                    icon: 'down-fire',
-                    mode: 'bake'
+                    name: "下火",
+                    icon: "down-fire",
+                    mode: "bake"
                 },
                 {
-                    name: '上下火',
-                    icon: 'both-fire',
-                    mode: 'roast'
+                    name: "上下火",
+                    icon: "both-fire",
+                    mode: "roast"
                 }
             ],
-            device_name: ''
+            device_name: ""
         };
     },
     watch: {
-        'allAttribute.status'(val) {
-            if (val == 'start') {
+        "allAttribute.status"(val) {
+            if (val == "start") {
                 this.wenduSelectFlag = false;
                 this.timeSelectFlag = false;
                 if (this.modelLayerShow) {
@@ -243,7 +242,7 @@ export default {
                     flex: 1,
                     defaultIndex: current,
                     values: this.allAttribute.wenduList,
-                    className: 'slot1'
+                    className: "slot1"
                 }
             ];
         },
@@ -257,18 +256,18 @@ export default {
                     flex: 1,
                     defaultIndex: current,
                     values: this.allAttribute.timeList,
-                    className: 'slot2'
+                    className: "slot2"
                 }
             ];
         },
         remainingText() {
             var total = this.allAttribute.remaining;
-            if (this.allAttribute.status == 'start' && this.allAttribute.step == 'reserve') {
+            if (this.allAttribute.status == "start" && this.allAttribute.step == "reserve") {
                 total = total - this.allAttribute.bake_duration;
             }
             var h = Math.floor(total / 60);
             var m = total % 60;
-            var s = '';
+            var s = "";
             if (h > 0) {
                 s += `<strong>${h}</strong>小时 &nbsp;&nbsp;`;
             }
@@ -316,7 +315,7 @@ export default {
         },
         seleteMode(item) {
             // 如果正在工作 不能选模式
-            if (this.allAttribute.status === 'start') {
+            if (this.allAttribute.status === "start") {
                 return;
             }
             this.allAttribute.mode = item.mode;
@@ -327,10 +326,10 @@ export default {
             this.allAttribute.remaining = this.allAttribute.bake_duration;
         },
         toggleShowSlider(val) {
-            if (this.allAttribute.status === 'start') {
+            if (this.allAttribute.status === "start") {
                 return;
             }
-            if (val === 'wendu') {
+            if (val === "wendu") {
                 this.wenduSelectFlag = !this.wenduSelectFlag;
                 if (this.wenduSelectFlag && this.timeSelectFlag) {
                     this.timeSelectFlag = false;
@@ -354,7 +353,7 @@ export default {
             }
         },
         getModeName(val) {
-            let text = '';
+            let text = "";
             var modeList = this.modeList.concat(this.elseModeList);
             var currentMode = modeList.filter(item => {
                 return item.mode == val;
@@ -362,7 +361,7 @@ export default {
             if (currentMode.length) {
                 return currentMode[0].name;
             }
-            return '';
+            return "";
         },
         getSnapShot(cb) {
             HdSmart.Device.getSnapShot(
@@ -379,7 +378,7 @@ export default {
             HdSmart.UI.hideLoading();
             let attributes = data.attribute;
             let curAttributes = this.allAttribute;
-            let config = AllConfig[attributes.mode || 'barbecues'];
+            let config = AllConfig[attributes.mode || "barbecues"];
             //剩余时间设置为烘干时间，避免没有该字段显示异常
             config.remaining = config.bake_duration;
 
@@ -398,7 +397,7 @@ export default {
         controlDevice(paramObj, success, error) {
             HdSmart.Device.control(
                 {
-                    method: 'dm_set',
+                    method: "dm_set",
                     nodeid: `oven.main.custom`,
                     params: {
                         attribute: paramObj
@@ -417,7 +416,7 @@ export default {
             const obj = this;
             let curParam = this.allAttribute;
             let paramObj = {
-                control: 'start',
+                control: "start",
                 mode: curParam.mode,
                 bake_duration: curParam.bake_duration * 60,
                 temperature: curParam.temperature
@@ -431,20 +430,20 @@ export default {
         // 停止
         stopOven() {
             const obj = this;
-            this.controlDevice({ control: 'stop' });
+            this.controlDevice({ control: "stop" });
         },
         // 设置热风对流
         changeConvection(obj) {
             let self = this;
-            this.controlDevice({ convection: obj.value ? 'on' : 'off' }, () => {
-                self.allAttribute.convection = self.value ? 'on' : 'off';
+            this.controlDevice({ convection: obj.value ? "on" : "off" }, () => {
+                self.allAttribute.convection = self.value ? "on" : "off";
             });
         },
         // 设置转叉
         changeRotisserie(obj) {
             let self = this;
-            this.controlDevice({ rotisserie: obj.value ? 'on' : 'off' }, () => {
-                self.allAttribute.rotisserie = self.value ? 'on' : 'off';
+            this.controlDevice({ rotisserie: obj.value ? "on" : "off" }, () => {
+                self.allAttribute.rotisserie = self.value ? "on" : "off";
             });
         }
     }
@@ -490,7 +489,7 @@ ul {
     height: 96px;
     top: 132px;
     display: block;
-    background-image: url('../../lib/base/oven/assets/btn_aircon_more.png');
+    background-image: url("../../lib/base/oven/assets/btn_aircon_more.png");
     background-size: 100% 100%;
 }
 .wrapper {
@@ -566,13 +565,13 @@ ul {
                 background-size: 100% 100%;
             }
             .c-stop {
-                background-image: url('../../lib/base/oven/assets/icon__stop.png');
+                background-image: url("../../lib/base/oven/assets/icon__stop.png");
             }
             .c-model {
-                background-image: url('../../lib/base/oven/assets/icon_selectionpattern.png');
+                background-image: url("../../lib/base/oven/assets/icon_selectionpattern.png");
             }
             .c-firing {
-                background-image: url('../../lib/base/oven/assets/icon__firing.png');
+                background-image: url("../../lib/base/oven/assets/icon__firing.png");
             }
         }
     }
@@ -613,7 +612,7 @@ ul {
             height: 30px;
             width: 30px;
             background-size: 100% 100%;
-            background-image: url('../../lib/base/oven/assets/btn_close.png');
+            background-image: url("../../lib/base/oven/assets/btn_close.png");
         }
     }
     .layer-body {
@@ -657,28 +656,28 @@ ul {
                 opacity: 0.3;
             }
             a.ico-bread {
-                background-image: url('../../lib/base/oven/assets/btn_bread_g.png');
+                background-image: url("../../lib/base/oven/assets/btn_bread_g.png");
             }
             a.ico-biscuit {
-                background-image: url('../../lib/base/oven/assets/btn_biscuits_g.png');
+                background-image: url("../../lib/base/oven/assets/btn_biscuits_g.png");
             }
             a.ico-cake {
-                background-image: url('../../lib/base/oven/assets/btn_cake_g.png');
+                background-image: url("../../lib/base/oven/assets/btn_cake_g.png");
             }
             a.ico-pizza {
-                background-image: url('../../lib/base/oven/assets/btn_pizza_g.png');
+                background-image: url("../../lib/base/oven/assets/btn_pizza_g.png");
             }
             a.ico-barbecue {
-                background-image: url('../../lib/base/oven/assets/btn_barbecue_g.png');
+                background-image: url("../../lib/base/oven/assets/btn_barbecue_g.png");
             }
             a.ico-fish {
-                background-image: url('../../lib/base/oven/assets/btn_fishandshrimp_g.png');
+                background-image: url("../../lib/base/oven/assets/btn_fishandshrimp_g.png");
             }
             a.ico-sweet-potato {
-                background-image: url('../../lib/base/oven/assets/btn_pachyrhizus_g.png');
+                background-image: url("../../lib/base/oven/assets/btn_pachyrhizus_g.png");
             }
             a.ico-chicken {
-                background-image: url('../../lib/base/oven/assets/btn_chicken_g.png');
+                background-image: url("../../lib/base/oven/assets/btn_chicken_g.png");
             }
         }
     }
@@ -705,70 +704,70 @@ ul {
                 background-size: 100% 100%;
             }
             .ico-bread {
-                background-image: url('../../lib/base/oven/assets/btn_bread.png');
+                background-image: url("../../lib/base/oven/assets/btn_bread.png");
                 &.active {
-                    background-image: url('../../lib/base/oven/assets/btn_bread_selected.png');
+                    background-image: url("../../lib/base/oven/assets/btn_bread_selected.png");
                 }
             }
             .ico-biscuit {
-                background-image: url('../../lib/base/oven/assets/btn_biscuits.png');
+                background-image: url("../../lib/base/oven/assets/btn_biscuits.png");
                 &.active {
-                    background-image: url('../../lib/base/oven/assets/btn_biscuits_selected.png');
+                    background-image: url("../../lib/base/oven/assets/btn_biscuits_selected.png");
                 }
             }
             .ico-cake {
-                background-image: url('../../lib/base/oven/assets/btn_cake.png');
+                background-image: url("../../lib/base/oven/assets/btn_cake.png");
                 &.active {
-                    background-image: url('../../lib/base/oven/assets/btn_cake_selected.png');
+                    background-image: url("../../lib/base/oven/assets/btn_cake_selected.png");
                 }
             }
             .ico-pizza {
-                background-image: url('../../lib/base/oven/assets/btn_pizza.png');
+                background-image: url("../../lib/base/oven/assets/btn_pizza.png");
                 &.active {
-                    background-image: url('../../lib/base/oven/assets/btn_pizza_selected.png');
+                    background-image: url("../../lib/base/oven/assets/btn_pizza_selected.png");
                 }
             }
             .ico-barbecue {
-                background-image: url('../../lib/base/oven/assets/btn_barbecue.png');
+                background-image: url("../../lib/base/oven/assets/btn_barbecue.png");
                 &.active {
-                    background-image: url('../../lib/base/oven/assets/btn_barbecue_selected.png');
+                    background-image: url("../../lib/base/oven/assets/btn_barbecue_selected.png");
                 }
             }
             .ico-fish {
-                background-image: url('../../lib/base/oven/assets/btn_fishandshrimp.png');
+                background-image: url("../../lib/base/oven/assets/btn_fishandshrimp.png");
                 &.active {
-                    background-image: url('../../lib/base/oven/assets/btn_fishandshrimp_selected.png');
+                    background-image: url("../../lib/base/oven/assets/btn_fishandshrimp_selected.png");
                 }
             }
             .ico-sweet-potato {
-                background-image: url('../../lib/base/oven/assets/btn_pachyrhizus.png');
+                background-image: url("../../lib/base/oven/assets/btn_pachyrhizus.png");
                 &.active {
-                    background-image: url('../../lib/base/oven/assets/btn_pachyrhizus_selected.png');
+                    background-image: url("../../lib/base/oven/assets/btn_pachyrhizus_selected.png");
                 }
             }
             .ico-chicken {
-                background-image: url('../../lib/base/oven/assets/btn_chicken.png');
+                background-image: url("../../lib/base/oven/assets/btn_chicken.png");
                 &.active {
-                    background-image: url('../../lib/base/oven/assets/btn_chicken_selected.png');
+                    background-image: url("../../lib/base/oven/assets/btn_chicken_selected.png");
                 }
             }
 
             .up-fire {
-                background-image: url('../../lib/base/oven/assets/btn_up_fire.png');
+                background-image: url("../../lib/base/oven/assets/btn_up_fire.png");
                 &.active {
-                    background-image: url('../../lib/base/oven/assets/btn_up_fire_selected.png');
+                    background-image: url("../../lib/base/oven/assets/btn_up_fire_selected.png");
                 }
             }
             .down-fire {
-                background-image: url('../../lib/base/oven/assets/btn_down_fire.png');
+                background-image: url("../../lib/base/oven/assets/btn_down_fire.png");
                 &.active {
-                    background-image: url('../../lib/base/oven/assets/btn_down_fire_selected.png');
+                    background-image: url("../../lib/base/oven/assets/btn_down_fire_selected.png");
                 }
             }
             .both-fire {
-                background-image: url('../../lib/base/oven/assets/btn_conflagration.png');
+                background-image: url("../../lib/base/oven/assets/btn_conflagration.png");
                 &.active {
-                    background-image: url('../../lib/base/oven/assets/btn_conflagration_selected.png');
+                    background-image: url("../../lib/base/oven/assets/btn_conflagration_selected.png");
                 }
             }
         }
@@ -807,21 +806,21 @@ ul {
         background-size: 100% 100%;
     }
     .up-fire {
-        background-image: url('../../lib/base/oven/assets/btn_up_fire.png');
+        background-image: url("../../lib/base/oven/assets/btn_up_fire.png");
         &.active {
-            background-image: url('../../lib/base/oven/assets/btn_up_fire_selected.png');
+            background-image: url("../../lib/base/oven/assets/btn_up_fire_selected.png");
         }
     }
     .down-fire {
-        background-image: url('../../lib/base/oven/assets/btn_down_fire.png');
+        background-image: url("../../lib/base/oven/assets/btn_down_fire.png");
         &.active {
-            background-image: url('../../lib/base/oven/assets/btn_down_fire_selected.png');
+            background-image: url("../../lib/base/oven/assets/btn_down_fire_selected.png");
         }
     }
     .both-fire {
-        background-image: url('../../lib/base/oven/assets/btn_conflagration.png');
+        background-image: url("../../lib/base/oven/assets/btn_conflagration.png");
         &.active {
-            background-image: url('../../lib/base/oven/assets/btn_conflagration_selected.png');
+            background-image: url("../../lib/base/oven/assets/btn_conflagration_selected.png");
         }
     }
 }
@@ -847,10 +846,10 @@ ul {
             margin-left: 20px;
         }
         .icon-arrow-down {
-            background-image: url('../../lib/base/oven/assets/arrow_down.png');
+            background-image: url("../../lib/base/oven/assets/arrow_down.png");
         }
         .icon-arrow-up {
-            background-image: url('../../lib/base/oven/assets/arrow_up.png');
+            background-image: url("../../lib/base/oven/assets/arrow_up.png");
         }
     }
     .vue-js-switch {
@@ -898,13 +897,13 @@ ul {
         }
     }
     a.up-fire {
-        background-image: url('../../lib/base/oven/assets/btn_up_fire_g.png');
+        background-image: url("../../lib/base/oven/assets/btn_up_fire_g.png");
     }
     a.down-fire {
-        background-image: url('../../lib/base/oven/assets/btn_down_fire_g.png');
+        background-image: url("../../lib/base/oven/assets/btn_down_fire_g.png");
     }
     a.both-fire {
-        background-image: url('../../lib/base/oven/assets/btn_conflagration_g.png');
+        background-image: url("../../lib/base/oven/assets/btn_conflagration_g.png");
     }
     .up-down-fire {
         color: #ccc;

@@ -234,9 +234,9 @@ body,
     opacity: 0.5;
 }
 
-.page_off .disabled .imgWrapper {
-    filter: invert(18%);
-}
+// .page_off .disabled .imgWrapper {
+//     filter: invert(18%);
+// }
 
 .cool {
     .imgWrapper {
@@ -244,6 +244,9 @@ body,
     }
     &.active .imgWrapper {
         background-image: url(./assets/cool_active.png);
+    }
+    &.disabled .imgWrapper {
+        background-image: url(./assets/cool_disabled.png);
     }
 }
 .heat {
@@ -253,6 +256,9 @@ body,
     &.active .imgWrapper {
         background-image: url(./assets/heat_active.png);
     }
+    &.disabled .imgWrapper {
+        background-image: url(./assets/heat_disabled.png);
+    }
 }
 .dehumidify {
     .imgWrapper {
@@ -260,6 +266,9 @@ body,
     }
     &.active .imgWrapper {
         background-image: url(./assets/dehumidify_active.png);
+    }
+    &.disabled .imgWrapper {
+        background-image: url(./assets/dehumidify_disabled.png);
     }
 }
 .on {
@@ -289,6 +298,9 @@ body,
     &.active .imgWrapper {
         background-image: url(./assets/low_active.png);
     }
+    &.disabled .imgWrapper {
+        background-image: url(./assets/low_disabled.png);
+    }
 }
 .normal {
     .imgWrapper {
@@ -297,6 +309,9 @@ body,
     &.active .imgWrapper {
         background-image: url(./assets/medium_active.png);
     }
+    &.disabled .imgWrapper {
+        background-image: url(./assets/medium_disabled.png);
+    }
 }
 .high {
     .imgWrapper {
@@ -304,6 +319,9 @@ body,
     }
     &.active .imgWrapper {
         background-image: url(./assets/high_active.png);
+    }
+    &.disabled .imgWrapper {
+        background-image: url(./assets/high_disabled.png);
     }
 }
 .minus {
@@ -395,7 +413,7 @@ body,
 }
 
 /*子菜单*/
-.modal-body{
+.modal-body {
     padding-top: 0px;
 }
 .subMenu {
@@ -405,11 +423,11 @@ body,
             height: 144px;
             margin: 0 18px 12px;
         }
-        .btnName{
-            color:#76787a;
+        .btnName {
+            color: #76787a;
         }
-        &.active .btnName{
-            color:#46bcff;
+        &.active .btnName {
+            color: #46bcff;
         }
     }
     .devider {
@@ -419,10 +437,10 @@ body,
 
 .devider {
     line-height: 24px;
-    font-size:24px;
-    color:#c8cacc;
+    font-size: 24px;
+    color: #c8cacc;
 }
-.devider-line{
+.devider-line {
     box-shadow: inset 0 -1px 0 0 #dbdbdb;
     width: 144px;
     height: 12px;

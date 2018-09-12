@@ -1,8 +1,7 @@
 <template>
     <div id="app" :class="appClassObj">
-        <p class="title">{{ deviceName }}
-            <icon :class="[params.switch==='on'?'redact-white':'']" />
-        </p>
+        <icon :class="[params.switch==='off'?'':'redact-white']" />
+        <p class="title">{{ deviceName }}</p>
         <p class="status" v-show="params.switch === 'on'">
             {{modeText}} {{speedText}} {{params.env_temperature ? '环境温度' + params.env_temperature/10 + '℃' : ''}}
         </p>
@@ -95,32 +94,32 @@
 </template>
 
 <script>
-import Modal from '../../lib/components/Modal.vue';
-import AcButton from './components/AcButton.vue';
-import Devider from './components/Devider.vue';
-import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
+import Modal from "../../lib/components/Modal.vue";
+import AcButton from "./components/AcButton.vue";
+import Devider from "./components/Devider.vue";
+import Icon from "../../lib/components/SettingIcon.vue";
 
-import watermark from '../../lib/watermark';
+import watermark from "../../lib/watermark";
 
 const [MIN_TEMP, MAX_TEMP] = [16, 30];
 const [POWER, MODE, SPEED, TEMPERATURE, WIND_UP_DOWN, WIND_LEFT_RIGHT, BOOT_SWITCH, OFF_SWITCH] = [
-    'switch',
-    'mode',
-    'speed',
-    'temperature',
-    'wind_up_down',
-    'wind_left_right',
-    'bootSwitch',
-    'offSwitch'
+    "switch",
+    "mode",
+    "speed",
+    "temperature",
+    "wind_up_down",
+    "wind_left_right",
+    "bootSwitch",
+    "offSwitch"
 ];
-const [ON, OFF] = ['on', 'off'];
-const NODE_ID = 'airconditioner.main.';
+const [ON, OFF] = ["on", "off"];
+const NODE_ID = "airconditioner.main.";
 //连续设置时间判断间隔
 const SPAN = 600;
 //loading效果延迟
 const LOADING_DELAY = 800;
 //loading class
-const LOADING_CLASS = 'loading';
+const LOADING_CLASS = "loading";
 //提示持续时间--3s
 const TIP_DURATION = 3000;
 
@@ -146,24 +145,24 @@ export default {
     data() {
         this.buttonList = {
             //模式
-            cool: Button('制冷', MODE, 'cold', '制冷模式切换成功'),
-            heat: Button('制热', MODE, 'heat', '制热模式切换成功'),
-            dehumidify: Button('除湿', MODE, 'dehumidify', '除湿模式切换成功'),
-            mode_auto: Button('智能', MODE, 'auto', '智能模式切换成功'),
-            wind: Button('送风', MODE, 'wind', '送风模式切换成功'),
+            cool: Button("制冷", MODE, "cold", "制冷模式切换成功"),
+            heat: Button("制热", MODE, "heat", "制热模式切换成功"),
+            dehumidify: Button("除湿", MODE, "dehumidify", "除湿模式切换成功"),
+            mode_auto: Button("智能", MODE, "auto", "智能模式切换成功"),
+            wind: Button("送风", MODE, "wind", "送风模式切换成功"),
 
             //风速
-            low: Button('低风', SPEED, 'low', '低风切换成功'),
-            normal: Button('中风', SPEED, 'normal', '中风切换成功'),
-            high: Button('高风', SPEED, 'high', '高风切换成功'),
+            low: Button("低风", SPEED, "low", "低风切换成功"),
+            normal: Button("中风", SPEED, "normal", "中风切换成功"),
+            high: Button("高风", SPEED, "high", "高风切换成功"),
 
             //电源开关
-            on: Button('', POWER, '', ''),
-            off: Button('', POWER, '', ''),
+            on: Button("", POWER, "", ""),
+            off: Button("", POWER, "", ""),
 
             //扫风
-            lrBtn: Button('左右', WIND_LEFT_RIGHT, ''),
-            udBtn: Button('上下', WIND_UP_DOWN, ''),
+            lrBtn: Button("左右", WIND_LEFT_RIGHT, ""),
+            udBtn: Button("上下", WIND_UP_DOWN, ""),
 
             //温度
             minusBtn: {
@@ -184,39 +183,39 @@ export default {
 
         return {
             //设备名称
-            deviceName: '',
+            deviceName: "",
             //空调类型，0：挂机，1：柜机
             // deviceCategory: -1,
             params: {
                 //开关
-                switch: '',
+                switch: "",
                 //温度
                 temperature: null,
                 //模式
-                mode: '',
+                mode: "",
                 //风速
-                speed: '',
+                speed: "",
                 //上下扫风
-                wind_up_down: '',
+                wind_up_down: "",
                 //左右扫风
-                wind_left_right: '',
+                wind_left_right: "",
                 //                        sleep: false,//睡眠模式
                 bootSwitch: false,
                 offSwitch: false,
                 //开机时间
-                bootTime: '',
+                bootTime: "",
                 //关机时间
-                offTime: ''
+                offTime: ""
             },
             //提示，3秒后隐藏
-            tip: '',
+            tip: "",
             //提示计时器
-            tipTimer: '',
+            tipTimer: "",
             //更多菜单是否可见
             showMore: false,
             tempFlag: false,
             tempTimer: null,
-            fakeTemp: '--',
+            fakeTemp: "--",
             //页面初始化失败
             initErr: false,
             loading: false
@@ -226,26 +225,26 @@ export default {
         appClassObj: function() {
             return {
                 main: true,
-                page_on: this.params.switch == 'on',
-                page_off: this.params.switch == 'off'
+                page_on: this.params.switch == "on",
+                page_off: this.params.switch == "off"
             };
         },
         modeText() {
             return {
-                cold: '制冷模式',
-                heat: '制热模式',
-                dehumidify: '除湿模式',
-                auto: '智能模式',
-                wind: '送风模式'
+                cold: "制冷模式",
+                heat: "制热模式",
+                dehumidify: "除湿模式",
+                auto: "智能模式",
+                wind: "送风模式"
             }[this.params.mode];
         },
         speedText() {
             return {
-                low: '低风',
-                overlow: '低风',
-                normal: '中风',
-                overnormal: '中风',
-                high: '高风'
+                low: "低风",
+                overlow: "低风",
+                normal: "中风",
+                overnormal: "中风",
+                high: "高风"
                 // 'auto': '自动风'
             }[this.params.speed];
         }
@@ -253,7 +252,7 @@ export default {
     watch: {
         tempFlag(val) {
             if (!val) {
-                this.setParam(TEMPERATURE, this.fakeTemp, '温度设置成功', this.curButton);
+                this.setParam(TEMPERATURE, this.fakeTemp, "温度设置成功", this.curButton);
             }
         }
     },
@@ -265,7 +264,7 @@ export default {
             }
 
             if (window.user_name && window.phone) {
-                watermark({ el: '#app' });
+                watermark({ el: "#app" });
             }
 
             this.init();
@@ -296,7 +295,7 @@ export default {
         onSuccess(data) {
             if (data && data.attribute) {
                 //设备故障
-                if (data.attribute.operation == 'abnormal') {
+                if (data.attribute.operation == "abnormal") {
                     this.onError();
                 } else {
                     this.initErr = false;
@@ -306,8 +305,8 @@ export default {
         },
         onError() {
             this.initErr = true;
-            this.params.switch = 'on';
-            this.fakeTemp = '--';
+            this.params.switch = "on";
+            this.fakeTemp = "--";
         },
         //设置全量状态
         setState(attr) {
@@ -321,10 +320,10 @@ export default {
                 //     continue;
                 // }
                 switch (k) {
-                    case 'switchStatus':
+                    case "switchStatus":
                         this.params.switch = attr.switchStatus;
                         break;
-                    case 'temperature':
+                    case "temperature":
                         this.params.temperature = attr.temperature / temperatureRadio;
                         break;
                     default:
@@ -338,23 +337,23 @@ export default {
             }
         },
         toggle(type, value, tip, el) {
-            let str = '';
+            let str = "";
             let newValue = this.negation(this.params[type]);
 
             if (newValue === OFF || newValue === false) {
-                str = '已关闭';
+                str = "已关闭";
             } else if (newValue === ON || newValue === true) {
-                str = '已启动';
+                str = "已启动";
             } else {
-                str = '';
+                str = "";
             }
 
             switch (type) {
                 case WIND_LEFT_RIGHT:
-                    this.setParam(type, newValue, '左右扫风' + str, el);
+                    this.setParam(type, newValue, "左右扫风" + str, el);
                     break;
                 case WIND_UP_DOWN:
-                    this.setParam(type, newValue, '上下扫风' + str, el);
+                    this.setParam(type, newValue, "上下扫风" + str, el);
                     break;
                 default:
                     this.setParam(type, newValue, tip, el);
@@ -376,11 +375,11 @@ export default {
 
             //判断是否为重置命令
             if (that.isResetCommand(type, value)) {
-                this.setTip('低风、制冷模式下不支持此温度，请调整后重试');
+                this.setTip("低风、制冷模式下不支持此温度，请调整后重试");
                 return;
             }
 
-            if (el && el.classList.contains('disabled')) {
+            if (el && el.classList.contains("disabled")) {
                 return;
             }
 
@@ -399,7 +398,7 @@ export default {
             //发送指令
             HdSmart.Device.control(
                 {
-                    method: 'dm_set',
+                    method: "dm_set",
                     nodeid: NODE_ID + type,
                     params: {
                         attribute: attr
@@ -407,7 +406,7 @@ export default {
                 },
                 () => {
                     that.removeLoading();
-                    if (type != 'temperature') {
+                    if (type != "temperature") {
                         that.params[type] = value;
                     }
                     that.setTip(tip);
@@ -418,7 +417,7 @@ export default {
                     if (type === TEMPERATURE) {
                         that.fakeTemp = that.params.temperature;
                     }
-                    that.setTip('设置失败');
+                    that.setTip("设置失败");
                 }
             );
         },
@@ -453,15 +452,15 @@ export default {
             value = this.fakeTemp + value;
 
             //送风模式不能设置温度
-            if (this.params.mode === 'wind') {
-                this.setTip('送风模式下不能设置温度');
+            if (this.params.mode === "wind") {
+                this.setTip("送风模式下不能设置温度");
                 return;
             }
 
             //限制温度范围16-30℃。TODO：智能模式19-25，24-30
             if (value < MIN_TEMP) {
                 if (this.params.temperature == MIN_TEMP) {
-                    this.setTip('温度已调至最低');
+                    this.setTip("温度已调至最低");
                     return;
                 } else {
                     value = MIN_TEMP;
@@ -470,7 +469,7 @@ export default {
 
             if (value > MAX_TEMP) {
                 if (this.params.temperature == MAX_TEMP) {
-                    this.setTip('温度已调至最高');
+                    this.setTip("温度已调至最高");
                     return;
                 } else {
                     value = MAX_TEMP;
@@ -487,10 +486,10 @@ export default {
             }, SPAN);
         },
         setTip(tip) {
-            this.tip = tip || '';
+            this.tip = tip || "";
             clearTimeout(this.tipTimer);
             this.tipTimer = setTimeout(() => {
-                this.tip = '';
+                this.tip = "";
             }, TIP_DURATION);
         },
         screenClick() {
@@ -522,7 +521,7 @@ export default {
                 obj[TEMPERATURE] = this.fakeTemp;
             }
 
-            if (obj[TEMPERATURE] === MAX_TEMP && obj[SPEED] === 'low' && obj[MODE] === 'cold') {
+            if (obj[TEMPERATURE] === MAX_TEMP && obj[SPEED] === "low" && obj[MODE] === "cold") {
                 if (type == TEMPERATURE) {
                     this.fakeTemp = this.params[TEMPERATURE];
                 }

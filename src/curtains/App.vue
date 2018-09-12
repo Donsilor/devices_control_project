@@ -1,8 +1,7 @@
 <template>
     <div id="app">
-        <div class="device_name">{{device_name}}
-            <icon className="redact-white" />
-        </div>
+        <icon class="redact-white" />
+        <div class="device_name">{{device_name}}</div>
         <div class="tip" v-if="show && tip">{{tip}}</div>
         <navigator class="navigator" v-once></navigator>
         <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"></curtain>
@@ -11,17 +10,17 @@
 </template>
 
 <script>
-import watermark from '../../lib/watermark';
-import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
+import watermark from "../../lib/watermark";
+import Icon from "../../lib/components/SettingIcon.vue";
 
 // const [METHOD, CMD_SWITCH, CMD_RANGE] = ['dm_set_zigbee_curtain', 'setOnoff', 'setLevel'];
-const [METHOD, CMD_SWITCH, CMD_RANGE] = ['dm_set', 'setOnoff', 'setLevel'];
+const [METHOD, CMD_SWITCH, CMD_RANGE] = ["dm_set", "setOnoff", "setLevel"];
 
 export default {
     components: {
         Icon
     },
-    name: 'app',
+    name: "app",
     data() {
         return {
             //用于确定数据是否加载完成，加载完成后渲染动态的UI
@@ -31,7 +30,7 @@ export default {
             //目标幅度，用于动画
             target_percentage: 0,
             //点击中部到指定幅度按钮显示的信息
-            tip: '',
+            tip: "",
             //帧数动画id，用于取消
             raf_id: 0,
             //每帧运动的百分比
@@ -44,7 +43,7 @@ export default {
             show: false,
             //临时处理窗帘变动没有上传的问题
             cbFunc: null,
-            device_name: ''
+            device_name: ""
         };
     },
     mounted() {
@@ -53,7 +52,7 @@ export default {
                 this.device_name = window.device_name;
             }
             if (window.user_name && window.phone) {
-                watermark({ el: '#app' });
+                watermark({ el: "#app" });
                 // this.raf_time = 150
             }
             //获取快照
@@ -108,7 +107,7 @@ export default {
                     //下一帧数的幅度
                     let nextTargetPercentage = this.target_percentage;
                     //当前的方向
-                    let direction = '';
+                    let direction = "";
                     //当前幅度小于预计移动的幅度，说明正在关闭
                     var end = Date.now();
                     var p = (end - start) / this.raf_time;
@@ -116,14 +115,14 @@ export default {
                     start = end;
                     if (nextTargetPercentage > percent) {
                         nextTargetPercentage -= this.raf_percent * p;
-                        direction = 'close';
+                        direction = "close";
                     } else if (nextTargetPercentage < percent) {
                         nextTargetPercentage += this.raf_percent * p;
-                        direction = 'open';
+                        direction = "open";
                     }
-                    if (direction === 'close' && nextTargetPercentage < percent) {
+                    if (direction === "close" && nextTargetPercentage < percent) {
                         nextTargetPercentage = percent;
-                    } else if (direction === 'open' && nextTargetPercentage > percent) {
+                    } else if (direction === "open" && nextTargetPercentage > percent) {
                         nextTargetPercentage = percent;
                     }
 
@@ -154,10 +153,10 @@ export default {
             HdSmart.Device.control(
                 {
                     method: METHOD,
-                    nodeid: 'curtain.main.switch',
+                    nodeid: "curtain.main.switch",
                     params: {
                         attribute: {
-                            switch: 'on'
+                            switch: "on"
                         }
                     }
                 },
@@ -178,10 +177,10 @@ export default {
             HdSmart.Device.control(
                 {
                     method: METHOD,
-                    nodeid: 'curtain.main.switch',
+                    nodeid: "curtain.main.switch",
                     params: {
                         attribute: {
-                            switch: 'off'
+                            switch: "off"
                         }
                     }
                 },
@@ -200,10 +199,10 @@ export default {
             HdSmart.Device.control(
                 {
                     method: METHOD,
-                    nodeid: 'curtain.main.switch',
+                    nodeid: "curtain.main.switch",
                     params: {
                         attribute: {
-                            switch: 'pause'
+                            switch: "pause"
                         }
                     }
                 },
@@ -227,7 +226,7 @@ export default {
             HdSmart.Device.control(
                 {
                     method: METHOD,
-                    nodeid: 'curtain.main.open_percentage',
+                    nodeid: "curtain.main.open_percentage",
                     params: {
                         attribute: {
                             open_percentage: percentage

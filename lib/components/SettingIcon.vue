@@ -1,23 +1,21 @@
 <template>
-    <icon :className="className" :onClick="toAppDeviceDetail" />
+    <icon class="redact" :onClick="toAppDeviceDetail" />
 </template>
 
 <style lang="less">
 .redact {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    background: url(./assets/icn_redact@2x.png) no-repeat;
+    position: absolute;
+    z-index: 8;
+    right: 48px;
+    bottom: 228px;
+    width: 48px;
+    height: 48px;
+    background-image: url(./assets/btn_device_setting.png);
+    background-repeat: no-repeat;
     background-size: 100% 100%;
-    margin-left: 5px;
-}
-.redact-white {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    background: url(./assets/icn_redact_white@2x.png) no-repeat;
-    background-size: 100% 100%;
-    margin-left: 5px;
+    &-white {
+        background-image: url(./assets/btn_device_setting_white.png);
+    }
 }
 </style>
 

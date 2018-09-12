@@ -112,7 +112,7 @@ import SwitchButton from '../../lib/components/SwitchButton.vue';
 import Picker from '../../lib/components/Picker/picker.vue';
 import AllConfig from './config';
 import SubPage from '../../lib/components/SubPage';
-import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
+import Icon from '../../lib/components/SettingIconMobile.vue';
 // import IScroll from 'iscroll/build/iscroll-lite';
 
 export default {

@@ -89,7 +89,7 @@
 
 <script>
 import Modal from '../../../lib/components/Modal.vue';
-import Icon from '../../../lib/components/ToAppDeviceDetailIcon.vue';
+import Icon from '../../../lib/components/SettingIconMobile.vue';
 
 const tips = {
     fail: '设置失败',

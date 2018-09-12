@@ -5,9 +5,8 @@
     <div class="page-index">
         <div class="page-index2">
             <status-tip class="sp_status_home" />
-            <div class="device_name">{{$store.state.device_name}}
-                <icon />
-            </div>
+            <icon />
+            <div class="device_name">{{$store.state.device_name}} </div>
             <div class="grid">
                 <div class="content-con">
                     <div class="span1">
@@ -290,8 +289,8 @@
 </style>
 
 <script>
-import * as service from '../service';
-import Icon from '../../../lib/components/ToAppDeviceDetailIcon.vue';
+import * as service from "../service";
+import Icon from "../../../lib/components/SettingIcon.vue";
 let infoCache = [];
 export default {
     components: { Icon },
@@ -300,8 +299,8 @@ export default {
         return {
             timeOutEventUp: 0,
             timeOutEventDown: 0,
-            channelId: '',
-            vid: '',
+            channelId: "",
+            vid: "",
             swiperOption: {
                 loop: true,
                 autoplay: {
@@ -309,7 +308,7 @@ export default {
                     disableOnInteraction: false
                 },
                 pagination: {
-                    el: '.swiper-pagination'
+                    el: ".swiper-pagination"
                 },
                 on: {
                     tap() {
@@ -327,22 +326,22 @@ export default {
             homePageInfo: [],
             channels_1: [
                 {
-                    channelId: '001',
-                    channel: '电影'
+                    channelId: "001",
+                    channel: "电影"
                 },
                 {
-                    channelId: '002',
-                    channel: '电视剧'
+                    channelId: "002",
+                    channel: "电视剧"
                 }
             ],
             channels_2: [
                 {
-                    channelId: '003',
-                    channel: '动漫'
+                    channelId: "003",
+                    channel: "动漫"
                 },
                 {
-                    channelId: '004',
-                    channel: '综艺'
+                    channelId: "004",
+                    channel: "综艺"
                 }
             ]
             //                ...service.getInitData()
@@ -371,36 +370,36 @@ export default {
         volupStart(e) {
             e.preventDefault();
             this.timeOutEventUp = 1;
-            this.cmd('rcVolumeUpStart');
+            this.cmd("rcVolumeUpStart");
         },
         voldownStart(e) {
             e.preventDefault();
             this.timeOutEventDown = 1;
-            this.cmd('rcVolumeDownStart');
+            this.cmd("rcVolumeDownStart");
         },
         volupEnd(e) {
             e.preventDefault();
             if (this.timeOutEventUp) {
-                this.cmd('rcVolumeUpStop');
+                this.cmd("rcVolumeUpStop");
                 this.timeOutEventUp = 0;
             } else {
-                this.cmd('rcVolumeUp');
+                this.cmd("rcVolumeUp");
             }
         },
         voldownEnd(e) {
             e.preventDefault();
             if (this.timeOutEventDown) {
-                this.cmd('rcVolumeDownStop');
+                this.cmd("rcVolumeDownStop");
                 this.timeOutEventDown = 0;
             } else {
-                this.cmd('rcVolumeDown');
+                this.cmd("rcVolumeDown");
             }
         },
         cmd(name) {
             service.onClickEvent(name);
         },
         showDetailInfo(item) {
-            this.$store.dispatch('showDetail', item);
+            this.$store.dispatch("showDetail", item);
         },
         pageInit() {
             service.getHomePageInfo(data => {

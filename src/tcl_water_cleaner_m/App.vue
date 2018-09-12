@@ -159,7 +159,7 @@ import Modal from '../../lib/components/Modal';
 import CirclePie from './components/CirclePie.vue';
 import FilterItems from './components/FilterItems.vue';
 import SubPage from '../../lib/components/SubPage.vue';
-import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
+import Icon from '../../lib/components/SettingIconMobile.vue';
 
 const TDS_VALUE = [0, 50, 100, 300, 500];
 const TDS_ANGLE = [-136, -74, 0, 74, 136];

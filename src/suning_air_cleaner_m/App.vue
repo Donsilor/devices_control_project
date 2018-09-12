@@ -105,7 +105,7 @@
 <script>
 import Modal from '../../lib/components/Modal';
 import SubPage from '../../lib/components/SubPage.vue';
-import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
+import Icon from '../../lib/components/SettingIconMobile.vue';
 
 const SPEED_TEXT1 = [
     { text: '低速', className: '1', value: 'low' },

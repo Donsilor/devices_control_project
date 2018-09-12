@@ -252,7 +252,7 @@
 
 <script>
 import * as service from '../service';
-import Icon from '../../../lib/components/ToAppDeviceDetailIcon.vue';
+import Icon from '../../../lib/components/SettingIconMobile.vue';
 let infoCache = [];
 
 export default {

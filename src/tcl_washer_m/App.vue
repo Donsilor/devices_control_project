@@ -203,7 +203,7 @@ import SwitchButton from '../../lib/components/SwitchButton.vue';
 import Picker from '../../lib/components/Picker/picker.vue';
 import ModeButton from './components/ModeButton.vue';
 import SubPage from '../../lib/components/SubPage.vue';
-import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
+import Icon from '../../lib/components/SettingIconMobile.vue';
 
 import {
     MODE_OPTIONS,

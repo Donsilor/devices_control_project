@@ -169,7 +169,7 @@ import ModeButton from './components/ModeButton.vue';
 import Modal from '../../lib/components/Modal';
 import Vue from 'vue';
 import DatetimePicker from '../../lib/components/datetime-picker';
-import Icon from '../../lib/components/ToAppDeviceDetailIcon.vue';
+import Icon from '../../lib/components/SettingIconMobile.vue';
 
 Vue.component(DatetimePicker.name, DatetimePicker);
 
