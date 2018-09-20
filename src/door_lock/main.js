@@ -11,9 +11,38 @@ import '../../lib/base/door_lock/index.less'
 import App from './App.vue'
 import Index from './components/Index.vue'
 import Log from './components/Log.vue'
+import AlertPage from '../../lib/components/AlertPage'
 
 Vue.use(Router)
+Vue.use(Vuex)
 
+const store = new Vuex.Store({
+  state: {
+      alertPage: false,
+  },
+  mutations: {
+      showAlertpage(state, payload) {
+          state.alertPage = true
+          // state.activeDetail = payload
+          // service.RemoteController({'show':false});
+      },
+      hideDetail(state) {
+         state.alertPage = false
+      },
+      // setDeviceName(state, payload) {
+      //     state.device_name = payload
+      // },
+      // setScreenProjectionStatus(state, payload){
+      //     state.tvStatus = payload
+      // }
+  },
+  actions: {
+      // showDetail({ commit }, item) {
+      //     commit('showDetail', item)
+      // },
+      // hideDetail: ({ commit }) => commit('hideDetail'),
+  }
+})
 const router =  new Router({
     routes: [
       {
@@ -25,6 +54,11 @@ const router =  new Router({
         path: '/log',
         name: 'log',
         component: Log
+      },
+      {
+        path:'/AlertPage',
+        name:'AlertPage',
+        component: AlertPage
       }
     ]
   })
@@ -47,6 +81,7 @@ const router =  new Router({
   new Vue({
     el: '#app',
     router,
+    store,
     template: '<App />',
     components: { App }
   });
