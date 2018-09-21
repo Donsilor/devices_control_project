@@ -7,8 +7,8 @@
         <div class="mainList">
             <div class="listOne" v-for="(item,index) in queryInfo">
                 <div class="alertTips"><span class="tipImg"></span><span class="tipTitle">{{item.msg}}</span></div>
-                <div class="alertDetail">1. 排查是否进水压力过小； 
-                    2. 排查是否滤芯未及时更换，造成拥堵； 3. 其他设备问题，请致电客服
+                <div class="alertDetail">
+                    {{item.text}}
                 </div>
                 <div class="closeTips" @click="closeItem(item)">关闭提醒</div>
             </div>
@@ -101,6 +101,7 @@
                 letter-spacing: -0.5px;
                 text-align: center;
                 line-height: 36px;
+                text-align:left;
             }
             .closeTips{
                 width:240px;
