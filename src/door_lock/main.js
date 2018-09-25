@@ -26,7 +26,7 @@ const store = new Vuex.Store({
           // state.activeDetail = payload
           // service.RemoteController({'show':false});
       },
-      hideDetail(state) {
+      hideAlertpage(state) {
          state.alertPage = false
       },
       // setDeviceName(state, payload) {

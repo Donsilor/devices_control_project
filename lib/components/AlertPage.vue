@@ -159,24 +159,27 @@ export default {
     methods: {
         closeItem(itemClicked){
              let code = itemClicked.code;
-            if (code == "e4") {
-                HdSmart.Device.control({//APP主动消除故障命令
-                    method: "dm_set",
-                    nodeid: "doorlock.main.error",
-                    params: {
-                        attribute: {
-                            error: [
-                                {
-                                    code: "e4",
-                                    status: itemClicked.status
-                                }
-                            ]
+            if(this.localStorageName === 'doorlock_errorsStorage'){//门锁特殊高警处理
+                if (code == "e4") {
+                    HdSmart.Device.control({//APP主动消除故障命令
+                        method: "dm_set",
+                        nodeid: "doorlock.main.error",
+                        params: {
+                            attribute: {
+                                error: [
+                                    {
+                                        code: "e4",
+                                        status: itemClicked.status
+                                    }
+                                ]
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
+            
             let store = window.localStorage;
-            let errorsStorage =  JSON.parse(store.getItem('doorlock_errorsStorage'));
+            let errorsStorage =  JSON.parse(store.getItem(this.localStorageName)) || [];
             errorsStorage.forEach((item,index)=>{//点击了某一条
                 if(item.code === itemClicked.code){
                     item.clicked = true;//已经被点击
