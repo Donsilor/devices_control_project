@@ -2,7 +2,7 @@
     <div class="content" :class="className">
         <div class="title">
             <div class="backButton" @click="()=>{this.$router.go(-1)}"></div>
-            <div class="title_detail">净水器报警</div>
+            <div class="title_detail">{{haedtTitle}}</div>
         </div>
         <div class="mainList">
             <div class="listOne" v-for="(item,index) in queryInfo">
@@ -99,7 +99,6 @@
                 font-size: 24px;
                 color: #76787A;
                 letter-spacing: -0.5px;
-                text-align: center;
                 line-height: 36px;
                 text-align:left;
             }
@@ -145,7 +144,8 @@ export default {
             visible: this.value,
             queryInfo:[],//query返回的告警信息
             errorArray:[],
-            localStorageName:this.$route.query.localStorageName
+            localStorageName:this.$route.query.localStorageName,
+            haedtTitle:this.$route.query.localStorageName == 'doorlock_errorsStorage'?'智能门锁告警':'净水器告警'
         };
     },
     watch: {
