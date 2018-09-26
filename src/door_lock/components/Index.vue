@@ -22,15 +22,8 @@
         </div>
         -->
         <password-input :visible="passwordInputVisible" v-on:close-dialog="passwordInputVisible=false" />
-        <div class="alertButton" v-if="alertModel.length>0" @click = "goAlertpage('doorlock_errorsStorage')">
-            <div class="outer">
-                <div class="inner"> 
-                    <img src="../../../lib/components/assets/btn_airouter_alarm_red.png" />
-                    <p class="errorCount" v-show="alertModel.length>=2">{{alertModel.length}}</p>
-                </div>
-            </div>
-            
-        </div>
+        
+        <alert-button :alertModel="alertModel" v-on:goAlertpage = "goAlertpage('doorlock_errorsStorage')"></alert-button>
     </div>
 </template>
 
@@ -38,6 +31,7 @@
 import PasswordInput from "./PasswordInput.vue";
 import Icon from "../../../lib/components/SettingIcon.vue";
 import { WARN_CODE } from "./const";
+import AlertButton from '../../../lib/components/AlertButton'
 /**
  *  {0, "e0", "not fully locked"}, // 未锁好
     {1, "e3", "tamper alarm: "},   // 防拆
@@ -65,7 +59,8 @@ function findIndex(array, fn) {
 export default {
     components: {
         PasswordInput,
-        Icon
+        Icon,
+        AlertButton
     },
     data() {
         return {
@@ -147,9 +142,10 @@ export default {
         }
     },
     methods: {
-        goAlertpage(localStorageName){
+         goAlertpage(localStorageName){
            //要传入给页面的alert信息
-            this.$router.push({path: '/AlertPage', query: {queryInfo:this.alertModel,localStorageName:localStorageName}})
+            this.$store.commit('showAlertpage',{queryInfo:this.alertModel,localStorageName:localStorageName})
+            this.$router.push({path: '/AlertPage'})
         },
         showPwdInput() {
             if (this.btnDisabled) {
@@ -284,46 +280,35 @@ export default {
             }
             
         },
-        onAlarmError(errors){//status全为1，设备自动发送告警信息
-        // var errors = errors;
-        // errors=[{
-        //     "family_id": 1,
-		// 	"device_id": 111222233333,
-		// 	"device_uuid":"112233445566778810",
-		// 	"device_category_id": 'xxx',
-		// 	"code":"e1",
-        //     "level": 1,
-        //     "status":1,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
-		// 	"updated_at": 1498047283,
-        // },
-        // {
-        //     "family_id": 1,
-		// 	"device_id": 111222233333,
-		// 	"device_uuid":"112233445566778810",
-		// 	"device_category_id": 'xxx',
-		// 	"code":"e5",
-        //     "level": 1,
-        //     "status":0,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
-		// 	"updated_at": 1498047283,
-        // },
-        // {
-        //     "family_id": 1,
-		// 	"device_id": 111222233333,
-		// 	"device_uuid":"112233445566778810",
-		// 	"device_category_id": 'xxx',
-		// 	"code":"e4",
-        //     "level": 1,
-        //     "status":1,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
-		// 	"updated_at": 1498047283,
-        // }]
-        // debugger;
+        onAlarmError(attr){//status全为1，设备自动发送告警信息
+            let errors = attr.error;//设备上报的错误
+             errors=[{
+                "family_id": 1,
+                "device_id": 111222233333,
+                "device_uuid":"112233445566778810",
+                "device_category_id": 'xxx',
+                "code":"e2",
+                "level": 1,
+                "status":1,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
+                "updated_at": 1498047283,
+            },{
+                "family_id": 1,
+                "device_id": 111222233333,
+                "device_uuid":"112233445566778810",
+                "device_category_id": 'xxx',
+                "code":"e4",
+                "level": 1,
+                "status":1,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
+                "updated_at": 1498047283,
+            }]
+            let store = window.localStorage;
+            let errorsStorage = [];
             if(errors && errors.length>0){
-                let store = window.localStorage;
-                let errorsStorage = [];
                 if(store.getItem('doorlock_errorsStorage')){//本地已经有存储
                     errorsStorage =  JSON.parse(store.getItem('doorlock_errorsStorage')) || [];//得到本地缓存
+                    this.dealErrors(errors,errorsStorage)//只保留尚存的告警，内存里的其他告警一并删除
                     errors.forEach((item,index)=>{
-                    this.storageDeal(item,errorsStorage)//对这一项（item）进行处理，内存中值保存status为1的告警信息，返回新的内存信息
+                        this.storageDeal(item,errorsStorage)//对这一项（item）进行处理，内存中值保存status为1的告警信息，返回新的内存信息
                     })
                     store.setItem('doorlock_errorsStorage',JSON.stringify(errorsStorage))//设置新的告警信息
                 }else{//本地缓存为空
@@ -350,6 +335,9 @@ export default {
                     return item.clicked === false
                 });
                 console.log("this.alertModel11111",this.alertModel)
+            }else{//没有告警
+                store.setItem('doorlock_errorsStorage',JSON.stringify([]));
+                this.alertModel = []; 
             }
         },
         storageDeal(item,errorsStorage){//用来判断内存中(errorsStorage)是否存在某个error(item)的方法
@@ -398,6 +386,27 @@ export default {
                 
             }
             return errorsStorage
+        },
+        dealErrors(errors,errorsStorage){
+            let arr=[];//保存内存和告警相同的项
+            for(let i=0;i<errors.length;i++){
+                for(let j=0;j<errorsStorage.length;j++){
+                    if(errors[i].code === errorsStorage[j].code && errors[i].status == 1 ){//status为0，告警已经解除的也一并删除
+                        arr.push(errors[i].code)
+                    }
+                }
+            }
+            if(arr && arr.length>0){
+                errorsStorage.forEach((item,index)=>{
+                    for(let x=0;x<arr.length;x++){
+                        if(arr[x] !== item.code){
+                            errorsStorage.splice(item,1)
+                        }
+                    }
+                })
+            }else{
+                errorsStorage = [];
+            }
         },
         getSnapShot(cb) {
             HdSmart.Device.getSnapShot(

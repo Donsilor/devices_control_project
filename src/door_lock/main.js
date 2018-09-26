@@ -11,7 +11,7 @@ import '../../lib/base/door_lock/index.less'
 import App from './App.vue'
 import Index from './components/Index.vue'
 import Log from './components/Log.vue'
-import AlertPage from '../../lib/components/AlertPage'
+import AlertPage from './components/Alertpage'
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -19,10 +19,13 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
       alertPage: false,
+      errStore:[]
   },
   mutations: {
-      showAlertpage(state, payload) {
-          state.alertPage = true
+      showAlertpage(state, errStore) {
+        state.alertPage = true
+        state.errStore = errStore
+        console.log("state11111",state.errStore)
           // state.activeDetail = payload
           // service.RemoteController({'show':false});
       },
