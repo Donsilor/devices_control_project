@@ -730,6 +730,11 @@ export default {
             // }
             this.onDaAlertErr(data.result);//上报
         });
-    }
+    },
+    mounted() {
+        this.alertModel = this.errorStore.filter((item,index)=>{
+            return item.clicked === false
+        });
+    },
 };
 </script>

@@ -86,24 +86,24 @@ export default {
             });
             return status;
         },
-        theUnclickAlert() {
-            var hasE5 = findIndex(this.alertModel, item => {
-                return item.code == "e5";
-            });
-            var result = this.alertModel.filter(item => {
-                if (item.clicked) {
-                    return false;
-                }
-                if (item.code == "e6") {
-                    return false;
-                }
-                if (item.code == "e2" && hasE5 >= 0) {
-                    return false;
-                }
-                return true;
-            });
-            return result.reverse();
-        },
+        // theUnclickAlert() {
+        //     var hasE5 = findIndex(this.alertModel, item => {
+        //         return item.code == "e5";
+        //     });
+        //     var result = this.alertModel.filter(item => {
+        //         if (item.clicked) {
+        //             return false;
+        //         }
+        //         if (item.code == "e6") {
+        //             return false;
+        //         }
+        //         if (item.code == "e2" && hasE5 >= 0) {
+        //             return false;
+        //         }
+        //         return true;
+        //     });
+        //     return result.reverse();
+        // },
         lockedStatus() {
             var hasE6 = findIndex(this.alertModel, item => {
                 return item.code == "e6";
@@ -307,7 +307,7 @@ export default {
                 let store = window.localStorage;
                 let errorsStorage = [];
                 if(store.getItem('doorlock_errorsStorage')){//本地已经有存储
-                    errorsStorage =  JSON.parse(store.getItem('doorlock_errorsStorage'));//得到本地缓存
+                    errorsStorage =  JSON.parse(store.getItem('doorlock_errorsStorage')) || [];//得到本地缓存
                     errors.forEach((item,index)=>{
                     this.storageDeal(item,errorsStorage)//对这一项（item）进行处理，内存中值保存status为1的告警信息，返回新的内存信息
                     })
@@ -430,7 +430,7 @@ export default {
         });
     },
     mounted(){
-        let errorsStorage =  JSON.parse(window.localStorage.getItem('doorlock_errorsStorage'));//得到本地缓存
+        let errorsStorage =  JSON.parse(window.localStorage.getItem('doorlock_errorsStorage')) || [];//得到本地缓存
         this.alertModel = errorsStorage.filter((item,index)=>{
             return item.clicked === false
         });

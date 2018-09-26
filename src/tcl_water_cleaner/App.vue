@@ -299,6 +299,7 @@ export default {
                 el.style.width = "100.1%";
                 setTimeout(() => {
                     el.style.cssText = "";
+
                 }, 1500);
             }
         }
@@ -551,7 +552,7 @@ export default {
             }
         },
         getAlertListErr(errors){
-            var errors = errors;
+            // var errors = errors;
             // errors=[{
             //     "family_id": 1,
             //     "device_id": 111222233333,
@@ -676,6 +677,11 @@ export default {
             // }
             this.onDaAlertErr(data.result);//上报
         });
-    }
+    },
+    mounted() {
+        this.alertModel = this.errorStore.filter((item,index)=>{
+            return item.clicked === false
+        });
+    },
 };
 </script>
