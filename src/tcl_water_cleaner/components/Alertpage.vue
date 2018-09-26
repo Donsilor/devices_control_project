@@ -11,7 +11,7 @@ export default {
     },
     data() {
         return {
-            title:'智能门锁告警',
+            title:'净水器告警',
             queryInfo:[],
             localStorageName:''
         };
@@ -21,23 +21,6 @@ export default {
     },
     methods: {
         closeItem(itemClicked){
-            // let code = itemClicked.code;
-            // if (code == "e4") {
-            //     HdSmart.Device.control({//APP主动消除故障命令
-            //         method: "dm_set",
-            //         nodeid: "doorlock.main.error",
-            //         params: {
-            //             attribute: {
-            //                 error: [
-            //                     {
-            //                         code: "e4",
-            //                         status: itemClicked.status
-            //                     }
-            //                 ]
-            //             }
-            //         }
-            //     });
-            // }
             let store = window.localStorage;
             let errorsStorage =  JSON.parse(store.getItem(this.localStorageName)) || [];
             errorsStorage.forEach((item,index)=>{//点击了某一条

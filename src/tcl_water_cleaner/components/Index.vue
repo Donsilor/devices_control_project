@@ -306,7 +306,6 @@ export default {
     },
     methods: {
         goAlertpage(localStorageName){
-            console.log(7777,this.$router)
             //要传入给页面的alert信息
             this.$store.commit('showAlertpage',{queryInfo:this.alertModel,localStorageName:localStorageName})
             this.$router.push({path: '/Alertpage'})
@@ -386,7 +385,6 @@ export default {
 
             // this.getAlertList(attrs.error);
             this.getAlertListErr(attrs.error);//主动获取,得到的是一个数组
-             this.onDaAlertErr(result);//上报，//Todo
 
             var tds = attrs.water_filter_result.TDS;
             if (tds && tds[0] != 65535) {
@@ -529,8 +527,6 @@ export default {
                     store.setItem(ERROR_STORE_KEY,JSON.stringify(this.errorStore))//设置新的告警信息
                 }else{//本地缓存为空
                     if(parseInt(err.status,10)===1){
-                        console.log(222,WARN_CODE[item.code])
-                        console.log(222,WARN_CODE[item.code].msg)
                         this.errorStore.push({
                             msg: WARN_CODE[err.code].msg,
                             text:WARN_CODE[err.code].text,
@@ -552,24 +548,25 @@ export default {
                 console.log("this.alertModel32222",this.alertModel)
             }
         },
-        getAlertListErr(errors){
+        getAlertListErr(attr){
+            let errors = attr ? attr.errors :[];
+            let store = window.localStorage;
             // var errors = errors;
             // errors=[{
             //     "family_id": 1,
             //     "device_id": 111222233333,
             //     "device_uuid":"112233445566778810",
             //     "device_category_id": 'xxx',
-            //     "code":"BIT2",
+            //     "code":"BIT0",
             //     "level": 1,
             //     "status":1,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
             //     "updated_at": 1498047283,
             // }]
         // debugger;
             if(errors && errors.length>0){
-                let store = window.localStorage;
                 // let errorsStorage = [];
                 if(this.errorStore){//本地已经有存储
-                    // errorsStorage =  JSON.parse(store.getItem(ERROR_STORE_KEY));//得到本地缓存
+                    this.dealErrors(errors,this.errorStore)//只保留尚存的告警，内存里的其他告警一并删除
                     errors.forEach((item,index)=>{
                         this.storageDeal(item,this.errorStore)//对这一项（item）进行处理，内存中值保存status为1的告警信息，返回新的内存信息
                     })
@@ -596,6 +593,10 @@ export default {
                     return item.clicked === false
                 });
                 console.log("this.alertModel11111",this.alertModel)
+            }else{
+                //没有告警
+                store.setItem('water_cleaner_error',JSON.stringify([]));
+                this.alertModel = [];
             }
         },
         storageDeal(item,errorsStorage){//用来判断内存中(errorsStorage)是否存在某个error(item)的方法
@@ -647,6 +648,28 @@ export default {
                 
             }
             return errorsStorage
+        },
+        dealErrors(errors,errorsStorage){
+            let arr=[];//保存内存和告警相同的项
+            for(let i=0;i<errors.length;i++){
+                for(let j=0;j<errorsStorage.length;j++){
+                    if(errors[i].code === errorsStorage[j].code && errors[i].status == 1 ){//status为0，告警已经解除的也一并删除
+                        arr.push(errors[i].code)
+                    }
+                }
+            }
+            if(arr && arr.length>0){
+                errorsStorage.forEach((item,index)=>{
+                    for(let x=0;x<arr.length;x++){
+                        if(arr[x] !== item.code){
+                            errorsStorage.splice(item,1)
+                        }
+                    }
+                })
+            }else{
+                errorsStorage = [];
+            }
+            console.log(111,arr,errorsStorage)
         },
     },
     created() {

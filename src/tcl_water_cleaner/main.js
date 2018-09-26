@@ -26,10 +26,14 @@ Vue.filter('toDays', function (val) {
 const store = new Vuex.Store({
     state: {
         alertPage: false,
+        errStore:[]
     },
     mutations: {
-        showAlertpage(state, payload) {
+        showAlertpage(state, errStore) {
             state.alertPage = true
+            state.alertPage = true
+            state.errStore = errStore
+            console.log("state11111",state.errStore)
             // state.activeDetail = payload
             // service.RemoteController({'show':false});
         },

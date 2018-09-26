@@ -494,8 +494,6 @@ export default {
                     store.setItem(ERROR_STORE_KEY,JSON.stringify(this.errorStore))//设置新的告警信息
                 }else{//本地缓存为空
                     if(parseInt(err.status,10)===1){
-                        console.log(222,WARN_CODE[item.code])
-                        console.log(222,WARN_CODE[item.code].msg)
                         this.errorStore.push({
                             msg: WARN_CODE[err.code].msg,
                             text:WARN_CODE[err.code].text,
@@ -564,6 +562,9 @@ export default {
                     return item.clicked === false
                 });
                 console.log("this.alertModel11111",this.alertModel)
+            }else{//没有告警
+                store.setItem('water_cleaner_error',JSON.stringify([]));
+                this.alertModel = [];
             }
         },
         storageDeal(item,errorsStorage){//用来判断内存中(errorsStorage)是否存在某个error(item)的方法
