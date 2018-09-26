@@ -444,6 +444,12 @@ export default {
             // this.onAlert(data.result.attribute.error);
             this.onAlertError(data.result);//得到错误信息，单条上报
         });
-    }
+    },
+    mounted() {
+        let errorsStorage =  JSON.parse(window.localStorage.getItem('doorlock_errorsStorage'));//得到本地缓存
+        this.alertModel = errorsStorage.filter((item,index)=>{
+            return item.clicked === false
+        });
+    },
 };
 </script>

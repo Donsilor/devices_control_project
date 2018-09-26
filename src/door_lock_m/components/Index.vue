@@ -271,37 +271,37 @@ export default {
             
         },
         onAlarmError(errors){//status全为1，设备自动发送告警信息
-        var errors = errors;
-        errors=[{
-            "family_id": 1,
-			"device_id": 111222233333,
-			"device_uuid":"112233445566778810",
-			"device_category_id": 'xxx',
-			"code":"e1",
-            "level": 1,
-            "status":1,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
-			"updated_at": 1498047283,
-        },
-        {
-            "family_id": 1,
-			"device_id": 111222233333,
-			"device_uuid":"112233445566778810",
-			"device_category_id": 'xxx',
-			"code":"e5",
-            "level": 1,
-            "status":0,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
-			"updated_at": 1498047283,
-        },
-        {
-            "family_id": 1,
-			"device_id": 111222233333,
-			"device_uuid":"112233445566778810",
-			"device_category_id": 'xxx',
-			"code":"e4",
-            "level": 1,
-            "status":1,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
-			"updated_at": 1498047283,
-        }]
+        // var errors = errors;
+        // errors=[{
+        //     "family_id": 1,
+		// 	"device_id": 111222233333,
+		// 	"device_uuid":"112233445566778810",
+		// 	"device_category_id": 'xxx',
+		// 	"code":"e1",
+        //     "level": 1,
+        //     "status":1,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
+		// 	"updated_at": 1498047283,
+        // },
+        // {
+        //     "family_id": 1,
+		// 	"device_id": 111222233333,
+		// 	"device_uuid":"112233445566778810",
+		// 	"device_category_id": 'xxx',
+		// 	"code":"e5",
+        //     "level": 1,
+        //     "status":0,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
+		// 	"updated_at": 1498047283,
+        // },
+        // {
+        //     "family_id": 1,
+		// 	"device_id": 111222233333,
+		// 	"device_uuid":"112233445566778810",
+		// 	"device_category_id": 'xxx',
+		// 	"code":"e4",
+        //     "level": 1,
+        //     "status":1,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
+		// 	"updated_at": 1498047283,
+        // }]
         // debugger;
             if(errors && errors.length>0){
                 let store = window.localStorage;
@@ -427,6 +427,12 @@ export default {
         HdSmart.onDeviceAlert(data => {
             // this.onAlert(data.result.attribute.error);
             this.onAlertError(data.result);//得到错误信息，单条上报
+        });
+    },
+    mounted(){
+        let errorsStorage =  JSON.parse(window.localStorage.getItem('doorlock_errorsStorage'));//得到本地缓存
+        this.alertModel = errorsStorage.filter((item,index)=>{
+            return item.clicked === false
         });
     }
 };

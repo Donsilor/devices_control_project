@@ -195,11 +195,9 @@ export default {
             })
         },
         dealString(str){//处理换行的规则
-            console.log(1111,str)
             str = str.replace(/；/g, ';')
             str = str.replace(/\n/g, '')
             str = str.split(';')
-            console.log(str)
             return str;
         }
         
