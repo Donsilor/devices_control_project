@@ -8,7 +8,9 @@
             <div class="listOne" v-for="(item,index) in queryInfo">
                 <div class="alertTips"><span class="tipImg"></span><span class="tipTitle">{{item.msg}}</span></div>
                 <div class="alertDetail">
-                    {{item.text}}
+                    <p v-for='(i,number) in dealString(item.text)'>
+                        {{i}}{{number+1!=dealString(item.text).length?'；':''}}
+                    </p>
                 </div>
                 <div class="closeTips" @click="closeItem(item)">关闭提醒</div>
             </div>
@@ -191,17 +193,16 @@ export default {
             this.queryInfo = errorsStorage.filter((item,index)=>{
                 return item.clicked === false
             })
+        },
+        dealString(str){//处理换行的规则
+            console.log(1111,str)
+            str = str.replace(/；/g, ';')
+            str = str.replace(/\n/g, '')
+            str = str.split(';')
+            console.log(str)
+            return str;
         }
-        // close() {
-        //     this.visible = false;
-        //     this.$emit("input", false);
-        //     this.$emit("on-cancel");
-        // },
-        // overlayClick() {
-        //     if (this.overlayClickable) {
-        //         this.close();
-        //     }
-        // }
+        
     },
     mounted() {
         this.queryInfo = this.$route.query.queryInfo || [],//query返回的告警信息

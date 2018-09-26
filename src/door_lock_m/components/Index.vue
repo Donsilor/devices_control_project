@@ -260,12 +260,10 @@ export default {
                     }else{
                         return
                     }     
-                  
                     console.log(9999999999,JSON.parse(window.localStorage.getItem('doorlock_errorsStorage')))  
                     store.setItem('doorlock_errorsStorage',JSON.stringify(errorsStorage))//设置新的告警信息
                 }
                 this.alertModel = errorsStorage.filter((item,index)=>{
-                    // console.log(index,item.clicked)
                     return item.clicked === false
                 });
                 console.log("this.alertModel32222",this.alertModel)
