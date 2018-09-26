@@ -267,7 +267,7 @@ export default {
             }
         },
         onAlarmError(attr){//status全为1，设备自动发送告警信息
-            let errors = attr.error;//设备上报的错误
+             let errors = attr ? attr.errors :[];//设备上报的错误
             // errors=[{
             //     "family_id": 1,
             //     "device_id": 111222233333,

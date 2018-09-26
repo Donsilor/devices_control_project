@@ -3,12 +3,12 @@ if(process.env.NODE_ENV == 'development'){
 }
 
 import Vue from 'vue'
-import Index from './Index.vue'//路由页面，router-view
+import Index from './components/Index.vue'//路由页面，router-view
 import App from './App.vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
 
-import AlertPage from '../../lib/components/AlertPage'
+import Alertpage from './components/Alertpage'
 import '../../lib/base/water_cleaner/index.less'
 
 import FastClick from 'fastclick'
@@ -49,12 +49,12 @@ const store = new Vuex.Store({
         {
           path: '/',
           name: 'index',
-          component: App
+          component: Index
         },
         {
-          path:'/AlertPage',
-          name:'AlertPage',
-          component: AlertPage
+          path:'/Alertpage',
+          name:'Alertpage',
+          component: Alertpage
         }
       ]
     })
@@ -63,7 +63,7 @@ new Vue({
     el: '#app',
     router,
     store,
-    template: '<Index />',
-    components: { Index }
+    template: '<App />',
+    components: { App }
   });
 

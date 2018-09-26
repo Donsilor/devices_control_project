@@ -6,10 +6,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
 
-import Index from './Index.vue'//路由页面，router-view
+import Index from './components/Index.vue'//路由页面，router-view
 import App from './App.vue'
 
-import AppAlertPage from '../../lib/components/AppAlertPage'
+import Alertpage from './components/AlertPage'
 
 import '../../lib/base/water_cleaner/index_m.less'
 
@@ -27,10 +27,13 @@ Vue.filter('toDays', function (val) {
 const store = new Vuex.Store({
     state: {
         alertPage: false,
+        errStore:[],
     },
     mutations: {
-        showAlertpage(state, payload) {
+        showAlertpage(state, errStore) {
             state.alertPage = true
+            state.errStore = errStore
+            console.log("state11111",state.errStore)
             // state.activeDetail = payload
             // service.RemoteController({'show':false});
         },
@@ -48,14 +51,14 @@ const store = new Vuex.Store({
   const router =  new Router({
       routes: [
         {
-          path: '/',
-          name: 'index',
-          component: App
-        },
+            path: '/',
+            name: 'index',
+            component: Index
+          },
         {
-          path:'/AppAlertPage',
-          name:'AppAlertPage',
-          component: AppAlertPage
+          path:'/Alertpage',
+          name:'Alertpage',
+          component: Alertpage
         }
       ]
     })
@@ -64,8 +67,8 @@ new Vue({
     el: '#app',
     router,
     store,
-    template: '<Index />',
-    components: { Index }
+    template: '<App />',
+    components: { App }
   });
 
 
