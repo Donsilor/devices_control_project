@@ -528,7 +528,8 @@ export default {
                 console.log("this.alertModel32222",this.alertModel)
             }
         },
-        getAlertListErr(errors){
+        getAlertListErr(attr){
+            let errors = attr.error;
             // var errors = errors;
             // errors=[{
             //     "family_id": 1,
@@ -541,6 +542,7 @@ export default {
             //     "updated_at": 1498047283,
             // }]
         // debugger;
+        console.log(111,errors)
             if(errors && errors.length>0){
                 let store = window.localStorage;
                 // let errorsStorage = [];

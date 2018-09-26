@@ -2,7 +2,7 @@
     <div class="content" :class="className">
         <div class="title">
             <div class="backButton" @click="()=>{this.$router.go(-1)}"></div>
-            <div class="title_detail">{{haedtTitle}}</div>
+            <div class="title_detail">{{title}}</div>
         </div>
         <div class="mainList">
             <div class="listOne" v-for="(item,index) in queryInfo">
@@ -132,14 +132,7 @@ export default {
             default: false
         },
         className: "",
-        // overlayClickable: {
-        //     type: Boolean,
-        //     default: true
-        // },
-        // showCloseBtn: {
-        //     type: Boolean,
-        //     default: true
-        // }
+        queryInfo:[],//返回的告警信息
     },
     data() {
         return {

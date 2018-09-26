@@ -2,7 +2,7 @@
     <div class="content" :class="className">
         <div class="title">
             <div class="backButton" @click="()=>{this.$router.go(-1)}"></div>
-            <div class="title_detail">{{haedtTitle}}</div>
+            <div class="title_detail">{{title}}</div>
         </div>
         <div class="mainList">
             <div class="listOne" v-for="(item,index) in queryInfo">
@@ -131,22 +131,15 @@ export default {
             default: false
         },
         className: "",
-        // overlayClickable: {
-        //     type: Boolean,
-        //     default: true
-        // },
-        // showCloseBtn: {
-        //     type: Boolean,
-        //     default: true
-        // }
+        localStorageName:'',
+        queryInfo:{
+            type: Array,
+            default: []
+        },//返回的告警信息
     },
     data() {
         return {
             visible: this.value,
-            queryInfo:[],//query返回的告警信息
-            errorArray:[],
-            localStorageName:this.$route.query.localStorageName,
-            haedtTitle:this.$route.query.localStorageName == 'doorlock_errorsStorage'?'智能门锁告警':'净水器告警'
         };
     },
     watch: {
@@ -154,44 +147,45 @@ export default {
             this.visible = val;
         },
         visible(val) {
-            this.$emit("on-visible-change", val);
+           
         }
     },
     methods: {
         closeItem(itemClicked){
-             let code = itemClicked.code;
-            if(this.localStorageName === 'doorlock_errorsStorage'){//门锁特殊高警处理
-                if (code == "e4") {
-                    HdSmart.Device.control({//APP主动消除故障命令
-                        method: "dm_set",
-                        nodeid: "doorlock.main.error",
-                        params: {
-                            attribute: {
-                                error: [
-                                    {
-                                        code: "e4",
-                                        status: itemClicked.status
-                                    }
-                                ]
-                            }
-                        }
-                    });
-                }
-            }
+            this.$emit('closeItem',itemClicked)
+        //      let code = itemClicked.code;
+        //     if(this.localStorageName === 'doorlock_errorsStorage'){//门锁特殊高警处理
+        //         if (code == "e4") {
+        //             HdSmart.Device.control({//APP主动消除故障命令
+        //                 method: "dm_set",
+        //                 nodeid: "doorlock.main.error",
+        //                 params: {
+        //                     attribute: {
+        //                         error: [
+        //                             {
+        //                                 code: "e4",
+        //                                 status: itemClicked.status
+        //                             }
+        //                         ]
+        //                     }
+        //                 }
+        //             });
+        //         }
+        //     }
             
-            let store = window.localStorage;
-            let errorsStorage =  JSON.parse(store.getItem(this.localStorageName)) || [];
-            errorsStorage.forEach((item,index)=>{//点击了某一条
-                if(item.code === itemClicked.code){
-                    item.clicked = true;//已经被点击
-                    return
-                }
-            })
-            store.setItem(this.localStorageName,JSON.stringify(errorsStorage))//更新告警信息
-            console.log("errorArray",this.errorArray)
-            this.queryInfo = errorsStorage.filter((item,index)=>{
-                return item.clicked === false
-            })
+        //     let store = window.localStorage;
+        //     let errorsStorage =  JSON.parse(store.getItem(this.localStorageName)) || [];
+        //     errorsStorage.forEach((item,index)=>{//点击了某一条
+        //         if(item.code === itemClicked.code){
+        //             item.clicked = true;//已经被点击
+        //             return
+        //         }
+        //     })
+        //     store.setItem(this.localStorageName,JSON.stringify(errorsStorage))//更新告警信息
+        //     console.log("errorArray",this.errorArray)
+        //     this.queryInfo = errorsStorage.filter((item,index)=>{
+        //         return item.clicked === false
+        //     })
         },
         dealString(str){//处理换行的规则
             str = str.replace(/；/g, ';')
@@ -201,9 +195,8 @@ export default {
         }
     },
     mounted() {
-        this.queryInfo = this.$route.query.queryInfo || [],//query返回的告警信息
-        this.errorArray = this.queryInfo,
-        console.log(888888,this.$route.query.localStorageName)
+        // this.queryInfo = this.$route.query.queryInfo || [],//query返回的告警信息
+        // console.log(2333333,this.queryInfo)
     },
 };
 </script>
