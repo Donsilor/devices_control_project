@@ -267,7 +267,7 @@ export default {
             }
         },
         onAlarmError(attr){//status全为1，设备自动发送告警信息
-             let errors = attr ? attr.errors :[];//设备上报的错误
+             let errors = attr ? attr.error :[];//设备上报的错误
             //  debugger;
             // errors=[{
             //     "family_id": 1,
@@ -342,12 +342,7 @@ export default {
             console.log("isHave",isHave)
             if(isHave){//已经存在这个错误，并且已经保存在内存中
                 if(parseInt(item.status,10)===1){//告警没有解除，再次触发,但clicked状态若是true的要变为false
-                    errorsStorage.forEach((err,i)=>{
-                        // console.log(err,"这一项还存在内存中，但是被关闭过提醒！")
-                        if(item.code == err.code){//说明这一项曾经告警过，切被关闭了提醒，要再次变成false
-                           err.clicked = false;
-                        }
-                    })
+                    return
                 }else if(parseInt(item.status,10)===0){//0：告警消除，把他从内存里面删除
                     // console.log(item,"这个告警解除了！")
                     errorsStorage.forEach((err,i)=>{
