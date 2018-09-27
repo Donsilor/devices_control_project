@@ -257,13 +257,13 @@ export default {
                     }else{
                         return
                     }     
-                    console.log(9999999999,JSON.parse(window.localStorage.getItem('doorlock_errorsStorage')))  
+                    // console.log(9999999999,JSON.parse(window.localStorage.getItem('doorlock_errorsStorage')))  
                     store.setItem('doorlock_errorsStorage',JSON.stringify(errorsStorage))//设置新的告警信息
                 }
                 this.alertModel = errorsStorage.filter((item,index)=>{
                     return item.clicked === false
                 });
-                console.log("this.alertModel32222",this.alertModel)
+                // console.log("this.alertModel32222",this.alertModel)
             }
         },
         onAlarmError(attr){//status全为1，设备自动发送告警信息
@@ -295,14 +295,13 @@ export default {
                 if(store.getItem('doorlock_errorsStorage')){//本地已经有存储
                     errorsStorage =  JSON.parse(store.getItem('doorlock_errorsStorage')) || [];//得到本地缓存
                     errorsStorage = this.dealErrors(errors,errorsStorage)//只保留尚存的告警，内存里的其他告警一并删除
-                    console.log(88888,errorsStorage)
+                    // console.log(88888,errorsStorage)
                     errors.forEach((item,index)=>{
                         this.storageDeal(item,errorsStorage)//对这一项（item）进行处理，内存中值保存status为1的告警信息，返回新的内存信息
                     })
                     store.setItem('doorlock_errorsStorage',JSON.stringify(errorsStorage))//设置新的告警信息
                 }else{//本地缓存为空
                     errors.forEach((item,index)=>{
-                        console.log("empty",index,item)
                         if(parseInt(item.status,10)===1){
                             errorsStorage.push({
                                 msg: WARN_CODE[item.code].msg,
@@ -319,11 +318,11 @@ export default {
                     })    
                     store.setItem('doorlock_errorsStorage',JSON.stringify(errorsStorage))//设置新的告警信息
                 }
-                console.log(99999,JSON.parse(window.localStorage.getItem('doorlock_errorsStorage')))
+                // console.log(99999,JSON.parse(window.localStorage.getItem('doorlock_errorsStorage')))
                 this.alertModel = errorsStorage.filter((item,index)=>{
                     return item.clicked === false
                 });
-                console.log("this.alertModel11111",this.alertModel)
+                // console.log("this.alertModel11111",this.alertModel)
             }else{//没有告警
                 store.setItem('doorlock_errorsStorage',JSON.stringify([]));
                 this.alertModel = [];
@@ -339,12 +338,10 @@ export default {
                     isHave = false;
                 }
             }
-            console.log("isHave",isHave)
             if(isHave){//已经存在这个错误，并且已经保存在内存中
                 if(parseInt(item.status,10)===1){//告警没有解除，再次触发,但clicked状态若是true的要变为false
                     return
                 }else if(parseInt(item.status,10)===0){//0：告警消除，把他从内存里面删除
-                    // console.log(item,"这个告警解除了！")
                     errorsStorage.forEach((err,i)=>{
                         if(item.code == err.code){//说明这个告警已经解除，将其从localstorage里删除
                             errorsStorage.splice(i,1)
@@ -363,9 +360,10 @@ export default {
                         status: item.status
                     })
                 }else if(parseInt(item.status,10)===0){//0：告警消除，把他从里面删除
-                    console.log(item,"这个告警没有存在过")
                     return
-                }else{}
+                }else{
+                    return
+                }
                 
             }
             return errorsStorage

@@ -21,7 +21,6 @@ export default {
     },
     methods: {
         closeItem(itemClicked){
-            console.log(8888,itemClicked)
             let code = itemClicked.code;
             if (code == "e4") {
                 HdSmart.Device.control({//APP主动消除故障命令
@@ -51,6 +50,9 @@ export default {
             this.queryInfo = errorsStorage.filter((item,index)=>{
                 return item.clicked === false
             })
+            if(this.queryInfo.length<=0){
+                this.$router.go(-1)
+            }
         }
     },
     created() {
@@ -59,7 +61,6 @@ export default {
         console.log(99999,this.title,this.queryInfo,this.localStorageName)
     },
     mounted() {
-       
     },
     destroyed() {
         

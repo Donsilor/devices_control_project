@@ -154,39 +154,6 @@ export default {
     methods: {
         closeItem(itemClicked){
             this.$emit('closeItem',itemClicked)
-        //      let code = itemClicked.code;
-        //     if(this.localStorageName === 'doorlock_errorsStorage'){//门锁特殊高警处理
-        //         if (code == "e4") {
-        //             HdSmart.Device.control({//APP主动消除故障命令
-        //                 method: "dm_set",
-        //                 nodeid: "doorlock.main.error",
-        //                 params: {
-        //                     attribute: {
-        //                         error: [
-        //                             {
-        //                                 code: "e4",
-        //                                 status: itemClicked.status
-        //                             }
-        //                         ]
-        //                     }
-        //                 }
-        //             });
-        //         }
-        //     }
-            
-        //     let store = window.localStorage;
-        //     let errorsStorage =  JSON.parse(store.getItem(this.localStorageName)) || [];
-        //     errorsStorage.forEach((item,index)=>{//点击了某一条
-        //         if(item.code === itemClicked.code){
-        //             item.clicked = true;//已经被点击
-        //             return
-        //         }
-        //     })
-        //     store.setItem(this.localStorageName,JSON.stringify(errorsStorage))//更新告警信息
-        //     console.log("errorArray",this.errorArray)
-        //     this.queryInfo = errorsStorage.filter((item,index)=>{
-        //         return item.clicked === false
-        //     })
         },
         dealString(str){//处理换行的规则
             str = str.replace(/；/g, ';')
@@ -196,8 +163,7 @@ export default {
         }
     },
     mounted() {
-        // this.queryInfo = this.$route.query.queryInfo || [],//query返回的告警信息
-        // console.log(2333333,this.queryInfo)
+        
     },
 };
 </script>

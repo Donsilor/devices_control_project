@@ -33,6 +33,9 @@ export default {
             this.queryInfo = errorsStorage.filter((item,index)=>{
                 return item.clicked === false
             })
+            if(this.queryInfo.length<=0){
+                this.$router.go(-1)
+            }
         }
     },
     created() {

@@ -21,7 +21,6 @@ export default {
     },
     methods: {
         closeItem(itemClicked){
-            console.log(8888,itemClicked)
             let store = window.localStorage;
             let errorsStorage =  JSON.parse(store.getItem(this.localStorageName)) || [];
             errorsStorage.forEach((item,index)=>{//点击了某一条
@@ -34,6 +33,9 @@ export default {
             this.queryInfo = errorsStorage.filter((item,index)=>{
                 return item.clicked === false
             })
+            if(this.queryInfo.length<=0){
+                this.$router.go(-1)
+            }
         }
     },
     created() {

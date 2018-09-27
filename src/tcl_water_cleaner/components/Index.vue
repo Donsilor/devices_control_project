@@ -539,13 +539,13 @@ export default {
                         return
                     }     
                     store.setItem(ERROR_STORE_KEY,JSON.stringify(this.errorStore))//设置新的告警信息
-                     console.log(9999999999,JSON.parse(window.localStorage.getItem(ERROR_STORE_KEY)))  
+                    //  console.log(9999999999,JSON.parse(window.localStorage.getItem(ERROR_STORE_KEY)))  
                 }
                 this.alertModel = this.errorStore.filter((item,index)=>{
                     // console.log(index,item.clicked)
                     return item.clicked === false
                 });
-                console.log("this.alertModel32222",this.alertModel)
+                // console.log("this.alertModel32222",this.alertModel)
             }
         },
         getAlertListErr(attr){
@@ -588,11 +588,11 @@ export default {
                     })    
                     store.setItem(ERROR_STORE_KEY,JSON.stringify(this.errorStore))//设置新的告警信息
                 }
-                console.log(99999,JSON.parse(window.localStorage.getItem(ERROR_STORE_KEY)))
+                // console.log(99999,JSON.parse(window.localStorage.getItem(ERROR_STORE_KEY)))
                 this.alertModel = this.errorStore.filter((item,index)=>{
                     return item.clicked === false
                 });
-                console.log("this.alertModel11111",this.alertModel)
+                // console.log("this.alertModel11111",this.alertModel)
             }else{
                 //没有告警
                 store.setItem('water_cleaner_error',JSON.stringify([]));
@@ -609,14 +609,11 @@ export default {
                     isHave = false;
                 }
             }
-            console.log("isHave",isHave)
             if(isHave){//已经存在这个错误，并且已经保存在内存中
                 if(parseInt(item.status,10)===1){//告警没有解除，再次触发,但clicked状态若是true的要变为false
                    return
                 }else if(parseInt(item.status,10)===0){//0：告警消除，把他从内存里面删除
-                    console.log(item,"这个告警解除了！")
                     errorsStorage.forEach((err,i)=>{
-                        console.log(i,err)
                         if(item.code == err.code){//说明这个告警已经解除，将其从localstorage里删除
                             errorsStorage.splice(i,1)
                         }
@@ -624,9 +621,6 @@ export default {
                 }
             }else{//没有存在这个告警，如果是1存在内存中吗，0则退出
                 if(parseInt(item.status,10)===1){//新增的告警，添加到内存中
-                    console.log(111,WARN_CODE)
-                    console.log(WARN_CODE[item.code])
-                    console.log(WARN_CODE[item.code].msg)
                     errorsStorage.push({
                         msg: WARN_CODE[item.code].msg,
                         text:WARN_CODE[item.code].text,
@@ -637,7 +631,6 @@ export default {
                         status: item.status
                     })
                 }else if(parseInt(item.status,10)===0){//0：告警消除，把他从里面删除
-                    console.log(item,"这个告警没有存在过")
                     return
                 }
                 
@@ -685,7 +678,6 @@ export default {
             this.onSuccess(data.result);
         });
         HdSmart.onDeviceAlert(data => {
-            console.log("data88888",data)
             // if (data.method == "dr_report_dev_alert") {//设备状态变化后主动上报
             //     this.getAlertList(data.result.attribute.error);
             // } else {
