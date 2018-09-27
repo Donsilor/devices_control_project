@@ -268,12 +268,13 @@ export default {
         },
         onAlarmError(attr){//status全为1，设备自动发送告警信息
              let errors = attr ? attr.errors :[];//设备上报的错误
+            //  debugger;
             // errors=[{
             //     "family_id": 1,
             //     "device_id": 111222233333,
             //     "device_uuid":"112233445566778810",
             //     "device_category_id": 'xxx',
-            //     "code":"e2",
+            //     "code":"e4",
             //     "level": 1,
             //     "status":1,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
             //     "updated_at": 1498047283,
@@ -282,7 +283,7 @@ export default {
             //     "device_id": 111222233333,
             //     "device_uuid":"112233445566778810",
             //     "device_category_id": 'xxx',
-            //     "code":"e4",
+            //     "code":"e3",
             //     "level": 1,
             //     "status":1,    // 0：告警消除，1：新告警，2：自动恢复告警，3：手工恢复，4：忽略
             //     "updated_at": 1498047283,
@@ -293,7 +294,7 @@ export default {
             if(errors && errors.length>0){
                 if(store.getItem('doorlock_errorsStorage')){//本地已经有存储
                     errorsStorage =  JSON.parse(store.getItem('doorlock_errorsStorage')) || [];//得到本地缓存
-                    this.dealErrors(errors,errorsStorage)//只保留尚存的告警，内存里的其他告警一并删除
+                    errorsStorage = this.dealErrors(errors,errorsStorage)//只保留尚存的告警，内存里的其他告警一并删除
                     console.log(88888,errorsStorage)
                     errors.forEach((item,index)=>{
                         this.storageDeal(item,errorsStorage)//对这一项（item）进行处理，内存中值保存status为1的告警信息，返回新的内存信息
@@ -342,15 +343,14 @@ export default {
             if(isHave){//已经存在这个错误，并且已经保存在内存中
                 if(parseInt(item.status,10)===1){//告警没有解除，再次触发,但clicked状态若是true的要变为false
                     errorsStorage.forEach((err,i)=>{
-                        console.log(err,"这一项还存在内存中，但是被关闭过提醒！")
+                        // console.log(err,"这一项还存在内存中，但是被关闭过提醒！")
                         if(item.code == err.code){//说明这一项曾经告警过，切被关闭了提醒，要再次变成false
                            err.clicked = false;
                         }
                     })
                 }else if(parseInt(item.status,10)===0){//0：告警消除，把他从内存里面删除
-                    console.log(item,"这个告警解除了！")
+                    // console.log(item,"这个告警解除了！")
                     errorsStorage.forEach((err,i)=>{
-                        console.log(i,err)
                         if(item.code == err.code){//说明这个告警已经解除，将其从localstorage里删除
                             errorsStorage.splice(i,1)
                         }
@@ -379,22 +379,20 @@ export default {
             let arr=[];//保存内存和告警相同的项
             for(let i=0;i<errors.length;i++){
                 for(let j=0;j<errorsStorage.length;j++){
-                    if(errors[i].code === errorsStorage[j].code && errors[i].status == 1 ){//status为0，告警已经解除的也一并删除
+                    if((errors[i].code === errorsStorage[j].code) && (errors[i].status == 1)){//status为0，告警已经解除的也一并删除
                         arr.push(errors[i].code)
                     }
                 }
             }
+            console.log(11111,arr)//找到数组中相同的项
+            let newErrorsStorage = [];
             if(arr && arr.length>0){
-                errorsStorage.forEach((item,index)=>{
-                    for(let x=0;x<arr.length;x++){
-                        if(arr[x] !== item.code){
-                            errorsStorage.splice(item,1)
-                        }
-                    }
+                newErrorsStorage = errorsStorage.filter((item,index)=>{
+                    return arr.indexOf(item.code)>-1;
                 })
-            }else{
-                errorsStorage = [];
             }
+            console.log(22222,newErrorsStorage)
+            return newErrorsStorage;
         },
         getSnapShot(cb) {
             HdSmart.Device.getSnapShot(

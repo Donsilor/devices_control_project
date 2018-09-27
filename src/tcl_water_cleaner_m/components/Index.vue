@@ -535,7 +535,7 @@ export default {
                 // let errorsStorage = [];
                 if(this.errorStore){//本地已经有存储
                     // errorsStorage =  JSON.parse(store.getItem(ERROR_STORE_KEY));//得到本地缓存
-                    this.dealErrors(errors,this.errorStore)//只保留尚存的告警，内存里的其他告警一并删除
+                    this.errorStore = this.dealErrors(errors,this.errorStore)//只保留尚存的告警，内存里的其他告警一并删除
                     errors.forEach((item,index)=>{
                         this.storageDeal(item,this.errorStore)//对这一项（item）进行处理，内存中值保存status为1的告警信息，返回新的内存信息
                     })
@@ -618,22 +618,20 @@ export default {
             let arr=[];//保存内存和告警相同的项
             for(let i=0;i<errors.length;i++){
                 for(let j=0;j<errorsStorage.length;j++){
-                    if(errors[i].code === errorsStorage[j].code && errors[i].status == 1 ){//status为0，告警已经解除的也一并删除
+                    if((errors[i].code === errorsStorage[j].code) && (errors[i].status == 1)){//status为0，告警已经解除的也一并删除
                         arr.push(errors[i].code)
                     }
                 }
             }
+            console.log(11111,arr)//找到数组中相同的项
+            let newErrorsStorage = [];
             if(arr && arr.length>0){
-                errorsStorage.forEach((item,index)=>{
-                    for(let x=0;x<arr.length;x++){
-                        if(arr[x] !== item.code){
-                            errorsStorage.splice(item,1)
-                        }
-                    }
+                newErrorsStorage = errorsStorage.filter((item,index)=>{
+                    return arr.indexOf(item.code)>-1;
                 })
-            }else{
-                errorsStorage = [];
             }
+            console.log(22222,newErrorsStorage)
+            return newErrorsStorage;
         },
         // getAlertList(errors) {
         //     errors = errors || [];
