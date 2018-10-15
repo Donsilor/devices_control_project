@@ -244,10 +244,10 @@ export default {
                 if (this.isLoading || this.loadState === "NO_DATA") {
                     return;
                 }
-                // if (list.length && !more) {
-                //     HdSmart.UI.toast("已加载全部");
-                //     return;
-                // }
+                if (list.length && !more) {
+                    // HdSmart.UI.toast("已加载全部");
+                    return;
+                }
                 this.getLogData(true, this.type);
             }
         }, 200),
