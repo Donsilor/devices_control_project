@@ -352,11 +352,13 @@ export default {
     },
     mounted() {
         service.RemoteController({ show: false });
-        if (!infoCache.length) {
-            this.pageInit();
-        } else {
-            this.homePageInfo = infoCache;
-        }
+        this.$nextTick(() => {
+            if (!infoCache.length) {
+                this.pageInit();
+            } else {
+                this.homePageInfo = infoCache;
+            }
+        })
     }
 };
 </script>

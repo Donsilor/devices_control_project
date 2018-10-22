@@ -49,12 +49,22 @@ body,
 .bottom {
     display: flex;
     margin: 0 240px;
-    justify-content: space-around;
+    justify-content: center;//space-around;
     align-items: center;
     position: relative;
 }
+.bottom .button{
+    margin: 0 50px;
+}
 .bottom .imgWrapper {
     margin-bottom: 10px;
+}
+
+.btns-wrap{ 
+    margin-top: -30px;
+}
+.modal .button{
+    margin-top: 70px;
 }
 
 .hanging,
@@ -240,32 +250,32 @@ body,
 
 .cool {
     .imgWrapper {
-        background-image: url(./assets/cool_normal.png);
+        background-image: url(./assets/btn_aircon_sleep_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/cool_active.png);
+        background-image: url(./assets/btn_aircon_sleep.png);
     }
     &.disabled .imgWrapper {
-        background-image: url(./assets/cool_disabled.png);
+        // background-image: url(./assets/cool_disabled.png);
     }
 }
 .heat {
     .imgWrapper {
-        background-image: url(./assets/heat_normal.png);
+        background-image: url(./assets/btn_aircon_heat_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/heat_active.png);
+        background-image: url(./assets/btn_aircon_heat.png);
     }
     &.disabled .imgWrapper {
-        background-image: url(./assets/heat_disabled.png);
+        // background-image: url(./assets/heat_disabled.png);
     }
 }
 .dehumidify {
     .imgWrapper {
-        background-image: url(./assets/dehumidify_normal.png);
+        background-image: url(./assets/btn_aircon_dry.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/dehumidify_active.png);
+        background-image: url(./assets/btn_aircon_dry_preesed.png);
     }
     &.disabled .imgWrapper {
         background-image: url(./assets/dehumidify_disabled.png);
@@ -291,39 +301,39 @@ body,
         background-image: url(./assets/off_active.png);
     }
 }
-.low {
-    .imgWrapper {
-        background-image: url(./assets/low_normal.png);
-    }
-    &.active .imgWrapper {
-        background-image: url(./assets/low_active.png);
-    }
-    &.disabled .imgWrapper {
-        background-image: url(./assets/low_disabled.png);
-    }
-}
-.normal {
-    .imgWrapper {
-        background-image: url(./assets/medium_normal.png);
-    }
-    &.active .imgWrapper {
-        background-image: url(./assets/medium_active.png);
-    }
-    &.disabled .imgWrapper {
-        background-image: url(./assets/medium_disabled.png);
-    }
-}
-.high {
-    .imgWrapper {
-        background-image: url(./assets/high_normal.png);
-    }
-    &.active .imgWrapper {
-        background-image: url(./assets/high_active.png);
-    }
-    &.disabled .imgWrapper {
-        background-image: url(./assets/high_disabled.png);
-    }
-}
+// .low {
+//     .imgWrapper {
+//         background-image: url(./assets/low_normal.png);
+//     }
+//     &.active .imgWrapper {
+//         background-image: url(./assets/low_active.png);
+//     }
+//     &.disabled .imgWrapper {
+//         background-image: url(./assets/low_disabled.png);
+//     }
+// }
+// .normal {
+//     .imgWrapper {
+//         background-image: url(./assets/medium_normal.png);
+//     }
+//     &.active .imgWrapper {
+//         background-image: url(./assets/medium_active.png);
+//     }
+//     &.disabled .imgWrapper {
+//         background-image: url(./assets/medium_disabled.png);
+//     }
+// }
+// .high {
+//     .imgWrapper {
+//         background-image: url(./assets/high_normal.png);
+//     }
+//     &.active .imgWrapper {
+//         background-image: url(./assets/high_active.png);
+//     }
+//     &.disabled .imgWrapper {
+//         background-image: url(./assets/high_disabled.png);
+//     }
+// }
 .minus {
     .imgWrapper {
         background-image: url(./assets/minus_normal.png);
@@ -342,18 +352,18 @@ body,
 }
 .mode_auto {
     .imgWrapper {
-        background-image: url(./assets/mode_auto_normal.png);
+        background-image: url(./assets/btn_aircon_ai_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/mode_auto_active.png);
+        background-image: url(./assets/btn_aircon_ai_active.png);
     }
 }
 .wind {
     .imgWrapper {
-        background-image: url(./assets/mode_air_normal.png);
+        background-image: url(./assets/btn_aircon_blow_normal.png);
     }
     &.active .imgWrapper {
-        background-image: url(./assets/mode_air_active.png);
+        background-image: url(./assets/btn_aircon_blow_active.png);
     }
 }
 .lr {
@@ -370,6 +380,60 @@ body,
     }
     &.active .imgWrapper {
         background-image: url(./assets/horizontal_active.png);
+    }
+}
+.mode {
+    .imgWrapper {
+        background-image: url(./assets/btn_washer_mode.png);
+    }
+    &.active .imgWrapper {
+        // background-image: url(./assets/low_active.png);
+    }
+    &.disabled .imgWrapper {
+        // background-image: url(./assets/low_disabled.png);
+    }
+}
+.speed {
+    .imgWrapper {
+        background-image: url(./assets/low_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/low_active.png);
+    }
+    &.disabled .imgWrapper {
+        background-image: url(./assets/low_disabled.png);
+    }
+}
+.low {
+    .imgWrapper {
+        background-image: url(./assets/btn_airvolume_s_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/icn_airvolume_s.png);
+    }
+}
+.normal {
+    .imgWrapper {
+        background-image: url(./assets/btn_airvolume_m_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/icn_airvolume_m.png);
+    }
+}
+.high {
+    .imgWrapper {
+        background-image: url(./assets/icn_airvolume_l_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/icn_airvolume_l.png);
+    }
+}
+.super_high {
+    .imgWrapper {
+        background-image: url(./assets/btn_airvolume_l_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/btn_airvolume_l.png);
     }
 }
 

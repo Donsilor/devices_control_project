@@ -73,7 +73,7 @@
 .isIOS .topbar {
     height: 88px;
     .title {
-        line-height: 95px;
+        line-height: 88px;
     }
     .icon {
         height: 88px;

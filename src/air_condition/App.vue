@@ -36,28 +36,52 @@
             <!--底部按钮Start-->
             <div class="bottom">
 
-                <ac-button class="cool" :class="{active:params.mode=='cold'}" :info="buttonList.cool" @tap="setParam"></ac-button>
+                <!-- <ac-button class="cool" :class="{active:params.mode=='cold'}" :info="buttonList.cool" @tap="setParam"></ac-button>
                 <ac-button class="heat" :class="{active:params.mode=='heat'}" :info="buttonList.heat" @tap="setParam"></ac-button>
                 <ac-button class="dehumidify" :class="{active:params.mode=='dehumidify'}" :info="buttonList.dehumidify" @tap="setParam"></ac-button>
                 <ac-button class="switch on" :info="buttonList.on" @tap="toggle"></ac-button>
                 <ac-button class="low" :class="{active:params.speed=='low'}" :info="buttonList.low" @tap="setParam"></ac-button>
                 <ac-button class="normal" :class="{active:params.speed=='normal'}" :info="buttonList.normal" @tap="setParam"></ac-button>
-                <ac-button class="high" :class="{active:params.speed=='high'}" :info="buttonList.high" @tap="setParam"></ac-button>
+                <ac-button class="high" :class="{active:params.speed=='high'}" :info="buttonList.high" @tap="setParam"></ac-button> -->
+                
+                <div class="button mode">
+                    <div class="imgWrapper" @click="modeDialogShow=true"></div>
+                    <span class="btnName">模式</span>
+                </div>
+                <ac-button class="switch on" :info="buttonList.on" @tap="toggle"></ac-button>
+                <div class="button speed">
+                    <div class="imgWrapper" @click="speedDialogShow=true"></div>
+                    <span class="btnName">风速</span>
+                </div>
+            
             </div>
             <!--底部按钮End-->
 
             <div class="more" @click.stop="showMore=true;"></div>
             <!--更多子菜单Start-->
             <modal class="subMenu" v-model="showMore" title="更多">
-                <devider :content="'模式'"></devider>
-                <div class="more-mode">
-                    <ac-button class="mode_auto" :class="{active:params.mode=='auto'}" :info="buttonList.mode_auto" @tap="setParam"></ac-button>
-                    <ac-button class="wind" :class="{active:params.mode=='wind'}" :info="buttonList.wind" @tap="setParam"></ac-button>
-                </div>
                 <devider :content="'摆风'"></devider>
-                <div class="more-wind-direction">
+                <div class="btns-wrap">
                     <!-- <ac-button class="lr" :class="{active:params.wind_left_right=='on'}" :info="buttonList.lrBtn" @tap="toggle"></ac-button> -->
                     <ac-button class="ud" :class="{active:params.wind_up_down=='on'}" :info="buttonList.udBtn" @tap="toggle"></ac-button>
+                </div>
+            </modal>
+            <!-- 模式 -->
+            <modal class="subMenu" v-model="modeDialogShow" title="模式设置">
+                <div class="btns-wrap">
+                <ac-button class="cool" :class="{active:params.mode=='cold'}" :info="buttonList.cool" @tap="setParam"></ac-button>
+                <ac-button class="heat" :class="{active:params.mode=='heat'}" :info="buttonList.heat" @tap="setParam"></ac-button>
+                <ac-button class="dehumidify" :class="{active:params.mode=='dehumidify'}" :info="buttonList.dehumidify" @tap="setParam"></ac-button>
+                <ac-button class="mode_auto" :class="{active:params.mode=='auto'}" :info="buttonList.mode_auto" @tap="setParam"></ac-button>
+                <ac-button class="wind" :class="{active:params.mode=='wind'}" :info="buttonList.wind" @tap="setParam"></ac-button>
+                </div>
+            </modal>
+            <!-- 风速 -->
+            <modal class="subMenu" v-model="speedDialogShow" title="风速设置">
+                <div class="btns-wrap">
+                <ac-button class="low" :class="{active:params.speed=='low'}" :info="buttonList.low" @tap="setParam"></ac-button>
+                <ac-button class="normal" :class="{active:params.speed=='normal'}" :info="buttonList.normal" @tap="setParam"></ac-button>
+                <ac-button class="high" :class="{active:params.speed=='high'}" :info="buttonList.high" @tap="setParam"></ac-button>
                 </div>
             </modal>
         </div>
@@ -70,13 +94,14 @@
 
             <div class="bottom">
 
-                <ac-button class="cool disabled"></ac-button>
+                <!-- <ac-button class="cool disabled"></ac-button>
                 <ac-button class="heat disabled"></ac-button>
                 <ac-button class="dehumidify disabled"></ac-button>
                 <ac-button class="switch off" :info="buttonList.off" @tap="toggle" />
                 <ac-button class="low disabled"></ac-button>
                 <ac-button class="normal disabled"></ac-button>
-                <ac-button class="high disabled"></ac-button>
+                <ac-button class="high disabled"></ac-button> -->
+                <ac-button class="switch off" :info="buttonList.off" @tap="toggle" />
 
             </div>
         </div>
@@ -218,7 +243,9 @@ export default {
             fakeTemp: "--",
             //页面初始化失败
             initErr: false,
-            loading: false
+            loading: false,
+            modeDialogShow: false,
+            speedDialogShow: false,
         };
     },
     computed: {

@@ -20,13 +20,11 @@
     </div>
 </template>
 
-<style lang="less">
-    html,body{
-        width:100%;
-        height:100%;
-        background: #F2F2F2;
-    }
+<style lang="less" scoped>
     .content{
+        position: fixed;
+        left: 0;
+        top: 0;
         width:100%;
         height:100%;
         background: #F2F2F2;

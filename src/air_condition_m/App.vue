@@ -35,6 +35,11 @@ export default {
             device: {}
         };
     },
+    watch: {    
+        'ac.switchStatus'() { 
+            HdSmart.UI.toggleHeadAndFoot(true)
+        }
+    },
     methods: {
         showSpin(ele, style) {
             if (!ele) {

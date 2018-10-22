@@ -106,13 +106,12 @@ a {
 .btn-off {
     position: absolute;
     left: 50%;
-    width: 144px;
-    height: 144px;
-    margin-left: -72px;
+    width: 160px;
+    height: 160px;
+    bottom: 140px;
+    transform: translateX(-50%);
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    // top: 600px;
-    bottom: 140px;
     background-image: url(./assets/btn_aircon_poweroff_normal@2x.png);
     transition: all 1s;
     &:active {
@@ -138,11 +137,10 @@ a {
 }
 .btns {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-wrap: wrap;
     li {
         // float: left;
-        margin: 0 25px;
+        margin:0 25px 0;
         text-align: center;
         width: 120px;
         height: 200px;
@@ -163,12 +161,20 @@ a {
 .btns-hold {
     position: absolute;
     left: 50%;
-    bottom: 328px;
-    width: 750px;
+    bottom: 140px;
+    width: 700px;
     transform: translateX(-50%);
     padding: 0 35px;
     .on {
         font-weight: bold;
+    }
+    .btns{  
+        margin-bottom: -60px; 
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .btns li{   
+        // margin: 0 160px;
     }
 }
 .btns-more {
@@ -180,7 +186,7 @@ a {
         color: #c8cacc;
     }
     li{
-        margin: 0 30px;
+        margin: 80px 32px 0;
     }
     .on {
         color: #46bcff;
@@ -190,31 +196,41 @@ a {
     padding-top: 0;
     padding-bottom: 20px;
 }
-.btn-cold {
-    background-image: url(./assets/btn_aircon_cool_normal@2x.png);
+.btn-mode{
+    background-image: url(./assets/btn_washer_mode@2x.png);
     &:active {
-        background-image: url(./assets/btn_aircon_cool_pressed@2x.png);
+    }
+}
+.btn-speed2{
+    background-image: url(./assets/btn_airvolume_m@2x.png);
+    &:active {
+    }
+}
+.btn-cold {
+    background-image: url(./assets/btn_aircon_sleep_normal.png);
+    &:active {
+        background-image: url(./assets/btn_aircon_sleep.png);
     }
     &.on {
-        background-image: url(./assets/btn_aircon_cool_active@2x.png);
+        background-image: url(./assets/btn_aircon_sleep.png);
     }
 }
 .btn-heat {
-    background-image: url(./assets/btn_aircon_heat_normal@2x.png);
+    background-image: url(./assets/btn_aircon_heat_normal.png);
     &:active {
-        background-image: url(./assets/btn_aircon_heat_pressed@2x.png);
+        background-image: url(./assets/btn_aircon_heat.png);
     }
     &.on {
-        background-image: url(./assets/btn_aircon_heat_active@2x.png);
+        background-image: url(./assets/btn_aircon_heat.png);
     }
 }
 .btn-dehumidify {
-    background-image: url(./assets/btn_aircon_dry_normal@2x.png);
+    background-image: url(./assets/btn_aircon_dry.png);
     &:active {
-        background-image: url(./assets/btn_aircon_dry_pressed@2x.png);
+        background-image: url(./assets/btn_aircon_dry_preesed.png);
     }
     &.on {
-        background-image: url(./assets/btn_aircon_dry_active@2x.png);
+        background-image: url(./assets/btn_aircon_dry_preesed.png);
     }
 }
 .btn-speed {
@@ -224,30 +240,39 @@ a {
     }
 }
 .btn-s1 {
-    background-image: url(./assets/btn_airvolume_s_normal@2x.png);
+    background-image: url(./assets/btn_airvolume_s_normal.png);
     &:active {
-        background-image: url(./assets/btn_airvolume_s_pressed@2x.png);
+        background-image: url(./assets/icn_airvolume_s.png);
+    }
+    &.on {
+        background-image: url(./assets/icn_airvolume_s.png);
     }
 }
 .btn-s2 {
-    background-image: url(./assets/btn_airvolume_m_normal@2x.png);
+    background-image: url(./assets/btn_airvolume_m_normal.png);
     &:active {
-        background-image: url(./assets/btn_airvolume_m_pressed@2x.png);
+        background-image: url(./assets/icn_airvolume_m.png);
+    }
+    &.on {
+        background-image: url(./assets/icn_airvolume_m.png);
     }
 }
 .btn-s3 {
-    background-image: url(./assets/btn_airvolume_l_normal@2x.png);
+    background-image: url(./assets/icn_airvolume_l_normal.png);
     &:active {
-        background-image: url(./assets/btn_airvolume_l_pressed@2x.png);
+        background-image: url(./assets/icn_airvolume_l.png);
+    }
+    &.on {
+        background-image: url(./assets/icn_airvolume_l.png);
     }
 }
 .btn-auto {
-    background-image: url(./assets/btn_aircon_ai_normal@2x.png);
+    background-image: url(./assets/btn_aircon_ai_normal.png);
     &:active {
-        background-image: url(./assets/btn_aircon_ai_pressed@2x.png);
+        background-image: url(./assets/btn_aircon_ai_active.png);
     }
     &.on {
-        background-image: url(./assets/btn_aircon_ai_active@2x.png);
+        background-image: url(./assets/btn_aircon_ai_active.png);
     }
 }
 .btn-wind {
@@ -295,7 +320,7 @@ a {
     opacity: 0;
 }
 .android .btns-hold {
-    bottom: 428px;
+    bottom: 252px;
 }
 .android .btn-off {
     bottom: 252px;
@@ -350,10 +375,9 @@ a {
 .btn-on {
     position: absolute;
     left: 50%;
-    // top: 600px;
     bottom: 140px;
-    width: 144px;
-    height: 144px;
+    width: 160px;
+    height: 160px;
     transform: translateX(-50%);
     background-size: 100% 100%;
     background-repeat: no-repeat;
