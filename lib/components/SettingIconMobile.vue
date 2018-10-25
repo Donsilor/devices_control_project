@@ -1,12 +1,12 @@
 <template>
-    <icon class="redact" :onClick="toAppDeviceDetail" />
+  <icon :on-click="toAppDeviceDetail" class="redact" />
 </template>
 
 <style lang="less">
 .redact {
     display: inline-block;
     margin-left: 5px;
-    vertical-align: middle;
+    vertical-align: -1px;
     width: 24px;
     height: 24px;
     background-image: url(./assets/btn_device_setting.png);
@@ -19,25 +19,25 @@
 </style>
 
 <script>
-import Icon from "./Icon.vue";
+import Icon from './Icon.vue'
 export default {
-    components: {
-        Icon
-    },
-    props: {
-        className: {
-            type: String,
-            default: "redact"
-        }
-    },
-    data() {
-        return {};
-    },
-
-    methods: {
-        toAppDeviceDetail() {
-            HdSmart.UI.goDeviceDetail();
-        }
+  components: {
+    Icon
+  },
+  props: {
+    className: {
+      type: String,
+      default: 'redact'
     }
-};
+  },
+  data() {
+    return {}
+  },
+
+  methods: {
+    toAppDeviceDetail() {
+      HdSmart.UI.goDeviceDetail()
+    }
+  }
+}
 </script>

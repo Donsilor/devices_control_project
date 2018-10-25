@@ -2,16 +2,16 @@
     导航条
 -->
 <template>
-    <div class="topbar">
-        <div class="left">
-            <a class="icon icon-arrow" @click="goBack"></a>
-        </div>
-        <div class="right">
-            <router-link to="/search" class="icon icon-search"></router-link>
-        </div>
-        <div class="title" v-if="title">{{title}}</div>
-        <slot></slot>
+  <div class="topbar">
+    <div class="left">
+      <a class="icon icon-arrow" @click="goBack"/>
     </div>
+    <div class="right">
+      <router-link to="/search" class="icon icon-search"/>
+    </div>
+    <div v-if="title" class="title">{{ title }}</div>
+    <slot/>
+  </div>
 </template>
 
 <style lang="less">
@@ -71,12 +71,12 @@
 }
 
 .isIOS .topbar {
-    height: 88px;
+    height: 44PX;
     .title {
-        line-height: 88px;
+        line-height: 44PX;
     }
     .icon {
-        height: 88px;
+        height: 44PX;
     }
 }
 .topbar-fixed {
@@ -90,16 +90,16 @@
 
 <script>
 export default {
-    props: {
-        title: String
+  props: {
+    title: String
+  },
+  data() {
+    return {}
     },
-    data() {
-        return {};
-    },
-    methods: {
-        goBack() {
-            this.$router.back();
+  methods: {
+    goBack() {
+      this.$router.back()
         }
-    }
-};
+  }
+}
 </script>
