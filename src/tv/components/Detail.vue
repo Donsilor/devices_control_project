@@ -303,7 +303,7 @@
     .desc {
         padding-top: 30px;
         border-top: 1px solid #dbdbdb;
-        color: #7578a;
+        // color: #7578a7;
         position: relative;
     }
     .desc-cont {
@@ -323,7 +323,7 @@
     }
     .desc-toggle {
         float: right;
-        color: #fff;
+        color: #75787a;
         i {
             display: inline-block;
             background: url(../../../lib/base/tv/assets/icn_arrow_down.png)
