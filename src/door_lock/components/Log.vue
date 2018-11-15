@@ -150,7 +150,8 @@ export default {
               this.firstLoad = false
               // this.list = [];
             } else {
-              HdSmart.UI.toast(JSON.stringify(data))
+            //   HdSmart.UI.toast(JSON.stringify(data))
+              HdSmart.UI.toast(`操作失败：${data.code}`)
             }
           }
         )
@@ -189,7 +190,8 @@ export default {
               this.firstLoad = false
               // this.list = [];
             } else {
-              HdSmart.UI.toast(JSON.stringify(data))
+            //   HdSmart.UI.toast(JSON.stringify(data))
+              HdSmart.UI.toast(`操作失败：${data.code}`)
             }
           }
         )
