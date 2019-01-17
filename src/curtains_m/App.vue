@@ -1,11 +1,27 @@
 <template>
     <div id="app">
-        <div class="device_name">{{device_name}}
-            <icon class="redact-white" />
+        <div class="topbar topbar-fixed">
+            <div class="left">
+                <a href="#/" class="icon-return"></a>
+            </div>
+            <div class="title">智能窗帘</div>
+            <div class="right">
+                <a href="" class="icon-more"></a>
+            </div>
+
         </div>
-        <div class="tip" v-if="show && tip">{{tip}}</div>
-        <navigator class="navigator" v-once></navigator>
-        <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"></curtain>
+        <div class="curtain-wrap">
+
+            <div class="device_name">
+                <!-- {{device_name}}
+                 <icon class="redact-white" />-->
+                窗帘已关闭
+            </div>
+            <div class="tip" v-if="show && tip">{{tip}}</div>
+            <navigator class="navigator" v-once></navigator>
+            <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"></curtain>
+
+        </div>
         <control class="control" v-on:onOpen="onOpen" v-on:onPause="onPause" v-on:onClose="onClose" :is_ready="is_ready" @onGoPercentage="onGoPercentage"></control>
     </div>
 </template>

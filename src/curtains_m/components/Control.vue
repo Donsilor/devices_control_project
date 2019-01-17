@@ -1,15 +1,21 @@
 <template>
     <div class="control-container">
         <div class="box tap-box">
-            <div class="tap" @click="onGo(20)">20%</div>
-            <div class="tap" @click="onGo(50)">50%</div>
-            <div class="tap" @click="onGo(80)">80%</div>
-            <div class="tap" @click="onGo(100)">100%</div>
+            <div class="tap icon-per20" @click="onGo(20)">20%</div>
+            <div class="tap icon-per50" @click="onGo(50)">50%</div>
+            <div class="tap icon-per80" @click="onGo(80)">80%</div>
+            <div class="tap icon-per100" @click="onGo(100)">100%</div>
         </div>
         <div class="box button-box">
-            <div class="off button" @click="onCloseTouchStart" :class="[loading_type=='off' ? 'loading':'normal']"></div>
-            <div class="pause button" @click="onPauseTouchStart" :class="[loading_type=='pause' ? 'loading':'normal']"></div>
-            <div class="on button" @click="onOpenTouchStart" :class="[loading_type=='on' ? 'loading':'normal']"></div>
+            <div class="off button" @click="onCloseTouchStart" :class="[loading_type=='off' ? 'loading':'normal']">
+                <i class="icon-off"></i>关
+            </div>
+            <div class="pause button" @click="onPauseTouchStart" :class="[loading_type=='pause' ? 'loading':'normal']">
+                <i class="icon-pause"></i>暂停
+            </div>
+            <div class="on button" @click="onOpenTouchStart" :class="[loading_type=='on' ? 'loading':'normal']">
+                <i class="icon-on"></i>开
+            </div>
         </div>
     </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <mt-popup v-model="visible" :closeOnClickModal="false" position="center" class="mint-datetime2">
-    <div class="dp-header">选择日期</div>
+    <!--<div class="dp-header">选择日期</div>-->
     <div class="dp-body">
         <mt-picker
         :slots="dateSlots"
@@ -17,8 +17,8 @@
         </div>
     </div>
     <div class="dp-footer">
-        <span class="btn btn-cancel" @click="visible = false;$emit('cancel')">{{ cancelText }}</span>
         <span class="btn btn-confirm" @click="confirm">{{ confirmText }}</span>
+        <span class="btn btn-cancel" @click="visible = false;$emit('cancel')">{{ cancelText }}</span>
     </div>
   </mt-popup>
 </template>

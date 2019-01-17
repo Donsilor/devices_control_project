@@ -1,22 +1,29 @@
 <template>
   <div class="page-log">
     <!-- 顶部条 -->
+      <div class="log-box">
+
+
     <div class="topbar topbar-fixed">
       <div class="left">
-        <router-link to="/" class="icon icon-arrow"/>
+        <router-link to="/" class="icon-return"/>
       </div>
       <div class="title">
-        <a :class="{active:type!=='warn'}" href="javascript:void(0)" @click.prevent="switchLog('open')">开锁记录</a>
-        <a :class="{active:type=='warn'}" href="#" @click.prevent="switchLog('warn')">预警记录</a>
+        详细记录
       </div>
       <div class="right">
-        <a href="" class="icon icon-del" @click.prevent="clearLog"/>
+        <a href="" class="icon-del" @click.prevent="clearLog"/>
       </div>
     </div>
 
+      <div class="tabs-nav">
+          <a :class="{active:type!=='warn'}" href="javascript:void(0)" @click.prevent="switchLog('open')">开锁记录</a>
+          <a :class="{active:type=='warn'}" href="#" @click.prevent="switchLog('warn')">预警记录</a>
+      </div>
+
     <mt-datetime-picker ref="picker2" v-model="date" :start-date="startDate" :end-date="endDate" :visible-item-count="3" type="date" @confirm="handleChange"/>
 
-    <log-list v-show="!firstLoad" :current-date="currentDate" :data="list" />
+    <log-list :class="{warn:type=='warn'}" v-show="!firstLoad" :current-date="currentDate" :data="list" />
     <div v-if="!isLoading && more" class="loadmore">
       <a href="" @click.prevent="loadMore2">加载更多</a>
     </div>
@@ -24,7 +31,9 @@
       <a href="">加载中</a>
     </div>
     <div v-if="!isLoading && list.length && !more" class="nomore">已加载完全部</div>
-    <a href="javascript:void(0)" class="btn-cale" @click.prevent="showCalendar"/>
+    <!--<a href="javascript:void(0)" class="btn-cale" @click.prevent="showCalendar"/>-->
+  </div>
+      <div class="log-note">仅展示近1年记录<a class="cale" href="javascript:void(0)" @click.prevent="showCalendar">按时间筛选</a></div>
   </div>
 </template>
 

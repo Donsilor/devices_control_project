@@ -1,6 +1,6 @@
 <template>
     <div class="wrap" :class="{visible:is_ready}">
-        <div class="bg" :style="{transform:'translate3d(-50%,-'+moveX+'px,0)',opacity:bg_opacity}"></div>
+        <!--<div class="bg" :style="{transform:'translate3d(-50%,-'+moveX+'px,0)',opacity:bg_opacity}"></div>-->
         <div class="box left" ref="leftBox">
             <div class="clothes" :style="{width:width}">
                 <div class="folding" :style="{opacity: opacity}"></div>

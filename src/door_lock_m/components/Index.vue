@@ -1,20 +1,42 @@
 <template>
   <div class="page-index">
+      <div class="topbar topbar-fixed">
+          <div class="left">
+              <a href="#/" class="icon-return"></a>
+          </div>
+          <div class="title">智能锁</div>
+          <div class="right">
+              <router-link v-if="family_id" :to="{name:'log',query:{device_id:device_id,family_id:family_id, category_id: device_category_id}}" class="btn-golog icon-recode"/>
+              <!--<a href="" class="icon-more"></a>-->
+          </div>
+
+      </div>
     <div class="mainTitle">
-      <div class="name">{{ device_name }}
-        <icon />
-      </div>
-      <div class="lock-status">
-        <span :class="{red:lockedStatus,on:model.switch=='on'}" class="status">{{ statusText }}</span>
-        <span :class="{low:lowBattery}" class="battery">{{ model.battery_percentage }}%电量</span>
-      </div>
+      <div class="name"><!--{{ device_name }}--><span :class="{red:lockedStatus,on:model.switch=='on'}" class="status">{{ statusText }}</span></div>
     </div>
 
-    <div :class="[model.switch]" class="lock"/>
+      <div :class="[model.switch]" class="lock-box">
+          <div class="lock">
+              <div class="num-key"></div>
+              <div class="handle"></div>
+          </div>
+      </div>
 
-    <a :class="{disabled:btnDisabled}" href="#" class="btn-unlock" @click.prevent="showPwdInput">开锁</a>
+    <a :class="{disabled:btnDisabled}" href="#" class="btn-unlock" @click.prevent="showPwdInput">
+        <span class="icon-switch"></span>
+        <span>开锁</span>
+    </a>
+      <div class="lock-status">
+          <div class="battery-box">
+              <div class="battery">
+                  <div class="battery-bar" :style="{width:model.battery_percentage +'%'}"></div>
+              </div>
+              电量状态：{{ model.battery_percentage }}%</div>
+          <p class="icon-wifi">连接状态：正常</p>
+          <!--<span :class="{low:lowBattery}" class="battery">{{ model.battery_percentage }}%电量</span>-->
+      </div>
 
-    <router-link v-if="family_id" :to="{name:'log',query:{device_id:device_id,family_id:family_id, category_id: device_category_id}}" class="btn-golog"/>
+
 
     <!--
         <div class="alert-wraper">
@@ -104,12 +126,12 @@ export default {
     },
     statusText() {
       if (this.lockedStatus) {
-        return '已反锁'
+        return '门锁已反锁'
       }
       if (this.model.switch == 'on') {
-        return '已打开'
+        return '门锁已打开'
       }
-      return '已关闭'
+      return '门锁已关闭'
     }
   },
   watch: {

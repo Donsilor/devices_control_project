@@ -1,11 +1,48 @@
 <template>
     <div class="door-log">
+        <!--<div class="log-block">
+            <p class="which-day">208-12-05</p>
+            <ul>
+                <li>
+                    <span class="dot"></span>
+                    <span class="date">14:39</span>
+                    <span class="log">电池电量低于10%，请及时更换电池</span>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    <span class="date">14:39</span>
+                    <span class="log">门未关紧</span>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    <span class="date">14:39</span>
+                    <span class="log">门未关紧</span>
+                </li>
+            </ul>
+            <p class="which-day">208-12-05</p>
+            <ul>
+                <li>
+                    <span class="dot"></span>
+                    <span class="date">14:39</span>
+                    <span class="log">电池电量低于10%，请及时更换电池</span>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    <span class="date">14:39</span>
+                    <span class="log">门未关紧</span>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    <span class="date">14:39</span>
+                    <span class="log">门未关紧</span>
+                </li>
+            </ul>
+        </div>-->
         <template v-if="data.length">
             <div class="log-block" v-for="row in dataArray" :key="row.dayText">
                 <span class="which-day">{{row.dayText}}</span>
                 <ul>
                     <li v-for="item in row.data" :key="item.updated_at">
-                        <span class="line"></span>
                         <span class="dot"></span>
                         <span class="date">{{formatDate(item.updated_at)}}</span>
                         <span class="log">
@@ -15,7 +52,9 @@
             </div>
         </template>
         <div class="nodata" v-else>
-            <span></span> {{dayText}}暂无记录
+            <span></span>
+            <!--{{dayText}}-->
+            <p>暂无记录</p>
         </div>
     </div>
 </template>
