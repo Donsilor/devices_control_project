@@ -1,42 +1,40 @@
 <template>
   <div class="page-index">
-      <div class="topbar topbar-fixed">
-          <div class="left">
-              <router-link to="/" class="icon-return"/>
-          </div>
-          <div class="title">智能锁</div>
-          <div class="right">
-              <router-link v-if="family_id" :to="{name:'log',query:{device_id:device_id,family_id:family_id, category_id: device_category_id}}" class="btn-golog icon-recode"/>
-              <!--<a href="" class="icon-more"></a>-->
-          </div>
-
+    <div class="topbar topbar-fixed">
+      <div class="left">
+        <router-link to="/" class="icon-return" @click.prevent="back"/>
       </div>
+      <div class="title">智能锁</div>
+      <div class="right">
+        <router-link v-if="family_id" :to="{name:'log',query:{device_id:device_id,family_id:family_id, category_id: device_category_id}}" class="btn-golog icon-recode"/>
+        <!--<a href="" class="icon-more"></a>-->
+      </div>
+
+    </div>
     <div class="mainTitle">
       <div class="name"><!--{{ device_name }}--><span :class="{red:lockedStatus,on:model.switch=='on'}" class="status">{{ statusText }}</span></div>
     </div>
 
-      <div :class="[model.switch]" class="lock-box">
-          <div class="lock">
-              <div class="num-key"></div>
-              <div class="handle"></div>
-          </div>
+    <div :class="[model.switch]" class="lock-box">
+      <div class="lock">
+        <div class="num-key"/>
+        <div class="handle"/>
       </div>
+    </div>
 
     <a :class="{disabled:btnDisabled}" href="#" class="btn-unlock" @click.prevent="showPwdInput">
-        <span class="icon-switch"></span>
-        <span>开锁</span>
+      <span class="icon-switch"/>
+      <span>开锁</span>
     </a>
-      <div class="lock-status">
-          <div class="battery-box">
-              <div class="battery">
-                  <div class="battery-bar" :style="{width:model.battery_percentage +'%'}"></div>
-              </div>
-              电量状态：{{ model.battery_percentage }}%</div>
-          <p class="icon-wifi">连接状态：正常</p>
-          <!--<span :class="{low:lowBattery}" class="battery">{{ model.battery_percentage }}%电量</span>-->
-      </div>
-
-
+    <div class="lock-status">
+      <div class="battery-box">
+        <div class="battery">
+          <div :style="{width:model.battery_percentage +'%'}" class="battery-bar"/>
+        </div>
+        电量状态：{{ model.battery_percentage }}%</div>
+      <p class="icon-wifi">连接状态：正常</p>
+      <!--<span :class="{low:lowBattery}" class="battery">{{ model.battery_percentage }}%电量</span>-->
+    </div>
 
     <!--
         <div class="alert-wraper">
@@ -176,6 +174,9 @@ export default {
     })
   },
   methods: {
+    back() {
+      HdSmart.UI.popWindow()
+    },
     goAlertpage(localStorageName) {
       // 要传入给页面的alert信息
       this.$store.commit('showAlertpage', { queryInfo: this.alertModel, localStorageName: localStorageName })
