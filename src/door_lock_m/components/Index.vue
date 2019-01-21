@@ -2,7 +2,7 @@
   <div class="page-index">
     <div class="topbar topbar-fixed">
       <div class="left">
-        <router-link to="/" class="icon-return" @click.prevent="back"/>
+        <a href="#" class="icon-return" @click.prevent="back"/>
       </div>
       <div class="title">智能锁</div>
       <div class="right">
