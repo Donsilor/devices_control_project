@@ -32,7 +32,7 @@
           <div :style="{width:model.battery_percentage +'%'}" class="battery-bar"/>
         </div>
         电量状态：{{ model.battery_percentage }}%</div>
-      <p class="icon-wifi">连接状态：正常</p>
+      <p class="icon-wifi">连接状态：{{ model.connectivity=='online' ? '正常': '离线' }}</p>
       <!--<span :class="{low:lowBattery}" class="battery">{{ model.battery_percentage }}%电量</span>-->
     </div>
 
@@ -84,7 +84,8 @@ export default {
         battery_percentage: '--'
       },
       // errorStore: [],
-      device_category_id: ''
+      device_category_id: '',
+      isOnline: false
     }
   },
   computed: {
