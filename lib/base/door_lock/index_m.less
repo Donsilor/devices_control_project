@@ -22,13 +22,12 @@ html {
 }
 
 @font-face {
-    font-family: 'iconfont';  /* project id 90609 */
-    src: url('//at.alicdn.com/t/font_90609_d9dmeu6icso.eot');
-    src: url('//at.alicdn.com/t/font_90609_d9dmeu6icso.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_90609_d9dmeu6icso.woff2') format('woff2'),
-    url('//at.alicdn.com/t/font_90609_d9dmeu6icso.woff') format('woff'),
-    url('//at.alicdn.com/t/font_90609_d9dmeu6icso.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_90609_d9dmeu6icso.svg#iconfont') format('svg');
+    font-family: 'iconfont';  /* project id 616019 */
+    src: url('/static/iconfont/iconfont.eot');
+    src: url('/static/iconfont/iconfont.eot?#iefix') format('embedded-opentype'),
+    url('/static/iconfont/iconfont.woff') format('woff'),
+    url('/static/iconfont/iconfont.ttf') format('truetype'),
+    url('/static/iconfont/iconfont.svg#iconfont') format('svg');
 }
 
 [class^="icon-"],
@@ -185,22 +184,22 @@ html {
         height: 550px;
         background-image: url(./assets/img_circle2_m.png);
     }
+    &::before,
+    &::after {
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+    }
 
+    &::before {
+        animation-name: rotate1;
+    }
+
+    &::after {
+        animation-name: rotate2;
+    }
     &.off {
-        &::before,
-        &::after {
-            animation-duration: 2s;
-            animation-iteration-count: infinite;
-            animation-timing-function: linear;
-        }
 
-        &::before {
-            animation-name: rotate1;
-        }
-
-        &::after {
-            animation-name: rotate2;
-        }
     }
 
     &.on {
@@ -402,7 +401,7 @@ html {
         box-sizing: border-box;
         background: #f7f8fa;
         min-height: 100%;
-        padding-top: 143px;
+        padding-top: 188px;
         padding-bottom: 150px;
     }
 
@@ -424,6 +423,7 @@ html {
     }
 }
 .topbar {
+    padding-top: 44px;
     height: 95px;
     /*background: #f2f2f2;
     border-bottom: 1px solid #dbdbdb;*/
@@ -431,12 +431,12 @@ html {
     position: relative;
     .left {
         position: absolute;
-        top: 0;
+        top: 44px;
         left: 0;
     }
     .right {
         position: absolute;
-        top: 0;
+        top: 44px;
         right: 0;
     }
     .title {
@@ -1014,3 +1014,7 @@ html {
     line-height: 60px !important;
     height: 60px !important;
 }*/
+
+.alert-page {
+    padding-top: 22px;
+}

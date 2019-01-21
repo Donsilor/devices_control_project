@@ -4,6 +4,15 @@
             <div class="backButton" @click="()=>{this.$router.go(-1)}"></div>
             <div class="title_detail">{{title}}</div>
         </div>
+        <!--<div class="topbar topbar-fixed">
+            <div class="left">
+                &lt;!&ndash;<div class="backButton" @click="()=>{this.$router.go(-1)}"></div>&ndash;&gt;
+                <router-link to="/" class="icon-return"/>
+            </div>
+            <div class="title">{{title}}</div>
+            <div class="right"></div>
+
+        </div>-->
         <div class="mainList">
             <div class="listOne" v-for="(item,index) in queryInfo">
                 <div class="alertTips"><span class="tipImg"></span><span class="tipTitle">{{item.msg}}</span></div>
@@ -116,7 +125,7 @@
                 color: #FFFFFF;
                 text-align: center;
             }
-        }  
+        }
     }
 </style>
 
@@ -145,7 +154,7 @@ export default {
             this.visible = val;
         },
         visible(val) {
-           
+
         }
     },
     methods: {

@@ -6,17 +6,17 @@
             </div>
             <div class="title">智能窗帘</div>
             <div class="right">
-                <a href="" class="icon-more"></a>
+                <!--<a href="" class="icon-more"></a>-->
             </div>
 
         </div>
         <div class="curtain-wrap">
 
-            <div class="device_name">
-                <!-- {{device_name}}
-                 <icon class="redact-white" />-->
+           <!-- <div class="device_name">
+                &lt;!&ndash; {{device_name}}
+                 <icon class="redact-white" />&ndash;&gt;
                 窗帘已关闭
-            </div>
+            </div>-->
             <div class="tip" v-if="show && tip">{{tip}}</div>
             <navigator class="navigator" v-once></navigator>
             <curtain class="curtain" :is_ready="is_ready" :open_percentage="target_percentage"></curtain>

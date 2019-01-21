@@ -71,11 +71,11 @@ const router =  new Router({
   HdSmart.ready(() => {
 
     router.beforeEach((to, from, next) => {
-        if(to.name == 'index'){
+        /*if(to.name == 'index'){
             HdSmart.UI.toggleHeadAndFoot(true)
         }else{
             HdSmart.UI.toggleHeadAndFoot(false)
-        }
+        }*/
         next()
     })
 

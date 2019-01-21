@@ -1,5 +1,5 @@
 <template>
-  <alert-page-mobile :title="title" :query-info="queryInfo" @closeItem="closeItem"/>
+  <alert-page-mobile class="alert-page" :title="title" :query-info="queryInfo" @closeItem="closeItem"/>
 </template>
 
 <script>

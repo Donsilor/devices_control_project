@@ -18,7 +18,8 @@ body {
 }
 
 .navigator {
-    margin: 130px auto 0 auto;
+    margin: 0 auto;
+    padding-top: 200px;
 }
 
 .curtain {
@@ -28,12 +29,12 @@ body {
 .tip {
     position: absolute;
     left: 0;
-    top: 210px;
+    top: 190px;
     width: 100%;
     text-align: center;
-    font-size: 28px;
-    line-height: 24px;
-    color: rgba(255, 255, 255, 0.5);
+    font-size: 40px;
+    line-height: 44px;
+    color: #fff;
     font-family: NotoSansHans-DemiLight;
 }
 .device_name {
@@ -50,8 +51,10 @@ body {
 /* control.vue */
 .control {
 
-    .control-container {
+    &.control-container {
         width: 100%;
+        position: absolute;
+        bottom: 5%;
     }
 
     .button-box {
@@ -250,14 +253,14 @@ body {
     }*/
 }
 @font-face {
-    font-family: 'iconfont';  /* project id 90609 */
-    src: url('//at.alicdn.com/t/font_90609_4hgvxkv9jvs.eot');
-    src: url('//at.alicdn.com/t/font_90609_4hgvxkv9jvs.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_90609_4hgvxkv9jvs.woff2') format('woff2'),
-    url('//at.alicdn.com/t/font_90609_4hgvxkv9jvs.woff') format('woff'),
-    url('//at.alicdn.com/t/font_90609_4hgvxkv9jvs.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_90609_4hgvxkv9jvs.svg#iconfont') format('svg');
+    font-family: 'iconfont';  /* project id 616019 */
+    src: url('/static/iconfont/iconfont.eot');
+    src: url('/static/iconfont/iconfont.eot?#iefix') format('embedded-opentype'),
+    url('/static/iconfont/iconfont.woff') format('woff'),
+    url('/static/iconfont/iconfont.ttf') format('truetype'),
+    url('/static/iconfont/iconfont.svg#iconfont') format('svg');
 }
+
 [class^="icon-"],
 [class*=" icon-"] {
     position: relative;
@@ -284,11 +287,12 @@ body {
 .icon-on:before{content: '\e61c';}
 
 .topbar-fixed {
-    position: fixed;
+    position: relative;
     left: 0;
     top: 0;
     width: 100%;
     z-index: 100;
+    padding-top: 44px;
 }
 
 .topbar {
@@ -297,12 +301,12 @@ body {
     position: relative;
     .left {
         position: absolute;
-        top: 0;
+        top: 44px;
         left: 0;
     }
     .right {
         position: absolute;
-        top: 0;
+        top: 44px;
         right: 0;
     }
     .title {
