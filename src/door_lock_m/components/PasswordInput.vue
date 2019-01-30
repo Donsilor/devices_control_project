@@ -2,8 +2,8 @@
   <div v-show="visible" class="password-input">
     <div class="password-input-container">
       <div class="password-input-title">
-        {{ msg }}
-        <a href="javascript:void(0)" class="close" @click="close"/>
+          <p class="close-box"><a href="javascript:void(0)" class="close" @click="close"/></p>
+          <h3>{{ msg }}</h3>
       </div>
       <div class="password-input-content">
         <input :value="psw_str" type="password" readonly>
