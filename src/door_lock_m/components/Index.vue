@@ -4,7 +4,7 @@
       <div class="left">
         <a href="#" class="icon-return" @click.prevent="back"/>
       </div>
-      <div class="title">智能锁</div>
+      <div class="title">{{ device_name }}</div>
       <div class="right">
         <router-link v-if="family_id" :to="{name:'log',query:{device_id:device_id,family_id:family_id, category_id: device_category_id}}" class="btn-golog icon-recode"/>
         <!--<a href="" class="icon-more"></a>-->

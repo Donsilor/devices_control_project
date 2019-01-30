@@ -4,7 +4,7 @@
       <div class="left">
         <a href="#/" class="icon-return" @click.prevent="back"/>
       </div>
-      <div class="title">智能窗帘</div>
+      <div class="title">{{device_name}}</div>
       <div class="right">
         <!--<a href="" class="icon-more"></a>-->
       </div>
