@@ -10,9 +10,104 @@ body {
     line-height: 1;
 }
 a {
+    text-decoration: none;
     outline: none;
     -webkit-tap-highlight-color: transparent;
 }
+
+.topbar {
+    position: relative;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    height: 139px;
+    padding-top: 44px;
+    .left {
+        position: absolute;
+        top: 44px;
+        left: 0;
+    }
+    .right {
+        position: absolute;
+        top: 44px;
+        right: 0;
+    }
+    .title {
+        text-align: center;
+        line-height: 95px;
+        font-size: 34px;
+    }
+    a {
+        width: 95px;
+        height: 95px;
+        display: block;
+        line-height: 95px;
+        color: #222a37;
+        text-align: center;
+        font-size: 38px;
+        text-decoration: none;
+        &:active {
+            opacity: .8;
+        }
+    }
+
+}
+
+@font-face {
+    font-family: 'iconfont';  /* project id 616019 */
+    src: url('../../iconfont/iconfont.eot');
+    src: url('../../iconfont/iconfont.eot?#iefix') format('embedded-opentype'),
+    url('../../iconfont/iconfont.woff') format('woff'),
+    url('../../iconfont/iconfont.ttf') format('truetype'),
+    url('../../iconfont/iconfont.svg#iconfont') format('svg');
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+    position: relative;
+    &:before {
+        font-family: 'iconfont' !important;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+.icon-return:before{content: '\e619';}
+.icon-more:before{content: '\e61d';}
+.icon-switch:before{content: '\e620';}
+.icon-less:before{content: '\e613';}
+.icon-plus:before{content: '\e611';}
+.icon-mode:before{content: '\e615';}
+.icon-speed:before{content: '\e60e';}
+.icon-s1:before{content: '\e60e';}
+.icon-s2:before{content: '\e62c';}
+.icon-s3:before{content: '\e610';}
+.icon-vertical:before{content: '\e626';}
+.icon-horizontal:before{content: '\e62b';}
+.icon-mute:before{content: '\e614';}
+.icon-cold:before{content: '\e62a';}
+.icon-heat:before{content: '\e629';}
+.icon-dehumidify:before{content: '\e60f';}
+.icon-auto:before{content: '\e627';}
+.icon-wind:before{content: '\e628';}
+
+.subpage {
+    background-color: #f2f2f2;
+    z-index: 111;
+    .topbar {
+        height: 139px;
+        padding-top: 44px;
+        background-color: #fff !important;
+        color: #222a37 !important;
+    }
+}
+
 .wrap-off,
 .wrap-on,
 .wrap-error {
@@ -25,32 +120,64 @@ a {
 /* page on */
 .wrap-on {
     color: #fff;
-    background: #46bcff;
+    /*background: #46bcff;*/
+    background-image: linear-gradient(-180deg, #00a0d0 0%, #17d7d2 100%);
+    .topbar {
+        background-color: transparent;
+        border-bottom: none;
+        color: #fff;
+    }
+
+    a {
+        color: #fff;
+    }
     .bg {
         position: absolute;
-        bottom: 0;
+        top: 200px;
         left: 0;
-        height: 480px;
+        height: 800px;
         width: 100%;
-        background: url(./assets/img_bg_aircon_on@2x.png)
-            no-repeat;
-        background-size: 100%;
+        background-image: url('./assets/bg_img_default@2x.png');
+        background-repeat: no-repeat;
+        background-size: 100% auto;
     }
+
+    &.cold{
+        background-image: linear-gradient(-180deg, #0159d7 0%, #1ebbfd 100%);
+        .bg {
+            background-image: url('./assets/bg_img_cold@2x.png');
+        }
+    }
+
+    &.heat {
+        background-image: linear-gradient(-180deg, #f8610c 0%, #fac061 100%);
+        .bg {
+            background-image: url('./assets/bg_img_hot@2x.png');
+        }
+    }
+
+    &.dehumidify {
+        background-image: linear-gradient(-180deg, #34d280 0%, #13d5dc 100%);
+        .bg {
+            background-image: url('./assets/bg_img_dry@2x.png');
+        }
+    }
+
     .header {
         text-align: center;
         width: 100%;
         position: absolute;
         left: 0;
-        top: 200px;
+        top: 240px;
         .name {
             font-size: 32px;
             display: block;
             margin-bottom: 12px;
         }
         .status {
-            font-size: 28px;
-            color: rgba(255,255,255,.5);
-            display: block;
+            font-size: 40px;
+            color: #fff;
+            text-align: center;
         }
     }
 }
@@ -60,7 +187,7 @@ a {
     width: 100%;
     position: absolute;
     left: 0;
-    top: 310px;
+    top: 400px;
     .num {
         font-size: 180px;
         font-family: PingFangSC-Medium;
@@ -79,44 +206,32 @@ a {
 .btn-minus,
 .btn-add {
     position: absolute;
-    top: 360px;
+    top: 440px;
     width: 96px;
     height: 96px;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    &.disabled{
+    line-height: 96px;
+    font-size: 96px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, .2);
+    color: #fff;
+    &.disabled {
         opacity: .5;
     }
+
+    &:active {
+        background-color: rgba(0, 0, 0, .2);
+    }
+
 }
 .btn-minus {
-    background-repeat: no-repeat;
     left: 64px;
-    background-image: url(./assets/btn_aircon_minus_normal@2x.png);
-    &:active {
-        background-image: url(./assets/btn_aircon_minus_pressed@2x.png);
-    }
 }
 .btn-add {
     right: 64px;
-    background-image: url(./assets/btn_aircon_plus_normal@2x.png);
-    &:active {
-        background-image: url(./assets/btn_aircon_plus_pressed@2x.png);
-    }
 }
 .btn-off {
-    position: absolute;
-    left: 50%;
-    width: 160px;
-    height: 160px;
-    bottom: 140px;
-    transform: translateX(-50%);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-image: url(./assets/btn_aircon_poweroff_normal@2x.png);
     transition: all 1s;
-    &:active {
-        background-image: url(./assets/btn_aircon_poweroff_pressed@2x.png);
-    }
     &-toggle {
         transform: scale(0);
         opacity: 0;
@@ -135,9 +250,11 @@ a {
         background-image: url(./assets/btn_aircon_more_pressed@2x.png);
     }
 }
+
 .btns {
     display: flex;
     flex-wrap: wrap;
+
     li {
         // float: left;
         margin:0 25px 0;
@@ -152,10 +269,19 @@ a {
     a {
         width: 120px;
         height: 120px;
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
         display: block;
         margin-bottom: 20px;
+        font-size: 56px;
+        line-height: 120px;
+        text-align: center;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        color: #fff;
+        &:active {
+            background-color: rgba(255, 255, 255, .5);
+        }
+        background-repeat: no-repeat;
+        background-size: 100%;
     }
 }
 .btns-hold {
@@ -168,17 +294,20 @@ a {
     .on {
         font-weight: bold;
     }
-    .btns{  
-        margin-bottom: -60px; 
+    .btns {
+        margin-bottom: -60px;
         flex-direction: row;
         justify-content: space-between;
-    }
-    .btns li{   
-        // margin: 0 160px;
+
+        a:active {
+            background-color: rgba(0, 0, 0, .1);
+            border-width: 0;
+            box-shadow: 0 0 4px rgba(255, 255, 255, .5);
+        }
     }
 }
 .btns-more {
-    color: #75787a;
+    color: #a4a9af;
     p {
         text-align: center;
         font-size: 28px;
@@ -189,23 +318,29 @@ a {
         margin: 80px 32px 0;
     }
     .on {
-        color: #46bcff;
+        color: #2d333c;
+    }
+    .btns a {
+        border: 1px solid #d4d8de;
+        color: #d4d8de;
+
+        &:active {
+            background-color: rgba(0, 0, 0, .1);
+            border-width: 0;
+            box-shadow: 0 0 4px rgba(255, 255, 255, .5);
+            color: #222a37;
+        }
+        &.on {
+            color: #222a37;
+            background-image: linear-gradient(90deg, #FFDA00 0%, #FFC700 100%);
+            border-width: 0;
+        }
     }
 }
 .modal-body{
     padding-top: 0;
     padding-bottom: 20px;
-}
-.btn-mode{
-    background-image: url(./assets/btn_washer_mode@2x.png);
-    &:active {
-    }
-}
-.btn-speed2{
-    background-image: url(./assets/btn_airvolume_m@2x.png);
-    &:active {
-    }
-}
+}/*
 .btn-cold {
     background-image: url(./assets/btn_aircon_sleep_normal.png);
     &:active {
@@ -301,7 +436,7 @@ a {
     &.on {
         background-image: url(./assets/btn_aircon_horizontal_active@2x.png);
     }
-}
+}*/
 .tip {
     position: absolute;
     left: 0;
@@ -329,15 +464,18 @@ a {
 /* page off */
 .wrap-off {
     background: #f2f2f2;
+    .topbar {
+        background-color: #fff;
+    }
     .bg {
         position: absolute;
         bottom: 0;
         left: 0;
         height: 480px;
         width: 100%;
-        background: url(./assets/img_bg_aircon_off@2x.png)
-            no-repeat;
-        background-size: 100%;
+        //background: url(./assets/img_bg_aircon_off@2x.png)
+        //    no-repeat;
+        //background-size: 100%;
     }
     .header {
         text-align: center;
@@ -345,16 +483,15 @@ a {
         position: absolute;
         left: 0;
         top: 200px;
+
         .name {
-            font-size: 32px;
-            color: #75787a;
-            display: block;
+            font-size: 40px;
+            color: #222a37;
             margin-bottom: 12px;
         }
         .status {
-            font-size: 28px;
-            color: #c8cacc;
-            display: block;
+            font-size: 30px;
+            color: #a4a9af;
         }
     }
 }
@@ -363,8 +500,8 @@ a {
     position: absolute;
     left: 50%;
     top: 370px;
-    width: 360px;
-    height: 240px;
+    width: 560px;
+    height: 560px;
     background-image: url(./assets/img_aircon_off@2x.png);
     background-size: 100% 100%;
     transform: translateX(-50%);
@@ -378,12 +515,14 @@ a {
     bottom: 140px;
     width: 160px;
     height: 160px;
+    line-height: 160px;
+    text-align: center;
+    border-radius: 50%;
     transform: translateX(-50%);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-image: url(./assets/btn_aircon_poweron_normal@2x.png);
+    background-image: linear-gradient(90deg, #FFDA00 0%, #FFC700 100%);
+    color: #222a37;
     &:active {
-        background-image: url(./assets/btn_aircon_poweron_pressed@2x.png);
+        opacity: .5;
     }
 }
 .android .btn-on {
@@ -411,3 +550,8 @@ a {
         margin: 0 auto 36px;
     }
 }
+
+.tip {
+    top: 320px;
+}
+
