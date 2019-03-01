@@ -4,13 +4,29 @@
 <template>
     <!-- <transition name="slideup"> -->
     <div class="page-detail" v-show="visible">
-        <div class="detail-hd">
+
+
+        <div class="topbar topbar-fixed">
+            <div class="left">
+                <a href="#/" class="icon-return" @click="close"/>
+            </div>
+            <div class="title">
+                {{loading?'正在加载中...':cur.title}}
+                <span class="isvip" v-show="!loading && ispay && ispay !== '1'">付费</span>
+            </div>
+            <div class="right">
+                <!--<a href="" class="icon-more"></a>-->
+            </div>
+
+        </div>
+
+        <!--<div class="detail-hd">
             <span class="back" @click="close"></span>
             <div class="title">
                 {{loading?'正在加载中...':cur.title}}
                 <span class="isvip" v-show="!loading && ispay && ispay !== '1'">付费</span>
             </div>
-        </div>
+        </div>-->
         <div class="detail-hd-placeholder"></div>
         <status-tip class="sp_status_detail" />
         <div class="status-tip-placeholder" v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"></div>
@@ -46,16 +62,21 @@
                         <div class="desc-cont-p" v-html="toHTML(cur.desc)"></div>
                     </div>
                     <a href="#" class="desc-toggle" @click.prevent="isDescShow=!isDescShow" v-show="isDescOverflow" :class="{'open':isDescShow}">
-                        <i></i>
+                        <i class="icon-arrow"></i>
                     </a>
                 </div>
             </div>
 
-            <div class="detail-playlist">
+            <div class="detail-playlist" :class="[isShowAll?'detail-playlist-all':'']">
                 <div class="hd" v-if="cur.playlist2.list.length">
                     {{channelId==='001' ? '正片' : getUpdateSet()}}
+
                     <a href="#" class="showAll" @click.prevent="showAll" v-show="!isShowAll && (channelId==='002' || channelId==='003')">全部
-                        <i></i>
+                        <i class="icon-arrow"></i>
+                    </a>
+
+                    <a href="#" class="showAll" @click.prevent="showAllClose" v-show="isShowAll">
+                        <span class="icon-close"></span>
                     </a>
                 </div>
                 <ul class="bd" v-if="channelId==='001' || channelId==='004'">
@@ -63,22 +84,27 @@
                         <img v-lazy="item.pictureUrl" :key="item.pictureUrl">
                         <p>{{item.name}}</p>
                         <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
-                        <span class="tag_pay" v-show="item.drm && item.drm!='0'"></span>
+                        <span class="tag_pay" v-show="item.drm && item.drm!='0'">付费</span>
                     </li>
                 </ul>
+
+
                 <ul class="bd" :class="[isShowAll?'bd-num-all':'bd-num']" v-else>
                     <li class="item-num" v-for="(item, num) in cur.playlist2.list" :key="item.index" @click="play(item)">{{item.index=='0' ? num+1 : item.index}}
-                        <!-- <span class="tag_new" v-show="item.states"></span> -->
-                        <span class="tag_pay" v-show="item.drm && item.drm!='0'"></span>
+                         <!--<span class="tag_new" v-show="item.states">新</span> -->
+                        <span class="tag_pay" v-show="item.drm && item.drm!='0'">付费</span>
                     </li>
                 </ul>
-                <div class="hd" style="clear:both" v-if="cur.playlist2.list2.length">相关视频</div>
+            </div>
+
+            <div class="detail-playlist">
+                <div class="hd related" style="clear:both" v-if="cur.playlist2.list2.length">相关视频</div>
                 <ul class="bd">
                     <li class="item-haspic" v-for="item in cur.playlist2.list2" :key="item.index" @click="play(item)">
                         <img v-lazy="item.pictureUrl" :key="item.pictureUrl">
                         <p>{{item.name}}</p>
                         <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
-                        <span class="tag_pay" v-show="item.drm && item.drm!='0'"></span>
+                        <span class="tag_pay" v-show="item.drm && item.drm!='0'">付费</span>
                     </li>
                 </ul>
             </div>
@@ -116,6 +142,7 @@
     // z-index: 9;
     color: #75787a;
     background: #fafafa;
+    padding-top: 139px;
     // display: flex;
     // flex-direction: column;
     // padding-top: 124px;
@@ -125,7 +152,7 @@
     top: 0;
     left: 0;
     z-index: 9;
-    height: 116px;
+    height: 160px;
     // height:100px;
     width: 100%;
     background: #fafafa;
@@ -217,12 +244,13 @@
         margin-left: 344px;
         height: 470px;
         position: relative;
+        color: #222a37;
     }
     .desc {
         clear: both;
         padding-top: 24px;
         border-top: 1px solid #dbdbdb;
-        color: #c8cacc;
+        color: #a4a9af;
         position: relative;
     }
     .desc-cont {
@@ -245,13 +273,12 @@
         width: 24px;
         display: block;
         color: #fff;
-        i {
+        i,
+        span {
+            color: #222a37;
             display: inline-block;
-            background: url(../../../lib/base/tv/assets/icn_arrow_up.png)
-                no-repeat center center;
             width: 40px;
             height: 40px;
-            background-size: 32px 16px;
             transform: rotate(180deg);
             /*transition: transform .6s;*/
         }
@@ -284,10 +311,10 @@
     width: 100%;
     height: 84px;
     .btn {
-        background: #13d5dc;
-        border-radius: 6px;
-        height: 84px;
-        line-height: 84px;
+        background-image: linear-gradient(90deg, #FFDA00 0%, #FFC700 100%);
+        border-radius: 45px;
+        height: 90px;
+        line-height: 90px;
         display: block;
         color: #fff;
         font-size: 36px;
@@ -301,9 +328,7 @@
             vertical-align: middle;
         }
         .icon-play {
-            width: 36px;
-            height: 36px;
-            background-image: url(../../../lib/base/tv/assets/icn_play_white_s.png);
+            font-size: 40px;
         }
         .icon-time {
             width: 34px;
@@ -351,24 +376,59 @@
 .detail-playlist {
     margin-left: 32px;
     padding-top: 30px;
+
     .hd {
         margin-bottom: 30px;
-        color: #2f3133;
-        font-size: 32px;
+        color: #222a37;
+        font-size: 30px;
+
+        &.related {
+            font-size: 34px;
+        }
     }
+
+    &-all {
+        position: fixed;
+        bottom: 0;
+        z-index: 10;
+        width: 100%;
+        height: 776px;
+        overflow: hidden;
+        background-color: #fff;
+        margin-left: 0;
+        padding-top: 0;
+
+        .hd {
+            height: 106px;
+            line-height: 106px;
+            padding-left: 32px;
+            border: 1px solid #d8d8d8;
+            margin-bottom: 0;
+        }
+
+        .bd-num-all {
+            width: 100%;
+            padding-top: 30px;
+            height: 670px;
+            padding-left: 32px;
+            overflow-y: auto;
+        }
+    }
+
+
+
     .showAll {
         float: right;
         margin-right: 32px;
-        color: #75787a;
+        color: #A4A9AF;
         i {
             display: inline-block;
-            background: url(../../../lib/base/tv/assets/icn_arrow_up.png)
-                no-repeat center center;
             width: 24px;
             height: 24px;
-            background-size: 24px 12px;
+            font-size: 24px;
             margin-left: 2px;
             transform: rotate(90deg);
+            color: #C8CACC;
         }
     }
     .bd-num {
@@ -395,18 +455,21 @@
         line-height: 112px;
         text-align: center;
         position: relative;
-        background: #fff;
-        border: 1px solid #dbdbdb;
+        background-color: #F0F0F0;
+        /*border: 1px solid #dbdbdb;*/
         border-radius: 8px;
+        font-size: 30px;
+        color: #222a37;
         &:active {
             background: #ebebeb;
         }
         &.active {
-            background: #19c9cf
+            /*background: #19c9cf
                 url(../../../lib/base/tv/assets/icn_playing_white_s.png)
                 no-repeat center center;
             background-size: 36px 36px;
-            text-indent: -9999px;
+            text-indent: -9999px;*/
+            color: #FFC700;
         }
     }
     li.item-haspic {
@@ -416,11 +479,12 @@
         margin: 0 25px 0 5px;
         float: left;
         overflow: hidden;
+        color: #222a37;
         img {
             width: 320px;
             height: 180px;
             display: block;
-            margin-bottom: 18px;
+            margin-bottom: 12px;
         }
         p {
             text-overflow: ellipsis;
@@ -452,33 +516,55 @@
             }
         }
     }
-    .tag_new {
-        width: 72px;
-        height: 72px;
-        background: url(../../../lib/base/tv/assets/tag_TV_new@2x.png) no-repeat;
-        background-size: 100%;
+    .tag_new,
+    .tag_pay {
         position: absolute;
         right: 0;
         top: 0;
+        width: 60px;
+        height: 32px;
+        font-size: 24px;
+        line-height: 32px;
+        text-align: center;
+        color: #fff;
+        border-radius: 4px;
+    }
+
+    .tag_new {
+        background-image: linear-gradient(-90deg, #FFDA00 0%,#FFC700 100%);
+        /*background-image: url(../../../lib/base/tv/assets/tag_new.png);*/
+    }
+    .tag_pay {
+        background-color: #F26161;
+        /*background-image: url(../../../lib/base/tv/assets/tag_pay.png);*/
     }
 }
 
 .detail-hd-placeholder{
-    height: 124px;
+    /*height: 124px;*/
+}
+
+.isvip {
+    background-color: #f26161;
+    color: #fff;
+    font-size: 28px;
+    border-radius: 4px;
+    line-height: 32px;
+    padding: 0 6px;
 }
 
 .isIOS {
     .detail-hd-placeholder{
-        height: 96px;
+        /*height: 96px;*/
     }
     .detail-hd {
         height: 96px;
         .back {
             height: 96px;
         }
-        .title {
+        /*.title {
             line-height: 96px;
-        }
+        }*/
     }
 }
 .andriod #app{
@@ -670,6 +756,9 @@ export default {
         },
         showAll() {
             this.isShowAll = true;
+        },
+        showAllClose() {
+            this.isShowAll = false;
         }
     },
     created() {

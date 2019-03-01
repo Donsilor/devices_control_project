@@ -21,10 +21,12 @@ import ErrorView from "./components/Error.vue";
 import OfflineMask from "./components/OfflineMask.vue";
 //import Statusbar from './components/Statusbar.vue'
 import StatusTip from "./components/StatusTip.vue";
-import AlloyFinger from 'alloyfinger'
+// import AlloyFinger from 'alloyfinger'
 //import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue'
 
 import * as service from "./service";
+
+import '../../lib/base/tv/index_m.less'
 
 Vue.use(Vuex);
 Vue.use(Router);
@@ -36,7 +38,7 @@ Vue.use(VueLazyload, {
 // Vue.use(AlloyFingerVue, {
 //     AlloyFinger
 // })
-Vue.use(AlloyFinger)
+// Vue.use(AlloyFinger)
 
 Vue.component("detail", Detail);
 Vue.component("topbar", Topbar);

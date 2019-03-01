@@ -23,7 +23,7 @@
     <!-- 搜搜历史 -->
     <div v-show="curpage===1" class="search_history">
       <div class="hd">
-        <a href="#" class="del" @click.prevent="clearHistory"/>
+        <a href="#" class="del icon-del" @click.prevent="clearHistory"/>
         搜索记录
       </div>
       <ul class="bd clearfix">
@@ -89,8 +89,31 @@
 </template>
 
 <style lang="less">
+    /*@font-face {
+        font-family: 'iconfont';  !* project id 616019 *!
+        src: url('../../../lib/iconfont/iconfont.eot');
+        src: url('../../../lib/iconfont/iconfont.eot?#iefix') format('embedded-opentype'),
+        url('../../../lib/iconfont/iconfont.woff') format('woff'),
+        url('../../../lib/iconfont/iconfont.ttf') format('truetype'),
+        url('../../../lib/iconfont/iconfont.svg#iconfont') format('svg');
+    }
+
+    [class^="icon-"],
+    [class*=" icon-"] {
+        position: relative;
+        &:before {
+            font-family: 'iconfont' !important;
+            speak: none;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    }*/
 .page-search {
-    padding-top: 124px;
+    padding-top: 139px;
 }
 .page-search .right {
     display: none;
@@ -123,7 +146,7 @@
             outline: none;
         }
     }
-    .del {
+    .icon-del {
         position: absolute;
         width: 42px;
         height: 42px;
@@ -137,6 +160,7 @@
         }
     }
 }
+
 .search_submit {
     width: 150px;
     font-size: 28px;
@@ -144,6 +168,7 @@
     border: none;
     background: none;
     outline: none;
+    color: #2F3133;
 }
 .search_history {
     margin: 0 32px;
@@ -152,21 +177,27 @@
         padding: 32px 0 24px;
         border-bottom: 1px solid #dbdbdb;
         margin-bottom: 24px;
-        .del {
+        color: #A4A9AF;
+        .icon-del {
             float: right;
             margin-right: 10px;
             width: 36px;
             height: 36px;
-            background-repeat: no-repeat;
+            line-height: 36px;
+            font-size: 36px;
+            color: #76787A;
+            /*background-repeat: no-repeat;
             background-size: 100% 100%;
-            background-image: url(../../../lib/base/tv/assets/btn_clear_normal.png);
+            background-image: url(../../../lib/base/tv/assets/btn_clear_normal.png);*/
             &:active {
-                background-image: url(../../../lib/base/tv/assets/btn_clear_pressed.png);
+                color: #FFC700;
+                /*background-image: url(../../../lib/base/tv/assets/btn_clear_pressed.png);*/
             }
         }
     }
     .bd {
         li {
+            color: #222a37;
             width: 50%;
             box-sizing: border-box;
             height: 56px;
@@ -191,7 +222,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         strong {
-            color: #13d5dc;
+            color: #FFC700;
             font-weight: normal;
         }
         &:last-child {
@@ -201,21 +232,24 @@
     border-bottom: 1px solid #dbdbdb;
 }
 .search_result {
+    background-color: #F7F8FA;
     .hd {
-        margin: 0 32px;
+        padding: 20px 32px 26px;
+        background-color: #fff;
     }
     .tab {
-        border-bottom: 1px solid #dbdbdb;
+        /*border-bottom: 1px solid #dbdbdb;*/
         margin-bottom: 24px;
         overflow: hidden;
         a {
             float: left;
-            padding: 32px 12px 24px;
+            padding: 15px 0;
             margin-right: 20px;
-            color: #75787a;
+            color: #a4a9af;
             &.active {
-                color: #13d5dc;
-                border-bottom: 3px solid #13d5dc;
+                color: #222a37;
+                font-weight: bold;
+                border-bottom: 3px solid #FFC700;
             }
         }
     }
@@ -226,12 +260,12 @@
             height: 56px;
             text-align: center;
             line-height: 56px;
-            border-radius: 4px;
             margin-right: 16px;
-            color: #75787a;
+            color: #a4a9af;
+            border-radius: 2px;
             &.active {
-                color: #fff;
-                background: #13d5dc;
+                color: #FFC700 ;
+                background: #f6f6f6;
             }
         }
     }
@@ -253,7 +287,7 @@
 }
 
 .isIOS .page-search {
-    padding-top: 96px;
+    /*padding-top: 96px;*/
 }
 .isIOS .search_bar {
     padding: 12px 0 0 100px;
