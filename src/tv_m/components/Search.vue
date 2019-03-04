@@ -26,10 +26,8 @@
           class="search_submit">
       </form>
     </topbar>
-    <div
-      v-show="$store.state.tvStatus.tvOnlineStatus!=1"
-      class="status-tip-placeholder"/>
-    <status-tip class="sp_status_search" />
+
+    <status-tip />
     <!-- 搜索建议 -->
     <div
       v-show="curpage===2"
@@ -140,12 +138,14 @@
     display: none;
 }
 .search_bar {
-    padding: 10px 0 0 100px;
+    padding-top: 8PX;
+    padding-left: 100px;
     display: flex;
-    vertical-align: middle;
 }
 .search_input {
+    line-height: 1;
     position: relative;
+    height: 30PX;
     width: 100%;
     input {
         border: 1px solid #dbdbdb;
@@ -172,8 +172,8 @@
         position: absolute;
         width: 40px;
         height: 40px;
-        right: 10px;
-        top: 7px;
+        right: 5PX;
+        top: 5PX;
         background-repeat: no-repeat;
         background-size: 100% 100%;
         background-image: url(../../../lib/base/tv/assets/btn_input_delete_normal.png);

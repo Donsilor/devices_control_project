@@ -2,69 +2,82 @@
   <div
     v-if="visible"
     class="status_bar">
+    <div class="status_bar_block"/>
     <div
-      v-if="spVisible"
-      class="sp_status_bar"
-      @click="goToScreenProjectionPage">
-      <i class="ico"/>正在投屏 {{ spStatusText }}：
-      <span class="text">{{ tvStatus.screenProjectTitle }}</span>
-      <i class="arr"/>
-    </div>
-    <div v-show="ios">
+      :style="{top:(status_bar_height + navigation_bar_height) +'px'}"
+      class="status_bar_fixed">
       <div
-        v-if="tvStatus.tvOnlineStatus==-1"
-        class="offline_bar"
-        @click="goToOfflineHelpPage">
-        <i class="wifi"/>无法连接网络，请检查网络设置
-      </div>
-      <div
-        v-if="tvStatus.tvOnlineStatus==-2"
-        class="offline_bar"
-        @click="goToOfflineHelpPage">
-        <i class="error"/>路由器已离线 &nbsp;
-        <span class="link">查看帮助</span>
+        v-if="spVisible"
+        class="sp_status_bar"
+        @click="goToScreenProjectionPage">
+        <i class="ico"/>正在投屏 {{ spStatusText }}：
+        <span class="text">{{ tvStatus.screenProjectTitle }}</span>
         <i class="arr"/>
       </div>
-      <div
-        v-if="tvStatus.tvOnlineStatus==-3"
-        class="offline_bar"
-        @click="goToOfflineHelpPage">
-        <i class="error"/>电视离线或关机 &nbsp;
-        <span class="link">查看帮助</span>
-        <i class="arr"/>
+      <div v-show="ios">
+        <div
+          v-if="tvStatus.tvOnlineStatus==-1"
+          class="offline_bar"
+          @click="goToOfflineHelpPage">
+          <i class="wifi"/>无法连接网络，请检查网络设置
+        </div>
+        <div
+          v-if="tvStatus.tvOnlineStatus==-2"
+          class="offline_bar"
+          @click="goToOfflineHelpPage">
+          <i class="error"/>路由器已离线 &nbsp;
+          <span class="link">查看帮助</span>
+          <i class="arr"/>
+        </div>
+        <div
+          v-if="tvStatus.tvOnlineStatus==-3"
+          class="offline_bar"
+          @click="goToOfflineHelpPage">
+          <i class="error"/>电视离线或关机 &nbsp;
+          <span class="link">查看帮助</span>
+          <i class="arr"/>
+        </div>
       </div>
+      <div
+        v-if="tvStatus.tvOnlineStatus < 0 && !ios"
+        class="offline_bar_blank"/>
     </div>
-    <div
-      v-if="tvStatus.tvOnlineStatus < 0 && !ios"
-      class="offline_bar_blank"/>
   </div>
 </template>
 
 <style>
-.sp_status_bar {
-    /* background:#ffffff; */
-    background: rgba(255, 255, 255, 0.98);
-    box-shadow: inset 0 -1px 0 0 #dbdbdb;
-    text-align: center;
+.status_bar_block{
     height: 80px;
-    line-height: 80px;
+}
+.status_bar_fixed{
+    position:fixed;
+    left: 0;
+    top: 64PX;
+    width: 100%;
+    z-index: 999;
+    border-bottom:1px solid rgba(45,45,45,0.20);
+}
+.sp_status_bar {
+    /* background: #f7f8fa; */
+    text-align: center;
+    height: 40PX;
+    line-height: 40PX;
     font-size: 28px;
-    color: #13d5dc;
+    color: #FFC800;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: rgb(255,255,255);
 }
 .sp_status_bar .text {
     max-width: 50%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    /* display: inline-block;
-    vertical-align: middle; */
 }
 .status_bar .link {
-    color: #13d5dc;
+    color: #FFC800;
 }
 .status_bar .ico {
     width: 32px;
@@ -92,40 +105,12 @@
     background-size: 100% 100%;
     display: inline-block;
 }
-.sp_status_home {
-    position: fixed;
-    left: 0;
-    width: 100%;
-    top: 100px;
-    z-index: 2;
-}
-.sp_status_detail {
-    background: #fff;
-    flex-shrink: 0;
-    position: fixed;
-    left: 0;
-    width: 100%;
-    top: 100px;
-    z-index: 2;
-}
-.sp_status_list {
-    background: #fff;
-}
-.sp_status_search {
-    position: fixed;
-    left: 0;
-    width: 100%;
-    top: 100px;
-    z-index: 9;
-}
-.status-tip-placeholder {
-    height: 80px;
-}
+
 .offline_bar {
-    background: rgba(51, 51, 51, 0.9);
+    background: rgba(51, 51, 51, 1);
     width: 100%;
-    height: 80px;
-    line-height: 80px;
+    height: 40PX;
+    line-height: 40PX;
     text-align: center;
     color: #fff;
     font-size: 28px;
@@ -149,6 +134,8 @@
 
 <script>
 import * as service from "../service";
+import {mapState} from 'vuex'
+
 export default {
     data() {
         return {
@@ -173,7 +160,8 @@ export default {
         },
         visible() {
             return this.tvStatus.tvOnlineStatus != 1 || this.spVisible;
-        }
+        },
+        ...mapState(['status_bar_height', 'navigation_bar_height', 'isStatusBarShow'])
     },
     mounted() {
     },

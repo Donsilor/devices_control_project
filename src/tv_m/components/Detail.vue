@@ -16,10 +16,7 @@
       </div>
     </topbar>
 
-    <status-tip class="sp_status_detail" />
-    <div
-      v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"
-      class="status-tip-placeholder"/>
+    <status-tip />
 
     <div class="detail-bd">
       <div
@@ -298,8 +295,7 @@
         width: 24px;
         display: block;
         color: #fff;
-        i,
-        span {
+        i, span {
             color: #222a37;
             display: inline-block;
             width: 40px;

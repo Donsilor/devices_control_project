@@ -11,7 +11,7 @@
         :style="{height:status_bar_height+'px'}"
         class="statusbar"/>
       <div
-        :style="{height:navigation_bar_height+'px'}"
+        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
         class="navbar" >
         <div class="left">
           <a

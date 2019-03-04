@@ -8,7 +8,7 @@
       :title="$store.state.device_name"
       :back="back" />
 
-    <status-tip class="sp_status_home" />
+    <status-tip />
 
     <div class="search-box">
       <router-link
@@ -130,7 +130,7 @@
         top: 0;
         left: 28px;
         font-size: 36px;
-        line-height: 38px;
+        line-height: 64px;
         color: rgba(0, 0, 0, .2);
     }
 }
@@ -165,7 +165,7 @@
             font-size: 40px;
             width: 82px;
             height: 82px;
-            line-height: 50px;
+            line-height: 82px;
             background-color: #3478f6;
             border-radius: 50%;
             color: #fff;
@@ -243,7 +243,7 @@
         display: block;
         width: 100px;
         height: 100px;
-        line-height: 60px;
+        line-height: 100px;
         background-size: 100% 100%;
         background-color: #fff;
         border-radius: 50%;
@@ -337,15 +337,14 @@ export default {
   watch: {
     detailVisible(visible) {
       if (visible) {
-        HdSmart.UI.toggleHeadAndFoot(false)
         this.$refs.swiper.swiper.autoplay.stop()
       } else {
-        HdSmart.UI.toggleHeadAndFoot(true)
         this.$refs.swiper.swiper.autoplay.start()
       }
     }
   },
   mounted() {
+    document.body.scrollTop = 0
     service.RemoteController({ show: false })
     this.$nextTick(() => {
       if (!infoCache.length) {

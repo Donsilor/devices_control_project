@@ -65,6 +65,11 @@ const store = new Vuex.Store({
     status_bar_height: 20,
     navigation_bar_height: 44
   },
+  getters: {
+    isStatusBarShow(state)  {
+        return state.tvStatus.screenProjectType != 0 || state.tvStatus.tvOnlineStatus != 1
+    }
+  },
   mutations: {
     showDetail(state, payload) {
       state.detailVisible = true
@@ -151,6 +156,7 @@ const router = new Router({
 })
 // hack: app多次执行ready
 let is_ready = false
+let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
 
 // app jsbridge ready
 HdSmart.onDeviceListen(function(data) {
@@ -169,11 +175,11 @@ HdSmart.ready(() => {
     }
 
     if(window.status_bar_height){
-        store.commit('setStatusBarHeight', window.status_bar_height)
+        store.commit('setStatusBarHeight', window.status_bar_height / dpr)
     }
 
     if(window.navigation_bar_height){
-        store.commit('setNavigationBarHeight', window.navigation_bar_height)
+        store.commit('setNavigationBarHeight', window.navigation_bar_height / dpr)
     }
 
     // setTimeout(() => {

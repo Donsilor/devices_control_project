@@ -17,18 +17,15 @@
 
     <topbar :title="title"/>
 
-    <div
-      v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"
-      class="status-tip-placeholder"/>
-
-    <status-tip class="sp_status_list" />
+    <status-tip />
     <!-- 条件 -->
     <div
-      :style="{height:filterVisible?'190px':'64px'}"
+      :style="{height:filterVisible?'175px':'64px'}"
       class="filters-placeholder"/>
     <div
       v-if="!error"
       :class="{active:filterVisible}"
+      :style="{top: isStatusBarShow ? (status_bar_height + navigation_bar_height + 40) + 'px' : (status_bar_height + navigation_bar_height) + 'px' }"
       class="filters">
       <!-- 地区 -->
       <dl
@@ -429,6 +426,7 @@
 <script>
 import * as service from "../service";
 import _ from "../util";
+import {mapState , mapGetters} from 'vuex'
 
 export default {
     data() {
@@ -476,6 +474,10 @@ export default {
             filterVisible: false
             //filterToggleClicked: false
         };
+    },
+    computed: {
+        ...mapState(['status_bar_height', 'navigation_bar_height']),
+        ...mapGetters(['isStatusBarShow']),
     },
     watch: {
         //如果首次加载，则调用app loading
