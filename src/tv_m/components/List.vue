@@ -20,7 +20,7 @@
     <status-tip />
     <!-- 条件 -->
     <div
-      :style="{height:filterVisible?'175px':'64px'}"
+      :class="{active:filterVisible}"
       class="filters-placeholder"/>
     <div
       v-if="!error"
@@ -156,6 +156,12 @@
 </template>
 
 <style lang="less">
+.filters-placeholder{
+    height: 120px;
+    &.active{
+        height: 345px;
+    }
+}
 .filters {
     padding: 28px 28px 12px;
     background: rgba(255, 255, 255, 0.98);
