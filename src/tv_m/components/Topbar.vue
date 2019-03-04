@@ -4,10 +4,10 @@
 <template>
   <div class="topbar">
     <div class="left">
-      <a class="icon icon-arrow" @click="goBack"/>
+      <a class="icon icon-return" @click="goBack"/>
     </div>
     <div class="right">
-      <router-link to="/search" class="icon icon-search"/>
+      <router-link to="/search" class="icon-search"/>
     </div>
     <div v-if="title" class="title">{{ title }}</div>
     <slot/>
@@ -43,7 +43,7 @@
         background-size: 36px 36px;
         background-position: center center;
     }
-    .icon-arrow {
+    /*.icon-arrow {
         background-image: url(../../../lib/base/tv/assets/icn_topbar_back_normal@2x.png);
         &:active {
             background-image: url(../../../lib/base/tv/assets/icn_topbar_back_pressed@2x.png);
@@ -54,7 +54,7 @@
         &:active {
             background-image: url(../../../lib/base/tv/assets/icn_topbar_search_pressed@2x.png);
         }
-    }
+    }*/
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 3),

@@ -1,15 +1,24 @@
 <template>
-    <div class="wrap-on">
+    <div class="wrap-on" v-bind:class="[ac.mode]">
+        <div class="topbar topbar-fixed">
+            <div class="left">
+                <a href="#/" class="icon-return" @click.prevent="back"/>
+            </div>
+            <div class="title">智能空调</div>
+            <div class="right">
+                <a href="" class="icon-more" @click.prevent="showMore()"></a>
+            </div>
 
+        </div>
         <div class="bg"></div>
 
         <div class="header">
-            <span class="name">{{device.name}}
-                <icon class="redact-white" />
-            </span>
-            <span class="status">
+            <!--<p class="name">{{device.name}}
+                <icon class="redact-white"/>
+            </p>-->
+            <p class="status">
                 {{modeText}} {{speedText}} {{ac.env_temperature ? '环境温度' + ac.env_temperature/10 + '℃' : ''}}
-            </span>
+            </p>
         </div>
 
         <div class="current_temp">
@@ -27,19 +36,24 @@
             <div class="tip" v-show="tipVisible">{{tip}}</div>
         </transition>
 
-        <a href="#" class="btn-minus" :class="{disabled:ac.mode=='wind'}" @click.prevent="setTemperature(-1, $event)"></a>
-        <a href="#" class="btn-add" :class="{disabled:ac.mode=='wind'}" @click.prevent="setTemperature(1, $event)"></a>
+        <a href="#" class="btn-minus icon-less" :class="{disabled:ac.mode=='wind'}" @click.prevent="setTemperature(-1, $event)"></a>
+        <a href="#" class="btn-add icon-plus" :class="{disabled:ac.mode=='wind'}" @click.prevent="setTemperature(1, $event)"></a>
 
-        <a href="#" class="btn-toggle" :class="{'btn-toggle-more':toggle}" @click.prevent="showMore()"></a>
-        
+        <!--<a href="#" class="btn-toggle" :class="{'btn-toggle-more':toggle}" @click.prevent="showMore()"></a>
+-->
         <div class="btns-hold">
             <ul class="btns">
                 <li>
-                    <a href="#" class="btn-mode" @click.prevent="modeDialogShow=true"></a>
-                    模式                   
+                    <a href="#" class="btn-mode icon-mode" @click.prevent="modeDialogShow=true"></a>
+                    模式
                 </li>
                 <li>
-                    <a href="#" class="btn-speed2" @click.prevent="speedDialogShow=true"></a>
+                    <!--<a href="#" class="btn-mode" @click.prevent="modeDialogShow=true"></a>-->
+                    <a href="#" class="btn-off icon-switch" @click.prevent="setOff($event)"></a>
+                    关闭
+                </li>
+                <li>
+                    <a href="#" class="btn-speed2 icon-speed" @click.prevent="speedDialogShow=true"></a>
                     风速
                 </li>
             </ul>
@@ -67,7 +81,7 @@
 
         </div>
 
-        <a href="#" class="btn-off" @click.prevent="setOff($event)"></a>
+        <!--<a href="#" class="btn-off" @click.prevent="setOff($event)"></a>-->
 
         <sub-page class="btns-more" v-model="toggle" title="更多">
             <!-- <p>模式</p>
@@ -81,10 +95,10 @@
                     送风
                 </li>
             </ul> -->
-            <p>摆风</p>
+            <!--<p>摆风</p>-->
             <ul class="btns">
                 <li :class="{on:ac.wind_up_down==='on'}">
-                    <a href="#" class="btn-vertical" :class="{on:ac.wind_up_down==='on'}" @click.prevent="setWind('wind_up_down', $event)"></a>
+                    <a href="#" class="icon-vertical" :class="{on:ac.wind_up_down==='on'}" @click.prevent="setWind('wind_up_down', $event)"></a>
                     上下
                 </li>
                 <!-- <li :class="{on:ac.wind_left_right==='on'}">
@@ -95,44 +109,44 @@
         </sub-page>
 
         <!-- 模式 -->
-        <sub-page class="btns-more" v-model="modeDialogShow" title="模式设置">
+        <sub-page class="btns-more" v-model="modeDialogShow" title="模式">
             <ul class="btns">
-            <li :class="{on:ac.mode==='cold'}">
-                    <a href="#" class="btn-cold" :class="{on:ac.mode==='cold'}" @click.prevent="setMode('cold', $event)"></a>
+                <li :class="{on:ac.mode==='auto'}">
+                    <a href="#" class="icon-auto" :class="{on:ac.mode==='auto'}" @click.prevent="setMode('auto', $event)"></a>
+                    智能
+                </li>
+                <li :class="{on:ac.mode==='cold'}">
+                    <a href="#" class="icon-cold" :class="{on:ac.mode==='cold'}" @click.prevent="setMode('cold', $event)"></a>
                     制冷
                 </li>
                 <li :class="{on:ac.mode==='heat'}">
-                    <a href="#" class="btn-heat" :class="{on:ac.mode==='heat'}" @click.prevent="setMode('heat', $event)"></a>
+                    <a href="#" class="icon-heat" :class="{on:ac.mode==='heat'}" @click.prevent="setMode('heat', $event)"></a>
                     制热
                 </li>
                 <li :class="{on:ac.mode==='dehumidify'}">
-                    <a href="#" class="btn-dehumidify" :class="{on:ac.mode==='dehumidify'}" @click.prevent="setMode('dehumidify', $event)"></a>
+                    <a href="#" class="icon-dehumidify" :class="{on:ac.mode==='dehumidify'}" @click.prevent="setMode('dehumidify', $event)"></a>
                     除湿
                 </li>
-                <li :class="{on:ac.mode==='auto'}">
-                    <a href="#" class="btn-auto" :class="{on:ac.mode==='auto'}" @click.prevent="setMode('auto', $event)"></a>
-                    智能
-                </li>
                 <li :class="{on:ac.mode==='wind'}">
-                    <a href="#" class="btn-wind" :class="{on:ac.mode==='wind'}" @click.prevent="setMode('wind', $event)"></a>
+                    <a href="#" class="icon-wind" :class="{on:ac.mode==='wind'}" @click.prevent="setMode('wind', $event)"></a>
                     送风
                 </li>
             </ul>
         </sub-page>
 
         <!-- 风速 -->
-        <sub-page class="btns-more" v-model="speedDialogShow" title="风速设置">
+        <sub-page class="btns-more" v-model="speedDialogShow" title="风速">
             <ul class="btns">
             <li :class="{'on':ac.speed==='low'}">
-                    <a href="#" class="btn-s1" :class="{'on':ac.speed==='low'}" @click.prevent="setSpeed($event,'low')"></a>
+                    <a href="#" class="icon-s1" :class="{'on':ac.speed==='low'}" @click.prevent="setSpeed($event,'low')"></a>
                     <span>低</span>
                 </li>
             <li :class="{'on':ac.speed==='normal'}">
-                    <a href="#" class="btn-s2" :class="{'on':ac.speed==='normal'}" @click.prevent="setSpeed($event,'normal')"></a>
+                    <a href="#" class="icon-s2" :class="{'on':ac.speed==='normal'}" @click.prevent="setSpeed($event,'normal')"></a>
                     <span>中</span>
                 </li>
             <li :class="{'on':ac.speed==='high'}">
-                    <a href="#" class="btn-s3" :class="{'on':ac.speed==='high'}" @click.prevent="setSpeed($event,'high')"></a>
+                    <a href="#" class="icon-s3" :class="{'on':ac.speed==='high'}" @click.prevent="setSpeed($event,'high')"></a>
                     <span>高</span>
                 </li>
             </ul>
@@ -171,7 +185,7 @@ const [MIN_TEMP, MAX_TEMP] = [16, 30];
 let tempDelay,
     tempFlag = true;
 
-function toggleHead(flag) { 
+function toggleHead(flag) {
     HdSmart.UI.toggleHeadAndFoot(!flag)
 }
 
@@ -199,10 +213,10 @@ export default {
             tipVisible: false,
             modeDialogShow: false,
             speedDialogShow: false,
-            tip: ""
+            tip: ''
         };
     },
-    watch: {    
+    watch: {
         toggle: toggleHead,
         modeDialogShow: toggleHead,
         speedDialogShow: toggleHead
@@ -210,11 +224,11 @@ export default {
     computed: {
         modeText() {
             return {
-                cold: "制冷模式",
-                heat: "制热模式",
-                dehumidify: "除湿模式",
-                auto: "智能模式",
-                wind: "送风模式"
+                cold: "制冷",
+                heat: "制热",
+                dehumidify: "除湿",
+                auto: "智能",
+                wind: "送风"
             }[this.ac.mode];
         },
         speedText() {
@@ -224,7 +238,7 @@ export default {
                 normal: "中风",
                 overnormal: "中风",
                 high: "高风"
-                // 'auto': '自动风'
+                // 'auto': '自动'
             }[this.ac.speed];
         }
     },

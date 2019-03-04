@@ -62,8 +62,8 @@
                     </dd>
                 </dl>
                 <a href="#" class="toggle" :class="{active:filterVisible}" @click.prevent="toggleFilter()">
-                    {{filterVisible?'收起':'展开'}}
-                    <i></i>
+                    <!--{{filterVisible?'收起':'展开'}}-->
+                    <i class="icon-arrow"></i>
                 </a>
             </div>
         </div>
@@ -75,10 +75,10 @@
                 <span class="update">
                     {{getUpdateSet(item.setCount,item.lastUpdateSet)}}
                 </span>
-                <div class="label">
-                    <span class="isvip" v-if="item.ispay && item.ispay !== '1'">付费</span>
-                    <span class="score">{{item.score}}</span>
-                </div>
+                <span class="isvip" v-if="item.ispay && item.ispay !== '1'">付费</span>
+                <span class="score">{{item.score}}7.2</span>
+                <!--<div class="label">-->
+                <!--</div>-->
             </li>
         </ul>
         <!-- 没有数据 -->
@@ -128,14 +128,17 @@
         color: #75787a;
         padding: 20px;
         i {
-            background: url(../../../lib/base/tv/assets/icn_arrow_up.png)
-                no-repeat center right;
-            background-size: 24px 12px;
+            /*background: url(../../../lib/base/tv/assets/icn_arrow_up.png)*/
+                /*no-repeat center right;*/
+            /*background-size: 24px 12px;*/
             display: inline-block;
             width: 24px;
-            height: 22px;
+            height: 24px;
+            font-size: 16px;
+            line-height: 24px;
             margin-left: 2px;
             transform: rotate(180deg);
+            color: #222a37;
         }
         &.active i {
             transform: rotate(0deg);
@@ -160,14 +163,17 @@
         height: 56px;
         line-height:56px;
         display: block;
-        margin-right: 32px;
+        margin-right: 12px;
         margin-bottom:16px;
         color: #7f8082;
         height: 56px;
         line-height: 56px;
         white-space: nowrap;
+        padding: 0 10px;
         &.active {
-            color: #13d5dc;
+            color: #FFC700;
+            background: #F6F6F6;
+            border-radius: 2px;
         }
     }
 }
@@ -207,16 +213,19 @@
         border-radius: 0 3px 3px 0;
         display: none;
     }
-    .label {
+    /*.label {
         position: absolute;
         right: 0;
         top: 27px;
-    }
+    }*/
     .isvip {
+        position: absolute;
+        right: 15px;
+        top: 40px;
         background: #f26161;
         width: 60px;
         line-height: 30px;
-        border-radius: 3px 0 0 3px;
+        border-radius: 4px;
         font-size: 24px;
         text-align: center;
         color: #fff;
@@ -225,10 +234,13 @@
         margin-bottom: 5px;
     }
     .score {
-        background: #ffd53d;
+        position: absolute;
+        right: 15px;
+        top: 420px;
+        background-image: linear-gradient(90deg, #FFDA00 0%, #FFC700 100%);
         width: 60px;
         line-height: 30px;
-        border-radius: 3px 0 0 3px;
+        border-radius: 4px;
         font-size: 24px;
         text-align: center;
         color: #fff;

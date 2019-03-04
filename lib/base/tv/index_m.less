@@ -1,0 +1,93 @@
+@font-face {
+    font-family: 'iconfont';  /* project id 616019 */
+    src: url('../../iconfont/iconfont.eot');
+    src: url('../../iconfont/iconfont.eot?#iefix') format('embedded-opentype'),
+    url('../../iconfont/iconfont.woff') format('woff'),
+    url('../../iconfont/iconfont.ttf') format('truetype'),
+    url('../../iconfont/iconfont.svg#iconfont') format('svg');
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+    position: relative;
+    &:before {
+        font-family: 'iconfont' !important;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+.icon-return:before{content: '\e619';}
+.icon-more:before{content: '\e61d';}
+.icon-search:before{content: '\e631';}
+.icon-shut:before{content: '\e645';}
+.icon-home:before{content: '\e644';}
+.icon-volup:before{content: '\e642';}
+.icon-voldown:before{content: '\e60c';}
+.icon-back:before{content: '\e60a';}
+.icon-movie:before,
+.icon-001:before{content: '\e609';}
+.icon-tv:before,
+.icon-002:before{content: '\e608';}
+.icon-anime:before,
+.icon-003:before{content: '\e64a';}
+.icon-variety:before,
+.icon-004:before{content: '\e63a';}
+.icon-screening:before{content: '\e636';}
+.icon-control:before{content: '\e643';}
+.icon-play:before{content: '\e62f';}
+.icon-arrow:before{content: '\e63c';}
+.icon-del:before{content: '\e630';}
+.icon-close:before{content: '\e646';}
+
+
+
+.topbar {
+    position: relative;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    height: 139px !important;
+    padding-top: 44px;
+    background-color: #fff;
+    color: #222a37;
+    .left {
+        position: absolute;
+        top: 44px;
+        left: 0;
+    }
+    .right {
+        position: absolute;
+        top: 44px;
+        right: 0;
+    }
+    .title {
+        text-align: center;
+        line-height: 95px !important;
+        font-size: 34px;
+    }
+    a {
+        width: 95px;
+        height: 95px;
+        display: block;
+        line-height: 95px;
+        color: #222a37;
+        text-align: center;
+        font-size: 38px;
+        text-decoration: none;
+        &:active {
+            opacity: .8;
+        }
+    }
+
+}
+
+.topbar-fixed {
+    position: fixed;
+}
