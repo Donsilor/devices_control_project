@@ -53,7 +53,6 @@ var docEl = document.body
 
 const store = new Vuex.Store({
   state: {
-    toolbarHeight: 38.89,
     online: true,
     detailVisible: false,
     activeDetail: {},
@@ -62,7 +61,9 @@ const store = new Vuex.Store({
       tvOnlineStatus: 1,
       screenProjectType: 0,
       screenProjectTitle: ``
-    }
+    },
+    status_bar_height: 20,
+    navigation_bar_height: 44
   },
   mutations: {
     showDetail(state, payload) {
@@ -93,6 +94,12 @@ const store = new Vuex.Store({
     },
     setScreenProjectionStatus(state, payload) {
       state.tvStatus = payload
+    },
+    setStatusBarHeight(state, payload) {
+        state.status_bar_height = payload
+    },
+    setNavigationBarHeight(state, payload) {
+        state.navigation_bar_height = payload
     }
   },
   actions: {
@@ -159,6 +166,14 @@ HdSmart.ready(() => {
 
     if (window.device_name) {
       store.commit('setDeviceName', window.device_name)
+    }
+
+    if(window.status_bar_height){
+        store.commit('setStatusBarHeight', window.status_bar_height)
+    }
+
+    if(window.navigation_bar_height){
+        store.commit('setNavigationBarHeight', window.navigation_bar_height)
     }
 
     // setTimeout(() => {

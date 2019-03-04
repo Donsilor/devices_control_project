@@ -3,10 +3,16 @@
 -->
 <template>
   <div class="topbar">
-    <div class="topbar-block"/>
+    <div
+      :style="{height:(status_bar_height + navigation_bar_height) +'px'}"
+      class="topbar-block" />
     <div class="topbar-fixed">
-      <div class="statusbar"/>
-      <div class="navbar">
+      <div
+        :style="{height:status_bar_height+'px'}"
+        class="statusbar"/>
+      <div
+        :style="{height:navigation_bar_height+'px'}"
+        class="navbar" >
         <div class="left">
           <a
             href="#/"
@@ -28,6 +34,9 @@
 </template>
 
 <script>
+
+import { mapState } from 'vuex'
+
 export default {
   props: {
     title: String,
@@ -36,6 +45,7 @@ export default {
   data() {
     return {}
   },
+  computed: mapState(['status_bar_height', 'navigation_bar_height']),
   methods: {
     goBack() {
         if(typeof this.back === 'function'){

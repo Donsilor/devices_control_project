@@ -1,30 +1,42 @@
 <template>
-  <div v-if="visible" class="status_bar">
-    <div class="sp_status_bar" 
-v-if="spVisible" @click="goToScreenProjectionPage">
+  <div
+    v-if="visible"
+    class="status_bar">
+    <div
+      v-if="spVisible"
+      class="sp_status_bar"
+      @click="goToScreenProjectionPage">
       <i class="ico"/>正在投屏 {{ spStatusText }}：
       <span class="text">{{ tvStatus.screenProjectTitle }}</span>
       <i class="arr"/>
     </div>
     <div v-show="ios">
-      <div class="offline_bar" 
-v-if="tvStatus.tvOnlineStatus==-1" @click="goToOfflineHelpPage">
+      <div
+        v-if="tvStatus.tvOnlineStatus==-1"
+        class="offline_bar"
+        @click="goToOfflineHelpPage">
         <i class="wifi"/>无法连接网络，请检查网络设置
       </div>
-      <div class="offline_bar" 
-v-if="tvStatus.tvOnlineStatus==-2" @click="goToOfflineHelpPage">
+      <div
+        v-if="tvStatus.tvOnlineStatus==-2"
+        class="offline_bar"
+        @click="goToOfflineHelpPage">
         <i class="error"/>路由器已离线 &nbsp;
         <span class="link">查看帮助</span>
         <i class="arr"/>
       </div>
-      <div class="offline_bar" 
-v-if="tvStatus.tvOnlineStatus==-3" @click="goToOfflineHelpPage">
+      <div
+        v-if="tvStatus.tvOnlineStatus==-3"
+        class="offline_bar"
+        @click="goToOfflineHelpPage">
         <i class="error"/>电视离线或关机 &nbsp;
         <span class="link">查看帮助</span>
         <i class="arr"/>
       </div>
     </div>
-    <div v-if="tvStatus.tvOnlineStatus < 0 && !ios" class="offline_bar_blank"/>
+    <div
+      v-if="tvStatus.tvOnlineStatus < 0 && !ios"
+      class="offline_bar_blank"/>
   </div>
 </template>
 
