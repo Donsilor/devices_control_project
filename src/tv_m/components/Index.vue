@@ -163,7 +163,7 @@
         top: 0;
         left: 28px;
         font-size: 36px;
-        line-height: 60px;
+        line-height: 38px;
         color: rgba(0, 0, 0, .2);
     }
 }
@@ -182,9 +182,6 @@
         height: 250px;
         box-shadow: inset 1px 1px 1px -1px #dbdbdb;
         background-color: #fff;
-        background-size: 96px 96px;
-        background-position: center 48px;
-        background-repeat: no-repeat;
         font-size: 28px;
         text-align: center;
         color: #75787a;
@@ -201,7 +198,7 @@
             font-size: 40px;
             width: 82px;
             height: 82px;
-            line-height: 82px;
+            line-height: 50px;
             background-color: #3478f6;
             border-radius: 50%;
             color: #fff;
@@ -279,7 +276,7 @@
         display: block;
         width: 100px;
         height: 100px;
-        line-height: 100px;
+        line-height: 60px;
         background-size: 100% 100%;
         background-color: #fff;
         border-radius: 50%;

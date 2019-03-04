@@ -140,8 +140,9 @@
     display: none;
 }
 .search_bar {
-    padding: 12px 0 0 100px;
+    padding: 10px 0 0 100px;
     display: flex;
+    vertical-align: middle;
 }
 .search_input {
     position: relative;
@@ -204,7 +205,7 @@
             margin-right: 10px;
             width: 36px;
             height: 36px;
-            line-height: 36px;
+            line-height: 18px;
             font-size: 36px;
             color: #76787A;
             /*background-repeat: no-repeat;
@@ -311,7 +312,6 @@
     /*padding-top: 96px;*/
 }
 .isIOS .search_bar {
-    padding: 12px 0 0 100px;
     input {
         height: 32PX;
     }

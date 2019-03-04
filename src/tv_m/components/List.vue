@@ -415,7 +415,7 @@
 }
 
 .isIOS .page-list {
-    padding-top: 200px;
+    padding-top: 230px;
 }
 
 @media (min-device-width: 414px) {
