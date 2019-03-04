@@ -279,6 +279,7 @@
             display: inline-block;
             width: 40px;
             height: 40px;
+            line-height: 20px;
             transform: rotate(180deg);
             /*transition: transform .6s;*/
         }
@@ -327,24 +328,30 @@
             margin-top: -2px;
             vertical-align: middle;
         }
-        .icon-play {
+        .icon-play,
+        .icon-playing {
             font-size: 40px;
+
+            &:before {
+                line-height: 20px;
+            }
+
         }
         .icon-time {
             width: 34px;
             height: 34px;
             background-image: url(../../../lib/base/tv/assets/icn_history_white_s.png);
         }
-        .icon-playing {
-            width: 36px;
-            height: 36px;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 12px;
-            background: url(../../../lib/base/tv/assets/icn_playing_blue_s.png)
-                no-repeat;
-            background-size: 100% 100%;
-        }
+        /*.icon-playing {*/
+            /*width: 36px;*/
+            /*height: 36px;*/
+            /*display: inline-block;*/
+            /*vertical-align: middle;*/
+            /*margin-right: 12px;*/
+            /*background: url(../../../lib/base/tv/assets/icn_playing_blue_s.png)*/
+                /*no-repeat;*/
+            /*background-size: 100% 100%;*/
+        /*}*/
     }
     .btn-outline {
         color: #13d5dc;
@@ -413,6 +420,10 @@
             padding-left: 32px;
             overflow-y: auto;
         }
+
+        .icon-close {
+            line-height: 1;
+        }
     }
 
 
@@ -425,6 +436,7 @@
             display: inline-block;
             width: 24px;
             height: 24px;
+            line-height: 12px;
             font-size: 24px;
             margin-left: 2px;
             transform: rotate(90deg);
