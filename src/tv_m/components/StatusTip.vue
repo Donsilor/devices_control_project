@@ -1,27 +1,31 @@
 <template>
-    <div class="status_bar" v-if="visible">
-        <div class="sp_status_bar" @click="goToScreenProjectionPage" v-if="spVisible">
-            <i class="ico"></i>正在投屏 {{spStatusText}}：
-            <span class="text">{{tvStatus.screenProjectTitle}}</span>
-            <i class="arr"></i>
-        </div>
-        <div v-show="ios">
-            <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-1">
-                <i class="wifi"></i>无法连接网络，请检查网络设置
-            </div>
-            <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-2">
-                <i class="error"></i>路由器已离线 &nbsp;
-                <span class="link">查看帮助</span>
-                <i class="arr"></i>
-            </div>
-            <div class="offline_bar" @click="goToOfflineHelpPage" v-if="tvStatus.tvOnlineStatus==-3">
-                <i class="error"></i>电视离线或关机 &nbsp;
-                <span class="link">查看帮助</span>
-                <i class="arr"></i>
-            </div>
-        </div>
-        <div class="offline_bar_blank" v-if="tvStatus.tvOnlineStatus < 0 && !ios"></div>
+  <div v-if="visible" class="status_bar">
+    <div class="sp_status_bar" 
+v-if="spVisible" @click="goToScreenProjectionPage">
+      <i class="ico"/>正在投屏 {{ spStatusText }}：
+      <span class="text">{{ tvStatus.screenProjectTitle }}</span>
+      <i class="arr"/>
     </div>
+    <div v-show="ios">
+      <div class="offline_bar" 
+v-if="tvStatus.tvOnlineStatus==-1" @click="goToOfflineHelpPage">
+        <i class="wifi"/>无法连接网络，请检查网络设置
+      </div>
+      <div class="offline_bar" 
+v-if="tvStatus.tvOnlineStatus==-2" @click="goToOfflineHelpPage">
+        <i class="error"/>路由器已离线 &nbsp;
+        <span class="link">查看帮助</span>
+        <i class="arr"/>
+      </div>
+      <div class="offline_bar" 
+v-if="tvStatus.tvOnlineStatus==-3" @click="goToOfflineHelpPage">
+        <i class="error"/>电视离线或关机 &nbsp;
+        <span class="link">查看帮助</span>
+        <i class="arr"/>
+      </div>
+    </div>
+    <div v-if="tvStatus.tvOnlineStatus < 0 && !ios" class="offline_bar_blank"/>
+  </div>
 </template>
 
 <style>
@@ -128,24 +132,6 @@
     vertical-align: text-bottom;
 }
 
-@media only screen and (-webkit-min-device-pixel-ratio: 3),
-    only screen and (min-device-pixel-ratio: 3) {
-    .sp_status_home,
-    .sp_status_detail,
-    .sp_status_search {
-        top: 116px;
-    }
-}
-
-.isIOS .sp_status_home {
-    top: 0;
-}
-.isIOS .sp_status_search {
-    top: 88px;
-}
-.isIOS .sp_status_detail {
-    top: 88px;
-}
 </style>
 
 
@@ -177,6 +163,8 @@ export default {
             return this.tvStatus.tvOnlineStatus != 1 || this.spVisible;
         }
     },
+    mounted() {
+    },
     methods: {
         goToScreenProjectionPage() {
             service.onClickEvent("screenProjectionStatusClick");
@@ -187,7 +175,5 @@ export default {
             });
         }
     },
-    mounted() {
-    }
 };
 </script>

@@ -149,7 +149,7 @@
     width: 100%;
     input {
         border: 1px solid #dbdbdb;
-        height: 75px;
+        height: 30PX;
         border-radius: 32px;
         width: 100%;
         box-sizing: border-box;
@@ -159,7 +159,7 @@
         background-size: 36px 36px;
         padding-left: 68px;
         padding-right: 64px;
-        font-size: 32px;
+        font-size: 28px;
         &::-webkit-input-placeholder {
             color: #c8cacc;
         }
@@ -168,12 +168,12 @@
             outline: none;
         }
     }
-    .icon-del {
+    .del {
         position: absolute;
-        width: 42px;
-        height: 42px;
-        right: 18px;
-        top: 18px;
+        width: 40px;
+        height: 40px;
+        right: 10px;
+        top: 7px;
         background-repeat: no-repeat;
         background-size: 100% 100%;
         background-image: url(../../../lib/base/tv/assets/btn_input_delete_normal.png);
@@ -290,35 +290,6 @@
                 background: #f6f6f6;
             }
         }
-    }
-}
-
-@media only screen and (-webkit-min-device-pixel-ratio: 3),
-    only screen and (min-device-pixel-ratio: 3) {
-    .search_bar {
-        padding: 20px 0 0 100px;
-        input {
-            height: 75px;
-        }
-        .del {
-            width: 42px;
-            height: 42px;
-            top: 18px;
-        }
-    }
-}
-
-.isIOS .page-search {
-    /*padding-top: 96px;*/
-}
-.isIOS .search_bar {
-    input {
-        height: 32PX;
-    }
-    .del {
-        width: 36px;
-        height: 36px;
-        top: 16px;
     }
 }
 </style>

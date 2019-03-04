@@ -3,22 +3,10 @@
 -->
 <template>
   <div class="page-index">
-    <!-- 导航头 -->
-    <div class="topbar">
-      <div class="topbar-block"/>
-      <div class="topbar-fixed">
-        <div class="statusbar"/>
-        <div class="navbar">
-          <div class="left">
-            <a
-              href="#/"
-              class="icon-return"
-              @click.prevent="back"/>
-          </div>
-          <div class="title">{{ $store.state.device_name }}</div>
-        </div>
-      </div>
-    </div>
+
+    <topbar
+      :title="$store.state.device_name"
+      :back="back" />
 
     <status-tip class="sp_status_home" />
 
@@ -120,36 +108,15 @@
     background: #f7f8fa;
     padding-bottom: 50px;
 }
-.page-header {
-    width: 100%;
-    z-index: 999;
-    height: 100px;
-    position: fixed;
-    left: 0;
-    top: 0;
-    background: #fafafa;
-}
-
-.page-body {
-    height: 100%;
-    padding-bottom: 120px;
-    overflow-y: auto;
-}
-.device_name {
-    text-align: center;
-    font-size: 32px;
-    padding: 30px 0 20px;
-}
 .search-box {
     background-color: #fff;
     padding: 24px 0;
-    margin-top: 20px;
 }
 .search {
     background-color: #f0f0f0;
     border: 1px solid #dbdbdb;
     border-radius: 32px;
-    width: 702px;
+    width: 654px;
     height: 64px;
     line-height: 64px;
     margin: 0 auto;

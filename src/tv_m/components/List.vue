@@ -15,109 +15,109 @@
       </div>
     </div>
 
-    <div
-      v-show="filterVisible"
-      class="filters-placeholder"/>
+    <topbar :title="title"/>
+
     <div
       v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"
       class="status-tip-placeholder"/>
 
-    <div class="fixedtop">
-      <topbar :title="title"/>
-      <status-tip class="sp_status_list" />
-      <!-- 条件 -->
-      <div
-        v-if="!error"
+    <status-tip class="sp_status_list" />
+    <!-- 条件 -->
+    <div
+      :style="{height:filterVisible?'190px':'64px'}"
+      class="filters-placeholder"/>
+    <div
+      v-if="!error"
+      :class="{active:filterVisible}"
+      class="filters">
+      <!-- 地区 -->
+      <dl
+        v-show="filterVisible"
+        class="row">
+        <dt>
+          <a
+            :class="{active:current_region==''}"
+            href="#"
+            @click.prevent="setParam('current_region','')">全部地区</a>
+        </dt>
+        <dd>
+          <a
+            v-for="item in region"
+            :key="item.regionId"
+            :class="{active:current_region==item.regionId}"
+            href="#"
+            @click.prevent="setParam('current_region',item.regionId)">
+            {{ item.region }}
+          </a>
+        </dd>
+      </dl>
+      <!-- 分类 -->
+      <dl
+        :style="{width:filterVisible?'auto':'82%'}"
+        class="row">
+        <dt>
+          <a
+            :class="{active:current_category==''}"
+            href="#"
+            @click.prevent="setParam('current_category','')">全部分类</a>
+        </dt>
+        <dd>
+          <a
+            v-for="item in category"
+            :key="item.cateId"
+            :class="{active:current_category==item.cateId}"
+            href="#"
+            @click.prevent="setParam('current_category',item.cateId)">
+            {{ item.cate }}
+          </a>
+        </dd>
+      </dl>
+      <!-- 年份 -->
+      <dl
+        v-show="filterVisible"
+        class="row">
+        <dt>
+          <a
+            :class="{active:current_year==''}"
+            href="#"
+            @click.prevent="setParam('current_year','')">全部年份</a>
+        </dt>
+        <dd>
+          <a
+            v-for="item in year"
+            :key="item.yearrange"
+            :class="{active:current_year==item.yearrange}"
+            href="#"
+            @click.prevent="setParam('current_year',item.yearrange)">
+            {{ item.year }}
+          </a>
+        </dd>
+      </dl>
+      <!-- 排序 -->
+      <dl
+        v-show="filterVisible"
+        class="row">
+        <dd>
+          <a
+            v-for="item in orderby"
+            :key="item.orderId"
+            :class="{active:current_orderby==item.orderId}"
+            href="#"
+            @click.prevent="setParam('current_orderby',item.orderId)">
+            {{ item.text }}
+          </a>
+        </dd>
+      </dl>
+      <a
         :class="{active:filterVisible}"
-        class="filters">
-        <!-- 地区 -->
-        <dl
-          v-show="filterVisible"
-          class="row">
-          <dt>
-            <a
-              :class="{active:current_region==''}"
-              href="#"
-              @click.prevent="setParam('current_region','')">全部地区</a>
-          </dt>
-          <dd>
-            <a
-              v-for="item in region"
-              :key="item.regionId"
-              :class="{active:current_region==item.regionId}"
-              href="#"
-              @click.prevent="setParam('current_region',item.regionId)">
-              {{ item.region }}
-            </a>
-          </dd>
-        </dl>
-        <!-- 分类 -->
-        <dl
-          :style="{width:filterVisible?'auto':'82%'}"
-          class="row">
-          <dt>
-            <a
-              :class="{active:current_category==''}"
-              href="#"
-              @click.prevent="setParam('current_category','')">全部分类</a>
-          </dt>
-          <dd>
-            <a
-              v-for="item in category"
-              :key="item.cateId"
-              :class="{active:current_category==item.cateId}"
-              href="#"
-              @click.prevent="setParam('current_category',item.cateId)">
-              {{ item.cate }}
-            </a>
-          </dd>
-        </dl>
-        <!-- 年份 -->
-        <dl
-          v-show="filterVisible"
-          class="row">
-          <dt>
-            <a
-              :class="{active:current_year==''}"
-              href="#"
-              @click.prevent="setParam('current_year','')">全部年份</a>
-          </dt>
-          <dd>
-            <a
-              v-for="item in year"
-              :key="item.yearrange"
-              :class="{active:current_year==item.yearrange}"
-              href="#"
-              @click.prevent="setParam('current_year',item.yearrange)">
-              {{ item.year }}
-            </a>
-          </dd>
-        </dl>
-        <!-- 排序 -->
-        <dl
-          v-show="filterVisible"
-          class="row">
-          <dd>
-            <a
-              v-for="item in orderby"
-              :key="item.orderId"
-              :class="{active:current_orderby==item.orderId}"
-              href="#"
-              @click.prevent="setParam('current_orderby',item.orderId)">
-              {{ item.text }}
-            </a>
-          </dd>
-        </dl>
-        <a
-          :class="{active:filterVisible}"
-          href="#"
-          class="toggle"
-          @click.prevent="toggleFilter()">
-          <!--{{filterVisible?'收起':'展开'}}-->
-          <i class="icon-arrow"/>
-        </a>
-      </div>
+        href="#"
+        class="toggle"
+        @click.prevent="toggleFilter()">
+        <!--{{filterVisible?'收起':'展开'}}-->
+        <i class="icon-arrow"/>
+      </a>
     </div>
+
     <!-- 列表 -->
     <ul class="vlist list-m60">
       <li
@@ -159,21 +159,15 @@
 </template>
 
 <style lang="less">
-.fixedtop {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    z-index: 2;
-}
-.filters-placeholder {
-    height: 230px;
-}
 .filters {
     padding: 28px 28px 12px;
     background: rgba(255, 255, 255, 0.98);
     box-shadow: inset 0 -1px 0 0 #dbdbdb;
-    position: relative;
+    position: fixed;
+    left: 0;
+    top: 65PX;
+    width: 100%;
+    z-index: 999;
     &.active{
         padding: 32px 32px 16px 32px;
         .toggle {
@@ -414,10 +408,6 @@
     }
 }
 
-.isIOS .page-list {
-    padding-top: 230px;
-}
-
 @media (min-device-width: 414px) {
     .list-m60 {
         margin: 0 17px;
@@ -428,6 +418,9 @@
         img {
             width: 216px;
             height: 317px;
+        }
+        .score {
+            top: 270px;
         }
     }
 }

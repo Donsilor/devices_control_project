@@ -1,8 +1,10 @@
 <template>
-<div id="app" :class="{isIOS:isIOS}">
-    <router-view v-show="!$store.state.detailVisible"></router-view>
-    <detail></detail>
-</div>
+  <div
+    id="app"
+    :class="{isIOS:isIOS}">
+    <router-view v-show="!$store.state.detailVisible"/>
+    <detail/>
+  </div>
 </template>
 
 <style lang="less">
@@ -44,13 +46,6 @@
     }
     .detail-bd{
         padding-bottom: 300px;
-    }
-    .isIOS .page-list,
-    .isIOS .page-search{
-        padding-bottom: 20px;
-    }
-    .isIOS .detail-bd{
-        padding-bottom: 200px;
     }
 </style>
 

@@ -1,6 +1,6 @@
 <template>
-  <div class="mask" :style="maskStyle" v-show="!$store.state.online" @touchmove.prevent="onTouchMove">
-      <div></div>
+  <div :style="maskStyle" class="mask" v-show="!$store.state.online" @touchmove.prevent="onTouchMove">
+    <div/>
   </div>
 </template>
 
@@ -22,26 +22,20 @@
     width: 100%;
     height: 100%;
 }
-.isIOS .mask{
-    top: 88px;
-}
-.isIOS .mask div{
-    top: -88px;
-}
 </style>
 
 <script>
 export default {
     props: ['page'],
+    computed: {
+        maskStyle() {
+            return this.page == 'index' ? {top:0+'px'} : ''
+        }
+    },
     methods: {
         onTouchMove() {
             return false
         }
     },
-    computed: {
-        maskStyle() {
-            return this.page == 'index' ? {top:0+'px'} : ''
-        }
-    }
 }
 </script>

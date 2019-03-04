@@ -6,31 +6,16 @@
     v-show="visible"
     class="page-detail">
 
-    <div class="topbar">
-      <div class="topbar-block"/>
-      <div class="topbar-fixed">
-        <div class="statusbar"/>
-        <div class="navbar">
-          <div class="left">
-            <a
-              href="#/"
-              class="icon-return"
-              @click.prevent="close"/>
-          </div>
-          <div
-            class="title">
-            {{ loading?'正在加载中...':cur.title }}
-            <span
-              v-show="!loading && ispay && ispay !== '1'"
-              class="isvip">付费</span>
-          </div>
-          <slot/>
-        </div>
+    <topbar :back="close">
+      <div
+        class="title">
+        {{ loading?'正在加载中...':cur.title }}
+        <span
+          v-show="!loading && ispay && ispay !== '1'"
+          class="isvip">付费</span>
       </div>
-    </div>
+    </topbar>
 
-
-    <div class="detail-hd-placeholder"/>
     <status-tip class="sp_status_detail" />
     <div
       v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"
@@ -354,8 +339,8 @@
     .btn {
         background-image: linear-gradient(90deg, #FFDA00 0%, #FFC700 100%);
         border-radius: 45px;
-        height: 90px;
-        line-height: 90px;
+        height: 84px;
+        line-height: 84px;
         display: block;
         color: #fff;
         font-size: 36px;
@@ -592,10 +577,6 @@
     }
 }
 
-.detail-hd-placeholder{
-    /*height: 124px;*/
-}
-
 .isvip {
     background-color: #f26161;
     color: #fff;
@@ -605,26 +586,6 @@
     padding: 0 6px;
 }
 
-.isIOS {
-    .detail-hd-placeholder{
-        /*height: 96px;*/
-    }
-    .detail-hd {
-        height: 96px;
-        .back {
-            height: 96px;
-        }
-        /*.title {
-            line-height: 96px;
-        }*/
-    }
-}
-.andriod #app{
-    height:auto;
-    overflow-y:auto;
-    box-sizing:border-box;
-    padding-bottom:120px;
-}
 </style>
 
 <script>

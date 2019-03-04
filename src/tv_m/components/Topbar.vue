@@ -30,15 +30,20 @@
 <script>
 export default {
   props: {
-    title: String
+    title: String,
+    back: Function
   },
   data() {
     return {}
-    },
+  },
   methods: {
     goBack() {
-      this.$router.back()
+        if(typeof this.back === 'function'){
+            this.back()
+        }else{
+             this.$router.back()
         }
+    }
   }
 }
 </script>
