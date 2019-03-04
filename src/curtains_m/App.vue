@@ -2,9 +2,12 @@
   <div id="app">
     <div class="topbar topbar-fixed">
       <div class="left">
-        <a href="#/" class="icon-return" @click.prevent="back"/>
+        <a
+          href="#/"
+          class="icon-return"
+          @click.prevent="back"/>
       </div>
-      <div class="title">{{device_name}}</div>
+      <div class="title">{{ device_name }}123</div>
       <div class="right">
         <!--<a href="" class="icon-more"></a>-->
       </div>
@@ -17,12 +20,25 @@
                  <icon class="redact-white" />&ndash;&gt;
                 窗帘已关闭
             </div>-->
-      <div v-if="show && tip" class="tip">{{ tip }}</div>
-      <navigator v-once class="navigator"/>
-      <curtain :is_ready="is_ready" :open_percentage="target_percentage" class="curtain"/>
+      <div
+        v-if="show && tip"
+        class="tip">{{ tip }}</div>
+      <navigator
+        v-once
+        class="navigator"/>
+      <curtain
+        :is_ready="is_ready"
+        :open_percentage="target_percentage"
+        class="curtain"/>
 
     </div>
-    <control :is_ready="is_ready" class="control" @onOpen="onOpen" @onPause="onPause" @onClose="onClose" @onGoPercentage="onGoPercentage"/>
+    <control
+      :is_ready="is_ready"
+      class="control"
+      @onOpen="onOpen"
+      @onPause="onPause"
+      @onClose="onClose"
+      @onGoPercentage="onGoPercentage"/>
   </div>
 </template>
 

@@ -45,49 +45,59 @@
 .icon-del:before{content: '\e630';}
 .icon-close:before{content: '\e646';}
 
+@status_bar_height:20PX;
+@navigation_bar_height:44PX;
 
+.topbar-block {
+    height: 64PX;
+    background: #fff;
+}
 
-.topbar {
-    position: relative;
+.topbar-fixed{
+    position: fixed;
     left: 0;
     top: 0;
     z-index: 100;
     width: 100%;
-    height: 139px !important;
-    padding-top: 44px;
-    background-color: #fff;
+    background: #fff;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.statusbar{
+    height: @status_bar_height;
+}
+
+.navbar {
+    height: @navigation_bar_height;
+    position: relative;
     color: #222a37;
     .left {
         position: absolute;
-        top: 44px;
+        top: 0;
         left: 0;
     }
     .right {
         position: absolute;
-        top: 44px;
+        top: 0;
         right: 0;
     }
     .title {
         text-align: center;
-        line-height: 95px !important;
-        font-size: 34px;
+        line-height: @navigation_bar_height;
+        font-size: 17PX;
     }
     a {
-        width: 95px;
-        height: 95px;
+        width: @navigation_bar_height;
+        height: @navigation_bar_height;
         display: block;
-        line-height: 95px;
+        line-height: @navigation_bar_height;
         color: #222a37;
         text-align: center;
-        font-size: 38px;
+        font-size: 17PX;
         text-decoration: none;
         &:active {
             opacity: .8;
         }
     }
 
-}
-
-.topbar-fixed {
-    position: fixed;
 }

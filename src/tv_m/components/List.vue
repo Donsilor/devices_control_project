@@ -2,103 +2,163 @@
     列表页,query:{title:"",channelId:""}
 -->
 <template>
-    <div class="page-list">
+  <div class="page-list">
 
-        <!-- 错误提示 -->
-        <div class="error-page" v-if="error" @click="reload">
-            <div class="error-tip">
-                <img src='../../../lib/base/tv/assets/img_disconnection@2x.png' />
-                <p>加载失败，请点击屏幕刷新</p>
-            </div>
-        </div>
-
-        <div class="filters-placeholder" v-show="filterVisible"></div>
-        <div class="status-tip-placeholder" v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"></div>
-
-        <div class="fixedtop">
-            <topbar :title="title"></topbar>
-            <status-tip class="sp_status_list" />
-            <!-- 条件 -->
-            <div class="filters" v-if="!error" :class="{active:filterVisible}">
-                <!-- 地区 -->
-                <dl class="row" v-show="filterVisible">
-                    <dt>
-                        <a href="#" @click.prevent="setParam('current_region','')" :class="{active:current_region==''}">全部地区</a>
-                    </dt>
-                    <dd>
-                        <a href="#" v-for="item in region" :key="item.regionId" @click.prevent="setParam('current_region',item.regionId)" :class="{active:current_region==item.regionId}">
-                            {{item.region}}
-                        </a>
-                    </dd>
-                </dl>
-                <!-- 分类 -->
-                <dl class="row" :style="{width:filterVisible?'auto':'82%'}">
-                    <dt>
-                        <a href="#" @click.prevent="setParam('current_category','')" :class="{active:current_category==''}">全部分类</a>
-                    </dt>
-                    <dd>
-                        <a href="#" v-for="item in category" :key="item.cateId" @click.prevent="setParam('current_category',item.cateId)" :class="{active:current_category==item.cateId}">
-                            {{item.cate}}
-                        </a>
-                    </dd>
-                </dl>
-                <!-- 年份 -->
-                <dl class="row" v-show="filterVisible">
-                    <dt>
-                        <a href="#" @click.prevent="setParam('current_year','')" :class="{active:current_year==''}">全部年份</a>
-                    </dt>
-                    <dd>
-                        <a href="#" v-for="item in year" :key="item.yearrange" @click.prevent="setParam('current_year',item.yearrange)" :class="{active:current_year==item.yearrange}">
-                            {{item.year}}
-                        </a>
-                    </dd>
-                </dl>
-                <!-- 排序 -->
-                <dl class="row" v-show="filterVisible">
-                    <dd>
-                        <a href="#" v-for="item in orderby" :key="item.orderId" @click.prevent="setParam('current_orderby',item.orderId)" :class="{active:current_orderby==item.orderId}">
-                            {{item.text}}
-                        </a>
-                    </dd>
-                </dl>
-                <a href="#" class="toggle" :class="{active:filterVisible}" @click.prevent="toggleFilter()">
-                    <!--{{filterVisible?'收起':'展开'}}-->
-                    <i class="icon-arrow"></i>
-                </a>
-            </div>
-        </div>
-        <!-- 列表 -->
-        <ul class="vlist list-m60">
-            <li class="vitem" v-for="item in list" :key="item.vid" @click="showDetailInfo(item)" :class="['item-'+channelId]">
-                <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
-                <div class="name">{{item.title}}</div>
-                <span class="update">
-                    {{getUpdateSet(item.setCount,item.lastUpdateSet)}}
-                </span>
-                <span class="isvip" v-if="item.ispay && item.ispay !== '1'">付费</span>
-                <span class="score">{{item.score}}7.2</span>
-                <!--<div class="label">-->
-                <!--</div>-->
-            </li>
-        </ul>
-        <!-- 没有数据 -->
-        <div class="nodata" v-show="loadState === 'NO_DATA'">
-            <i></i>
-            <p>暂无结果</p>
-        </div>
-        <!-- 加载更多 -->
-        <div class="loadmore">
-            <p v-show="!isFirstLoad && loadState === 'LOADING'">正在加载中...</p>
-            <p v-show="!isFirstLoad && loadState === 'LOADED'">加载更多...</p>
-            <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
-        </div>
+    <!-- 错误提示 -->
+    <div
+      v-if="error"
+      class="error-page"
+      @click="reload">
+      <div class="error-tip">
+        <img src="../../../lib/base/tv/assets/img_disconnection@2x.png" >
+        <p>加载失败，请点击屏幕刷新</p>
+      </div>
     </div>
+
+    <div
+      v-show="filterVisible"
+      class="filters-placeholder"/>
+    <div
+      v-show="$store.state.tvStatus.screenProjectType!=0 || $store.state.tvStatus.tvOnlineStatus!=1"
+      class="status-tip-placeholder"/>
+
+    <div class="fixedtop">
+      <topbar :title="title"/>
+      <status-tip class="sp_status_list" />
+      <!-- 条件 -->
+      <div
+        v-if="!error"
+        :class="{active:filterVisible}"
+        class="filters">
+        <!-- 地区 -->
+        <dl
+          v-show="filterVisible"
+          class="row">
+          <dt>
+            <a
+              :class="{active:current_region==''}"
+              href="#"
+              @click.prevent="setParam('current_region','')">全部地区</a>
+          </dt>
+          <dd>
+            <a
+              v-for="item in region"
+              :key="item.regionId"
+              :class="{active:current_region==item.regionId}"
+              href="#"
+              @click.prevent="setParam('current_region',item.regionId)">
+              {{ item.region }}
+            </a>
+          </dd>
+        </dl>
+        <!-- 分类 -->
+        <dl
+          :style="{width:filterVisible?'auto':'82%'}"
+          class="row">
+          <dt>
+            <a
+              :class="{active:current_category==''}"
+              href="#"
+              @click.prevent="setParam('current_category','')">全部分类</a>
+          </dt>
+          <dd>
+            <a
+              v-for="item in category"
+              :key="item.cateId"
+              :class="{active:current_category==item.cateId}"
+              href="#"
+              @click.prevent="setParam('current_category',item.cateId)">
+              {{ item.cate }}
+            </a>
+          </dd>
+        </dl>
+        <!-- 年份 -->
+        <dl
+          v-show="filterVisible"
+          class="row">
+          <dt>
+            <a
+              :class="{active:current_year==''}"
+              href="#"
+              @click.prevent="setParam('current_year','')">全部年份</a>
+          </dt>
+          <dd>
+            <a
+              v-for="item in year"
+              :key="item.yearrange"
+              :class="{active:current_year==item.yearrange}"
+              href="#"
+              @click.prevent="setParam('current_year',item.yearrange)">
+              {{ item.year }}
+            </a>
+          </dd>
+        </dl>
+        <!-- 排序 -->
+        <dl
+          v-show="filterVisible"
+          class="row">
+          <dd>
+            <a
+              v-for="item in orderby"
+              :key="item.orderId"
+              :class="{active:current_orderby==item.orderId}"
+              href="#"
+              @click.prevent="setParam('current_orderby',item.orderId)">
+              {{ item.text }}
+            </a>
+          </dd>
+        </dl>
+        <a
+          :class="{active:filterVisible}"
+          href="#"
+          class="toggle"
+          @click.prevent="toggleFilter()">
+          <!--{{filterVisible?'收起':'展开'}}-->
+          <i class="icon-arrow"/>
+        </a>
+      </div>
+    </div>
+    <!-- 列表 -->
+    <ul class="vlist list-m60">
+      <li
+        v-for="item in list"
+        :key="item.vid"
+        :class="['item-'+channelId]"
+        class="vitem"
+        @click="showDetailInfo(item)">
+        <img
+          v-lazy="getThumbPic(item.pictureUrl)"
+          :data-src1="item.pictureUrl"
+          alt="">
+        <div class="name">{{ item.title }}</div>
+        <span class="update">
+          {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
+        </span>
+        <span
+          v-if="item.ispay && item.ispay !== '1'"
+          class="isvip">付费</span>
+        <span class="score">{{ item.score }}7.2</span>
+        <!--<div class="label">-->
+        <!--</div>-->
+      </li>
+    </ul>
+    <!-- 没有数据 -->
+    <div
+      v-show="loadState === 'NO_DATA'"
+      class="nodata">
+      <i/>
+      <p>暂无结果</p>
+    </div>
+    <!-- 加载更多 -->
+    <div class="loadmore">
+      <p v-show="!isFirstLoad && loadState === 'LOADING'">正在加载中...</p>
+      <p v-show="!isFirstLoad && loadState === 'LOADED'">加载更多...</p>
+      <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
+    </div>
+  </div>
 </template>
 
 <style lang="less">
-.page-list {
-    padding-top: 228px;
-}
 .fixedtop {
     position: fixed;
     left: 0;

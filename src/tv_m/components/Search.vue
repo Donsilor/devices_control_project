@@ -3,83 +3,130 @@
 -->
 <template>
   <div class="page-search">
-    <topbar class="topbar-fixed">
-      <form class="search_bar" @submit.prevent="submit">
+
+    <topbar>
+      <form
+        class="search_bar"
+        @submit.prevent="submit">
         <div class="search_input">
-          <input type="text" v-model="word" placeholder="输入片名、导演、演员搜索" @input="fuzzySearch">
-          <a href="#" v-show="this.word != ''" class="del" @click.prevent="clearWord"/>
+          <input
+            v-model="word"
+            type="text"
+            placeholder="输入片名、导演、演员搜索"
+            @input="fuzzySearch">
+          <a
+            v-show="word != ''"
+            href="#"
+            class="del"
+            @click.prevent="clearWord"/>
         </div>
-        <input type="submit" value="搜索" class="search_submit">
+        <input
+          type="submit"
+          value="搜索"
+          class="search_submit">
       </form>
     </topbar>
-    <div v-show="$store.state.tvStatus.tvOnlineStatus!=1" class="status-tip-placeholder"/>
+    <div
+      v-show="$store.state.tvStatus.tvOnlineStatus!=1"
+      class="status-tip-placeholder"/>
     <status-tip class="sp_status_search" />
     <!-- 搜索建议 -->
-    <div v-show="curpage===2" class="search_suggest">
+    <div
+      v-show="curpage===2"
+      class="search_suggest">
       <ul>
-        <li v-for="item in suggestData" @click="doSearch(item.text)" :key="`${item.index}`" v-html="item.html"/>
+        <li
+          v-for="item in suggestData"
+          :key="`${item.index}`"
+          @click="doSearch(item.text)"
+          v-html="item.html"/>
       </ul>
     </div>
     <!-- 搜搜历史 -->
-    <div v-show="curpage===1" class="search_history">
+    <div
+      v-show="curpage===1"
+      class="search_history">
       <div class="hd">
-        <a href="#" class="del icon-del" @click.prevent="clearHistory"/>
+        <a
+          href="#"
+          class="del icon-del"
+          @click.prevent="clearHistory"/>
         搜索记录
       </div>
       <ul class="bd clearfix">
-        <li v-for="item in historyData" @click="doSearch(item)" :key="`${item.index}`">
+        <li
+          v-for="item in historyData"
+          :key="`${item.index}`"
+          @click="doSearch(item)">
           {{ item }}
         </li>
       </ul>
     </div>
     <!-- 搜索结果 -->
-    <div v-show="curpage===3" class="search_result">
-      <div v-show="resultData.length && loadState !== 'NO_DATA' || current_channel!=''" class="hd clearfix">
+    <div
+      v-show="curpage===3"
+      class="search_result">
+      <div
+        v-show="resultData.length && loadState !== 'NO_DATA' || current_channel!=''"
+        class="hd clearfix">
         <div class="tab">
-          <a href="#" :class="{active:current_channel==''}" @click.prevent="setParam('current_channel','')">
+          <a
+            :class="{active:current_channel==''}"
+            href="#"
+            @click.prevent="setParam('current_channel','')">
             全部
           </a>
-          <a v-for="item in channels" href="#" :class="{active:current_channel==item.channelId}" @click.prevent="setParam('current_channel',item.channelId)">
+          <a
+            v-for="item in channels"
+            :class="{active:current_channel==item.channelId}"
+            href="#"
+            @click.prevent="setParam('current_channel',item.channelId)">
             {{ item.channel }}
           </a>
         </div>
         <div class="sorts">
-          <a v-for="item in orderby" href="#" :class="{active:current_orderby==item.orderId}" @click.prevent="setParam('current_orderby',item.orderId)">
+          <a
+            v-for="item in orderby"
+            :class="{active:current_orderby==item.orderId}"
+            href="#"
+            @click.prevent="setParam('current_orderby',item.orderId)">
             {{ item.text }}
           </a>
         </div>
       </div>
       <ul class="vlist list-m60">
-        <li v-for="item in resultData" class="vitem" :key="item.vid" :class="['item-'+item.channelId]" @click="showDetailInfo(item)">
-          <img v-lazy="getThumbPic(item.pictureUrl)" :data-src1="item.pictureUrl" alt="">
+        <li
+          v-for="item in resultData"
+          :key="item.vid"
+          :class="['item-'+item.channelId]"
+          class="vitem"
+          @click="showDetailInfo(item)">
+          <img
+            v-lazy="getThumbPic(item.pictureUrl)"
+            :data-src1="item.pictureUrl"
+            alt="">
           <div class="name">{{ item.title }}</div>
-          <span v-show="item.channelId!='001'" class="update">
+          <span
+            v-show="item.channelId!='001'"
+            class="update">
             {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
           </span>
           <div class="label">
-            <span v-if="item.ispay && item.ispay !== '1'" class="isvip">付费</span>
+            <span
+              v-if="item.ispay && item.ispay !== '1'"
+              class="isvip">付费</span>
           </div>
         </li>
       </ul>
       <!-- 没有数据 -->
-      <div v-show="loadState === 'NO_DATA'" class="nodata">
+      <div
+        v-show="loadState === 'NO_DATA'"
+        class="nodata">
         <i/>
         <p>暂无结果</p>
       </div>
       <!-- 加载更多 -->
       <div class="loadmore">
-        <!--
-                <div class="spinner" v-show="loadState === 'LOADING'">
-                    <div class="rect1"></div>
-                    <div class="rect2"></div>
-                    <div class="rect3"></div>
-                    <div class="rect4"></div>
-                    <div class="rect5"></div>
-                    <div class="rect6"></div>
-                    <div class="rect7"></div>
-                    <div class="rect8"></div>
-                </div>
-                -->
         <p v-show="!isFirstLoad && loadState === 'LOADING'">正在加载中...</p>
         <p v-show="!isFirstLoad && loadState === 'LOADED'">加载更多...</p>
         <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
@@ -89,32 +136,6 @@
 </template>
 
 <style lang="less">
-    /*@font-face {
-        font-family: 'iconfont';  !* project id 616019 *!
-        src: url('../../../lib/iconfont/iconfont.eot');
-        src: url('../../../lib/iconfont/iconfont.eot?#iefix') format('embedded-opentype'),
-        url('../../../lib/iconfont/iconfont.woff') format('woff'),
-        url('../../../lib/iconfont/iconfont.ttf') format('truetype'),
-        url('../../../lib/iconfont/iconfont.svg#iconfont') format('svg');
-    }
-
-    [class^="icon-"],
-    [class*=" icon-"] {
-        position: relative;
-        &:before {
-            font-family: 'iconfont' !important;
-            speak: none;
-            font-style: normal;
-            font-weight: normal;
-            font-variant: normal;
-            text-transform: none;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-    }*/
-.page-search {
-    padding-top: 139px;
-}
 .page-search .right {
     display: none;
 }
