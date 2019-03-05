@@ -134,7 +134,7 @@
         <span
           v-if="item.ispay && item.ispay !== '1'"
           class="isvip">付费</span>
-        <span class="score">{{ item.score }}7.2</span>
+        <span class="score">{{ item.score }}</span>
         <!--<div class="label">-->
         <!--</div>-->
       </li>

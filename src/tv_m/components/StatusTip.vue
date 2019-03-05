@@ -1,47 +1,30 @@
 <template>
-  <div
-    v-if="visible"
-    class="status_bar">
-    <div class="status_bar_block"/>
-    <div
-      :style="{top:(status_bar_height + navigation_bar_height) +'px'}"
-      class="status_bar_fixed">
-      <div
-        v-if="spVisible"
-        class="sp_status_bar"
-        @click="goToScreenProjectionPage">
-        <i class="ico"/>正在投屏 {{ spStatusText }}：
-        <span class="text">{{ tvStatus.screenProjectTitle }}</span>
-        <i class="arr"/>
-      </div>
-      <div v-show="ios">
-        <div
-          v-if="tvStatus.tvOnlineStatus==-1"
-          class="offline_bar"
-          @click="goToOfflineHelpPage">
-          <i class="wifi"/>无法连接网络，请检查网络设置
-        </div>
-        <div
-          v-if="tvStatus.tvOnlineStatus==-2"
-          class="offline_bar"
-          @click="goToOfflineHelpPage">
-          <i class="error"/>路由器已离线 &nbsp;
-          <span class="link">查看帮助</span>
-          <i class="arr"/>
-        </div>
-        <div
-          v-if="tvStatus.tvOnlineStatus==-3"
-          class="offline_bar"
-          @click="goToOfflineHelpPage">
-          <i class="error"/>电视离线或关机 &nbsp;
-          <span class="link">查看帮助</span>
-          <i class="arr"/>
-        </div>
-      </div>
-      <div
-        v-if="tvStatus.tvOnlineStatus < 0 && !ios"
-        class="offline_bar_blank"/>
+  <div v-if="visible" class="status_bar">
+    <div class="sp_status_bar"
+v-if="spVisible" @click="goToScreenProjectionPage">
+      <i class="icon-tv1"/>正在投屏 {{ spStatusText }}：
+      <span class="text">{{ tvStatus.screenProjectTitle }}</span>
+      <i class="icon-arrow"/>
     </div>
+    <div v-show="ios">
+      <div class="offline_bar"
+v-if="tvStatus.tvOnlineStatus==-1" @click="goToOfflineHelpPage">
+        <i class="icon-wifi"/>无法连接网络，请检查网络设置
+      </div>
+      <div class="offline_bar"
+v-if="tvStatus.tvOnlineStatus==-2" @click="goToOfflineHelpPage">
+        <i class="icon-error"/>路由器已离线 &nbsp;
+        <span class="link">查看帮助</span>
+        <i class="icon-arrow"/>
+      </div>
+      <div class="offline_bar"
+v-if="tvStatus.tvOnlineStatus==-3" @click="goToOfflineHelpPage">
+        <i class="icon-error"/>电视离线或关机 &nbsp;
+        <span class="link">查看帮助</span>
+        <i class="icon-arrow"/>
+      </div>
+    </div>
+    <div v-if="tvStatus.tvOnlineStatus < 0 && !ios" class="offline_bar_blank"/>
   </div>
 </template>
 
@@ -79,30 +62,20 @@
 .status_bar .link {
     color: #FFC800;
 }
-.status_bar .ico {
-    width: 32px;
-    height: 32px;
-    background: url(../../../lib/base/tv/assets/icn_sync_blue.png) no-repeat;
-    background-size: 100% 100%;
+.status_bar .icon-tv1 {
+
     display: inline-block;
-    vertical-align: -8px;
-    margin-right: 10px;
+    margin-right: 20px;
+    color: #FFC700;
+    font-size: 36px;
 }
-.status_bar .arr {
-    width: 22px;
-    height: 12px;
-    background: url(../../../lib/base/tv/assets/icn_arrow_down_blue.png)
-        no-repeat;
-    background-size: 100% 100%;
-    transform: rotate(-90deg);
+.status_bar .icon-arrow {
+    transform: rotate(90deg);
     display: inline-block;
-    vertical-align: 4px;
+    font-size: 24px;
+    color: #FFC700;
 }
-.status_bar .wifi {
-    width: 32px;
-    height: 32px;
-    background: url(../../../lib/base/tv/assets/ico_wifi.png) no-repeat;
-    background-size: 100% 100%;
+.status_bar .icon-wifi {
     display: inline-block;
 }
 
@@ -120,13 +93,8 @@
 }
 .offline_bar i {
     display: inline-block;
-    width: 30px;
-    height: 30px;
-    background: url(../../../lib/base/tv/assets/icn_notice_white_s.png)
-        no-repeat;
-    background-size: 100% 100%;
     margin-right: 10px;
-    vertical-align: text-bottom;
+    font-size: 30px;
 }
 
 </style>

@@ -17,7 +17,7 @@
           <a
             v-show="word != ''"
             href="#"
-            class="del"
+            class="icon-del1"
             @click.prevent="clearWord"/>
         </div>
         <input
@@ -168,17 +168,15 @@
             outline: none;
         }
     }
-    .del {
+    .icon-del1 {
         position: absolute;
-        width: 40px;
-        height: 40px;
-        right: 5PX;
-        top: 5PX;
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        background-image: url(../../../lib/base/tv/assets/btn_input_delete_normal.png);
+        right: 2px;
+        top: 10px;
+        color: #d8d8d8;
+        font-size: 35px;
+        line-height: 35px;
         &:active {
-            background-image: url(../../../lib/base/tv/assets/btn_input_delete_pressed.png);
+            color: #999;
         }
     }
 }
@@ -197,7 +195,7 @@
     .hd {
         color: #75787a;
         padding: 32px 0 24px;
-        border-bottom: 1px solid #dbdbdb;
+        border-bottom: 1px solid rgba(216, 216, 216, .7);
         margin-bottom: 24px;
         color: #A4A9AF;
         .icon-del {
@@ -235,14 +233,17 @@
 }
 .search_suggest {
     padding-left: 32px;
+    background-color: #fff;
+    /*border-bottom: 1px solid rgba(216, 216, 216, .7);*/
     li {
         height: 120px;
         line-height: 120px;
-        border-bottom: 1px solid #dbdbdb;
+        border-bottom: 1px solid rgba(216, 216, 216, .7);
         font-size: 32px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        color: #222a37;
         strong {
             color: #FFC700;
             font-weight: normal;
@@ -251,7 +252,6 @@
             border-bottom: 0;
         }
     }
-    border-bottom: 1px solid #dbdbdb;
 }
 .search_result {
     background-color: #F7F8FA;
