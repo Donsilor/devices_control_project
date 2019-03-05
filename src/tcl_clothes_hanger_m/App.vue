@@ -1,13 +1,24 @@
 <template>
     <div id="app">
         <div class="page-on">
+            <div class="topbar topbar-fixed">
+                <div class="left">
+                    <a href="#" class="icon-return" @click.prevent="back"/>
+                </div>
+                <div class="title">{{ device_name }}</div>
+                <div class="right">
+                    <a href="" class="icon-more"></a>
+                </div>
+
+            </div>
+
             <div class="bg">
                 <div class="cloud"></div>
             </div>
 
-            <div class="name">{{device_name}}
-                <icon class="redact-white" />
-            </div>
+            <!--<div class="name">-->
+                <!--<icon class="redact-white" />-->
+            <!--</div>-->
 
             <div class="tip">
                 <p>
@@ -30,14 +41,31 @@
                 <div class="slight" v-show="sterilization == 'on'"></div>
             </div>
 
-            <div class="control">
-                <a href="#" class="btn-up" @click.prevent="setUp"></a>
-                <a href="#" class="btn-pause" @click.prevent="setPause"></a>
-                <a href="#" class="btn-down" @click.prevent="setDown"></a>
-                <a href="#" class="btn-light" :class="{'on':light == 'on'}" @click.prevent="setLight"></a>
-            </div>
+            <ul class="control">
+                <li>
+                    <a href="#" class="icon-up" @click.prevent="setUp"></a>
+                    上升
+                </li>
+                <li>
+                    <a href="#" class="icon-pause" @click.prevent="setPause"></a>
+                    暂停
+                </li>
+                <li>
+                    <a href="#" class="icon-down" @click.prevent="setDown"></a>
+                    下降
+                </li>
+                <li>
+                    <a href="#" class="icon-light" :class="{'on':light == 'on'}" @click.prevent="setLight"></a>
+                    照明
+                </li>
 
-            <a href="#" class="btn-mode" @click.prevent="toggleModal(true)"></a>
+
+
+
+            </ul>
+
+            <a href="#" class="icon-mode" @click.prevent="modeDialogShow=true"></a>
+            <!--<a href="#" class="icon-mode" @click.prevent="toggleModal(true)"></a>
 
             <modal title="模式" v-model="modal_visible">
                 <a href="#" class="btn-wind" :class="{'on':air_drying == 'on'}" @click.prevent="setWind">
@@ -49,8 +77,38 @@
                 <a href="#" class="btn-sterilize" :class="{'on':sterilization == 'on'}" @click.prevent="setSterilize">
                     <i></i> 杀菌
                 </a>
-            </modal>
+            </modal>-->
         </div>
+
+        <!-- 模式 -->
+        <sub-page
+            v-model="modeDialogShow"
+            class="btns-more"
+            title="模式">
+            <ul class="btns">
+                <li :class="{'on':air_drying == 'on'}">
+                    <a
+                        :class="{'on':air_drying == 'on'}" @click.prevent="setWind"
+                        href="#"
+                        class="icon-wind" />
+                    风干
+                </li>
+                <li :class="{'on':drying == 'on'}">
+                    <a
+                        :class="{'on':drying == 'on'}" @click.prevent="setBake"
+                        href="#"
+                        class="icon-bake" />
+                    烘干
+                </li>
+                <li :class="{'on':sterilization == 'on'}">
+                    <a
+                        :class="{'on':sterilization == 'on'}" @click.prevent="setSterilize"
+                        href="#"
+                        class="icon-sterilize" />
+                    杀菌
+                </li>
+            </ul>
+        </sub-page>
 
         <!-- <div class="page-error" v-if="0">
         <div class="error-tip">
@@ -65,6 +123,7 @@
 <script>
 import Modal from "../../lib/components/Modal.vue";
 import Icon from "../../lib/components/SettingIconMobile.vue";
+import SubPage from '../../lib/components/SubPage.vue'
 const tips = {
     moving_up: "正在上升",
     moved_up: "已上升至顶部",
@@ -90,6 +149,10 @@ const radio = (document.documentElement.clientWidth || window.innerWidth) / 750 
 
 function getToggle(val) {
     return val === "on" ? "off" : "on";
+}
+
+function toggleHead(flag) {
+    HdSmart.UI.toggleHeadAndFoot(!flag)
 }
 
 const duration = 28000;
@@ -201,13 +264,13 @@ function setPosition(el, pos) {
 let pauseTipTimer;
 
 export default {
-    components: { Icon, Modal },
+    components: { Icon, Modal, SubPage },
     data() {
         return {
             device_name: "",
             tip: "",
             tip2: "",
-            modal_visible: false,
+            // modal_visible: false,
             timeleft: 0,
             light: "", //on/off
             sterilization: "",
@@ -216,7 +279,8 @@ export default {
             status: "", //top/bottom/up/down/pause
             drying_remain: 0,
             air_drying_remain: 0,
-            sterilization_remain: 0
+            sterilization_remain: 0,
+            modeDialogShow: false
         };
     },
     watch: {
@@ -226,7 +290,8 @@ export default {
             } else if (cur == "down") {
                 // setDuration(this.$refs.ani, 'down')
             }
-        }
+        },
+        modeDialogShow: toggleHead
     },
     methods: {
         showTip(text, fade) {
@@ -247,9 +312,9 @@ export default {
                 }, 2000);
             }
         },
-        toggleModal(visible) {
+        /*toggleModal(visible) {
             this.modal_visible = visible;
-        },
+        },*/
         controlDevice(attr, val, success) {
             HdSmart.Device.control(
                 {
