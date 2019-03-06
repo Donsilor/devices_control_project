@@ -164,7 +164,9 @@
 </template>
 
 <style lang="less">
-
+.page-detail .right {
+    display: none;
+}
 .page-detail {
     color: #75787a;
     background: #fafafa;

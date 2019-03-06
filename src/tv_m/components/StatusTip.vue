@@ -1,36 +1,51 @@
 <template>
-  <div v-if="visible" class="status_bar">
-    <div class="sp_status_bar"
-v-if="spVisible" @click="goToScreenProjectionPage">
-      <i class="icon-tv1"/>正在投屏 {{ spStatusText }}：
-      <span class="text">{{ tvStatus.screenProjectTitle }}</span>
-      <i class="icon-arrow"/>
-    </div>
-    <div v-show="ios">
-      <div class="offline_bar"
-v-if="tvStatus.tvOnlineStatus==-1" @click="goToOfflineHelpPage">
-        <i class="icon-wifi"/>无法连接网络，请检查网络设置
-      </div>
-      <div class="offline_bar"
-v-if="tvStatus.tvOnlineStatus==-2" @click="goToOfflineHelpPage">
-        <i class="icon-error"/>路由器已离线 &nbsp;
-        <span class="link">查看帮助</span>
+  <div
+    v-if="visible"
+    class="status_bar">
+    <div class="status_bar_block"/>
+    <div class="status_bar_fixed">
+      <div
+        v-if="spVisible"
+        class="sp_status_bar"
+        @click="goToScreenProjectionPage">
+        <i class="icon-tv1"/>正在投屏 {{ spStatusText }}：
+        <span class="text">{{ tvStatus.screenProjectTitle }}</span>
         <i class="icon-arrow"/>
       </div>
-      <div class="offline_bar"
-v-if="tvStatus.tvOnlineStatus==-3" @click="goToOfflineHelpPage">
-        <i class="icon-error"/>电视离线或关机 &nbsp;
-        <span class="link">查看帮助</span>
-        <i class="icon-arrow"/>
+      <div v-show="ios">
+        <div
+          v-if="tvStatus.tvOnlineStatus==-1"
+          class="offline_bar"
+          @click="goToOfflineHelpPage">
+          <i class="icon-wifi"/>无法连接网络，请检查网络设置
+        </div>
+        <div
+          v-if="tvStatus.tvOnlineStatus==-2"
+          class="offline_bar"
+          @click="goToOfflineHelpPage">
+          <i class="icon-error"/>路由器已离线 &nbsp;
+          <span class="link">查看帮助</span>
+          <i class="icon-arrow"/>
+        </div>
+        <div
+          v-if="tvStatus.tvOnlineStatus==-3"
+          class="offline_bar"
+          @click="goToOfflineHelpPage">
+          <i class="icon-error"/>电视离线或关机 &nbsp;
+          <span class="link">查看帮助</span>
+          <i class="icon-arrow"/>
+        </div>
       </div>
     </div>
-    <div v-if="tvStatus.tvOnlineStatus < 0 && !ios" class="offline_bar_blank"/>
+    <!-- <div
+      v-if="tvStatus.tvOnlineStatus < 0 && !ios"
+      class="offline_bar_blank"/> -->
   </div>
 </template>
 
 <style>
 .status_bar_block{
-    height: 80px;
+    height: 40PX;
 }
 .status_bar_fixed{
     position:fixed;
@@ -63,7 +78,6 @@ v-if="tvStatus.tvOnlineStatus==-3" @click="goToOfflineHelpPage">
     color: #FFC800;
 }
 .status_bar .icon-tv1 {
-
     display: inline-block;
     margin-right: 20px;
     color: #FFC700;
@@ -88,9 +102,7 @@ v-if="tvStatus.tvOnlineStatus==-3" @click="goToOfflineHelpPage">
     color: #fff;
     font-size: 28px;
 }
-.offline_bar_blank {
-    height: 84px;
-}
+
 .offline_bar i {
     display: inline-block;
     margin-right: 10px;
