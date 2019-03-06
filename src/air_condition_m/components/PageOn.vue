@@ -9,7 +9,7 @@
           class="icon-return"
           @click.prevent="back"/>
       </div>
-      <div class="title">智能空调</div>
+      <div class="title">{{ device.name }}</div>
       <div class="right">
         <a
           href=""
