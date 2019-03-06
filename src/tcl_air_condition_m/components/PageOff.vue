@@ -1,19 +1,32 @@
 <template>
     <div class="wrap-off">
+        <div class="topbar topbar-fixed">
+            <div class="left">
+                <a
+                    href="#/"
+                    class="icon-return"
+                    @click.prevent="back"/>
+            </div>
+            <div class="title">智能空调</div>
+            <div class="right">
+                <!--<a href="" class="icon-more"></a>-->
+            </div>
 
-        <div class="bg"></div>
+        </div>
+
+        <!--<div class="bg"></div>-->
 
         <div class="header">
-            <span class="name">{{device.name}}
-                <icon />
-            </span>
-            <span class="status">已关闭</span>
+            <!--<p class="name">{{device.name}}-->
+                <!--<icon />-->
+            <!--</p>-->
+            <p class="status">已关闭</p>
         </div>
 
         <div class="ac2" v-if="device.category_id == 1 || device.category_id == 5001"></div>
         <div class="ac1" v-else></div>
 
-        <a href="#" class="btn-on" @click.prevent="setOn($event)"></a>
+        <a href="#" class="btn-on icon-switch" @click.prevent="setOn($event)"></a>
 
     </div>
 </template>
