@@ -1,15 +1,16 @@
 <template>
-    <div class="subpage" v-show="visible">
-        <div class="topbar">
-            <div class="left">
-                <a class="icon icon-arrow" @click="close"></a>
-            </div>
-            <div class="title">{{title}}</div>
-        </div>
-        <div class="subpage-body">
-            <slot />
-        </div>
+  <div v-show="visible" class="subpage">
+    <div class="topbar">
+      <div class="left">
+        <a class="icon icon-arrow" 
+@click="close"/>
+      </div>
+      <div class="title">{{ title }}</div>
     </div>
+    <div class="subpage-body">
+      <slot />
+    </div>
+  </div>
 </template>
 
 <style lang="less">
@@ -56,34 +57,6 @@
         }
     }
 }
-
-.android{
-    .topbar {
-        height: 100px;
-        .title {
-            line-height: 100px;
-        }
-        .icon {
-            height: 100px;
-        }
-    }
-}
-
-@media only screen and (-webkit-min-device-pixel-ratio: 3),
-    only screen and (min-device-pixel-ratio: 3) {
-    .android{
-        .topbar {
-            height: 116px;
-            .title {
-                line-height: 116px;
-            }
-            .icon {
-                height: 116px;
-            }
-        }
-    }
-}
-
 </style>
 
 

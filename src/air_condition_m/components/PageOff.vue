@@ -7,7 +7,7 @@
           class="icon-return"
           @click.prevent="back"/>
       </div>
-      <div class="title">智能空调</div>
+      <div class="title">{{ device.name }}</div>
       <div class="right">
         <!--<a href="" class="icon-more"></a>-->
       </div>
@@ -19,7 +19,7 @@
       <p class="name">
         <!--{{device.name}}
                 <icon/>-->
-        挂式空调
+        &nbsp;
       </p>
       <p class="status">已关闭</p>
     </div>
