@@ -14,7 +14,7 @@
         <a
           href=""
           class="icon-more"
-          @click.prevent="showMore()"/>
+          @click.prevent="goDetail"/>
       </div>
 
     </div>
@@ -58,7 +58,11 @@
       class="btn-add icon-plus"
       @click.prevent="setTemperature(1, $event)"/>
 
-    <!--<a href="#" class="btn-toggle" :class="{'btn-toggle-more':toggle}" @click.prevent="showMore()"></a>-->
+    <a
+      :class="{'btn-toggle-more':toggle}"
+      href="#"
+      class="btn-toggle"
+      @click.prevent="showMore()"/>
 
     <div class="btns-hold">
       <ul class="btns">
@@ -258,11 +262,6 @@ const [MIN_TEMP, MAX_TEMP] = [16, 31];
 let tempDelay,
     tempFlag = true;
 
-function toggleHead(flag) {
-    HdSmart.UI.toggleHeadAndFoot(!flag)
-}
-
-
 export default {
     components: {
         Modal,
@@ -311,12 +310,19 @@ export default {
             }[this.ac.speed];
         }
     },
-    watch: {
-        toggle: toggleHead,
-        modeDialogShow: toggleHead,
-        speedDialogShow: toggleHead
+    mounted() {
+      this.changeStatus(false)
+      this.$watch('toggle', this.changeStatus)
+      this.$watch('modeDialogShow', this.changeStatus)
+      this.$watch('speedDialogShow', this.changeStatus)
     },
     methods: {
+        changeStatus(val) {
+            HdSmart.UI.setStatusBarColor(val ? 2 : 1)
+        },
+        goDetail() {
+            HdSmart.UI.goDeviceDetail()
+        },
         back() {
             HdSmart.UI.popWindow()
         },

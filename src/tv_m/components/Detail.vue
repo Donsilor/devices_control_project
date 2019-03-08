@@ -6,10 +6,12 @@
     v-show="visible"
     class="page-detail">
 
-    <topbar :back="close">
+    <topbar
+      :back="close"
+      :search="false">
       <div
         class="title">
-        {{ loading?'正在加载中...':cur.title }}
+        {{ title }}
         <span
           v-show="!loading && ispay && ispay !== '1'"
           class="isvip">付费</span>
@@ -164,9 +166,6 @@
 </template>
 
 <style lang="less">
-.page-detail .right {
-    display: none;
-}
 .page-detail {
     color: #75787a;
     background: #fafafa;
@@ -633,7 +632,13 @@ export default {
             channelId: state => state.activeDetail.channelId,
             vid: state => state.activeDetail.vid,
             ispay: state => state.activeDetail.ispay
-        })
+        }),
+        title() {
+            if(this.cur.title && this.cur.title.length > 10){
+                return this.cur.title.substr(0,10) + '...'
+            }
+            return this.cur.title
+        }
     },
     watch: {
         visible(val) {

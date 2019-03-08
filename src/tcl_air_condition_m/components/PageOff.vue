@@ -9,7 +9,10 @@
       </div>
       <div class="title">{{ device.name }}</div>
       <div class="right">
-        <!--<a href="" class="icon-more"></a>-->
+        <a
+          href=""
+          class="icon-more"
+          @click.prevent="goDetail"/>
       </div>
 
     </div>
@@ -23,15 +26,17 @@
       <p class="status">已关闭</p>
     </div>
 
-    <div v-if="device.category_id == 1 || device.category_id == 5001" 
-class="ac2"/>
-    <div v-else 
-class="ac1"/>
+    <div
+      v-if="device.category_id == 1 || device.category_id == 5001"
+      class="ac2"/>
+    <div
+      v-else
+      class="ac1"/>
 
-    <a 
-href="#"
-       class="btn-on icon-switch" 
-@click.prevent="setOn($event)"/>
+    <a
+      href="#"
+      class="btn-on icon-switch"
+      @click.prevent="setOn($event)"/>
 
   </div>
 </template>
@@ -53,7 +58,13 @@ export default {
     data() {
         return {};
     },
+    mounted() {
+        HdSmart.UI.setStatusBarColor(2)
+    },
     methods: {
+        goDetail() {
+            HdSmart.UI.goDeviceDetail()
+        },
         back() {
             HdSmart.UI.popWindow()
         },

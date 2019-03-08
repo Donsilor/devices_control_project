@@ -4,7 +4,7 @@
 <template>
   <div class="page-search">
 
-    <topbar>
+    <topbar :search="false">
       <form
         class="search_bar"
         @submit.prevent="submit">
@@ -134,9 +134,6 @@
 </template>
 
 <style lang="less">
-.page-search .right {
-    display: none;
-}
 .search_bar {
     padding-top: 8PX;
     padding-left: 100px;

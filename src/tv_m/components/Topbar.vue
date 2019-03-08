@@ -21,8 +21,14 @@
         </div>
         <div class="right">
           <router-link
+            v-if="search"
             to="/search"
             class="icon-search"/>
+          <a
+            v-if="more"
+            href=""
+            class="icon-more"
+            @click.prevent="goDetail"/>
         </div>
         <div
           v-if="title"
@@ -40,13 +46,24 @@ import { mapState } from 'vuex'
 export default {
   props: {
     title: String,
-    back: Function
+    back: Function,
+    search: {
+        type: Boolean,
+        default: true
+    },
+    more: {
+        type: Boolean,
+        default: false
+    }
   },
   data() {
     return {}
   },
   computed: mapState(['status_bar_height', 'navigation_bar_height']),
   methods: {
+    goDetail() {
+        HdSmart.UI.goDeviceDetail()
+    },
     goBack() {
         if(typeof this.back === 'function'){
             this.back()

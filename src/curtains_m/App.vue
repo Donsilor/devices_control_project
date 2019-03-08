@@ -9,7 +9,10 @@
       </div>
       <div class="title">{{ device_name }}123</div>
       <div class="right">
-        <!--<a href="" class="icon-more"></a>-->
+        <a
+          href=""
+          class="icon-more"
+          @click.prevent="goDetail"/>
       </div>
 
     </div>
@@ -117,6 +120,9 @@ export default {
     })
   },
   methods: {
+    goDetail() {
+        HdSmart.UI.goDeviceDetail()
+    },
     back() {
       HdSmart.UI.popWindow()
     },

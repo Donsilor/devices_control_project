@@ -3,7 +3,9 @@
     v-if="visible"
     class="status_bar">
     <div class="status_bar_block"/>
-    <div class="status_bar_fixed">
+    <div
+      :style="{top:(status_bar_height+navigation_bar_height)+'px'}"
+      class="status_bar_fixed">
       <div
         v-if="spVisible"
         class="sp_status_bar"
@@ -53,7 +55,7 @@
     top: 64PX;
     width: 100%;
     z-index: 999;
-    border-bottom:1px solid rgba(45,45,45,0.20);
+    /* border-bottom:1px solid rgba(45,45,45,0.20); */
 }
 .sp_status_bar {
     /* background: #f7f8fa; */

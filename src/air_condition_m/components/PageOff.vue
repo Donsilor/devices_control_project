@@ -9,7 +9,10 @@
       </div>
       <div class="title">{{ device.name }}</div>
       <div class="right">
-        <!--<a href="" class="icon-more"></a>-->
+        <a
+          href=""
+          class="icon-more"
+          @click.prevent="goDetail"/>
       </div>
 
     </div>
@@ -52,7 +55,13 @@ export default {
     data() {
         return {};
     },
+    mounted() {
+        HdSmart.UI.setStatusBarColor(2)
+    },
     methods: {
+        goDetail() {
+            HdSmart.UI.goDeviceDetail()
+        },
         back() {
             HdSmart.UI.popWindow()
         },

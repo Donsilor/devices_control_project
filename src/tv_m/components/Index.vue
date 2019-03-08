@@ -6,6 +6,8 @@
 
     <topbar
       :title="$store.state.device_name"
+      :more="true"
+      :search="false"
       :back="back" />
 
     <status-tip />
@@ -97,9 +99,6 @@
       </div>
       <!-- </div> -->
     </div>
-    <offline-mask
-      v-if="!$store.state.detailVisible"
-      page="index" />
   </div>
 </template>
 

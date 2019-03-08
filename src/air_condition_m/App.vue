@@ -43,11 +43,6 @@ export default {
             device: {}
         };
     },
-    watch: {
-        'ac.switchStatus'() {
-            HdSmart.UI.toggleHeadAndFoot(true)
-        }
-    },
     created() {
         HdSmart.onDeviceStateChange(res => {
             this.onSuccess(res.result);

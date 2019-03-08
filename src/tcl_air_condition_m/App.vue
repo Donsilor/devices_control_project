@@ -1,9 +1,11 @@
 <template>
-    <div class="wrap">
-        <page-on v-if="ac.switchStatus==='on'" :control="controlDevice" :device="device" :ac="ac" ref="airon" />
-        <page-off v-if="ac.switchStatus==='off'" :control="controlDevice" :device="device" />
-        <!-- <page-error v-if="status==='ERROR'" :reload="init" /> -->
-    </div>
+  <div class="wrap">
+    <page-on v-if="ac.switchStatus==='on'" 
+:control="controlDevice" :device="device" ref="airon" :ac="ac" />
+    <page-off v-if="ac.switchStatus==='off'" 
+:control="controlDevice" :device="device" />
+    <!-- <page-error v-if="status==='ERROR'" :reload="init" /> -->
+  </div>
 </template>
 
 <script>
@@ -49,10 +51,11 @@ export default {
             device: {}
         };
     },
-    watch: {    
-        'ac.switchStatus'() { 
-            HdSmart.UI.toggleHeadAndFoot(true)
-        }
+    created() {
+        HdSmart.onDeviceStateChange(res => {
+            this.onSuccess(res.result);
+        });
+        this.init();
     },
     methods: {
         showSpin(ele, style) {
@@ -222,12 +225,6 @@ export default {
             });
         }
     },
-    created() {
-        HdSmart.onDeviceStateChange(res => {
-            this.onSuccess(res.result);
-        });
-        this.init();
-    }
 };
 </script>
 
