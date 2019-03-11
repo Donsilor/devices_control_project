@@ -398,16 +398,16 @@
 
 .nodata {
     text-align: center;
-    color: #c8cacc;
+    color: #9097A2;
     padding-top: 126px;
     i {
         width: 360px;
         height: 360px;
-        background: url(../../../lib/base/tv/assets/img_noresult@2x.png)
+        background: url(../../../lib/base/tv/assets/img_nodata@2x.png)
             no-repeat;
         background-size: 100% 100%;
         display: block;
-        margin: 0 auto 36px;
+        margin: 0 auto;
     }
 }
 

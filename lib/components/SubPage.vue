@@ -1,9 +1,12 @@
 <template>
-  <div v-show="visible" class="subpage">
+  <div
+    v-show="visible"
+    class="subpage">
     <div class="topbar">
       <div class="left">
-        <a class="icon icon-arrow" 
-@click="close"/>
+        <a
+          class="icon icon-arrow"
+          @click="close"/>
       </div>
       <div class="title">{{ title }}</div>
     </div>
@@ -82,6 +85,9 @@ export default {
         },
         visible(val) {
             this.$emit("on-visible-change", val);
+            if(!val){
+                this.$emit('close')
+            }
         }
     },
     methods: {

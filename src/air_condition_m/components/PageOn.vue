@@ -59,17 +59,17 @@
 
     <a
       :class="{'btn-toggle-more':toggle}"
-      href="#"
+      href="#modal"
       class="btn-toggle"
-      @click.prevent="showMore()"/>
+      @click="showMore()"/>
 
     <div class="btns-hold">
       <ul class="btns">
         <li>
           <a
-            href="#"
+            href="#modal"
             class="btn-mode icon-mode"
-            @click.prevent="modeDialogShow=true"/>
+            @click="modeDialogShow=true"/>
           模式
         </li>
         <li>
@@ -82,9 +82,9 @@
         </li>
         <li>
           <a
-            href="#"
+            href="#modal"
             class="btn-speed2 icon-speed"
-            @click.prevent="speedDialogShow=true"/>
+            @click="speedDialogShow=true"/>
           风速
         </li>
       </ul>
@@ -117,7 +117,8 @@
     <sub-page
       v-model="toggle"
       class="btns-more"
-      title="更多">
+      title="更多"
+      @close="onModalClose">
       <!-- <p>模式</p>
             <ul class="btns">
                 <li :class="{on:ac.mode==='auto'}">
@@ -150,7 +151,8 @@
     <sub-page
       v-model="modeDialogShow"
       class="btns-more"
-      title="模式">
+      title="模式"
+      @close="onModalClose">
       <ul class="btns">
         <li :class="{on:ac.mode==='auto'}">
           <a
@@ -199,7 +201,8 @@
     <sub-page
       v-model="speedDialogShow"
       class="btns-more"
-      title="风速">
+      title="风速"
+      @close="onModalClose">
       <ul class="btns">
         <li :class="{'on':ac.speed==='low'}">
           <a
@@ -315,8 +318,23 @@ export default {
       this.$watch('toggle', this.changeStatus)
       this.$watch('modeDialogShow', this.changeStatus)
       this.$watch('speedDialogShow', this.changeStatus)
+      window.addEventListener('hashchange', this.onHashChange)
+  },
+  beforeDestroy() {
+      window.removeEventListener('hashchange', this.onHashChange)
   },
   methods: {
+    onHashChange() {
+        let hash = location.hash
+        if(!hash) {
+            this.toggle = false
+            this.modeDialogShow = false
+            this.speedDialogShow = false
+        }
+    },
+    onModalClose() {
+        history.go(-1)
+    },
     changeStatus(val) {
         HdSmart.UI.setStatusBarColor(val ? 2 : 1)
     },
