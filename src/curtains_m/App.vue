@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <div class="topbar topbar-fixed">
+    <!-- <div class="topbar topbar-fixed">
       <div class="left">
         <a
           href="#/"
           class="icon-return"
           @click.prevent="back"/>
       </div>
-      <div class="title">{{ device_name }}123</div>
+      <div class="title">{{ device_name }}</div>
       <div class="right">
         <a
           href=""
@@ -15,7 +15,12 @@
           @click.prevent="goDetail"/>
       </div>
 
-    </div>
+    </div> -->
+
+    <topbar
+      :transparent="true"
+      :title="device_name" />
+
     <div class="curtain-wrap">
 
       <!-- <div class="device_name">
@@ -46,13 +51,15 @@
 </template>
 
 <script>
+import Topbar from '../../lib/components/Topbar.vue'
 import Icon from '../../lib/components/SettingIconMobile.vue'
 const [METHOD, CMD_SWITCH, CMD_RANGE] = ['dm_set', 'setOnoff', 'setLevel']
 
 export default {
   name: 'App',
   components: {
-    Icon
+    Icon,
+    Topbar
   },
   data() {
     return {

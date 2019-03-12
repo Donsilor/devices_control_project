@@ -31,7 +31,7 @@ if (location.search.indexOf('env=desktop') != -1) {
             }
             percent += dif
             data.result.attribute.open_percentage = percent
-            window.onDeviceChange(data)
+            // window.onDeviceChange(data)
         }, delay)
 
     }, 2000);

@@ -2,7 +2,7 @@
   <div
     :class="[ac.mode]"
     class="wrap-on">
-    <div class="topbar topbar-fixed">
+    <!-- <div class="topbar topbar-fixed">
       <div class="left">
         <a
           href="#/"
@@ -17,7 +17,12 @@
           @click.prevent="goDetail"/>
       </div>
 
-    </div>
+    </div> -->
+
+    <topbar
+      :title="device.name"
+      :transparent="true" />
+
     <div class="bg"/>
 
     <div class="header">

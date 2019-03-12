@@ -1,6 +1,6 @@
 <template>
   <div class="wrap-error">
-    <div class="topbar topbar-fixed">
+    <!-- <div class="topbar topbar-fixed">
       <div class="left">
         <a
           href="#/"
@@ -8,7 +8,7 @@
           @click.prevent="back"/>
       </div>
       <div class="title">{{ device.name }}</div>
-    </div>
+    </div> -->
 
     <div
       class="error-tip"

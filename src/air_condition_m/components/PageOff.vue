@@ -1,6 +1,6 @@
 <template>
   <div class="wrap-off">
-    <div class="topbar topbar-fixed">
+    <!-- <div class="topbar topbar-fixed">
       <div class="left">
         <a
           href="#/"
@@ -15,7 +15,9 @@
           @click.prevent="goDetail"/>
       </div>
 
-    </div>
+    </div> -->
+    <topbar
+      :title="device.name" />
     <!--<div class="bg"></div>-->
 
     <div class="header">
@@ -46,10 +48,14 @@ export default {
     },
     props: {
         control: {
-            type: Function
+            type: Function,
+            default: null
         },
         device: {
-            type: Object
+            type: Object,
+            default() {
+                return {}
+            }
         }
     },
     data() {

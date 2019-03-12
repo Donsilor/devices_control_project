@@ -15,45 +15,6 @@ a {
     -webkit-tap-highlight-color: transparent;
 }
 
-.topbar {
-    position: relative;
-    left: 0;
-    top: 0;
-    z-index: 100;
-    width: 100%;
-    height: 139px;
-    padding-top: 44px;
-    .left {
-        position: absolute;
-        top: 44px;
-        left: 0;
-    }
-    .right {
-        position: absolute;
-        top: 44px;
-        right: 0;
-    }
-    .title {
-        text-align: center;
-        line-height: 95px;
-        font-size: 34px;
-    }
-    a {
-        width: 95px;
-        height: 95px;
-        display: block;
-        line-height: 95px;
-        color: #222a37;
-        text-align: center;
-        font-size: 38px;
-        text-decoration: none;
-        &:active {
-            opacity: .8;
-        }
-    }
-
-}
-
 @font-face {
     font-family: 'iconfont';  /* project id 616019 */
     src: url('../../iconfont/iconfont.eot');
@@ -97,17 +58,6 @@ a {
 .icon-auto:before{content: '\e627';}
 .icon-wind:before{content: '\e628';}
 
-.subpage {
-    background-color: #f2f2f2;
-    z-index: 111;
-    .topbar {
-        height: 139px;
-        padding-top: 44px;
-        background-color: #fff !important;
-        color: #222a37 !important;
-    }
-}
-
 .wrap-off,
 .wrap-on,
 .wrap-error {
@@ -122,11 +72,6 @@ a {
     color: #fff;
     /*background: #46bcff;*/
     background-image: linear-gradient(-180deg, #00a0d0 0%, #17d7d2 100%);
-    .topbar {
-        background-color: transparent;
-        border-bottom: none;
-        color: #fff;
-    }
 
     a {
         color: #fff;
@@ -462,9 +407,7 @@ a {
 /* page off */
 .wrap-off {
     background: #f2f2f2;
-    .topbar {
-        background-color: #fff;
-    }
+
     .bg {
         position: absolute;
         bottom: 0;
@@ -550,4 +493,3 @@ a {
 .tip {
     top: 320px;
 }
-
