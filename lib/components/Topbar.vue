@@ -46,6 +46,9 @@
 
 
 <script>
+
+let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
+
 export default {
     props: {
         back: {
@@ -76,10 +79,10 @@ export default {
     created() {
         HdSmart.ready(() => {
             if(window.status_bar_height){
-                this.status_bar_height = window.status_bar_height
+                this.status_bar_height = window.status_bar_height/dpr
             }
             if(window.navigation_bar_height){
-                this.navigation_bar_height = window.navigation_bar_height
+                this.navigation_bar_height = window.navigation_bar_height/dpr
             }
         })
     },

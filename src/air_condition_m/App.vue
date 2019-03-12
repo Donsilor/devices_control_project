@@ -57,8 +57,7 @@ export default {
             this.removeSpin();
             this.loadingDelay = setTimeout(() => {
                 this.spinner = document.createElement("img");
-                this.spinner.style.width = "100%";
-                this.spinner.style.height = "100%";
+                this.spinner.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%'
                 this.spinner.src = style === "blue" ? BlueSpin : DefaultSpin;
                 this.loadingEl = ele;
                 this.loadingEl.appendChild(this.spinner);
@@ -76,14 +75,7 @@ export default {
                 return;
             }
             var style = "default";
-            if (attr === "switch" && val === "on") {
-                style = "blue";
-            } else if (
-                (attr === "wind_up_down" || attr === "wind_left_right") &&
-                val === "on"
-            ) {
-                style = "blue";
-            } else if (attr === "mode" && (val === "auto" || val === "wind")) {
+            if (attr !== "temperature") {
                 style = "blue";
             }
             this.showSpin(target, style);
