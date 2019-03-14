@@ -129,7 +129,7 @@
             v-for="(item, num) in cur.playlist2.list"
             :key="item.index"
             class="item-num"
-            @click="play(item)">{{ item.index=='0' ? num+1 : item.index }}
+            @click="play(item)">{{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}
             <!--<span class="tag_new" v-show="item.states">新</span> -->
             <span
               v-show="item.drm && item.drm!='0'"
@@ -299,9 +299,10 @@
         i, span {
             color: #222a37;
             display: inline-block;
-            width: 40px;
-            height: 40px;
-            line-height: 20px;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
             transform: rotate(180deg);
             /*transition: transform .6s;*/
         }
@@ -458,7 +459,7 @@
             display: inline-block;
             width: 24px;
             height: 24px;
-            line-height: 12px;
+            // line-height: 12px;
             font-size: 24px;
             margin-left: 2px;
             transform: rotate(90deg);
