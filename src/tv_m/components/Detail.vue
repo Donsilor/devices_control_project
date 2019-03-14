@@ -671,7 +671,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(["hideDetail"]),
+        ...mapActions(["hideDetail", "showDetail"]),
         getData() {
             this.loading = true;
             this.setHistory();
@@ -784,6 +784,8 @@ export default {
         this.$watch("$route.query.detail", (newVal, oldVal) => {
             if (oldVal && newVal === undefined && this.visible) {
                 this.hideDetail();
+            }else if(oldVal === undefined && newVal){
+                this.showDetail()
             }
         });
     }

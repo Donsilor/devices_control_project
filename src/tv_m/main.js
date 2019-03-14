@@ -73,7 +73,11 @@ const store = new Vuex.Store({
   mutations: {
     showDetail(state, payload) {
       state.detailVisible = true
-      state.activeDetail = payload
+      if(payload) {
+        state.activeDetail = payload
+        scrollTop = docEl.scrollTop
+        docEl.scrollTop = 0
+      }
       service.RemoteController({
         'show': true
       })
@@ -90,6 +94,9 @@ const store = new Vuex.Store({
           'show': true
         })
       }
+      setTimeout(() => {
+        docEl.scrollTop = scrollTop
+      }, 50)
     },
     setOnline(state, payload) {
       state.online = payload
@@ -111,17 +118,12 @@ const store = new Vuex.Store({
     showDetail({
       commit
     }, item) {
-      scrollTop = docEl.scrollTop
-      docEl.scrollTop = 0
       commit('showDetail', item)
     },
     hideDetail: ({
       commit
     }) => {
       commit('hideDetail')
-      setTimeout(() => {
-        docEl.scrollTop = scrollTop
-      }, 50)
     },
     setOnline({
       commit
