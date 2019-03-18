@@ -33,7 +33,7 @@
           v-if="tvStatus.tvOnlineStatus==-3"
           class="offline_bar"
           @click="goToOfflineHelpPage">
-          <i class="icon-error"/>电视离线或关机 &nbsp;
+          <i class="icon-error"/>设备已离线 &nbsp;
           <span class="link">查看帮助</span>
           <i class="icon-arrow"/>
         </div>
