@@ -96,7 +96,7 @@
 }
 
 .offline_bar {
-    background: rgba(51, 51, 51, 1);
+    background: rgba(40, 40, 40, .8);
     width: 100%;
     height: 40PX;
     line-height: 40PX;
