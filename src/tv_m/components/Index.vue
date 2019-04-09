@@ -59,13 +59,13 @@
         v-finger:touch-end="volupEnd"
         v-finger:touch-move="touchMove"
         v-finger:long-tap="volupStart"
-        href="#"
+        href="javascript:void(0)"
         class="icon-volup"/>
       <a
         v-finger:touch-end="voldownEnd"
         v-finger:touch-move="touchMove"
         v-finger:long-tap="voldownStart"
-        href="#"
+        href="javascript:void(0)"
         class="icon-voldown"/>
       <a
         href="#"
@@ -205,7 +205,7 @@
     .title {
         position: absolute;
         left: 0;
-        bottom: 0;
+        bottom: -1px;
         color: #fff;
         font-size: 32px;
         height: 120px;
@@ -352,6 +352,10 @@ export default {
         this.homePageInfo = infoCache
       }
     })
+
+    document.addEventListener('contextmenu', function(e){
+        e.preventDefault();
+    });
   },
   methods: {
     back() {
@@ -362,32 +366,31 @@ export default {
     },
     volupStart(e) {
       this.timeOutEventUp = 1
-      e.preventDefault()
       this.cmd('rcVolumeUpStart')
+      e.preventDefault()
     },
     voldownStart(e) {
       this.timeOutEventDown = 1
-      e.preventDefault()
       this.cmd('rcVolumeDownStart')
+      e.preventDefault()
     },
     volupEnd(e) {
-      e.preventDefault()
       if (this.timeOutEventUp) {
         this.cmd('rcVolumeUpStop')
         this.timeOutEventUp = 0
       } else {
         this.cmd('rcVolumeUp')
       }
+      e.preventDefault()
     },
     voldownEnd(e) {
-      e.preventDefault()
-
       if (this.timeOutEventDown) {
         this.cmd('rcVolumeDownStop')
         this.timeOutEventDown = 0
       } else {
         this.cmd('rcVolumeDown')
       }
+      e.preventDefault()
     },
     cmd(name) {
       service.onClickEvent(name)

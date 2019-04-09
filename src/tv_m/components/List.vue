@@ -207,6 +207,11 @@
         display: flex;
         width: 100%;
     }
+    dt{
+        width: 178px;
+        display: -webkit-box;
+        -webkit-box-orient: horizontal;
+    }
     dd {
         width: 100%;
         overflow-x: auto;
