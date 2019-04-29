@@ -13,7 +13,7 @@ var util = require('./util')
 var env = config.build.env
 var app = util.getInputName()
 var buildTime = util.getBuildTime()
-
+var isMock = util.getIsMock()
 // 本地测试使用
 // baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/${app}/index.js`;
 // 使用此entry可以进行打包后代码测试，但需要在链接后面加上 ?env=desktop
@@ -35,7 +35,8 @@ var webpackConfig = merge(baseWebpackConfig, {
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': config.build.env,
-      'buildTime': JSON.stringify(buildTime)
+      buildTime: JSON.stringify(buildTime),
+      argv_is_mock: isMock
     }),
     new UglifyJSPlugin(),
     // extract css into its own file

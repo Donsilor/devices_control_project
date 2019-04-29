@@ -9,11 +9,14 @@ var util = require('./util')
 
 // add hot-reload related code to entry chunks
 Object.keys(baseWebpackConfig.entry).forEach(function(name) {
-  baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name])
+  baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(
+    baseWebpackConfig.entry[name]
+  )
 })
 
 var app = util.getInputName()
 var buildTime = util.getBuildTime()
+var isMock = util.getIsMock()
 
 module.exports = merge(baseWebpackConfig, {
   module: {
@@ -24,7 +27,8 @@ module.exports = merge(baseWebpackConfig, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': config.dev.env,
-      'buildTime': JSON.stringify(buildTime)
+      buildTime: JSON.stringify(buildTime),
+      argv_is_mock: isMock
     }),
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
     new webpack.HotModuleReplacementPlugin(),

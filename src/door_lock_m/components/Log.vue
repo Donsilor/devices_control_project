@@ -1,39 +1,82 @@
 <template>
   <div class="page-log">
     <!-- 顶部条 -->
-      <div class="log-box">
+    <div class="log-box">
 
-
-    <div class="topbar topbar-fixed">
-      <div class="left">
-        <router-link to="/" class="icon-return"/>
+      <div class="topbar topbar-fixed">
+        <div class="left">
+          <router-link
+            to="/"
+            class="icon-return"
+          />
+        </div>
+        <div class="title">
+          详细记录
+        </div>
+        <div class="right">
+          <a
+            href=""
+            class="icon-del"
+            @click.prevent="clearLog"
+          />
+        </div>
       </div>
-      <div class="title">
-        详细记录
-      </div>
-      <div class="right">
-        <a href="" class="icon-del" @click.prevent="clearLog"/>
-      </div>
-    </div>
 
       <div class="tabs-nav">
-          <a :class="{active:type!=='warn'}" href="javascript:void(0)" @click.prevent="switchLog('open')">开锁记录</a>
-          <a :class="{active:type=='warn'}" href="#" @click.prevent="switchLog('warn')">预警记录</a>
+        <a
+          :class="{active:type!=='warn'}"
+          href="javascript:void(0)"
+          @click.prevent="switchLog('open')"
+        >开锁记录</a>
+        <a
+          :class="{active:type=='warn'}"
+          href="#"
+          @click.prevent="switchLog('warn')"
+        >预警记录</a>
       </div>
 
-    <mt-datetime-picker ref="picker2" v-model="date" :start-date="startDate" :end-date="endDate" :visible-item-count="3" type="date" @confirm="handleChange"/>
+      <mt-datetime-picker
+        ref="picker2"
+        v-model="date"
+        :start-date="startDate"
+        :end-date="endDate"
+        :visible-item-count="3"
+        type="date"
+        @confirm="handleChange"
+      />
 
-    <log-list :class="{warn:type=='warn'}" v-show="!firstLoad" :current-date="currentDate" :data="list" />
-    <div v-if="!isLoading && more" class="loadmore">
-      <a href="" @click.prevent="loadMore2">加载更多</a>
+      <log-list
+        v-show="!firstLoad"
+        :class="{warn:type=='warn'}"
+        :current-date="currentDate"
+        :data="list"
+      />
+      <div
+        v-if="!isLoading && more"
+        class="loadmore"
+      >
+        <a
+          href=""
+          @click.prevent="loadMore2"
+        >加载更多</a>
+      </div>
+      <div
+        v-if="isLoading && more"
+        class="loadmore"
+      >
+        <a href="">加载中</a>
+      </div>
+      <div
+        v-if="!isLoading && list.length && !more"
+        class="nomore"
+      >已加载完全部</div>
+      <!--<a href="javascript:void(0)" class="btn-cale" @click.prevent="showCalendar"/>-->
     </div>
-    <div v-if="isLoading && more" class="loadmore">
-      <a href="">加载中</a>
-    </div>
-    <div v-if="!isLoading && list.length && !more" class="nomore">已加载完全部</div>
-    <!--<a href="javascript:void(0)" class="btn-cale" @click.prevent="showCalendar"/>-->
-  </div>
-      <div class="log-note">仅展示近1年记录<a class="cale" href="javascript:void(0)" @click.prevent="showCalendar">按时间筛选</a></div>
+    <div class="log-note">仅展示近1年记录<a
+      class="cale"
+      href="javascript:void(0)"
+      @click.prevent="showCalendar"
+    >按时间筛选</a></div>
   </div>
 </template>
 
@@ -112,7 +155,7 @@ export default {
       this.getLogData(undefined, this.type)
     },
     loadMore2() {
-    //   this.getLogData(true, this.type)
+      //   this.getLogData(true, this.type)
     },
     getLogData(more, type) {
       if (!more) {
@@ -225,7 +268,7 @@ export default {
                 : item.attribute.user_identify == 255
                   ? ''
                   : item.attribute.user_identify
-            } 通过${this.getOpenType(item.attribute.open_type)}`,
+              } 通过${this.getOpenType(item.attribute.open_type)}`,
             isOpen: true,
             ...item
           }
@@ -307,7 +350,7 @@ export default {
       )
     }
   },
-  created() {},
+  created() { },
   mounted() {
     HdSmart.ready(() => {
       setTimeout(() => {

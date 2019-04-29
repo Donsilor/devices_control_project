@@ -2,36 +2,60 @@
   <div class="page-index">
     <div class="topbar topbar-fixed">
       <div class="left">
-        <a href="#" class="icon-return" @click.prevent="back"/>
+        <a
+          href="#"
+          class="icon-return"
+          @click.prevent="back"
+        />
       </div>
       <div class="title">{{ device_name }}</div>
       <div class="right">
-        <router-link v-if="family_id" :to="{name:'log',query:{device_id:device_id,family_id:family_id, category_id: device_category_id}}" class="btn-golog icon-recode"/>
+        <router-link
+          v-if="family_id"
+          :to="{name:'log',query:{device_id:device_id,family_id:family_id, category_id: device_category_id}}"
+          class="btn-golog icon-recode"
+        />
         <!--<a href="" class="icon-more"></a>-->
       </div>
 
     </div>
     <div class="mainTitle">
-      <div class="name"><!--{{ device_name }}--><span :class="{red:lockedStatus,on:model.switch=='on'}" class="status">{{ statusText }}</span></div>
+      <div class="name">
+        <!--{{ device_name }}--><span
+          :class="{red:lockedStatus,on:model.switch=='on'}"
+          class="status"
+      >{{ statusText }}</span></div>
     </div>
 
-    <div :class="[model.switch]" class="lock-box">
+    <div
+      :class="[model.switch]"
+      class="lock-box"
+    >
       <div class="lock">
-        <div class="num-key"/>
-        <div class="handle"/>
+        <div class="num-key" />
+        <div class="handle" />
       </div>
     </div>
 
-    <a :class="{disabled:btnDisabled}" href="#" class="btn-unlock" @click.prevent="showPwdInput">
-      <span class="icon-switch"/>
+    <a
+      :class="{disabled:btnDisabled}"
+      href="#"
+      class="btn-unlock"
+      @click.prevent="showPwdInput"
+    >
+      <span class="icon-switch" />
       <span>开锁</span>
     </a>
     <div class="lock-status">
       <div class="battery-box">
         <div class="battery">
-          <div :style="{width:model.battery_percentage +'%'}" class="battery-bar"/>
+          <div
+            :style="{width:model.battery_percentage +'%'}"
+            class="battery-bar"
+          />
         </div>
-        电量状态：{{ model.battery_percentage }}%</div>
+        电量状态：{{ model.battery_percentage }}%
+      </div>
       <p class="icon-wifi">连接状态：{{ model.connectivity=='online' ? '正常': '离线' }}</p>
       <!--<span :class="{low:lowBattery}" class="battery">{{ model.battery_percentage }}%电量</span>-->
     </div>
@@ -44,9 +68,15 @@
             </div>
         </div>
         -->
-    <password-input :visible="passwordInputVisible" @close-dialog="passwordInputVisible=false" />
+    <password-input
+      :visible="passwordInputVisible"
+      @close-dialog="passwordInputVisible=false"
+    />
     <!-- 告警按钮-->
-    <alert-button-mobile :alert-model="alertModel" @goAlertpage = "goAlertpage('doorlock_errorsStorage')"/>
+    <alert-button-mobile
+      :alert-model="alertModel"
+      @goAlertpage="goAlertpage('doorlock_errorsStorage')"
+    />
   </div>
 </template>
 
@@ -374,7 +404,7 @@ export default {
       // this.onAlarm(data.attribute);
       this.onAlarmError(data.attribute)
     },
-    onError() {}
+    onError() { }
   }
 }
 </script>

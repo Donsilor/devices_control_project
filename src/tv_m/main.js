@@ -1,11 +1,12 @@
-if (process.env.NODE_ENV == 'development') {
+console.log(`argv_is_mock: ${argv_is_mock}`)
+if (argv_is_mock || process.env.NODE_ENV == 'development') {
   require('../../mock/tv/index.js')
 }
 
 import Vue from 'vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
-import FastClick from 'fastclick'
+// import FastClick from 'fastclick'
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
@@ -21,12 +22,16 @@ import ErrorView from './components/Error.vue'
 import OfflineMask from './components/OfflineMask.vue'
 // import Statusbar from './components/Statusbar.vue'
 import StatusTip from './components/StatusTip.vue'
-import AlloyFinger from 'alloyfinger'
-import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue'
-
 import * as service from './service'
 
 import '../../lib/base/tv/index_m.less'
+
+/* eslint-disable no-unused-vars */
+import AlloyFinger from 'alloyfinger/alloy_finger' // 手势库
+import AlloyFingerVue from 'alloyfinger/vue/alloy_finger_vue'
+Vue.use(AlloyFingerVue, {
+  AlloyFinger
+})
 
 Vue.use(Vuex)
 Vue.use(Router)
@@ -34,9 +39,6 @@ Vue.use(VueAwesomeSwiper)
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   attempt: 1
-})
-Vue.use(AlloyFingerVue, {
-  AlloyFinger
 })
 
 Vue.component('detail', Detail)
@@ -66,20 +68,23 @@ const store = new Vuex.Store({
     navigation_bar_height: 44
   },
   getters: {
-    isStatusBarShow(state)  {
-        return state.tvStatus.screenProjectType != 0 || state.tvStatus.tvOnlineStatus != 1
+    isStatusBarShow(state) {
+      return (
+        state.tvStatus.screenProjectType != 0 ||
+        state.tvStatus.tvOnlineStatus != 1
+      )
     }
   },
   mutations: {
     showDetail(state, payload) {
       state.detailVisible = true
-      if(payload) {
+      if (payload) {
         state.activeDetail = payload
         scrollTop = docEl.scrollTop
         docEl.scrollTop = 0
       }
       service.RemoteController({
-        'show': true
+        show: true
       })
     },
     hideDetail(state) {
@@ -87,11 +92,11 @@ const store = new Vuex.Store({
       var path = router.history.current.name
       if (path === 'index') {
         service.RemoteController({
-          'show': false
+          show: false
         })
       } else {
         service.RemoteController({
-          'show': true
+          show: true
         })
       }
       setTimeout(() => {
@@ -108,57 +113,54 @@ const store = new Vuex.Store({
       state.tvStatus = payload
     },
     setStatusBarHeight(state, payload) {
-        state.status_bar_height = payload
+      state.status_bar_height = payload
     },
     setNavigationBarHeight(state, payload) {
-        state.navigation_bar_height = payload
+      state.navigation_bar_height = payload
     }
   },
   actions: {
-    showDetail({
-      commit
-    }, item) {
+    showDetail({ commit }, item) {
       commit('showDetail', item)
     },
-    hideDetail: ({
-      commit
-    }) => {
+    hideDetail: ({ commit }) => {
       commit('hideDetail')
     },
-    setOnline({
-      commit
-    }, onlineStr) {
+    setOnline({ commit }, onlineStr) {
       commit('setOnline', onlineStr == 'online')
     }
   }
 })
 
 const router = new Router({
-  routes: [{
-    path: '/',
-    name: 'index',
-    component: Index
-  },
-  {
-    path: '/list',
-    name: 'list',
-    component: List
-  },
-  {
-    path: '/search',
-    name: 'search',
-    component: Search
-  },
-  {
-    path: '/error',
-    name: 'error',
-    component: ErrorView
-  }
+  routes: [
+    {
+      path: '/',
+      name: 'index',
+      component: Index
+    },
+    {
+      path: '/list',
+      name: 'list',
+      component: List
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: Search
+    },
+    {
+      path: '/error',
+      name: 'error',
+      component: ErrorView
+    }
   ]
 })
 // hack: app多次执行ready
 let is_ready = false
-let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
+let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent)
+  ? 1
+  : window.devicePixelRatio
 
 // app jsbridge ready
 HdSmart.onDeviceListen(function(data) {
@@ -168,7 +170,6 @@ HdSmart.onDeviceListen(function(data) {
 })
 
 HdSmart.ready(() => {
-
   if (!is_ready) {
     is_ready = true
 
@@ -176,18 +177,18 @@ HdSmart.ready(() => {
       store.commit('setDeviceName', window.device_name)
     }
 
-    if(window.status_bar_height){
-        store.commit('setStatusBarHeight', window.status_bar_height / dpr)
+    if (window.status_bar_height) {
+      store.commit('setStatusBarHeight', window.status_bar_height / dpr)
     }
 
-    if(window.navigation_bar_height){
-        store.commit('setNavigationBarHeight', window.navigation_bar_height / dpr)
+    if (window.navigation_bar_height) {
+      store.commit('setNavigationBarHeight', window.navigation_bar_height / dpr)
     }
 
     // setTimeout(() => {
-      service.getScreenProjectionStatus((error, data) => {
-        store.commit('setScreenProjectionStatus', data)
-      })
+    service.getScreenProjectionStatus((error, data) => {
+      store.commit('setScreenProjectionStatus', data)
+    })
     // }, 150)
 
     window.onScreenProjectStatusChanged = function(data) {

@@ -19,7 +19,8 @@
 
     <topbar
       :transparent="true"
-      :title="device_name" />
+      :title="device_name"
+    />
 
     <div class="curtain-wrap">
 
@@ -30,14 +31,17 @@
             </div>-->
       <div
         v-if="show && tip"
-        class="tip">{{ tip }}</div>
+        class="tip"
+      >{{ tip }}</div>
       <navigator
         v-once
-        class="navigator"/>
+        class="navigator"
+      />
       <curtain
         :is_ready="is_ready"
         :open_percentage="target_percentage"
-        class="curtain"/>
+        class="curtain"
+      />
 
     </div>
     <control
@@ -46,7 +50,8 @@
       @onOpen="onOpen"
       @onPause="onPause"
       @onClose="onClose"
-      @onGoPercentage="onGoPercentage"/>
+      @onGoPercentage="onGoPercentage"
+    />
   </div>
 </template>
 
@@ -96,6 +101,7 @@ export default {
       // 获取快照
       HdSmart.Device.getSnapShot(
         data => {
+          console.log('getSnapShot:' + data)
           HdSmart.UI.hideLoading()
           this.is_ready = true
           if (data && data.attribute) {
@@ -123,12 +129,12 @@ export default {
       try {
         this.animateToTargetPercentage(data.result.attribute.open_percentage, isFirstLoad)
         isFirstLoad = false
-      } catch (error) {}
+      } catch (error) { }
     })
   },
   methods: {
     goDetail() {
-        HdSmart.UI.goDeviceDetail()
+      HdSmart.UI.goDeviceDetail()
     },
     back() {
       HdSmart.UI.popWindow()
@@ -279,8 +285,8 @@ export default {
             }
           }
         },
-        () => {},
-        () => {}
+        () => { },
+        () => { }
       )
     },
     clearTargetTip() {

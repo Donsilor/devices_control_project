@@ -1,35 +1,31 @@
-
 import iOSCore from './ios'
 import androidCore from './android'
-import {apiList} from './constant'
+import { apiList } from './constant'
 
 const ua = navigator.userAgent
-const isAndroid = /android/i.test(ua)
+// const isAndroid = /android/i.test(ua)
 const isIOS = /iphone|ipad/i.test(ua)
 let $on
 
-if(isIOS){
+if (isIOS) {
     iOSCore.$init()
     $on = iOSCore.$on
-}else{
+} else {
     androidCore.$init()
     $on = androidCore.$on
 }
 
-if (location.search.indexOf('env=desktop') != -1) {
-
-    for(var key in apiList){
-        $on(apiList[key],()=>{})
+if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
+    for (var key in apiList) {
+        $on(apiList[key], () => {})
     }
-
-    $on(apiList.ui_alert, function(data, done){
+    $on(apiList.ui_alert, function(data, done) {
         alert(data.message)
         done({})
     })
-
-    setTimeout(()=>{
+    setTimeout(() => {
         onDeviceJsReady()
-    },200)
+    }, 200)
 }
 
 export default $on

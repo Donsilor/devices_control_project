@@ -1,10 +1,10 @@
 // https://github.com/michael-ciniawsky/postcss-load-config
 
-var autoprefixer = require('autoprefixer');
-var pxtorem = require('postcss-pxtorem');
+var autoprefixer = require('autoprefixer')
+var pxtorem = require('postcss-pxtorem')
 
 module.exports = {
-  "plugins": [
+    plugins: [
         autoprefixer({
             remove: false
         }),
