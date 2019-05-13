@@ -378,7 +378,11 @@ export default {
   },
   methods: {
     back() {
-      HdSmart.UI.popWindow()
+      if(argv_is_mock){
+        window.history.go(-1)
+      } else {
+        HdSmart.UI.popWindow()
+      }
     },
     touchMove(e) {
       e.preventDefault()

@@ -2,7 +2,7 @@ import { on, trigger } from './event'
 
 export default {
     $init() {
-        window.JSBridgeEventHandler = {
+        window.mock = {
             callNativeFunction: function(method, params, callback) {
                 params = params || {}
                 if (callback) {

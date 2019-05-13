@@ -285,7 +285,7 @@ const tips = {
   err_temp2: '温度已调至最高',
   err_temp3: '温度已调至最低'
 }
-const SPEED = ['low', 'normal', 'high']
+// const SPEED = ['low', 'normal', 'high']
 const [MIN_TEMP, MAX_TEMP] = [16, 30]
 let tempDelay
 

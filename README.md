@@ -11,6 +11,7 @@ npm run build 产品名 参数
 - ~~`-w` 添加水印~~
   改为判断 app 注入变量(`user_name`和`phone`)
 
+### 2019.4.28
 - `-mock` 是否启用 mock 目前只适用 空调、窗帘、电视
 
   示例 npm run build air_condition -m -mock

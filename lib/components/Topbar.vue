@@ -89,9 +89,11 @@ export default {
     methods: {
         goBack() {
             if(typeof this.back === 'function'){
-                this.back()
+              this.back()
+            } else if (argv_is_mock){
+              window.history.go(-1)
             }else{
-                HdSmart.UI.popWindow()
+              HdSmart.UI.popWindow()
             }
         },
         goDetail() {

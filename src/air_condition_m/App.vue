@@ -92,7 +92,7 @@ export default {
             }
           }
         },
-        res => {
+        () => {
           if (attr == "switch") {
             this.ac.switchStatus = val
           } else {
