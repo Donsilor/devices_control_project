@@ -142,7 +142,7 @@ export default {
         } else {
           this.status = "SUCCESS"
           this.setAttr(data.attribute)
-          if (this.ac.switchStatus === 'on') {
+          if (this.ac.switchStatus === 'on' && this.$refs.airon) {
             this.$refs.airon.syncTemp()
           }
         }
@@ -152,7 +152,7 @@ export default {
       this.status = "ERROR"
       this.ac.switchStatus = 'on'
       this.ac.temperature = 0
-      if (this.ac.switchStatus === 'on') {
+      if (this.ac.switchStatus === 'on' && this.$refs.airon) {
         this.$refs.airon.syncTemp()
       }
     }
