@@ -13,8 +13,7 @@
         :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
         class="navbar" >
         <div class="left">
-          <a
-            href="#/"
+          <i
             class="icon-return"
             @click.prevent="goBack"/>
         </div>
