@@ -52,7 +52,7 @@
 
           <div class="btns center">
             <div 
-              :class="[{'active': !isClose }, 'btn btn-swich center']"
+              :class="[{'active': !isClose && !isOffline }, 'btn btn-swich center']"
               @click="setSwitch" />
             <div 
               :class="[ btnClass,'btn btn-mode center']"
@@ -107,32 +107,32 @@
       @click="hide">
       <div class="items btns">
         <div 
-          :class="[{ 'item1': animation }, 'btn btn-wind center']"
+          :class="[{ 'item1': animation }, { 'btn-current': deviceInfo.attribute.mode === 'wind' }, 'btn btn-wind center']"
           @click.stop="setMode('wind', $event)">
           <div class="name">送风</div>
         </div>
         <div 
-          :class="[{ 'item2': animation }, 'btn btn-heat center']"
+          :class="[{ 'item2': animation }, { 'btn-current': deviceInfo.attribute.mode === 'heat' }, 'btn btn-heat center']"
           @click.stop="setMode('heat', $event)">
           <div class="name">制热</div>
         </div>
         <div 
-          :class="[{ 'item3': animation }, 'btn btn-dehumidify center']"
+          :class="[{ 'item3': animation }, { 'btn-current': deviceInfo.attribute.mode === 'dehumidify' }, 'btn btn-dehumidify center']"
           @click.stop="setMode('dehumidify', $event)">
           <div class="name">除湿</div>
         </div>
         <div 
-          :class="[{ 'item4': animation }, 'btn btn-cold center']"
+          :class="[{ 'item4': animation }, { 'btn-current': deviceInfo.attribute.mode === 'cold' }, 'btn btn-cold center']"
           @click.stop="setMode('cold', $event)">
           <div class="name">制冷</div>
         </div>
         <div 
-          :class="[{ 'item5': animation }, 'btn btn-auto center']"
+          :class="[{ 'item5': animation }, { 'btn-current': deviceInfo.attribute.mode === 'auto' }, 'btn btn-auto center']"
           @click.stop="setMode('auto', $event)">
           <div class="name">智能</div>
         </div>
         <div 
-          :class="[ { 'item6': animation }, btnClass,'btn btn-cold center active']"
+          :class="[ { 'item6': animation }, btnClass,'btn center active']"
           @click.stop />
       </div>
     </div>
@@ -145,17 +145,17 @@
       @click="hide">
       <div class="items btns">
         <div 
-          :class="[{ 'item2': animation }, 'btn btn-time center']"
+          :class="[{ 'item2': animation }, { 'btn-current': deviceInfo.attribute.timer}, 'btn btn-time center']"
           @click.stop="showTime">
           <div class="name">定时</div>
         </div>
         <div 
-          :class="[{ 'item3': animation }, 'btn btn-swing center']"
+          :class="[{ 'item3': animation }, { 'btn-current': deviceInfo.attribute.wind_up_down === 'on' || deviceInfo.attribute.wind_left_right === 'on' }, 'btn btn-swing center']"
           @click.stop="showSwing">
           <div class="name">扫风</div>
         </div>
         <div 
-          :class="[{ 'item6': animation }, 'btn btn-swing center active']"
+          :class="[{ 'item6': animation }, 'btn btn-menu center active']"
           @click.stop />
       </div>
     </div>
@@ -246,6 +246,7 @@ export default {
       let status = this.deviceInfo.attribute.switchStatus === 'on' ? false : true
       return status
     },
+    
     btnClass() {
       /* eslint-disable no-unreachable */
       switch (this.deviceInfo.attribute.mode) {
@@ -306,6 +307,7 @@ export default {
     },
     // 滑动
     swipe(e) {
+      if(this.isClose || this.isOffline) return
       // 一圈 360deg = 30 摄氏度  1deg = 12℃
       if (e.direction === 'Up') {
         if (this.temp < 30) {
@@ -531,6 +533,304 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+
+.btns {
+  justify-content: flex-start;
+  transition: all 0.3s ease-in-out;
+  margin-top: 57px;
+  .btn {
+    margin-right: 40px;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #fff;
+    border-radius: 50%;
+
+    display: flex;
+    flex-direction: column;
+
+    .name {
+      margin-top: 8px;
+      font-size: 20px;
+      color: #fff;
+    }
+    &.active {
+      background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+      border: none;
+    }
+  }
+  .btn-swich {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
+      background-size: 100% 100%;
+    }
+    &.active {
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/swich-black.png);
+      }
+    }
+  }
+  .btn-mode {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url(../../lib/base/air_condition/assets/new-air/heat-white.png);
+      background-size: 100% 100%;
+    }
+    &.active {
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/heat-black.png);
+      }
+    }
+  }
+  .btn-menu {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url(../../lib/base/air_condition/assets/new-air/more-white.png);
+      background-size: 100% 100%;
+    }
+    &.active {
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/more-black.png);
+      }
+    }
+  }
+
+  .btn-wind {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url(../../lib/base/air_condition/assets/new-air/wind-white.png);
+      background-size: 100% 100%;
+    }
+    &.active {
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/wind-black.png);
+      }
+    }
+    &.btn-current {
+      border-color: #FFC600;
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/wind-yellow.png);
+      }
+      .name{
+        color: #FFC600;
+      }
+    }
+  }
+  .btn-heat {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url(../../lib/base/air_condition/assets/new-air/heat-white.png);
+      background-size: 100% 100%;
+    }
+    &.active {
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/heat-black.png);
+      }
+    }
+    &.btn-current {
+      border-color: #FFC600;
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/heat-yellow.png);
+      }
+      .name{
+        color: #FFC600;
+      }
+    }
+  }
+  .btn-dehumidify {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url(../../lib/base/air_condition/assets/new-air/dehumidify-white.png);
+      background-size: 100% 100%;
+    }
+    &.active {
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/dehumidify-black.png);
+      }
+    }
+    &.btn-current {
+      border-color: #FFC600;
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/dehumidify-yellow.png);
+      }
+      .name{
+        color: #FFC600;
+      }
+    }
+  }
+  .btn-cold {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url(../../lib/base/air_condition/assets/new-air/cold-white.png);
+      background-size: 100% 100%;
+    }
+    &.active {
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/cold-black.png);
+      }
+    }
+    &.btn-current {
+      border-color: #FFC600;
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/cold-yellow.png);
+      }
+      .name{
+        color: #FFC600;
+      }
+    }
+  }
+  .btn-auto {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url(../../lib/base/air_condition/assets/new-air/auto-white.png);
+      background-size: 100% 100%;
+    }
+    &.active {
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/auto-black.png);
+      }
+    }
+    &.btn-current {
+      border-color: #FFC600;
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/auto-yellow.png);
+      }
+      .name{
+        color: #FFC600;
+      }
+    }
+  }
+  .btn-time {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url(../../lib/base/air_condition/assets/new-air/time-white.png);
+      background-size: 100% 100%;
+    }
+    &.active {
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/time-black.png);
+      }
+    }
+    &.btn-current {
+      border-color: #FFC600;
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/time-yellow.png);
+      }
+      .name{
+        color: #FFC600;
+      }
+    }
+  }
+  .btn-swing {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url(../../lib/base/air_condition/assets/new-air/wind-dir-w.png);
+      background-size: 100% 100%;
+    }
+    &.active {
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/wind-dir-b.png);
+      }
+    }
+    &.btn-current {
+      border-color: #FFC600;
+      &::before {
+        background-image: url(../../lib/base/air_condition/assets/new-air/wind-dir-y.png);
+      }
+      .name{
+        color: #FFC600;
+      }
+    }
+  }
+}
+
+.btns-mode {
+  &:before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 99999;
+    width: 100%;
+
+    background: rgba(0, 0, 0, 0.8);
+  }
+  .items {
+    position: fixed;
+    left: 216px;
+    // bottom: 358px;
+    bottom: 310px;
+    z-index: 999999;
+
+    width: 120px;
+    height: 120px;
+    .btn {
+      transition: all 0.3s ease-in-out;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .item1 {
+      top: 132px;
+      left: 132px;
+
+    }
+    .item2 {
+      top: 0;
+      left: 204px;
+    }
+    .item3 {
+      top: -132px;
+      left: 132px;
+    }
+    .item4 {
+      top: -204px;
+      left: 0;
+    }
+    .item5 {
+      top: -132px;
+      left: -132px;
+    }
+  }
+  &.more {
+    .items {
+      left: 384px;
+    }
+  }
+}
+
 .wrap {
   background: #20282b;
   * {
@@ -552,7 +852,7 @@ export default {
     .tips {
       background: rgba(0, 0, 0, 0.3);
       position: fixed;
-      top: 64px;
+      top: 64PX;
       left: 0;
       z-index: 99;
 
@@ -839,11 +1139,20 @@ export default {
           background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
           background-size: 100% 100%;
         }
+        &.active {
+          &::before {
+            background-image: url(../../lib/base/air_condition/assets/new-air/swich-black.png);
+          }
+        }
       }
     }
   }
   &.offline {
     .canclick {
+      z-index: 0;
+    }
+    .btns .btn-swich {
+      position: relative;
       z-index: 0;
     }
   }
@@ -861,236 +1170,4 @@ export default {
   }
 }
 
-.btns {
-  justify-content: flex-start;
-  transition: all 0.3s ease-in-out;
-  margin-top: 57px;
-  .btn {
-    margin-right: 40px;
-    width: 120px;
-    height: 120px;
-    border: 1px solid #fff;
-    border-radius: 50%;
-
-    display: flex;
-    flex-direction: column;
-
-    .name {
-      margin-top: 8px;
-      font-size: 20px;
-      color: #fff;
-    }
-    &.active {
-      background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-      border: none;
-    }
-  }
-  .btn-swich {
-    &::before {
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
-      background-size: 100% 100%;
-    }
-    &.active {
-      &::before {
-        background-image: url(../../lib/base/air_condition/assets/new-air/swich-black.png);
-      }
-    }
-  }
-  .btn-mode {
-    &::before {
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url(../../lib/base/air_condition/assets/new-air/heat-white.png);
-      background-size: 100% 100%;
-    }
-    &.active {
-      &::before {
-        background-image: url(../../lib/base/air_condition/assets/new-air/heat-black.png);
-      }
-    }
-  }
-  .btn-menu {
-    &::before {
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url(../../lib/base/air_condition/assets/new-air/more-white.png);
-      background-size: 100% 100%;
-    }
-    &.active {
-      &::before {
-        background-image: url(../../lib/base/air_condition/assets/new-air/more-black.png);
-      }
-    }
-  }
-
-  .btn-wind {
-    &::before {
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url(../../lib/base/air_condition/assets/new-air/wind-white.png);
-      background-size: 100% 100%;
-    }
-    &.active {
-      &::before {
-        background-image: url(../../lib/base/air_condition/assets/new-air/wind-black.png);
-      }
-    }
-  }
-  .btn-heat {
-    &::before {
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url(../../lib/base/air_condition/assets/new-air/heat-white.png);
-      background-size: 100% 100%;
-    }
-    &.active {
-      &::before {
-        background-image: url(../../lib/base/air_condition/assets/new-air/heat-black.png);
-      }
-    }
-  }
-  .btn-dehumidify {
-    &::before {
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url(../../lib/base/air_condition/assets/new-air/dehumidify-white.png);
-      background-size: 100% 100%;
-    }
-    &.active {
-      &::before {
-        background-image: url(../../lib/base/air_condition/assets/new-air/dehumidify-black.png);
-      }
-    }
-  }
-  .btn-cold {
-    &::before {
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url(../../lib/base/air_condition/assets/new-air/cold-white.png);
-      background-size: 100% 100%;
-    }
-    &.active {
-      &::before {
-        background-image: url(../../lib/base/air_condition/assets/new-air/cold-black.png);
-      }
-    }
-  }
-  .btn-auto {
-    &::before {
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url(../../lib/base/air_condition/assets/new-air/auto-white.png);
-      background-size: 100% 100%;
-    }
-    &.active {
-      &::before {
-        background-image: url(../../lib/base/air_condition/assets/new-air/auto-black.png);
-      }
-    }
-  }
-  .btn-time {
-    &::before {
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url(../../lib/base/air_condition/assets/new-air/time-white.png);
-      background-size: 100% 100%;
-    }
-    &.active {
-      &::before {
-        background-image: url(../../lib/base/air_condition/assets/new-air/time-black.png);
-      }
-    }
-  }
-  .btn-swing {
-    &::before {
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url(../../lib/base/air_condition/assets/new-air/wind-dir-w.png);
-      background-size: 100% 100%;
-    }
-    &.active {
-      &::before {
-        background-image: url(../../lib/base/air_condition/assets/new-air/wind-dir-b.png);
-      }
-    }
-  }
-}
-
-.btns-mode {
-  &:before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 99999;
-    width: 100%;
-
-    background: rgba(0, 0, 0, 0.8);
-  }
-  .items {
-    position: fixed;
-    left: 216px;
-    // bottom: 358px;
-    bottom: 245px;
-    z-index: 999999;
-
-    width: 120px;
-    height: 120px;
-    .btn {
-      transition: all 0.3s ease-in-out;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    .item1 {
-      top: 132px;
-      left: 132px;
-    }
-    .item2 {
-      top: 0;
-      left: 204px;
-    }
-    .item3 {
-      top: -132px;
-      left: 132px;
-    }
-    .item4 {
-      top: -204px;
-      left: 0;
-    }
-    .item5 {
-      top: -132px;
-      left: -132px;
-    }
-  }
-  &.more {
-    .items {
-      left: 384px;
-    }
-  }
-}
 </style>
