@@ -23,13 +23,16 @@
 
 <style lang="less">
 .subpage {
-    background: #f2f2f2;
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    left: 0;
-    top: 0;
-    z-index: 999;
+  background: #f2f2f2;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 999;
+  .navbar .left a.icon-return {
+    border-color: #000;
+  }
 }
 </style>
 

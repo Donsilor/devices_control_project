@@ -13,7 +13,8 @@
         :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
         class="navbar" >
         <div class="left">
-          <i
+          <a
+            href="#/"
             class="icon-return"
             @click.prevent="goBack"/>
         </div>
@@ -171,7 +172,16 @@ export default {
             opacity: .8;
         }
     }
-
+    .left a.icon-return{
+      position: absolute;
+      left: 40px;
+      top: 55%;
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: solid #000;
+      border-width: 2PX 2PX 0 0;
+      transform: translate(0, -50%) rotate(225deg);
+    }
 }
-
 </style>

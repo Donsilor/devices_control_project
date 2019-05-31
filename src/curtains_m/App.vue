@@ -94,6 +94,10 @@ export default {
     }
   },
   mounted() {
+    HdSmart.onDeviceListen(res => {
+      this.animateToTargetPercentage(res.params.attribute.open_percentage, true)
+    })
+
     HdSmart.ready(() => {
       if (window.device_name) {
         this.device_name = window.device_name
@@ -101,7 +105,6 @@ export default {
       // 获取快照
       HdSmart.Device.getSnapShot(
         data => {
-          console.log('getSnapShot:' + data)
           HdSmart.UI.hideLoading()
           this.is_ready = true
           if (data && data.attribute) {
@@ -285,7 +288,7 @@ export default {
             }
           }
         },
-        () => { },
+        () => {},
         () => { }
       )
     },
