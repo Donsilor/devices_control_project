@@ -125,6 +125,8 @@
 .search-box {
   background-color: #fff;
   padding: 24px 0;
+  display: flex;
+  align-items: center;
 }
 .search {
   background-color: #f0f0f0;
@@ -133,18 +135,16 @@
   width: 654px;
   height: 64px;
   line-height: 64px;
+
   margin: 0 auto;
-  display: block;
+  display: flex;
+  align-items: center;
   font-size: 32px;
   color: #b4b4b4;
-  padding-left: 68px;
-  position: relative;
+  padding-left: 10px;
+
   &:before {
-    position: absolute;
-    top: 0;
-    left: 28px;
-    font-size: 36px;
-    line-height: 1;
+    width: 44px;
     color: rgba(0, 0, 0, 0.2);
   }
 }

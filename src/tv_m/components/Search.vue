@@ -154,18 +154,19 @@
 
 <style lang="less">
 .search_bar {
-  padding-top: 8px;
-  padding-left: 100px;
+  padding-left: 40PX;
   display: flex;
 }
 .search_input {
-  line-height: 1;
+  display: flex;
+  align-items: center;
+
   position: relative;
-  height: 60px;
+  height: 30PX;
   width: 100%;
   input {
     border: 1px solid #dbdbdb;
-    height: 60px;
+    height: 30PX;
     border-radius: 32px;
     width: 100%;
     box-sizing: border-box;
@@ -190,8 +191,13 @@
     top: 0;
     color: #d8d8d8;
     font-size: 35px;
-    line-height: 1;
+    width: 30PX;
+    height: 30PX;
+    line-height: 30PX;
     &:before {
+      display: inline-block;
+      width: 30PX;
+      height: 30PX;
       line-height: 1;
     }
     &:active {
@@ -386,6 +392,25 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getHistory()
+    service.RemoteController({ 'show': true })
+    setTimeout(() => {
+      this.$el.querySelector('.search_input input').focus()
+    }, 500)
+
+    window.addEventListener('scroll', this.loadMore)
+    this.$Lazyload.$on('error', function({ el, src, loading }) {
+      el.src = el.dataset.src1
+      el.onerror = function() {
+        el.src = loading
+        el.onerror = null
+      };
+    })
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.loadMore)
+  },
   methods: {
     // 删除搜索词
     clearWord() {
@@ -539,25 +564,6 @@ export default {
         this.historyData = data.data
       })
     }
-  },
-  mounted() {
-    this.getHistory()
-    service.RemoteController({ 'show': true })
-    setTimeout(() => {
-      this.$el.querySelector('.search_input input').focus()
-    }, 500)
-
-    window.addEventListener('scroll', this.loadMore)
-    this.$Lazyload.$on('error', function({ el, src, loading }) {
-      el.src = el.dataset.src1
-      el.onerror = function() {
-        el.src = loading
-        el.onerror = null
-      };
-    })
-  },
-  destroyed() {
-    window.removeEventListener('scroll', this.loadMore)
   }
 }
 </script>
