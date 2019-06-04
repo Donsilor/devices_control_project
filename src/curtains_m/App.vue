@@ -95,7 +95,20 @@ export default {
   },
   mounted() {
     HdSmart.onDeviceListen(res => {
-      this.animateToTargetPercentage(res.params.attribute.open_percentage, true)
+      if(!argv_is_mock) return
+      var switchStatus = res.params.attribute.switch
+      var open_percentage = res.params.attribute.open_percentage
+      var flag = false
+
+      if( switchStatus === 'on'){
+        open_percentage = 100
+      } else if(switchStatus === 'off'){
+        open_percentage = 0
+      } else if (switchStatus === 'pause'){
+        open_percentage = this.target_percentage
+        flag = false
+      }
+      this.animateToTargetPercentage(open_percentage, flag)
     })
 
     HdSmart.ready(() => {
