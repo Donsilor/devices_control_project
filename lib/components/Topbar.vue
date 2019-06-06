@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{'topbar-nobg':transparent}"
+    :class="[{'topbar-nobg':transparent}, {'topbar-black': bgBlack}]"
     class="topbar">
     <div
       :style="{height:(status_bar_height + navigation_bar_height) +'px'}"
@@ -65,6 +65,10 @@ export default {
             type: Boolean,
             default: false
         },
+        bgBlack: {
+            type: Boolean,
+            default: false
+        },
         title: {
             type: String,
             default: ''
@@ -126,6 +130,19 @@ export default {
 .topbar-nobg{
     .topbar-fixed{
         background: transparent;
+        border-bottom: none;
+    }
+    .navbar{
+        color: #fff;
+        .left a,.right a {
+            color: #fff;
+        }
+    }
+}
+
+.topbar-black{
+    .topbar-fixed{
+        background: #20282b;
         border-bottom: none;
     }
     .navbar{
