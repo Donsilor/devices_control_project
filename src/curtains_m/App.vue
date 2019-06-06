@@ -94,6 +94,23 @@ export default {
     }
   },
   mounted() {
+    HdSmart.onDeviceListen(res => {
+      if(!argv_is_mock) return
+      var switchStatus = res.params.attribute.switch
+      var open_percentage = res.params.attribute.open_percentage
+      var flag = false
+
+      if( switchStatus === 'on'){
+        open_percentage = 100
+      } else if(switchStatus === 'off'){
+        open_percentage = 0
+      } else if (switchStatus === 'pause'){
+        open_percentage = this.target_percentage
+        flag = false
+      }
+      this.animateToTargetPercentage(open_percentage, flag)
+    })
+
     HdSmart.ready(() => {
       if (window.device_name) {
         this.device_name = window.device_name
@@ -101,7 +118,6 @@ export default {
       // 获取快照
       HdSmart.Device.getSnapShot(
         data => {
-          console.log('getSnapShot:' + data)
           HdSmart.UI.hideLoading()
           this.is_ready = true
           if (data && data.attribute) {
@@ -285,7 +301,7 @@ export default {
             }
           }
         },
-        () => { },
+        () => {},
         () => { }
       )
     },

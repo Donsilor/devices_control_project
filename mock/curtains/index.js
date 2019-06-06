@@ -10,9 +10,11 @@ if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
   })
 
   on(apiList.device_control, function(data, done) {
-    done({
-      result: data
-    })
+    done({ result: data })
+    // 设备状态改变
+    setTimeout(function() {
+      onDeviceChange(data)
+    }, 1000)
   })
 
   var percent = 0

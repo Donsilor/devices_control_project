@@ -9,19 +9,6 @@ body {
 a {
     text-decoration: none;
 }
-
-.icon-return{
-  position: absolute;
-  left: 40px;
-  top: 55%;
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: solid #000;
-  border-width: 2PX 2PX 0 0;
-  transform: translate(0, -50%) rotate(225deg);
-}
-
 .page-on {
     background: #46bcff;
     position: absolute;
@@ -29,9 +16,6 @@ a {
     top: 0;
     width: 100%;
     height: 100%;
-    .name{
-        color:#fff;
-    }
 }
 .page-off {
     background: #f2f2f2;
@@ -40,61 +24,15 @@ a {
     top: 0;
     width: 100%;
     height: 100%;
-    .name{
-        color: #76787A;
-    }
-    .tip{
-        position: absolute;
-        left: 0;
-        top: 220px;
-        width: 100%;
-        text-align: center;
-        font-size: 30px;
-        // opacity: 0.5;
-        font-size: 28px;
-        color: #C8CACC;
-    }
-    //关机样式
-    .washer {
-        width: 243px;
-        height: 395px;
-        position: absolute;
-        left: 50%;
-        top: 300px;
-        transform: translate(-50%, 0);
-        background: url(./assets/img_washer_off@2x.png) no-repeat;
-        background-size: 100% 100%;
-    }
-    .off_button{
-        position:absolute;
-        top:780px;
-        left:50%;
-        transform: translateX(-50%);
-        width:144px;
-        height: 144px;
-        a{
-            width:100%;
-            height: 100%;
-            display: block;
-            i{
-                width:100%;
-                height: 100%;
-                display: block;
-                background:url(./assets/btn_power@2x.png) no-repeat center;
-                background-size:100% 100%;
-            }
-        }
-    }
 }
 .name {
     position: absolute;
     left: 0;
-    top: 168px;
+    top: 156px;
     width: 100%;
-    height: 45px;
-    line-height: 45px;
     text-align: center;
-    font-size: 32px;
+    font-size: 30px;
+    color: #ffffff;
 }
 .tip {
     position: absolute;
@@ -113,15 +51,15 @@ a {
 
     span {
         box-sizing: border-box;
-        border-radius: 0 45px 45px 0;
-        width: 200px;
-        height: 70px;
-        line-height: 70px;
+        border-radius: 0 48px 48px 0;
+        width: 252px;
+        height: 78px;
+        line-height: 78px;
         font-size: 30px;
         color: #333333;
-        padding-left: 60px;
+        padding-left: 100px;
         background: #fff url(./assets/washer_icon_msg.png)
-            no-repeat 20px center;
+            no-repeat 60px center;
         background-size: 30px 30px;
         display: block;
         margin-bottom: 5px;
@@ -150,7 +88,7 @@ a {
     height: 460px;
     position: absolute;
     left: 50%;
-    top: 25%;
+    top: 220px;
     transform: translate(-50%, 0);
     color: #46bcff;
     background-image: url(./assets/washer_bg_initial.png);
@@ -211,30 +149,22 @@ a {
     }
     .title {
         font-size: 36px;
-        top: 79px;
-        height: 50px;
-        line-height:50px;
+        top: 66px;
     }
     .sub_title {
         font-size: 24px;
-        top: 160px;
-        height:33px;
-        line-height:33px;
+        top: 150px;
     }
     .timeleft {
-        font-size: 120px;
-        top: 172px;
-        height:168px;
-        line-height:168px;
+        font-size: 144px;
+        top: 160px;
         small {
             font-size: 24px;
         }
     }
     .status {
         font-size: 24px;
-        top: 339px;
-        height:33px;
-        line-height:33px;
+        top: 350px;
     }
     .lock {
         background: url(./assets/washer_icon_childlock_normal.png)
@@ -255,72 +185,71 @@ a {
         background-size: 100% 100%;
     }
 }
-
+//关机样式
+.page-off .name {
+    color: #76787a;
+}
+.page-off .tip {
+    color: #c8cacc;
+}
+.washer {
+    width: 420px;
+    height: 420px;
+    position: absolute;
+    left: 50%;
+    top: 252px;
+    transform: translate(-50%, 0);
+    background: url(./assets/washer_bg_img.png) no-repeat;
+    background-size: 100% 100%;
+}
 //弹框样式
-
+.modal-w .modal {
+    width: 1300px;
+}
+.modal-more .modal {
+    top: 80px;
+    transform: translate(-50%, 0);
+}
 .model-wrap {
+    display: flex;
+    justify-content: center;
+    .line {
+        width: 1px;
+        border-left: 1px solid #f0f0f0;
+        height: 370px;
+        margin-top: 60px;
+    }
     .group {
-        background-color: #fff;
+        padding: 0 50px;
         .title {
-            text-align: center;
-            font-size: 28px;
-            color: #76787a;
-            margin: 60px 0 24px;
-            font-weight: bold;
+            font-size: 24px;
+            color: #c8cacc;
+            margin-bottom: 24px;
         }
     }
 }
 .more-wrap {
     .group {
-        background-color: #fff;
-        overflow: hidden;
         .title {
-            text-align: center;
-            font-size: 28px;
-            color: #76787a;
-            font-weight: bold;
-            height: 40px;
-            line-height: 40px;
+            font-size: 24px;
+            color: #c8cacc;
+            margin-bottom: 24px;
         }
     }
-    .group-one{
-            margin-bottom:16px;
-            .title {
-                margin: 52px 0 24px;
-            }
-    }
-    .group-two{
-            margin-bottom:16px;
-            .title {
-                margin: 24px 0 0 0;
-
-            }
-     }
 }
 .selectbox {
-    &.lockDetail{
-        margin: 20px auto 83px;
-        background-color: #fff;
-        .hd .left{
-            font-size: 32px;
-            color: #2F3133;
-        }
-    }
     .hd {
-        padding:20px 0;
-        margin: 0 32px;
-        height: 80px;
-        line-height: 80px;
+        margin: 0 46px;
+        padding: 20px 46px;
+        height: 40px;
+        line-height: 40px;
         border-top: 1px solid #f5f5f5;
         .left {
             float: left;
-            font-size:32px;
-            color: #2F3133;
         }
         .right {
             float: right;
             color: #333333;
-            font-size:32px;
         }
         .arrow {
             display: inline-block;
@@ -336,7 +265,7 @@ a {
     .bd {
         display: none;
         overflow: hidden;
-        padding: 31px 32px;
+        padding: 31px 92px;
         background: #fafafa;
         .option {
             display: block;
@@ -367,7 +296,7 @@ a {
         }
     }
     &.disable {
-        opacity: 0.5;//todo
+        opacity: 0.5;
     }
 }
 .sb-wrap {
@@ -425,18 +354,17 @@ a {
     }
 }
 .childlock_confirm {
-    text-align: center;
+    line-height: 58px;
     .right {
-        text-align: center;
-        margin-top: 15px;
+        float: right;
     }
     a {
-        width: 100px;
-        line-height: 42px;
+        width: 148px;
+        height: 58px;
         border-radius: 6px;
-        margin: 0 10px;
         display: inline-block;
-        font-size: 28px;
+        margin-left: 12px;
+        font-size: 30px;
         box-sizing: border-box;
         text-align: center;
     }
@@ -447,19 +375,18 @@ a {
     }
     .submit {
         background: #46bcff;
-        border: 1px solid #46bcff;
         color: #ffffff;
     }
 }
 //按钮样式
 .btns {
     display: flex;
+    justify-content: center;
     &-fn {
         position: absolute;
         left: 0;
-        top: 70%;
+        top: 720px;
         width: 100%;
-        justify-content: center;
         .btn {
             margin: 0 50px;
             color: #ffffff;
@@ -468,46 +395,47 @@ a {
             }
         }
     }
-    &-model {//模式选择样式
+    &-model {
         flex-wrap: wrap;
-        padding-left: 20px;
         .btn {
-            margin: 0 28px;
+            margin: 0 18px 46px;
         }
     }
     &-more_model {
-        flex-wrap: wrap;
-        padding-left: 20px;
         .btn {
-            margin: 0 28px 50px;
+            margin: 0 55px 36px;
+            i {
+                width: 90px;
+                height: 90px;
+            }
         }
     }
 }
 .btn {
     display: block;
     text-align: center;
-    font-size: 28px;
     color: #76787a;
+    font-size: 24px;
     i {
-        width: 120px;
-        height: 120px;
+        width: 144px;
+        height: 144px;
         display: block;
-        margin: 0 auto 20px;
+        margin: 0 auto 12px;
         background-repeat: no-repeat;
         background-size: 100% 100%;
     }
     //更多
     &-more {
         position: absolute;
-        right: 40px;
-        top: 136px;
+        right: 60px;
+        top: 132px;
         i {
             width: 96px;
             height: 96px;
-            background-image: url(./assets/btn_aircon_more_normal@2x.png);
+            background-image: url(./assets/more_normal.png);
         }
         &:active i {
-            background-image: url(./assets/btn_aircon_more_pressed@2x.png);
+            background-image: url(./assets/more_active.png);
         }
     }
     //关机
@@ -844,57 +772,10 @@ a {
     position: absolute;
     transform: translate(-50%, -50%);
 }
-.error-tip img{
-    width: 400px;
-}
 .error-tip p {
     min-height: 30px;
     font-size: 30px;
     margin: 24px 0 110px 0;
     opacity: 1;
     position: relative;
-}
-#app .backControl{
-    background-color: #f4f4f8;
-    height: auto;
-    min-height: 100%;
-    position: absolute;
-    // padding-top: 90px;
-    .topbar{
-        position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        z-index:1;
-    }
-    .subpage-body{
-        margin-top: 90px;
-    }
-
-}
-#app .backControl2{
-    height: auto;
-    min-height: 100%;
-    position: absolute;
-    .topbar{
-        position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        z-index:1;
-    }
-    .subpage-body{
-        margin-top: 90px;
-    }
-    .model-wrap{
-        overflow: hidden;
-    }
-}
-.android .backControl{
-    box-sizing:border-box;
-    padding-bottom: 120px;
-}
-.android .backControl2{
-    box-sizing:border-box;
-    padding-bottom: 120px;
 }

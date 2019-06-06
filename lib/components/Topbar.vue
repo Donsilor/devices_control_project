@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{'topbar-nobg':transparent}"
+    :class="[{'topbar-nobg':transparent}, {'topbar-black': bgBlack}]"
     class="topbar">
     <div
       :style="{height:(status_bar_height + navigation_bar_height) +'px'}"
@@ -61,6 +61,10 @@ export default {
             }
         },
         transparent: {
+            type: Boolean,
+            default: false
+        },
+        bgBlack: {
             type: Boolean,
             default: false
         },
@@ -135,6 +139,19 @@ export default {
     }
 }
 
+.topbar-black{
+    .topbar-fixed{
+        background: #20282b;
+        border-bottom: none;
+    }
+    .navbar{
+        color: #fff;
+        .left a,.right a {
+            color: #fff;
+        }
+    }
+}
+
 .statusbar{
     height: @status_bar_height;
 }
@@ -171,7 +188,16 @@ export default {
             opacity: .8;
         }
     }
-
+    .left a.icon-return{
+      position: absolute;
+      left: 40px;
+      top: 55%;
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: solid #000;
+      border-width: 2PX 2PX 0 0;
+      transform: translate(0, -50%) rotate(225deg);
+    }
 }
-
 </style>
