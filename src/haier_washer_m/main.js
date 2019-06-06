@@ -4,7 +4,7 @@ if(process.env.NODE_ENV == 'development'){
 
 import Vue from 'vue'
 import App from './App.vue'
-import Topbar from '../../lib/components/Topbar.vue'
+import Topbar from './components/Topbar.vue'
 
 import '../../lib/base/haier_washer/index_m.less'
 

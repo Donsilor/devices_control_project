@@ -23,7 +23,7 @@
         <div class="status">洗衣待启动</div>
       </div>
 
-      <div class="wrap-wave">
+      <div class="wrap-wave run">
         <div class="wave wave1"/>
         <div class="wave wave2"/>
         <div class="bubbles">
@@ -46,10 +46,10 @@
               @click.stop="setSwitch($event)"/>
             <div 
               class="btn btn-start center"
-              @click.stop="setMode('heat', $event)"/>
+              @click.stop="setMode('start', $event)"/>
             <div 
               class="btn btn-mode center"
-              @click.stop="setMode('heat', $event)"/>
+              @click.stop="setMode('mode', $event)"/>
             <div 
               class="btn btn-time center"
               @click.stop="showTime"/>
@@ -76,18 +76,56 @@
           <div class="title">洗涤清洁</div>
           <div class="btns">
             <div class="btn-wrap">
-              <div class="btn"/>
+              <div class="btn btn-mode center active"/>
               <div class="btn-name">标准洗</div>
+            </div>
+
+            <div class="btn-wrap">
+              <div class="btn btn-mode-15 center"/>
+              <div class="btn-name">速洗15′</div>
+            </div>
+
+            <div class="btn-wrap">
+              <div class="btn btn-ts center"/>
+              <div class="btn-name">单脱水</div>
+            </div>
+            <div class="btn-wrap">
+              <div class="btn btn-jzj center"/>
+              <div class="btn-name">筒自洁</div>
             </div>
           </div>
         </div>
 
         <div class="mode-group">
-          <div class="title">衣服类型</div>
+          <div class="title">洗涤清洁</div>
           <div class="btns">
             <div class="btn-wrap">
-              <div class="btn"/>
-              <div class="btn-name">标准洗</div>
+              <div class="btn btn-hh center"/>
+              <div class="btn-name">混合</div>
+            </div>
+
+            <div class="btn-wrap">
+              <div class="btn btn-ms center"/>
+              <div class="btn-name">棉麻</div>
+            </div>
+
+            <div class="btn-wrap">
+              <div class="btn btn-hq center"/>
+              <div class="btn-name">化纤</div>
+            </div>
+
+            <div class="btn-wrap">
+              <div class="btn btn-ym center"/>
+              <div class="btn-name">羊毛</div>
+            </div>
+            <div class="btn-wrap">
+              <div class="btn btn-nz center"/>
+              <div class="btn-name">牛仔</div>
+            </div>
+
+            <div class="btn-wrap">
+              <div class="btn btn-ylf center"/>
+              <div class="btn-name">羽绒服</div>
             </div>
           </div>
         </div>
@@ -105,7 +143,7 @@ import Modal from '../../lib/components/Modal.vue';
 import SwitchButton from '../../lib/components/SwitchButton.vue';
 import Picker from '../../lib/components/Picker/picker.vue';
 import ModeButton from './components/ModeButton.vue';
-import SubPage from '../../lib/components/SubPage.vue';
+import SubPage from './components/SubPage.vue';
 import Icon from '../../lib/components/SettingIconMobile.vue';
 
 import {
@@ -165,7 +203,7 @@ export default {
       model: {},
       device_name: '',
       moreModalVisible: false,
-      modeModalVisible: true,
+      modeModalVisible: false,
       reserveModalVisible: false,
       currentReserveTime: 0,
       confirmChildLockVisible: false,
@@ -346,15 +384,16 @@ export default {
       this.controlDevice('control', val);
     },
     setMode(mode) {
-      if (this.isRun || this.isPause) {
-        return;
-      }
-      if (this.model.mode == mode) {
-        return;
-      }
-      this.controlDevice('mode', mode, () => {
-        this.model.mode = mode;
-      });
+      this.modeModalVisible = true
+      // if (this.isRun || this.isPause) {
+      //   return;
+      // }
+      // if (this.model.mode == mode) {
+      //   return;
+      // }
+      // this.controlDevice('mode', mode, () => {
+      //   this.model.mode = mode;
+      // });
     },
     setChildLock(val, callback) {
       this.controlDevice('child_lock_switch', val, callback);
@@ -539,6 +578,48 @@ export default {
     }
 }
 
+@keyframes animX1{
+   0% {left: 506px;}
+	100% {left: 546px;}
+}
+@keyframes animX2{
+   0% {left: 224px;}
+	100% {left: 284px;}
+}
+@keyframes animX3{
+   0% {left: 458px;}
+	100% {left: 480px;}
+}
+@keyframes animX4{
+   0% {left: 422px;}
+	100% {left: 482px;}
+}
+@keyframes animX5{
+   0% {left: 184px;}
+	100% {left: 244px;}
+}
+@keyframes animX6{
+   0% {left: 200px;}
+	100% {left: 260px;}
+}
+@keyframes animX7{
+   0% {left: 540px;}
+	100% {left: 580px;}
+}
+@keyframes animX8{
+   0% {left: 262px;}
+	100% {left: 342px;}
+}
+@keyframes animX9{
+   0% {left: 492px;}
+	100% {left: 510px;}
+}
+
+@keyframes animY{
+   0% {top: 640px;}
+	100% {top: 0px;}
+}
+
 #app{
   background: #20282b;
   .page{
@@ -633,7 +714,7 @@ export default {
     top: 30px;
     width: 100%;
     height: 100%;
-    background-repeat: repeat-x;
+    background-repeat: no-repeat;
     background-position-y: top;
     background-size: 250% 100%;
   }
@@ -644,6 +725,14 @@ export default {
   .wave2 {
     background-image: url(../../lib/base/haier_washer/assets/wave2.png);
     background-position-x: -520px;
+  }
+  .run {
+    .wave1 {
+      animation: wave1 2s linear 0s infinite;
+    }
+    .wave2 {
+      animation: wave2 2s linear -.5s infinite;
+    }
   }
 
   .bubbles{
@@ -686,38 +775,47 @@ export default {
       &.ps1{
         top: 220px;
         left: 506px;
+        animation: animX1 .5s ease-in-out 0s infinite alternate, animY 4s ease-in-out 0s infinite;
       }
       &.ps2{
         top: 316px;
         left: 224px;
+        animation: animX2 .5s ease-in-out -.5s infinite alternate, animY 4s ease-in-out -.5s infinite;
       }
       &.ps3{
         top: 378px;
         left: 458px;
+        animation: animX3 .5s ease-in-out -1s infinite alternate, animY 4s ease-in-out -1s infinite;
       }
       &.ps4{
         top: 302px;
         left: 422px;
+        animation: animX4 .5s ease-in-out -1.5s infinite alternate, animY 4s ease-in-out -1.5s infinite;
       }
       &.ps5{
         top: 512px;
         left: 184px;
+        animation: animX5 .5s ease-in-out -2s infinite alternate, animY 4s ease-in-out -2s infinite;
       }
       &.ps6{
         top: 512px;
         left: 184px;
+        animation: animX6 .5s ease-in-out -2.5s infinite alternate, animY 4s ease-in-out -2.5s infinite;
       }
       &.ps7{
         top: 514px;
         left: 540px;
+        animation: animX7 .5s ease-in-out -3s infinite alternate, animY 4s ease-in-out -3s infinite;
       }
       &.ps8{
         top: 644px;
         left: 262px;
+        animation: animX8 .5s ease-in-out -3.5s infinite alternate, animY 4s ease-in-out -3.5s infinite;
       }
       &.ps9{
         top: 636px;
         left: 492px;
+        animation: animX9 .5s ease-in-out -3.7s infinite alternate, animY 4s ease-in-out -3.7s infinite;
       }
     }
   }
@@ -727,96 +825,232 @@ export default {
     bottom: 0;
     left: 31px;
     padding: 48px 0;
-    .btns {
-      padding-top: 48px;
-      border-top: 1px solid #ccc;
-      .btn {
-        box-sizing: content-box;
-        margin: 0 24px;
-        width: 120px;
-        height: 120px;
-        border: 1px solid #fff;
-        border-radius: 50%;
+  }
+  .btns {
+    padding-top: 48px;
+    border-top: 1px solid #ccc;
+    .btn {
+      box-sizing: border-box;
+      margin: 0 24px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
 
-        display: flex;
-        flex-direction: column;
-        &.active {
-          background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-          border: none;
-        }
+      display: flex;
+      flex-direction: column;
+      &.active {
+        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        border: none;
       }
-      .btn-swich {
+    }
+    .btn-swich {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
         &::before {
-          content: "";
-          display: block;
-          width: 44px;
-          height: 44px;
-          background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
-          background-size: 100% 100%;
-        }
-        &.active {
-          &::before {
-            background-image: url(../../lib/base/air_condition/assets/new-air/swich-black.png);
-          }
+          background-image: url(../../lib/base/air_condition/assets/new-air/swich-black.png);
         }
       }
-      .btn-start {
+    }
+    .btn-start {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/btn-start.png);
+        background-size: 100% 100%;
+      }
+      &.active {
         &::before {
-          content: "";
-          display: block;
-          width: 44px;
-          height: 44px;
-          background-image: url(../../lib/base/haier_washer/assets/btn-start.png);
-          background-size: 100% 100%;
-        }
-        &.active {
-          &::before {
-            background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-          }
+          background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
         }
       }
-      .btn-mode {
+    }
+    .btn-mode {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/btn-mode-white58.png);
+        background-size: 100% 100%;
+      }
+      &.active {
         &::before {
-          content: "";
-          display: block;
-          width: 44px;
-          height: 44px;
-          background-image: url(../../lib/base/haier_washer/assets/btn-mode-white58.png);
-          background-size: 100% 100%;
-        }
-        &.active {
-          &::before {
-            background-image: url(../../lib/base/haier_washer/assets/btn-mode-black58.png);
-          }
+          background-image: url(../../lib/base/haier_washer/assets/btn-mode-black58.png);
         }
       }
-      .btn-time {
+    }
+    .btn-time {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_condition/assets/new-air/time-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
         &::before {
-          content: "";
-          display: block;
-          width: 44px;
-          height: 44px;
-          background-image: url(../../lib/base/air_condition/assets/new-air/time-white.png);
-          background-size: 100% 100%;
-        }
-        &.active {
-          &::before {
-            background-image: url(../../lib/base/air_condition/assets/new-air/time-black.png);
-          }
-        }
-        &.btn-current {
-          border-color: #FFC600;
-          &::before {
-            background-image: url(../../lib/base/air_condition/assets/new-air/time-yellow.png);
-          }
-          .name{
-            color: #FFC600;
-          }
+          background-image: url(../../lib/base/air_condition/assets/new-air/time-black.png);
         }
       }
+      &.btn-current {
+        border-color: #FFC600;
+        &::before {
+          background-image: url(../../lib/base/air_condition/assets/new-air/time-yellow.png);
+        }
+        .name{
+          color: #FFC600;
+        }
+      }
+    }
 
+    .btn-mode-15 {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/btn-mode-white15.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/haier_washer/assets/btn-mode-black15.png);
+        }
+      }
+    }
+    .btn-ts{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/ts-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/haier_washer/assets/ts-black.png);
+        }
+      }
+    }
+    .btn-jzj{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/jzj-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/haier_washer/assets/jzj-black.png);
+        }
+      }
+    }
+    .btn-hh{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/hh-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/haier_washer/assets/hh-black.png);
+        }
+      }
+    }
+    .btn-ms{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/ms-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/haier_washer/assets/ms-black.png);
+        }
+      }
+    }
+    .btn-hq{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/hq-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/haier_washer/assets/hq-black.png);
+        }
+      }
+    }
+    .btn-ym{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/ym-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/haier_washer/assets/ym-black.png);
+        }
+      }
+    }
+    .btn-nz{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/nz-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/haier_washer/assets/nz-black.png);
+        }
+      }
+    }
+    .btn-ylf{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/ylf-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/haier_washer/assets/ylf-black.png);
+        }
+      }
     }
   }
+
   .wrap-txt{
     display: flex;
     .name{
@@ -889,6 +1123,33 @@ export default {
     .btns .btn-swich {
       position: relative;
       z-index: 0;
+    }
+  }
+
+  .mode-group{
+    font-size: 24px;
+    color: #fff;
+    .title{
+      padding: 48px;
+      color: #A4A9AF;
+    }
+    .btns{
+      padding: 0 10px;
+      border-top: none;
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      .btn-wrap{
+        margin: 0 29px 50px;
+        .btn{
+          margin: 0;
+        }
+        .btn-name{
+          margin-top: 16px;
+          text-align: center;
+        }
+      }
+
     }
   }
 }
