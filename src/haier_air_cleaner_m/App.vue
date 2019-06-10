@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <div 
-      v-if="status == 'error' || model.switch_status == 'on'" 
+  <!-- <div id="app">
+    <div
+      v-if="status == 'error' || model.switch_status == 'on'"
       class="page-on">
       <div class="mainTitle">
         <div class="name">{{ device_name }}
@@ -12,27 +12,27 @@
           <p v-show="!tip && remain_tip">{{ remain_tip }}</p>
         </div>
       </div>
-      <a 
-        v-if="ab.child_lock_switch || ab.negative_ion_switch" 
-        href="" 
-        class="btn-more" 
+      <a
+        v-if="ab.child_lock_switch || ab.negative_ion_switch"
+        href=""
+        class="btn-more"
         @click.prevent="moreModalVisible = true"/>
       <div class="pm25">
         <div class="circle">
-          <span 
-            v-for="i in 5" 
-            v-show="i==(pm25_level>5?5:pm25_level)" 
-            :key="i" 
+          <span
+            v-for="i in 5"
+            v-show="i==(pm25_level>5?5:pm25_level)"
+            :key="i"
             :class="'c'+i"/>
         </div>
-        <div 
-          :style="{transform:'rotate('+ pm25_rotate +'deg)'}" 
+        <div
+          :style="{transform:'rotate('+ pm25_rotate +'deg)'}"
           class="arrow"/>
-        <div 
-          class="value" 
+        <div
+          class="value"
           v-html="pm25_text"/>
-        <div 
-          class="pic" 
+        <div
+          class="pic"
           @click="togglePMPop">PM 2.5</div>
         <div class="attrs">
           <span v-if="model.temperature && model.temperature!='0'">温度：{{ model.temperature }}℃</span>
@@ -41,94 +41,96 @@
       </div>
 
       <div class="btns btns-fn">
-        <a 
-          href="" 
-          class="btn-on" 
+        <a
+          href=""
+          class="btn-on"
           @click.prevent="setSwitch('off')">
           <i/> 开关
         </a>
-        <a 
-          :class="{active:model.control_status == 'sleep'}" 
-          href="" 
-          class="btn-sleep" 
+        <a
+          :class="{active:model.control_status == 'sleep'}"
+          href=""
+          class="btn-sleep"
           @click.prevent="setSleep">
           <i/> 睡眠
         </a>
-        <!-- <a href="" class="btn-sleep"  @click.prevent="setControl('manual')">
+
+        <a href="" class="btn-sleep"  @click.prevent="setControl('manual')">
                 <i></i> 手动
-            </a> -->
-        <a 
-          v-if="model.control_status == 'auto'" 
-          href="" 
-          class="btn-auto active" 
+            </a>
+
+        <a
+          v-if="model.control_status == 'auto'"
+          href=""
+          class="btn-auto active"
           @click.prevent="showSpeedModal">
           <i/> 自动
         </a>
-        <a 
-          v-else-if="model.control_status == 'manual'" 
-          :class="speedCss" 
-          href="" 
+        <a
+          v-else-if="model.control_status == 'manual'"
+          :class="speedCss"
+          href=""
           @click.prevent="showSpeedModal">
           <i/> {{ speedText }}
         </a>
-        <a 
-          v-else 
-          href="" 
-          class="btn-speed" 
+        <a
+          v-else
+          href=""
+          class="btn-speed"
           @click.prevent="showSpeedModal">
           <i/> 风档
         </a>
       </div>
 
-      <modal 
-        v-model="speedModalVisible" 
-        title="风档" 
+      <modal
+        v-model="speedModalVisible"
+        title="风档"
         class="windControl">
         <div class="btns btns-speed">
-          <a 
-            v-for="item in speedItems" 
-            :key="item.value" 
-            :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]" 
-            href="" 
+          <a
+            v-for="item in speedItems"
+            :key="item.value"
+            :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]"
+            href=""
             @click.prevent="setSpeed(item.value)">
             <i/> {{ item.text }}
           </a>
-          <a 
-            :class="{active: model.control_status == 'auto'}" 
-            href="" 
-            class="btn1-auto" 
+          <a
+            :class="{active: model.control_status == 'auto'}"
+            href=""
+            class="btn1-auto"
             @click.prevent="setControl('auto')">
             <i/> 自动
           </a>
         </div>
       </modal>
 
-      <modal 
-        v-model="moreModalVisible" 
+      <modal
+        v-model="moreModalVisible"
         title="更多">
         <div class="btns btns-more">
-          <a 
-            v-if="ab.negative_ion_switch" 
-            :class="{active:model.negative_ion_switch_status == 'on'}" 
-            href="" 
-            class="btn-ni" 
+          <a
+            v-if="ab.negative_ion_switch"
+            :class="{active:model.negative_ion_switch_status == 'on'}"
+            href=""
+            class="btn-ni"
             @click.prevent="setNegativeIon">
             <i/> 负离子
           </a>
-          <a 
-            v-if="ab.child_lock_switch" 
-            :class="{active:model.child_lock_switch_status == 'on'}" 
-            href="" 
-            class="btn-cl" 
+          <a
+            v-if="ab.child_lock_switch"
+            :class="{active:model.child_lock_switch_status == 'on'}"
+            href=""
+            class="btn-cl"
             @click.prevent="setChildLock">
             <i/> 童锁
           </a>
         </div>
       </modal>
-      <sub-page 
-        v-model="pmPopVisible" 
-        title="PM2.5简介" 
-        class="modal-w" 
+      <sub-page
+        v-model="pmPopVisible"
+        title="PM2.5简介"
+        class="modal-w"
         @click.prevent="toggleModePop">
         <div class="intro-body">
           <p class="main_text">
@@ -142,8 +144,8 @@
 
     </div>
 
-    <div 
-      v-if="model.switch_status == 'off'" 
+    <div
+      v-if="model.switch_status == 'off'"
       class="page-off">
       <div class="name">{{ device_name }}
         <icon />
@@ -151,26 +153,127 @@
       <div class="tip">已关闭</div>
       <div class="air_cleaner"/>
       <div class="btns btns-fn">
-        <a 
-          href="javascript:void(0)" 
-          class="btn-off" 
+        <a
+          href="javascript:void(0)"
+          class="btn-off"
           @click.prevent="setSwitch('on')">
           <i/> 开关
         </a>
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="btn-sleep disable">
           <i/> 睡眠
         </a>
-        <a 
-          href="javascript:void(0)" 
+        <a
+          href="javascript:void(0)"
           class="btn-speed disable">
           <i/> 风档
         </a>
       </div>
     </div>
 
-    <!-- <error-tip v-if="status == 'error'" @click.native="getSnapShot" /> -->
+    <error-tip v-if="status == 'error'" @click.native="getSnapShot" />
+  </div> -->
+  <div id="APP">
+    <topbar
+      :transparent="true"
+      title="空气净化器" />
+    <div
+      class="main"
+      @click="togglePMPop">
+      <div class="block">
+        <div class="num">76</div>
+        <div class="txt">室内空气 优</div>
+      </div>
+      <span class="nuit">μg/m³</span>
+      <div class="sport"/>
+      <div class="sport1"/>
+      <div class="sport2"/>
+      <div class="sport3"/>
+      <div class="sport4"/>
+      <div class="sport5"/>
+      <div class="sport6"/>
+      <div class="sport7"/>
+      <div class="sport8"/>
+      <div class="sport9"/>
+      <div class="sport10"/>
+      <div class="sport11"/>
+      <div class="sport12"/>
+      <div class="sport13"/>
+      <sub-page
+        v-model="pmPopVisible"
+        title="PM2.5简介"
+        class="modal-w"
+        @click.prevent="toggleModePop">
+        <div class="intro-body">
+          <p class="main_text">
+            PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
+          </p>
+          <div class="pm-range">
+            <img src="../../lib/base/air_cleaner/assets/PM2.5_scale@3x.png" >
+          </div>
+        </div>
+      </sub-page>
+    </div>
+    <div class="remind">
+      <div class="remind-box">
+        <div class="remind-num">53</div>
+        <div class="remind-txt">剩余滤芯</div>
+        <div class="remind-tis">%</div>
+      </div>
+      <div class="remind-box">
+        <div class="remind-num">98</div>
+        <div class="remind-txt">滤芯寿命</div>
+        <div class="remind-tis">天</div>
+      </div>
+    </div>
+    <div class="btn">
+      <div
+        :class="{'btn-show':current==1}"
+        class="btn-tab"
+        @click.prevent="btnClose"
+      >
+        <div class="btn-sty">
+          <a
+            href="#"
+            class="shutdown"/>
+        </div>
+        <div class="btn-txt">关机</div>
+      </div>
+      <div
+        :class="{'btn-show':current==2}"
+        class="btn-tab"
+        @click.prevent="btnSleep">
+        <div class="btn-sty">
+          <a
+            href="#"
+            class="shutdown1"/>
+        </div>
+        <div class="btn-txt">睡眠</div>
+      </div>
+      <div
+        :class="{'btn-show':current==3}"
+        class="btn-tab"
+        @click.prevent="btnWind">
+        <div class="btn-sty">
+          <a
+            href="#"
+            class="shutdown2"/>
+        </div>
+        <div class="btn-txt">中速风</div>
+      </div>
+      <div
+        :class="{'btn-show':current==4}"
+        class="btn-tab"
+        @click.prevent="btnMore">
+        <div class="btn-sty">
+          <a
+            href="#"
+            class="shutdown3"/>
+        </div>
+        <div class="btn-txt">更多</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -296,7 +399,8 @@ export default {
                 control_status: "auto",
                 speed: ""
             },
-            pmPopVisible: false
+            pmPopVisible: false,
+            current: 1
         };
     },
     computed: {
@@ -335,7 +439,7 @@ export default {
         }
     },
     watch: {
-        pmPopVisible(val) {
+        pmPopVisible() {
             if (this.pmPopVisible) {
                 HdSmart.UI.toggleHeadAndFoot(false);
             } else {
@@ -368,6 +472,18 @@ export default {
         });
     },
     methods: {
+      btnClose() {
+        this.current = !this.current
+      },
+      btnSleep() {
+        this.current = 2
+      },
+      btnWind() {
+        this.current = 3
+      },
+      btnMore() {
+        this.current = 4
+      },
         togglePMPop() {
             //pm2.5
             this.pmPopVisible = !this.pmPopVisible;
@@ -545,3 +661,305 @@ export default {
     }
 };
 </script>
+<style lang="less" scoped>
+#APP {
+  background: #35353D;
+  height: 1624px;
+  width: 750px;
+  position: relative;
+  .main {
+    background-image: url(../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png), url(../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png);
+    background-repeat: no-repeat, no-repeat;
+    background-position: 0 0, 200px 1px;
+    background-size: 100% 100%, 136px 26px;
+    width: 540px;
+    height: 540px;
+    margin: 300px 0 0 108px;
+    // transform:scaleX(-1);
+    // transform: rotate(180deg);
+    .block {
+      position: absolute;
+      left: 286px;
+      top: 552px;
+      width: 184px;
+      height: 224px;
+      color: #FFFFFF;
+      text-align: center;
+      font-family: PingFangSC-Regular;
+      .num {
+        font-size: 160px;
+      }
+      .txt {
+        font-size: 24px;
+        color: #FFFFFF;
+        letter-spacing: -0.2px;
+        text-align: center;
+        position: absolute;
+        top: 192px;
+        left: 32px;
+      }
+    }
+    .nuit {
+      opacity: 0.5;
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      text-align: center;
+      position: relative;
+      left: 370px;
+      top: 104px;
+    }
+    .sport {
+      border-radius: 50%;
+      width: 13px;
+      height: 13px;
+      opacity: 0.84;
+      background: #00C4A5;
+      position: relative;
+      left: 260px;
+      top: -60px;
+    }
+    .sport1 {
+      border-radius: 50%;
+      width: 13px;
+      height: 13px;
+      opacity: 0.55;
+      background: #00C4A5;
+      position: relative;
+      left: 280px;
+      top: -126px;
+    }
+    .sport2 {
+      border-radius: 50%;
+      width: 10px;
+      height: 10px;
+      opacity: 0.62;
+      background: #00C4A5;
+      position: relative;
+      left: 360px;
+      top: -180px;
+    }
+    .sport3 {
+      border-radius: 50%;
+      width: 13px;
+      height: 13px;
+      opacity: 0.5;
+      background: #00C4A5;
+      position: relative;
+      left: 376px;
+      top: -172px;
+    }
+    .sport4 {
+      border-radius: 50%;
+      width: 11px;
+      height: 11px;
+      opacity: 0.4;
+      background: #00C4A5;
+      position: relative;
+      left: 436px;
+      top: -94px;
+    }
+    .sport5 {
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      opacity: 0.54;
+      background: #00C4A5;
+      position: relative;
+      left: -32px;
+      top: -60px;
+    }
+    .sport6 {
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      opacity: 1;
+      background: #00C4A5;
+      position: relative;
+      left: 176px;
+      top: -56px;
+    }
+    .sport7 {
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      opacity: 1;
+      background: #00C4A5;
+      position: relative;
+      left: 144px;
+      top: -40px;
+    }
+    .sport8 {
+      border-radius: 50%;
+      width: 11px;
+      height: 11px;
+      opacity: 0.66;
+      background: #00C4A5;
+      position: relative;
+      left: 496px;
+      top: -52px;
+    }
+    .sport9 {
+      border-radius: 50%;
+      width: 11px;
+      height: 11px;
+      opacity: 0.57;
+      background: #00C4A5;
+      position: relative;
+      left: 560px;
+      top: 40px;
+    }
+    .sport10 {
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      opacity: 1;
+      background: #00C4A5;
+      position: relative;
+      left: 544px;
+      top: 100px;
+    }
+    .sport11 {
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      opacity: 0.57;
+      background: #00C4A5;
+      position: relative;
+      left: 56px;
+      top: 260px;
+    }
+    .sport12 {
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      opacity: 0.51;
+      background: #00C4A5;
+      position: relative;
+      left: 390px;
+      top: 250px;
+    }
+    .sport13 {
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      opacity: 0.7;
+      background: #00C4A5;
+      position: relative;
+      left: 190px;
+      top: 300px;
+    }
+  }
+  .remind {
+    position: relative;
+    top: 180px;
+    display: flex;
+    justify-content: space-evenly;
+    font-family: PingFangSC-Regular;
+    .remind-box {
+      display: inline-block;
+      .remind-num {
+        font-size: 80px;
+        color: #FFFFFF;
+        text-align: center;
+      }
+      .remind-txt {
+        opacity: 0.5;
+        font-size: 24px;
+        color: #FFFFFF;
+        text-align: center;
+      }
+      .remind-tis {
+        position: relative;
+        font-size: 24px;
+        color: #FFFFFF;
+        text-align: center;
+        top: -120px;
+        left: 60px;
+      }
+    }
+  }
+  .btn {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 306px;
+    border-radius: 40px 40px 0 0;
+    box-shadow: 0px -6px 56px 0px #111111;
+    display: flex;
+    justify-content: space-evenly;
+    align-items:center;
+    .btn-tab {
+      position: relative;
+      top: -50px;
+      width: 120px;
+      height: 120px;
+      // background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
+      opacity: 0.5;
+      border: 1px solid #FFFFFF;
+      border-radius: 50%;
+      .btn-txt {
+        font-size: 24px;
+        color: #FFFFFF;
+        text-align: center;
+        position: relative;
+        top: 10px;
+      }
+      .btn-sty {
+        height: 120px;
+        .shutdown {
+          display: block;
+          width: 120px;
+          height: 120px;
+          background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_on_cd@2x.png);
+          background-repeat: no-repeat;
+          background-size: 48px 48px;
+          background-position: 50% 50%;
+          // background: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_on_cd@2x.png) 50% 50% 48px 48px no-repeat;
+        }
+        .shutdown1 {
+          display: block;
+          width: 120px;
+          height: 120px;
+          background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_mode_heat@2x.png);
+          background-repeat: no-repeat;
+          background-size: 48px 48px;
+          background-position: 50% 50%;
+        }
+        .shutdown2 {
+          display: block;
+          width: 120px;
+          height: 120px;
+          background-image: url(../../lib/base/air_cleaner/assets/new-air/feng2@2x.png);
+          background-repeat: no-repeat;
+          background-size: 48px 48px;
+          background-position: 50% 50%;
+        }
+        .shutdown3 {
+          display: block;
+          width: 120px;
+          height: 120px;
+          background-image: url(../../lib/base/air_cleaner/assets/new-air/gengduo@2x.png);
+          background-repeat: no-repeat;
+          background-size: 48px 48px;
+          background-position: 50% 50%;
+        }
+      }
+    }
+    .btn-show {
+      background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
+      opacity: 1;
+    }
+  }
+  .modal-w {
+    font-family: PingFangSC-Medium;
+    font-size: 17px;
+    color: #FFFFFF;
+    .main_text {
+      font-family: PingFangSC-Regular;
+      font-size: 28px;
+    }
+  }
+}
+</style>
