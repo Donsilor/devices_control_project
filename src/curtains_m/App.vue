@@ -218,23 +218,25 @@ export default {
       // 等硬件修复了需要干掉
       this.cbFunc = onFinishCallback
 
-      HdSmart.Device.control(
-        {
-          method: METHOD,
-          nodeid: 'curtain.main.switch',
-          params: {
-            attribute: {
-              switch: 'on'
-            }
-          }
-        },
-        data => {
-          onFinishCallback()
-        },
-        () => {
-          onFinishCallback()
-        }
-      )
+      this.animate(100)
+      onFinishCallback()
+      // HdSmart.Device.control(
+      //   {
+      //     method: METHOD,
+      //     nodeid: 'curtain.main.switch',
+      //     params: {
+      //       attribute: {
+      //         switch: 'on'
+      //       }
+      //     }
+      //   },
+      //   data => {
+      //     onFinishCallback()
+      //   },
+      //   () => {
+      //     onFinishCallback()
+      //   }
+      // )
     },
 
     onClose(onFinishCallback) {
@@ -242,45 +244,50 @@ export default {
       // 等硬件修复了需要干掉
       this.cbFunc = onFinishCallback
 
-      HdSmart.Device.control(
-        {
-          method: METHOD,
-          nodeid: 'curtain.main.switch',
-          params: {
-            attribute: {
-              switch: 'off'
-            }
-          }
-        },
-        data => {
-          onFinishCallback()
-        },
-        () => {
-          onFinishCallback()
-        }
-      )
+      this.animate(0)
+      onFinishCallback()
+      // HdSmart.Device.control(
+      //   {
+      //     method: METHOD,
+      //     nodeid: 'curtain.main.switch',
+      //     params: {
+      //       attribute: {
+      //         switch: 'off'
+      //       }
+      //     }
+      //   },
+      //   data => {
+      //     onFinishCallback()
+      //   },
+      //   () => {
+      //     onFinishCallback()
+      //   }
+      // )
     },
     onPause(onFinishCallback) {
       // 等硬件修复了需要干掉
       this.cbFunc = onFinishCallback
 
-      HdSmart.Device.control(
-        {
-          method: METHOD,
-          nodeid: 'curtain.main.switch',
-          params: {
-            attribute: {
-              switch: 'pause'
-            }
-          }
-        },
-        data => {
-          onFinishCallback()
-        },
-        () => {
-          onFinishCallback()
-        }
-      )
+      let open_percentage = this.target_percentage
+      this.animate(open_percentage)
+      onFinishCallback()
+      // HdSmart.Device.control(
+      //   {
+      //     method: METHOD,
+      //     nodeid: 'curtain.main.switch',
+      //     params: {
+      //       attribute: {
+      //         switch: 'pause'
+      //       }
+      //     }
+      //   },
+      //   data => {
+      //     onFinishCallback()
+      //   },
+      //   () => {
+      //     onFinishCallback()
+      //   }
+      // )
     },
     onGoPercentage(percentage) {
       clearTimeout(this.timer)
@@ -290,23 +297,27 @@ export default {
       this.timer = setTimeout(() => {
         this.show = false
       }, 2000)
-
-      HdSmart.Device.control(
-        {
-          method: METHOD,
-          nodeid: 'curtain.main.open_percentage',
-          params: {
-            attribute: {
-              open_percentage: percentage
-            }
-          }
-        },
-        () => {},
-        () => { }
-      )
+      this.animate(percentage)
+      // HdSmart.Device.control(
+      //   {
+      //     method: METHOD,
+      //     nodeid: 'curtain.main.open_percentage',
+      //     params: {
+      //       attribute: {
+      //         open_percentage: percentage
+      //       }
+      //     }
+      //   },
+      //   () => {},
+      //   () => { }
+      // )
     },
     clearTargetTip() {
       this.show = false
+    },
+    animate(percentage) {
+      this.open_percentage = percentage
+      this.animateToTargetPercentage(percentage, false)
     }
   }
 }

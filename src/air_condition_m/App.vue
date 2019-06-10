@@ -81,31 +81,41 @@ export default {
         style = "blue"
       }
       this.showSpin(target, style)
-      HdSmart.Device.control(
-        {
-          method: "dm_set",
-          nodeid: `airconditioner.main.${attr}`,
-          params: {
-            attribute: {
-              [attr]:
-                attr == "temperature" ? val * tempRadio : val
-            }
-          }
-        },
-        () => {
-          if (attr == "switch") {
-            this.ac.switchStatus = val
-          } else {
-            this.ac[attr] = val
-          }
-          this.removeSpin()
-          success && success()
-        },
-        () => {
-          this.removeSpin()
-          error && error()
-        }
-      )
+      // HdSmart.Device.control(
+      //   {
+      //     method: "dm_set",
+      //     nodeid: `airconditioner.main.${attr}`,
+      //     params: {
+      //       attribute: {
+      //         [attr]:
+      //           attr == "temperature" ? val * tempRadio : val
+      //       }
+      //     }
+      //   },
+      //   () => {
+      //     if (attr == "switch") {
+      //       this.ac.switchStatus = val
+      //     } else {
+      //       this.ac[attr] = val
+      //     }
+      //     this.removeSpin()
+      //     success && success()
+      //   },
+      //   () => {
+      //     this.removeSpin()
+      //     error && error()
+      //   }
+      // )
+
+      // 安装手机 app 取不到mock 数据
+      if (attr == "switch") {
+        this.ac.switchStatus = val
+      } else {
+        this.ac[attr] = val
+      }
+      this.removeSpin()
+      success && success()
+
     },
     setAttr(attrs) {
       // for(var p in attrs){

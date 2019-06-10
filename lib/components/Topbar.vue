@@ -12,11 +12,12 @@
       <div
         :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
         class="navbar" >
-        <div class="left">
+        <div 
+          class="left" 
+          @click.prevent="goBack">
           <a
             href="#/"
-            class="icon-return"
-            @click.prevent="goBack"/>
+            class="icon-return" />
         </div>
         <div class="right">
           <template v-if="buttons">
@@ -76,7 +77,7 @@ export default {
     },
     data() {
         return {
-            status_bar_height: 20,
+            status_bar_height: 25,
             navigation_bar_height: 44
         }
     },
@@ -110,7 +111,7 @@ export default {
 
 <style lang="less">
 /* topbar */
-@status_bar_height:20PX;
+@status_bar_height:25PX;
 @navigation_bar_height:44PX;
 
 .topbar-block {
@@ -165,6 +166,7 @@ export default {
         position: absolute;
         top: 50%;
         right: 0;
+        width: 44PX;
         height: @navigation_bar_height;
         transform: translateY(-50%);
     }
@@ -194,8 +196,8 @@ export default {
       left: 40px;
       top: 55%;
       display: inline-block;
-      width: 18px;
-      height: 18px;
+      width: 14PX;
+      height: 14PX;
       border: solid #000;
       border-width: 2PX 2PX 0 0;
       transform: translate(0, -50%) rotate(225deg);

@@ -84,12 +84,12 @@ export default {
   .left a.icon-return {
     position: absolute;
     left: 40px;
-    top: 50%;
+    top: 55%;
     display: inline-block;
-    width: 22px;
-    height: 22px;
+    width: 14PX;
+    height: 14PX;
     border: solid #000;
-    border-width: 2px 2px 0 0;
+    border-width: 2PX 2PX 0 0;
     transform: translate(0, -50%) rotate(225deg);
   }
 
