@@ -122,8 +122,8 @@ export default {
     top: 0;
     z-index: 100;
     width: 100%;
-    background: #fff;
-    border-bottom: 1px solid rgba(216, 216, 216, .7);
+    // background: #fff;
+    // border-bottom: 1px solid rgba(216, 216, 216, .7);
 }
 
 .topbar-nobg{
@@ -174,6 +174,7 @@ export default {
     .title {
         text-align: center;
         font-size: 17PX;
+        color: #fff;
     }
     .left a,.right a {
         width: @navigation_bar_height;

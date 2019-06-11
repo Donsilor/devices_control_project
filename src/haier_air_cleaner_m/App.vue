@@ -181,36 +181,107 @@
     <div
       class="main"
       @click="togglePMPop">
+      <div>
+        <img
+          class="circle"
+          src="../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png"
+          alt="">
+        <img
+          v-show="current==1"
+          class="pointer-excellent"
+          src="../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png"
+          alt="">
+        <img
+          v-show="current==0"
+          class="pointer-good"
+          src="../../lib/base/air_cleaner/assets/new-air/lianghao@2x.png"
+          alt="">
+        <img
+          v-show="current==2"
+          class="pointer-light"
+          src="../../lib/base/air_cleaner/assets/new-air/qingdu@2x.png"
+          alt="">
+        <img
+          v-show="current==3"
+          class="pointer-moderate"
+          src="../../lib/base/air_cleaner/assets/new-air/zhongdu@2x.png"
+          alt="">
+        <img
+          v-show="current==4"
+          class="pointer-severe"
+          src="../../lib/base/air_cleaner/assets/new-air/zhongduz@2x.png"
+          alt="">
+      </div>
       <div class="block">
         <div class="num">76</div>
         <div class="txt">室内空气 优</div>
       </div>
       <span class="nuit">μg/m³</span>
-      <div class="sport"/>
-      <div class="sport1"/>
-      <div class="sport2"/>
-      <div class="sport3"/>
-      <div class="sport4"/>
-      <div class="sport5"/>
-      <div class="sport6"/>
-      <div class="sport7"/>
-      <div class="sport8"/>
-      <div class="sport9"/>
-      <div class="sport10"/>
-      <div class="sport11"/>
-      <div class="sport12"/>
-      <div class="sport13"/>
+      <span class="sport"/>
+      <span class="sport1"/>
+      <span class="sport2"/>
+      <span class="sport3"/>
+      <span class="sport4"/>
+      <span class="sport5"/>
+      <span class="sport6"/>
+      <span class="sport7"/>
+      <span class="sport8"/>
+      <span class="sport9"/>
+      <span class="sport10"/>
+      <span class="sport11"/>
+      <span class="sport12"/>
+      <span class="sport13"/>
       <sub-page
         v-model="pmPopVisible"
-        title="PM2.5简介"
         class="modal-w"
+        title="PM2.5简介"
         @click.prevent="toggleModePop">
         <div class="intro-body">
           <p class="main_text">
             PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
           </p>
           <div class="pm-range">
-            <img src="../../lib/base/air_cleaner/assets/PM2.5_scale@3x.png" >
+            <!-- <img src="../../lib/base/air_cleaner/assets/PM2.5_scale@3x.png" > -->
+            <p class="pm-range-title">PM2.5数值范围说明</p>
+            <ul>
+              <li>
+                <p>优</p>
+              </li>
+              <li>
+                <p>良</p>
+              </li>
+              <li>
+                <p>轻度</p>
+              </li>
+              <li>
+                <p>中度</p>
+              </li>
+              <li>
+                <p>重度</p>
+              </li>
+              <li>
+                <p>严重</p>
+              </li>
+            </ul>
+            <table>
+              <tr>
+                <td/>
+                <td/>
+                <td/>
+                <td/>
+                <td/>
+                <td/>
+              </tr>
+            </table>
+            <div class="pm-num">
+              <span>0</span>
+              <span>35</span>
+              <span>75</span>
+              <span>115</span>
+              <span>150</span>
+              <span>250+</span>
+              <span/>
+            </div>
           </div>
         </div>
       </sub-page>
@@ -663,24 +734,64 @@ export default {
 </script>
 <style lang="less" scoped>
 #APP {
+  position: relative;
   background: #35353D;
   height: 1624px;
   width: 750px;
-  position: relative;
+  // 圆圈样式
   .main {
-    background-image: url(../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png), url(../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png);
-    background-repeat: no-repeat, no-repeat;
-    background-position: 0 0, 200px 1px;
-    background-size: 100% 100%, 136px 26px;
     width: 540px;
     height: 540px;
-    margin: 300px 0 0 108px;
-    // transform:scaleX(-1);
-    // transform: rotate(180deg);
+    margin: 216px 0 0 108px;
+    .circle {
+      width: 100%;
+      height: 100%;
+      transform: rotateY(180deg);
+    }
+    .pointer-excellent {
+      position: relative;
+      left: 110px;
+      top: -594px;
+      width: 136px;
+      height: 26px;
+      transform: rotate(339deg);
+    }
+    .pointer-good {
+      position: relative;
+      left: -50px;
+      top: -394px;
+      width: 136px;
+      height: 26px;
+      transform: rotate(278deg);
+    }
+    .pointer-light {
+      position: relative;
+      left: 120px;
+      top: -116px;
+      width: 136px;
+      height: 26px;
+      transform: rotate(200deg);
+    }
+    .pointer-moderate {
+      position: relative;
+      left: 392px;
+      top: -190px;
+      width: 136px;
+      height: 26px;
+      transform: rotate(131deg);
+    }
+    .pointer-severe {
+      position: relative;
+      left: 436px;
+      top: -456px;
+      width: 136px;
+      height: 26px;
+      transform: rotate(67deg);
+    }
     .block {
-      position: absolute;
-      left: 286px;
-      top: 552px;
+      position: relative;
+      left: 176px;
+      top: -520px;
       width: 184px;
       height: 224px;
       color: #FFFFFF;
@@ -693,10 +804,8 @@ export default {
         font-size: 24px;
         color: #FFFFFF;
         letter-spacing: -0.2px;
-        text-align: center;
-        position: absolute;
-        top: 192px;
-        left: 32px;
+        position: relative;
+        top: -24px;
       }
     }
     .nuit {
@@ -708,152 +817,166 @@ export default {
       text-align: center;
       position: relative;
       left: 370px;
-      top: 104px;
+      top: -760px;
     }
     .sport {
+      display: inline-block;
       border-radius: 50%;
       width: 13px;
       height: 13px;
       opacity: 0.84;
       background: #00C4A5;
       position: relative;
-      left: 260px;
-      top: -60px;
+      left: 170px;
+      top: -930px;
     }
     .sport1 {
+      display: inline-block;
       border-radius: 50%;
       width: 13px;
       height: 13px;
       opacity: 0.55;
       background: #00C4A5;
       position: relative;
-      left: 280px;
-      top: -126px;
+      left: 156px;
+      top: -960px;
     }
     .sport2 {
+      display: inline-block;
       border-radius: 50%;
       width: 10px;
       height: 10px;
       opacity: 0.62;
       background: #00C4A5;
       position: relative;
-      left: 360px;
-      top: -180px;
+      left: 208px;
+      top: -996px;
     }
     .sport3 {
+      display: inline-block;
       border-radius: 50%;
       width: 13px;
       height: 13px;
       opacity: 0.5;
       background: #00C4A5;
       position: relative;
-      left: 376px;
-      top: -172px;
+      left: 190px;
+      top: -980px;
     }
     .sport4 {
+      display: inline-block;
       border-radius: 50%;
       width: 11px;
       height: 11px;
       opacity: 0.4;
       background: #00C4A5;
       position: relative;
-      left: 436px;
-      top: -94px;
+      left: 200px;
+      top: -900px;
     }
     .sport5 {
+      display: inline-block;
       border-radius: 50%;
       width: 8px;
       height: 8px;
       opacity: 0.54;
       background: #00C4A5;
       position: relative;
-      left: -32px;
-      top: -60px;
+      left: -280px;
+      top: -870px;
     }
     .sport6 {
+      display: inline-block;
       border-radius: 50%;
       width: 8px;
       height: 8px;
       opacity: 1;
       background: #00C4A5;
       position: relative;
-      left: 176px;
-      top: -56px;
+      left: -120px;
+      top: -846px;
     }
     .sport7 {
+      display: inline-block;
       border-radius: 50%;
       width: 8px;
       height: 8px;
       opacity: 1;
       background: #00C4A5;
       position: relative;
-      left: 144px;
-      top: -40px;
+      left: -190px;
+      top: -820px;
     }
     .sport8 {
+      display: inline-block;
       border-radius: 50%;
       width: 11px;
       height: 11px;
       opacity: 0.66;
       background: #00C4A5;
       position: relative;
-      left: 496px;
-      top: -52px;
+      left: 136px;
+      top: -824px;
     }
     .sport9 {
+      display: inline-block;
       border-radius: 50%;
       width: 11px;
       height: 11px;
       opacity: 0.57;
       background: #00C4A5;
       position: relative;
-      left: 560px;
-      top: 40px;
+      left: 170px;
+      top: -720px;
     }
     .sport10 {
+      display: inline-block;
       border-radius: 50%;
       width: 8px;
       height: 8px;
       opacity: 1;
       background: #00C4A5;
       position: relative;
-      left: 544px;
-      top: 100px;
+      left: 116px;
+      top: -630px;
     }
     .sport11 {
+      display: inline-block;
       border-radius: 50%;
       width: 8px;
       height: 8px;
       opacity: 0.57;
       background: #00C4A5;
       position: relative;
-      left: 56px;
-      top: 260px;
+      left: -410px;
+      top: -500px;
     }
     .sport12 {
+      display: inline-block;
       border-radius: 50%;
       width: 8px;
       height: 8px;
       opacity: 0.51;
       background: #00C4A5;
       position: relative;
-      left: 390px;
-      top: 250px;
+      left: -70px;
+      top: -500px;
     }
     .sport13 {
+      display: inline-block;
       border-radius: 50%;
       width: 8px;
       height: 8px;
       opacity: 0.7;
       background: #00C4A5;
       position: relative;
-      left: 190px;
-      top: 300px;
+      left: -336px;
+      top: -430px;
     }
   }
   .remind {
     position: relative;
-    top: 180px;
+    top: 250px;
     display: flex;
     justify-content: space-evenly;
     font-family: PingFangSC-Regular;
@@ -895,7 +1018,6 @@ export default {
       top: -50px;
       width: 120px;
       height: 120px;
-      // background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
       opacity: 0.5;
       border: 1px solid #FFFFFF;
       border-radius: 50%;
@@ -916,7 +1038,6 @@ export default {
           background-repeat: no-repeat;
           background-size: 48px 48px;
           background-position: 50% 50%;
-          // background: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_on_cd@2x.png) 50% 50% 48px 48px no-repeat;
         }
         .shutdown1 {
           display: block;
@@ -952,13 +1073,101 @@ export default {
       opacity: 1;
     }
   }
+  // pm2.5简介
   .modal-w {
     font-family: PingFangSC-Medium;
     font-size: 17px;
-    color: #FFFFFF;
+    background: #35353D;
     .main_text {
-      font-family: PingFangSC-Regular;
       font-size: 28px;
+      padding: 0.453rem 48px 0;
+      color: #FFFFFF;
+    }
+    .pm-range {
+      padding: 0 48px;
+      .pm-range-title {
+        font-size: 28px;
+        color: #000000;
+        margin-bottom: 0.453rem;
+        color: #FFFFFF;
+      }
+      ul {
+        display: flex;
+        justify-content: space-between;
+        li {
+          list-style: none;
+          background: #15D0BA;
+          border-radius: 8px;
+          width: 106px;
+          height: 96px;
+          display: flex;
+          align-items: center;
+          justify-content:center;
+          &:nth-child(2) {
+            background: #A5D015;
+          }
+          &:nth-child(3) {
+            background: #EFC12D;
+          }
+          &:nth-child(4) {
+            background: #EF9C2D;
+          }
+          &:nth-child(5) {
+            background: #EF642D;
+          }
+          &:nth-child(6) {
+            background: #EF2D2D;
+          }
+          p {
+            font-size: 24px;
+            color: #FFFFFF;
+          }
+        }
+      }
+      table {
+        margin-top: 10px;
+        width: 100%;
+        height: 16px;
+        border-collapse: collapse;
+        opacity: 0.3;
+        tr {
+          height: 16px;
+          td {
+            height: 16px;
+            border: 1px solid #D8D8D8;
+            border-top: none;
+            border-right: none;
+            &:last-child {
+              border-right: 1px solid #D8D8D8;
+            }
+          }
+        }
+      }
+      .pm-num {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 24px;
+        color: #FFFFFF;
+        span {
+          &:nth-child(2) {
+            position: relative;
+            left: 6px;
+          }
+          &:nth-child(3) {
+            position: relative;
+            left: 14px;
+          }
+          &:nth-child(4) {
+            position: relative;
+            left: 14px;
+          }
+          &:nth-child(5) {
+            position: relative;
+            left: 6px;
+          }
+        }
+      }
     }
   }
 }
