@@ -2,13 +2,13 @@
 <template>
   <div>
     <div :class="[{ 'offline': isOffline }, { 'close': isClose }, { 'loading': isLoading }, {'filter': showModeBtns }, {'filter': showMoreBtns },'wrap']">
-      <topbar 
+      <topbar
         :transparent="true"
         title="空调" />
 
       <div class="page">
         <!-- 离线提示 -->
-        <div 
+        <div
           v-show="isOffline"
           class="tips">
           <i class="attention" />
@@ -17,7 +17,7 @@
 
         <!-- msg 提示 -->
         <transition name="fade">
-          <div 
+          <div
             v-show="isShowMsg"
             class="err-tips">{{ msg }}</div>
         </transition>
@@ -29,7 +29,7 @@
         </div>
 
         <!-- msg 滑动设置温度 -->
-        <div 
+        <div
           v-finger:swipe="swipe"
           :style="{ transform: 'rotate(' + deg + 'deg)' }"
           class="dial"
@@ -41,7 +41,7 @@
             <i class="icon-time" />
             2小时25分后关机
           </div>
-          <div 
+          <div
             class="status"
             @click="toggleLine">
             <i class="icon-status" />
@@ -51,13 +51,13 @@
           </div>
 
           <div class="btns center">
-            <div 
+            <div
               :class="[{'active': !isClose && !isOffline }, 'btn btn-swich center']"
               @click="setSwitch" />
-            <div 
+            <div
               :class="[ btnClass,'btn btn-mode center']"
               @click="handeModeClick" />
-            <div 
+            <div
               class="btn btn-menu center"
               @click="handeMoreClick" />
           </div>
@@ -66,32 +66,32 @@
             <i :class="[speedClass, 'small']" />
             <div :class="[deviceInfo.attribute.speed === 'auto' ? 'auto': '', 'swich']">
               <div class="up mask-item center">
-                <div 
+                <div
                   class="item"
                   @click="setSpeed($event,'low')" />
-                <div 
+                <div
                   class="item"
                   @click="setSpeed($event,'normal')" />
-                <div 
+                <div
                   class="item last"
                   @click="setSpeed($event,'high')" />
               </div>
 
               <div class="dowm mask-item center">
-                <div 
+                <div
                   class="item"
                   @click="setSpeed($event,'low')" />
-                <div 
+                <div
                   class="item"
                   @click="setSpeed($event,'normal')" />
-                <div 
+                <div
                   class="item last"
                   @click="setSpeed($event,'high')" />
               </div>
 
               <div :class="[speedClass, 'current']" />
             </div>
-            <div 
+            <div
               :class="[speedClass, 'btn btn-big center']"
               @click="setSpeed($event,'auto')"/>
           </div>
@@ -100,67 +100,67 @@
       </div>
     </div>
     <!-- 模式选择弹框 -->
-    <div 
+    <div
       v-show="showModeBtns"
       class="btns-mode center"
       @touchmove.prevent
       @click="hide">
       <div class="items btns">
-        <div 
+        <div
           :class="[{ 'item1': animation }, { 'btn-current': deviceInfo.attribute.mode === 'wind' }, 'btn btn-wind center']"
           @click.stop="setMode('wind', $event)">
           <div class="name">送风</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item2': animation }, { 'btn-current': deviceInfo.attribute.mode === 'heat' }, 'btn btn-heat center']"
           @click.stop="setMode('heat', $event)">
           <div class="name">制热</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item3': animation }, { 'btn-current': deviceInfo.attribute.mode === 'dehumidify' }, 'btn btn-dehumidify center']"
           @click.stop="setMode('dehumidify', $event)">
           <div class="name">除湿</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item4': animation }, { 'btn-current': deviceInfo.attribute.mode === 'cold' }, 'btn btn-cold center']"
           @click.stop="setMode('cold', $event)">
           <div class="name">制冷</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item5': animation }, { 'btn-current': deviceInfo.attribute.mode === 'auto' }, 'btn btn-auto center']"
           @click.stop="setMode('auto', $event)">
           <div class="name">智能</div>
         </div>
-        <div 
+        <div
           :class="[ { 'item6': animation }, btnClass,'btn center active']"
           @click.stop />
       </div>
     </div>
 
     <!-- 更多功能 -->
-    <div 
+    <div
       v-show="showMoreBtns"
       class="btns-mode more center"
       @touchmove.prevent
       @click="hide">
       <div class="items btns">
-        <div 
+        <div
           :class="[{ 'item2': animation }, { 'btn-current': deviceInfo.attribute.timer}, 'btn btn-time center']"
           @click.stop="showTime">
           <div class="name">定时</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item3': animation }, { 'btn-current': deviceInfo.attribute.wind_up_down === 'on' || deviceInfo.attribute.wind_left_right === 'on' }, 'btn btn-swing center']"
           @click.stop="showSwing">
           <div class="name">扫风</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item6': animation }, 'btn btn-menu center active']"
           @click.stop />
       </div>
     </div>
 
-    <model-swing 
+    <model-swing
       ref="swing"
       :wind_up_down="deviceInfo.attribute.wind_up_down"
       :wind_left_right="deviceInfo.attribute.wind_left_right"
@@ -246,7 +246,7 @@ export default {
       let status = this.deviceInfo.attribute.switchStatus === 'on' ? false : true
       return status
     },
-    
+
     btnClass() {
       /* eslint-disable no-unreachable */
       switch (this.deviceInfo.attribute.mode) {
@@ -281,7 +281,7 @@ export default {
           break
         case 'auto':
           return 'active'
-          break  
+          break
       }
     },
   },

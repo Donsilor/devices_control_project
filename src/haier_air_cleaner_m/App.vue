@@ -300,8 +300,7 @@
     </div>
     <div class="btn">
       <div
-        :class="{'btn-show':current==1}"
-        class="btn-tab"
+        :class="[{'btn-show':current==1}, 'btn-tab']"
         @click.prevent="btnClose"
       >
         <div class="btn-sty">
@@ -312,8 +311,7 @@
         <div class="btn-txt">关机</div>
       </div>
       <div
-        :class="{'btn-show':current==2}"
-        class="btn-tab"
+        :class="[{'btn-show':current==2}, 'btn-tab']"
         @click.prevent="btnSleep">
         <div class="btn-sty">
           <a
@@ -323,8 +321,7 @@
         <div class="btn-txt">睡眠</div>
       </div>
       <div
-        :class="{'btn-show':current==3}"
-        class="btn-tab"
+        :class="[{'btn-show':current==3}, 'btn-tab']"
         @click.prevent="btnWind">
         <div class="btn-sty">
           <a
@@ -334,8 +331,7 @@
         <div class="btn-txt">中速风</div>
       </div>
       <div
-        :class="{'btn-show':current==4}"
-        class="btn-tab"
+        :class="[{'btn-show':current==4}, 'btn-tab']"
         @click.prevent="btnMore">
         <div class="btn-sty">
           <a
@@ -734,15 +730,19 @@ export default {
 </script>
 <style lang="less" scoped>
 #APP {
+  overflow-x: hidden;
   position: relative;
   background: #35353D;
   height: 1624px;
   width: 750px;
+  * {
+    transition: all 0.3s ease-in-out;
+  }
   // 圆圈样式
   .main {
     width: 540px;
     height: 540px;
-    margin: 216px 0 0 108px;
+    margin: 216px auto 0;
     .circle {
       width: 100%;
       height: 100%;
