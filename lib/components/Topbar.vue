@@ -96,7 +96,14 @@ export default {
             if(typeof this.back === 'function'){
               this.back()
             } else if (argv_is_mock){
-              window.history.go(-1)
+              let t= new Date().getTime()
+              let url = ''
+              if (process.env.NODE_ENV == 'development'){
+                return
+              } else {
+                url = `/scattered-pages-in-app/dist/experience.html?_=${t}`
+              }
+              window.location.replace(url)
             }else{
               HdSmart.UI.popWindow()
             }
@@ -143,7 +150,8 @@ export default {
 
 .topbar-black{
     .topbar-fixed{
-        background: #20282b;
+        // background: #20282b;
+        background: #35353D;
         border-bottom: none;
     }
     .navbar{
@@ -196,8 +204,8 @@ export default {
       left: 40px;
       top: 55%;
       display: inline-block;
-      width: 14PX;
-      height: 14PX;
+      width: 12PX;
+      height: 12PX;
       border: solid #000;
       border-width: 2PX 2PX 0 0;
       transform: translate(0, -50%) rotate(225deg);

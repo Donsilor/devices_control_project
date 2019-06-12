@@ -11,7 +11,7 @@ import App from './App.vue'
 import Topbar from '../../lib/components/Topbar.vue'
 
 
-import '../../lib/base/haier_water_cleaner/index_m.less'
+import '../../lib/base/haier_humidifier/index_m.less'
 
 import FastClick from 'fastclick'
 

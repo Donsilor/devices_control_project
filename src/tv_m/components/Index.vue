@@ -379,7 +379,14 @@ export default {
   methods: {
     back() {
       if(argv_is_mock){
-        window.history.go(-1)
+        let t= new Date().getTime()
+        let url = ''
+        if (process.env.NODE_ENV == 'development'){
+          url = `/experience.html?_=${t}`
+        } else {
+          url = `/scattered-pages-in-app/dist/experience.html?_=${t}`
+        }
+        window.location.replace(url)
       } else {
         HdSmart.UI.popWindow()
       }

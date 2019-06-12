@@ -209,7 +209,6 @@ export default {
       isShowMsg: false,
       msg: '',
       isLoading: true,
-      isOffline: false,
 
       showModeBtns: false,
       showMoreBtns: false,
@@ -246,7 +245,10 @@ export default {
       let status = this.deviceInfo.attribute.switchStatus === 'on' ? false : true
       return status
     },
-    
+    isOffline() {
+      let status = this.deviceInfo.attribute.connectivity === 'online' ? false : true
+      return status
+    },
     btnClass() {
       /* eslint-disable no-unreachable */
       switch (this.deviceInfo.attribute.mode) {
