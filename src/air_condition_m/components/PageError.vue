@@ -12,9 +12,8 @@
 
     <div
       class="error-tip"
-      @click="reload()"
-    >
-      <i />
+      @click="reload()">
+      <i/>
       加载失败，请点击屏幕刷新
     </div>
   </div>
@@ -22,15 +21,15 @@
 
 <script>
 export default {
-  props: {
-    reload: {
-      type: Function
+    props: {
+        reload: {
+            type: Function
+        }
+    },
+    methods: {
+        back() {
+            HdSmart.UI.popWindow()
+        }
     }
-  },
-  methods: {
-    back() {
-      HdSmart.UI.popWindow()
-    }
-  }
-}
+};
 </script>

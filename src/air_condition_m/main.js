@@ -1,9 +1,9 @@
-console.log(`argv_is_mock: ${argv_is_mock}`)
-if (argv_is_mock || process.env.NODE_ENV == 'development') {
+if(process.env.NODE_ENV == 'development'){
     require('../../mock/air_condition/index.js')
 }
-import Vue from 'vue'
-import App from './App.vue'
+
+import Vue from 'vue';
+import App from './App.vue';
 import Topbar from '../../lib/components/Topbar.vue'
 
 import '../../lib/base/air_condition/index_m.less'
@@ -17,4 +17,4 @@ Vue.component('topbar', Topbar)
 new Vue({
     el: '#app',
     render: h => h(App)
-})
+});

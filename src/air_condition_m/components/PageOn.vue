@@ -1,8 +1,7 @@
 <template>
   <div
     :class="[ac.mode]"
-    class="wrap-on"
-  >
+    class="wrap-on">
     <!-- <div class="topbar topbar-fixed">
       <div class="left">
         <a
@@ -22,10 +21,9 @@
 
     <topbar
       :title="device.name"
-      :transparent="true"
-    />
+      :transparent="true" />
 
-    <div class="bg" />
+    <div class="bg"/>
 
     <div class="header">
       <!--<p class="name">{{device.name}}
@@ -42,37 +40,33 @@
         <span class="unit">℃</span>
       </template>
       <template v-else>
-        <span class="line" />
-        <span class="line" />
+        <span class="line"/>
+        <span class="line"/>
       </template>
     </div>
 
     <transition name="fade">
       <div
         v-show="tipVisible"
-        class="tip"
-      >{{ tip }}</div>
+        class="tip">{{ tip }}</div>
     </transition>
 
     <a
       :class="{disabled:ac.mode=='wind'}"
       href="#"
       class="btn-minus icon-less"
-      @click.prevent="setTemperature(-1, $event)"
-    />
+      @click.prevent="setTemperature(-1, $event)"/>
     <a
       :class="{disabled:ac.mode=='wind'}"
       href="#"
       class="btn-add icon-plus"
-      @click.prevent="setTemperature(1, $event)"
-    />
+      @click.prevent="setTemperature(1, $event)"/>
 
     <a
       :class="{'btn-toggle-more':toggle}"
       href="#modal"
       class="btn-toggle"
-      @click="showMore()"
-    />
+      @click="showMore()"/>
 
     <div class="btns-hold">
       <ul class="btns">
@@ -80,8 +74,7 @@
           <a
             href="#modal"
             class="btn-mode icon-mode"
-            @click="modeDialogShow=true"
-          />
+            @click="modeDialogShow=true"/>
           模式
         </li>
         <li>
@@ -89,16 +82,14 @@
           <a
             href="#"
             class="btn-off icon-switch"
-            @click.prevent="setOff($event)"
-          />
+            @click.prevent="setOff($event)"/>
           关闭
         </li>
         <li>
           <a
             href="#modal"
             class="btn-speed2 icon-speed"
-            @click="speedDialogShow=true"
-          />
+            @click="speedDialogShow=true"/>
           风速
         </li>
       </ul>
@@ -132,8 +123,7 @@
       v-model="toggle"
       class="btns-more"
       title="更多"
-      @close="onModalClose"
-    >
+      @close="onModalClose">
       <!-- <p>模式</p>
             <ul class="btns">
                 <li :class="{on:ac.mode==='auto'}">
@@ -152,8 +142,7 @@
             :class="{on:ac.wind_up_down==='on'}"
             href="#"
             class="icon-vertical"
-            @click.prevent="setWind('wind_up_down', $event)"
-          />
+            @click.prevent="setWind('wind_up_down', $event)"/>
           上下
         </li>
         <!-- <li :class="{on:ac.wind_left_right==='on'}">
@@ -168,16 +157,14 @@
       v-model="modeDialogShow"
       class="btns-more"
       title="模式"
-      @close="onModalClose"
-    >
+      @close="onModalClose">
       <ul class="btns">
         <li :class="{on:ac.mode==='auto'}">
           <a
             :class="{on:ac.mode==='auto'}"
             href="#"
             class="icon-auto"
-            @click.prevent="setMode('auto', $event)"
-          />
+            @click.prevent="setMode('auto', $event)"/>
           智能
         </li>
         <li :class="{on:ac.mode==='cold'}">
@@ -185,8 +172,7 @@
             :class="{on:ac.mode==='cold'}"
             href="#"
             class="icon-cold"
-            @click.prevent="setMode('cold', $event)"
-          />
+            @click.prevent="setMode('cold', $event)"/>
           制冷
         </li>
         <li :class="{on:ac.mode==='heat'}">
@@ -194,8 +180,7 @@
             :class="{on:ac.mode==='heat'}"
             href="#"
             class="icon-heat"
-            @click.prevent="setMode('heat', $event)"
-          />
+            @click.prevent="setMode('heat', $event)"/>
           制热
         </li>
         <li :class="{on:ac.mode==='dehumidify'}">
@@ -203,8 +188,7 @@
             :class="{on:ac.mode==='dehumidify'}"
             href="#"
             class="icon-dehumidify"
-            @click.prevent="setMode('dehumidify', $event)"
-          />
+            @click.prevent="setMode('dehumidify', $event)"/>
           除湿
         </li>
         <li :class="{on:ac.mode==='wind'}">
@@ -212,8 +196,7 @@
             :class="{on:ac.mode==='wind'}"
             href="#"
             class="icon-wind"
-            @click.prevent="setMode('wind', $event)"
-          />
+            @click.prevent="setMode('wind', $event)"/>
           送风
         </li>
       </ul>
@@ -224,16 +207,14 @@
       v-model="speedDialogShow"
       class="btns-more"
       title="风速"
-      @close="onModalClose"
-    >
+      @close="onModalClose">
       <ul class="btns">
         <li :class="{'on':ac.speed==='low'}">
           <a
             :class="{'on':ac.speed==='low'}"
             href="#"
             class="icon-s1"
-            @click.prevent="setSpeed($event,'low')"
-          />
+            @click.prevent="setSpeed($event,'low')"/>
           <span>低</span>
         </li>
         <li :class="{'on':ac.speed==='normal'}">
@@ -241,8 +222,7 @@
             :class="{'on':ac.speed==='normal'}"
             href="#"
             class="icon-s2"
-            @click.prevent="setSpeed($event,'normal')"
-          />
+            @click.prevent="setSpeed($event,'normal')"/>
           <span>中</span>
         </li>
         <li :class="{'on':ac.speed==='high'}">
@@ -250,8 +230,7 @@
             :class="{'on':ac.speed==='high'}"
             href="#"
             class="icon-s3"
-            @click.prevent="setSpeed($event,'high')"
-          />
+            @click.prevent="setSpeed($event,'high')"/>
           <span>高</span>
         </li>
       </ul>
@@ -285,7 +264,7 @@ const tips = {
   err_temp2: '温度已调至最高',
   err_temp3: '温度已调至最低'
 }
-// const SPEED = ['low', 'normal', 'high']
+const SPEED = ['low', 'normal', 'high']
 const [MIN_TEMP, MAX_TEMP] = [16, 30]
 let tempDelay
 
@@ -340,32 +319,32 @@ export default {
     }
   },
   mounted() {
-    this.changeStatus(false)
-    this.$watch('toggle', this.changeStatus)
-    this.$watch('modeDialogShow', this.changeStatus)
-    this.$watch('speedDialogShow', this.changeStatus)
-    window.addEventListener('hashchange', this.onHashChange)
+      this.changeStatus(false)
+      this.$watch('toggle', this.changeStatus)
+      this.$watch('modeDialogShow', this.changeStatus)
+      this.$watch('speedDialogShow', this.changeStatus)
+      window.addEventListener('hashchange', this.onHashChange)
   },
   beforeDestroy() {
-    window.removeEventListener('hashchange', this.onHashChange)
+      window.removeEventListener('hashchange', this.onHashChange)
   },
   methods: {
     onHashChange() {
-      let hash = location.hash
-      if (!hash) {
-        this.toggle = false
-        this.modeDialogShow = false
-        this.speedDialogShow = false
-      }
+        let hash = location.hash
+        if(!hash) {
+            this.toggle = false
+            this.modeDialogShow = false
+            this.speedDialogShow = false
+        }
     },
     onModalClose() {
-      history.go(-1)
+        history.go(-1)
     },
     changeStatus(val) {
-      HdSmart.UI.setStatusBarColor(val ? 2 : 1)
+        HdSmart.UI.setStatusBarColor(val ? 2 : 1)
     },
     goDetail() {
-      HdSmart.UI.goDeviceDetail()
+        HdSmart.UI.goDeviceDetail()
     },
     back() {
       HdSmart.UI.popWindow()
@@ -377,7 +356,7 @@ export default {
       }
     },
     setOff(event) {
-      this.control('switch', 'off', event.target, () => { }, this.onSetError())
+      this.control('switch', 'off', event.target, () => {}, this.onSetError())
     },
     setTemperature(val, event) {
       if (this.ac.mode === 'wind') {

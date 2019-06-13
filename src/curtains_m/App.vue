@@ -19,8 +19,7 @@
 
     <topbar
       :transparent="true"
-      :title="device_name"
-    />
+      :title="device_name" />
 
     <div class="curtain-wrap">
 
@@ -31,17 +30,14 @@
             </div>-->
       <div
         v-if="show && tip"
-        class="tip"
-      >{{ tip }}</div>
+        class="tip">{{ tip }}</div>
       <navigator
         v-once
-        class="navigator"
-      />
+        class="navigator"/>
       <curtain
         :is_ready="is_ready"
         :open_percentage="target_percentage"
-        class="curtain"
-      />
+        class="curtain"/>
 
     </div>
     <control
@@ -50,8 +46,7 @@
       @onOpen="onOpen"
       @onPause="onPause"
       @onClose="onClose"
-      @onGoPercentage="onGoPercentage"
-    />
+      @onGoPercentage="onGoPercentage"/>
   </div>
 </template>
 
@@ -94,23 +89,6 @@ export default {
     }
   },
   mounted() {
-    HdSmart.onDeviceListen(res => {
-      if(!argv_is_mock) return
-      var switchStatus = res.params.attribute.switch
-      var open_percentage = res.params.attribute.open_percentage
-      var flag = false
-
-      if( switchStatus === 'on'){
-        open_percentage = 100
-      } else if(switchStatus === 'off'){
-        open_percentage = 0
-      } else if (switchStatus === 'pause'){
-        open_percentage = this.target_percentage
-        flag = false
-      }
-      this.animateToTargetPercentage(open_percentage, flag)
-    })
-
     HdSmart.ready(() => {
       if (window.device_name) {
         this.device_name = window.device_name
@@ -145,12 +123,12 @@ export default {
       try {
         this.animateToTargetPercentage(data.result.attribute.open_percentage, isFirstLoad)
         isFirstLoad = false
-      } catch (error) { }
+      } catch (error) {}
     })
   },
   methods: {
     goDetail() {
-      HdSmart.UI.goDeviceDetail()
+        HdSmart.UI.goDeviceDetail()
     },
     back() {
       HdSmart.UI.popWindow()
@@ -218,25 +196,23 @@ export default {
       // 等硬件修复了需要干掉
       this.cbFunc = onFinishCallback
 
-      this.animate(100)
-      onFinishCallback()
-      // HdSmart.Device.control(
-      //   {
-      //     method: METHOD,
-      //     nodeid: 'curtain.main.switch',
-      //     params: {
-      //       attribute: {
-      //         switch: 'on'
-      //       }
-      //     }
-      //   },
-      //   data => {
-      //     onFinishCallback()
-      //   },
-      //   () => {
-      //     onFinishCallback()
-      //   }
-      // )
+      HdSmart.Device.control(
+        {
+          method: METHOD,
+          nodeid: 'curtain.main.switch',
+          params: {
+            attribute: {
+              switch: 'on'
+            }
+          }
+        },
+        data => {
+          onFinishCallback()
+        },
+        () => {
+          onFinishCallback()
+        }
+      )
     },
 
     onClose(onFinishCallback) {
@@ -244,50 +220,45 @@ export default {
       // 等硬件修复了需要干掉
       this.cbFunc = onFinishCallback
 
-      this.animate(0)
-      onFinishCallback()
-      // HdSmart.Device.control(
-      //   {
-      //     method: METHOD,
-      //     nodeid: 'curtain.main.switch',
-      //     params: {
-      //       attribute: {
-      //         switch: 'off'
-      //       }
-      //     }
-      //   },
-      //   data => {
-      //     onFinishCallback()
-      //   },
-      //   () => {
-      //     onFinishCallback()
-      //   }
-      // )
+      HdSmart.Device.control(
+        {
+          method: METHOD,
+          nodeid: 'curtain.main.switch',
+          params: {
+            attribute: {
+              switch: 'off'
+            }
+          }
+        },
+        data => {
+          onFinishCallback()
+        },
+        () => {
+          onFinishCallback()
+        }
+      )
     },
     onPause(onFinishCallback) {
       // 等硬件修复了需要干掉
       this.cbFunc = onFinishCallback
 
-      let open_percentage = this.target_percentage
-      this.animate(open_percentage)
-      onFinishCallback()
-      // HdSmart.Device.control(
-      //   {
-      //     method: METHOD,
-      //     nodeid: 'curtain.main.switch',
-      //     params: {
-      //       attribute: {
-      //         switch: 'pause'
-      //       }
-      //     }
-      //   },
-      //   data => {
-      //     onFinishCallback()
-      //   },
-      //   () => {
-      //     onFinishCallback()
-      //   }
-      // )
+      HdSmart.Device.control(
+        {
+          method: METHOD,
+          nodeid: 'curtain.main.switch',
+          params: {
+            attribute: {
+              switch: 'pause'
+            }
+          }
+        },
+        data => {
+          onFinishCallback()
+        },
+        () => {
+          onFinishCallback()
+        }
+      )
     },
     onGoPercentage(percentage) {
       clearTimeout(this.timer)
@@ -297,27 +268,23 @@ export default {
       this.timer = setTimeout(() => {
         this.show = false
       }, 2000)
-      this.animate(percentage)
-      // HdSmart.Device.control(
-      //   {
-      //     method: METHOD,
-      //     nodeid: 'curtain.main.open_percentage',
-      //     params: {
-      //       attribute: {
-      //         open_percentage: percentage
-      //       }
-      //     }
-      //   },
-      //   () => {},
-      //   () => { }
-      // )
+
+      HdSmart.Device.control(
+        {
+          method: METHOD,
+          nodeid: 'curtain.main.open_percentage',
+          params: {
+            attribute: {
+              open_percentage: percentage
+            }
+          }
+        },
+        () => {},
+        () => {}
+      )
     },
     clearTargetTip() {
       this.show = false
-    },
-    animate(percentage) {
-      this.open_percentage = percentage
-      this.animateToTargetPercentage(percentage, false)
     }
   }
 }
