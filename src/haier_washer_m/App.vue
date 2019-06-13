@@ -1073,7 +1073,7 @@ export default {
       z-index: 999;
       width: 100%;
 
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(46, 46, 46, .8);
     }
     .wrap-btns{
       z-index: 9999;

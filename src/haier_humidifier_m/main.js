@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV == 'development') {
-  require('../../mock/water_cleaner/index.js')
+  require('../../mock/humidifier/index.js')
 }
 
 import Vue from 'vue'
