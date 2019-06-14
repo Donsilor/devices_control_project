@@ -4,16 +4,17 @@
     <div :class="[{ 'offline': isOffline }, { 'close': isClose }, { 'loading': isLoading }, {'filter': showModeBtns }, {'filter': showMoreBtns },'wrap']">
       <topbar 
         :transparent="true"
-        title="空调" />
+        :title="device.name"
+        bak-color="#fff" />
 
       <div class="page">
-        <!-- 离线提示 -->
-        <div 
+        <!-- 离线提示 app自带 注释掉 -->
+        <!-- <div 
           v-show="isOffline"
           class="tips">
           <i class="attention" />
           设备已离线，查看帮助
-        </div>
+        </div> -->
 
         <!-- msg 提示 -->
         <transition name="fade">
@@ -22,7 +23,7 @@
             class="err-tips">{{ msg }}</div>
         </transition>
 
-
+        <!-- 温度 -->
         <div class="temperature">
           <div class="unit">温度，℃</div>
           <div class="num">{{ temp }}</div>
@@ -42,58 +43,57 @@
             2小时25分后关机
           </div>
           <div 
-            class="status"
-            @click="toggleLine">
+            class="status">
             <i class="icon-status" />
             正在{{ deviceInfo.attribute.mode | modeType }}
             {{ deviceInfo.attribute.wind_up_down === 'on' ? '上下扫风':'' }}
             {{ deviceInfo.attribute.wind_left_right === 'on' ? '左右扫风': '' }}
           </div>
-
+          <!-- 按钮 -->
           <div class="btns center">
             <div 
-              :class="[{'active': !isClose && !isOffline }, 'btn btn-swich center']"
+              :class="[{'active': !isClose && !isOffline }, {' btn-loading': btnLoading.switch }, 'btn btn-swich center']"
               @click="setSwitch" />
             <div 
-              :class="[ btnClass,'btn btn-mode center']"
+              :class="[ btnClass, 'btn btn-mode center']"
               @click="handeModeClick" />
             <div 
               class="btn btn-menu center"
               @click="handeMoreClick" />
           </div>
-
+          <!-- 风速 -->
           <div class="speed">
             <i :class="[speedClass, 'small']" />
             <div :class="[deviceInfo.attribute.speed === 'auto' ? 'auto': '', 'swich']">
               <div class="up mask-item center">
                 <div 
                   class="item"
-                  @click="setSpeed($event,'low')" />
+                  @click="setSpeed('low')" />
                 <div 
                   class="item"
-                  @click="setSpeed($event,'normal')" />
+                  @click="setSpeed('normal')" />
                 <div 
                   class="item last"
-                  @click="setSpeed($event,'high')" />
+                  @click="setSpeed('high')" />
               </div>
 
               <div class="dowm mask-item center">
                 <div 
                   class="item"
-                  @click="setSpeed($event,'low')" />
+                  @click="setSpeed('low')" />
                 <div 
                   class="item"
-                  @click="setSpeed($event,'normal')" />
+                  @click="setSpeed('normal')" />
                 <div 
                   class="item last"
-                  @click="setSpeed($event,'high')" />
+                  @click="setSpeed('high')" />
               </div>
 
               <div :class="[speedClass, 'current']" />
             </div>
             <div 
               :class="[speedClass, 'btn btn-big center']"
-              @click="setSpeed($event,'auto')"/>
+              @click="setSpeed('auto')"/>
           </div>
 
         </div>
@@ -107,28 +107,28 @@
       @click="hide">
       <div class="items btns">
         <div 
-          :class="[{ 'item1': animation }, { 'btn-current': deviceInfo.attribute.mode === 'wind' }, 'btn btn-wind center']"
-          @click.stop="setMode('wind', $event)">
+          :class="[{ 'item1': animation }, { 'btn-current': deviceInfo.attribute.mode === 'wind' }, {' btn-loading': btnLoading.wind }, 'btn btn-wind center']"
+          @click.stop="setMode('wind')">
           <div class="name">送风</div>
         </div>
         <div 
-          :class="[{ 'item2': animation }, { 'btn-current': deviceInfo.attribute.mode === 'heat' }, 'btn btn-heat center']"
-          @click.stop="setMode('heat', $event)">
+          :class="[{ 'item2': animation }, { 'btn-current': deviceInfo.attribute.mode === 'heat' }, {' btn-loading': btnLoading.heat },'btn btn-heat center']"
+          @click.stop="setMode('heat')">
           <div class="name">制热</div>
         </div>
         <div 
-          :class="[{ 'item3': animation }, { 'btn-current': deviceInfo.attribute.mode === 'dehumidify' }, 'btn btn-dehumidify center']"
-          @click.stop="setMode('dehumidify', $event)">
+          :class="[{ 'item3': animation }, { 'btn-current': deviceInfo.attribute.mode === 'dehumidify' }, {' btn-loading': btnLoading.dehumidify }, 'btn btn-dehumidify center']"
+          @click.stop="setMode('dehumidify')">
           <div class="name">除湿</div>
         </div>
         <div 
-          :class="[{ 'item4': animation }, { 'btn-current': deviceInfo.attribute.mode === 'cold' }, 'btn btn-cold center']"
-          @click.stop="setMode('cold', $event)">
+          :class="[{ 'item4': animation }, { 'btn-current': deviceInfo.attribute.mode === 'cold' }, {' btn-loading': btnLoading.cold },'btn btn-cold center']"
+          @click.stop="setMode('cold')">
           <div class="name">制冷</div>
         </div>
         <div 
-          :class="[{ 'item5': animation }, { 'btn-current': deviceInfo.attribute.mode === 'auto' }, 'btn btn-auto center']"
-          @click.stop="setMode('auto', $event)">
+          :class="[{ 'item5': animation }, { 'btn-current': deviceInfo.attribute.mode === 'auto' }, {' btn-loading': btnLoading.auto },'btn btn-auto center']"
+          @click.stop="setMode('auto')">
           <div class="name">智能</div>
         </div>
         <div 
@@ -164,6 +164,8 @@
       ref="swing"
       :wind_up_down="deviceInfo.attribute.wind_up_down"
       :wind_left_right="deviceInfo.attribute.wind_left_right"
+      :btn_wind_up_down="btnLoading.wind_up_down"
+      :btn_wind_left_right="btnLoading.wind_left_right"
       @setWind="setWind" />
 
     <model-time ref="time" />
@@ -233,6 +235,18 @@ export default {
         }
       },
       deg: 0,
+      device: {},
+      btnLoading: {
+        switch: false,
+        auto: false,
+        cold: false,
+        heat: false,
+        dehumidify: false,
+        wind: false,
+        wind_up_down: false,
+        wind_left_right: false
+      }
+
     }
   },
   computed: {
@@ -298,6 +312,9 @@ export default {
 
       HdSmart.ready(() => {
         HdSmart.UI.showLoading()
+        if (window.device_name) {
+            this.device.name = window.device_name;
+        }
         this.getSnapShot()
       })
 
@@ -350,10 +367,6 @@ export default {
         }, 0)
       })
     },
-    toggleLine() {
-      this.deviceInfo.attribute.switchStatus = 'on'
-      this.isOffline = !this.isOffline
-    },
     showTime() {
       this.hide()
       this.$refs.time.show = true
@@ -389,22 +402,24 @@ export default {
       //   }
       // }
     },
-    controlDevice(attr, val, target, success, error) {
-      if (this.deviceInfo.attribute[attr] === val) { // 没有更改
-        return success && success()
-      }
+    controlDevice(attr, val, btnAttr, success, error) {
+      // if (this.deviceInfo.attribute[attr] === val) { // 没有更改
+      //   return success && success()
+      // }
+
+      this.showBtnLoading(btnAttr);
       HdSmart.Device.control(
         {
           method: "dm_set",
           nodeid: `airconditioner.main.${attr}`,
           params: {
             attribute: {
-              [attr]:
-                attr == "temperature" ? val * 10 : val
+              [attr]: val
             }
           }
         },
         () => {
+          this.hideBtnLoading(btnAttr);
           if (attr == "switch") {
             this.deviceInfo.attribute.switchStatus = val
           } else {
@@ -413,11 +428,17 @@ export default {
           success && success()
         },
         () => {
+          this.hideBtnLoading(btnAttr);
           error && error()
         }
       )
     },
-
+    showBtnLoading(attr) {
+      this.btnLoading[attr] = true
+    },
+    hideBtnLoading(attr) {
+      this.btnLoading[attr] = false
+    },
     showMsg(msg) {
       if (!msg) return
       clearTimeout(timer)
@@ -431,22 +452,23 @@ export default {
 
     },
 
-    setMode(mode, event) {
-      this.controlDevice('mode', mode, event.target, () => {
-        this.showMsg(tips['mode_' + mode])
-        this.showModeBtns = false
-      }, () => { })
+    setMode(mode) {
+      this.controlDevice('mode', mode, mode,
+       () => {
+          if(this.showModeBtns) this.showModeBtns = false
+          this.showMsg(tips['mode_' + mode])
+       }, () => { })
     },
-    setSwitch(event) {
+    setSwitch() {
       let switchStatus = ''
       if (this.deviceInfo.attribute.switchStatus == 'on') {
         switchStatus = 'off'
       } else {
         switchStatus = 'on'
       }
-      this.controlDevice('switch', switchStatus, event.target, () => { }, () => { })
+      this.controlDevice('switch', switchStatus, 'switch', () => { }, () => { })
     },
-    setTemperature(val, event) {
+    setTemperature(val) {
       if (this.deviceInfo.attribute.mode === 'wind' && this.tempFlag) {
         return this.showMsg(tips.err_temp1)
       }
@@ -470,19 +492,14 @@ export default {
         }
       }
 
-      // this.deviceInfo.attribute.temperature = temp
-
       clearTimeout(tempDelay)
       this.tempFlag = false
       tempDelay = setTimeout(() => {
         this.tempFlag = true
-        if (this.checkCmd('temperature', temp)) {
-          return
-        }
         this.controlDevice(
           'temperature',
           temp,
-          event.target,
+          '',
           () => {
             if (val > 0) {
               this.deg += 24
@@ -497,45 +514,28 @@ export default {
         )
       }, 500)
     },
-    setSpeed(event, speed) {
-      if (this.checkCmd('speed', speed)) {
-        return
-      }
-
-      this.controlDevice('speed', speed, event.target,
+    setSpeed(speed) {
+      this.controlDevice('speed', speed, '',
         () => {
           this.showMsg(tips['speed_' + speed])
         },
         () => { }
       )
     },
-    setWind(args) {
-      let [attr, event] = args
+    setWind(attr) {
       var val = this.deviceInfo.attribute[attr] === 'on' ? 'off' : 'on'
 
-      this.controlDevice(attr, val, event.target,
+      this.controlDevice(attr, val, attr,
         () => {
           this.showMsg(tips[attr + '_' + val])
           this.$refs.swing.show = false
         },
         () => { })
-    },
-
-    checkCmd(attr, val) {
-      var ac = this.deviceInfo.attribute
-      ac[attr] = val
-
-      if (ac.temperature == MAX_TEMP && ac.speed == 'low' && ac.mode == 'cold') {
-        this.showMsg('低风、制冷模式下不支持此温度，请调整后重试')
-        return true
-      }
-      return false
-    },
+    }
   },
 }
 </script>
 <style lang="less" scoped>
-
 .btns {
   justify-content: flex-start;
   transition: all 0.3s ease-in-out;
@@ -796,8 +796,8 @@ export default {
     bottom: 310px;
     z-index: 999999;
 
-    width: 120px;
-    height: 120px;
+    width: 750px;
+    min-height: 160px;
     .btn {
       transition: all 0.3s ease-in-out;
       position: absolute;
@@ -807,7 +807,6 @@ export default {
     .item1 {
       top: 132px;
       left: 132px;
-
     }
     .item2 {
       top: 0;
@@ -838,7 +837,6 @@ export default {
   * {
     transition: all 0.3s ease-in-out;
   }
-
   &.filter {
     filter: blur(12px);
   }
@@ -847,7 +845,7 @@ export default {
   }
   .page {
     position: relative;
-    padding-bottom: 100px;
+    padding-bottom: 140px;
     padding-top: 298px;
     padding-left: 48px;
     overflow-x: hidden;

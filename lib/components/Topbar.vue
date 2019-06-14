@@ -18,6 +18,7 @@
           class="left"
           @click.prevent="goBack">
           <a 
+            :style="{ 'border-color': bakColor }"
             href="#/"
             class="icon-return" />
         </div>
@@ -74,6 +75,10 @@ export default {
     bgColor: {
       type: String,
       default: 'transparent'
+    },
+    bakColor: {
+      type: String,
+      default: '#000'
     },
     title: {
       type: String,

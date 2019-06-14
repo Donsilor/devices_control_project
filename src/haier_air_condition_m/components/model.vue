@@ -9,15 +9,15 @@
       <div class="items btns">
         <div 
           class="btn" 
-          @click="setWind('wind_up_down', $event)">
-          <div :class="[wind_up_down === 'on' ? 'active' : '', 'btn-swing center']" />
+          @click="setWind('wind_up_down')">
+          <div :class="[wind_up_down === 'on' ? 'active' : '', {'btn-loading': btn_wind_up_down }, 'btn-swing center']" />
           <div 
             class="name" >上下风</div>
         </div>
         <div 
           class="btn"
-          @click="setWind('wind_left_right', $event)">
-          <div :class="[wind_left_right === 'on' ? 'active' : '', 'btn-swing horizontal center']" />
+          @click="setWind('wind_left_right')">
+          <div :class="[wind_left_right === 'on' ? 'active' : '', {'btn-loading': btn_wind_left_right }, 'btn-swing horizontal center']" />
           <div class="name">左右风</div>
         </div>
       </div>
@@ -106,7 +106,7 @@
 </style>
 <script>
 export default {
-  props: ['wind_up_down', 'wind_left_right'],
+  props: ['wind_up_down', 'wind_left_right', 'btn_wind_up_down', 'btn_wind_left_right'],
   data() {
     return {
       show: false
@@ -115,9 +115,8 @@ export default {
   mounted() {
   },
   methods: {
-    setWind(attr, event){
-      this.show = false
-      this.$emit('setWind', [attr, event])
+    setWind(attr){
+      this.$emit('setWind', attr)
     }
   }
 }
