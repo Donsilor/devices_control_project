@@ -8,9 +8,10 @@
         <!-- 离线提示 -->
         <div
           v-show="isOffline"
-          class="tips">
+          class="tips"
+          @click="tips">
           <i class="attention" />
-          设备已离线，查看帮助
+          <div class="tips-txt">设备已离线，查看帮助</div>
         </div>
         <!-- 数值展示 -->
         <div class="remind">
@@ -65,7 +66,7 @@
           <div class="btn-txt">开关</div>
         </div>
         <div
-          class="btn-tab"
+          :class="[{'active-mode': activeMode}, 'btn-tab']"
           @click="handeModeClick">
           <div class="btn-sty">
             <a
@@ -74,7 +75,9 @@
           </div>
           <div class="btn-txt">模式</div>
         </div>
-        <div class="btn-tab">
+        <div
+          class="btn-tab"
+          @click="gear">
           <div class="btn-sty">
             <a
               href="#"
@@ -98,13 +101,19 @@
         @touchmove.prevent
         @click="hide">
         <div class="mode-items">
-          <div class="mode-item1">
+          <div
+            :class="[{'dehumidify': showModeName === 'dehumidify'},'mode-item1']"
+            @click.stop="setMode('dehumidify')">
             <div class="mode-name">除湿</div>
           </div>
-          <div class="mode-item2">
+          <div
+            :class="[{'drying': showModeName === 'drying'},'mode-item2']"
+            @click.stop="setMode('drying')">
             <div class="mode-name">干衣</div>
           </div>
-          <div class="mode-item3">
+          <div
+            :class="[{'auto': showModeName === 'auto'},'mode-item3']"
+            @click.stop="setMode('auto')">
             <div class="mode-name">自动</div>
           </div>
         </div>
@@ -119,7 +128,9 @@ export default {
     return {
       isOffline: false,
       switchStatus: 'on',
-      showModeBtns: true,
+      showModeBtns: false,
+      showModeName: 'dehumidify',
+      activeMode: false,
     }
   },
   computed: {
@@ -130,6 +141,7 @@ export default {
   methods: {
     hide(){
       this.showModeBtns = false
+      this.activeMode = false
     },
     setSwitch() {
       if(this.switchStatus === 'on') {
@@ -140,6 +152,20 @@ export default {
     },
     handeModeClick() {
       console.log(123)
+      this.showModeBtns = true
+      this.activeMode = true
+    },
+    setMode(mode) {
+      console.log(mode)
+      this.showModeName = mode
+      this.showModeBtns = false
+      this.activeMode = false
+    },
+    gear() {
+      this.isOffline = true
+    },
+    tips() {
+      this.isOffline = false
     }
   },
 }
@@ -150,16 +176,16 @@ export default {
   background: #20282B;
   height: 1624px;
   position: relative;
-  // * {
-  //   transition: all 0.3s ease-in-out;
-  // }
+  * {
+    transition: all 0.3s ease-in-out;
+  }
   .page {
     position: relative;
     overflow-x: hidden;
     margin-top: 60px;
     // 离线提示
     .tips {
-      background: rgba(0, 0, 0, 0.3);
+      // background: rgba(0, 0, 0, 1);
       position: fixed;
       top: 64PX;
       left: 0;
@@ -174,6 +200,9 @@ export default {
 
       font-size: 32px;
       color: #fff;
+      .tips-txt {
+        z-index: 99;
+      }
       .attention {
         display: inline-block;
         width: 36px;
@@ -181,10 +210,12 @@ export default {
         background-image: url(../../lib/base/air_condition/assets/new-air/icon-tips.png);
         background-size: 100% 100%;
         margin-right: 12px;
+        z-index: 99;
       }
       &:after {
+        z-index: 99;
         position: absolute;
-        right: 50px;
+        right: 120px;
         top: 50%;
         display: inline-block;
         content: "";
@@ -194,6 +225,17 @@ export default {
         border-width: 2px 2px 0 0;
         -webkit-transform: translate(0, -50%) rotate(45deg);
         transform: translate(0, -50%) rotate(45deg);
+      }
+      &:before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        // z-index: 9;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.8);
       }
     }
     // 数值提示
@@ -445,6 +487,19 @@ export default {
           background-position: 50% 50%;
         }
       }
+      &.active-mode {
+        z-index: 99999;
+        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        .shutdown1 {
+          display: block;
+          width: 120px;
+          height: 120px;
+          background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_dry_hl.png);
+          background-repeat: no-repeat;
+          background-size: 48px 48px;
+          background-position: 50% 50%;
+        }
+      }
     }
   }
   &.close {
@@ -475,6 +530,108 @@ export default {
             }
           }
         }
+      }
+    }
+  }
+}
+.mode-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 9999;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+  }
+  .mode-items {
+    z-index: 99999;
+    position: absolute;
+    bottom: 0;
+    .mode-item1 {
+      position: relative;
+      left: -88px;
+      top: -80px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_dry.png);
+      background-repeat: no-repeat;
+      background-size: 48px 48px;
+      background-position: 50% 20px;
+      .mode-name {
+        position: relative;
+        top: 72px;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+      }
+    }
+    .mode-item2 {
+      position: relative;
+      left: 56px;
+      top: -160px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_drycloth.png);
+      background-repeat: no-repeat;
+      background-size: 48px 48px;
+      background-position: 50% 20px;
+      .mode-name {
+        position: relative;
+        top: 72px;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+      }
+    }
+    .mode-item3 {
+      position: relative;
+      left: 88px;
+      top: -142px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background-image: url(../../lib/base/dehumidifier/assets/auto-white.png);
+      background-repeat: no-repeat;
+      background-size: 48px 48px;
+      background-position: 50% 20px;
+      .mode-name {
+        position: relative;
+        top: 72px;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+      }
+    }
+    .dehumidify {
+      border-color: #FFC600;
+      background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_dry_chose.png);
+      .mode-name {
+        color: #FFC600;
+      }
+    }
+    .drying {
+      border-color: #FFC600;
+      background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_drycloth_chose.png);
+      .mode-name {
+        color: #FFC600;
+      }
+    }
+    .auto {
+      border-color: #FFC600;
+      background-image: url(../../lib/base/dehumidifier/assets/auto-yellow.png);
+      .mode-name {
+        color: #FFC600;
       }
     }
   }
