@@ -1034,7 +1034,7 @@ export default {
           display: block;
           width: 120px;
           height: 120px;
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_on_cd@2x.png);
+          background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
           background-repeat: no-repeat;
           background-size: 48px 48px;
           background-position: 50% 50%;
@@ -1071,6 +1071,17 @@ export default {
     .btn-show {
       background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
       opacity: 1;
+      .btn-sty {
+        .shutdown {
+          display: block;
+          width: 120px;
+          height: 120px;
+          background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_on_cd@2x.png);
+          background-repeat: no-repeat;
+          background-size: 48px 48px;
+          background-position: 50% 50%;
+        }
+      }
     }
   }
   // pm2.5简介
