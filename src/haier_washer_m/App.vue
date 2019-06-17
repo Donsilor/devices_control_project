@@ -6,13 +6,13 @@
       <topbar
         :bg-black="true"
         title="大人的洗衣机" />
-      <!-- 离线提示 -->
-      <div 
+      <!-- 离线提示 原生实现了改功能注释掉-->
+      <!-- <div 
         v-show="isOffline"
         class="tips">
         <i class="attention" />
         设备已离线，查看帮助
-      </div>
+      </div> -->
 
       <div 
         class="main" 
@@ -36,7 +36,9 @@
             <li class="bubble bubble2 ps6"/>
             <li class="bubble bubble4 ps7"/>
             <li class="bubble bubble2 ps8"/>
+            <li class="bubble bubble3 ps5"/>
             <li class="bubble bubble1 ps9 "/>
+            <li class="bubble bubble4 ps7"/>
           </ul>
         </div>
         <div class="wrap-btns">
@@ -131,6 +133,27 @@
         </div>
       </div>
     </sub-page>
+
+    <!-- 弹框 -->
+    <modal 
+      v-model="showModel" 
+      title="预约洗衣" 
+      class="modal-w">
+      <div class="reserve-wrap">
+        content
+      </div>
+      <div class="reserve-foot">
+        <a 
+          href="" 
+          class="cancel" 
+          @click.prevent="cancelReserve">取消</a>
+        <a 
+          href="" 
+          class="submit" 
+          @click.prevent="submitReserve">确定</a>
+      </div>
+    </modal>
+
   </div>
 </template>
 
@@ -139,12 +162,10 @@
 import SelectTime from '../../lib/components/time/time.vue'
 
 
-import Modal from '../../lib/components/Modal.vue';
-import SwitchButton from '../../lib/components/SwitchButton.vue';
-import Picker from '../../lib/components/Picker/picker.vue';
-import ModeButton from './components/ModeButton.vue';
-import SubPage from './components/SubPage.vue';
-import Icon from '../../lib/components/SettingIconMobile.vue';
+import Modal from '../../lib/components/Modal.vue'
+import SwitchButton from '../../lib/components/SwitchButton.vue'
+
+import SubPage from './components/SubPage.vue'
 
 import {
   MODE_OPTIONS,
@@ -155,32 +176,32 @@ import {
   OPERATION_OPTIONS,
   ERROR_CODE,
   DEFAULT_ERROR_MSG
-} from './config';
+} from './config'
 
-const radio = (document.documentElement.clientWidth || window.innerWidth) / 750 * 75;
+const radio = (document.documentElement.clientWidth || window.innerWidth) / 750 * 75
 
 // function getToggle(val) {
 //     return val === 'on' ? 'off' : 'on';
 // }
 
 function formatTime(time) {
-  var hour = Math.floor(time / 60);
-  var minute = time % 60;
-  var result = '';
+  var hour = Math.floor(time / 60)
+  var minute = time % 60
+  var result = ''
   if (hour > 0) {
-    result += `${hour}<small>时</small>`;
+    result += `${hour}<small>时</small>`
   }
-  result += `${minute}<small>分</small>`;
-  return result;
+  result += `${minute}<small>分</small>`
+  return result
 }
 
 function findIndex(array, fn) {
   for (var i = 0; i < array.length; i++) {
     if (fn(array[i])) {
-      return i;
+      return i
     }
   }
-  return -1;
+  return -1
 }
 
 export default {
@@ -188,48 +209,46 @@ export default {
     SelectTime,
     Modal,
     SwitchButton,
-    Picker,
-    ModeButton,
     SubPage,
-    Icon
+
   },
   data() {
     return {
       isOffline: false,
       isClose: false,
-
+      showModel: false,
 
       status: '',
       model: {},
       device_name: '',
       moreModalVisible: false,
       modeModalVisible: false,
-      reserveModalVisible: false,
+
       currentReserveTime: 0,
       confirmChildLockVisible: false,
       currentSet: -1,
       number: 0,
       itemHeight: 1.2 * radio,
       errors: []
-    };
+    }
   },
   computed: {
     isRun() {
-      return this.model.status == 'run';
+      return this.model.status == 'run'
     },
     isPause() {
-      return this.model.status == 'standby' && this.model.operation != 'none' && this.model.operation != 'finish';
+      return this.model.status == 'standby' && this.model.operation != 'none' && this.model.operation != 'finish'
     },
     isStandby() {
-      return this.model.status == 'standby' && this.model.operation == 'none';
+      return this.model.status == 'standby' && this.model.operation == 'none'
     },
     isFinish() {
-      return this.model.status == 'standby' && this.model.operation == 'finish';
+      return this.model.status == 'standby' && this.model.operation == 'finish'
     },
     numberSlot() {
       var values = RESERVE_TIME_OPTIONS.map((item) => {
-        return `${item}`;
-      });
+        return `${item}`
+      })
       return [
         {
           flex: 1,
@@ -237,96 +256,96 @@ export default {
           values: values,
           className: 'slot1'
         }
-      ];
+      ]
     },
     time_left() {
-      return formatTime(this.model.time_left);
+      return formatTime(this.model.time_left)
     },
     operationText() {
-      return this.isRun ? OPERATION_OPTIONS[this.model.operation] : '暂停中';
+      return this.isRun ? OPERATION_OPTIONS[this.model.operation] : '暂停中'
     },
     childLockSwitch() {
-      return this.model.child_lock_switch == 'on' ? true : false;
+      return this.model.child_lock_switch == 'on' ? true : false
     },
     currentModeConfig() {
-      return MODE_OPTIONS[this.model.mode];
+      return MODE_OPTIONS[this.model.mode]
     },
     temperatureOptions() {
-      var temperatureConfig = this.currentModeConfig.temperature;
+      var temperatureConfig = this.currentModeConfig.temperature
       return TEMPERATURE_OPTIONS.filter((item, i) => {
-        return temperatureConfig.options.indexOf(i) >= 0;
-      });
+        return temperatureConfig.options.indexOf(i) >= 0
+      })
     },
     dryingOptions() {
-      var dryingConfig = this.currentModeConfig.drying;
+      var dryingConfig = this.currentModeConfig.drying
       return DRY_OPTIONS.filter((item, i) => {
-        return dryingConfig.options.indexOf(i) >= 0;
-      });
+        return dryingConfig.options.indexOf(i) >= 0
+      })
     },
     detergentOptions() {
-      var detergentConfig = this.currentModeConfig.detergent;
+      var detergentConfig = this.currentModeConfig.detergent
       return DETERGENT_OPTIONS.filter((item, i) => {
-        return detergentConfig.options.indexOf(i) >= 0;
-      });
+        return detergentConfig.options.indexOf(i) >= 0
+      })
     },
     currentTemperature() {
       var result = this.temperatureOptions.filter(item => {
-        return item.value == this.model.temperature;
-      });
-      return result[0] || {};
+        return item.value == this.model.temperature
+      })
+      return result[0] || {}
     },
     currentDrying() {
       var result = this.dryingOptions.filter(item => {
-        return item.value == this.model.drying;
-      });
-      return result[0] || {};
+        return item.value == this.model.drying
+      })
+      return result[0] || {}
     },
     currentDetergent() {
       var result = this.detergentOptions.filter(item => {
-        return item.value == this.model.auto_detergent_switch;
-      });
-      return result[0] || {};
+        return item.value == this.model.auto_detergent_switch
+      })
+      return result[0] || {}
     }
   },
   watch: {
     isRun(val) {
       if (val) {
-        this.currentSet = -1;
+        this.currentSet = -1
       }
     },
     moreModalVisible(val) {
       if (val) {
-        HdSmart.UI.toggleHeadAndFoot(false); //隐藏app头部
+        HdSmart.UI.toggleHeadAndFoot(false) //隐藏app头部
       } else {
-        HdSmart.UI.toggleHeadAndFoot(true); //显示app头部
+        HdSmart.UI.toggleHeadAndFoot(true) //显示app头部
       }
     },
     modeModalVisible(val) {
       if (val) {
-        HdSmart.UI.toggleHeadAndFoot(false); //隐藏app头部
+        HdSmart.UI.toggleHeadAndFoot(false) //隐藏app头部
       } else {
-        HdSmart.UI.toggleHeadAndFoot(true); //显示app头部
+        HdSmart.UI.toggleHeadAndFoot(true) //显示app头部
       }
     }
   },
   created() {
     HdSmart.ready(() => {
       if (window.device_name) {
-        this.device_name = window.device_name;
+        this.device_name = window.device_name
       }
-      HdSmart.UI.showLoading();
-      this.getSnapShot();
-    });
+      HdSmart.UI.showLoading()
+      this.getSnapShot()
+    })
     HdSmart.onDeviceStateChange(data => {
-      this.onSuccess(data.result);
-    });
+      this.onSuccess(data.result)
+    })
     HdSmart.onDeviceAlert(data => {
       if (data.method == 'dr_report_dev_alert') {
-        this.getAlertList(data.result.attribute.error);
+        this.getAlertList(data.result.attribute.error)
       } else {
-        this.onDaAlert(data.result.attribute.error);
+        this.onDaAlert(data.result.attribute.error)
       }
-    });
+    })
   },
   methods: {
     showTime() {
@@ -338,13 +357,13 @@ export default {
       //     return
       // }
       if (this.model.child_lock_switch == 'on' && attr != 'child_lock_switch') {
-        HdSmart.UI.toast('请先关闭童锁');
-        return;
+        HdSmart.UI.toast('请先关闭童锁')
+        return
       }
 
       var params = {
         [attr]: val
-      };
+      }
 
       if (attr == 'mode') {
         //要切到待机模式
@@ -359,12 +378,12 @@ export default {
           }
         },
         () => {
-          success && success();
+          success && success()
         },
         () => {
-          error && error();
+          error && error()
         }
-      );
+      )
     },
     setSwitch() {
       this.isClose = !this.isClose
@@ -378,10 +397,10 @@ export default {
     },
     setControl(val) {
       if (this.model.operation == 'drying' && val == 'halt') {
-        HdSmart.UI.toast('烘干时不可暂停');
-        return;
+        HdSmart.UI.toast('烘干时不可暂停')
+        return
       }
-      this.controlDevice('control', val);
+      this.controlDevice('control', val)
     },
     setMode(mode) {
       this.modeModalVisible = true
@@ -396,58 +415,58 @@ export default {
       // });
     },
     setChildLock(val, callback) {
-      this.controlDevice('child_lock_switch', val, callback);
+      this.controlDevice('child_lock_switch', val, callback)
     },
     setReserve(time) {
       if (this.isRun) {
-        HdSmart.UI.toast('运行中无法设置预约');
-        return;
+        HdSmart.UI.toast('运行中无法设置预约')
+        return
       }
-      this.controlDevice('reserve_wash', parseInt(time));
+      this.controlDevice('reserve_wash', parseInt(time))
     },
     setTemperature(item) {
       if (this.isRun) {
-        return;
+        return
       }
       if (item.value == this.currentTemperature.value) {
-        return;
+        return
       }
       this.controlDevice('temperature', parseInt(item.value), () => {
-        this.model.temperature = item.value;
-      });
+        this.model.temperature = item.value
+      })
     },
     setDetergent(item) {
       if (this.isRun) {
-        return;
+        return
       }
       if (item.value == this.currentDetergent.value) {
-        return;
+        return
       }
       this.controlDevice('auto_detergent_switch', item.value, () => {
-        this.model.auto_detergent_switch = item.value;
-      });
+        this.model.auto_detergent_switch = item.value
+      })
     },
     setDrying(item) {
       if (this.isRun) {
-        return;
+        return
       }
       if (item.value == this.currentDrying.value) {
-        return;
+        return
       }
       this.controlDevice('drying', item.value, () => {
-        this.model.drying = item.value;
-      });
+        this.model.drying = item.value
+      })
     },
     cancelReserve() {
-      this.reserveModalVisible = false;
-      this.setReserve(0);
+      this.reserveModalVisible = false
+      this.setReserve(0)
     },
     submitReserve() {
-      this.reserveModalVisible = false;
-      this.setReserve(this.number);
+      this.reserveModalVisible = false
+      this.setReserve(this.number)
     },
     onNumberChange(picker, values) {
-      this.number = values[0];
+      this.number = values[0]
     },
     confirmChildLock() {
       if (this.childLockSwitch) {
@@ -458,76 +477,76 @@ export default {
           },
           val => {
             if (val) {
-              this.submitChildLock();
+              this.submitChildLock()
             }
           }
-        );
+        )
       } else {
         if (this.isRun) {
           this.setChildLock('on', () => {
-            this.model.child_lock_switch = 'on';
-          });
+            this.model.child_lock_switch = 'on'
+          })
         } else {
-          HdSmart.UI.toast('运行中才能开启童锁');
+          HdSmart.UI.toast('运行中才能开启童锁')
         }
       }
     },
     submitChildLock() {
       this.setChildLock('off', () => {
         // this.confirmChildLockVisible = false;
-        this.model.child_lock_switch = 'off';
-      });
+        this.model.child_lock_switch = 'off'
+      })
     },
     toggleSet(index) {
       if (this.isRun || this.isPause) {
-        return;
+        return
       }
-      this.currentSet = this.currentSet == index ? -1 : index;
+      this.currentSet = this.currentSet == index ? -1 : index
     },
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot(
         data => {
-          this.onSuccess(data);
-          cb && cb();
+          this.onSuccess(data)
+          cb && cb()
         },
         () => {
-          this.onError();
-          cb && cb();
+          this.onError()
+          cb && cb()
         }
-      );
+      )
     },
     onSuccess(data) {
-      HdSmart.UI.hideLoading();
-      this.status = 'success';
+      HdSmart.UI.hideLoading()
+      this.status = 'success'
 
-      this.model = data.attribute;
+      this.model = data.attribute
 
-      this.getAlertList(data.attribute.error);
+      this.getAlertList(data.attribute.error)
     },
     onError() {
-      this.status = 'error';
+      this.status = 'error'
     },
     getAlertList(errors) {
-      errors = errors || [];
+      errors = errors || []
       this.errors = errors.filter(item => {
-        return item.status == 1;
-      });
+        return item.status == 1
+      })
     },
     onDaAlert(errors) {
-      var error = errors[0];
+      var error = errors[0]
       //当前故障
       var index = findIndex(this.errors, item => {
-        return item.code == error.code;
-      });
+        return item.code == error.code
+      })
       if (index >= 0) {
-        this.errors.splice(index, 1);
+        this.errors.splice(index, 1)
       }
       if (error.status == 1) {
-        this.errors.push(error);
+        this.errors.push(error)
       }
     },
     showAlarmTip(err) {
-      var msg = ERROR_CODE[err.code] || DEFAULT_ERROR_MSG;
+      var msg = ERROR_CODE[err.code] || DEFAULT_ERROR_MSG
       HdSmart.UI.alert(
         {
           title: '故障',
@@ -548,17 +567,17 @@ export default {
             // }, () => {})
           }
         }
-      );
+      )
     },
     inError(error) {
       return (
         findIndex(this.errors, item => {
-          return item.code == error;
+          return item.code == error
         }) >= 0
-      );
+      )
     }
   },
-};
+}
 </script>
 <style lang="less" scoped>
 @keyframes wave1 {
@@ -748,14 +767,14 @@ export default {
       background-image: url(../../lib/base/haier_washer/assets/bubble.png);
       background-size: 100% 100%;
       &.bubble1{
-        width: 28px;
-        height: 28px;
+        width: 18px;
+        height: 18px;
         position: absolute;
         left: 170px;
       }
       &.bubble2{
-        width: 18px;
-        height: 18px;
+        width: 28px;
+        height: 28px;
         position: absolute; 
         left: 170px;
       }

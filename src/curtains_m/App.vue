@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       // 用于确定数据是否加载完成，加载完成后渲染动态的UI
-      is_ready: false,
+      is_ready: true,
       // 当前窗帘打开的幅度，请注意,硬件不修改属性依旧使用close_percentage
       open_percentage: 0,
       // 目标幅度，用于动画
@@ -90,12 +90,15 @@ export default {
   },
   mounted() {
     HdSmart.ready(() => {
+      console.log('ready')
       if (window.device_name) {
         this.device_name = window.device_name
       }
       // 获取快照
       HdSmart.Device.getSnapShot(
         data => {
+          console.log('getSnapShot')
+          console.log(data)
           HdSmart.UI.hideLoading()
           this.is_ready = true
           if (data && data.attribute) {
@@ -121,6 +124,8 @@ export default {
         this.cbFunc = null
       }
       try {
+        console.log('onDeviceStateChange')
+        console.log(data)
         this.animateToTargetPercentage(data.result.attribute.open_percentage, isFirstLoad)
         isFirstLoad = false
       } catch (error) {}

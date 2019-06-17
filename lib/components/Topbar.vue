@@ -78,7 +78,7 @@ export default {
     },
     bakColor: {
       type: String,
-      default: '#000'
+      default: '#fff'
     },
     title: {
       type: String,
