@@ -14,6 +14,11 @@ import Topbar from '../../lib/components/Topbar.vue'
 import '../../lib/base/haier_water_cleaner/index_m.less'
 
 import FastClick from 'fastclick'
+import * as filters from './filters' // global filters
+// register global utility filters.
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -24,6 +29,9 @@ Vue.component('topbar', Topbar)
 Vue.filter('toDays', function(val) {
   return Math.ceil(val / 24)
 })
+
+
+
 
 const store = new Vuex.Store({
   state: {

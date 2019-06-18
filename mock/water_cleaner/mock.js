@@ -1,5 +1,5 @@
 
-import Mock from 'mockjs';
+import Mock from 'mockjs'
 
 var res = {
     "water_filter_result": {
@@ -9,8 +9,7 @@ var res = {
     "filter_time_total": [1000, 1000, 1000, 1000, 1000],
     "filter_time_remaining": [300, 500, 0, 600, 0],
     "filter_lifetime": [30, 50, 0, 60, 0],
-    "filter_status": '',
-    "status": "clean"
+    "filter_status": ''
 }
 
 export function generateSnapShot() {

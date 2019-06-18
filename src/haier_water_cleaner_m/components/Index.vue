@@ -1,26 +1,26 @@
 <template>
   <div :class="[ bgClass,'page']">
     <div class="bg">
-      <topbar
+      <topbar 
         :transparent="true"
-        title="大人的洗衣机" />
+        :title="device_name" />
       <div class="main">
-        <div class="title">过滤前水质：122 TDS</div>
+        <div class="title">过滤前水质：{{ oldTDS }} TDS</div>
         <div 
-          class="wrap-num" 
+          class="wrap-num"
           @click="tdsModalVisibleControl">
           <span class="num">
-            24
+            {{ nowTDS }}
             <span class="unit">TDS</span>
           </span>
         </div>
-        <div class="msg">当前指数水质可以直饮</div>
+        <div class="msg">{{ rankTxt }}</div>
       </div>
     </div>
 
     <div class="wrap-wave">
       <div class="wave-bg">
-        <div class="wave">冲洗中…</div>
+        <div class="wave">{{ statusTip }}</div>
       </div>
     </div>
 
@@ -40,12 +40,14 @@
     </div>
     <div class="panel-btn">
       <div class="btn-wrap btns">
-        <div class="btn btn-hh center circleProgress_wrapper">
+        <div 
+          :class="[model.status == 'clean' ? 'clean' : '', 'btn btn-hh center circleProgress_wrapper']"
+          @click="setClean">
           <div class="wrapper right">
-            <div class="circleProgress rightcircle"/>
+            <div class="circleProgress rightcircle" />
           </div>
           <div class="wrapper left">
-            <div class="circleProgress leftcircle"/>
+            <div class="circleProgress leftcircle" />
           </div>
         </div>
         <div class="btn-name">冲洗</div>
@@ -53,8 +55,8 @@
     </div>
 
     <sub-page 
-      v-model="tdsModalVisible" 
-      title="TDS简介" 
+      v-model="tdsModalVisible"
+      title="TDS简介"
       class="modal-w">
       <div class="tds">
         <p>
@@ -71,12 +73,12 @@
           <div class="item item4">污染水</div>
         </div>
         <ul class="ruler">
-          <li/>
-          <li/>
-          <li/>
-          <li/>
-          <li/>
-          <li/> 
+          <li />
+          <li />
+          <li />
+          <li />
+          <li />
+          <li />
         </ul>
         <ul class="name">
           <li>0</li>
@@ -84,7 +86,7 @@
           <li>100</li>
           <li>200</li>
           <li>300+</li>
-          <li/>
+          <li />
         </ul>
       </div>
     </sub-page>
@@ -92,18 +94,86 @@
 </template>
 
 <script>
-import SubPage from './SubPage.vue';
+// var res = {
+//     "water_filter_result": {
+//         "TDS": [500,100]
+//     },
+//     "status": "clean",
+//     "filter_time_total": [1000, 1000, 1000, 1000, 1000],
+//     "filter_time_remaining": [300, 500, 0, 600, 0],
+//     "filter_lifetime": [30, 50, 0, 60, 0],
+//     "filter_status": '',
+//     "status": "clean"
+// }
+
+
+import SubPage from './SubPage.vue'
 export default {
   components: {
     SubPage
   },
   data() {
     return {
-      rank: 4,
+      model: {
+        "water_filter_result": {
+          "TDS": [500, 100]
+        },
+        "status": "clean",
+        "filter_time_total": [1000, 1000, 1000, 1000, 1000],
+        "filter_time_remaining": [300, 500, 0, 600, 0],
+        "filter_lifetime": [30, 50, 0, 60, 0],
+        "filter_status": ''
+      },
+      device_name: '',
       tdsModalVisible: false,
     }
   },
   computed: {
+    oldTDS() {
+      return this.model.water_filter_result.TDS[0]
+    },
+    nowTDS() {
+      return this.model.water_filter_result.TDS[1]
+    },
+    hasTDS() {
+      return this.oldTDS != 65535
+    },
+    rank() {
+      if (this.nowTDS < 50) {
+        return 1
+      } else if (this.nowTDS < 100) {
+        return 2
+      } else if (this.nowTDS < 300) {
+        return 3
+      } else if (this.nowTDS >= 300) {
+        return 4
+      }
+    },
+    rankTxt() {
+      if (this.nowTDS < 50) {
+        return '当前指数水质可以直饮'
+      } else if (this.nowTDS < 300) {
+        return '当前指数水质不建议直饮'
+      } else if (this.nowTDS >= 300) {
+        return '当前指数水质不能饮用'
+      }
+    },
+    statusTip() {
+      //净水器状态
+      if (this.model.status == 'filter') {
+        return '制水中...'
+      }
+      if (this.model.status == 'clean') {
+        return '冲洗中...'
+      }
+      if (this.model.status == 'standby' && this.hasTDS && this.oldTDS) {
+        return '过滤前水质：' + this.oldTDS + ' TDS'
+      }
+      if (this.model.status == 'standby') {
+        return '待机'
+      }
+      return ''
+    },
     bgClass() {
       /* eslint-disable no-unreachable */
       switch (this.rank) {
@@ -127,67 +197,93 @@ export default {
   created() {
   },
   mounted() {
+    HdSmart.ready(() => {
+      if (window.device_name) {
+        this.device_name = window.device_name
+      }
+      HdSmart.UI.showLoading()
+      this.getSnapShot()
+    })
+
+    HdSmart.onDeviceStateChange(data => {
+      this.onSuccess(data.result)
+    })
+    HdSmart.onDeviceAlert(data => {
+      this.onDaAlertErr(data.result)//上报
+    })
   },
   methods: {
     tdsModalVisibleControl() {
-        //点击TDS按钮
-        this.tdsModalVisible = !this.tdsModalVisible;
+      //点击TDS按钮
+      this.tdsModalVisible = !this.tdsModalVisible
     },
     getSnapShot() {
       HdSmart.Device.getSnapShot(
         data => {
-          console.log(data)
+          this.onSuccess(data)
+          HdSmart.UI.hideLoading()
         },
         () => {
+          this.success = false
+          HdSmart.UI.hideLoading()
         }
-      );
+      )
     },
     controlDevice(attr, val, success) {
-        if (this.errors.length) {
-            return;
-        }
-
-        HdSmart.Device.control(
-            {
-                method: 'dm_set',
-                nodeid: `water_filter.main.${attr}`,
-                params: {
-                    attribute: {
-                        [attr]: val
-                    }
-                }
-            },
-            () => {
-                success && success();
-            },
-            () => {}
-        );
+      HdSmart.Device.control(
+        {
+          method: 'dm_set',
+          nodeid: `water_filter.main.${attr}`,
+          params: {
+            attribute: {
+              [attr]: val
+            }
+          }
+        },
+        () => {
+          success && success()
+        },
+        () => { }
+      )
     },
+    onSuccess(result) {
+      this.model = result.attribute
+    },
+    setClean() {
+      console.log('setClean')
+      //一键冲洗 如果正在冲洗中，只是改变下UI状态
+      if (this.model.status != 'clean') {
+        this.model.status = 'clean'
+
+        this.controlDevice('control', 'clean', () => {
+        })
+      }
+    }
   }
-};
+}
 </script>
 <style lang="less" scoped>
-.page{
-  background: #35353D;
+.page {
+  background: #35353d;
   color: #fff;
   text-align: center;
-  .bg{
-    background: #FE3232;
+  .bg {
+    background: #fe3232;
   }
-  .main{
+  .main {
     font-size: 24px;
-    .title{
+    .title {
       margin-top: 126px;
       opacity: 0.5;
     }
-    .wrap-num{
+    .wrap-num {
       margin-top: 40px;
-      .num{
+      .num {
         position: relative;
         line-height: 1;
         font-size: 200px;
       }
-      .unit{
+      .unit {
         position: absolute;
         top: 56px;
         right: -40px;
@@ -195,16 +291,16 @@ export default {
         font-size: 24px;
       }
     }
-    .msg{
+    .msg {
       margin-top: 12px;
       padding-bottom: 131px;
     }
   }
-  .wave-bg{
-    background: #FE3232;
+  .wave-bg {
+    background: #fe3232;
     border-radius: 0 0 750px 750px;
   }
-  .wave{
+  .wave {
     background-image: url(../../../lib/base/haier_water_cleaner/assets/wave.png);
     background-size: 165% 100%;
 
@@ -214,26 +310,26 @@ export default {
 
     border-radius: 0 0 750px 750px;
   }
-  .wrap-filter{
+  .wrap-filter {
     display: flex;
     justify-content: center;
   }
-  .filter{
+  .filter {
     margin: 60px 38px;
-    .filter-item{
+    .filter-item {
       font-size: 80px;
-      sup{
+      sup {
         font-size: 24px;
       }
     }
-    .filter-name{
+    .filter-name {
       font-size: 24px;
     }
   }
-  .panel-btn{
+  .panel-btn {
     height: 306px;
-    background: #35353D;
-    box-shadow: 0 -3px 28px 0 rgba(17,17,17,0.50);
+    background: #35353d;
+    box-shadow: 0 -3px 28px 0 rgba(17, 17, 17, 0.5);
     border-radius: 42px 42px 0px 0px;
   }
 
@@ -254,11 +350,11 @@ export default {
         border: none;
       }
     }
-    .btn-name{
+    .btn-name {
       margin-top: 14px;
       font-size: 24px;
     }
-    .btn-hh{
+    .btn-hh {
       &::before {
         content: "";
         display: block;
@@ -268,7 +364,6 @@ export default {
         background-size: 100% 100%;
       }
     }
-
   }
 
   .circleProgress_wrapper {
@@ -301,27 +396,20 @@ export default {
       position: absolute;
       top: -1px;
     }
-
-    .rightcircle {
-      border-top: 1px solid yellow;
-      border-right: 1px solid yellow;
-      right: 0;
+    &.clean {
+      .rightcircle {
+        border-top: 1px solid yellow;
+        border-right: 1px solid yellow;
+        right: 0;
+        animation: circleRight 5s linear infinite;
+      }
+      .leftcircle {
+        border-bottom: 1px solid yellow;
+        border-left: 1px solid yellow;
+        left: 0;
+        animation: circleLeft 5s linear infinite;
+      }
     }
-
-    .rightcircle {
-      border-top: 1px solid yellow;
-      border-right: 1px solid yellow;
-      right: 0;
-      animation: circleRight 5s linear infinite;
-    }
-
-    .leftcircle {
-      border-bottom: 1px solid yellow;
-      border-left: 1px solid yellow;
-      left: 0;
-      animation: circleLeft 5s linear infinite;
-    }
-
     @keyframes circleRight {
       0% {
         -webkit-transform: rotate(225deg);
@@ -334,7 +422,6 @@ export default {
     }
 
     @keyframes circleLeft {
-
       0%,
       50% {
         -webkit-transform: rotate(225deg);
@@ -345,56 +432,56 @@ export default {
       }
     }
   }
-  
-  &.great{
-    .bg{
-      background: #46BCFF;
+
+  &.great {
+    .bg {
+      background: #46bcff;
     }
-    .wave-bg{
-      background: #46BCFF;
-    }
-  }
-  &.good{
-    .bg{
-      background: #327DFE;
-    }
-    .wave-bg{
-      background: #327DFE;
+    .wave-bg {
+      background: #46bcff;
     }
   }
-  &.normal{
-    .bg{
-      background: #2D37EF;
+  &.good {
+    .bg {
+      background: #327dfe;
     }
-    .wave-bg{
-      background: #2D37EF;
+    .wave-bg {
+      background: #327dfe;
     }
   }
-  &.bad{
-    .bg{
-      background: #FE3232;
+  &.normal {
+    .bg {
+      background: #2d37ef;
     }
-    .wave-bg{
-      background: #FE3232;
+    .wave-bg {
+      background: #2d37ef;
+    }
+  }
+  &.bad {
+    .bg {
+      background: #fe3232;
+    }
+    .wave-bg {
+      background: #fe3232;
     }
   }
 }
 
-.modal-w.subpage{
-  background: #35353D;
+.modal-w.subpage {
+  background: #35353d;
 }
-.tds{
+.tds {
   padding: 56px 48px;
   font-size: 28px;
   color: #fff;
   text-align: justify;
-  .sub-title{
+  .sub-title {
     padding: 48px 0;
   }
-  .items{
+  .items {
     display: flex;
     justify-content: space-between;
-    .item{
+    .item {
       width: 124px;
       height: 96px;
       line-height: 96px;
@@ -403,39 +490,38 @@ export default {
       font-size: 24px;
       color: #fff;
       text-align: center;
-      &.item1{
-        background: #46BCFF;
+      &.item1 {
+        background: #46bcff;
       }
-      &.item2{
-        background: #327DFE;
+      &.item2 {
+        background: #327dfe;
       }
-      &.item3{
-        background: #2D37EF;
+      &.item3 {
+        background: #2d37ef;
       }
-      &.item4{
-        background: #FE3232;
+      &.item4 {
+        background: #fe3232;
       }
     }
   }
-  .ruler{
+  .ruler {
     margin-top: 26px;
-
     list-style: none;
     opacity: 0.3;
 
     border-radius: 4px;
 
-    border-bottom: 1px solid #D8D8D8;
+    border-bottom: 1px solid #d8d8d8;
 
     display: flex;
     justify-content: space-between;
-    li{
-      background: #D8D8D8;
+    li {
+      background: #d8d8d8;
       width: 1px;
       height: 12px;
     }
   }
-  .name{
+  .name {
     margin-top: 8px;
     list-style: none;
     display: flex;

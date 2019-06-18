@@ -1,26 +1,32 @@
 <template>
-<label role="checkbox"
-       :class="className"
-       :aria-checked="ariaChecked">
-  <input type="checkbox"
-         class="v-switch-input"
-         @change.stop="toggle">
-  <div class="v-switch-core"
-        :style="coreStyle">
-    <div class="v-switch-button"
-        :style="buttonStyle"/>
-  </div>
-  <template v-if="labels">
-    <span class="v-switch-label v-left"
-          :style="labelStyle"
-          v-if="toggled"
-          v-html="labelChecked"/>
-    <span class="v-switch-label v-right"
-          :style="labelStyle"
-          v-else
-          v-html="labelUnchecked"/>
-  </template>
-</label>
+  <label 
+    :class="className"
+    :aria-checked="ariaChecked"
+    role="checkbox">
+    <input 
+      type="checkbox"
+      class="v-switch-input"
+      @change.stop="toggle">
+    <div 
+      :style="coreStyle"
+      class="v-switch-core">
+      <div 
+        :style="buttonStyle"
+        class="v-switch-button"/>
+    </div>
+    <template v-if="labels">
+      <span 
+        v-if="toggled"
+        :style="labelStyle"
+        class="v-switch-label v-left"
+        v-html="labelChecked"/>
+      <span 
+        v-else
+        :style="labelStyle"
+        class="v-switch-label v-right"
+        v-html="labelUnchecked"/>
+    </template>
+  </label>
 </template>
 
 <script>
@@ -59,7 +65,7 @@ export default {
     },
     color: {
       type: [String, Object],
-      validator (value) {
+      validator(value) {
         return typeof value === 'object'
           ? (value.checked || value.unchecked)
           : typeof value === 'string'
@@ -72,7 +78,7 @@ export default {
     labels: {
       type: [Boolean, Object],
       default: false,
-      validator (value) {
+      validator(value) {
         return typeof value === 'object'
           ? (value.checked || value.unchecked)
           : typeof value === 'boolean'
@@ -87,15 +93,20 @@ export default {
       default: constants.width
     }
   },
+  data() {
+    return {
+      toggled: !!this.value
+    }
+  },
   computed: {
-    className () {
+    className() {
       let { toggled, disabled } = this
       return ['vue-js-switch', { toggled, disabled }]
     },
-    ariaChecked () {
+    ariaChecked() {
       return this.toggled.toString()
     },
-    coreStyle () {
+    coreStyle() {
       return {
         width: px(this.width),
         height: px(this.height),
@@ -103,13 +114,13 @@ export default {
         borderRadius: px(Math.round(this.height / 2))
       }
     },
-    buttonRadius () {
+    buttonRadius() {
       return this.height - constants.margin * 2;
     },
-    distance () {
+    distance() {
       return px(this.width - this.height + constants.margin)
     },
-    buttonStyle () {
+    buttonStyle() {
       return {
         width: px(this.buttonRadius),
         height: px(this.buttonRadius),
@@ -119,12 +130,12 @@ export default {
           : null
       }
     },
-    labelStyle () {
+    labelStyle() {
       return {
         lineHeight: px(this.height)
       }
     },
-    colorChecked () {
+    colorChecked() {
       let { color } = this
       if (typeof color !== 'object') {
         return color || constants.colorChecked
@@ -133,42 +144,37 @@ export default {
         ? color.checked
         : constants.colorChecked
     },
-    colorUnchecked () {
+    colorUnchecked() {
       let { color } = this
       return contains(color, 'unchecked')
         ? color.unchecked
         : constants.colorUnchecked
     },
-    colorCurrent () {
+    colorCurrent() {
       return this.toggled
         ? this.colorChecked
         : this.colorUnchecked
     },
-    labelChecked () {
+    labelChecked() {
       return contains(this.labels, 'checked')
         ? this.labels.checked
         : constants.labelChecked
     },
-    labelUnchecked () {
+    labelUnchecked() {
       return contains(this.labels, 'unchecked')
         ? this.labels.unchecked
         : constants.labelUnchecked
     }
   },
   watch: {
-    value (value) {
+    value(value) {
       if (this.sync) {
         this.toggled = !!value
       }
     }
   },
-  data () {
-    return {
-      toggled: !!this.value
-    }
-  },
   methods: {
-    toggle (event) {
+    toggle(event) {
       this.toggled = !this.toggled
       this.$emit('input', this.toggled)
       this.$emit('change', {
