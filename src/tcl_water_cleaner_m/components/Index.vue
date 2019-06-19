@@ -1,15 +1,20 @@
 <template>
-    <div id="app" :class="{warn:level>=4}">
+  <div 
+    id="app" 
+    :class="{warn:level>=4}">
 
-        <template v-if="success">
+    <template v-if="success">
 
-            <div class="page-on" :style="inPage('index')" v-if="hasTDS">
-                <div class="mainTitle">
-                    <div class="name">{{device_name}}
-                        <icon />
-                    </div>
-                    <div class="tip">
-                    <!--
+      <div 
+        v-if="hasTDS" 
+        :style="inPage('index')" 
+        class="page-on">
+        <div class="mainTitle">
+          <div class="name">{{ device_name }}
+            <icon />
+          </div>
+          <div class="tip">
+            <!--
                         <p v-if="inError('E3')">
                             <span @click="toggleErrorModal('E3', true)">漏水</span>
                         </p>
@@ -18,112 +23,169 @@
                         </p>
                         <p v-else>{{statusTip}}</p>
                         -->
-                        <p>{{statusTip}}</p>
-                    </div>
-                </div>
-
-                <div class="wash" :class="{washing:washing}">
-                    <a href="#" @click.prevent="setClean">一键冲洗</a>
-                    <div class="progress"></div>
-                </div>
-
-                <div class="record_panle" v-if="hasTDS" @click="tdsModalVisibleControl">
-
-                    <div class="value">{{nowTDS}}</div>
-                    <div class="pic" :class="{'pic_100':nowTDS>=100}">TDS</div>
-
-                    <div class="text">
-                        <span v-if="level==1">过滤后水质可直接饮用</span>
-                        <span v-else-if="level==2">过滤后水质不建议直接饮用</span>
-                        <span v-else-if="level==3">过滤后水质不建议直接饮用</span>
-                        <span v-else>过滤后水质不可直接饮用</span>
-                    </div>
-                </div>
-
-                <div class="water_wave ww1"></div>
-                <div class="water_wave ww2"></div>
-                <div class="water_wave ww3"></div>
-                <a class="view" href="" @click.prevent="currentPage='list'" v-if="hasTDS">
-                    <span v-if="expired_num > 0">{{expired_num}}个滤芯已过期，点击查看详情</span>
-                    <span v-else-if="expiring_num > 0">{{expiring_num}}个滤芯将到期，点击查看详情</span>
-                    <span v-else>查看滤芯寿命</span>
-                </a>
-                <!-- 告警按钮-->
-                <alert-button-mobile :alertModel="alertModel" v-on:goAlertpage = "goAlertpage('water_cleaner_error')"></alert-button-mobile>
-            </div>
-            <!-- 没有TDS的机器的样式 -->
-            <div class="hasNotTDs" v-if="!hasTDS" :style="inPage('index')">
-                <div class="mainTitle">
-                    <div class="name">{{device_name}}
-                        <icon />
-                    </div>
-                    <div class="tip">
-                        <!--
-                        <p v-if="inError('E3')">
-                            <span @click="toggleErrorModal('E3', true)">漏水</span>
-                        </p>
-                        <p v-else-if="inError('E1')">
-                            <span>缺水</span>
-                        </p>
-                        <p v-else>{{statusTip}}</p>
-                        -->
-                         <p>{{statusTip}}</p>
-                    </div>
-                </div>
-                <div class="wash" :class="{washing:washing}">
-                    <a href="#" @click.prevent="setClean">一键冲洗</a>
-                    <div class="progress"></div>
-                </div>
-                <filter-items :items="filterItems" :view-filter="viewFilter" :hasTDS="hasTDS" :toggle-modal-visible="toggleModalVisible" />
-                <!-- 告警按钮-->
-                <alert-button-mobile :alertModel="alertModel" v-on:goAlertpage = "goAlertpage('water_cleaner_error')"></alert-button-mobile>
-            </div>
-            <div class="page-sec" :style="inPage('list')" v-if="hasTDS">
-                <div class="topbar">
-                    <div class="left">
-                        <a href="" class="arrow" @click.prevent="currentPage='index'"></a>
-                    </div>
-                    <div class="title">滤芯寿命</div>
-                </div>
-                <filter-items :items="filterItems" :view-filter="viewFilter" :nowTDS="nowTDS" :level="level" :hasTDS="hasTDS" v-model="tdsModalVisible" :toggle-modal-visible="toggleModalVisible" />
-            </div>
-
-        </template>
-
-        <div class="page-nodata" v-if="!success">
-            <div class="mainTitle">
-                <div class="name">{{device_name}}
-                    <icon />
-                </div>
-            </div>
-            <div class="pic1"></div>
+            <p>{{ statusTip }}</p>
+          </div>
         </div>
 
-        <sub-page title="TDS简介" class="modal-w" v-model="tdsModalVisible">
-            <div class="tds">
-                <p class="tds_text">
-                    对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果， 数值越低代表过滤效果越好。但对于含有致病菌、悬浮物等有害物质的水源，TDS并不适用。
-                </p>
-                <img src="../../../lib/base/water_cleaner/assets/waterpurifier_img_tdsppm@2x.png" />
-            </div>
-        </sub-page>
+        <div 
+          :class="{washing:washing}" 
+          class="wash">
+          <a 
+            href="#" 
+            @click.prevent="setClean">一键冲洗</a>
+          <div class="progress"/>
+        </div>
 
-        <modal v-for="item in expiredFilter" :key="item.index" title="净水器滤芯到期" v-model="item.timeoutModalVisible" :showCloseBtn="false" :overlayClickable="false">
-            <div class="alarm">
-                <div class="alert">
-                    <i></i>“净水器”的滤芯{{item.index+1}}已到期</div>
-                <div class="text">
-                    <p>{{getName(item.index)}}寿命已到期，请更换以保证饮水质量！</p>
-                    <p>请在更换滤芯后重置寿命</p>
-                </div>
+        <div 
+          v-if="hasTDS" 
+          class="record_panle" 
+          @click="tdsModalVisibleControl">
 
-                <div class="btn">
-                    <a href="#" class="" @click.prevent="viewExpired(item)">查看详情</a>
-                    <a href="#" class="btn-default" @click.prevent="confirmExpired(item)">我知道了</a>
-                </div>
-            </div>
-        </modal>
-        <!-- 告警升级
+          <div class="value">{{ nowTDS }}</div>
+          <div 
+            :class="{'pic_100':nowTDS>=100}" 
+            class="pic">TDS</div>
+
+          <div class="text">
+            <span v-if="level==1">过滤后水质可直接饮用</span>
+            <span v-else-if="level==2">过滤后水质不建议直接饮用</span>
+            <span v-else-if="level==3">过滤后水质不建议直接饮用</span>
+            <span v-else>过滤后水质不可直接饮用</span>
+          </div>
+        </div>
+
+        <div class="water_wave ww1"/>
+        <div class="water_wave ww2"/>
+        <div class="water_wave ww3"/>
+        <a 
+          v-if="hasTDS" 
+          class="view" 
+          href="" 
+          @click.prevent="currentPage='list'">
+          <span v-if="expired_num > 0">{{ expired_num }}个滤芯已过期，点击查看详情</span>
+          <span v-else-if="expiring_num > 0">{{ expiring_num }}个滤芯将到期，点击查看详情</span>
+          <span v-else>查看滤芯寿命</span>
+        </a>
+        <!-- 告警按钮-->
+        <alert-button-mobile 
+          :alert-model="alertModel" 
+          @goAlertpage = "goAlertpage('water_cleaner_error')"/>
+      </div>
+      <!-- 没有TDS的机器的样式 -->
+      <div 
+        v-if="!hasTDS" 
+        :style="inPage('index')" 
+        class="hasNotTDs">
+        <div class="mainTitle">
+          <div class="name">{{ device_name }}
+            <icon />
+          </div>
+          <div class="tip">
+            <!--
+                        <p v-if="inError('E3')">
+                            <span @click="toggleErrorModal('E3', true)">漏水</span>
+                        </p>
+                        <p v-else-if="inError('E1')">
+                            <span>缺水</span>
+                        </p>
+                        <p v-else>{{statusTip}}</p>
+                        -->
+            <p>{{ statusTip }}</p>
+          </div>
+        </div>
+        <div 
+          :class="{washing:washing}" 
+          class="wash">
+          <a 
+            href="#" 
+            @click.prevent="setClean">一键冲洗</a>
+          <div class="progress"/>
+        </div>
+        <filter-items 
+          :items="filterItems" 
+          :view-filter="viewFilter" 
+          :has-tds="hasTDS" 
+          :toggle-modal-visible="toggleModalVisible" />
+        <!-- 告警按钮-->
+        <alert-button-mobile 
+          :alert-model="alertModel" 
+          @goAlertpage = "goAlertpage('water_cleaner_error')"/>
+      </div>
+      <div 
+        v-if="hasTDS" 
+        :style="inPage('list')" 
+        class="page-sec">
+        <div class="topbar">
+          <div class="left">
+            <a 
+              href="" 
+              class="arrow" 
+              @click.prevent="currentPage='index'"/>
+          </div>
+          <div class="title">滤芯寿命</div>
+        </div>
+        <filter-items 
+          :items="filterItems" 
+          :view-filter="viewFilter" 
+          :now-tds="nowTDS" 
+          :level="level" 
+          :has-tds="hasTDS" 
+v-model="tdsModalVisible" :toggle-modal-visible="toggleModalVisible" />
+      </div>
+
+    </template>
+
+    <div 
+      v-if="!success" 
+      class="page-nodata">
+      <div class="mainTitle">
+        <div class="name">{{ device_name }}
+          <icon />
+        </div>
+      </div>
+      <div class="pic1"/>
+    </div>
+
+    <sub-page 
+      v-model="tdsModalVisible" 
+      title="TDS简介" 
+      class="modal-w">
+      <div class="tds">
+        <p class="tds_text">
+          对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果， 数值越低代表过滤效果越好。但对于含有致病菌、悬浮物等有害物质的水源，TDS并不适用。
+        </p>
+        <img src="../../../lib/base/water_cleaner/assets/waterpurifier_img_tdsppm@2x.png" >
+      </div>
+    </sub-page>
+
+    <modal 
+      v-for="item in expiredFilter" 
+      :key="item.index" 
+      v-model="item.timeoutModalVisible" 
+      :show-close-btn="false" 
+      :overlay-clickable="false" 
+title="净水器滤芯到期">
+      <div class="alarm">
+        <div class="alert">
+        <i/>“净水器”的滤芯{{ item.index+1 }}已到期</div>
+        <div class="text">
+          <p>{{ getName(item.index) }}寿命已到期，请更换以保证饮水质量！</p>
+          <p>请在更换滤芯后重置寿命</p>
+        </div>
+
+        <div class="btn">
+          <a 
+            href="#" 
+            class="" 
+            @click.prevent="viewExpired(item)">查看详情</a>
+          <a 
+            href="#" 
+            class="btn-default" 
+            @click.prevent="confirmExpired(item)">我知道了</a>
+        </div>
+      </div>
+    </modal>
+    <!-- 告警升级
         <modal title="漏水警报" v-model="alarmModalVisible" :showCloseBtn="false" :overlayClickable="false">
             <div class="alarm">
                 <div class="alert">
@@ -140,44 +202,57 @@
         </modal>
         -->
 
-        <sub-page title="滤芯状态" class="modal-w" v-model="statusModalVisible">
-            <div class="lx_status">
-                <div class="p1">滤芯{{currentFilter.index+1}}</div>
-                <div class="p2">{{getName(currentFilter.index)}} </div>
-                <circle-pie class="pie" :value="toPercent(currentFilter.remaining, currentFilter.total)">
-                    <p class="p3">预计剩余寿命</p>
-                    <p class="p4">{{currentFilter.remaining | toDays}}
-                        <span>天</span>
-                    </p>
-                    <p class="p5">剩余{{toPercent(currentFilter.remaining, currentFilter.total)}}%</p>
-                </circle-pie>
-                <div class="msg">更换滤芯后请重置剩余时间</div>
-                <div class="btn">
-                    <div class="btn-block" :class="{active:isFilterResetActive}">
-                        <a href="" class="reset" @click.prevent="confirmFilterReset">重置剩余时间</a>
-                        <a href="" class="reset_submit" @click.prevent="submitFilterReset">确定重置</a>
-                    </div>
-                </div>
+    <sub-page 
+      v-model="statusModalVisible" 
+      title="滤芯状态" 
+      class="modal-w">
+      <div class="lx_status">
+        <div class="p1">滤芯{{ currentFilter.index+1 }}</div>
+        <div class="p2">{{ getName(currentFilter.index) }} </div>
+        <circle-pie 
+          :value="toPercent(currentFilter.remaining, currentFilter.total)" 
+          class="pie">
+          <p class="p3">预计剩余寿命</p>
+          <p class="p4">{{ currentFilter.remaining | toDays }}
+            <span>天</span>
+          </p>
+          <p class="p5">剩余{{ toPercent(currentFilter.remaining, currentFilter.total) }}%</p>
+        </circle-pie>
+        <div class="msg">更换滤芯后请重置剩余时间</div>
+        <div class="btn">
+          <div 
+            :class="{active:isFilterResetActive}" 
+            class="btn-block">
+            <a 
+              href="" 
+              class="reset" 
+              @click.prevent="confirmFilterReset">重置剩余时间</a>
+            <a 
+              href="" 
+              class="reset_submit" 
+              @click.prevent="submitFilterReset">确定重置</a>
+          </div>
+        </div>
 
-            </div>
-        </sub-page>
+      </div>
+    </sub-page>
 
-    </div>
+  </div>
 </template>
 
 <script>
-import Modal from '../../../lib/components/Modal';
-import CirclePie from './CirclePie.vue';
-import FilterItems from './FilterItems.vue';
-import SubPage from '../../../lib/components/SubPage.vue';
-import Icon from '../../../lib/components/SettingIconMobile.vue';
-import { WARN_CODE } from "./consts";
+import Modal from '../../../lib/components/Modal'
+import CirclePie from './CirclePie.vue'
+import FilterItems from './FilterItems.vue'
+import SubPage from '../../../lib/components/SubPage.vue'
+import Icon from '../../../lib/components/SettingIconMobile.vue'
+import { WARN_CODE } from "./consts"
 import AlertButtonMobile from '../../../lib/components/AlertButtonMobile'
 
-const TDS_VALUE = [0, 50, 100, 300, 500];
-const TDS_ANGLE = [-136, -74, 0, 74, 136];
-const ERROR_STORE_KEY = 'water_cleaner_error';
-const EXPIRED_STORE_KEY = 'water_cleaner_expired';
+const TDS_VALUE = [0, 50, 100, 300, 500]
+const TDS_ANGLE = [-136, -74, 0, 74, 136]
+const ERROR_STORE_KEY = 'water_cleaner_error'
+const EXPIRED_STORE_KEY = 'water_cleaner_expired'
 
 // function getRotate(val, start, end) {
 //     var min = TDS_VALUE[start];
@@ -188,16 +263,16 @@ const EXPIRED_STORE_KEY = 'water_cleaner_expired';
 // }
 
 function getDays(hour) {
-    return Math.ceil(hour / 24);
+    return Math.ceil(hour / 24)
 }
 
 function findIndex(array, fn) {
     for (var i = 0; i < array.length; i++) {
         if (fn(array[i])) {
-            return i;
+            return i
         }
     }
-    return -1;
+    return -1
 }
 
 export default {
@@ -230,17 +305,17 @@ export default {
             expiredStore: JSON.parse(localStorage.getItem(EXPIRED_STORE_KEY)) || [],
             success: true,
             alertModel:[]//告警信息存放数组
-        };
+        }
     },
     computed: {
         level() {
-            var level;
+            var level
             for (var i = TDS_VALUE.length - 1; i >= 0; i--) {
                 if (this.nowTDS > TDS_VALUE[i]) {
-                    return i + 1;
+                    return i + 1
                 }
             }
-            return 1;
+            return 1
         },
         // rotate() {
         //     var level = this.level;
@@ -251,86 +326,120 @@ export default {
         // },
         //已过期
         expired_num() {
-            if (!this.model.filter_time_remaining) return 0;
+            if (!this.model.filter_time_remaining) return 0
             return this.model.filter_time_remaining.filter(item => {
-                return item <= 0;
-            }).length;
+                return item <= 0
+            }).length
         },
         //即将过期
         expiring_num() {
-            if (!this.model.filter_time_remaining) return 0;
+            if (!this.model.filter_time_remaining) return 0
             return this.model.filter_time_remaining.filter(item => {
-                return getDays(item) <= 30;
-            }).length;
+                return getDays(item) <= 30
+            }).length
         },
         currentFilter() {
             //当前正在查看状态的某个滤芯的状态
-            if (this.currentIndex == -1) return {};
-            return this.filterItems[this.currentIndex];
+            if (this.currentIndex == -1) return {}
+            return this.filterItems[this.currentIndex]
         },
         expiredFilter() {
             //净水器滤芯到期
-            var result = [];
-            if (!this.model.filter_time_remaining) return result;
+            var result = []
+            if (!this.model.filter_time_remaining) return result
             this.model.filter_time_remaining.forEach((item, index) => {
                 if (item <= 0 && this.expiredStore.indexOf(index) < 0) {
                     // result.push(index)
                     result.push({
                         index: index,
                         timeoutModalVisible: true
-                    });
+                    })
                 }
-            });
-            return result;
+            })
+            return result
         },
         statusTip() {
             //净水器状态
             if (this.model.status == 'filter') {
-                return '制水中...';
+                return '制水中...'
             }
             if (this.model.status == 'clean') {
-                return '冲洗中...';
+                return '冲洗中...'
             }
             if (this.model.status == 'standby' && this.hasTDS && this.oldTDS) {
-                return '过滤前水质：' + this.oldTDS + ' TDS';
+                return '过滤前水质：' + this.oldTDS + ' TDS'
             }
             if (this.model.status == 'standby') {
-                return '待机';
+                return '待机'
             }
-            return '';
+            return ''
         }
     },
     watch: {
         currentPage(page) {
             if (page == 'index') {
-                HdSmart.UI.toggleHeadAndFoot(true);
+                HdSmart.UI.toggleHeadAndFoot(true)
             } else if (page == 'list') {
-                HdSmart.UI.toggleHeadAndFoot(false);
+                HdSmart.UI.toggleHeadAndFoot(false)
             }
         },
         'model.status'(newVal, oldVal) {
             if (oldVal == 'clean' && this.washing) {
-                var el = this.$el.querySelector('.progress');
-                el.style.transitionDuration = '1.2s';
-                el.style.width = '100.1%';
+                var el = this.$el.querySelector('.progress')
+                el.style.transitionDuration = '1.2s'
+                el.style.width = '100.1%'
                 setTimeout(() => {
-                    el.style.cssText = '';
-                }, 1500);
+                    el.style.cssText = ''
+                }, 1500)
             }
         },
         tdsModalVisible(val) {
             if (this.currentPage == 'index') {
-                HdSmart.UI.toggleHeadAndFoot(!val);
+                HdSmart.UI.toggleHeadAndFoot(!val)
             }
         },
         statusModalVisible(val) {
             if (!val) {
-                this.isFilterResetActive = false;
+                this.isFilterResetActive = false
             }
             if (this.currentPage == 'index') {
-                HdSmart.UI.toggleHeadAndFoot(!val);
+                HdSmart.UI.toggleHeadAndFoot(!val)
             }
         }
+    },
+    created() {
+        this.$watch('errorStore', () => {
+            localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore))
+        })
+
+        this.$watch('expiredStore', () => {
+            localStorage.setItem(EXPIRED_STORE_KEY, JSON.stringify(this.expiredStore))
+        })
+
+        HdSmart.ready(() => {
+            if (window.device_name) {
+                this.device_name = window.device_name
+            }
+            HdSmart.UI.showLoading()
+            this.getSnapShot()
+        })
+
+        HdSmart.onDeviceStateChange(data => {
+            this.onSuccess(data.result)
+        })
+        HdSmart.onDeviceAlert(data => {
+            // if (data.method == 'dr_report_dev_alert') {
+            //     this.getAlertList(data.result.attribute.error);
+            // } else {
+            //     this.onDaAlert(data.result.attribute.error);
+            // }
+            this.onDaAlertErr(data.result)//上报
+        })
+    },
+    mounted() {
+        this.alertModel = this.errorStore.filter((item,index)=>{
+            return item.clicked === false
+        })
     },
     methods: {
         goAlertpage(localStorageName){
@@ -340,20 +449,20 @@ export default {
         },
         tdsModalVisibleControl() {
             //点击TDS按钮
-            this.tdsModalVisible = !this.tdsModalVisible;
+            this.tdsModalVisible = !this.tdsModalVisible
         },
         getName(index) {
-            return ['PP棉', '前置活性炭', 'RO', '后置活性炭'][index];
+            return ['PP棉', '前置活性炭', 'RO', '后置活性炭'][index]
         },
         inPage(page) {
             return {
                 visibility: this.currentPage == page ? '' : 'hidden'
                 // display: this.currentPage == page ? "" : "none"
-            };
+            }
         },
         controlDevice(attr, val, success) {
             if (this.errors.length) {
-                return;
+                return
             }
 
             HdSmart.Device.control(
@@ -367,111 +476,111 @@ export default {
                     }
                 },
                 () => {
-                    success && success();
+                    success && success()
                 },
                 () => {}
-            );
+            )
         },
         setClean() {
             //一键冲洗
-            var el = this.$el.querySelector('.progress');
+            var el = this.$el.querySelector('.progress')
             var onWash = () => {
-                this.washing = false;
-                el.washing = false;
-                el.removeEventListener('transitionend', onWash, false);
-            };
+                this.washing = false
+                el.washing = false
+                el.removeEventListener('transitionend', onWash, false)
+            }
 
             if (el.washing) {
-                return;
+                return
             }
 
             //如果正在冲洗中，只是改变下UI状态
             if (this.model.status == 'clean') {
-                this.washing = true;
-                el.washing = true;
-                el.addEventListener('transitionend', onWash, false);
+                this.washing = true
+                el.washing = true
+                el.addEventListener('transitionend', onWash, false)
             } else {
                 this.controlDevice('control', 'clean', () => {
-                    this.washing = true;
-                    el.washing = true;
-                    el.addEventListener('transitionend', onWash, false);
-                });
+                    this.washing = true
+                    el.washing = true
+                    el.addEventListener('transitionend', onWash, false)
+                })
             }
         },
         getSnapShot() {
             HdSmart.Device.getSnapShot(
                 data => {
-                    this.onSuccess(data);
-                    HdSmart.UI.hideLoading();
+                    this.onSuccess(data)
+                    HdSmart.UI.hideLoading()
                 },
                 () => {
-                    this.success = false;
-                    HdSmart.UI.hideLoading();
+                    this.success = false
+                    HdSmart.UI.hideLoading()
                 }
-            );
+            )
         },
         onSuccess(result) {
-            this.success = true;
-            var attrs = result.attribute;
+            this.success = true
+            var attrs = result.attribute
 
-            this.model = attrs;
+            this.model = attrs
 
             // this.getAlertList(attrs.error);
-            this.getAlertListErr(attrs.error);
+            this.getAlertListErr(attrs.error)
 
-            var tds = attrs.water_filter_result.TDS;
+            var tds = attrs.water_filter_result.TDS
 
             if (tds && tds[0] != 65535) {
-                this.hasTDS = true; //Todo
+                this.hasTDS = true //Todo
                 // this.hasTDS =false;
-                this.oldTDS = tds[0];
-                this.nowTDS = tds[1];
+                this.oldTDS = tds[0]
+                this.nowTDS = tds[1]
             } else {
-                this.hasTDS = false;
+                this.hasTDS = false
             }
 
             this.filterItems = this.model.filter_time_remaining.map((el, index) => {
                 if (el > 0 && this.expiredStore.indexOf(index) >= 0) {
-                    this.expiredStore.splice(this.expiredStore.indexOf(index), 1);
+                    this.expiredStore.splice(this.expiredStore.indexOf(index), 1)
                 }
-                var total = this.model.filter_time_total[index];
+                var total = this.model.filter_time_total[index]
                 return {
                     remaining: el,
                     total: total,
                     index: index
-                };
-            });
+                }
+            })
         },
         toPercent(remaining, total) {
             //剩余寿命百分比转化
-            return Math.ceil(remaining / total * 100);
+            return Math.ceil(remaining / total * 100)
         },
         viewFilter(index) {
             //点击滤芯列表查看某个滤芯的状态
-            this.currentIndex = index;
-            this.statusModalVisible = true;
+            this.currentIndex = index
+            this.statusModalVisible = true
         },
         confirmFilterReset() {
             //点击“重置剩余时间”按钮
-            this.isFilterResetActive = true;
+            this.isFilterResetActive = true
         },
         submitFilterReset() {
             //点击“确认重置”
-            var index = this.currentIndex;
+            var index = this.currentIndex
             this.controlDevice(
                 'reset_filter',
                 [index + 1],
                 () => {
-                    HdSmart.UI.toast('重置成功');
-                    this.isFilterResetActive = false;
-                    this.filterItems[index].remaining = this.filterItems[index].total;
-                    console.log('success', this.filterItems[index].total);
+                    HdSmart.UI.toast('重置成功')
+                    this.isFilterResetActive = false
+                    this.filterItems[index].remaining = this.filterItems[index].total
+                    console.log('success', this.filterItems[index].total)
                 },
                 () => {
-                    HdSmart.UI.toast('重置失败');
-                    console.log('error');
+                    HdSmart.UI.toast('重置失败')
+                    console.log('error')
                 }
-            );
+            )
         },
         onDaAlertErr(err){
             // err={
@@ -486,7 +595,7 @@ export default {
             // }
             // debugger
             if(err){
-                let store = window.localStorage;
+                let store = window.localStorage
                 // let errorsStorage = [];
                 if(this.errorStore){//本地已经有存储
                     // errorsStorage =  JSON.parse(store.getItem('ERROR_STORE_KEY'));//得到本地缓存
@@ -511,12 +620,12 @@ export default {
                 this.alertModel = this.errorStore.filter((item,index)=>{
                     // console.log(index,item.clicked)
                     return item.clicked === false
-                });
+                })
                 // console.log("this.alertModel32222",this.alertModel)
             }
         },
         getAlertListErr(attr){
-            let errors = attr ? attr.error :[];
+            let errors = attr ? attr.error :[]
             // var errors = errors;
             // errors=[{
             //     "family_id": 1,
@@ -530,7 +639,7 @@ export default {
             // }]
         // debugger;
             console.log(111,errors)
-            let store = window.localStorage;
+            let store = window.localStorage
             if(errors && errors.length>0){
                 // let errorsStorage = [];
                 if(this.errorStore){//本地已经有存储
@@ -560,21 +669,21 @@ export default {
                 // console.log(99999,JSON.parse(window.localStorage.getItem(ERROR_STORE_KEY)))
                 this.alertModel = this.errorStore.filter((item,index)=>{
                     return item.clicked === false
-                });
+                })
                 // console.log("this.alertModel11111",this.alertModel)
             }else{//没有告警
-                store.setItem('water_cleaner_error',JSON.stringify([]));
-                this.alertModel = [];
+                store.setItem('water_cleaner_error',JSON.stringify([]))
+                this.alertModel = []
             }
         },
         storageDeal(item,errorsStorage){//用来判断内存中(errorsStorage)是否存在某个error(item)的方法
-            let isHave = false;//标记内存中是否存在这个告警
+            let isHave = false//标记内存中是否存在这个告警
             for(let i=0;i<errorsStorage.length;i++){
                 if(item.code ==errorsStorage[i].code){
-                    isHave = true;
-                    break;
+                    isHave = true
+                    break
                 }else{
-                    isHave = false;
+                    isHave = false
                 }
             }
             if(isHave){//已经存在这个错误，并且已经保存在内存中
@@ -606,7 +715,7 @@ export default {
             return errorsStorage
         },
         dealErrors(errors,errorsStorage){
-            let arr=[];//保存内存和告警相同的项
+            let arr=[]//保存内存和告警相同的项
             for(let i=0;i<errors.length;i++){
                 for(let j=0;j<errorsStorage.length;j++){
                     if((errors[i].code === errorsStorage[j].code) && (errors[i].status == 1)){//status为0，告警已经解除的也一并删除
@@ -615,14 +724,14 @@ export default {
                 }
             }
             console.log(11111,arr)//找到数组中相同的项
-            let newErrorsStorage = [];
+            let newErrorsStorage = []
             if(arr && arr.length>0){
                 newErrorsStorage = errorsStorage.filter((item,index)=>{
-                    return arr.indexOf(item.code)>-1;
+                    return arr.indexOf(item.code)>-1
                 })
             }
             console.log(22222,newErrorsStorage)
-            return newErrorsStorage;
+            return newErrorsStorage
         },
         // getAlertList(errors) {
         //     errors = errors || [];
@@ -692,52 +801,18 @@ export default {
         // },
         viewExpired(item) {
             //点击查看详情
-            this.viewFilter(item.index);
-            this.confirmExpired(item);
+            this.viewFilter(item.index)
+            this.confirmExpired(item)
         },
         confirmExpired(item) {
             //点击“知道了”
-            item.timeoutModalVisible = false;
-            this.expiredStore = this.expiredStore.concat(item.index);
+            item.timeoutModalVisible = false
+            this.expiredStore = this.expiredStore.concat(item.index)
         },
         toggleModalVisible(str) {
             //滤芯列表页点击“TDS按钮”展示TDS介绍页面
-            this.tdsModalVisible = true;
+            this.tdsModalVisible = true
         }
     },
-    created() {
-        this.$watch('errorStore', () => {
-            localStorage.setItem(ERROR_STORE_KEY, JSON.stringify(this.errorStore));
-        });
-
-        this.$watch('expiredStore', () => {
-            localStorage.setItem(EXPIRED_STORE_KEY, JSON.stringify(this.expiredStore));
-        });
-
-        HdSmart.ready(() => {
-            if (window.device_name) {
-                this.device_name = window.device_name;
-            }
-            HdSmart.UI.showLoading();
-            this.getSnapShot();
-        });
-
-        HdSmart.onDeviceStateChange(data => {
-            this.onSuccess(data.result);
-        });
-        HdSmart.onDeviceAlert(data => {
-            // if (data.method == 'dr_report_dev_alert') {
-            //     this.getAlertList(data.result.attribute.error);
-            // } else {
-            //     this.onDaAlert(data.result.attribute.error);
-            // }
-            this.onDaAlertErr(data.result);//上报
-        });
-    },
-    mounted() {
-        this.alertModel = this.errorStore.filter((item,index)=>{
-            return item.clicked === false
-        });
-    },
-};
+}
 </script>

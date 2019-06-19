@@ -4,9 +4,9 @@
     :class="[{ 'offline': isOffline }, { 'close': isClose }]">
     <div class="page">
       <topbar
-        :bg-black="true"
-        title="大人的洗衣机" />
-      <!-- 离线提示 原生实现了改功能注释掉-->
+        :title="device_name"
+        bak-color="#000" />
+      <!-- 离线提示 原生实现了 该功能注释掉-->
       <!-- <div 
         v-show="isOffline"
         class="tips">
@@ -14,16 +14,15 @@
         设备已离线，查看帮助
       </div> -->
 
-      <div 
-        class="main" 
-        @click="isOffline = !isOffline">
-        <div class="mode">标准洗模式</div>
-        <div class="time">58</div>
+      <div class="main">
+        <div class="mode">{{ model.mode | modeType }}模式 </div>
+        <div class="time">{{ model.time_left }}</div>
         <div class="time-unit">分</div>
-        <div class="status">洗衣待启动</div>
+        <div class="status">{{ model.operation | operationType }}</div>
+        <div class="reserve"><i/>14点25分将启动洗衣</div>
       </div>
 
-      <div class="wrap-wave run">
+      <div :class="[{ 'run': isRun }, 'wrap-wave']">
         <div class="wave wave1"/>
         <div class="wave wave2"/>
         <div class="bubbles">
@@ -32,40 +31,41 @@
             <li class="bubble bubble2 ps2"/>
             <li class="bubble bubble3 ps3"/>
             <li class="bubble bubble4 ps4"/>
-            <li class="bubble bubble3 ps5"/>
-            <li class="bubble bubble2 ps6"/>
-            <li class="bubble bubble4 ps7"/>
-            <li class="bubble bubble2 ps8"/>
-            <li class="bubble bubble3 ps5"/>
-            <li class="bubble bubble1 ps9 "/>
-            <li class="bubble bubble4 ps7"/>
+            <li class="bubble bubble5 ps5"/>
+            <li class="bubble bubble4 ps6"/>
+            <li class="bubble bubble1 ps7"/>
+            <li class="bubble bubble5 ps8"/>
+            <li class="bubble bubble3 ps9 "/>
+            <li class="bubble bubble4 ps10"/>
           </ul>
         </div>
         <div class="wrap-btns">
           <div class="btns center">
             <div 
               class="btn  btn-swich center"
-              @click.stop="setSwitch($event)"/>
+              @click.stop="setSwitch('off')"/>
             <div 
               class="btn btn-start center"
-              @click.stop="setMode('start', $event)"/>
+              @click.stop="setControl('halt')"/>
             <div 
-              class="btn btn-mode center"
-              @click.stop="setMode('mode', $event)"/>
+              :class="[modeBtnClass, 'btn center']"
+              @click.stop="showModelPanel"/>
             <div 
               class="btn btn-time center"
               @click.stop="showTime"/>
           </div>
           <div class="wrap-txt center">
             <div class="name">开关</div>
-            <div class="name">启动</div>
+            <div class="name">{{ isRun ? '暂停' : '启动' }}</div>
             <div class="name">模式</div>
             <div class="name">预约</div>
           </div>
         </div>
       </div>
 
-      <SelectTime ref="time" />
+      <SelectTime 
+        ref="time" 
+        @selectedTime="setReserve" />
     </div>
 
     <!-- 更多 -->
@@ -77,22 +77,30 @@
         <div class="mode-group">
           <div class="title">洗涤清洁</div>
           <div class="btns">
-            <div class="btn-wrap">
-              <div class="btn btn-mode center active"/>
+            <div 
+              class="btn-wrap" 
+              @click="setMode('strong_wash')">
+              <div :class="[{ 'active': model.mode == 'strong_wash' }, 'btn btn-mode center']" />
               <div class="btn-name">标准洗</div>
             </div>
 
-            <div class="btn-wrap">
-              <div class="btn btn-mode-15 center"/>
+            <div 
+              class="btn-wrap"
+              @click="setMode('high_speed_15m')">
+              <div :class="[{ 'active': model.mode == 'high_speed_15m' }, 'btn btn-mode-15 center']"/>
               <div class="btn-name">速洗15′</div>
             </div>
 
-            <div class="btn-wrap">
-              <div class="btn btn-ts center"/>
+            <div 
+              class="btn-wrap"
+              @click="setMode('spin')">
+              <div :class="[{ 'active': model.mode == 'spin' }, 'btn btn-ts center']"/>
               <div class="btn-name">单脱水</div>
             </div>
-            <div class="btn-wrap">
-              <div class="btn btn-jzj center"/>
+            <div 
+              class="btn-wrap"
+              @click="setMode('odor_removal')">
+              <div :class="[{ 'active': model.mode == 'odor_removal' }, 'btn btn-jzj center']"/>
               <div class="btn-name">筒自洁</div>
             </div>
           </div>
@@ -101,32 +109,44 @@
         <div class="mode-group">
           <div class="title">洗涤清洁</div>
           <div class="btns">
-            <div class="btn-wrap">
-              <div class="btn btn-hh center"/>
+            <div 
+              class="btn-wrap"
+              @click="setMode('mix')">
+              <div :class="[{ 'active': model.mode == 'mix' }, 'btn btn-hh center']" />
               <div class="btn-name">混合</div>
             </div>
 
-            <div class="btn-wrap">
-              <div class="btn btn-ms center"/>
+            <div 
+              class="btn-wrap"
+              @click="setMode('cotton')">
+              <div :class="[{ 'active': model.mode == 'cotton' }, 'btn btn-ms center']"/>
               <div class="btn-name">棉麻</div>
             </div>
 
-            <div class="btn-wrap">
-              <div class="btn btn-hq center"/>
+            <div 
+              class="btn-wrap"
+              @click="setMode('synthetic')">
+              <div :class="[{ 'active': model.mode == 'synthetic' }, 'btn btn-hq center']" />
               <div class="btn-name">化纤</div>
             </div>
 
-            <div class="btn-wrap">
-              <div class="btn btn-ym center"/>
+            <div 
+              class="btn-wrap"
+              @click="setMode('cardigan')">
+              <div :class="[{ 'active': model.mode == 'cardigan' }, 'btn btn-ym center']"/>
               <div class="btn-name">羊毛</div>
             </div>
-            <div class="btn-wrap">
-              <div class="btn btn-nz center"/>
+            <div 
+              class="btn-wrap"
+              @click="setMode('cowboy_suit')">
+              <div :class="[{ 'active': model.mode == 'cowboy_suit' }, 'btn btn-nz center']"/>
               <div class="btn-name">牛仔</div>
             </div>
 
-            <div class="btn-wrap">
-              <div class="btn btn-ylf center"/>
+            <div 
+              class="btn-wrap"
+              @click="setMode('down_coat')">
+              <div :class="[{ 'active': model.mode == 'down_coat' }, 'btn btn-ylf center']"/>
               <div class="btn-name">羽绒服</div>
             </div>
           </div>
@@ -160,11 +180,7 @@
 
 <script>
 import SelectTime from '../../lib/components/time/time.vue'
-
-
 import Modal from '../../lib/components/Modal.vue'
-import SwitchButton from '../../lib/components/SwitchButton.vue'
-
 import SubPage from './components/SubPage.vue'
 
 import {
@@ -204,18 +220,34 @@ function findIndex(array, fn) {
   return -1
 }
 
+
+// let res = {
+//     "add_laundry_switch": "off",
+//     "auto_detergent_switch": "off",
+//     "child_lock_switch": "off",
+//     "drying": "no_drying",
+//     "drying_duration": 15,
+//     "mode": "mix",
+//     "operation": "spin",
+//     "reserve_wash": 24,
+//     "spin": 0,
+//     "status": "standby",
+//     "sterilization": "off",
+//     "switch": "on",
+//     "temperature": 28,
+//     "time_left": 10
+// }
+
 export default {
   components: {
     SelectTime,
     Modal,
-    SwitchButton,
     SubPage,
 
   },
   data() {
     return {
       isOffline: false,
-      isClose: false,
       showModel: false,
 
       status: '',
@@ -233,6 +265,9 @@ export default {
     }
   },
   computed: {
+    isClose() {
+      return this.model.switch == 'off'
+    },
     isRun() {
       return this.model.status == 'run'
     },
@@ -305,6 +340,42 @@ export default {
         return item.value == this.model.auto_detergent_switch
       })
       return result[0] || {}
+    },
+    modeBtnClass(){
+      /* eslint-disable no-unreachable */
+      switch(this.model.mode) {
+        case 'strong_wash':
+          return 'btn-mode'
+          break
+        case 'high_speed_15m':
+          return 'btn-mode-15'
+          break
+        case 'spin':
+          return 'btn-ts'
+          break
+        case 'odor_removal':
+          return 'btn-jzj'
+          break
+
+        case 'mix':
+            return 'btn-hh'
+            break
+        case 'cotton':
+            return 'btn-ms'
+            break
+          case 'synthetic':
+            return 'btn-hq'
+            break
+          case 'cardigan':
+            return 'btn-ym'
+            break
+          case 'cowboy_suit':
+            return 'btn-nz'
+            break
+          case 'down_coat':
+            return 'btn-ylf'
+            break 
+      }
     }
   },
   watch: {
@@ -348,8 +419,11 @@ export default {
     })
   },
   methods: {
+    showModelPanel() {
+      if(!this.isClose) this.modeModalVisible = true
+    },
     showTime() {
-      this.$refs.time.show = true
+      if(!this.isClose) this.$refs.time.show = true
     },
     controlDevice(attr, val, success, error) {
       // if(this.errors.length){
@@ -386,16 +460,16 @@ export default {
       )
     },
     setSwitch() {
-      this.isClose = !this.isClose
-      // let switchStatus = ''
-      // if (this.deviceInfo.attribute.switchStatus == 'on') {
-      //   switchStatus = 'off'
-      // } else {
-      //   switchStatus = 'on'
-      // }
-      // this.controlDevice('switch', switchStatus, event.target, () => { }, () => { })
+      let switchStatus = ''
+      if (this.model.switch == 'on') {
+        switchStatus = 'off'
+      } else {
+        switchStatus = 'on'
+      }
+      this.controlDevice('switch', switchStatus)
     },
     setControl(val) {
+      if(this.isClose) return
       if (this.model.operation == 'drying' && val == 'halt') {
         HdSmart.UI.toast('烘干时不可暂停')
         return
@@ -403,16 +477,15 @@ export default {
       this.controlDevice('control', val)
     },
     setMode(mode) {
-      this.modeModalVisible = true
       // if (this.isRun || this.isPause) {
-      //   return;
+      //   return
       // }
       // if (this.model.mode == mode) {
-      //   return;
+      //   return
       // }
-      // this.controlDevice('mode', mode, () => {
-      //   this.model.mode = mode;
-      // });
+      this.controlDevice('mode', mode, () => {
+        this.model.mode = mode
+      })
     },
     setChildLock(val, callback) {
       this.controlDevice('child_lock_switch', val, callback)
@@ -422,7 +495,8 @@ export default {
         HdSmart.UI.toast('运行中无法设置预约')
         return
       }
-      this.controlDevice('reserve_wash', parseInt(time))
+      let dealTime = parseInt(time.split(':')[0])
+      this.controlDevice('reserve_wash', dealTime)
     },
     setTemperature(item) {
       if (this.isRun) {
@@ -640,10 +714,10 @@ export default {
 }
 
 #app{
-  background: #20282b;
+  background: #fff;
   .page{
     min-height: 100%;
-    background: #20282b;
+    background: #fff;
   }
   .tips {
     box-sizing: border-box;
@@ -700,7 +774,7 @@ export default {
     
     background-image: url(../../lib/base/haier_washer/assets/bg-circle.png);
     background-size: 100% 100%;
-    color: #fff;
+    color: #000;
     font-size: 24px;
     text-align: center;
     .mode{
@@ -715,10 +789,27 @@ export default {
       top:190px;
       left: 394px;
       width: 40px;
-      color: #ccc;
+      color: #20282B;
     }
     .status{
+      color: #fff;
       margin-top: 40px;
+    }
+    .reserve{
+      font-size: 24px;
+      color: #FFC600;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: 1;
+      i{
+        display: block;
+        width: 30px;
+        height: 30px;
+        background-image: url(../../lib/base/haier_washer/assets/icon-time.png);
+        background-size: 100% 100%;
+      }
     }
   }
   .wrap-wave{
@@ -745,20 +836,12 @@ export default {
     background-image: url(../../lib/base/haier_washer/assets/wave2.png);
     background-position-x: -520px;
   }
-  .run {
-    .wave1 {
-      animation: wave1 2s linear 0s infinite;
-    }
-    .wave2 {
-      animation: wave2 2s linear -.5s infinite;
-    }
-  }
 
   .bubbles{
     position: absolute;
     top: 48px;
     width: 100%;
-    height: 566px;
+    height: 545px;
     overflow: hidden;
     .items{
       list-style: none;
@@ -785,55 +868,95 @@ export default {
         left: 170px;
       }
       &.bubble4{
-        width: 48px;
-        height: 48px;
+        width: 45px;
+        height: 45px;
+        position: absolute;
+        top: 550px;
+        left: 170px;
+      }
+      &.bubble5{
+        width: 58px;
+        height: 58px;
         position: absolute;
         top: 550px;
         left: 170px;
       }
       &.ps1{
-        top: 220px;
+        top: 120px;
         left: 506px;
+      }
+      &.ps2{
+        top: 172px;
+        left: 224px;
+      }
+      &.ps3{
+        top: 234px;
+        left: 458px;
+      }
+      &.ps4{
+        top: 266px;
+        left: 302px;
+      }
+      &.ps5{
+        top: 358px;
+        left: 184px;
+      }
+      &.ps6{
+        top: 368px;
+        left: 540px;
+      }
+      &.ps7{
+        top: 522px;
+        left: 262px;
+      }
+      &.ps8{
+        top: 510px;
+        left: 492px;
+      }
+      &.ps9{
+        top: 606px;
+        left: 392px;
+      }
+      &.ps10{
+        top: 626px;
+        left: 402px;
+      }
+    }
+  }
+
+  .run {
+    .wave1 {
+      animation: wave1 2s linear 0s infinite;
+    }
+    .wave2 {
+      animation: wave2 2s linear -.5s infinite;
+    }
+    .bubbles .bubble{
+      &.ps1{
         animation: animX1 .5s ease-in-out 0s infinite alternate, animY 4s ease-in-out 0s infinite;
       }
       &.ps2{
-        top: 316px;
-        left: 224px;
         animation: animX2 .5s ease-in-out -.5s infinite alternate, animY 4s ease-in-out -.5s infinite;
       }
       &.ps3{
-        top: 378px;
-        left: 458px;
         animation: animX3 .5s ease-in-out -1s infinite alternate, animY 4s ease-in-out -1s infinite;
       }
       &.ps4{
-        top: 302px;
-        left: 422px;
         animation: animX4 .5s ease-in-out -1.5s infinite alternate, animY 4s ease-in-out -1.5s infinite;
       }
       &.ps5{
-        top: 512px;
-        left: 184px;
         animation: animX5 .5s ease-in-out -2s infinite alternate, animY 4s ease-in-out -2s infinite;
       }
       &.ps6{
-        top: 512px;
-        left: 184px;
         animation: animX6 .5s ease-in-out -2.5s infinite alternate, animY 4s ease-in-out -2.5s infinite;
       }
       &.ps7{
-        top: 514px;
-        left: 540px;
         animation: animX7 .5s ease-in-out -3s infinite alternate, animY 4s ease-in-out -3s infinite;
       }
       &.ps8{
-        top: 644px;
-        left: 262px;
         animation: animX8 .5s ease-in-out -3.5s infinite alternate, animY 4s ease-in-out -3.5s infinite;
       }
       &.ps9{
-        top: 636px;
-        left: 492px;
         animation: animX9 .5s ease-in-out -3.7s infinite alternate, animY 4s ease-in-out -3.7s infinite;
       }
     }
@@ -1162,10 +1285,76 @@ export default {
         margin: 0 29px 50px;
         .btn{
           margin: 0;
+          border: 1PX solid #20282B;
+          &.active{
+            border: none;
+          }
         }
         .btn-name{
+          color: #20282B;
           margin-top: 16px;
           text-align: center;
+        }
+        .btn-mode{
+          &::before {
+            background-image: url(../../lib/base/haier_washer/assets/btn-mode-black58.png);
+            background-size: 100% 100%;
+          }
+        }
+        .btn-mode-15 {
+          &::before {
+            background-image: url(../../lib/base/haier_washer/assets/btn-mode-black15.png);
+            background-size: 100% 100%;
+          }
+    
+        }
+        .btn-ts{
+          &::before {
+            background-image: url(../../lib/base/haier_washer/assets/ts-black.png);
+            background-size: 100% 100%;
+          }
+        }
+        .btn-jzj{
+          &::before {
+            background-image: url(../../lib/base/haier_washer/assets/jzj-black.png);
+            background-size: 100% 100%;
+          }
+        }
+        .btn-hh{
+          &::before {
+            background-image: url(../../lib/base/haier_washer/assets/hh-black.png);
+            background-size: 100% 100%;
+          }
+        }
+        .btn-ms{
+          &::before {
+            background-image: url(../../lib/base/haier_washer/assets/ms-black.png);
+            background-size: 100% 100%;
+          }
+        }
+        .btn-hq{
+          &::before {
+            background-image: url(../../lib/base/haier_washer/assets/hq-black.png);
+            background-size: 100% 100%;
+          }
+        }
+        .btn-ym{
+          &::before {
+            background-image: url(../../lib/base/haier_washer/assets/ym-black.png);
+            background-size: 100% 100%;
+          }
+        }
+        .btn-nz{
+          &::before {
+            background-image: url(../../lib/base/haier_washer/assets/nz-black.png);
+            background-size: 100% 100%;
+          }
+        }
+        .btn-ylf{
+          &::before {
+            background-image: url(../../lib/base/haier_washer/assets/ylf-black.png);
+            background-size: 100% 100%;
+          }
         }
       }
 

@@ -26,15 +26,15 @@
 
     <div class="wrap-filter">
       <div class="filter">
-        <div class="filter-item">53<sup>%</sup></div>
+        <div class="filter-item">{{ model.filter_lifetime[0] }}<sup>%</sup></div>
         <div class="filter-name">剩余初滤滤芯</div>
       </div>
       <div class="filter">
-        <div class="filter-item">60<sup>%</sup></div>
+        <div class="filter-item">{{ model.filter_lifetime[1] }}<sup>%</sup></div>
         <div class="filter-name">剩余吸附滤芯</div>
       </div>
       <div class="filter">
-        <div class="filter-item">20<sup>%</sup></div>
+        <div class="filter-item">{{ model.filter_lifetime[2] }}<sup>%</sup></div>
         <div class="filter-name">剩余RO滤芯</div>
       </div>
     </div>
@@ -264,7 +264,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .page {
-  background: #35353d;
+  background: #fff;
   color: #fff;
   text-align: center;
   .bg {
@@ -315,21 +315,30 @@ export default {
     justify-content: center;
   }
   .filter {
+    color: #232323;
     margin: 60px 38px;
     .filter-item {
+      position: relative;
       font-size: 80px;
       sup {
         font-size: 24px;
+        position: absolute;
+        top: 15px;
       }
     }
     .filter-name {
+      color: #000;
       font-size: 24px;
     }
   }
   .panel-btn {
     height: 306px;
-    background: #35353d;
-    box-shadow: 0 -3px 28px 0 rgba(17, 17, 17, 0.5);
+    // background: #35353d;
+    // box-shadow: 0 -3px 28px 0 rgba(17, 17, 17, 0.5);
+    // border-radius: 42px 42px 0px 0px;
+
+    background: #FFFFFF;
+    box-shadow: 0 -3px 28px 0 rgba(209,209,209,0.50);
     border-radius: 42px 42px 0px 0px;
   }
 
@@ -340,7 +349,7 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid #fff;
+      border: 1px solid #000;
       border-radius: 50%;
 
       display: flex;
@@ -351,6 +360,7 @@ export default {
       }
     }
     .btn-name {
+      color: #000;
       margin-top: 14px;
       font-size: 24px;
     }
@@ -468,12 +478,12 @@ export default {
 }
 
 .modal-w.subpage {
-  background: #35353d;
+  background: #fff;
 }
 .tds {
   padding: 56px 48px;
   font-size: 28px;
-  color: #fff;
+  color: #35353D;
   text-align: justify;
   .sub-title {
     padding: 48px 0;
@@ -511,12 +521,12 @@ export default {
 
     border-radius: 4px;
 
-    border-bottom: 1px solid #d8d8d8;
+    border-bottom: 1px solid #35353D;
 
     display: flex;
     justify-content: space-between;
     li {
-      background: #d8d8d8;
+      background: #35353D;
       width: 1px;
       height: 12px;
     }

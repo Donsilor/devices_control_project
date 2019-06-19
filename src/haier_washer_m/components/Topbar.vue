@@ -14,6 +14,7 @@
         class="navbar" >
         <div class="left">
           <a
+            :style="{ 'border-color': bakColor }"
             href="#/"
             class="icon-return"
             @click.prevent="goBack"/>
@@ -68,6 +69,10 @@ export default {
         bgBlack: {
             type: Boolean,
             default: false
+        },
+        bakColor: {
+            type: String,
+            default: '#000'
         },
         title: {
             type: String,

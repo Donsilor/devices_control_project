@@ -37,7 +37,6 @@ export function generateSnapShot() {
             "attribute": res
         }
     })
-
 }
 
 export function set(data){
