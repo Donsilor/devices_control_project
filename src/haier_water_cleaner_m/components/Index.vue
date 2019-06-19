@@ -19,7 +19,7 @@
     </div>
 
     <div class="wrap-wave">
-      <div class="wave-bg">
+      <div :class="[{'run': model.status == 'clean' }, 'wave-bg']">
         <div class="wave">{{ statusTip }}</div>
       </div>
     </div>
@@ -34,7 +34,7 @@
         <div class="filter-name">剩余吸附滤芯</div>
       </div>
       <div class="filter">
-        <div class="filter-item">{{ model.filter_lifetime[2] }}<sup>%</sup></div>
+        <div class="filter-item">{{ model.filter_lifetime[4] }}<sup>%</sup></div>
         <div class="filter-name">剩余RO滤芯</div>
       </div>
     </div>
@@ -94,19 +94,6 @@
 </template>
 
 <script>
-// var res = {
-//     "water_filter_result": {
-//         "TDS": [500,100]
-//     },
-//     "status": "clean",
-//     "filter_time_total": [1000, 1000, 1000, 1000, 1000],
-//     "filter_time_remaining": [300, 500, 0, 600, 0],
-//     "filter_lifetime": [30, 50, 0, 60, 0],
-//     "filter_status": '',
-//     "status": "clean"
-// }
-
-
 import SubPage from './SubPage.vue'
 export default {
   components: {
@@ -263,6 +250,15 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@keyframes wave {
+    from {
+        background-position-x: 0;
+    }
+    to {
+        background-position-x: 100%;
+    }
+}
+
 .page {
   background: #fff;
   color: #fff;
@@ -302,7 +298,7 @@ export default {
   }
   .wave {
     background-image: url(../../../lib/base/haier_water_cleaner/assets/wave.png);
-    background-size: 165% 100%;
+    background-size: 200% 100%;
 
     width: 100%;
     padding: 221px 0 120px 0;
@@ -310,6 +306,12 @@ export default {
 
     border-radius: 0 0 750px 750px;
   }
+  .run {
+    .wave {
+      animation: wave 3s linear 0s infinite;
+    }
+  }
+
   .wrap-filter {
     display: flex;
     justify-content: center;
@@ -349,7 +351,7 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid #000;
+      border: 1px solid #b5b5b5;
       border-radius: 50%;
 
       display: flex;
