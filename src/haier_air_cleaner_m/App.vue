@@ -174,40 +174,38 @@
 
     <error-tip v-if="status == 'error'" @click.native="getSnapShot" />
   </div> -->
-  <div :class="[{'close': isClose}, 'APP']">
-    <topbar
-      :transparent="true"
-      style="font-weight: 500"
+  <div :class="[{'close': isClose}, 'page']">
+    <topbar 
       title="空气净化器" />
-    <div
+    <div 
       class="main"
       @click="togglePMPop">
       <div>
-        <img
+        <img 
           class="circle"
           src="../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png"
           alt="">
-        <img
+        <img 
           v-show="current==1"
           class="pointer-excellent"
           src="../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png"
           alt="">
-        <img
+        <img 
           v-show="current==0"
           class="pointer-good"
           src="../../lib/base/air_cleaner/assets/new-air/lianghao@2x.png"
           alt="">
-        <img
+        <img 
           v-show="current==2"
           class="pointer-light"
           src="../../lib/base/air_cleaner/assets/new-air/qingdu@2x.png"
           alt="">
-        <img
+        <img 
           v-show="current==3"
           class="pointer-moderate"
           src="../../lib/base/air_cleaner/assets/new-air/zhongdu@2x.png"
           alt="">
-        <img
+        <img 
           v-show="current==4"
           class="pointer-severe"
           src="../../lib/base/air_cleaner/assets/new-air/zhongduz@2x.png"
@@ -218,21 +216,21 @@
         <div class="txt">室内空气 优</div>
       </div>
       <span class="nuit">μg/m³</span>
-      <span class="sport"/>
-      <span class="sport1"/>
-      <span class="sport2"/>
-      <span class="sport3"/>
-      <span class="sport4"/>
-      <span class="sport5"/>
-      <span class="sport6"/>
-      <span class="sport7"/>
-      <span class="sport8"/>
-      <span class="sport9"/>
-      <span class="sport10"/>
-      <span class="sport11"/>
-      <span class="sport12"/>
-      <span class="sport13"/>
-      <sub-page
+      <span class="sport" />
+      <span class="sport1" />
+      <span class="sport2" />
+      <span class="sport3" />
+      <span class="sport4" />
+      <span class="sport5" />
+      <span class="sport6" />
+      <span class="sport7" />
+      <span class="sport8" />
+      <span class="sport9" />
+      <span class="sport10" />
+      <span class="sport11" />
+      <span class="sport12" />
+      <span class="sport13" />
+      <sub-page 
         v-model="pmPopVisible"
         class="modal-w"
         title="PM2.5简介"
@@ -266,12 +264,12 @@
             </ul>
             <table>
               <tr>
-                <td/>
-                <td/>
-                <td/>
-                <td/>
-                <td/>
-                <td/>
+                <td />
+                <td />
+                <td />
+                <td />
+                <td />
+                <td />
               </tr>
             </table>
             <div class="pm-num">
@@ -281,7 +279,7 @@
               <span>115</span>
               <span>150</span>
               <span>250+</span>
-              <span/>
+              <span />
             </div>
           </div>
         </div>
@@ -300,80 +298,79 @@
       </div>
     </div>
     <div class="btn">
-      <div
+      <div 
         :class="[{'active-switch': !isClose}, {'btn-show':btnSwitch}, 'btn-tab', 'btn-swich']"
-        @click.prevent="btnClose"
-      >
+        @click.prevent="btnClose">
         <div class="btn-sty">
-          <a
+          <a 
             href="#"
-            class="shutdown"/>
+            class="shutdown" />
         </div>
         <div class="btn-txt">关机</div>
       </div>
-      <div
+      <div 
         :class="[{'btn-show':somnus}, 'btn-tab']"
         @click.prevent="btnSleep">
         <div class="btn-sty">
-          <a
+          <a 
             href="#"
-            class="shutdown1"/>
+            class="shutdown1" />
         </div>
         <div class="btn-txt">睡眠</div>
       </div>
-      <div
+      <div 
         :class="[{'btn-wind':windshield}, 'btn-tab']"
         @click.prevent="btnWind">
-        <div
+        <div 
           class="btn-sty"
           @click="handeModeClick">
-          <a
+          <a 
             href="#"
-            class="shutdown2"/>
+            class="shutdown2" />
         </div>
         <div class="btn-txt">{{ showModeName }}</div>
       </div>
-      <div
+      <div 
         :class="[{'btn-wind':moreShow}, 'btn-tab']"
         @click.prevent="btnMore">
-        <div
+        <div 
           class="btn-sty"
           @click="handMoreClick">
-          <a
+          <a 
             href="#"
-            class="shutdown3"/>
+            class="shutdown3" />
         </div>
         <div class="btn-txt">更多</div>
       </div>
     </div>
     <!-- 风档选择弹框 -->
-    <div
+    <div 
       v-show="showModeBtns"
       class="mode-btn"
       @touchmove.prevent
       @click="hide">
       <div class="mode-items">
-        <div
+        <div 
           :class="[{'disu': showModeName === '低速风'},'mode-item1']"
           @click.stop="setMode('低速风')">
           <div class="mode-name">低速</div>
         </div>
-        <div
+        <div 
           :class="[{'zhongdisu': showModeName === '中低速风'},'mode-item2']"
           @click.stop="setMode('中低速风')">
           <div class="mode-name">中低速</div>
         </div>
-        <div
+        <div 
           :class="[{'zhongsu': showModeName === '中速风'},'mode-item3']"
           @click.stop="setMode('中速风')">
           <div class="mode-name">中速</div>
         </div>
-        <div
+        <div 
           :class="[{'gaosu': showModeName === '高速风'},'mode-item4']"
           @click.stop="setMode('高速风')">
           <div class="mode-name">高速</div>
         </div>
-        <div
+        <div 
           :class="[{'auto': showModeName === '自动'},'mode-item5']"
           @click.stop="setMode('自动')">
           <div class="mode-name">自动</div>
@@ -381,18 +378,18 @@
       </div>
     </div>
     <!-- 更多选择弹框 -->
-    <div
+    <div 
       v-show="showMoreBtns"
       class="mode-btn"
       @touchmove.prevent
       @click="hide">
       <div class="mode-items">
-        <div
+        <div 
           :class="[{'disu': anion},'mode-item6']"
           @click.stop="setAnion()">
           <div class="mode-name">负离子</div>
         </div>
-        <div
+        <div 
           :class="[{'zhongdisu': childLockName},'mode-item7']"
           @click.stop="childLock()">
           <div class="mode-name">童锁</div>
@@ -408,55 +405,55 @@ import SubPage from "../../lib/components/SubPage";
 import Icon from "../../lib/components/SettingIconMobile.vue";
 
 const SPEED_TEXT1 = [
-    { text: "低速", className: "1", value: "low" },
-    { text: "中低速", className: "2", value: "middle" },
-    { text: "中速", className: "3", value: "high" },
-    { text: "中高速", className: "4", value: "very_high" },
-    { text: "高速", className: "5", value: "super_high" }
+  { text: "低速", className: "1", value: "low" },
+  { text: "中低速", className: "2", value: "middle" },
+  { text: "中速", className: "3", value: "high" },
+  { text: "中高速", className: "4", value: "very_high" },
+  { text: "高速", className: "5", value: "super_high" }
 ];
 const SPEED_TEXT2 = [
-    { text: "一档", className: "1", value: "low" },
-    { text: "二档", className: "2", value: "middle" },
-    { text: "三档", className: "3", value: "high" },
-    { text: "四档", className: "4", value: "very_high" }
+  { text: "一档", className: "1", value: "low" },
+  { text: "二档", className: "2", value: "middle" },
+  { text: "三档", className: "3", value: "high" },
+  { text: "四档", className: "4", value: "very_high" }
 ];
 const SPEED_TEXT3 = [
-    { text: "低速", className: "1", value: "low" },
-    { text: "中速", className: "3", value: "middle" },
-    { text: "高速", className: "5", value: "high" }
+  { text: "低速", className: "1", value: "low" },
+  { text: "中速", className: "3", value: "middle" },
+  { text: "高速", className: "5", value: "high" }
 ];
 const DEVICE_MODEL = {
-    "KJ315F-A1": {
-        child_lock_switch: false,
-        negative_ion_switch: false
-    },
-    "KJ400F-A11": {
-        child_lock_switch: false,
-        negative_ion_switch: false
-    },
-    "KJ819F-B2": {
-        speed: 5
-    }
+  "KJ315F-A1": {
+    child_lock_switch: false,
+    negative_ion_switch: false
+  },
+  "KJ400F-A11": {
+    child_lock_switch: false,
+    negative_ion_switch: false
+  },
+  "KJ819F-B2": {
+    speed: 5
+  }
 };
 const DEVICE_DEFAULT = {
-    child_lock_switch: true,
-    negative_ion_switch: true,
-    speed: 3
+  child_lock_switch: true,
+  negative_ion_switch: true,
+  speed: 3
 };
 
 const PM25_VAL = [0, 35, 75, 115, 150, 250];
 const PM25_ANGLE = [-136, -84, -28, 28, 84, 136];
 
 function getToggle(val) {
-    return val === "on" ? "off" : "on";
+  return val === "on" ? "off" : "on";
 }
 
 function getRotate(val, start, end) {
-    var min = PM25_VAL[start];
-    var max = PM25_VAL[end];
-    var min_r = PM25_ANGLE[start];
-    var max_r = PM25_ANGLE[end];
-    return min_r + (val - min) / (max - min) * (max_r - min_r);
+  var min = PM25_VAL[start];
+  var max = PM25_VAL[end];
+  var min_r = PM25_ANGLE[start];
+  var max_r = PM25_ANGLE[end];
+  return min_r + (val - min) / (max - min) * (max_r - min_r);
 }
 
 /**
@@ -468,380 +465,380 @@ function getRotate(val, start, end) {
  * @returns {Function}
  */
 function throttle(func, wait, options) {
-    var context, args, result;
-    var timeout = null;
-    var previous = 0;
-    if (!options) options = {};
-    var later = function() {
-        previous = options.leading === false ? 0 : new Date().getTime();
+  var context, args, result;
+  var timeout = null;
+  var previous = 0;
+  if (!options) options = {};
+  var later = function() {
+    previous = options.leading === false ? 0 : new Date().getTime();
+    timeout = null;
+    result = func.apply(context, args);
+    if (!timeout) context = args = null;
+  };
+  wait = wait || 500;
+  return function() {
+    var now = new Date().getTime();
+    if (!previous && options.leading === false) previous = now;
+    var remaining = wait - (now - previous);
+    context = this;
+    args = arguments;
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout);
         timeout = null;
-        result = func.apply(context, args);
-        if (!timeout) context = args = null;
-    };
-    wait = wait || 500;
-    return function() {
-        var now = new Date().getTime();
-        if (!previous && options.leading === false) previous = now;
-        var remaining = wait - (now - previous);
-        context = this;
-        args = arguments;
-        if (remaining <= 0 || remaining > wait) {
-            if (timeout) {
-                clearTimeout(timeout);
-                timeout = null;
-            }
-            previous = now;
-            result = func.apply(context, args);
-            if (!timeout) context = args = null;
-        } else if (!timeout && options.trailing !== false) {
-            timeout = setTimeout(later, remaining);
-        }
-        return result;
-    };
+      }
+      previous = now;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+    return result;
+  };
 }
 
 export default {
-    components: {
-        Modal,
-        SubPage,
-        Icon
+  components: {
+    Modal,
+    SubPage,
+    Icon
+  },
+  data() {
+    return {
+      status: "",
+      speedModalVisible: false,
+      moreModalVisible: false,
+      device_name: "",
+      model: {},
+      tip: "",
+      remain_tip: "",
+      pm25: "",
+      speedItems: SPEED_TEXT3,
+      //功能能力判断
+      ab: {},
+      //前一个状态
+      prevModel: {
+        control_status: "auto",
+        speed: ""
+      },
+      pmPopVisible: false,
+      current: 1,
+      switchStatus: 'on',
+      showModeBtns: false,
+      showMoreBtns: false,
+      showModeName: '低速风',
+      btnSwitch: true,
+      somnus: false,
+      windshield: false,
+      anion: false,
+      childLockName: false,
+      moreShow: false,
+    };
+  },
+  computed: {
+    isClose() {
+      return this.switchStatus == 'on' ? false : true
     },
-    data() {
-        return {
-            status: "",
-            speedModalVisible: false,
-            moreModalVisible: false,
-            device_name: "",
-            model: {},
-            tip: "",
-            remain_tip: "",
-            pm25: "",
-            speedItems: SPEED_TEXT3,
-            //功能能力判断
-            ab: {},
-            //前一个状态
-            prevModel: {
-                control_status: "auto",
-                speed: ""
-            },
-            pmPopVisible: false,
-            current: 1,
-            switchStatus: 'on',
-            showModeBtns: false,
-            showMoreBtns: false,
-            showModeName: '低速风',
-            btnSwitch: true,
-            somnus: false,
-            windshield: false,
-            anion: false,
-            childLockName: false,
-            moreShow: false,
-        };
+    currentSpeed() {
+      var item = this.speedItems.filter(item => {
+        return item.value == this.model.speed;
+      });
+      if (item.length) {
+        return item[0];
+      }
+      return {};
     },
-    computed: {
-      isClose() {
-        return this.switchStatus == 'on' ? false : true
-      },
-      currentSpeed() {
-        var item = this.speedItems.filter(item => {
-            return item.value == this.model.speed;
-        });
-        if (item.length) {
-            return item[0];
+    speedCss() {
+      return ["btn-speed" + this.currentSpeed.className, "active"];
+    },
+    speedText() {
+      return this.currentSpeed.text;
+    },
+    pm25_level() {
+      for (var i = PM25_VAL.length - 1; i >= 0; i--) {
+        if (this.pm25 > PM25_VAL[i]) {
+          return i + 1;
         }
-        return {};
-      },
-      speedCss() {
-        return ["btn-speed" + this.currentSpeed.className, "active"];
-      },
-      speedText() {
-        return this.currentSpeed.text;
-      },
-      pm25_level() {
-        for (var i = PM25_VAL.length - 1; i >= 0; i--) {
-            if (this.pm25 > PM25_VAL[i]) {
-                return i + 1;
-            }
-        }
-        return 1;
-      },
-      pm25_rotate() {
-        var level = this.pm25_level;
-        if (level == 6) {
-            return PM25_ANGLE[5];
-        }
-        return getRotate(this.pm25, level - 1, level);
-      },
-      pm25_text() {
-        return this.pm25 == 0 ? "--" : this.pm25 + "<small>μg/m³</small>";
+      }
+      return 1;
+    },
+    pm25_rotate() {
+      var level = this.pm25_level;
+      if (level == 6) {
+        return PM25_ANGLE[5];
+      }
+      return getRotate(this.pm25, level - 1, level);
+    },
+    pm25_text() {
+      return this.pm25 == 0 ? "--" : this.pm25 + "<small>μg/m³</small>";
+    }
+  },
+  watch: {
+    pmPopVisible() {
+      if (this.pmPopVisible) {
+        HdSmart.UI.toggleHeadAndFoot(false);
+      } else {
+        HdSmart.UI.toggleHeadAndFoot(true);
+      }
+    }
+  },
+  created() {
+    this.$watch("model.control_status", (newVal, oldVal) => {
+      this.prevModel.control_status = oldVal || "auto";
+    });
+
+    this.$watch("model.speed", (newVal, oldVal) => {
+      this.prevModel.speed = oldVal || "";
+    });
+
+    HdSmart.ready(() => {
+      if (window.device_name) {
+        this.device_name = window.device_name;
+      }
+      HdSmart.UI.showLoading();
+      HdSmart.UI.toggleHeadAndFoot(true);
+      this.getSnapShot(() => {
+        HdSmart.UI.hideLoading();
+      });
+    });
+
+    HdSmart.onDeviceStateChange(data => {
+      this.onSuccess(data.result);
+    });
+  },
+  methods: {
+    setAnion() {
+      this.anion = !this.anion
+    },
+    childLock() {
+      this.childLockName = !this.childLockName
+    },
+    handeModeClick() {
+      this.showModeBtns = true
+    },
+    handMoreClick() {
+      this.showMoreBtns = true
+      this.moreShow = true
+    },
+    setMode(mode) {
+      console.log(mode)
+      this.showModeName = mode
+      this.showModeBtns = false
+      this.showMoreBtns = false
+      this.activeMode = false
+      this.windshield = false
+    },
+    hide() {
+      this.showModeBtns = false
+      this.showMoreBtns = false
+      this.windshield = false
+      this.moreShow = false
+    },
+    // 开关btn
+    btnClose() {
+      this.btnSwitch = !this.btnSwitch
+      if (this.btnSwitch === false) {
+        this.somnus = false
+        this.windshield = false
+      }
+      if (this.switchStatus === 'on') {
+        this.switchStatus = 'off'
+      } else {
+        this.switchStatus = 'on'
       }
     },
-    watch: {
-        pmPopVisible() {
-            if (this.pmPopVisible) {
-                HdSmart.UI.toggleHeadAndFoot(false);
-            } else {
-                HdSmart.UI.toggleHeadAndFoot(true);
-            }
-        }
+    // 睡眠btn
+    btnSleep() {
+      this.somnus = !this.somnus
     },
-    created() {
-        this.$watch("model.control_status", (newVal, oldVal) => {
-            this.prevModel.control_status = oldVal || "auto";
-        });
-
-        this.$watch("model.speed", (newVal, oldVal) => {
-            this.prevModel.speed = oldVal || "";
-        });
-
-        HdSmart.ready(() => {
-            if (window.device_name) {
-                this.device_name = window.device_name;
-            }
-            HdSmart.UI.showLoading();
-            HdSmart.UI.toggleHeadAndFoot(true);
-            this.getSnapShot(() => {
-                HdSmart.UI.hideLoading();
-            });
-        });
-
-        HdSmart.onDeviceStateChange(data => {
-            this.onSuccess(data.result);
-        });
+    // 风档btn
+    btnWind() {
+      this.windshield = true
     },
-    methods: {
-      setAnion() {
-        this.anion = !this.anion
-      },
-      childLock() {
-        this.childLockName = !this.childLockName
-      },
-      handeModeClick() {
-        this.showModeBtns = true
-      },
-      handMoreClick() {
-        this.showMoreBtns = true
-        this.moreShow = true
-      },
-      setMode(mode) {
-        console.log(mode)
-        this.showModeName = mode
-        this.showModeBtns = false
-        this.showMoreBtns = false
-        this.activeMode = false
-        this.windshield = false
-      },
-      hide() {
-        this.showModeBtns = false
-        this.showMoreBtns = false
-        this.windshield = false
-        this.moreShow = false
-      },
-      // 开关btn
-      btnClose() {
-        this.btnSwitch = !this.btnSwitch
-        if(this.btnSwitch === false) {
-          this.somnus = false
-          this.windshield = false
+    // 更多btn
+    btnMore() {
+      this.current = 4
+    },
+    togglePMPop() {
+      //pm2.5
+      this.pmPopVisible = !this.pmPopVisible;
+    },
+    showTip(text) {
+      clearTimeout(this.tipTime);
+      this.tip = text;
+      this.tipTime = setTimeout(() => {
+        this.tip = "";
+      }, 2000);
+    },
+    controlDevice(attr, val, param, success, error) {
+      var fn = this.confirm;
+      var params = Object.assign(
+        {
+          [attr]: val
+        },
+        param
+      );
+
+      if (attr == "child_lock_switch") {
+        fn = function(cb) {
+          cb();
+        };
+      }
+
+      fn(() => {
+        HdSmart.Device.control(
+          {
+            method: "dm_set",
+            nodeid: `air_filter.main.${attr}`,
+            params: {
+              attribute: params
+            }
+          },
+          () => {
+            success && success();
+          },
+          () => {
+            error && error();
+            this.showTip("操作失败");
+          }
+        );
+      });
+    },
+    setSwitch(val) {
+      this.controlDevice("switch", val);
+    },
+    setControl: throttle(function(val) {
+      if (this.model.control_status == val) {
+        return;
+      }
+      this.controlDevice("control", val, () => {
+        this.model.control_status = val;
+      });
+    }),
+    setSleep() {
+      if (this.model.negative_ion_switch_status == "on") {
+        this.controlDevice("negative_ion_switch", "off", { control: "sleep" }, () => {
+          this.model.control_status = "sleep";
+        });
+      } else {
+        this.setControl("sleep");
+      }
+    },
+    setSpeed: throttle(function(val) {
+      if (this.model.control_status == "manual" && this.model.speed == val) {
+        return;
+      }
+      this.controlDevice("speed", val, { control: "manual" }, () => {
+        this.model.control_status = "manual";
+        this.model.speed = val;
+      });
+    }),
+    setNegativeIon: throttle(function() {
+      if (this.model.child_lock_switch_status == "on") {
+        HdSmart.UI.toast("解除童锁后才能控制此设备");
+        return;
+      }
+      var val = getToggle(this.model.negative_ion_switch_status);
+
+      this.controlDevice(
+        "negative_ion_switch",
+        val,
+        {
+          control:
+            this.model.control_status == "sleep" ? this.prevModel.control_status : this.model.control_status
+        },
+        () => {
+          this.model.negative_ion_switch_status = val;
         }
-        if(this.switchStatus === 'on') {
-          this.switchStatus = 'off'
-        } else {
-          this.switchStatus = 'on'
+      );
+    }),
+    setChildLock: throttle(function() {
+      if (this.model.control_status == "sleep") {
+        HdSmart.UI.toast("睡眠模式下不能开启童锁");
+        return;
+      }
+      var val = getToggle(this.model.child_lock_switch_status);
+      this.controlDevice(
+        "child_lock_switch",
+        val,
+        { control: this.model.control_status },
+        () => { },
+        () => {
+          this.model.child_lock_switch_status = getToggle(val);
         }
-      },
-      // 睡眠btn
-      btnSleep() {
-        this.somnus = !this.somnus
-      },
-      // 风档btn
-      btnWind() {
-        this.windshield = true
-      },
-      // 更多btn
-      btnMore() {
-        this.current = 4
-      },
-        togglePMPop() {
-            //pm2.5
-            this.pmPopVisible = !this.pmPopVisible;
+      );
+      //http://jira.evergrande.me/browse/HAALPHA-47
+      this.model.child_lock_switch_status = val;
+    }),
+    showSpeedModal() {
+      if (this.model.child_lock_switch_status == "on") {
+        this.confirm();
+      } else {
+        this.speedModalVisible = true;
+      }
+    },
+    getSnapShot(cb) {
+      HdSmart.Device.getSnapShot(
+        data => {
+          this.onSuccess(data);
+          cb && cb();
         },
-        showTip(text) {
-            clearTimeout(this.tipTime);
-            this.tip = text;
-            this.tipTime = setTimeout(() => {
-                this.tip = "";
-            }, 2000);
-        },
-        controlDevice(attr, val, param, success, error) {
-            var fn = this.confirm;
-            var params = Object.assign(
-                {
-                    [attr]: val
-                },
-                param
-            );
-
-            if (attr == "child_lock_switch") {
-                fn = function(cb) {
-                    cb();
-                };
-            }
-
-            fn(() => {
-                HdSmart.Device.control(
-                    {
-                        method: "dm_set",
-                        nodeid: `air_filter.main.${attr}`,
-                        params: {
-                            attribute: params
-                        }
-                    },
-                    () => {
-                        success && success();
-                    },
-                    () => {
-                        error && error();
-                        this.showTip("操作失败");
-                    }
-                );
-            });
-        },
-        setSwitch(val) {
-            this.controlDevice("switch", val);
-        },
-        setControl: throttle(function(val) {
-            if (this.model.control_status == val) {
-                return;
-            }
-            this.controlDevice("control", val, () => {
-                this.model.control_status = val;
-            });
-        }),
-        setSleep() {
-            if (this.model.negative_ion_switch_status == "on") {
-                this.controlDevice("negative_ion_switch", "off", { control: "sleep" }, () => {
-                    this.model.control_status = "sleep";
-                });
-            } else {
-                this.setControl("sleep");
-            }
-        },
-        setSpeed: throttle(function(val) {
-            if (this.model.control_status == "manual" && this.model.speed == val) {
-                return;
-            }
-            this.controlDevice("speed", val, { control: "manual" }, () => {
-                this.model.control_status = "manual";
-                this.model.speed = val;
-            });
-        }),
-        setNegativeIon: throttle(function() {
-            if (this.model.child_lock_switch_status == "on") {
-                HdSmart.UI.toast("解除童锁后才能控制此设备");
-                return;
-            }
-            var val = getToggle(this.model.negative_ion_switch_status);
-
-            this.controlDevice(
-                "negative_ion_switch",
-                val,
-                {
-                    control:
-                        this.model.control_status == "sleep" ? this.prevModel.control_status : this.model.control_status
-                },
-                () => {
-                    this.model.negative_ion_switch_status = val;
-                }
-            );
-        }),
-        setChildLock: throttle(function() {
-            if (this.model.control_status == "sleep") {
-                HdSmart.UI.toast("睡眠模式下不能开启童锁");
-                return;
-            }
-            var val = getToggle(this.model.child_lock_switch_status);
-            this.controlDevice(
-                "child_lock_switch",
-                val,
-                { control: this.model.control_status },
-                () => {},
-                () => {
-                    this.model.child_lock_switch_status = getToggle(val);
-                }
-            );
-            //http://jira.evergrande.me/browse/HAALPHA-47
-            this.model.child_lock_switch_status = val;
-        }),
-        showSpeedModal() {
-            if (this.model.child_lock_switch_status == "on") {
-                this.confirm();
-            } else {
-                this.speedModalVisible = true;
-            }
-        },
-        getSnapShot(cb) {
-            HdSmart.Device.getSnapShot(
-                data => {
-                    this.onSuccess(data);
-                    cb && cb();
-                },
-                () => {
-                    this.onError();
-                    cb && cb();
-                }
-            );
-        },
-        onSuccess(data) {
-            this.status = "success";
-            this.model = data.attribute;
-            console.log(this.model, 'mock假数据');
-
-            if (this.model.filter_time_remaining <= 0) {
-                this.remain_tip = "需更换滤网";
-            } else if (this.model.filter_time_remaining <= 120) {
-                this.remain_tip = `滤芯寿命剩余${this.model.filter_time_remaining}小时`;
-            } else {
-                this.remain_tip = "";
-            }
-
-            var pm25 = this.model.air_filter_result.PM25;
-            this.pm25 = pm25.length == 2 ? pm25[1] : pm25[0];
-
-            // 根据设备型号判断功能点，后边从开放平台拉取
-            this.ab = Object.assign(DEVICE_DEFAULT, DEVICE_MODEL[this.model.deviceModel] || {});
-            if (this.ab.speed == 5) {
-                this.speedItems = SPEED_TEXT1;
-            } else if (this.ab.speed == 4) {
-                this.speedItems = SPEED_TEXT2;
-            } else {
-                this.speedItems = SPEED_TEXT3;
-            }
-        },
-        onError() {
-            this.status = "error";
-        },
-        confirm(done) {
-            if (this.model.child_lock_switch_status == "on") {
-                HdSmart.UI.alert(
-                    {
-                        title: "解除童锁",
-                        message: "解除童锁后才能控制此设备，\n是否解除？",
-                        dialogStyle: 2
-                    },
-                    val => {
-                        if (val) this.setChildLock();
-                    }
-                );
-            } else {
-                done();
-            }
+        () => {
+          this.onError();
+          cb && cb();
         }
+      );
+    },
+    onSuccess(data) {
+      this.status = "success";
+      this.model = data.attribute;
+      console.log(this.model, 'mock假数据');
+
+      if (this.model.filter_time_remaining <= 0) {
+        this.remain_tip = "需更换滤网";
+      } else if (this.model.filter_time_remaining <= 120) {
+        this.remain_tip = `滤芯寿命剩余${this.model.filter_time_remaining}小时`;
+      } else {
+        this.remain_tip = "";
+      }
+
+      var pm25 = this.model.air_filter_result.PM25;
+      this.pm25 = pm25.length == 2 ? pm25[1] : pm25[0];
+
+      // 根据设备型号判断功能点，后边从开放平台拉取
+      this.ab = Object.assign(DEVICE_DEFAULT, DEVICE_MODEL[this.model.deviceModel] || {});
+      if (this.ab.speed == 5) {
+        this.speedItems = SPEED_TEXT1;
+      } else if (this.ab.speed == 4) {
+        this.speedItems = SPEED_TEXT2;
+      } else {
+        this.speedItems = SPEED_TEXT3;
+      }
+    },
+    onError() {
+      this.status = "error";
+    },
+    confirm(done) {
+      if (this.model.child_lock_switch_status == "on") {
+        HdSmart.UI.alert(
+          {
+            title: "解除童锁",
+            message: "解除童锁后才能控制此设备，\n是否解除？",
+            dialogStyle: 2
+          },
+          val => {
+            if (val) this.setChildLock();
+          }
+        );
+      } else {
+        done();
+      }
     }
+  }
 };
 </script>
 <style lang="less" scoped>
-.APP {
+.page {
   overflow-x: hidden;
   position: relative;
   background: rgba(230, 255, 243, 1);
@@ -906,7 +903,7 @@ export default {
       top: -520px;
       width: 184px;
       height: 224px;
-      color: #03FD05;
+      color: #03fd05;
       text-align: center;
       font-family: PingFangSC-Regular;
       .num {
@@ -924,7 +921,7 @@ export default {
       opacity: 0.5;
       font-family: PingFangSC-Regular;
       font-size: 12px;
-      color: #03FD05;
+      color: #03fd05;
       letter-spacing: 0;
       text-align: center;
       position: relative;
@@ -937,7 +934,7 @@ export default {
       width: 13px;
       height: 13px;
       opacity: 0.84;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: 170px;
       top: -930px;
@@ -948,7 +945,7 @@ export default {
       width: 13px;
       height: 13px;
       opacity: 0.55;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: 156px;
       top: -960px;
@@ -959,7 +956,7 @@ export default {
       width: 10px;
       height: 10px;
       opacity: 0.62;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: 208px;
       top: -996px;
@@ -970,7 +967,7 @@ export default {
       width: 13px;
       height: 13px;
       opacity: 0.5;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: 190px;
       top: -980px;
@@ -981,7 +978,7 @@ export default {
       width: 11px;
       height: 11px;
       opacity: 0.4;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: 200px;
       top: -900px;
@@ -992,7 +989,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 0.54;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: -280px;
       top: -870px;
@@ -1003,7 +1000,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 1;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: -120px;
       top: -846px;
@@ -1014,7 +1011,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 1;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: -190px;
       top: -820px;
@@ -1025,7 +1022,7 @@ export default {
       width: 11px;
       height: 11px;
       opacity: 0.66;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: 136px;
       top: -824px;
@@ -1036,7 +1033,7 @@ export default {
       width: 11px;
       height: 11px;
       opacity: 0.57;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: 170px;
       top: -720px;
@@ -1047,7 +1044,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 1;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: 116px;
       top: -630px;
@@ -1058,7 +1055,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 0.57;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: -410px;
       top: -500px;
@@ -1069,7 +1066,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 0.51;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: -70px;
       top: -500px;
@@ -1080,7 +1077,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 0.7;
-      background: #03FD05;
+      background: #03fd05;
       position: relative;
       left: -336px;
       top: -430px;
@@ -1096,19 +1093,19 @@ export default {
       display: inline-block;
       .remind-num {
         font-size: 80px;
-        color: #35353D;
+        color: #35353d;
         text-align: center;
       }
       .remind-txt {
         opacity: 0.5;
         font-size: 24px;
-        color: #35353D;
+        color: #35353d;
         text-align: center;
       }
       .remind-tis {
         position: relative;
         font-size: 24px;
-        color: #35353D;
+        color: #35353d;
         text-align: center;
         top: -120px;
         left: 60px;
@@ -1122,11 +1119,11 @@ export default {
     height: 306px;
     border-radius: 40px 40px 0 0;
     // box-shadow: 0px -6px 56px 0px #111111;
-    background: #FFFFFF;
-    box-shadow: 0 -3px 28px 0 rgba(209,209,209,0.50);
+    background: #ffffff;
+    box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
     display: flex;
     justify-content: space-evenly;
-    align-items:center;
+    align-items: center;
     .btn-tab {
       position: relative;
       top: -50px;
@@ -1137,7 +1134,7 @@ export default {
       border-radius: 50%;
       .btn-txt {
         font-size: 24px;
-        color: #35353D;
+        color: #35353d;
         text-align: center;
         position: relative;
         top: 10px;
@@ -1184,11 +1181,11 @@ export default {
       &.btn-wind {
         z-index: 99999;
         opacity: 1;
-        background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
+        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
       }
     }
     .btn-show {
-      background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
+      background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
       opacity: 1;
       border: 1px solid #ffffff;
       .btn-sty {
@@ -1212,7 +1209,7 @@ export default {
     .main_text {
       font-size: 28px;
       padding: 0.453rem 48px 0;
-      color: #35353D;
+      color: #35353d;
     }
     .pm-range {
       padding: 0 48px;
@@ -1220,38 +1217,38 @@ export default {
         font-size: 28px;
         color: #000000;
         margin-bottom: 0.453rem;
-        color: #35353D;
+        color: #35353d;
       }
       ul {
         display: flex;
         justify-content: space-between;
         li {
           list-style: none;
-          background: #15D0BA;
+          background: #15d0ba;
           border-radius: 8px;
           width: 106px;
           height: 96px;
           display: flex;
           align-items: center;
-          justify-content:center;
+          justify-content: center;
           &:nth-child(2) {
-            background: #A5D015;
+            background: #a5d015;
           }
           &:nth-child(3) {
-            background: #EFC12D;
+            background: #efc12d;
           }
           &:nth-child(4) {
-            background: #EF9C2D;
+            background: #ef9c2d;
           }
           &:nth-child(5) {
-            background: #EF642D;
+            background: #ef642d;
           }
           &:nth-child(6) {
-            background: #EF2D2D;
+            background: #ef2d2d;
           }
           p {
             font-size: 24px;
-            color: #35353D;
+            color: #35353d;
           }
         }
       }
@@ -1265,11 +1262,11 @@ export default {
           height: 16px;
           td {
             height: 16px;
-            border: 1px solid #D8D8D8;
+            border: 1px solid #d8d8d8;
             border-top: none;
             border-right: none;
             &:last-child {
-              border-right: 1px solid #D8D8D8;
+              border-right: 1px solid #d8d8d8;
             }
           }
         }
@@ -1279,7 +1276,7 @@ export default {
         display: flex;
         justify-content: space-between;
         font-size: 24px;
-        color: #FFFFFF;
+        color: #ffffff;
         span {
           &:nth-child(2) {
             position: relative;
@@ -1320,16 +1317,16 @@ export default {
         .btn-sty {
           .shutdown {
             display: block;
-              width: 120px;
-              height: 120px;
-              background-image: url(../../lib/base/dehumidifier/assets/swich-white.png);
-              background-repeat: no-repeat;
-              background-size: 48px 48px;
-              background-position: 50% 50%;
+            width: 120px;
+            height: 120px;
+            background-image: url(../../lib/base/dehumidifier/assets/swich-white.png);
+            background-repeat: no-repeat;
+            background-size: 48px 48px;
+            background-position: 50% 50%;
           }
         }
         .btn-txt {
-          color: #FFFFFF;
+          color: #ffffff;
         }
       }
     }
@@ -1372,7 +1369,7 @@ export default {
         top: 72px;
         text-align: center;
         font-size: 20px;
-        color: #FFFFFF;
+        color: #ffffff;
       }
     }
     .mode-item2 {
@@ -1392,7 +1389,7 @@ export default {
         top: 72px;
         text-align: center;
         font-size: 20px;
-        color: #FFFFFF;
+        color: #ffffff;
       }
     }
     .mode-item3 {
@@ -1412,7 +1409,7 @@ export default {
         top: 72px;
         text-align: center;
         font-size: 20px;
-        color: #FFFFFF;
+        color: #ffffff;
       }
     }
     .mode-item4 {
@@ -1432,7 +1429,7 @@ export default {
         top: 72px;
         text-align: center;
         font-size: 20px;
-        color: #FFFFFF;
+        color: #ffffff;
       }
     }
     .mode-item5 {
@@ -1452,7 +1449,7 @@ export default {
         top: 72px;
         text-align: center;
         font-size: 20px;
-        color: #FFFFFF;
+        color: #ffffff;
       }
     }
     .mode-item6 {
@@ -1472,7 +1469,7 @@ export default {
         top: 72px;
         text-align: center;
         font-size: 20px;
-        color: #FFFFFF;
+        color: #ffffff;
       }
     }
     .mode-item7 {
@@ -1492,42 +1489,42 @@ export default {
         top: 72px;
         text-align: center;
         font-size: 20px;
-        color: #FFFFFF;
+        color: #ffffff;
       }
     }
     .disu {
-      border-color: #FFC600;
+      border-color: #ffc600;
       background-image: url(../../lib/base/air_cleaner/assets/new-air/disu@2x.png);
       .mode-name {
-        color: #FFC600;
+        color: #ffc600;
       }
     }
     .zhongdisu {
-      border-color: #FFC600;
+      border-color: #ffc600;
       background-image: url(../../lib/base/air_cleaner/assets/new-air/zhongdisu@2x.png);
       .mode-name {
-        color: #FFC600;
+        color: #ffc600;
       }
     }
     .zhongsu {
-      border-color: #FFC600;
+      border-color: #ffc600;
       background-image: url(../../lib/base/air_cleaner/assets/new-air/zhongsu@2x.png);
       .mode-name {
-        color: #FFC600;
+        color: #ffc600;
       }
     }
     .gaosu {
-      border-color: #FFC600;
+      border-color: #ffc600;
       background-image: url(../../lib/base/air_cleaner/assets/new-air/gaosu@2x.png);
       .mode-name {
-        color: #FFC600;
+        color: #ffc600;
       }
     }
     .auto {
-      border-color: #FFC600;
+      border-color: #ffc600;
       background-image: url(../../lib/base/air_cleaner/assets/new-air/zidong@2x.png);
       .mode-name {
-        color: #FFC600;
+        color: #ffc600;
       }
     }
   }
