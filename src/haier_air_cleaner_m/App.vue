@@ -174,9 +174,10 @@
 
     <error-tip v-if="status == 'error'" @click.native="getSnapShot" />
   </div> -->
-  <div id="APP">
+  <div :class="[{'close': isClose}, 'APP']">
     <topbar
       :transparent="true"
+      style="font-weight: 500"
       title="空气净化器" />
     <div
       class="main"
@@ -300,7 +301,7 @@
     </div>
     <div class="btn">
       <div
-        :class="[{'btn-show':current==1}, 'btn-tab']"
+        :class="[{'active-switch': !isClose}, {'btn-show':btnSwitch}, 'btn-tab', 'btn-swich']"
         @click.prevent="btnClose"
       >
         <div class="btn-sty">
@@ -311,7 +312,7 @@
         <div class="btn-txt">关机</div>
       </div>
       <div
-        :class="[{'btn-show':current==2}, 'btn-tab']"
+        :class="[{'btn-show':somnus}, 'btn-tab']"
         @click.prevent="btnSleep">
         <div class="btn-sty">
           <a
@@ -321,24 +322,81 @@
         <div class="btn-txt">睡眠</div>
       </div>
       <div
-        :class="[{'btn-show':current==3}, 'btn-tab']"
+        :class="[{'btn-wind':windshield}, 'btn-tab']"
         @click.prevent="btnWind">
-        <div class="btn-sty">
+        <div
+          class="btn-sty"
+          @click="handeModeClick">
           <a
             href="#"
             class="shutdown2"/>
         </div>
-        <div class="btn-txt">中速风</div>
+        <div class="btn-txt">{{ showModeName }}</div>
       </div>
       <div
-        :class="[{'btn-show':current==4}, 'btn-tab']"
+        :class="[{'btn-wind':moreShow}, 'btn-tab']"
         @click.prevent="btnMore">
-        <div class="btn-sty">
+        <div
+          class="btn-sty"
+          @click="handMoreClick">
           <a
             href="#"
             class="shutdown3"/>
         </div>
         <div class="btn-txt">更多</div>
+      </div>
+    </div>
+    <!-- 风档选择弹框 -->
+    <div
+      v-show="showModeBtns"
+      class="mode-btn"
+      @touchmove.prevent
+      @click="hide">
+      <div class="mode-items">
+        <div
+          :class="[{'disu': showModeName === '低速风'},'mode-item1']"
+          @click.stop="setMode('低速风')">
+          <div class="mode-name">低速</div>
+        </div>
+        <div
+          :class="[{'zhongdisu': showModeName === '中低速风'},'mode-item2']"
+          @click.stop="setMode('中低速风')">
+          <div class="mode-name">中低速</div>
+        </div>
+        <div
+          :class="[{'zhongsu': showModeName === '中速风'},'mode-item3']"
+          @click.stop="setMode('中速风')">
+          <div class="mode-name">中速</div>
+        </div>
+        <div
+          :class="[{'gaosu': showModeName === '高速风'},'mode-item4']"
+          @click.stop="setMode('高速风')">
+          <div class="mode-name">高速</div>
+        </div>
+        <div
+          :class="[{'auto': showModeName === '自动'},'mode-item5']"
+          @click.stop="setMode('自动')">
+          <div class="mode-name">自动</div>
+        </div>
+      </div>
+    </div>
+    <!-- 更多选择弹框 -->
+    <div
+      v-show="showMoreBtns"
+      class="mode-btn"
+      @touchmove.prevent
+      @click="hide">
+      <div class="mode-items">
+        <div
+          :class="[{'disu': anion},'mode-item6']"
+          @click.stop="setAnion()">
+          <div class="mode-name">负离子</div>
+        </div>
+        <div
+          :class="[{'zhongdisu': childLockName},'mode-item7']"
+          @click.stop="childLock()">
+          <div class="mode-name">童锁</div>
+        </div>
       </div>
     </div>
   </div>
@@ -467,43 +525,56 @@ export default {
                 speed: ""
             },
             pmPopVisible: false,
-            current: 1
+            current: 1,
+            switchStatus: 'on',
+            showModeBtns: false,
+            showMoreBtns: false,
+            showModeName: '低速风',
+            btnSwitch: true,
+            somnus: false,
+            windshield: false,
+            anion: false,
+            childLockName: false,
+            moreShow: false,
         };
     },
     computed: {
-        currentSpeed() {
-            var item = this.speedItems.filter(item => {
-                return item.value == this.model.speed;
-            });
-            if (item.length) {
-                return item[0];
-            }
-            return {};
-        },
-        speedCss() {
-            return ["btn-speed" + this.currentSpeed.className, "active"];
-        },
-        speedText() {
-            return this.currentSpeed.text;
-        },
-        pm25_level() {
-            for (var i = PM25_VAL.length - 1; i >= 0; i--) {
-                if (this.pm25 > PM25_VAL[i]) {
-                    return i + 1;
-                }
-            }
-            return 1;
-        },
-        pm25_rotate() {
-            var level = this.pm25_level;
-            if (level == 6) {
-                return PM25_ANGLE[5];
-            }
-            return getRotate(this.pm25, level - 1, level);
-        },
-        pm25_text() {
-            return this.pm25 == 0 ? "--" : this.pm25 + "<small>μg/m³</small>";
+      isClose() {
+        return this.switchStatus == 'on' ? false : true
+      },
+      currentSpeed() {
+        var item = this.speedItems.filter(item => {
+            return item.value == this.model.speed;
+        });
+        if (item.length) {
+            return item[0];
         }
+        return {};
+      },
+      speedCss() {
+        return ["btn-speed" + this.currentSpeed.className, "active"];
+      },
+      speedText() {
+        return this.currentSpeed.text;
+      },
+      pm25_level() {
+        for (var i = PM25_VAL.length - 1; i >= 0; i--) {
+            if (this.pm25 > PM25_VAL[i]) {
+                return i + 1;
+            }
+        }
+        return 1;
+      },
+      pm25_rotate() {
+        var level = this.pm25_level;
+        if (level == 6) {
+            return PM25_ANGLE[5];
+        }
+        return getRotate(this.pm25, level - 1, level);
+      },
+      pm25_text() {
+        return this.pm25 == 0 ? "--" : this.pm25 + "<small>μg/m³</small>";
+      }
     },
     watch: {
         pmPopVisible() {
@@ -539,15 +610,55 @@ export default {
         });
     },
     methods: {
+      setAnion() {
+        this.anion = !this.anion
+      },
+      childLock() {
+        this.childLockName = !this.childLockName
+      },
+      handeModeClick() {
+        this.showModeBtns = true
+      },
+      handMoreClick() {
+        this.showMoreBtns = true
+        this.moreShow = true
+      },
+      setMode(mode) {
+        console.log(mode)
+        this.showModeName = mode
+        this.showModeBtns = false
+        this.showMoreBtns = false
+        this.activeMode = false
+        this.windshield = false
+      },
+      hide() {
+        this.showModeBtns = false
+        this.showMoreBtns = false
+        this.windshield = false
+        this.moreShow = false
+      },
+      // 开关btn
       btnClose() {
-        this.current = !this.current
+        this.btnSwitch = !this.btnSwitch
+        if(this.btnSwitch === false) {
+          this.somnus = false
+          this.windshield = false
+        }
+        if(this.switchStatus === 'on') {
+          this.switchStatus = 'off'
+        } else {
+          this.switchStatus = 'on'
+        }
       },
+      // 睡眠btn
       btnSleep() {
-        this.current = 2
+        this.somnus = !this.somnus
       },
+      // 风档btn
       btnWind() {
-        this.current = 3
+        this.windshield = true
       },
+      // 更多btn
       btnMore() {
         this.current = 4
       },
@@ -684,6 +795,7 @@ export default {
         onSuccess(data) {
             this.status = "success";
             this.model = data.attribute;
+            console.log(this.model, 'mock假数据');
 
             if (this.model.filter_time_remaining <= 0) {
                 this.remain_tip = "需更换滤网";
@@ -729,15 +841,15 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-#APP {
+.APP {
   overflow-x: hidden;
   position: relative;
-  background: #35353D;
+  background: rgba(230, 255, 243, 1);
   height: 1624px;
   width: 750px;
-  * {
-    transition: all 0.3s ease-in-out;
-  }
+  // * {
+  //   transition: all 0.3s ease-in-out;
+  // }
   // 圆圈样式
   .main {
     width: 540px;
@@ -746,7 +858,7 @@ export default {
     .circle {
       width: 100%;
       height: 100%;
-      transform: rotateY(180deg);
+      // transform: rotateY(180deg);
     }
     .pointer-excellent {
       position: relative;
@@ -794,7 +906,7 @@ export default {
       top: -520px;
       width: 184px;
       height: 224px;
-      color: #FFFFFF;
+      color: #03FD05;
       text-align: center;
       font-family: PingFangSC-Regular;
       .num {
@@ -802,17 +914,17 @@ export default {
       }
       .txt {
         font-size: 24px;
-        color: #FFFFFF;
         letter-spacing: -0.2px;
         position: relative;
         top: -24px;
+        font-weight: 900;
       }
     }
     .nuit {
       opacity: 0.5;
       font-family: PingFangSC-Regular;
       font-size: 12px;
-      color: #FFFFFF;
+      color: #03FD05;
       letter-spacing: 0;
       text-align: center;
       position: relative;
@@ -825,7 +937,7 @@ export default {
       width: 13px;
       height: 13px;
       opacity: 0.84;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: 170px;
       top: -930px;
@@ -836,7 +948,7 @@ export default {
       width: 13px;
       height: 13px;
       opacity: 0.55;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: 156px;
       top: -960px;
@@ -847,7 +959,7 @@ export default {
       width: 10px;
       height: 10px;
       opacity: 0.62;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: 208px;
       top: -996px;
@@ -858,7 +970,7 @@ export default {
       width: 13px;
       height: 13px;
       opacity: 0.5;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: 190px;
       top: -980px;
@@ -869,7 +981,7 @@ export default {
       width: 11px;
       height: 11px;
       opacity: 0.4;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: 200px;
       top: -900px;
@@ -880,7 +992,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 0.54;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: -280px;
       top: -870px;
@@ -891,7 +1003,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 1;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: -120px;
       top: -846px;
@@ -902,7 +1014,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 1;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: -190px;
       top: -820px;
@@ -913,7 +1025,7 @@ export default {
       width: 11px;
       height: 11px;
       opacity: 0.66;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: 136px;
       top: -824px;
@@ -924,7 +1036,7 @@ export default {
       width: 11px;
       height: 11px;
       opacity: 0.57;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: 170px;
       top: -720px;
@@ -935,7 +1047,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 1;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: 116px;
       top: -630px;
@@ -946,7 +1058,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 0.57;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: -410px;
       top: -500px;
@@ -957,7 +1069,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 0.51;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: -70px;
       top: -500px;
@@ -968,7 +1080,7 @@ export default {
       width: 8px;
       height: 8px;
       opacity: 0.7;
-      background: #00C4A5;
+      background: #03FD05;
       position: relative;
       left: -336px;
       top: -430px;
@@ -984,19 +1096,19 @@ export default {
       display: inline-block;
       .remind-num {
         font-size: 80px;
-        color: #FFFFFF;
+        color: #35353D;
         text-align: center;
       }
       .remind-txt {
         opacity: 0.5;
         font-size: 24px;
-        color: #FFFFFF;
+        color: #35353D;
         text-align: center;
       }
       .remind-tis {
         position: relative;
         font-size: 24px;
-        color: #FFFFFF;
+        color: #35353D;
         text-align: center;
         top: -120px;
         left: 60px;
@@ -1009,7 +1121,9 @@ export default {
     width: 100%;
     height: 306px;
     border-radius: 40px 40px 0 0;
-    box-shadow: 0px -6px 56px 0px #111111;
+    // box-shadow: 0px -6px 56px 0px #111111;
+    background: #FFFFFF;
+    box-shadow: 0 -3px 28px 0 rgba(209,209,209,0.50);
     display: flex;
     justify-content: space-evenly;
     align-items:center;
@@ -1019,11 +1133,11 @@ export default {
       width: 120px;
       height: 120px;
       opacity: 0.5;
-      border: 1px solid #FFFFFF;
+      border: 1px solid #818181;
       border-radius: 50%;
       .btn-txt {
         font-size: 24px;
-        color: #FFFFFF;
+        color: #35353D;
         text-align: center;
         position: relative;
         top: 10px;
@@ -1034,7 +1148,7 @@ export default {
           display: block;
           width: 120px;
           height: 120px;
-          background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
+          background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_on_cd@2x.png);
           background-repeat: no-repeat;
           background-size: 48px 48px;
           background-position: 50% 50%;
@@ -1067,10 +1181,16 @@ export default {
           background-position: 50% 50%;
         }
       }
+      &.btn-wind {
+        z-index: 99999;
+        opacity: 1;
+        background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
+      }
     }
     .btn-show {
       background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
       opacity: 1;
+      border: 1px solid #ffffff;
       .btn-sty {
         .shutdown {
           display: block;
@@ -1088,11 +1208,11 @@ export default {
   .modal-w {
     font-family: PingFangSC-Medium;
     font-size: 17px;
-    background: #35353D;
+    background: #ffffff;
     .main_text {
       font-size: 28px;
       padding: 0.453rem 48px 0;
-      color: #FFFFFF;
+      color: #35353D;
     }
     .pm-range {
       padding: 0 48px;
@@ -1100,7 +1220,7 @@ export default {
         font-size: 28px;
         color: #000000;
         margin-bottom: 0.453rem;
-        color: #FFFFFF;
+        color: #35353D;
       }
       ul {
         display: flex;
@@ -1131,7 +1251,7 @@ export default {
           }
           p {
             font-size: 24px;
-            color: #FFFFFF;
+            color: #35353D;
           }
         }
       }
@@ -1178,6 +1298,236 @@ export default {
             left: 6px;
           }
         }
+      }
+    }
+  }
+  &.close {
+    &:before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 9;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.8);
+    }
+    .btn {
+      .btn-swich {
+        z-index: 10;
+        opacity: 1;
+        .btn-sty {
+          .shutdown {
+            display: block;
+              width: 120px;
+              height: 120px;
+              background-image: url(../../lib/base/dehumidifier/assets/swich-white.png);
+              background-repeat: no-repeat;
+              background-size: 48px 48px;
+              background-position: 50% 50%;
+          }
+        }
+        .btn-txt {
+          color: #FFFFFF;
+        }
+      }
+    }
+  }
+}
+.mode-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 9999;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+  }
+  .mode-items {
+    z-index: 99999;
+    position: absolute;
+    bottom: 0;
+    left: 488px;
+    .mode-item1 {
+      position: relative;
+      left: -262px;
+      top: 354px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/disu@2x.png);
+      background-repeat: no-repeat;
+      background-size: 48px 48px;
+      background-position: 50% 20px;
+      .mode-name {
+        position: relative;
+        top: 72px;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+      }
+    }
+    .mode-item2 {
+      position: relative;
+      left: -230px;
+      top: 90px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/zhongdisu@2x.png);
+      background-repeat: no-repeat;
+      background-size: 48px 48px;
+      background-position: 50% 20px;
+      .mode-name {
+        position: relative;
+        top: 72px;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+      }
+    }
+    .mode-item3 {
+      position: relative;
+      left: -88px;
+      top: -80px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/zhongsu@2x.png);
+      background-repeat: no-repeat;
+      background-size: 48px 48px;
+      background-position: 50% 20px;
+      .mode-name {
+        position: relative;
+        top: 72px;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+      }
+    }
+    .mode-item4 {
+      position: relative;
+      left: 56px;
+      top: -160px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/gaosu@2x.png);
+      background-repeat: no-repeat;
+      background-size: 48px 48px;
+      background-position: 50% 20px;
+      .mode-name {
+        position: relative;
+        top: 72px;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+      }
+    }
+    .mode-item5 {
+      position: relative;
+      left: 88px;
+      top: -142px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/zidong@2x.png);
+      background-repeat: no-repeat;
+      background-size: 48px 48px;
+      background-position: 50% 20px;
+      .mode-name {
+        position: relative;
+        top: 72px;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+      }
+    }
+    .mode-item6 {
+      position: relative;
+      left: 88px;
+      top: -180px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/zidong@2x.png);
+      background-repeat: no-repeat;
+      background-size: 48px 48px;
+      background-position: 50% 20px;
+      .mode-name {
+        position: relative;
+        top: 72px;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+      }
+    }
+    .mode-item7 {
+      position: relative;
+      left: -88px;
+      top: -142px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/zidong@2x.png);
+      background-repeat: no-repeat;
+      background-size: 48px 48px;
+      background-position: 50% 20px;
+      .mode-name {
+        position: relative;
+        top: 72px;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+      }
+    }
+    .disu {
+      border-color: #FFC600;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/disu@2x.png);
+      .mode-name {
+        color: #FFC600;
+      }
+    }
+    .zhongdisu {
+      border-color: #FFC600;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/zhongdisu@2x.png);
+      .mode-name {
+        color: #FFC600;
+      }
+    }
+    .zhongsu {
+      border-color: #FFC600;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/zhongsu@2x.png);
+      .mode-name {
+        color: #FFC600;
+      }
+    }
+    .gaosu {
+      border-color: #FFC600;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/gaosu@2x.png);
+      .mode-name {
+        color: #FFC600;
+      }
+    }
+    .auto {
+      border-color: #FFC600;
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/zidong@2x.png);
+      .mode-name {
+        color: #FFC600;
       }
     }
   }

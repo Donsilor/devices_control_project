@@ -174,7 +174,7 @@ export default {
     .title {
         text-align: center;
         font-size: 17PX;
-        color: #fff;
+        color: #35353D;
     }
     .left a,.right a {
         width: @navigation_bar_height;
