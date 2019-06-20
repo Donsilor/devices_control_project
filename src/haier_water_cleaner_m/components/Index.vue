@@ -1,8 +1,9 @@
 <template>
-  <div :class="[ bgClass,'page']">
+  <div :class="[bgClass,'page']">
     <div class="bg">
       <topbar 
         :transparent="true"
+        :bg-color="topBarClass"
         :title="device_name" />
       <div class="main">
         <div class="title">过滤前水质：{{ oldTDS }} TDS</div>
@@ -178,6 +179,23 @@ export default {
           break
       }
     },
+    topBarClass() {
+      /* eslint-disable no-unreachable */
+      switch (this.rank) {
+        case 1:
+          return '#46bcff'
+          break
+        case 2:
+          return '#327dfe'
+          break
+        case 3:
+          return ' #2d37ef'
+          break
+        case 4:
+          return '#fe3232'
+          break
+      }
+    }
   },
   watch: {
   },

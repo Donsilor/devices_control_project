@@ -33,6 +33,7 @@
           </template>
           <template v-else>
             <a 
+              :style="{ 'color': bakColor }"
               href="#/"
               class="icon-more"
               @click.prevent="goDetail" />
@@ -40,6 +41,7 @@
         </div>
         <div 
           v-if="title"
+          :style="{ 'color': bakColor }"
           class="title">{{ title }}</div>
         <slot />
       </div>
@@ -130,7 +132,10 @@ export default {
 /* topbar */
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
-
+.topbar{
+  position: relative;
+  z-index: 9999;
+}
 .topbar-block {
   height: 64PX;
 }
@@ -142,7 +147,7 @@ export default {
   z-index: 100;
   width: 100%;
   background: #fff;
-  border-bottom: 1px solid rgba(216, 216, 216, 0.7);
+  // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
 }
 
 .topbar-nobg {

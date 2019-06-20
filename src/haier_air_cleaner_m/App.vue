@@ -3,7 +3,7 @@
     <div :class="[{'close': isClose}, {'filter': showModeBtns }, 'page']">
       <topbar 
         :title="device_name"
-        bak-color="#000"/>
+        :bak-color="bakColor"/>
       <div 
         class="main"
         @click="togglePMPop">
@@ -13,12 +13,12 @@
             src="../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png"
             alt="">
           <img 
-            v-show="current==1"
+            v-show="current==0"
             class="pointer-excellent"
             src="../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png"
             alt="">
           <img 
-            v-show="current==0"
+            v-show="current==1"
             class="pointer-good"
             src="../../lib/base/air_cleaner/assets/new-air/lianghao@2x.png"
             alt="">
@@ -221,12 +221,14 @@ export default {
         wind_left_right: false
       },
       pmPopVisible: false,
-      current: 4,
     }
   },
   computed: {
     isClose() {
       return this.model.switch_status == 'on' ? false : true
+    },
+    bakColor() {
+      return this.isClose ? '#fff' : '#000'
     },
     isOffline() {
       return this.model.connectivity === 'online' ? false : true
@@ -252,6 +254,20 @@ export default {
         case 'sleep':
           return 'btn-sleep'
           break 
+      }
+    },
+    current() {
+      let pm2 = this.model.air_filter_result.PM25[0]
+      if (pm2 < 35) {
+        return 0
+      } else if (pm2 < 75) {
+        return 1
+      } else if (pm2 < 115) {
+        return 2
+      } else if (pm2 >= 150) {
+        return 3
+      } else if (pm2 >= 250) {
+        return 4
       }
     },
     btnTxt() {
@@ -453,7 +469,7 @@ export default {
   .main {
     width: 540px;
     height: 540px;
-    margin: 202px auto 0;
+    margin: 90px auto 0;
     .circle {
       width: 100%;
       height: 100%;
@@ -849,7 +865,7 @@ export default {
       right: 0;
       z-index: 999;
       width: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.7);
     }
     .btn-wrap {
       &.up-index {

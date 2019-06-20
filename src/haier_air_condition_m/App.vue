@@ -144,11 +144,11 @@
       @touchmove.prevent
       @click="hide">
       <div class="items btns">
-        <div 
+        <!-- <div 
           :class="[{ 'item2': animation }, { 'btn-current': deviceInfo.attribute.timer}, 'btn btn-time center']"
           @click.stop="showTime">
           <div class="name">定时</div>
-        </div>
+        </div> -->
         <div 
           :class="[{ 'item3': animation }, { 'btn-current': deviceInfo.attribute.wind_up_down === 'on' || deviceInfo.attribute.wind_left_right === 'on' }, 'btn btn-swing center']"
           @click.stop="showSwing">
@@ -313,7 +313,7 @@ export default {
       HdSmart.ready(() => {
         HdSmart.UI.showLoading()
         if (window.device_name) {
-            this.device.name = window.device_name;
+            this.device.name = window.device_name
         }
         this.getSnapShot()
       })
@@ -390,24 +390,9 @@ export default {
     onSuccess(data) {
       this.deviceInfo = data
       console.log(data)
-      // if (data && data.attribute) {
-      //   if (data.attribute.operation === "abnormal") {
-      //     this.onError()
-      //   } else {
-      //     this.status = "SUCCESS"
-      //     this.setAttr(data.attribute)
-      //     if (this.ac.switchStatus === 'on' && this.$refs.airon) {
-      //       this.$refs.airon.syncTemp()
-      //     }
-      //   }
-      // }
     },
     controlDevice(attr, val, btnAttr, success, error) {
-      // if (this.deviceInfo.attribute[attr] === val) { // 没有更改
-      //   return success && success()
-      // }
-
-      this.showBtnLoading(btnAttr);
+      this.showBtnLoading(btnAttr)
       HdSmart.Device.control(
         {
           method: "dm_set",
@@ -419,7 +404,7 @@ export default {
           }
         },
         () => {
-          this.hideBtnLoading(btnAttr);
+          this.hideBtnLoading(btnAttr)
           if (attr == "switch") {
             this.deviceInfo.attribute.switchStatus = val
           } else {
@@ -428,7 +413,7 @@ export default {
           success && success()
         },
         () => {
-          this.hideBtnLoading(btnAttr);
+          this.hideBtnLoading(btnAttr)
           error && error()
         }
       )
@@ -545,6 +530,7 @@ export default {
     width: 120px;
     height: 120px;
     border: 1px solid #fff;
+    box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
     border-radius: 50%;
 
     display: flex;

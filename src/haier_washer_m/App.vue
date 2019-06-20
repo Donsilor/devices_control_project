@@ -5,7 +5,7 @@
     <div class="page">
       <topbar
         :title="device_name"
-        bak-color="#000" />
+        :bak-color="bakColor"/>
       <!-- 离线提示 原生实现了 该功能注释掉-->
       <!-- <div 
         v-show="isOffline"
@@ -267,6 +267,9 @@ export default {
   computed: {
     isClose() {
       return this.model.switch == 'off'
+    },
+    bakColor() {
+      return this.isClose ? '#fff' : '#000'
     },
     isRun() {
       return this.model.status == 'run'
@@ -1230,14 +1233,14 @@ export default {
       }
     }
 
-    .wave1 {
-      background-image: url(../../lib/base/haier_washer/assets/wave-close1.png);
-      background-position-x: -560px;
-    }
-    .wave2 {
-      background-image: url(../../lib/base/haier_washer/assets/wave-close2.png);
-      background-position-x: -520px;
-    }
+    // .wave1 {
+    //   background-image: url(../../lib/base/haier_washer/assets/wave-close1.png);
+    //   background-position-x: -560px;
+    // }
+    // .wave2 {
+    //   background-image: url(../../lib/base/haier_washer/assets/wave-close2.png);
+    //   background-position-x: -520px;
+    // }
     .btns {
       .btn-swich {
         position: relative;
