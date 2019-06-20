@@ -1,688 +1,347 @@
 <template>
-  <!-- <div id="app">
-    <div
-      v-if="status == 'error' || model.switch_status == 'on'"
-      class="page-on">
-      <div class="mainTitle">
-        <div class="name">{{ device_name }}
-          <icon class="redact-white" />
-        </div>
-        <div class="tip">
-          <p v-show="tip">{{ tip }}</p>
-          <p v-show="!tip && remain_tip">{{ remain_tip }}</p>
-        </div>
-      </div>
-      <a
-        v-if="ab.child_lock_switch || ab.negative_ion_switch"
-        href=""
-        class="btn-more"
-        @click.prevent="moreModalVisible = true"/>
-      <div class="pm25">
-        <div class="circle">
-          <span
-            v-for="i in 5"
-            v-show="i==(pm25_level>5?5:pm25_level)"
-            :key="i"
-            :class="'c'+i"/>
-        </div>
-        <div
-          :style="{transform:'rotate('+ pm25_rotate +'deg)'}"
-          class="arrow"/>
-        <div
-          class="value"
-          v-html="pm25_text"/>
-        <div
-          class="pic"
-          @click="togglePMPop">PM 2.5</div>
-        <div class="attrs">
-          <span v-if="model.temperature && model.temperature!='0'">温度：{{ model.temperature }}℃</span>
-          <span v-if="model.humidity && model.humidity!='0'">湿度：{{ model.humidity }}%</span>
-        </div>
-      </div>
-
-      <div class="btns btns-fn">
-        <a
-          href=""
-          class="btn-on"
-          @click.prevent="setSwitch('off')">
-          <i/> 开关
-        </a>
-        <a
-          :class="{active:model.control_status == 'sleep'}"
-          href=""
-          class="btn-sleep"
-          @click.prevent="setSleep">
-          <i/> 睡眠
-        </a>
-
-        <a href="" class="btn-sleep"  @click.prevent="setControl('manual')">
-                <i></i> 手动
-            </a>
-
-        <a
-          v-if="model.control_status == 'auto'"
-          href=""
-          class="btn-auto active"
-          @click.prevent="showSpeedModal">
-          <i/> 自动
-        </a>
-        <a
-          v-else-if="model.control_status == 'manual'"
-          :class="speedCss"
-          href=""
-          @click.prevent="showSpeedModal">
-          <i/> {{ speedText }}
-        </a>
-        <a
-          v-else
-          href=""
-          class="btn-speed"
-          @click.prevent="showSpeedModal">
-          <i/> 风档
-        </a>
-      </div>
-
-      <modal
-        v-model="speedModalVisible"
-        title="风档"
-        class="windControl">
-        <div class="btns btns-speed">
-          <a
-            v-for="item in speedItems"
-            :key="item.value"
-            :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]"
-            href=""
-            @click.prevent="setSpeed(item.value)">
-            <i/> {{ item.text }}
-          </a>
-          <a
-            :class="{active: model.control_status == 'auto'}"
-            href=""
-            class="btn1-auto"
-            @click.prevent="setControl('auto')">
-            <i/> 自动
-          </a>
-        </div>
-      </modal>
-
-      <modal
-        v-model="moreModalVisible"
-        title="更多">
-        <div class="btns btns-more">
-          <a
-            v-if="ab.negative_ion_switch"
-            :class="{active:model.negative_ion_switch_status == 'on'}"
-            href=""
-            class="btn-ni"
-            @click.prevent="setNegativeIon">
-            <i/> 负离子
-          </a>
-          <a
-            v-if="ab.child_lock_switch"
-            :class="{active:model.child_lock_switch_status == 'on'}"
-            href=""
-            class="btn-cl"
-            @click.prevent="setChildLock">
-            <i/> 童锁
-          </a>
-        </div>
-      </modal>
-      <sub-page
-        v-model="pmPopVisible"
-        title="PM2.5简介"
-        class="modal-w"
-        @click.prevent="toggleModePop">
-        <div class="intro-body">
-          <p class="main_text">
-            PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
-          </p>
-          <div class="pm-range">
-            <img src="../../lib/base/air_cleaner/assets/PM2.5_scale@3x.png" >
-          </div>
-        </div>
-      </sub-page>
-
-    </div>
-
-    <div
-      v-if="model.switch_status == 'off'"
-      class="page-off">
-      <div class="name">{{ device_name }}
-        <icon />
-      </div>
-      <div class="tip">已关闭</div>
-      <div class="air_cleaner"/>
-      <div class="btns btns-fn">
-        <a
-          href="javascript:void(0)"
-          class="btn-off"
-          @click.prevent="setSwitch('on')">
-          <i/> 开关
-        </a>
-        <a
-          href="javascript:void(0)"
-          class="btn-sleep disable">
-          <i/> 睡眠
-        </a>
-        <a
-          href="javascript:void(0)"
-          class="btn-speed disable">
-          <i/> 风档
-        </a>
-      </div>
-    </div>
-
-    <error-tip v-if="status == 'error'" @click.native="getSnapShot" />
-  </div> -->
-  <div :class="[{'close': isClose}, 'page']">
-    <topbar 
-      title="空气净化器" />
-    <div 
-      class="main"
-      @click="togglePMPop">
-      <div>
-        <img 
-          class="circle"
-          src="../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png"
-          alt="">
-        <img 
-          v-show="current==1"
-          class="pointer-excellent"
-          src="../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png"
-          alt="">
-        <img 
-          v-show="current==0"
-          class="pointer-good"
-          src="../../lib/base/air_cleaner/assets/new-air/lianghao@2x.png"
-          alt="">
-        <img 
-          v-show="current==2"
-          class="pointer-light"
-          src="../../lib/base/air_cleaner/assets/new-air/qingdu@2x.png"
-          alt="">
-        <img 
-          v-show="current==3"
-          class="pointer-moderate"
-          src="../../lib/base/air_cleaner/assets/new-air/zhongdu@2x.png"
-          alt="">
-        <img 
-          v-show="current==4"
-          class="pointer-severe"
-          src="../../lib/base/air_cleaner/assets/new-air/zhongduz@2x.png"
-          alt="">
-      </div>
-      <div class="block">
-        <div class="num">76</div>
-        <div class="txt">室内空气 优</div>
-      </div>
-      <span class="nuit">μg/m³</span>
-      <span class="sport" />
-      <span class="sport1" />
-      <span class="sport2" />
-      <span class="sport3" />
-      <span class="sport4" />
-      <span class="sport5" />
-      <span class="sport6" />
-      <span class="sport7" />
-      <span class="sport8" />
-      <span class="sport9" />
-      <span class="sport10" />
-      <span class="sport11" />
-      <span class="sport12" />
-      <span class="sport13" />
-      <sub-page 
-        v-model="pmPopVisible"
-        class="modal-w"
-        title="PM2.5简介"
-        @click.prevent="toggleModePop">
-        <div class="intro-body">
-          <p class="main_text">
-            PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
-          </p>
-          <div class="pm-range">
-            <!-- <img src="../../lib/base/air_cleaner/assets/PM2.5_scale@3x.png" > -->
-            <p class="pm-range-title">PM2.5数值范围说明</p>
-            <ul>
-              <li>
-                <p>优</p>
-              </li>
-              <li>
-                <p>良</p>
-              </li>
-              <li>
-                <p>轻度</p>
-              </li>
-              <li>
-                <p>中度</p>
-              </li>
-              <li>
-                <p>重度</p>
-              </li>
-              <li>
-                <p>严重</p>
-              </li>
-            </ul>
-            <table>
-              <tr>
-                <td />
-                <td />
-                <td />
-                <td />
-                <td />
-                <td />
-              </tr>
-            </table>
-            <div class="pm-num">
-              <span>0</span>
-              <span>35</span>
-              <span>75</span>
-              <span>115</span>
-              <span>150</span>
-              <span>250+</span>
-              <span />
-            </div>
-          </div>
-        </div>
-      </sub-page>
-    </div>
-    <div class="remind">
-      <div class="remind-box">
-        <div class="remind-num">53</div>
-        <div class="remind-txt">剩余滤芯</div>
-        <div class="remind-tis">%</div>
-      </div>
-      <div class="remind-box">
-        <div class="remind-num">98</div>
-        <div class="remind-txt">滤芯寿命</div>
-        <div class="remind-tis">天</div>
-      </div>
-    </div>
-    <div class="btn">
+  <div>
+    <div :class="[{'close': isClose}, {'filter': showModeBtns }, 'page']">
+      <topbar 
+        :title="device_name"
+        bak-color="#000"/>
       <div 
-        :class="[{'active-switch': !isClose}, {'btn-show':btnSwitch}, 'btn-tab', 'btn-swich']"
-        @click.prevent="btnClose">
-        <div class="btn-sty">
-          <a 
-            href="#"
-            class="shutdown" />
+        class="main"
+        @click="togglePMPop">
+        <div>
+          <img 
+            class="circle"
+            src="../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png"
+            alt="">
+          <img 
+            v-show="current==1"
+            class="pointer-excellent"
+            src="../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png"
+            alt="">
+          <img 
+            v-show="current==0"
+            class="pointer-good"
+            src="../../lib/base/air_cleaner/assets/new-air/lianghao@2x.png"
+            alt="">
+          <img 
+            v-show="current==2"
+            class="pointer-light"
+            src="../../lib/base/air_cleaner/assets/new-air/qingdu@2x.png"
+            alt="">
+          <img 
+            v-show="current==3"
+            class="pointer-moderate"
+            src="../../lib/base/air_cleaner/assets/new-air/zhongdu@2x.png"
+            alt="">
+          <img 
+            v-show="current==4"
+            class="pointer-severe"
+            src="../../lib/base/air_cleaner/assets/new-air/zhongduz@2x.png"
+            alt="">
         </div>
-        <div class="btn-txt">关机</div>
-      </div>
-      <div 
-        :class="[{'btn-show':somnus}, 'btn-tab']"
-        @click.prevent="btnSleep">
-        <div class="btn-sty">
-          <a 
-            href="#"
-            class="shutdown1" />
+        <div class="block">
+          <div class="num">{{ model.air_filter_result.PM25[0] }}</div>
+          <div class="txt">室内空气 优</div>
         </div>
-        <div class="btn-txt">睡眠</div>
+        <span class="nuit">μg/m³</span>
+        <span class="sport" />
+        <span class="sport1" />
+        <span class="sport2" />
+        <span class="sport3" />
+        <span class="sport4" />
+        <span class="sport5" />
+        <span class="sport6" />
+        <span class="sport7" />
+        <span class="sport8" />
+        <span class="sport9" />
+        <span class="sport10" />
+        <span class="sport11" />
+        <span class="sport12" />
+        <span class="sport13" />
       </div>
-      <div 
-        :class="[{'btn-wind':windshield}, 'btn-tab']"
-        @click.prevent="btnWind">
-        <div 
-          class="btn-sty"
-          @click="handeModeClick">
-          <a 
-            href="#"
-            class="shutdown2" />
+
+      <div class="wrap-filter">
+        <div class="filter">
+          <div class="filter-item">{{ model.filter_time_remaining }}<sup>%</sup></div>
+          <div class="filter-name">剩余滤芯</div>
         </div>
-        <div class="btn-txt">{{ showModeName }}</div>
-      </div>
-      <div 
-        :class="[{'btn-wind':moreShow}, 'btn-tab']"
-        @click.prevent="btnMore">
-        <div 
-          class="btn-sty"
-          @click="handMoreClick">
-          <a 
-            href="#"
-            class="shutdown3" />
+        <div class="filter">
+          <div class="filter-item">{{ model.filter_time_used }}<sup>天</sup></div>
+          <div class="filter-name">滤芯寿命</div>
         </div>
-        <div class="btn-txt">更多</div>
       </div>
+
+      <!-- 按钮 -->
+      <div class="panel-btn center">
+        <div class="btn-wrap up-index">
+          <div
+            :class="[{'active': !isClose && !isOffline }, 'btn btn-swich center']"
+            @click="setSwitch" />
+          <div class="btn-name">开关</div>
+        </div>
+
+        <div class="btn-wrap">
+          <div
+            :class="[{'active': model.control_status == 'sleep' },'btn btn-mode center']"
+            @click="setControl" />
+          <div class="btn-name">睡眠</div>
+        </div>
+
+        <div class="btn-wrap">
+          <div
+            :class="[btnClass, 'btn center']"
+            @click="handeModeClick" />
+          <div class="btn-name">{{ btnTxt }}</div>
+        </div>
+      </div>
+
     </div>
-    <!-- 风档选择弹框 -->
+    <!-- 模式选择弹框 -->
     <div 
       v-show="showModeBtns"
-      class="mode-btn"
+      class="btns-panel center"
       @touchmove.prevent
       @click="hide">
-      <div class="mode-items">
+      <div class="items btns">
         <div 
-          :class="[{'disu': showModeName === '低速风'},'mode-item1']"
-          @click.stop="setMode('低速风')">
-          <div class="mode-name">低速</div>
+          :class="[{ 'item1': animation }, {' btn-loading': btnLoading.wind }, 'btn btn-low center']"
+          @click.stop="setSpeed('low')">
+          <div class="name">低挡</div>
         </div>
         <div 
-          :class="[{'zhongdisu': showModeName === '中低速风'},'mode-item2']"
-          @click.stop="setMode('中低速风')">
-          <div class="mode-name">中低速</div>
+          :class="[{ 'item2': animation }, {' btn-loading': btnLoading.heat },'btn btn-middle center']"
+          @click.stop="setSpeed('middle')">
+          <div class="name">中档</div>
         </div>
         <div 
-          :class="[{'zhongsu': showModeName === '中速风'},'mode-item3']"
-          @click.stop="setMode('中速风')">
-          <div class="mode-name">中速</div>
+          :class="[{ 'item3': animation }, {' btn-loading': btnLoading.dehumidify }, 'btn btn-high center']"
+          @click.stop="setSpeed('high')">
+          <div class="name">高档</div>
         </div>
         <div 
-          :class="[{'gaosu': showModeName === '高速风'},'mode-item4']"
-          @click.stop="setMode('高速风')">
-          <div class="mode-name">高速</div>
+          :class="[{ 'item4': animation }, {' btn-loading': btnLoading.cold },'btn btn-very_high center']"
+          @click.stop="setSpeed('very_high')">
+          <div class="name">超高档</div>
         </div>
         <div 
-          :class="[{'auto': showModeName === '自动'},'mode-item5']"
-          @click.stop="setMode('自动')">
-          <div class="mode-name">自动</div>
+          :class="[{ 'item5': animation }, {' btn-loading': btnLoading.auto },'btn btn-super_high center']"
+          @click.stop="setSpeed('super_high')">
+          <div class="name">极速挡</div>
         </div>
+        <div 
+          :class="[ { 'item6': animation }, btnClass,'btn center active']"
+          @click.stop />
       </div>
     </div>
-    <!-- 更多选择弹框 -->
-    <div 
-      v-show="showMoreBtns"
-      class="mode-btn"
-      @touchmove.prevent
-      @click="hide">
-      <div class="mode-items">
-        <div 
-          :class="[{'disu': anion},'mode-item6']"
-          @click.stop="setAnion()">
-          <div class="mode-name">负离子</div>
+
+    <!-- PM2.5简介 -->
+    <sub-page 
+      v-model="pmPopVisible"
+      title="PM2.5简介"
+      class="modal-w">
+      <div class="pm2">
+        <p>
+          PM2.5指环境空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
+        </p>
+        <p class="sub-title">
+          PM2.5数值范围说明
+        </p>
+        <div class="items">
+          <div class="item item1">优</div>
+          <div class="item item2">良</div>
+          <div class="item item3">轻度</div>
+          <div class="item item3">中度</div>
+          <div class="item item4">重度</div>
+          <div class="item item5">严重</div>
         </div>
-        <div 
-          :class="[{'zhongdisu': childLockName},'mode-item7']"
-          @click.stop="childLock()">
-          <div class="mode-name">童锁</div>
-        </div>
+        <ul class="ruler">
+          <li />
+          <li />
+          <li />
+          <li />
+          <li />
+          <li />
+        </ul>
+        <ul class="name">
+          <li>0</li>
+          <li>35</li>
+          <li>75</li>
+          <li>115</li>
+          <li>150</li>
+          <li>250+</li>
+          <li />
+        </ul>
       </div>
-    </div>
+    </sub-page>
   </div>
 </template>
 
 <script>
-import Modal from "../../lib/components/Modal.vue";
-import SubPage from "../../lib/components/SubPage";
-import Icon from "../../lib/components/SettingIconMobile.vue";
-
-const SPEED_TEXT1 = [
-  { text: "低速", className: "1", value: "low" },
-  { text: "中低速", className: "2", value: "middle" },
-  { text: "中速", className: "3", value: "high" },
-  { text: "中高速", className: "4", value: "very_high" },
-  { text: "高速", className: "5", value: "super_high" }
-];
-const SPEED_TEXT2 = [
-  { text: "一档", className: "1", value: "low" },
-  { text: "二档", className: "2", value: "middle" },
-  { text: "三档", className: "3", value: "high" },
-  { text: "四档", className: "4", value: "very_high" }
-];
-const SPEED_TEXT3 = [
-  { text: "低速", className: "1", value: "low" },
-  { text: "中速", className: "3", value: "middle" },
-  { text: "高速", className: "5", value: "high" }
-];
-const DEVICE_MODEL = {
-  "KJ315F-A1": {
-    child_lock_switch: false,
-    negative_ion_switch: false
-  },
-  "KJ400F-A11": {
-    child_lock_switch: false,
-    negative_ion_switch: false
-  },
-  "KJ819F-B2": {
-    speed: 5
-  }
-};
-const DEVICE_DEFAULT = {
-  child_lock_switch: true,
-  negative_ion_switch: true,
-  speed: 3
-};
-
-const PM25_VAL = [0, 35, 75, 115, 150, 250];
-const PM25_ANGLE = [-136, -84, -28, 28, 84, 136];
-
-function getToggle(val) {
-  return val === "on" ? "off" : "on";
-}
-
-function getRotate(val, start, end) {
-  var min = PM25_VAL[start];
-  var max = PM25_VAL[end];
-  var min_r = PM25_ANGLE[start];
-  var max_r = PM25_ANGLE[end];
-  return min_r + (val - min) / (max - min) * (max_r - min_r);
-}
-
-/**
- * 创建并返回一个像节流阀一样的函数，当重复调用函数的时候，最多每隔 wait毫秒调用一次该函数
- * @param func 执行函数
- * @param wait 时间间隔
- * @param options 如果你想禁用第一次首先执行的话，传递{leading: false}，
- *                如果你想禁用最后一次执行的话，传递{trailing: false}
- * @returns {Function}
- */
-function throttle(func, wait, options) {
-  var context, args, result;
-  var timeout = null;
-  var previous = 0;
-  if (!options) options = {};
-  var later = function() {
-    previous = options.leading === false ? 0 : new Date().getTime();
-    timeout = null;
-    result = func.apply(context, args);
-    if (!timeout) context = args = null;
-  };
-  wait = wait || 500;
-  return function() {
-    var now = new Date().getTime();
-    if (!previous && options.leading === false) previous = now;
-    var remaining = wait - (now - previous);
-    context = this;
-    args = arguments;
-    if (remaining <= 0 || remaining > wait) {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-      previous = now;
-      result = func.apply(context, args);
-      if (!timeout) context = args = null;
-    } else if (!timeout && options.trailing !== false) {
-      timeout = setTimeout(later, remaining);
-    }
-    return result;
-  };
-}
-
+import SubPage from "./SubPage"
 export default {
   components: {
-    Modal,
-    SubPage,
-    Icon
+    SubPage
   },
   data() {
     return {
-      status: "",
-      speedModalVisible: false,
-      moreModalVisible: false,
       device_name: "",
-      model: {},
-      tip: "",
-      remain_tip: "",
-      pm25: "",
-      speedItems: SPEED_TEXT3,
-      //功能能力判断
-      ab: {},
-      //前一个状态
-      prevModel: {
-        control_status: "auto",
-        speed: ""
+      model: {
+        "air_filter_result": {
+          "air_quality": [
+            "very_high"
+          ],
+          "PM25": [
+            0
+          ]
+        },
+        "switch_status": "on",
+        "child_lock_switch_status": "off",
+        "negative_ion_switch_status": "off",
+        "speed": "low",
+        "control_status": "manual",
+        "filter_time_used": "2114",
+        "filter_time_remaining": "46",
+        "temperature": "0",
+        "humidity": "0",
+        "deviceModel": "KJ819F-B2",
+        "manufactureId": "tcl",
+        "deviceCategory": "air_filter.main",
+        "deviceSubCategory": 0,
+        "connectivity": "online"
+      },
+      showModeBtns: false,
+      animation: false,
+      btnLoading: {
+        switch: false,
+        auto: false,
+        cold: false,
+        heat: false,
+        dehumidify: false,
+        wind: false,
+        wind_up_down: false,
+        wind_left_right: false
       },
       pmPopVisible: false,
-      current: 1,
-      switchStatus: 'on',
-      showModeBtns: false,
-      showMoreBtns: false,
-      showModeName: '低速风',
-      btnSwitch: true,
-      somnus: false,
-      windshield: false,
-      anion: false,
-      childLockName: false,
-      moreShow: false,
-    };
+      current: 4,
+    }
   },
   computed: {
     isClose() {
-      return this.switchStatus == 'on' ? false : true
+      return this.model.switch_status == 'on' ? false : true
     },
-    currentSpeed() {
-      var item = this.speedItems.filter(item => {
-        return item.value == this.model.speed;
-      });
-      if (item.length) {
-        return item[0];
+    isOffline() {
+      return this.model.connectivity === 'online' ? false : true
+    },
+    btnClass() {
+      /* eslint-disable no-unreachable */
+      switch (this.model.speed) {
+        case 'low':
+          return 'btn-low'
+          break
+        case 'middle':
+          return 'btn-middle'
+          break
+        case 'high':
+          return 'btn-high'
+          break
+        case 'very_high':
+          return 'btn-very_high'
+          break
+        case 'super_high':
+          return 'btn-super_high'
+          break
+        case 'sleep':
+          return 'btn-sleep'
+          break 
       }
-      return {};
     },
-    speedCss() {
-      return ["btn-speed" + this.currentSpeed.className, "active"];
-    },
-    speedText() {
-      return this.currentSpeed.text;
-    },
-    pm25_level() {
-      for (var i = PM25_VAL.length - 1; i >= 0; i--) {
-        if (this.pm25 > PM25_VAL[i]) {
-          return i + 1;
-        }
+    btnTxt() {
+      /* eslint-disable no-unreachable */
+      switch (this.model.speed) {
+        case 'low':
+          return '低挡'
+          break
+        case 'middle':
+          return '中档'
+          break
+        case 'high':
+          return '高档'
+          break
+        case 'very_high':
+          return '超高档'
+          break
+        case 'super_high':
+          return '极速挡'
+          break
+        case 'sleep':
+          return '睡眠'
+          break 
       }
-      return 1;
-    },
-    pm25_rotate() {
-      var level = this.pm25_level;
-      if (level == 6) {
-        return PM25_ANGLE[5];
-      }
-      return getRotate(this.pm25, level - 1, level);
-    },
-    pm25_text() {
-      return this.pm25 == 0 ? "--" : this.pm25 + "<small>μg/m³</small>";
     }
   },
   watch: {
-    pmPopVisible() {
-      if (this.pmPopVisible) {
-        HdSmart.UI.toggleHeadAndFoot(false);
-      } else {
-        HdSmart.UI.toggleHeadAndFoot(true);
-      }
-    }
   },
   created() {
-    this.$watch("model.control_status", (newVal, oldVal) => {
-      this.prevModel.control_status = oldVal || "auto";
-    });
-
-    this.$watch("model.speed", (newVal, oldVal) => {
-      this.prevModel.speed = oldVal || "";
-    });
-
     HdSmart.ready(() => {
       if (window.device_name) {
-        this.device_name = window.device_name;
+        this.device_name = window.device_name
       }
-      HdSmart.UI.showLoading();
-      HdSmart.UI.toggleHeadAndFoot(true);
+      HdSmart.UI.showLoading()
+      HdSmart.UI.toggleHeadAndFoot(true)
       this.getSnapShot(() => {
-        HdSmart.UI.hideLoading();
-      });
-    });
+        HdSmart.UI.hideLoading()
+      })
+    })
 
     HdSmart.onDeviceStateChange(data => {
-      this.onSuccess(data.result);
-    });
+      this.onSuccess(data.result)
+    })
   },
   methods: {
-    setAnion() {
-      this.anion = !this.anion
-    },
-    childLock() {
-      this.childLockName = !this.childLockName
+    setSwitch() {
+      let switchStatus = ''
+      if (this.model.switch_status == 'on') {
+        switchStatus = 'off'
+      } else {
+        switchStatus = 'on'
+      }
+      this.controlDevice("switch", switchStatus)
     },
     handeModeClick() {
       this.showModeBtns = true
-    },
-    handMoreClick() {
-      this.showMoreBtns = true
-      this.moreShow = true
-    },
-    setMode(mode) {
-      console.log(mode)
-      this.showModeName = mode
-      this.showModeBtns = false
-      this.showMoreBtns = false
-      this.activeMode = false
-      this.windshield = false
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.animation = true
+        }, 0)
+      })
     },
     hide() {
       this.showModeBtns = false
-      this.showMoreBtns = false
-      this.windshield = false
-      this.moreShow = false
-    },
-    // 开关btn
-    btnClose() {
-      this.btnSwitch = !this.btnSwitch
-      if (this.btnSwitch === false) {
-        this.somnus = false
-        this.windshield = false
-      }
-      if (this.switchStatus === 'on') {
-        this.switchStatus = 'off'
-      } else {
-        this.switchStatus = 'on'
-      }
-    },
-    // 睡眠btn
-    btnSleep() {
-      this.somnus = !this.somnus
-    },
-    // 风档btn
-    btnWind() {
-      this.windshield = true
-    },
-    // 更多btn
-    btnMore() {
-      this.current = 4
+      this.animation = false
     },
     togglePMPop() {
       //pm2.5
-      this.pmPopVisible = !this.pmPopVisible;
+      this.pmPopVisible = !this.pmPopVisible
     },
     showTip(text) {
-      clearTimeout(this.tipTime);
-      this.tip = text;
+      clearTimeout(this.tipTime)
+      this.tip = text
       this.tipTime = setTimeout(() => {
-        this.tip = "";
-      }, 2000);
+        this.tip = ""
+      }, 2000)
     },
     controlDevice(attr, val, param, success, error) {
-      var fn = this.confirm;
+      var fn = this.confirm
       var params = Object.assign(
         {
           [attr]: val
         },
         param
-      );
+      )
 
       if (attr == "child_lock_switch") {
         fn = function(cb) {
-          cb();
-        };
+          cb()
+        }
       }
 
       fn(() => {
@@ -695,128 +354,72 @@ export default {
             }
           },
           () => {
-            success && success();
+            success && success()
           },
           () => {
-            error && error();
-            this.showTip("操作失败");
+            error && error()
+            this.showTip("操作失败")
           }
-        );
-      });
+        )
+      })
     },
-    setSwitch(val) {
-      this.controlDevice("switch", val);
-    },
-    setControl: throttle(function(val) {
-      if (this.model.control_status == val) {
-        return;
+
+    setControl() {
+      let val = ''
+      if(this.model.control_status == 'sleep'){
+        val = 'manual'
+      } else {
+        val = 'sleep'
       }
+
       this.controlDevice("control", val, () => {
-        this.model.control_status = val;
-      });
-    }),
+        this.model.control_status = val
+      })
+    },
     setSleep() {
       if (this.model.negative_ion_switch_status == "on") {
         this.controlDevice("negative_ion_switch", "off", { control: "sleep" }, () => {
-          this.model.control_status = "sleep";
-        });
+          this.model.control_status = "sleep"
+        })
       } else {
-        this.setControl("sleep");
+        this.setControl("sleep")
       }
     },
-    setSpeed: throttle(function(val) {
-      if (this.model.control_status == "manual" && this.model.speed == val) {
-        return;
-      }
+    setSpeed(val) {
       this.controlDevice("speed", val, { control: "manual" }, () => {
-        this.model.control_status = "manual";
-        this.model.speed = val;
-      });
-    }),
-    setNegativeIon: throttle(function() {
-      if (this.model.child_lock_switch_status == "on") {
-        HdSmart.UI.toast("解除童锁后才能控制此设备");
-        return;
-      }
-      var val = getToggle(this.model.negative_ion_switch_status);
-
-      this.controlDevice(
-        "negative_ion_switch",
-        val,
-        {
-          control:
-            this.model.control_status == "sleep" ? this.prevModel.control_status : this.model.control_status
-        },
-        () => {
-          this.model.negative_ion_switch_status = val;
-        }
-      );
-    }),
-    setChildLock: throttle(function() {
+        this.hide()
+        this.model.control_status = "manual"
+        this.model.speed = val
+      })
+    },
+    setChildLock() {
       if (this.model.control_status == "sleep") {
-        HdSmart.UI.toast("睡眠模式下不能开启童锁");
-        return;
+        HdSmart.UI.toast("睡眠模式下不能开启童锁")
+        return
       }
-      var val = getToggle(this.model.child_lock_switch_status);
+      var val = this.model.child_lock_switch_status == "on" ? "off" : "on"
       this.controlDevice(
         "child_lock_switch",
         val,
         { control: this.model.control_status },
-        () => { },
-        () => {
-          this.model.child_lock_switch_status = getToggle(val);
-        }
-      );
-      //http://jira.evergrande.me/browse/HAALPHA-47
-      this.model.child_lock_switch_status = val;
-    }),
-    showSpeedModal() {
-      if (this.model.child_lock_switch_status == "on") {
-        this.confirm();
-      } else {
-        this.speedModalVisible = true;
-      }
+        () => {},
+        () => {}
+      )
     },
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot(
         data => {
-          this.onSuccess(data);
-          cb && cb();
+          this.onSuccess(data)
+          cb && cb()
         },
         () => {
-          this.onError();
-          cb && cb();
+          cb && cb()
         }
-      );
+      )
     },
     onSuccess(data) {
-      this.status = "success";
-      this.model = data.attribute;
-      console.log(this.model, 'mock假数据');
-
-      if (this.model.filter_time_remaining <= 0) {
-        this.remain_tip = "需更换滤网";
-      } else if (this.model.filter_time_remaining <= 120) {
-        this.remain_tip = `滤芯寿命剩余${this.model.filter_time_remaining}小时`;
-      } else {
-        this.remain_tip = "";
-      }
-
-      var pm25 = this.model.air_filter_result.PM25;
-      this.pm25 = pm25.length == 2 ? pm25[1] : pm25[0];
-
-      // 根据设备型号判断功能点，后边从开放平台拉取
-      this.ab = Object.assign(DEVICE_DEFAULT, DEVICE_MODEL[this.model.deviceModel] || {});
-      if (this.ab.speed == 5) {
-        this.speedItems = SPEED_TEXT1;
-      } else if (this.ab.speed == 4) {
-        this.speedItems = SPEED_TEXT2;
-      } else {
-        this.speedItems = SPEED_TEXT3;
-      }
-    },
-    onError() {
-      this.status = "error";
+      this.status = "success"
+      this.model = data.attribute
     },
     confirm(done) {
       if (this.model.child_lock_switch_status == "on") {
@@ -827,31 +430,30 @@ export default {
             dialogStyle: 2
           },
           val => {
-            if (val) this.setChildLock();
+            if (val) this.setChildLock()
           }
-        );
+        )
       } else {
-        done();
+        done()
       }
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .page {
+  min-height: 100%;
   overflow-x: hidden;
   position: relative;
   background: rgba(230, 255, 243, 1);
-  height: 1624px;
-  width: 750px;
-  // * {
-  //   transition: all 0.3s ease-in-out;
-  // }
-  // 圆圈样式
+
+  &.filter {
+    filter: blur(12px);
+  }
   .main {
     width: 540px;
     height: 540px;
-    margin: 216px auto 0;
+    margin: 202px auto 0;
     .circle {
       width: 100%;
       height: 100%;
@@ -1083,218 +685,157 @@ export default {
       top: -430px;
     }
   }
-  .remind {
-    position: relative;
-    top: 250px;
+  .wrap-filter {
     display: flex;
-    justify-content: space-evenly;
-    font-family: PingFangSC-Regular;
-    .remind-box {
-      display: inline-block;
-      .remind-num {
-        font-size: 80px;
-        color: #35353d;
-        text-align: center;
-      }
-      .remind-txt {
-        opacity: 0.5;
+    justify-content: center;
+  }
+  .filter {
+    color: #232323;
+    margin: 60px 38px;
+    .filter-item {
+      position: relative;
+      font-size: 80px;
+      sup {
         font-size: 24px;
-        color: #35353d;
-        text-align: center;
-      }
-      .remind-tis {
-        position: relative;
-        font-size: 24px;
-        color: #35353d;
-        text-align: center;
-        top: -120px;
-        left: 60px;
+        position: absolute;
+        top: 15px;
       }
     }
+    .filter-name {
+      text-align: center;
+      color: #35353D;
+      font-size: 24px;
+    }
   }
-  .btn {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+
+  .panel-btn {
     height: 306px;
-    border-radius: 40px 40px 0 0;
-    // box-shadow: 0px -6px 56px 0px #111111;
-    background: #ffffff;
-    box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    .btn-tab {
+    background: #FFFFFF;
+    box-shadow: 0 -3px 28px 0 rgba(209,209,209,0.50);
+    border-radius: 42px 42px 0px 0px;
+    .btn {
+      margin-top: 24px;
+      width: 100%;
+      height: 306px;
+      border-radius: 40px 40px 0 0;
+      background: #ffffff;
+      box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+    }
+  }
+
+  .btn-wrap {
+    margin: 50px 24px 0;
+    &.up-index{
       position: relative;
-      top: -50px;
+      z-index: 9999;
+    }
+    .btn {
+      box-sizing: border-box;
+      margin: 0 auto;
       width: 120px;
       height: 120px;
-      opacity: 0.5;
       border: 1px solid #818181;
       border-radius: 50%;
-      .btn-txt {
-        font-size: 24px;
-        color: #35353d;
-        text-align: center;
-        position: relative;
-        top: 10px;
-      }
-      .btn-sty {
-        height: 120px;
-        .shutdown {
-          display: block;
-          width: 120px;
-          height: 120px;
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_on_cd@2x.png);
-          background-repeat: no-repeat;
-          background-size: 48px 48px;
-          background-position: 50% 50%;
-        }
-        .shutdown1 {
-          display: block;
-          width: 120px;
-          height: 120px;
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_mode_heat@2x.png);
-          background-repeat: no-repeat;
-          background-size: 48px 48px;
-          background-position: 50% 50%;
-        }
-        .shutdown2 {
-          display: block;
-          width: 120px;
-          height: 120px;
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/feng2@2x.png);
-          background-repeat: no-repeat;
-          background-size: 48px 48px;
-          background-position: 50% 50%;
-        }
-        .shutdown3 {
-          display: block;
-          width: 120px;
-          height: 120px;
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/gengduo@2x.png);
-          background-repeat: no-repeat;
-          background-size: 48px 48px;
-          background-position: 50% 50%;
-        }
-      }
-      &.btn-wind {
-        z-index: 99999;
-        opacity: 1;
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+
+      display: flex;
+      flex-direction: column;
+      &.active {
+        background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
+        border: none;
       }
     }
-    .btn-show {
-      background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-      opacity: 1;
-      border: 1px solid #ffffff;
-      .btn-sty {
-        .shutdown {
-          display: block;
-          width: 120px;
-          height: 120px;
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_on_cd@2x.png);
-          background-repeat: no-repeat;
-          background-size: 48px 48px;
-          background-position: 50% 50%;
+    .btn-name {
+      text-align: center;
+      color: #000;
+      margin-top: 14px;
+      font-size: 24px;
+    }
+    .btn-swich {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/air_condition/assets/new-air/swich-black.png);
         }
       }
     }
-  }
-  // pm2.5简介
-  .modal-w {
-    font-family: PingFangSC-Medium;
-    font-size: 17px;
-    background: #ffffff;
-    .main_text {
-      font-size: 28px;
-      padding: 0.453rem 48px 0;
-      color: #35353d;
+    .btn-mode {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_mode_heat@2x.png);
+        background-size: 100% 100%;
+      }
     }
-    .pm-range {
-      padding: 0 48px;
-      .pm-range-title {
-        font-size: 28px;
-        color: #000000;
-        margin-bottom: 0.453rem;
-        color: #35353d;
+    .btn-low {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
+        background-size: 100% 100%;
       }
-      ul {
-        display: flex;
-        justify-content: space-between;
-        li {
-          list-style: none;
-          background: #15d0ba;
-          border-radius: 8px;
-          width: 106px;
-          height: 96px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          &:nth-child(2) {
-            background: #a5d015;
-          }
-          &:nth-child(3) {
-            background: #efc12d;
-          }
-          &:nth-child(4) {
-            background: #ef9c2d;
-          }
-          &:nth-child(5) {
-            background: #ef642d;
-          }
-          &:nth-child(6) {
-            background: #ef2d2d;
-          }
-          p {
-            font-size: 24px;
-            color: #35353d;
-          }
-        }
+    }
+    .btn-middle {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
+        background-size: 100% 100%;
       }
-      table {
-        margin-top: 10px;
-        width: 100%;
-        height: 16px;
-        border-collapse: collapse;
-        opacity: 0.3;
-        tr {
-          height: 16px;
-          td {
-            height: 16px;
-            border: 1px solid #d8d8d8;
-            border-top: none;
-            border-right: none;
-            &:last-child {
-              border-right: 1px solid #d8d8d8;
-            }
-          }
-        }
+    }
+    .btn-high {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
+        background-size: 100% 100%;
       }
-      .pm-num {
-        margin-top: 10px;
-        display: flex;
-        justify-content: space-between;
-        font-size: 24px;
-        color: #ffffff;
-        span {
-          &:nth-child(2) {
-            position: relative;
-            left: 6px;
-          }
-          &:nth-child(3) {
-            position: relative;
-            left: 14px;
-          }
-          &:nth-child(4) {
-            position: relative;
-            left: 14px;
-          }
-          &:nth-child(5) {
-            position: relative;
-            left: 6px;
-          }
-        }
+    }
+    .btn-very_high {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4.png);
+        background-size: 100% 100%;
+      }
+    }
+    .btn-super_high {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5.png);
+        background-size: 100% 100%;
+      }
+    }
+    .btn-more {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/more.png);
+        background-size: 100% 100%;
       }
     }
   }
@@ -1306,36 +847,22 @@ export default {
       left: 0;
       bottom: 0;
       right: 0;
-      z-index: 9;
+      z-index: 999;
       width: 100%;
       background: rgba(0, 0, 0, 0.8);
     }
-    .btn {
-      .btn-swich {
-        z-index: 10;
-        opacity: 1;
-        .btn-sty {
-          .shutdown {
-            display: block;
-            width: 120px;
-            height: 120px;
-            background-image: url(../../lib/base/dehumidifier/assets/swich-white.png);
-            background-repeat: no-repeat;
-            background-size: 48px 48px;
-            background-position: 50% 50%;
-          }
-        }
-        .btn-txt {
-          color: #ffffff;
+    .btn-wrap {
+      &.up-index {
+        .btn-swich{
+          background: transparent;
+          border: 1px solid #fff;
         }
       }
     }
   }
 }
-.mode-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+.btns-panel {
   &:before {
     content: "";
     position: fixed;
@@ -1343,190 +870,233 @@ export default {
     left: 0;
     bottom: 0;
     right: 0;
-    z-index: 9999;
+    z-index: 99999;
     width: 100%;
+
     background: rgba(0, 0, 0, 0.8);
   }
-  .mode-items {
-    z-index: 99999;
-    position: absolute;
-    bottom: 0;
-    left: 488px;
-    .mode-item1 {
-      position: relative;
-      left: -262px;
-      top: 354px;
+  .items {
+    position: fixed;
+    left: 556px;
+    // bottom: 358px;
+    bottom: 150px;
+    z-index: 999999;
+
+    width: 750px;
+    min-height: 160px;
+    .btn {
+      transition: all 0.3s ease-in-out;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .item1 {
+      top: -150px;
+      left: 50px;
+    }
+    .item2 {
+      top: -122px;
+      left: -104px;
+    }
+    .item3 {
+      top: 0px;
+      left: -180px;
+    }
+    .item4 {
+      top: 122px;
+      left: -104px;
+    }
+    .item5 {
+      top: 150px;
+      left: 50px;
+    }
+  }
+  &.more {
+    .items {
+      left: 384px;
+    }
+  }
+  .btns{
+    justify-content: flex-start;
+    transition: all 0.3s ease-in-out;
+    margin-top: 57px;
+    .btn {
+      margin-right: 40px;
       width: 120px;
       height: 120px;
       border: 1px solid #fff;
       border-radius: 50%;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/disu@2x.png);
-      background-repeat: no-repeat;
-      background-size: 48px 48px;
-      background-position: 50% 20px;
-      .mode-name {
-        position: relative;
-        top: 72px;
-        text-align: center;
+
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        margin-top: 8px;
         font-size: 20px;
-        color: #ffffff;
+        color: #fff;
+      }
+      &.active {
+        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        border: none;
       }
     }
-    .mode-item2 {
-      position: relative;
-      left: -230px;
-      top: 90px;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/zhongdisu@2x.png);
-      background-repeat: no-repeat;
-      background-size: 48px 48px;
-      background-position: 50% 20px;
-      .mode-name {
-        position: relative;
-        top: 72px;
-        text-align: center;
-        font-size: 20px;
-        color: #ffffff;
+    .btn-swich {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/air_condition/assets/new-air/swich-black.png);
+        }
       }
     }
-    .mode-item3 {
-      position: relative;
-      left: -88px;
-      top: -80px;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/zhongsu@2x.png);
-      background-repeat: no-repeat;
-      background-size: 48px 48px;
-      background-position: 50% 20px;
-      .mode-name {
-        position: relative;
-        top: 72px;
-        text-align: center;
-        font-size: 20px;
-        color: #ffffff;
+
+    .btn-low {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
+        }
       }
     }
-    .mode-item4 {
-      position: relative;
-      left: 56px;
-      top: -160px;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/gaosu@2x.png);
-      background-repeat: no-repeat;
-      background-size: 48px 48px;
-      background-position: 50% 20px;
-      .mode-name {
-        position: relative;
-        top: 72px;
-        text-align: center;
-        font-size: 20px;
-        color: #ffffff;
+    .btn-middle {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
+        }
       }
     }
-    .mode-item5 {
-      position: relative;
-      left: 88px;
-      top: -142px;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/zidong@2x.png);
-      background-repeat: no-repeat;
-      background-size: 48px 48px;
-      background-position: 50% 20px;
-      .mode-name {
-        position: relative;
-        top: 72px;
-        text-align: center;
-        font-size: 20px;
-        color: #ffffff;
+    .btn-high {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
+        }
       }
     }
-    .mode-item6 {
-      position: relative;
-      left: 88px;
-      top: -180px;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/zidong@2x.png);
-      background-repeat: no-repeat;
-      background-size: 48px 48px;
-      background-position: 50% 20px;
-      .mode-name {
-        position: relative;
-        top: 72px;
-        text-align: center;
-        font-size: 20px;
-        color: #ffffff;
+    .btn-very_high {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4.png);
+        }
       }
     }
-    .mode-item7 {
-      position: relative;
-      left: -88px;
-      top: -142px;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/zidong@2x.png);
-      background-repeat: no-repeat;
-      background-size: 48px 48px;
-      background-position: 50% 20px;
-      .mode-name {
-        position: relative;
-        top: 72px;
-        text-align: center;
-        font-size: 20px;
-        color: #ffffff;
+    .btn-super_high {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5.png);
+        }
       }
     }
-    .disu {
-      border-color: #ffc600;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/disu@2x.png);
-      .mode-name {
-        color: #ffc600;
+  }
+}
+
+.modal-w.subpage {
+  background: #fff;
+}
+.pm2 {
+  padding: 56px 48px;
+  font-size: 28px;
+  color: #35353D;
+  text-align: justify;
+  .sub-title {
+    padding: 48px 0;
+  }
+  .items {
+    display: flex;
+    justify-content: space-between;
+    .item {
+      width: 124px;
+      height: 96px;
+      line-height: 96px;
+      border-radius: 10px;
+
+      font-size: 24px;
+      color: #fff;
+      text-align: center;
+      margin: 0 1px;
+      &.item1 {
+        background: #03FD05;
+      }
+      &.item2 {
+        background: #FFF100;
+      }
+      &.item3 {
+        background: #F99F03;
+      }
+      &.item4 {
+        background: #FE0408;
+      }
+      &.item5 {
+        background: #7E0023;
       }
     }
-    .zhongdisu {
-      border-color: #ffc600;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/zhongdisu@2x.png);
-      .mode-name {
-        color: #ffc600;
-      }
+  }
+  .ruler {
+    margin-top: 26px;
+    list-style: none;
+    opacity: 0.3;
+
+    border-radius: 4px;
+
+    border-bottom: 1px solid #35353D;
+
+    display: flex;
+    justify-content: space-between;
+    li {
+      background: #35353D;
+      width: 1px;
+      height: 12px;
     }
-    .zhongsu {
-      border-color: #ffc600;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/zhongsu@2x.png);
-      .mode-name {
-        color: #ffc600;
-      }
-    }
-    .gaosu {
-      border-color: #ffc600;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/gaosu@2x.png);
-      .mode-name {
-        color: #ffc600;
-      }
-    }
-    .auto {
-      border-color: #ffc600;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/zidong@2x.png);
-      .mode-name {
-        color: #ffc600;
-      }
-    }
+  }
+  .name {
+    margin-top: 8px;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
   }
 }
 </style>
