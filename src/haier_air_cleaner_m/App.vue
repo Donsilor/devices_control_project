@@ -188,29 +188,34 @@
           src="../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png"
           alt="">
         <img
-          v-show="current==1"
-          class="pointer-excellent"
-          src="../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png"
-          alt="">
-        <img
           v-show="current==0"
-          class="pointer-good"
+          class="lianghao"
           src="../../lib/base/air_cleaner/assets/new-air/lianghao@2x.png"
           alt="">
         <img
+          v-show="current==1"
+          class="lianghao1"
+          src="../../lib/base/air_cleaner/assets/new-air/lianghao1@2x.png"
+          alt="">
+        <img
           v-show="current==2"
-          class="pointer-light"
-          src="../../lib/base/air_cleaner/assets/new-air/qingdu@2x.png"
+          class="lianghao2"
+          src="../../lib/base/air_cleaner/assets/new-air/lianghao2@2x.png"
           alt="">
         <img
           v-show="current==3"
-          class="pointer-moderate"
-          src="../../lib/base/air_cleaner/assets/new-air/zhongdu@2x.png"
+          class="lianghao3"
+          src="../../lib/base/air_cleaner/assets/new-air/lianghao3@2x.png"
           alt="">
         <img
           v-show="current==4"
-          class="pointer-severe"
-          src="../../lib/base/air_cleaner/assets/new-air/zhongduz@2x.png"
+          class="lianghao4"
+          src="../../lib/base/air_cleaner/assets/new-air/lianghao4@2x.png"
+          alt="">
+        <img
+          v-show="current==5"
+          class="lianghao5"
+          src="../../lib/base/air_cleaner/assets/new-air/lianghao5@2x.png"
           alt="">
       </div>
       <div class="block">
@@ -325,11 +330,10 @@
         :class="[{'btn-wind':windshield}, 'btn-tab']"
         @click.prevent="btnWind">
         <div
-          class="btn-sty"
-          @click="handeModeClick">
+          class="btn-sty">
           <a
-            href="#"
-            class="shutdown2"/>
+            :class="['shutdown2', 'change'+modeNum]"
+            href="#"/>
         </div>
         <div class="btn-txt">{{ showModeName }}</div>
       </div>
@@ -337,8 +341,7 @@
         :class="[{'btn-wind':moreShow}, 'btn-tab']"
         @click.prevent="btnMore">
         <div
-          class="btn-sty"
-          @click="handMoreClick">
+          class="btn-sty">
           <a
             href="#"
             class="shutdown3"/>
@@ -355,27 +358,27 @@
       <div class="mode-items">
         <div
           :class="[{'disu': showModeName === '低速风'},'mode-item1']"
-          @click.stop="setMode('低速风')">
+          @click.stop="setMode('低速风', 1)">
           <div class="mode-name">低速</div>
         </div>
         <div
           :class="[{'zhongdisu': showModeName === '中低速风'},'mode-item2']"
-          @click.stop="setMode('中低速风')">
+          @click.stop="setMode('中低速风', 2)">
           <div class="mode-name">中低速</div>
         </div>
         <div
           :class="[{'zhongsu': showModeName === '中速风'},'mode-item3']"
-          @click.stop="setMode('中速风')">
+          @click.stop="setMode('中速风', 3)">
           <div class="mode-name">中速</div>
         </div>
         <div
           :class="[{'gaosu': showModeName === '高速风'},'mode-item4']"
-          @click.stop="setMode('高速风')">
+          @click.stop="setMode('高速风', 4)">
           <div class="mode-name">高速</div>
         </div>
         <div
           :class="[{'auto': showModeName === '自动'},'mode-item5']"
-          @click.stop="setMode('自动')">
+          @click.stop="setMode('自动', 5)">
           <div class="mode-name">自动</div>
         </div>
       </div>
@@ -525,7 +528,7 @@ export default {
                 speed: ""
             },
             pmPopVisible: false,
-            current: 1,
+            current: 0,
             switchStatus: 'on',
             showModeBtns: false,
             showMoreBtns: false,
@@ -536,6 +539,7 @@ export default {
             anion: false,
             childLockName: false,
             moreShow: false,
+            modeNum: 1,
         };
     },
     computed: {
@@ -616,16 +620,10 @@ export default {
       childLock() {
         this.childLockName = !this.childLockName
       },
-      handeModeClick() {
-        this.showModeBtns = true
-      },
-      handMoreClick() {
-        this.showMoreBtns = true
-        this.moreShow = true
-      },
-      setMode(mode) {
+      setMode(mode, num) {
         console.log(mode)
         this.showModeName = mode
+        this.modeNum = num
         this.showModeBtns = false
         this.showMoreBtns = false
         this.activeMode = false
@@ -657,10 +655,13 @@ export default {
       // 风档btn
       btnWind() {
         this.windshield = true
+        this.showModeBtns = true
       },
       // 更多btn
       btnMore() {
-        this.current = 4
+        // this.current = 4
+        this.showMoreBtns = true
+        this.moreShow = true
       },
         togglePMPop() {
             //pm2.5
@@ -860,7 +861,7 @@ export default {
       height: 100%;
       // transform: rotateY(180deg);
     }
-    .pointer-excellent {
+    .lianghao {
       position: relative;
       left: 110px;
       top: -594px;
@@ -868,7 +869,7 @@ export default {
       height: 26px;
       transform: rotate(339deg);
     }
-    .pointer-good {
+    .lianghao1 {
       position: relative;
       left: -50px;
       top: -394px;
@@ -876,29 +877,37 @@ export default {
       height: 26px;
       transform: rotate(278deg);
     }
-    .pointer-light {
+    .lianghao2 {
       position: relative;
-      left: 120px;
-      top: -116px;
+      left: -28px;
+      top: -250px;
       width: 136px;
       height: 26px;
-      transform: rotate(200deg);
+      transform: rotate(245deg);
     }
-    .pointer-moderate {
+    .lianghao3 {
       position: relative;
-      left: 392px;
-      top: -190px;
+      left: 186px;
+      top: -104px;
       width: 136px;
       height: 26px;
-      transform: rotate(131deg);
+      transform: rotate(184deg);
     }
-    .pointer-severe {
+    .lianghao4 {
       position: relative;
-      left: 436px;
-      top: -456px;
+      left: 426px;
+      top: -238px;
       width: 136px;
       height: 26px;
-      transform: rotate(67deg);
+      transform: rotate(118deg);
+    }
+    .lianghao5 {
+      position: relative;
+      left: 438px;
+      top: -452px;
+      width: 136px;
+      height: 26px;
+      transform: rotate(68deg);
     }
     .block {
       position: relative;
@@ -1166,10 +1175,25 @@ export default {
           display: block;
           width: 120px;
           height: 120px;
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/feng2@2x.png);
+          // background-image: url(../../lib/base/air_cleaner/assets/new-air/feng2@2x.png);
           background-repeat: no-repeat;
           background-size: 48px 48px;
           background-position: 50% 50%;
+          &.change1 {
+            background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_dh_fan_low.png);
+          }
+          &.change2 {
+            background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_dh_fan_mid.png);
+          }
+          &.change3 {
+            background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_dh_fan_high.png);
+          }
+          &.change4 {
+            background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_dh_fan_4high.png);
+          }
+          &.change5 {
+            background-image: url(../../lib/base/air_cleaner/assets/new-air/auto-black.png);
+          }
         }
         .shutdown3 {
           display: block;
@@ -1227,7 +1251,7 @@ export default {
         justify-content: space-between;
         li {
           list-style: none;
-          background: #15D0BA;
+          background: #03FD05;
           border-radius: 8px;
           width: 106px;
           height: 96px;
@@ -1235,23 +1259,23 @@ export default {
           align-items: center;
           justify-content:center;
           &:nth-child(2) {
-            background: #A5D015;
+            background: #FFF100;
           }
           &:nth-child(3) {
-            background: #EFC12D;
+            background: #F99F03;
           }
           &:nth-child(4) {
-            background: #EF9C2D;
+            background: #FE0408;
           }
           &:nth-child(5) {
-            background: #EF642D;
+            background: #99004C;
           }
           &:nth-child(6) {
-            background: #EF2D2D;
+            background: #7E0023;
           }
           p {
             font-size: 24px;
-            color: #35353D;
+            color: #ffffff;
           }
         }
       }
@@ -1260,7 +1284,7 @@ export default {
         width: 100%;
         height: 16px;
         border-collapse: collapse;
-        opacity: 0.3;
+        opacity: 1;
         tr {
           height: 16px;
           td {
@@ -1279,7 +1303,7 @@ export default {
         display: flex;
         justify-content: space-between;
         font-size: 24px;
-        color: #FFFFFF;
+        color: #35353D;
         span {
           &:nth-child(2) {
             position: relative;
@@ -1443,7 +1467,7 @@ export default {
       height: 120px;
       border: 1px solid #fff;
       border-radius: 50%;
-      background-image: url(../../lib/base/air_cleaner/assets/new-air/zidong@2x.png);
+      background-image: url(../../lib/base/air_cleaner/assets/new-air/auto-white.png);
       background-repeat: no-repeat;
       background-size: 48px 48px;
       background-position: 50% 20px;
