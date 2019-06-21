@@ -67,8 +67,8 @@
       .submit{
         margin-top: 50px;
         outline: none;
-        border: none;
         background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
+        border-color: #FFBF00;
         border-radius: 71px;
 
         font-size: 32px;

@@ -17,10 +17,9 @@
 
     </div> -->
 
-    <topbar
+    <topbar 
       :transparent="true"
-      :title="device_name"
-    />
+      :title="device_name" />
 
     <div class="curtain-wrap">
 
@@ -29,29 +28,25 @@
                  <icon class="redact-white" />&ndash;&gt;
                 窗帘已关闭
             </div>-->
-      <div
+      <div 
         v-if="show && tip"
-        class="tip"
-      >{{ tip }}</div>
-      <navigator
+        class="tip">{{ tip }}</div>
+      <navigator 
         v-once
-        class="navigator"
-      />
-      <curtain
+        class="navigator" />
+      <curtain 
         :is_ready="is_ready"
         :open_percentage="target_percentage"
-        class="curtain"
-      />
+        class="curtain" />
 
     </div>
-    <control
+    <control 
       :is_ready="is_ready"
       class="control"
       @onOpen="onOpen"
       @onPause="onPause"
       @onClose="onClose"
-      @onGoPercentage="onGoPercentage"
-    />
+      @onGoPercentage="onGoPercentage" />
   </div>
 </template>
 
@@ -95,16 +90,16 @@ export default {
   },
   mounted() {
     HdSmart.onDeviceListen(res => {
-      if(!argv_is_mock) return
+      if (!argv_is_mock) return
       var switchStatus = res.params.attribute.switch
       var open_percentage = res.params.attribute.open_percentage
       var flag = false
 
-      if( switchStatus === 'on'){
+      if (switchStatus === 'on') {
         open_percentage = 100
-      } else if(switchStatus === 'off'){
+      } else if (switchStatus === 'off') {
         open_percentage = 0
-      } else if (switchStatus === 'pause'){
+      } else if (switchStatus === 'pause') {
         open_percentage = this.target_percentage
         flag = false
       }
@@ -217,9 +212,12 @@ export default {
       this.clearTargetTip()
       // 等硬件修复了需要干掉
       this.cbFunc = onFinishCallback
+      
+      setTimeout(() => {
+        this.animate(100)
+        onFinishCallback()
+      }, 100)
 
-      this.animate(100)
-      onFinishCallback()
       // HdSmart.Device.control(
       //   {
       //     method: METHOD,
@@ -243,9 +241,10 @@ export default {
       this.clearTargetTip()
       // 等硬件修复了需要干掉
       this.cbFunc = onFinishCallback
-
-      this.animate(0)
-      onFinishCallback()
+      setTimeout(() => {
+        this.animate(0)
+        onFinishCallback()
+      }, 100)
       // HdSmart.Device.control(
       //   {
       //     method: METHOD,
@@ -271,6 +270,7 @@ export default {
       let open_percentage = this.target_percentage
       this.animate(open_percentage)
       onFinishCallback()
+
       // HdSmart.Device.control(
       //   {
       //     method: METHOD,
@@ -297,7 +297,11 @@ export default {
       this.timer = setTimeout(() => {
         this.show = false
       }, 2000)
-      this.animate(percentage)
+
+      setTimeout(() => {
+        this.animate(percentage)
+      }, 100)
+
       // HdSmart.Device.control(
       //   {
       //     method: METHOD,

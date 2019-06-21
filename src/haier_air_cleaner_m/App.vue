@@ -60,13 +60,13 @@
       </div>
 
       <div class="wrap-filter">
-        <div class="filter">
+        <!-- <div class="filter">
           <div class="filter-item">{{ model.filter_time_remaining }}<sup>%</sup></div>
           <div class="filter-name">剩余滤芯</div>
-        </div>
+        </div> -->
         <div class="filter">
-          <div class="filter-item">{{ model.filter_time_used }}<sup>天</sup></div>
-          <div class="filter-name">滤芯寿命</div>
+          <div class="filter-item">{{ model.filter_time_remaining }}<sup>小时</sup></div>
+          <div class="filter-name">滤芯剩余寿命</div>
         </div>
       </div>
 
@@ -257,6 +257,7 @@ export default {
       }
     },
     current() {
+      return 4
       let pm2 = this.model.air_filter_result.PM25[0]
       if (pm2 < 35) {
         return 0
@@ -477,11 +478,11 @@ export default {
     }
     .pointer-excellent {
       position: relative;
-      left: 110px;
-      top: -594px;
+      left: 105px;
+      top: -592px;
       width: 136px;
       height: 26px;
-      transform: rotate(339deg);
+      transform: rotate(337deg);
     }
     .pointer-good {
       position: relative;
@@ -489,15 +490,15 @@ export default {
       top: -394px;
       width: 136px;
       height: 26px;
-      transform: rotate(278deg);
+      transform: rotate(277deg);
     }
     .pointer-light {
       position: relative;
       left: 120px;
-      top: -116px;
+      top: -114px;
       width: 136px;
       height: 26px;
-      transform: rotate(200deg);
+      transform: rotate(198deg);
     }
     .pointer-moderate {
       position: relative;
@@ -505,7 +506,7 @@ export default {
       top: -190px;
       width: 136px;
       height: 26px;
-      transform: rotate(131deg);
+      transform: rotate(132deg);
     }
     .pointer-severe {
       position: relative;
@@ -513,7 +514,7 @@ export default {
       top: -456px;
       width: 136px;
       height: 26px;
-      transform: rotate(67deg);
+      transform: rotate(65deg);
     }
     .block {
       position: relative;
@@ -711,7 +712,9 @@ export default {
     .filter-item {
       position: relative;
       font-size: 80px;
+      text-align: center;
       sup {
+        white-space: nowrap;
         font-size: 24px;
         position: absolute;
         top: 15px;
@@ -760,7 +763,7 @@ export default {
       flex-direction: column;
       &.active {
         background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
-        border: none;
+        border-color: #FFBF00;
       }
     }
     .btn-name {
@@ -953,7 +956,7 @@ export default {
       }
       &.active {
         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border: none;
+        border-color: #ffbf00;
       }
     }
     .btn-swich {

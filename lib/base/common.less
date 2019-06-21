@@ -2,11 +2,19 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
 }
 ul {
   list-style: none;
 }
 body {
+  height: 100%;
   line-height: 1;
 }
 a {
@@ -37,6 +45,9 @@ a {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+}
+.icon-more:before {
+  content: '\e61d';
 }
 .center {
   display: flex;

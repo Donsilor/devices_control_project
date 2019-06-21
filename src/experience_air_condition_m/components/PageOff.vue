@@ -16,7 +16,9 @@
       </div>
 
     </div> -->
-    <topbar :title="device.name" />
+    <topbar 
+      :title="device.name" 
+      bak-color="#000" />
     <!--<div class="bg"></div>-->
 
     <div class="header">
@@ -47,14 +49,14 @@
   width: 100%;
   left: 0;
   top: 0;
-  z-index: 999;
+  z-index: 99999;
   .navbar .left a.icon-return {
     border-color: #000;
   }
 }
 </style>
 <script>
-import Icon from '../../../lib/components/SettingIconMobile.vue';
+import Icon from '../../../lib/components/SettingIconMobile.vue'
 export default {
   components: {
     Icon
@@ -72,7 +74,7 @@ export default {
     }
   },
   data() {
-    return {};
+    return {}
   },
   mounted() {
     HdSmart.UI.setStatusBarColor(2)
@@ -85,8 +87,8 @@ export default {
       HdSmart.UI.popWindow()
     },
     setOn(event) {
-      this.control('switch', 'on', event.target);
+      this.control('switch', 'on', event.target)
     }
   }
-};
+}
 </script>

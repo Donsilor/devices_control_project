@@ -85,7 +85,7 @@
             }
             &.active{
               background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
-              border: none;
+              border-color: #ffbf00;
               &::before{
                 background-image: url(../../../lib/base/air_condition/assets/new-air/swing-black.png);
               }

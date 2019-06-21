@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="app">
     <div :class="[{ 'offline': isOffline }, { 'close': isClose }, { 'loading': isLoading }, {'filter': showModeBtns }, {'filter': showMoreBtns },'wrap']">
       <topbar 
         :transparent="true"
@@ -38,10 +38,10 @@
 
         <!-- 状态 -->
         <div class="bottom">
-          <div class="time">
+          <!-- <div class="time">
             <i class="icon-time" />
             2小时25分后关机
-          </div>
+          </div> -->
           <div 
             class="status">
             <i class="icon-status" />
@@ -326,7 +326,13 @@ export default {
     },
     // 滑动
     swipe(e) {
+      // 离线和关闭不能设置温度
       if(this.isClose || this.isOffline) return
+      // 送风模式不能设置温度
+      if (this.deviceInfo.attribute.mode === 'wind' && this.tempFlag) {
+        return this.showMsg(tips.err_temp1)
+      }
+
       // 一圈 360deg = 30 摄氏度  1deg = 12℃
       if (e.direction === 'Up') {
         if (this.temp < 30) {
@@ -350,7 +356,8 @@ export default {
       this.showMoreBtns = false
     },
     handeModeClick() {
-      document.scrollingElement.scrollTop = document.body.scrollHeight
+      // document.scrollingElement.scrollTop = document.body.scrollHeight
+      document.scrollingElement.scrollTop = 0
       this.showModeBtns = true
       this.$nextTick(() => {
         setTimeout(() => {
@@ -359,7 +366,7 @@ export default {
       })
     },
     handeMoreClick() {
-      document.scrollingElement.scrollTop = document.body.scrollHeight
+      document.scrollingElement.scrollTop = 0
       this.showMoreBtns = true
       this.$nextTick(() => {
         setTimeout(() => {
@@ -454,9 +461,10 @@ export default {
       this.controlDevice('switch', switchStatus, 'switch', () => { }, () => { })
     },
     setTemperature(val) {
-      if (this.deviceInfo.attribute.mode === 'wind' && this.tempFlag) {
-        return this.showMsg(tips.err_temp1)
-      }
+      // if (this.deviceInfo.attribute.mode === 'wind' && this.tempFlag) {
+      //   return this.showMsg(tips.err_temp1)
+      // }
+
       var temp = this.deviceInfo.attribute.temperature + val
 
       if (temp < MIN_TEMP) {
@@ -521,6 +529,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.app{
+  background: #20282b;
+  min-height: 100%;
+}
 .btns {
   justify-content: flex-start;
   transition: all 0.3s ease-in-out;
@@ -529,7 +541,7 @@ export default {
     margin-right: 40px;
     width: 120px;
     height: 120px;
-    border: 1px solid #fff;
+    border: 1PX solid #fff;
     box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
     border-radius: 50%;
 
@@ -543,7 +555,7 @@ export default {
     }
     &.active {
       background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-      border: none;
+      border-color: #ffbf00;
     }
   }
   .btn-swich {
@@ -779,7 +791,7 @@ export default {
     position: fixed;
     left: 216px;
     // bottom: 358px;
-    bottom: 310px;
+    top: 895px;
     z-index: 999999;
 
     width: 750px;
@@ -819,16 +831,15 @@ export default {
 }
 
 .wrap {
-  background: #20282b;
   * {
     transition: all 0.3s ease-in-out;
   }
   &.filter {
     filter: blur(12px);
   }
-  &.offline {
-    background: #a4a9af;
-  }
+  // &.offline {
+  //   background: #a4a9af;
+  // }
   .page {
     position: relative;
     padding-bottom: 140px;
@@ -920,7 +931,7 @@ export default {
         color: #fff;
       }
       .num {
-        margin-top: 10px;
+        margin-top: 30px;
         font-family: PingFangSC-;
         font-size: 280px;
         color: #fff;
@@ -951,6 +962,11 @@ export default {
       margin-top: 23px;
       font-size: 24px;
       color: #d8d8d8;
+      height: 100px;
+      line-height: 100%;
+
+      display: flex;
+      align-items: center;
       .icon-status {
         display: inline-block;
         width: 12px;
@@ -1019,7 +1035,7 @@ export default {
           height: 10px;
           flex: 1;
           background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-          margin-right: 1px;
+          margin-right: 1PX;
         }
         &.auto .item{
            background: #a4a9af;
@@ -1027,7 +1043,7 @@ export default {
       }
       .btn-big {
         margin-left: 48px;
-        border: 1px solid #fff;
+        border: 1PX solid #fff;
         border-radius: 50%;
         width: 60px;
         height: 60px;
@@ -1040,8 +1056,8 @@ export default {
           background-size: 100% 100%;
         }
         &.active{
-          border: none;
           background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+          border-color: #ffbf00;
           &::before {
             background-image: url(../../lib/base/air_condition/assets/new-air/speed-black.png);
             background-size: 100% 100%;
@@ -1096,7 +1112,7 @@ export default {
     }
     .speed .btn-big {
       background: rgba(0, 0, 0, 0);
-      border: 1px solid #fff;
+      border: 1PX solid #fff;
       &::before {
         content: "";
         display: block;

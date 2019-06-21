@@ -37,7 +37,7 @@
 </template>
 
 <script>
-const BGMOVEDISTANCE = 24;
+const BGMOVEDISTANCE = 24
 export default {
   props: {
     open_percentage: Number,
@@ -46,25 +46,25 @@ export default {
   computed: {
     //背景图移动的距离
     moveX() {
-      return BGMOVEDISTANCE * this.open_percentage / 100;
+      return BGMOVEDISTANCE * this.open_percentage / 100
     },
     //云背景的透明度
     bg_opacity() {
-      return 0.7 + 0.3 * this.open_percentage / 100;
+      return 0.7 + 0.3 * this.open_percentage / 100
     },
     //窗帘黑色背景图的透明度
     opacity() {
-      return 0.1 + 0.9 * this.open_percentage / 100;
+      return 0.1 + 0.9 * this.open_percentage / 100
     },
     width() {
-      return 100 - 0.8 * this.open_percentage + "%";
+      return 100 - 0.8 * this.open_percentage + "%"
     }
   }
-};
+}
 </script>
 <style lang="less" scope>
 .clothes {
-  transition: width 1s;
+  transition: width 2.5s;
 }
 </style>
 

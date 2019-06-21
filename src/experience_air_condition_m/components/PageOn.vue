@@ -262,7 +262,7 @@
 
 <script>
 import Modal from '../../../lib/components/Modal.vue'
-import SubPage from '../../../lib/components/SubPage.vue'
+import SubPage from './SubPage.vue'
 import Icon from '../../../lib/components/SettingIconMobile.vue'
 
 const tips = {
