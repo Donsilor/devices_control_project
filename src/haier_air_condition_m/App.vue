@@ -92,10 +92,10 @@
               <div :class="[speedClass, 'current']" />
             </div>
             <div 
+              v-show="deviceInfo.attribute.mode !== 'wind'"
               :class="[speedClass, 'btn btn-big center']"
               @click="setSpeed('auto')"/>
           </div>
-
         </div>
       </div>
     </div>
@@ -197,7 +197,8 @@ const tips = {
   wind_left_right_off: '左右扫风已关闭',
   err_temp1: '送风模式下不能设置温度',
   err_temp2: '温度已调至最高',
-  err_temp3: '温度已调至最低'
+  err_temp3: '温度已调至最低',
+  err_temp4: '送风模式不能设置自动风速'
 }
 
 export default {
@@ -400,14 +401,24 @@ export default {
     },
     controlDevice(attr, val, btnAttr, success, error) {
       this.showBtnLoading(btnAttr)
+      // 送风模式 风速如果是自动，切换为低风速
+      let param = {}
+      if(attr == 'mode' && val == 'wind' && this.deviceInfo.attribute.speed == 'auto'){
+        param = { 'speed': 'low'}
+      }
+      var params = Object.assign(
+        {
+          [attr]: val
+        },
+        param
+      )
+
       HdSmart.Device.control(
         {
           method: "dm_set",
           nodeid: `airconditioner.main.${attr}`,
           params: {
-            attribute: {
-              [attr]: val
-            }
+            attribute: params
           }
         },
         () => {
@@ -508,6 +519,10 @@ export default {
       }, 500)
     },
     setSpeed(speed) {
+      if(this.deviceInfo.attribute.mode == 'wind' && speed == 'auto') {
+        return this.showMsg(tips['err_temp4'])
+      }
+
       this.controlDevice('speed', speed, '',
         () => {
           this.showMsg(tips['speed_' + speed])
@@ -842,10 +857,10 @@ export default {
   // }
   .page {
     position: relative;
-    padding-bottom: 140px;
     padding-top: 298px;
     padding-left: 48px;
-    overflow-x: hidden;
+    padding-bottom: 60px;
+    overflow: hidden;
     .tips {
       background: rgba(0, 0, 0, 0.3);
       position: fixed;
@@ -1066,6 +1081,7 @@ export default {
       }
       .current {
         position: absolute;
+        top: -25px;
 
         width: 50px;
         height: 50px;

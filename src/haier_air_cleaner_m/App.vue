@@ -6,37 +6,36 @@
         :bak-color="bakColor"/>
       <div 
         class="main"
-        @click="togglePMPop">
+        @click="toSubPage">
         <div>
           <img 
             class="circle"
-            src="../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png"
-            alt="">
+            src="../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png">
           <img 
             v-show="current==0"
             class="pointer-excellent"
             src="../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png"
-            alt="">
+          >
           <img 
             v-show="current==1"
             class="pointer-good"
             src="../../lib/base/air_cleaner/assets/new-air/lianghao@2x.png"
-            alt="">
+          >
           <img 
             v-show="current==2"
             class="pointer-light"
             src="../../lib/base/air_cleaner/assets/new-air/qingdu@2x.png"
-            alt="">
+          >
           <img 
             v-show="current==3"
             class="pointer-moderate"
             src="../../lib/base/air_cleaner/assets/new-air/zhongdu@2x.png"
-            alt="">
+          >
           <img 
             v-show="current==4"
             class="pointer-severe"
             src="../../lib/base/air_cleaner/assets/new-air/zhongduz@2x.png"
-            alt="">
+          >
         </div>
         <div class="block">
           <div class="num">{{ model.air_filter_result.PM25[0] }}</div>
@@ -81,8 +80,8 @@
 
         <div class="btn-wrap">
           <div
-            :class="[{'active': model.control_status == 'sleep' },'btn btn-mode center']"
-            @click="setControl" />
+            :class="[{'active': model.control_status == 'sleep' || model.speed == 'sleep' },'btn btn-mode center']"
+            @click="setSpeed('sleep')" />
           <div class="btn-name">睡眠</div>
         </div>
 
@@ -122,11 +121,11 @@
           @click.stop="setSpeed('very_high')">
           <div class="name">超高档</div>
         </div>
-        <div 
+        <!-- <div 
           :class="[{ 'item5': animation }, {' btn-loading': btnLoading.auto },'btn btn-super_high center']"
           @click.stop="setSpeed('super_high')">
           <div class="name">极速挡</div>
-        </div>
+        </div> -->
         <div 
           :class="[ { 'item6': animation }, btnClass,'btn center active']"
           @click.stop />
@@ -135,7 +134,7 @@
 
     <!-- PM2.5简介 -->
     <sub-page 
-      v-model="pmPopVisible"
+      v-model="showSubPage"
       title="PM2.5简介"
       class="modal-w">
       <div class="pm2">
@@ -220,7 +219,7 @@ export default {
         wind_up_down: false,
         wind_left_right: false
       },
-      pmPopVisible: false,
+      showSubPage: false
     }
   },
   computed: {
@@ -335,9 +334,9 @@ export default {
       this.showModeBtns = false
       this.animation = false
     },
-    togglePMPop() {
-      //pm2.5
-      this.pmPopVisible = !this.pmPopVisible
+    toSubPage() {
+      console.log('showSubPage')
+      this.showSubPage = true
     },
     showTip(text) {
       clearTimeout(this.tipTime)
@@ -514,7 +513,7 @@ export default {
       top: -456px;
       width: 136px;
       height: 26px;
-      transform: rotate(65deg);
+      transform: rotate(64deg);
     }
     .block {
       position: relative;
@@ -728,6 +727,9 @@ export default {
   }
 
   .panel-btn {
+    position: relative;
+    z-index: 9;
+
     height: 306px;
     background: #FFFFFF;
     box-shadow: 0 -3px 28px 0 rgba(209,209,209,0.50);
@@ -896,9 +898,8 @@ export default {
   }
   .items {
     position: fixed;
-    left: 556px;
-    // bottom: 358px;
-    bottom: 150px;
+    left: 490px;
+    top: 1050px;
     z-index: 999999;
 
     width: 750px;
@@ -910,16 +911,16 @@ export default {
       left: 0;
     }
     .item1 {
-      top: -150px;
-      left: 50px;
+      top: -122px;
+      left: 88px;
     }
     .item2 {
-      top: -122px;
-      left: -104px;
+      top: -128px;
+      left: -76px;
     }
     .item3 {
-      top: 0px;
-      left: -180px;
+      top: 20px;
+      left: -150px;
     }
     .item4 {
       top: 122px;
