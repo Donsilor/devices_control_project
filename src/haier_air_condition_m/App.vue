@@ -32,8 +32,8 @@
         <!-- msg 滑动设置温度 -->
         <div 
           v-finger:swipe="swipe"
-          :style="{ transform: 'rotate(' + deg + 'deg)' }"
-          class="dial"
+          :class="[{'temperatureUp': isSetTemperature === 'Up'},{'temperatureDown': isSetTemperature === 'Down'}]"
+          class="dial "
           @touchmove.prevent />
 
         <!-- 状态 -->
@@ -236,6 +236,8 @@ export default {
         }
       },
       deg: 0,
+      isSetTemperature: '',
+
       device: {},
       btnLoading: {
         switch: false,
@@ -329,6 +331,9 @@ export default {
     swipe(e) {
       // 离线和关闭不能设置温度
       if(this.isClose || this.isOffline) return
+      // 设置温度中
+      if(this.isSetTemperature) return
+
       // 送风模式不能设置温度
       if (this.deviceInfo.attribute.mode === 'wind' && this.tempFlag) {
         return this.showMsg(tips.err_temp1)
@@ -338,14 +343,14 @@ export default {
       if (e.direction === 'Up') {
         if (this.temp < 30) {
           // this.deviceInfo.attribute.temperature += 10
-          this.setTemperature(10, e)
+          this.setTemperature(10, e.direction)
         } else {
           this.showMsg(tips['err_temp2'])
         }
       } else if (e.direction === 'Down') {
         if (this.temp > 16) {
           // this.deviceInfo.attribute.temperature -= 10
-          this.setTemperature(-10, e)
+          this.setTemperature(-10, e.direction)
         } else {
           this.showMsg(tips['err_temp3'])
         }
@@ -471,7 +476,7 @@ export default {
       }
       this.controlDevice('switch', switchStatus, 'switch', () => { }, () => { })
     },
-    setTemperature(val) {
+    setTemperature(val, direction) {
       // if (this.deviceInfo.attribute.mode === 'wind' && this.tempFlag) {
       //   return this.showMsg(tips.err_temp1)
       // }
@@ -498,6 +503,7 @@ export default {
 
       clearTimeout(tempDelay)
       this.tempFlag = false
+      this.isSetTemperature = direction
       tempDelay = setTimeout(() => {
         this.tempFlag = true
         this.controlDevice(
@@ -505,14 +511,16 @@ export default {
           temp,
           '',
           () => {
-            if (val > 0) {
-              this.deg += 24
-            } else {
-              this.deg -= 24
-            }
+            this.isSetTemperature = ''
+            // if (val > 0) {
+            //   this.deg += 24
+            // } else {
+            //   this.deg -= 24
+            // }
             this.showMsg(tips.temperature)
           },
           () => {
+            this.isSetTemperature = ''
             this.tempFlag = true
           },
         )
@@ -544,6 +552,22 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@keyframes temperatureUp {
+    from {
+        transform: rotate(0deg);;
+    }
+    to {
+        transform: rotate(360deg);;
+    }
+}
+@keyframes temperatureDown {
+    from {
+        transform: rotate(0deg);;
+    }
+    to {
+        transform: rotate(-360deg);;
+    }
+}
 .app{
   background: #20282b;
   min-height: 100%;
@@ -934,6 +958,13 @@ export default {
 
       background-image: url(../../lib/base/air_condition/assets/new-air/dial-yellow.png);
       background-size: 100% 100%;
+
+      &.temperatureUp {
+        animation: temperatureUp 6s linear 0s infinite;
+      }
+      &.temperatureDown {
+        animation: temperatureDown 6s linear 0s infinite;
+      }
     }
 
     .temperature {
