@@ -33,7 +33,7 @@
     <div class="ac1" />
     <!-- <div class="ac2" v-else></div> -->
 
-    <a
+    <div
       href="#"
       class="btn-on icon-switch"
       @click.prevent="setOn($event)"

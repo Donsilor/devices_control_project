@@ -5,14 +5,14 @@
   >
     <!-- <div class="topbar topbar-fixed">
       <div class="left">
-        <a
+        <div
           href="#/"
           class="icon-return"
           @click.prevent="back"/>
       </div>
       <div class="title">{{ device.name }}</div>
       <div class="right">
-        <a
+        <div
           href=""
           class="icon-more"
           @click.prevent="goDetail"/>
@@ -54,49 +54,45 @@
       >{{ tip }}</div>
     </transition>
 
-    <a
+    <div
       :class="{disabled:ac.mode=='wind'}"
-      href="#"
+      
       class="btn-minus icon-less"
       @click.prevent="setTemperature(-1, $event)"
     />
-    <a
+    <div
       :class="{disabled:ac.mode=='wind'}"
-      href="#"
+      
       class="btn-add icon-plus"
       @click.prevent="setTemperature(1, $event)"
     />
 
-    <a
+    <div
       :class="{'btn-toggle-more':toggle}"
-      href="#modal"
-      class="btn-toggle"
+      class="btn-toggle a-link"
       @click="showMore()"
     />
 
     <div class="btns-hold">
       <ul class="btns">
         <li>
-          <a
-            href="#modal"
-            class="btn-mode icon-mode"
+          <div
+            class="btn-mode icon-mode a-link"
             @click="modeDialogShow=true"
           />
           模式
         </li>
         <li>
-          <!--<a href="#" class="btn-mode" @click.prevent="modeDialogShow=true"></a>-->
-          <a
-            href="#"
-            class="btn-off icon-switch"
+          <!--<div  class="btn-mode" @click.prevent="modeDialogShow=true"></div>-->
+          <div
+            class="btn-off icon-switch a-link"
             @click.prevent="setOff($event)"
           />
           关闭
         </li>
         <li>
-          <a
-            href="#modal"
-            class="btn-speed2 icon-speed"
+          <div
+            class="btn-speed2 icon-speed a-link"
             @click="speedDialogShow=true"
           />
           风速
@@ -104,19 +100,19 @@
       </ul>
       <!-- <ul class="btns">
                 <li :class="{on:ac.mode==='cold'}">
-                    <a href="#" class="btn-cold" :class="{on:ac.mode==='cold'}" @click.prevent="setMode('cold', $event)"></a>
+                    <div  class="btn-cold" :class="{on:ac.mode==='cold'}" @click.prevent="setMode('cold', $event)"></div>
                     制冷
                 </li>
                 <li :class="{on:ac.mode==='heat'}">
-                    <a href="#" class="btn-heat" :class="{on:ac.mode==='heat'}" @click.prevent="setMode('heat', $event)"></a>
+                    <div  class="btn-heat" :class="{on:ac.mode==='heat'}" @click.prevent="setMode('heat', $event)"></div>
                     制热
                 </li>
                 <li :class="{on:ac.mode==='dehumidify'}">
-                    <a href="#" class="btn-dehumidify" :class="{on:ac.mode==='dehumidify'}" @click.prevent="setMode('dehumidify', $event)"></a>
+                    <div  class="btn-dehumidify" :class="{on:ac.mode==='dehumidify'}" @click.prevent="setMode('dehumidify', $event)"></div>
                     除湿
                 </li>
                 <li :class="{'on':ac.speed==='low'||ac.speed==='normal'||ac.speed==='high'}">
-                    <a href="#" class="btn-speed" :class="{'btn-s1':ac.speed==='low','btn-s2':ac.speed==='normal','btn-s3':ac.speed==='high'}" @click.prevent="setSpeed($event)"></a>
+                    <div  class="btn-speed" :class="{'btn-s1':ac.speed==='low','btn-s2':ac.speed==='normal','btn-s3':ac.speed==='high'}" @click.prevent="setSpeed($event)"></div>
                     <span v-show="ac.speed==='low'">低</span>
                     <span v-show="ac.speed==='normal'">中</span>
                     <span v-show="ac.speed==='high'">高</span>
@@ -126,7 +122,7 @@
 
     </div>
 
-    <!--<a href="#" class="btn-off" @click.prevent="setOff($event)"></a>-->
+    <!--<div  class="btn-off" @click.prevent="setOff($event)"></div>-->
 
     <sub-page
       v-model="toggle"
@@ -137,27 +133,27 @@
       <!-- <p>模式</p>
             <ul class="btns">
                 <li :class="{on:ac.mode==='auto'}">
-                    <a href="#" class="btn-auto" :class="{on:ac.mode==='auto'}" @click.prevent="setMode('auto', $event)"></a>
+                    <div  class="btn-auto" :class="{on:ac.mode==='auto'}" @click.prevent="setMode('auto', $event)"></div>
                     智能
                 </li>
                 <li :class="{on:ac.mode==='wind'}">
-                    <a href="#" class="btn-wind" :class="{on:ac.mode==='wind'}" @click.prevent="setMode('wind', $event)"></a>
+                    <div  class="btn-wind" :class="{on:ac.mode==='wind'}" @click.prevent="setMode('wind', $event)"></div>
                     送风
                 </li>
             </ul> -->
       <!--<p>摆风</p>-->
       <ul class="btns">
         <li :class="{on:ac.wind_up_down==='on'}">
-          <a
+          <div
             :class="{on:ac.wind_up_down==='on'}"
-            href="#"
-            class="icon-vertical"
+            
+            class="icon-vertical a-link"
             @click.prevent="setWind('wind_up_down', $event)"
           />
           上下
         </li>
         <!-- <li :class="{on:ac.wind_left_right==='on'}">
-                    <a href="#" class="btn-horizontal" :class="{on:ac.wind_left_right==='on'}" @click.prevent="setWind('wind_left_right', $event)"></a>
+                    <div  class="btn-horizontal" :class="{on:ac.wind_left_right==='on'}" @click.prevent="setWind('wind_left_right', $event)"></div>
                     左右
                 </li> -->
       </ul>
@@ -172,46 +168,46 @@
     >
       <ul class="btns">
         <li :class="{on:ac.mode==='auto'}">
-          <a
+          <div
             :class="{on:ac.mode==='auto'}"
-            href="#"
-            class="icon-auto"
+            
+            class="icon-auto a-link"
             @click.prevent="setMode('auto', $event)"
           />
           智能
         </li>
         <li :class="{on:ac.mode==='cold'}">
-          <a
+          <div
             :class="{on:ac.mode==='cold'}"
-            href="#"
-            class="icon-cold"
+            
+            class="icon-cold a-link"
             @click.prevent="setMode('cold', $event)"
           />
           制冷
         </li>
         <li :class="{on:ac.mode==='heat'}">
-          <a
+          <div
             :class="{on:ac.mode==='heat'}"
-            href="#"
-            class="icon-heat"
+            
+            class="icon-heat a-link"
             @click.prevent="setMode('heat', $event)"
           />
           制热
         </li>
         <li :class="{on:ac.mode==='dehumidify'}">
-          <a
+          <div
             :class="{on:ac.mode==='dehumidify'}"
-            href="#"
-            class="icon-dehumidify"
+            
+            class="icon-dehumidify a-link"
             @click.prevent="setMode('dehumidify', $event)"
           />
           除湿
         </li>
         <li :class="{on:ac.mode==='wind'}">
-          <a
+          <div
             :class="{on:ac.mode==='wind'}"
-            href="#"
-            class="icon-wind"
+            
+            class="icon-wind a-link"
             @click.prevent="setMode('wind', $event)"
           />
           送风
@@ -228,28 +224,28 @@
     >
       <ul class="btns">
         <li :class="{'on':ac.speed==='low'}">
-          <a
+          <div
             :class="{'on':ac.speed==='low'}"
-            href="#"
-            class="icon-s1"
+            
+            class="icon-s1 a-link"
             @click.prevent="setSpeed($event,'low')"
           />
           <span>低</span>
         </li>
         <li :class="{'on':ac.speed==='normal'}">
-          <a
+          <div
             :class="{'on':ac.speed==='normal'}"
-            href="#"
-            class="icon-s2"
+            
+            class="icon-s2 a-link"
             @click.prevent="setSpeed($event,'normal')"
           />
           <span>中</span>
         </li>
         <li :class="{'on':ac.speed==='high'}">
-          <a
+          <div
             :class="{'on':ac.speed==='high'}"
-            href="#"
-            class="icon-s3"
+            
+            class="icon-s3 a-link"
             @click.prevent="setSpeed($event,'high')"
           />
           <span>高</span>
@@ -359,7 +355,7 @@ export default {
       }
     },
     onModalClose() {
-      history.go(-1)
+      // history.go(-1)
     },
     changeStatus(val) {
       HdSmart.UI.setStatusBarColor(val ? 2 : 1)

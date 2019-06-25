@@ -49,12 +49,11 @@
               >主演：{{ cur.starring }}</p>
             </div>
             <div class="playstate playstate_unplay">
-              <a
-                href="#"
+              <div
                 class="btn"
                 @click.prevent="play(cur.playlist2.list[0])"
               >
-              <i class="icon-play" />在电视上播放</a>
+              <i class="icon-play" />在电视上播放</div>
             </div>
           </div>
         </div>
@@ -187,7 +186,7 @@
     </div>
   </div>
   <!-- </transition> -->
-</template>
+</div></template>
 
 <style lang="less">
 .page-detail {
@@ -608,16 +607,16 @@
 </style>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import * as service from "../service";
+import { mapState, mapActions } from "vuex"
+import * as service from "../service"
 
 //隐藏body滚动条
 function toggleBoayScroll(val) {
   var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
   if (!iOS) {
-    document.documentElement.className = val ? "andriod hidescroll" : "";
+    document.documentElement.className = val ? "andriod hidescroll" : ""
   } else {
-    document.documentElement.className = val ? "hidescroll" : "";
+    document.documentElement.className = val ? "hidescroll" : ""
   }
 
 }
@@ -646,7 +645,7 @@ export default {
       loading: false,
       history: false,
       isShowAll: false
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -665,7 +664,7 @@ export default {
   watch: {
     visible(val) {
       if (val) {
-        this.getData();
+        this.getData()
       } else {
         this.cur = {
           playlist: [
@@ -677,138 +676,138 @@ export default {
             list: [],
             list2: []
           }
-        };
-        this.history = false;
-        this.isShowAll = false;
+        }
+        this.history = false
+        this.isShowAll = false
       }
-      toggleBoayScroll(val);
+      toggleBoayScroll(val)
     },
     loading(val) {
       if (val) {
-        HdSmart.UI.showLoading();
+        HdSmart.UI.showLoading()
       } else {
-        HdSmart.UI.hideLoading();
+        HdSmart.UI.hideLoading()
       }
     }
   },
   methods: {
     ...mapActions(["hideDetail", "showDetail"]),
     getData() {
-      this.loading = true;
-      this.setHistory();
+      this.loading = true
+      this.setHistory()
       service.getDetaileData(
         {
           channelId: this.channelId,
           vid: this.vid
         },
         (err, data) => {
-          this.loading = false;
+          this.loading = false
           if (err) {
-            this.close();
-            return;
+            this.close()
+            return
           }
 
-          var temp = data.data;
-          var playlist = temp.playlist[0];
-          temp.playlist2 = {};
-          temp.playlist2.total = playlist.total;
+          var temp = data.data
+          var playlist = temp.playlist[0]
+          temp.playlist2 = {}
+          temp.playlist2.total = playlist.total
           temp.playlist2.list = playlist.list.filter(
             item => item.states == "1"
-          );
+          )
           temp.playlist2.list2 = playlist.list.filter(
             item => item.states != "1"
-          );
-          this.cur = Object.freeze(temp);
+          )
+          this.cur = Object.freeze(temp)
         }
-      );
+      )
     },
     //点播：播放状态如playstate
     play(clickItem) {
       if (!clickItem) {
         clickItem =
-          this.cur.playlist2.list[0] || this.cur.playlist2.list2[0];
+          this.cur.playlist2.list[0] || this.cur.playlist2.list2[0]
       }
       if (clickItem) {
-        service.playVideo(clickItem.link, clickItem.name);
+        service.playVideo(clickItem.link, clickItem.name)
       }
     },
     //描述按行截取：对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
     getDescLine() {
       if (this.$el) {
-        this.isDescShow = false;
-        this.isDescOverflow = false;
+        this.isDescShow = false
+        this.isDescOverflow = false
         this.$nextTick(() => {
           let wrapHeight = this.$el.querySelector(".desc-cont")
-            .offsetHeight;
+            .offsetHeight
           let textHeight = this.$el.querySelector(".desc-cont-p")
-            .offsetHeight;
+            .offsetHeight
 
           if (textHeight > wrapHeight) {
-            this.isDescOverflow = true;
+            this.isDescOverflow = true
           } else {
-            this.isDescOverflow = false;
+            this.isDescOverflow = false
           }
-        });
+        })
       }
     },
     getUpdateSet() {
-      var count = this.cur.playlist2.total + 1; //-this.cur.playlist2.list2.length
-      var last = this.cur.playlist2.list.length;
+      var count = this.cur.playlist2.total + 1 //-this.cur.playlist2.list2.length
+      var last = this.cur.playlist2.list.length
       if (!count || !last || count == "0" || last == "0") {
-        return "";
+        return ""
       } else if (last === count) {
-        return count + "集全";
+        return count + "集全"
       } else {
-        return "更新至" + last + "集";
+        return "更新至" + last + "集"
       }
     },
     close() {
       if (this.visible) {
         if (this.history) {
-          this.$router.go(-1);
+          this.$router.go(-1)
         } else {
-          this.hideDetail();
+          this.hideDetail()
         }
       }
       this.loading = false
     },
     toHTML(str) {
-      if (!str) return "";
+      if (!str) return ""
       return str
         .split("\n")
         .map(item => {
-          return "\u3000\u3000" + item;
+          return "\u3000\u3000" + item
         })
-        .join("<br>");
+        .join("<br>")
     },
     isNotNull(str) {
-      return str && str != "null";
+      return str && str != "null"
     },
     setHistory() {
-      this.history = true;
+      this.history = true
       var query = {
         ...this.$route.query,
         detail: this.channelId + "_" + this.vid
-      };
-      this.$router.push({ query });
+      }
+      this.$router.push({ query })
     },
     showAll() {
-      this.isShowAll = true;
+      this.isShowAll = true
     },
     showAllClose() {
-      this.isShowAll = false;
+      this.isShowAll = false
     }
   },
   created() {
-    this.$watch("cur.desc", this.getDescLine);
+    this.$watch("cur.desc", this.getDescLine)
     //详情页添加history change
     this.$watch("$route.query.detail", (newVal, oldVal) => {
       if (oldVal && newVal === undefined && this.visible) {
-        this.hideDetail();
+        this.hideDetail()
       } else if (oldVal === undefined && newVal) {
         this.showDetail()
       }
-    });
+    })
   }
-};
+}
 </script>

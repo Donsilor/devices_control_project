@@ -36,12 +36,13 @@
           v-for="item in homePageInfo"
           :key="item.vid"
         >
-          <a
+          <div
             :style="{backgroundImage:'url('+item.pictureUrl+')'}"
+            class="a-link"
             href="javascript:void(0)"
           >
             <span class="title">{{ item.title }}</span>
-          </a>
+          </div>
         </swiper-slide>
         <div
           slot="pagination"
@@ -51,43 +52,38 @@
     </div>
 
     <div class="control">
-      <a
+      <div
         :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-        href="#"
-        class="icon-shut"
+        class="icon-shut a-link"
         @click.prevent="cmd('rcPower')"
       />
-      <a
-        href="#"
-        class="icon-home"
+      <div
+        class="icon-home a-link"
         @click.prevent="cmd('rcHome')"
       />
-      <!--// <a href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></a>
-            // <a href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></a>-->
-      <a
+      <!--// <div href="#" class="voldown" @click.prevent="cmd('rcVolumeDown')"></div>
+            // <div href="#" class="volup" @click.prevent="cmd('rcVolumeUp')"></div>-->
+      <div
         v-finger:touch-end="volupEnd"
         v-finger:touch-move="touchMove"
         v-finger:long-tap="volupStart"
-        href="javascript:void(0)"
-        class="icon-volup"
+        class="icon-volup a-link"
       />
-      <a
+      <div
         v-finger:touch-end="voldownEnd"
         v-finger:touch-move="touchMove"
         v-finger:long-tap="voldownStart"
-        href="javascript:void(0)"
-        class="icon-voldown"
+        class="icon-voldown a-link"
       />
-      <a
-        href="#"
-        class="icon-back"
+      <div
+        class="icon-back a-link"
         @click.prevent="cmd('rcBack')"
       />
     </div>
 
     <div class="icon_grid">
       <div class="icon_grid_inner">
-        <router-link
+        <!-- <router-link
           v-for="item in channels"
           :key="item.channelId"
           :to="{
@@ -99,18 +95,23 @@
           }"
           :class="['icon-'+item.channelId]"
           class="item"
-        >{{ item.channel }}</router-link>
+        >{{ item.channel }}</router-link> -->
 
-        <a
-          href="#"
+
+        <div 
+          v-for="item in channels" 
+          :class="['icon-'+item.channelId]"
+          class="item"
+          @click.prevent="toPage(item)">{{ item.channel }}</div>
+
+        <div
           class="item icon-screening"
           @click.prevent="cmd('screenProjectionEvent')"
-        >投屏</a>
-        <a
-          href="#"
+        >投屏</div>
+        <div
           class="item icon-control"
           @click.prevent="cmd('remoteControlEvent')"
-        >遥控器</a>
+        >遥控器</div>
       </div>
       <!-- </div> -->
     </div>
@@ -207,7 +208,7 @@
       no-repeat;
     background-size: 100%;
   }
-  a {
+  a, .a-link {
     display: block;
     width: 750px;
     height: 368px;
@@ -258,7 +259,7 @@
   display: flex;
   justify-content: space-between;
   margin: 50px;
-  a {
+  a, .a-link{
     display: block;
     width: 100px;
     height: 100px;
@@ -373,8 +374,8 @@ export default {
     })
 
     document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
+      e.preventDefault()
+    })
   },
   methods: {
     back() {
@@ -433,6 +434,9 @@ export default {
         infoCache = data
         this.homePageInfo = infoCache
       })
+    },
+    toPage(item) {
+      this.$router.push({ name: 'list', query: { channelId: item.channelId, channel: item.channel }})
     }
   }
 }

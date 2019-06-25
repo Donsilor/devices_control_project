@@ -192,7 +192,7 @@ export default {
             0
           ]
         },
-        "switch_status": "on",
+        "switch_status": "off",
         "child_lock_switch_status": "off",
         "negative_ion_switch_status": "off",
         "speed": "low",
@@ -251,7 +251,7 @@ export default {
           return 'btn-super_high'
           break
         case 'sleep':
-          return 'btn-sleep'
+          return 'btn-low'
           break 
       }
     },
@@ -289,7 +289,7 @@ export default {
           return '极速挡'
           break
         case 'sleep':
-          return '睡眠'
+          return '低挡'
           break 
       }
     }
@@ -297,6 +297,10 @@ export default {
   watch: {
   },
   created() {
+    var str_model = window.localStorage.getItem("cleaner_model_attr")
+    if(str_model){
+      this.model =JSON.parse(str_model)
+    }
     HdSmart.ready(() => {
       if (window.device_name) {
         this.device_name = window.device_name
@@ -436,6 +440,9 @@ export default {
     onSuccess(data) {
       this.status = "success"
       this.model = data.attribute
+
+      // 将model 保存在 localStorage
+      window.localStorage.setItem('cleaner_model_attr', JSON.stringify(data.attribute))
     },
     confirm(done) {
       if (this.model.child_lock_switch_status == "on") {
@@ -915,7 +922,7 @@ export default {
       left: 88px;
     }
     .item2 {
-      top: -128px;
+      top: -122px;
       left: -76px;
     }
     .item3 {
@@ -923,8 +930,8 @@ export default {
       left: -150px;
     }
     .item4 {
-      top: 122px;
-      left: -104px;
+      top: 155px;
+      left: -94px;
     }
     .item5 {
       top: 150px;

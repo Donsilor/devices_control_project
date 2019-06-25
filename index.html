@@ -80,6 +80,24 @@
             console.log('productName: <%= htmlWebpackPlugin.options.title %>')
             console.log('buildTime: ' + BUILD_TIME)
         </script>
+        <script type="text/JavaScript">
+          // 阻止iOS APP中的链接打开Safari浏览器
+          if (("standalone" in window.navigator) && window.navigator.standalone) {
+              var noddy, remotes = false;
+              document.addEventListener('click',
+              function(event) {
+                  noddy = event.target;
+                  while (noddy.nodeName !== "A" && noddy.nodeName !== "HTML") {
+                      noddy = noddy.parentNode;
+                  }
+                  if ('href' in noddy && noddy.href.indexOf('http') !== -1 && (noddy.href.indexOf(document.location.host) !== -1 || remotes)) {
+                      event.preventDefault();
+                      document.location.href = noddy.href;
+                  }
+              },
+              false);
+          }
+          </script>
 
 
         <script src="http://zsj-smarthome-test.oss-cn-shenzhen.aliyuncs.com/scattered-pages-in-app/dist/js/vconsole.min.js"></script>

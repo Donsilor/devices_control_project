@@ -26,7 +26,14 @@
         <!-- 温度 -->
         <div class="temperature">
           <div class="unit">温度，℃</div>
-          <div class="num">{{ temp }}</div>
+
+          <div 
+            v-if="deviceInfo.attribute.mode !=='wind'" 
+            class="num">{{ temp }}</div>
+          <!-- 送风模式显示环境温度 -->
+          <div 
+            v-else 
+            class="num">{{ env_temp }}</div>
         </div>
 
         <!-- msg 滑动设置温度 -->
@@ -220,7 +227,7 @@ export default {
       temperature: 16,
       deviceInfo: {
         attribute: {
-          switchStatus: 'on',
+          switchStatus: 'off',
           temperature: 165,
           env_temperature: 240,
           mode: 'cold',
@@ -255,6 +262,11 @@ export default {
   computed: {
     temp() {
       let tmp = this.deviceInfo.attribute.temperature / 10
+      tmp = tmp.toFixed(0)
+      return +tmp
+    },
+    env_temp() {
+      let tmp = this.deviceInfo.attribute.env_temperature / 10
       tmp = tmp.toFixed(0)
       return +tmp
     },
@@ -305,6 +317,10 @@ export default {
     },
   },
   mounted() {
+    var str_model = window.localStorage.getItem("air_model_attr")
+    if(str_model){
+      this.deviceInfo.attribute =JSON.parse(str_model)
+    }
     this.init()
   },
   methods: {
@@ -402,7 +418,9 @@ export default {
     },
     onSuccess(data) {
       this.deviceInfo = data
-      console.log(data)
+
+      // 将model 保存在 localStorage
+      window.localStorage.setItem('air_model_attr', JSON.stringify(data.attribute))
     },
     controlDevice(attr, val, btnAttr, success, error) {
       this.showBtnLoading(btnAttr)

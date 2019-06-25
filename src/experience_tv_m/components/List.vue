@@ -453,8 +453,8 @@
 </style>
 
 <script>
-import * as service from "../service";
-import _ from "../util";
+import * as service from "../service"
+import _ from "../util"
 import { mapState, mapGetters } from 'vuex'
 
 export default {
@@ -502,7 +502,7 @@ export default {
       isFirstLoad: true,
       filterVisible: false
       //filterToggleClicked: false
-    };
+    }
   },
   computed: {
     ...mapState(['status_bar_height', 'navigation_bar_height']),
@@ -513,28 +513,28 @@ export default {
     loadState(val) {
       if (this.isFirstLoad) {
         if (val === "LOADING") {
-          HdSmart.UI.showLoading();
+          HdSmart.UI.showLoading()
         } else if (val === "LOADED") {
-          HdSmart.UI.hideLoading();
+          HdSmart.UI.hideLoading()
         }
       }
     }
   },
   methods: {
     toggleFilter() {
-      this.filterVisible = !this.filterVisible;
+      this.filterVisible = !this.filterVisible
       // var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
       // scrollTop += this.filterVisible ? 132 : -132
       // window.scrollTo(0, scrollTop)
     },
     //参数筛选
     setParam(key, value) {
-      this[key] = value;
-      this.filterData(1);
+      this[key] = value
+      this.filterData(1)
     },
     filterData(page) {
-      if (page === 1) this.isFirstLoad = true;
-      this.loadState = "LOADING";
+      if (page === 1) this.isFirstLoad = true
+      this.loadState = "LOADING"
       service.searchData(
         {
           channelId: this.channelId,
@@ -548,118 +548,118 @@ export default {
           pageNo: page
         },
         (err, data) => {
-          this.loadState = "LOADED";
-          if (err) return;
+          this.loadState = "LOADED"
+          if (err) return
 
           if (data.data) {
-            data = data.data;
+            data = data.data
           }
           if (data.list == "") {
-            data.list = [];
+            data.list = []
           }
           this.$nextTick(() => {
             this.list = Object.freeze(
               (page === 1 ? [] : this.list).concat(data.list)
-            );
-            this.total = data.total;
-            this.pageNo = page;
+            )
+            this.total = data.total
+            this.pageNo = page
             if (this.isFirstLoad) {
-              this.isFirstLoad = false;
-              window.scrollTo(0, 0);
+              this.isFirstLoad = false
+              window.scrollTo(0, 0)
             }
             if (this.total === 0) {
               //没有数据
-              this.loadState = "NO_DATA";
+              this.loadState = "NO_DATA"
             } else if (this.pageSize * this.pageNo >= this.total) {
               //加载完全部
-              this.loadState = "NO_MORE";
+              this.loadState = "NO_MORE"
               //HdSmart.UI.toast('已加载全部')
             }
-          });
+          })
         }
-      );
+      )
     },
     loadMore: _.debounce(function() {
       var scrollTop =
         document.documentElement.scrollTop ||
         window.pageYOffset ||
-        document.body.scrollTop;
+        document.body.scrollTop
       if (
         scrollTop > 0 &&
         scrollTop + window.innerHeight >=
         document.documentElement.scrollHeight - 15
       ) {
         if (this.$store.state.detailVisible) {
-          return;
+          return
         }
         if (
           this.loadState === "LOADING" ||
           this.loadState === "NO_DATA"
         ) {
-          return;
+          return
         }
         if (this.loadState === "NO_MORE") {
-          HdSmart.UI.toast("已加载全部");
-          return;
+          HdSmart.UI.toast("已加载全部")
+          return
         }
-        this.filterData(this.pageNo + 1);
+        this.filterData(this.pageNo + 1)
       }
     }, 300),
     showDetailInfo(item) {
-      this.$store.dispatch("showDetail", item);
+      this.$store.dispatch("showDetail", item)
     },
     getUpdateSet(count, last) {
       if (!count || !last || count == "0" || last == "0") {
-        return "";
+        return ""
       } else if (last === count) {
-        return count + "集全";
+        return count + "集全"
       } else {
-        return "更新至" + last + "集";
+        return "更新至" + last + "集"
       }
     },
     //换成小图地址
     getThumbPic(pic) {
-      return pic.replace(".jpg", "_y.jpg");
+      return pic.replace(".jpg", "_y.jpg")
     },
     reload() {
       if (this.error) {
-        this.error = false;
-        this.onPageInit();
+        this.error = false
+        this.onPageInit()
       }
     },
     onPageInit() {
-      this.loadState = "LOADING";
+      this.loadState = "LOADING"
       service.getChannelData(this.channelId, (err, data) => {
-        this.loadState = "LOADED";
+        this.loadState = "LOADED"
         if (err) {
-          this.error = true;
-          return;
+          this.error = true
+          return
         }
-        this.category = Object.freeze(data.category);
-        this.region = Object.freeze(data.region);
-        this.year = Object.freeze(data.year);
-        this.list = Object.freeze(data.data.list);
-        this.total = data.data.total;
+        this.category = Object.freeze(data.category)
+        this.region = Object.freeze(data.region)
+        this.year = Object.freeze(data.year)
+        this.list = Object.freeze(data.data.list)
+        this.total = data.data.total
         this.$nextTick(() => {
-          this.isFirstLoad = false;
-        });
-      });
+          this.isFirstLoad = false
+        })
+      })
     }
   },
   mounted() {
-    service.RemoteController({ 'show': true });
-    this.onPageInit();
+    service.RemoteController({ 'show': true })
+    this.onPageInit()
     this.$Lazyload.$on("error", function({ el, src, loading }) {
-      el.src = el.dataset.src1;
+      el.src = el.dataset.src1
       el.onerror = function() {
-        el.src = loading;
-        el.onerror = null;
-      };
-    });
-    window.addEventListener("scroll", this.loadMore);
+        el.src = loading
+        el.onerror = null
+      }
+    })
+    window.addEventListener("scroll", this.loadMore)
   },
   destroyed() {
-    window.removeEventListener("scroll", this.loadMore);
+    window.removeEventListener("scroll", this.loadMore)
   }
-};
+}
 </script>
