@@ -5,16 +5,17 @@
     @click.self="show = false"
     @touchmove.prevent>
     <div class="main">
-      <p class="title">预约时间</p>
+      <p class="title">设置关机时间</p>
       <time-pick 
-        class="pickTime"
-        @selectedchange="selectedchange"/>
-      <!-- <div class="txt">设定后将在预约时间自动执行所选模式</div> -->
+        :selectedchange="selectedchange" 
+        class="pickTime"/>
+
       <div class="wrap-btns">
-        <button 
+        <input 
           class="submit" 
           type="button"
-          @click="submit" >开启预约</button>
+          value="开启定时"
+          @click=" show = false" >
         <div 
           class="cancel" 
           @click=" show = false">取消</div>
@@ -49,22 +50,16 @@
       position: relative;
       z-index: 999999999999;
       width: 638px;
-      height: 794px;
+      height: 726px;
 
-      color: #20282B;
-      background: #fff;
-      border: 1px solid #ddd;
+      color: #fff;
+      background: #373E41;
+      box-shadow: 0 10px 78px -8px rgba(0,0,0,0.64);
       border-radius: 24px;
       .title{
         margin: 88px 48px 0;
         font-size: 40px;
-        color: #20282B;
-      }
-      .txt{
-        text-align: center;
-        font-size: 24px;
-        color: #20282B;
-        margin-bottom: 35px;
+        color: #fff;
       }
       .wrap-btns{
         text-align: center;
@@ -113,10 +108,6 @@ export default {
   methods: {
     selectedchange(val) {
       this.time = val
-    },
-    submit() {
-      this.$emit('selectedTime', this.time || '0:0') //自定义事件，暴露值
-      this.show = false
     }
   }
 }

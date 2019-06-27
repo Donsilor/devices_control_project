@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2017/7/10.
  */
-import Mock from 'mockjs';
+import Mock from 'mockjs'
 
 let res = {
     "add_laundry_switch": "off",
@@ -9,7 +9,7 @@ let res = {
     "child_lock_switch": "off",
     "drying": "no_drying",
     "drying_duration": 15,
-    "mode": "mix",
+    "mode": "123",
     "operation": "spin",
     "reserve_wash": 24,
     "spin": 0,
@@ -17,7 +17,8 @@ let res = {
     "sterilization": "off",
     "switch": "on",
     "temperature": 28,
-    "time_left": 10
+    "time_left": '15',
+    "connectivity": "online"
 }
 
 export function generateSnapShot() {

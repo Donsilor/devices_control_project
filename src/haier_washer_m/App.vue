@@ -19,7 +19,7 @@
         <div class="time">{{ model.time_left }}</div>
         <div class="time-unit">分</div>
         <div class="status">{{ model.operation | operationType }}</div>
-        <div class="reserve"><i/>14点25分将启动洗衣</div>
+        <!-- <div class="reserve"><i/>14点25分将启动洗衣</div> -->
       </div>
 
       <div :class="[{ 'run': isRun }, 'wrap-wave']">
@@ -46,7 +46,7 @@
               @click.stop="setSwitch('off')"/>
             <div 
               class="btn btn-start center"
-              @click.stop="setControl('halt')"/>
+              @click.stop="setControl"/>
             <div 
               :class="[modeBtnClass, 'btn center']"
               @click.stop="showModelPanel"/>
@@ -220,24 +220,6 @@ function findIndex(array, fn) {
   return -1
 }
 
-
-// let res = {
-//     "add_laundry_switch": "off",
-//     "auto_detergent_switch": "off",
-//     "child_lock_switch": "off",
-//     "drying": "no_drying",
-//     "drying_duration": 15,
-//     "mode": "mix",
-//     "operation": "spin",
-//     "reserve_wash": 24,
-//     "spin": 0,
-//     "status": "standby",
-//     "sterilization": "off",
-//     "switch": "on",
-//     "temperature": 28,
-//     "time_left": 10
-// }
-
 export default {
   components: {
     SelectTime,
@@ -247,7 +229,6 @@ export default {
   },
   data() {
     return {
-      isOffline: false,
       showModel: false,
 
       status: '',
@@ -265,6 +246,10 @@ export default {
     }
   },
   computed: {
+    isOffline() {
+      let status = this.model.connectivity === 'online' ? false : true
+      return status
+    },
     isClose() {
       return this.model.switch == 'off'
     },
@@ -378,6 +363,8 @@ export default {
           case 'down_coat':
             return 'btn-ylf'
             break 
+          default:
+            return 'btn-others'
       }
     }
   },
@@ -403,6 +390,16 @@ export default {
     }
   },
   created() {
+    // get localStorage 保存的数据
+    var str_model = window.localStorage.getItem("washer_model_attr")
+    if(str_model){
+      try {
+        // str_model 有可能不是合法的JSON字符串，便会产生异常
+        this.model =JSON.parse(str_model)
+      } catch (e) {
+        this.model = {}
+      }
+    }
     HdSmart.ready(() => {
       if (window.device_name) {
         this.device_name = window.device_name
@@ -471,8 +468,15 @@ export default {
       }
       this.controlDevice('switch', switchStatus)
     },
-    setControl(val) {
+    setControl() {
       if(this.isClose) return
+
+      let val = ''
+      if(this.isRun){
+        val = 'halt'
+      } else {
+        val = 'start'
+      }
       if (this.model.operation == 'drying' && val == 'halt') {
         HdSmart.UI.toast('烘干时不可暂停')
         return
@@ -498,8 +502,9 @@ export default {
         HdSmart.UI.toast('运行中无法设置预约')
         return
       }
-      let dealTime = parseInt(time.split(':')[0])
-      this.controlDevice('reserve_wash', dealTime)
+      let h = parseInt(time.split(':')[0])
+      let m = parseInt(time.split(':')[1]) > 0 ? 0.5 : 0
+      this.controlDevice('reserve_wash', h + m)
     },
     setTemperature(item) {
       if (this.isRun) {
@@ -597,6 +602,8 @@ export default {
       this.status = 'success'
 
       this.model = data.attribute
+      // 将model 保存在 localStorage
+      window.localStorage.setItem('washer_model_attr', JSON.stringify(data.attribute))
 
       this.getAlertList(data.attribute.error)
     },
@@ -1194,6 +1201,16 @@ export default {
         }
       }
     }
+    .btn-others{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/btn-others.png);
+        background-size: 100% 100%;
+      }
+    }
   }
 
   .wrap-txt{
@@ -1262,13 +1279,18 @@ export default {
     }
   }
   &.offline {
+    .wrap-btns{
+      z-index: 0;
+      .btns .btn-swich {
+        position: relative;
+        z-index: 0;
+        opacity: .2;
+      }
+    }
     .canclick {
       z-index: 0;
     }
-    .btns .btn-swich {
-      position: relative;
-      z-index: 0;
-    }
+
   }
 
   .mode-group{

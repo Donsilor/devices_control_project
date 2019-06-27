@@ -1,5 +1,5 @@
 <template>
-  <div :class="[bgClass,'page']">
+  <div :class="[bgClass, { 'offline': isOffline }, 'page']">
     <div class="bg">
       <topbar 
         :transparent="true"
@@ -104,12 +104,12 @@ export default {
     return {
       model: {
         "water_filter_result": {
-          "TDS": [500, 100]
+          "TDS": ['--', '--']
         },
         "status": "clean",
-        "filter_time_total": [1000, 1000, 1000, 1000, 1000],
-        "filter_time_remaining": [300, 500, 0, 600, 0],
-        "filter_lifetime": [30, 50, 0, 60, 0],
+        "filter_time_total": ['--', '--', '--', '--', '--'],
+        "filter_time_remaining": ['--', '--', '--', '--', '--'],
+        "filter_lifetime": ['--', '--', '--', '--', '--'],
         "filter_status": ''
       },
       device_name: '',
@@ -117,6 +117,10 @@ export default {
     }
   },
   computed: {
+    isOffline() {
+      let status = this.model.connectivity === 'online' ? false : true
+      return status
+    },
     oldTDS() {
       return this.model.water_filter_result.TDS[0]
     },
@@ -154,9 +158,9 @@ export default {
       if (this.model.status == 'clean') {
         return '冲洗中...'
       }
-      if (this.model.status == 'standby' && this.hasTDS && this.oldTDS) {
-        return '过滤前水质：' + this.oldTDS + ' TDS'
-      }
+      // if (this.model.status == 'standby' && this.hasTDS && this.oldTDS) {
+      //   return '过滤前水质：' + this.oldTDS + ' TDS'
+      // }
       if (this.model.status == 'standby') {
         return '待机'
       }
@@ -181,19 +185,23 @@ export default {
     },
     topBarClass() {
       /* eslint-disable no-unreachable */
-      switch (this.rank) {
-        case 1:
-          return '#46bcff'
-          break
-        case 2:
-          return '#327dfe'
-          break
-        case 3:
-          return ' #2d37ef'
-          break
-        case 4:
-          return '#fe3232'
-          break
+      if(this.isOffline){
+        return 'transparent'
+      } else {
+        switch (this.rank) {
+          case 1:
+            return '#46bcff'
+            break
+          case 2:
+            return '#327dfe'
+            break
+          case 3:
+            return ' #2d37ef'
+            break
+          case 4:
+            return '#fe3232'
+            break
+        }
       }
     }
   },
@@ -202,6 +210,15 @@ export default {
   created() {
   },
   mounted() {
+    var str_model = window.localStorage.getItem("water_model_attr")
+    if(str_model){
+      try {
+        // str_model 有可能不是合法的JSON字符串，便会产生异常
+        this.model =JSON.parse(str_model)
+      } catch (e) {
+        this.model = {}
+      }
+    }
     HdSmart.ready(() => {
       if (window.device_name) {
         this.device_name = window.device_name
@@ -253,6 +270,8 @@ export default {
     },
     onSuccess(result) {
       this.model = result.attribute
+      // 将model 保存在 localStorage
+      window.localStorage.setItem('water_model_attr', JSON.stringify(result.attribute))
     },
     setClean() {
       console.log('setClean')
@@ -558,4 +577,19 @@ export default {
     justify-content: space-between;
   }
 }
+
+  &.offline {
+    &:before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 9;
+      width: 100%;
+
+      background: rgba(0, 0, 0, 0.7);
+    }
+  }
 </style>

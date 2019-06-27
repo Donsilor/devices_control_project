@@ -205,7 +205,8 @@ const tips = {
   err_temp1: '送风模式下不能设置温度',
   err_temp2: '温度已调至最高',
   err_temp3: '温度已调至最低',
-  err_temp4: '送风模式不能设置自动风速'
+  err_temp4: '送风模式不能设置自动风速',
+  err_temp5: '低风、制冷模式下不支持此温度'
 }
 
 export default {
@@ -317,10 +318,17 @@ export default {
     },
   },
   mounted() {
+    // get localStorage 保存的数据
     var str_model = window.localStorage.getItem("air_model_attr")
     if(str_model){
-      this.deviceInfo.attribute =JSON.parse(str_model)
+      try {
+        // str_model 有可能不是合法的JSON字符串，便会产生异常
+        this.deviceInfo.attribute =JSON.parse(str_model)
+      } catch (e) {
+        this.deviceInfo.attribute = {}
+      }
     }
+    // 获取云端数据
     this.init()
   },
   methods: {
@@ -479,6 +487,8 @@ export default {
     },
 
     setMode(mode) {
+      if (this.checkCmd('mode', mode)) return this.showModeBtns = false
+
       this.controlDevice('mode', mode, mode,
        () => {
           if(this.showModeBtns) this.showModeBtns = false
@@ -495,12 +505,8 @@ export default {
       this.controlDevice('switch', switchStatus, 'switch', () => { }, () => { })
     },
     setTemperature(val, direction) {
-      // if (this.deviceInfo.attribute.mode === 'wind' && this.tempFlag) {
-      //   return this.showMsg(tips.err_temp1)
-      // }
-
       var temp = this.deviceInfo.attribute.temperature + val
-
+      // 最小温度
       if (temp < MIN_TEMP) {
         if (this.deviceInfo.attribute.temperature == MIN_TEMP) {
           this.showMsg(tips.err_temp3)
@@ -509,7 +515,7 @@ export default {
           temp = MIN_TEMP
         }
       }
-
+      // 最大温度
       if (temp > MAX_TEMP) {
         if (this.deviceInfo.attribute.temperature == MAX_TEMP) {
           this.showMsg(tips.err_temp2)
@@ -520,8 +526,11 @@ export default {
       }
 
       clearTimeout(tempDelay)
+
+      if (this.checkCmd('temperature', temp)) return
       this.tempFlag = false
       this.isSetTemperature = direction
+
       tempDelay = setTimeout(() => {
         this.tempFlag = true
         this.controlDevice(
@@ -545,9 +554,12 @@ export default {
       }, 500)
     },
     setSpeed(speed) {
+      if (this.checkCmd('speed', speed)) return
+
       if(this.deviceInfo.attribute.mode == 'wind' && speed == 'auto') {
         return this.showMsg(tips['err_temp4'])
       }
+
 
       this.controlDevice('speed', speed, '',
         () => {
@@ -565,6 +577,22 @@ export default {
           this.$refs.swing.show = false
         },
         () => { })
+    },
+    checkCmd(attr, val) {
+      let ac = Object.assign({
+        temperature: this.deviceInfo.attribute.temperature,
+        speed: this.deviceInfo.attribute.speed,
+        mode: this.deviceInfo.attribute.mode,
+      }, {
+        [attr]: val 
+      })
+      console.log(ac)
+
+      if (ac.temperature == MAX_TEMP && ac.speed == 'low' && ac.mode == 'cold') {
+        this.showMsg(tips.err_temp5)
+        return true
+      }
+      return false
     }
   },
 }

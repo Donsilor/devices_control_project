@@ -1,0 +1,518 @@
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body {
+    font: 24px/1 "NotoSansHans-Regular";
+    color: #fff;
+}
+html,
+body,
+.main {
+    height: 100%;
+}
+::-webkit-scrollbar {
+    opacity: 0;
+}
+
+/*main样式*/
+.main {
+    box-sizing: border-box;
+    padding: 155px 0 180px 0;
+    text-align: center;
+}
+.main.page_on {
+    background-color: #0bc0fe;
+}
+.main.page_off {
+    background-color: #f2f2f2;
+}
+.main.err {
+    padding-top: 264px;
+    background: #f2f2f2;
+}
+.bg {
+    position: absolute;
+    left: 0;
+    bottom: 180px;
+    width: 100%;
+    height: auto;
+}
+
+/*bottom样式*/
+.bottom {
+    display: flex;
+    margin: 0 240px;
+    justify-content: center;//space-around;
+    align-items: center;
+    position: relative;
+}
+.bottom .button{
+    margin: 0 50px;
+}
+.bottom .imgWrapper {
+    margin-bottom: 10px;
+}
+
+.btns-wrap{ 
+    margin-top: -30px;
+}
+.modal .button{
+    margin-top: 70px;
+}
+
+.hanging,
+.package {
+    height: 360px;
+    margin-bottom: 45px;
+}
+.hanging {
+    background: url(./assets/bg_off_hanging.png) no-repeat center;
+}
+.package {
+    background: url(./assets/bg_off_package.png) no-repeat center;
+    background-size: 540px 360px;
+}
+
+/*title样式*/
+.title {
+    font-size: 30px;
+}
+.page_off .title {
+    color: #75787a;
+}
+
+/*温度*/
+.temp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.temp-show {
+    width: 680px;
+    text-align: center;
+}
+.temp-number {
+    font-size: 240px;
+    font-family: RobotoCondensed-Regular;
+}
+.temp-unit {
+    font-size: 72px;
+}
+
+/*提示*/
+.tip {
+    min-height: 30px;
+    font-size: 30px;
+    margin: 24px 0 110px 0;
+    opacity: 1;
+    transition: opacity 1s linear;
+    position: relative;
+}
+.tip.transparent {
+    opacity: 0;
+}
+.page_off .tip {
+    /*color: #c8cacc;*/
+    color: #46bcff;
+    margin: 24px 0;
+    /*margin: 25px 0 37px 0;*/
+}
+.page_on .status {
+    color: rgba(255, 255, 255, 0.6);
+    margin: 24px 0 30px;
+    font-size: 30px;
+}
+.err .tip {
+    margin-top: 36px;
+    color: #c8cacc;
+}
+
+/*图片*/
+.temp img,
+.bottom img {
+    width: 144px;
+    height: 144px;
+}
+.switch img {
+    width: 204px;
+    height: 204px;
+}
+
+.err img {
+    width: 360px;
+    height: 360px;
+}
+
+/*更多*/
+.more,
+.subMenu {
+    position: absolute;
+    right: 60px;
+    top: 132px;
+}
+.more {
+    width: 96px;
+    height: 96px;
+    background: url(./assets/more_normal.png) no-repeat center;
+    background-size: 96px 96px;
+    outline: 0;
+    cursor: pointer;
+    /*扩展点击范围*/
+    padding: 24px;
+    top: 108px;
+    right: 36px;
+}
+.more:hover {
+    background-image: url(./assets/more_active.png);
+}
+
+/*loading样式*/
+.loading {
+    position: relative;
+}
+.loading:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 144px;
+    height: 144px;
+    background: url("./assets/buffering_mode_white.gif") no-repeat center;
+    background-size: 100%;
+    /*transform: translate3d(0,0,0);*/
+    /*animation: circle 1s linear infinite;*/
+}
+.switch.loading:before {
+    top: 12px;
+    left: 12px;
+    width: 180px;
+    height: 180px;
+}
+.page_on .switch.loading:before {
+    background: url("./assets/buffering_power_white.gif") no-repeat center;
+    background-size: 100%;
+}
+.page_off .switch.loading:before {
+    background: url("./assets/buffering_power_blue.gif") no-repeat center;
+    background-size: 100%;
+}
+.subMenu .loading:before {
+    background: url("./assets/buffering_submenu_blue.gif") no-repeat center;
+    background-size: 100%;
+    width: 120px;
+    height: 120px;
+    top: 0;
+    left: 24px;
+}
+
+.button {
+    display: inline-block;
+    .imgWrapper {
+        width: 144px;
+        height: 144px;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+    &:active {
+        opacity: 0.8;
+    }
+    &.active {
+        .btnName {
+            opacity: 1;
+        }
+    }
+}
+
+/*按钮底部文字样式*/
+.bottom .btnName {
+    opacity: 0.5;
+    line-height: 30px;
+    display: inline-block;
+}
+.bottom .active .btnName {
+    font-size: 30px;
+}
+
+.page_on .disabled .imgWrapper {
+    opacity: 0.5;
+}
+
+// .page_off .disabled .imgWrapper {
+//     filter: invert(18%);
+// }
+
+.cool {
+    .imgWrapper {
+        background-image: url(./assets/btn_aircon_sleep_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/btn_aircon_sleep.png);
+    }
+    &.disabled .imgWrapper {
+        // background-image: url(./assets/cool_disabled.png);
+    }
+}
+.heat {
+    .imgWrapper {
+        background-image: url(./assets/btn_aircon_heat_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/btn_aircon_heat.png);
+    }
+    &.disabled .imgWrapper {
+        // background-image: url(./assets/heat_disabled.png);
+    }
+}
+.dehumidify {
+    .imgWrapper {
+        background-image: url(./assets/btn_aircon_dry.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/btn_aircon_dry_preesed.png);
+    }
+    &.disabled .imgWrapper {
+        background-image: url(./assets/dehumidify_disabled.png);
+    }
+}
+.on {
+    .imgWrapper {
+        width: 204px;
+        height: 204px;
+        background-image: url(./assets/on_normal.png);
+    }
+    &:active .imgWrapper {
+        background-image: url(./assets/on_active.png);
+    }
+}
+.off {
+    .imgWrapper {
+        width: 204px;
+        height: 204px;
+        background-image: url(./assets/off_normal.png);
+    }
+    &:active .imgWrapper {
+        background-image: url(./assets/off_active.png);
+    }
+}
+// .low {
+//     .imgWrapper {
+//         background-image: url(./assets/low_normal.png);
+//     }
+//     &.active .imgWrapper {
+//         background-image: url(./assets/low_active.png);
+//     }
+//     &.disabled .imgWrapper {
+//         background-image: url(./assets/low_disabled.png);
+//     }
+// }
+// .normal {
+//     .imgWrapper {
+//         background-image: url(./assets/medium_normal.png);
+//     }
+//     &.active .imgWrapper {
+//         background-image: url(./assets/medium_active.png);
+//     }
+//     &.disabled .imgWrapper {
+//         background-image: url(./assets/medium_disabled.png);
+//     }
+// }
+// .high {
+//     .imgWrapper {
+//         background-image: url(./assets/high_normal.png);
+//     }
+//     &.active .imgWrapper {
+//         background-image: url(./assets/high_active.png);
+//     }
+//     &.disabled .imgWrapper {
+//         background-image: url(./assets/high_disabled.png);
+//     }
+// }
+.minus {
+    .imgWrapper {
+        background-image: url(./assets/minus_normal.png);
+    }
+    &:active .imgWrapper {
+        background-image: url(./assets/minus_pressed.png);
+    }
+}
+.plus {
+    .imgWrapper {
+        background-image: url(./assets/plus_normal.png);
+    }
+    &:active .imgWrapper {
+        background-image: url(./assets/plus_pressed.png);
+    }
+}
+.mode_auto {
+    .imgWrapper {
+        background-image: url(./assets/btn_aircon_ai_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/btn_aircon_ai_active.png);
+    }
+}
+.wind {
+    .imgWrapper {
+        background-image: url(./assets/btn_aircon_blow_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/btn_aircon_blow_active.png);
+    }
+}
+.lr {
+    .imgWrapper {
+        background-image: url(./assets/vertical_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/vertical_active.png);
+    }
+}
+.ud {
+    .imgWrapper {
+        background-image: url(./assets/horizontal_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/horizontal_active.png);
+    }
+}
+.mode {
+    .imgWrapper {
+        background-image: url(./assets/btn_washer_mode.png);
+    }
+    &.active .imgWrapper {
+        // background-image: url(./assets/low_active.png);
+    }
+    &.disabled .imgWrapper {
+        // background-image: url(./assets/low_disabled.png);
+    }
+}
+.speed {
+    .imgWrapper {
+        background-image: url(./assets/low_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/low_active.png);
+    }
+    &.disabled .imgWrapper {
+        background-image: url(./assets/low_disabled.png);
+    }
+}
+.low {
+    .imgWrapper {
+        background-image: url(./assets/btn_airvolume_s_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/icn_airvolume_s.png);
+    }
+}
+.normal {
+    .imgWrapper {
+        background-image: url(./assets/btn_airvolume_m_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/icn_airvolume_m.png);
+    }
+}
+.high {
+    .imgWrapper {
+        background-image: url(./assets/icn_airvolume_l_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/icn_airvolume_l.png);
+    }
+}
+.super_high {
+    .imgWrapper {
+        background-image: url(./assets/btn_airvolume_l_normal.png);
+    }
+    &.active .imgWrapper {
+        background-image: url(./assets/btn_airvolume_l.png);
+    }
+}
+
+.alert {
+    position: fixed;
+    left: 0;
+    top: 96px;
+    width: 100%;
+    background: #fff7d9;
+    height: 84px;
+    line-height: 84px;
+    font-size: 30px;
+    color: #000000;
+    text-align: center;
+    overflow: hidden;
+    i {
+        display: inline-block;
+        width: 36px;
+        height: 36px;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        vertical-align: -4px;
+        margin-right: 10px;
+    }
+    .error {
+        background-image: url(./assets/icn_warn_s.png);
+    }
+    .spin {
+        background-image: url(./assets/buffering_updating.png);
+        animation: rotate 1s linear infinite;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/*子菜单*/
+.modal-body {
+    padding-top: 0px;
+}
+.subMenu {
+    .button {
+        .imgWrapper {
+            width: 144px;
+            height: 144px;
+            margin: 0 18px 12px;
+        }
+        .btnName {
+            color: #76787a;
+        }
+        &.active .btnName {
+            color: #46bcff;
+        }
+    }
+    .devider {
+        margin: 36px 0;
+    }
+}
+
+.devider {
+    line-height: 24px;
+    font-size: 24px;
+    color: #c8cacc;
+}
+.devider-line {
+    box-shadow: inset 0 -1px 0 0 #dbdbdb;
+    width: 144px;
+    height: 12px;
+    margin-bottom: 6px;
+    display: inline-block;
+}
+
+.more-timing {
+    font-size: 30px;
+    margin-top: 12px;
+}

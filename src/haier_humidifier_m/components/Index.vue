@@ -3,15 +3,15 @@
     <div class="bg">
       <topbar
         :transparent="true"
-        bg-color="#35353D"
+        bak-color="#000"
         title="卧室的加湿器" />
       <!-- 离线提示 -->
-      <div 
+      <!-- <div 
         v-show="isOffline"
         class="offline">
         <i class="attention" />
         设备已离线，查看帮助
-      </div>
+      </div> -->
 
       <div class="main">
         <div class="wrap-num">
@@ -64,7 +64,10 @@
       </div>
     </div>
 
-    <model-time ref="time" />
+    <model-time 
+      ref="time" 
+      @selectedTime="setReserve" />
+    
   </div>
 </template>
 
@@ -110,7 +113,7 @@ export default {
     },
     tdsModalVisibleControl() {
         //点击TDS按钮
-        this.tdsModalVisible = !this.tdsModalVisible;
+        this.tdsModalVisible = !this.tdsModalVisible
     },
     getSnapShot() {
       HdSmart.Device.getSnapShot(
@@ -120,7 +123,7 @@ export default {
         },
         () => {
         }
-      );
+      )
     },
     onSuccess(data) {
       this.deviceInfo = data
@@ -137,10 +140,10 @@ export default {
           }
         },
         () => {
-          success && success();
+          success && success()
         },
         () => {}
-      );
+      )
     },
     showTime() {
       this.$refs.time.show = true
@@ -154,14 +157,18 @@ export default {
       }
       this.controlDevice('switch', switchStatus, () => { }, () => { })
     },
+    setReserve(time) {
+      let dealTime = parseInt(time.split(':')[0])
+      console.log(dealTime)
+    },
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .page{
   min-height: 100%;
-  background: #35353D;
-  color: #fff;
+  background: #fff;
+  color: #20282B;
   text-align: center;
   .offline {
     box-sizing: border-box;
@@ -179,7 +186,7 @@ export default {
     line-height: 88px;
 
     font-size: 32px;
-    color: #fff;
+    color: #20282B;
     .attention {
       display: inline-block;
       width: 36px;
@@ -206,7 +213,7 @@ export default {
   .main{
     padding: 0 48px;
     font-size: 24px;
-    color: #fff;
+    color: #20282B;
     .wrap-num{
       display: flex;
       justify-content: center;
@@ -412,16 +419,16 @@ export default {
 
   .panel-btn{
     height: 306px;
-    background: #35353D;
-    box-shadow: 0 -3px 28px 0 rgba(17,17,17,0.50);
+    background: #fff;
+    box-shadow: 0 -6px 56px 0 rgba(17,17,17,0.10);
     border-radius: 42px 42px 0px 0px;
-
     display: flex;
     justify-content: center;
 
   }
 
   .btns {
+    
     margin: 0 36px;
     padding-top: 50px;
     .btn {
@@ -429,7 +436,8 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid #fff;
+      border: 1px solid #20282B;
+      box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
       border-radius: 50%;
 
       display: flex;
@@ -459,7 +467,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../../lib/base/haier_humidifier/assets/time-white.png);
+        background-image: url(../../../lib/base/haier_humidifier/assets/time-black.png);
         background-size: 100% 100%;
       }
     }
@@ -469,7 +477,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../../lib/base/haier_humidifier/assets/high.png);
+        background-image: url(../../../lib/base/haier_humidifier/assets/speed3.png);
         background-size: 100% 100%;
       }
     }

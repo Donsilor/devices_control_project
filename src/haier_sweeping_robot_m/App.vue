@@ -4,45 +4,15 @@
       <topbar 
         :title="device_name"
         :bak-color="bakColor"/>
-      <div 
-        class="main"
-        @click="toSubPage">
-        <div class="bg">
-          <img 
-            class="circle"
-            src="../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png">
-          <img 
-            v-if="current==0"
-            class="pointer-excellent"
-            src="../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png"
-          >
-          <img 
-            v-if="current==1"
-            class="pointer-good"
-            src="../../lib/base/air_cleaner/assets/new-air/lianghao@2x.png"
-          >
-          <img 
-            v-if="current==2"
-            class="pointer-light"
-            src="../../lib/base/air_cleaner/assets/new-air/qingdu@2x.png"
-          >
-          <img 
-            v-if="current==3"
-            class="pointer-moderate"
-            src="../../lib/base/air_cleaner/assets/new-air/zhongdu@2x.png"
-          >
-          <img 
-            v-if="current==4"
-            class="pointer-severe"
-            src="../../lib/base/air_cleaner/assets/new-air/zhongduz@2x.png"
-          >
-        </div>
-        <div class="block">
-          <div class="num">{{ model.air_filter_result.PM25[0] }}<sup class="nuit">μg/m³</sup></div>
-          <div class="txt">室内空气 优</div>
-        </div>
+      <div class="status">{{ model.status | statusType }}</div>
+      <div class="wrap-robot">
+        <img 
+          class="robot"
+          src="../../lib/base/sweeping_robot/assets/saodijiqiren@2x.png">
       </div>
-      <div class="point">
+
+
+      <!-- <div class="point">
         <span class="sport sport1" />
         <span class="sport sport2" />
         <span class="sport sport3" />
@@ -57,16 +27,37 @@
         <span class="sport sport12" />
         <span class="sport sport13" />
         <span class="sport sport1" />
-      </div>
+      </div> -->
 
-      <div class="wrap-filter">
+      <div 
+        v-show="model.status == 'charging'" 
+        class="wrap-filter">
         <!-- <div class="filter">
           <div class="filter-item">{{ model.filter_time_remaining }}<sup>%</sup></div>
           <div class="filter-name">剩余滤芯</div>
         </div> -->
         <div class="filter">
-          <div class="filter-item">{{ model.filter_time_remaining }}<sup>小时</sup></div>
-          <div class="filter-name">滤芯剩余寿命</div>
+          <div class="filter-item">{{ model.battery_percentage }}<sup>%</sup></div>
+          <div class="filter-name">目前电量</div>
+        </div>
+      </div>
+
+      <div class="wrap-filter detail">
+        <!-- <div class="filter">
+          <div class="filter-item">{{ model.filter_time_remaining }}<sup>%</sup></div>
+          <div class="filter-name">剩余滤芯</div>
+        </div> -->
+        <div class="filter">
+          <div class="filter-item">{{ model.battery_percentage }}<sup>m²</sup></div>
+          <div class="filter-name">清扫面积</div>
+        </div>
+        <div class="filter">
+          <div class="filter-item">{{ model.battery_percentage }}<sup>%</sup></div>
+          <div class="filter-name">剩余电量</div>
+        </div>
+        <div class="filter">
+          <div class="filter-item">{{ model.working_time }}<sup>，</sup></div>
+          <div class="filter-name">已扫时间</div>
         </div>
       </div>
 
@@ -78,20 +69,35 @@
             @click="setSwitch" />
           <div class="btn-name">开关</div>
         </div>
+        <div class="btn-wrap btns">
+          <div 
+            :class="[model.status == 'charging' ? 'charging' : '', 'btn btn-charging center circleProgress_wrapper']"
+            @click="setCharging">
+            <div class="wrapper right">
+              <div class="circleProgress rightcircle" />
+            </div>
+            <div class="wrapper left">
+              <div class="circleProgress leftcircle" />
+            </div>
+          </div>
+          <div class="btn-name">回充</div>
+        </div>
 
         <div class="btn-wrap">
           <div
-            :class="[{'active': model.speed == 'sleep' },'btn btn-mode center']"
+            :class="[{'active': model.speed == 'sleep' },'btn btn-clean center']"
             @click="setSleep()" />
-          <div class="btn-name">睡眠</div>
+          <div class="btn-name">清扫</div>
         </div>
 
         <div class="btn-wrap">
           <div
-            :class="[btnClass, 'btn center']"
+            :class="[btnClass, 'btn center btn-plan']"
             @click="handeModeClick" />
-          <div class="btn-name">{{ btnTxt }}</div>
+          <div class="btn-name">规划</div>
         </div>
+
+
       </div>
 
     </div>
@@ -184,29 +190,39 @@ export default {
   data() {
     return {
       device_name: "",
-      model: {
-        "air_filter_result": {
-          "air_quality": [
-            "very_high"
-          ],
-          "PM25": [
-            0
-          ]
-        },
-        "switch_status": "off",
-        "child_lock_switch_status": "off",
-        "negative_ion_switch_status": "off",
-        "speed": "low",
-        "control_status": "manual",
-        "filter_time_used": "2114",
-        "filter_time_remaining": "46",
-        "temperature": "0",
-        "humidity": "0",
-        "deviceModel": "KJ819F-B2",
-        "manufactureId": "tcl",
-        "deviceCategory": "air_filter.main",
-        "deviceSubCategory": 0,
-        "connectivity": "online"
+      model:  {
+        'switch_status': 'on',
+        'mode': 'mop',
+        'battery_percentage': '100',
+        'status': 'working',
+        'sweep_direction': 'right',
+        'fan_status': 'normall',
+
+        'command': 'stop',
+        'frequency': '2',
+
+        'water_level': 'low',
+        'remaining': '10',
+        'order_time': '01:20',
+
+        'notclean': [],
+        'working_time': '60',
+        'begin_point': '0',
+        'cleaning': '0',
+        'cleaned': '0',
+        'unclean': '0',
+
+        'alarm_cancel': 'on',
+        'wheel_overload': 'on',
+        'cliff': 'on',
+        'bump': 'on',
+        'brush': 'on',
+        'dust_box': 'on',
+        'battery_overheat': 'on',
+        'fan_err': 'on',
+        
+
+        'connectivity': 'online'
       },
       showModeBtns: false,
       animation: false,
@@ -402,35 +418,10 @@ export default {
         this.model.control_status = val
       })
     },
-    setSleep() {
-      let speed = ''
-      if(this.model.speed == 'sleep'){
-        speed = 'low'
-      } else {
-         speed = 'sleep'
-      }
-      this.setSpeed(speed)
+    setCharging() {
+
     },
-    setSpeed(val) {
-      this.controlDevice("speed", val, {}, () => {
-        this.hide()
-        this.model.speed = val
-      })
-    },
-    setChildLock() {
-      if (this.model.control_status == "sleep") {
-        HdSmart.UI.toast("睡眠模式下不能开启童锁")
-        return
-      }
-      var val = this.model.child_lock_switch_status == "on" ? "off" : "on"
-      this.controlDevice(
-        "child_lock_switch",
-        val,
-        { control: this.model.control_status },
-        () => {},
-        () => {}
-      )
-    },
+
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot(
         data => {
@@ -473,89 +464,27 @@ export default {
   min-height: 100%;
   overflow-x: hidden;
   position: relative;
-  background: rgba(230, 255, 243, 1);
+  background: #fff;
 
   &.filter {
     filter: blur(12px);
   }
-  .main {
-    position: relative;
-
-    width: 540px;
-    height: 540px;
-    margin: 90px auto 0;
-    .bg{
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    .circle {
-      width: 100%;
-      height: 100%;
-      // transform: rotateY(180deg);
-    }
-    .pointer-excellent {
-      position: relative;
-      left: 105px;
-      top: -592px;
-      width: 136px;
-      height: 26px;
-      transform: rotate(337deg);
-    }
-    .pointer-good {
-      position: relative;
-      left: -50px;
-      top: -394px;
-      width: 136px;
-      height: 26px;
-      transform: rotate(277deg);
-    }
-    .pointer-light {
-      position: relative;
-      left: 120px;
-      top: -114px;
-      width: 136px;
-      height: 26px;
-      transform: rotate(198deg);
-    }
-    .pointer-moderate {
-      position: relative;
-      left: 392px;
-      top: -190px;
-      width: 136px;
-      height: 26px;
-      transform: rotate(132deg);
-    }
-    .pointer-severe {
-      position: relative;
-      left: 436px;
-      top: -456px;
-      width: 136px;
-      height: 26px;
-      transform: rotate(64deg);
-    }
-    .block {
-      padding-top: 115px;
-      color: #03fd05;
-      text-align: center;
-      .num {
-        font-size: 160px;
-      }
-      .txt {
-        font-size: 24px;
-        font-weight: 900;
-      }
-    }
-    .nuit {
-      opacity: 0.5;
-      color: #03FD05;
-      font-size: 24px;
-      letter-spacing: 0;
-      text-align: center;
-      position: absolute;
-      top: 145px;
+  .status{
+    margin-top: 30px;
+    font-size: 24px;
+    color: #35353D;
+    text-align: center;
+  }
+  .wrap-robot{
+    text-align: center;
+    padding-top: 120px;
+    .robot{
+      width: 446px;
+      margin: auto;
     }
   }
+
+
   .point{
     .sport {
       display: inline-block;
@@ -624,10 +553,14 @@ export default {
   .wrap-filter {
     display: flex;
     justify-content: center;
+    margin: 80px 0 109px 0;
+    &.detail{
+      margin: 120px 0 48px 0;
+    }
   }
   .filter {
-    color: #232323;
-    margin: 60px 38px;
+    color: #35353D;
+    margin: 0 38px;
     .filter-item {
       position: relative;
       font-size: 80px;
@@ -676,12 +609,14 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid #818181;
+      border: 1px solid #B9B9B9;
       border-radius: 50%;
 
       display: flex;
       flex-direction: column;
+      opacity: .5;
       &.active {
+        opacity: 1;
         background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
         border-color: #FFBF00;
       }
@@ -707,77 +642,106 @@ export default {
         }
       }
     }
-    .btn-mode {
+    .btn-charging {
       &::before {
         content: "";
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/btn_ac_mode_heat@2x.png);
+        background-image: url(../../lib/base/sweeping_robot/assets/huichong1@2x.png);
         background-size: 100% 100%;
       }
     }
-    .btn-low {
+    .btn-clean{
       &::before {
         content: "";
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
+        background-image: url(../../lib/base/sweeping_robot/assets/qingsao2@2x.png);
         background-size: 100% 100%;
       }
     }
-    .btn-middle {
+    .btn-plan{
       &::before {
         content: "";
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
+        background-image: url(../../lib/base/sweeping_robot/assets/huihua@2x.png);
         background-size: 100% 100%;
       }
     }
-    .btn-high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
-        background-size: 100% 100%;
+
+  }
+
+  .circleProgress_wrapper {
+    width: 120px;
+    height: 120px;
+    margin: 50px auto;
+    position: relative;
+    .wrapper {
+      width: 60px;
+      height: 120px;
+      position: absolute;
+      top: 0;
+      overflow: hidden;
+    }
+
+    .right {
+      right: -1px;
+    }
+
+    .left {
+      left: -1px;
+    }
+
+    .circleProgress {
+      box-sizing: border-box;
+      width: 120px;
+      height: 120px;
+      border: 1px solid transparent;
+      border-radius: 50%;
+      position: absolute;
+      top: -1px;
+    }
+    &.charging {
+      .rightcircle {
+        border-top: 1px solid yellow;
+        border-right: 1px solid yellow;
+        right: 0;
+        animation: circleRight 5s linear infinite;
+      }
+      .leftcircle {
+        border-bottom: 1px solid yellow;
+        border-left: 1px solid yellow;
+        left: 0;
+        animation: circleLeft 5s linear infinite;
       }
     }
-    .btn-very_high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4.png);
-        background-size: 100% 100%;
+    @keyframes circleRight {
+      0% {
+        -webkit-transform: rotate(225deg);
+      }
+
+      50%,
+      100% {
+        -webkit-transform: rotate(405deg);
       }
     }
-    .btn-super_high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5.png);
-        background-size: 100% 100%;
+
+    @keyframes circleLeft {
+      0%,
+      50% {
+        -webkit-transform: rotate(225deg);
       }
-    }
-    .btn-more {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/more.png);
-        background-size: 100% 100%;
+
+      100% {
+        -webkit-transform: rotate(405deg);
       }
     }
   }
+
   &.close,   &.offline {
     &:before {
       content: "";

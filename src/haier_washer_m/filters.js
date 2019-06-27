@@ -41,7 +41,9 @@ export function modeType(type) {
         break;
       case 'down_coat':
         return '羽绒服'
-        break; 
+        break;
+      default:
+        return '其他'
   } 
 }
 
