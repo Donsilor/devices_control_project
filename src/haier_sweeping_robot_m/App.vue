@@ -328,7 +328,6 @@ export default {
         this.device_name = window.device_name
       }
       HdSmart.UI.showLoading()
-      HdSmart.UI.toggleHeadAndFoot(true)
       this.getSnapShot(() => {
         HdSmart.UI.hideLoading()
       })

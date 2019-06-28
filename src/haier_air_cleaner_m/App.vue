@@ -257,7 +257,6 @@ export default {
       }
     },
     current() {
-      return 4
       let pm2 = this.model.air_filter_result.PM25[0]
       if (pm2 < 35) {
         return 0
@@ -312,7 +311,6 @@ export default {
         this.device_name = window.device_name
       }
       HdSmart.UI.showLoading()
-      HdSmart.UI.toggleHeadAndFoot(true)
       this.getSnapShot(() => {
         HdSmart.UI.hideLoading()
       })
@@ -495,44 +493,45 @@ export default {
       // transform: rotateY(180deg);
     }
     .pointer-excellent {
-      position: relative;
-      left: 105px;
-      top: -592px;
+      position: absolute;
+      left: 155px;
+      top: 6px;
+
       width: 136px;
       height: 26px;
-      transform: rotate(337deg);
+      transform: rotate(348deg);
     }
     .pointer-good {
-      position: relative;
-      left: -50px;
-      top: -394px;
+      position: absolute;
+      left: -54px;
+      top: 230px;
       width: 136px;
       height: 26px;
-      transform: rotate(277deg);
+      transform: rotate(276deg);
     }
     .pointer-light {
-      position: relative;
-      left: 120px;
-      top: -114px;
+      position: absolute;
+      left: 70px;
+      top: 476px;
       width: 136px;
       height: 26px;
-      transform: rotate(198deg);
+      transform: rotate(211deg);
     }
     .pointer-moderate {
-      position: relative;
-      left: 392px;
-      top: -190px;
+      position: absolute;
+      left: 408px;
+      top: 410px;
       width: 136px;
       height: 26px;
-      transform: rotate(132deg);
+      transform: rotate(127deg);
     }
     .pointer-severe {
-      position: relative;
-      left: 436px;
-      top: -456px;
+      position: absolute;
+      left: 456px;
+      top: 236px;
       width: 136px;
       height: 26px;
-      transform: rotate(64deg);
+      transform: rotate(85deg);
     }
     .block {
       padding-top: 115px;

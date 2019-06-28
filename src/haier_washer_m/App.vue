@@ -45,7 +45,7 @@
               class="btn  btn-swich center"
               @click.stop="setSwitch('off')"/>
             <div 
-              class="btn btn-start center"
+              :class="[ isRun ? 'btn-stop': 'btn-start', 'btn center']"
               @click.stop="setControl"/>
             <div 
               :class="[modeBtnClass, 'btn center']"
@@ -372,20 +372,6 @@ export default {
     isRun(val) {
       if (val) {
         this.currentSet = -1
-      }
-    },
-    moreModalVisible(val) {
-      if (val) {
-        HdSmart.UI.toggleHeadAndFoot(false) //隐藏app头部
-      } else {
-        HdSmart.UI.toggleHeadAndFoot(true) //显示app头部
-      }
-    },
-    modeModalVisible(val) {
-      if (val) {
-        HdSmart.UI.toggleHeadAndFoot(false) //隐藏app头部
-      } else {
-        HdSmart.UI.toggleHeadAndFoot(true) //显示app头部
       }
     }
   },
@@ -1018,6 +1004,21 @@ export default {
         width: 44px;
         height: 44px;
         background-image: url(../../lib/base/haier_washer/assets/btn-start.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
+        }
+      }
+    }
+    .btn-stop {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
         background-size: 100% 100%;
       }
       &.active {
