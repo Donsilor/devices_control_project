@@ -1,5 +1,5 @@
 /**
- * Created by lenovo on 2017/6/27.
+ * Created by lenovo on 2019/7/1.
  */
 import on from '../app'
 import {apiList} from '../app/constant'
@@ -7,7 +7,7 @@ import * as mockData from './mock'
 
 if (location.search.indexOf('env=desktop') != -1) {
 
-    window.device_name = '空气净化器'
+    window.device_name = '除湿机'
 
     on(apiList.device_getsnapshot, function(data, done){
         done(mockData.generateSnapShot())
