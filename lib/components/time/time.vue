@@ -17,7 +17,7 @@
           @click="submit" >开启预约</button>
         <div 
           class="cancel" 
-          @click=" show = false">取消</div>
+          @click="cancel">取消</div>
       </div>
     </div>
   </div>
@@ -116,6 +116,11 @@ export default {
     },
     submit() {
       this.$emit('selectedTime', this.time || '0:0') //自定义事件，暴露值
+      this.show = false
+    },
+    cancel() {
+      console.log('cancel')
+      this.$emit('selectedTime', '0:0')
       this.show = false
     }
   }

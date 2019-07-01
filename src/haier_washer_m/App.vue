@@ -16,8 +16,13 @@
 
       <div class="main">
         <div class="mode">{{ model.mode | modeType }}模式 </div>
-        <div class="time">{{ model.time_left }}</div>
-        <div class="time-unit">分</div>
+        <div class="time">
+          <div class="wrap-time">
+            {{ model.time_left }}
+            <sup class="time-unit">分</sup>
+          </div>
+        </div>
+
         <div class="status">{{ model.operation | operationType }}</div>
         <!-- <div class="reserve"><i/>14点25分将启动洗衣</div> -->
       </div>
@@ -50,15 +55,15 @@
             <div 
               :class="[modeBtnClass, 'btn center']"
               @click.stop="showModelPanel"/>
-            <div 
+              <!-- <div 
               class="btn btn-time center"
-              @click.stop="showTime"/>
+              @click.stop="showTime"/> -->
           </div>
           <div class="wrap-txt center">
             <div class="name">开关</div>
             <div class="name">{{ isRun ? '暂停' : '启动' }}</div>
             <div class="name">模式</div>
-            <div class="name">预约</div>
+            <!-- <div class="name">预约</div> -->
           </div>
         </div>
       </div>
@@ -260,7 +265,7 @@ export default {
       return this.model.status == 'run'
     },
     isPause() {
-      return this.model.status == 'standby' && this.model.operation != 'none' && this.model.operation != 'finish'
+      return this.model.status == 'halt'
     },
     isStandby() {
       return this.model.status == 'standby' && this.model.operation == 'none'
@@ -406,6 +411,10 @@ export default {
   },
   methods: {
     showModelPanel() {
+      if (this.isRun || this.isPause) {
+        HdSmart.UI.toast('运行或者暂停，无法切换模式')
+        return
+      }
       if(!this.isClose) this.modeModalVisible = true
     },
     showTime() {
@@ -449,13 +458,31 @@ export default {
       let switchStatus = ''
       if (this.model.switch == 'on') {
         switchStatus = 'off'
+        HdSmart.UI.alert(
+          {
+            title: '温馨提示',
+            message: '关机后，物联功能不可用，请确认是否关机？',
+            okText: '确认',
+            cancelText: '取消',
+            dialogStyle: 2
+          },
+          (val)=> {
+            if (val != undefined && val != false) {
+              this.controlDevice('switch', switchStatus)
+            }
+          }
+        )
       } else {
         switchStatus = 'on'
+        return HdSmart.UI.toast('设备暂不支持远程开机')
       }
-      this.controlDevice('switch', switchStatus)
     },
     setControl() {
       if(this.isClose) return
+      if (this.model.operation == 'drying' && val == 'halt') {
+        HdSmart.UI.toast('烘干时不可暂停')
+        return
+      }
 
       let val = ''
       if(this.isRun){
@@ -463,19 +490,12 @@ export default {
       } else {
         val = 'start'
       }
-      if (this.model.operation == 'drying' && val == 'halt') {
-        HdSmart.UI.toast('烘干时不可暂停')
-        return
-      }
       this.controlDevice('control', val)
     },
     setMode(mode) {
-      // if (this.isRun || this.isPause) {
-      //   return
-      // }
-      // if (this.model.mode == mode) {
-      //   return
-      // }
+      if (this.model.mode == mode) {
+        return
+      }
       this.controlDevice('mode', mode, () => {
         this.model.mode = mode
       })
@@ -779,11 +799,16 @@ export default {
     .time{
       line-height: 1;
       font-size: 200px;
+      .wrap-time{
+        position: relative;
+        display: inline;
+      }
     }
     .time-unit{
+      font-size: 24px;
       position: absolute;
-      top:190px;
-      left: 394px;
+      top: 60px;
+      right: -40px;
       width: 40px;
       color: #20282B;
     }
@@ -962,11 +987,15 @@ export default {
     position: absolute;
     bottom: 0;
     left: 31px;
+    right: 31px;
     padding: 48px 0;
   }
   .btns {
+    display: flex;
+    justify-content: center;
     padding-top: 48px;
     border-top: 1px solid #ccc;
+    justify-content: space-around;
     .btn {
       box-sizing: border-box;
       margin: 0 24px;
@@ -1245,9 +1274,9 @@ export default {
         .btn{
           opacity: .2;
         }
-        .btn-swich{
-          opacity: 1;
-        }
+        // .btn-swich{
+        //   opacity: 1;
+        // }
       }
     }
 

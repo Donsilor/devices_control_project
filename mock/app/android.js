@@ -19,7 +19,11 @@ export default {
               options.onListener(JSON.stringify(response))
             }, 500)
           }
-          callback(JSON.parse(options.data), next)
+          try {
+            callback(JSON.parse(options.data), next)
+          } catch (error) {
+            callback(options.data, next)
+          }
         }
       }
       return fn[method]
