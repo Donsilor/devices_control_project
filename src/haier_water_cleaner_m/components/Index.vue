@@ -297,6 +297,8 @@ export default {
 }
 
 .page {
+  min-height: 100%;
+
   background: #fff;
   color: #fff;
   text-align: center;
@@ -306,7 +308,7 @@ export default {
   .main {
     font-size: 24px;
     .title {
-      margin-top: 126px;
+      margin-top: 28px;
       opacity: 0.5;
     }
     .wrap-num {
@@ -326,7 +328,7 @@ export default {
     }
     .msg {
       margin-top: 12px;
-      padding-bottom: 131px;
+      padding-bottom: 31px;
     }
   }
   .wave-bg {
@@ -377,12 +379,12 @@ export default {
     // border-radius: 42px 42px 0px 0px;
 
     background: #FFFFFF;
-    box-shadow: 0 -3px 28px 0 rgba(209,209,209,0.50);
+    box-shadow: 0 -10px 10px 0 rgba(209,209,209,0.50);
     border-radius: 42px 42px 0px 0px;
   }
 
   .btns {
-    padding-top: 50px;
+    padding-top: 30px;
     .btn {
       box-sizing: border-box;
       margin: 0 auto;

@@ -193,13 +193,13 @@ export default {
             0
           ]
         },
-        "switch_status": "off",
+        "switch_status": "on",
         "child_lock_switch_status": "off",
         "negative_ion_switch_status": "off",
         "speed": "low",
         "control_status": "manual",
         "filter_time_used": "2114",
-        "filter_time_remaining": "46",
+        "filter_time_remaining": "--",
         "temperature": "0",
         "humidity": "0",
         "deviceModel": "KJ819F-B2",
