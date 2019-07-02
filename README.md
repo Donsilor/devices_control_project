@@ -14,7 +14,7 @@ npm run build 产品名 参数
 ### 2019.4.28
 - `-mock` 是否启用 mock 目前只适用 空调、窗帘、电视
 
-  示例 npm run build air_condition -m -mock
+  示例 npm run build air_condition -m -mock -debug
 
 ### 已对接品类
 
