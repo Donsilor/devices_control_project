@@ -1,37 +1,37 @@
 <template>
   <div>
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, {'filter': showModeBtns }, 'page']">
-      <topbar 
+      <topbar
         :title="device_name"
         :bak-color="bakColor"/>
-      <div 
+      <div
         class="main"
         @click="toSubPage">
         <div class="bg">
-          <img 
+          <img
             class="circle"
             src="../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png">
-          <img 
+          <img
             v-if="current==0"
             class="pointer-excellent"
             src="../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png"
           >
-          <img 
+          <img
             v-if="current==1"
             class="pointer-good"
             src="../../lib/base/air_cleaner/assets/new-air/lianghao@2x.png"
           >
-          <img 
+          <img
             v-if="current==2"
             class="pointer-light"
             src="../../lib/base/air_cleaner/assets/new-air/qingdu@2x.png"
           >
-          <img 
+          <img
             v-if="current==3"
             class="pointer-moderate"
             src="../../lib/base/air_cleaner/assets/new-air/zhongdu@2x.png"
           >
-          <img 
+          <img
             v-if="current==4"
             class="pointer-severe"
             src="../../lib/base/air_cleaner/assets/new-air/zhongduz@2x.png"
@@ -96,45 +96,45 @@
 
     </div>
     <!-- 模式选择弹框 -->
-    <div 
+    <div
       v-show="showModeBtns"
       class="btns-panel center"
       @touchmove.prevent
       @click="hide">
       <div class="items btns">
-        <div 
+        <div
           :class="[{ 'item1': animation }, {' btn-loading': btnLoading.wind }, 'btn btn-low center']"
           @click.stop="setSpeed('low')">
           <div class="name">低挡</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item2': animation }, {' btn-loading': btnLoading.heat },'btn btn-middle center']"
           @click.stop="setSpeed('middle')">
           <div class="name">中档</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item3': animation }, {' btn-loading': btnLoading.dehumidify }, 'btn btn-high center']"
           @click.stop="setSpeed('high')">
           <div class="name">高档</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item4': animation }, {' btn-loading': btnLoading.cold },'btn btn-very_high center']"
           @click.stop="setSpeed('very_high')">
           <div class="name">超高档</div>
         </div>
-        <!-- <div 
+        <!-- <div
           :class="[{ 'item5': animation }, {' btn-loading': btnLoading.auto },'btn btn-super_high center']"
           @click.stop="setSpeed('super_high')">
           <div class="name">极速挡</div>
         </div> -->
-        <div 
+        <div
           :class="[ { 'item6': animation }, btnClass,'btn center active']"
           @click.stop />
       </div>
     </div>
 
     <!-- PM2.5简介 -->
-    <sub-page 
+    <sub-page
       v-model="showSubPage"
       title="PM2.5简介"
       class="modal-w">
@@ -154,6 +154,7 @@
           <div class="item item5">严重</div>
         </div>
         <ul class="ruler">
+          <li />
           <li />
           <li />
           <li />
@@ -253,7 +254,7 @@ export default {
           break
         case 'sleep':
           return 'btn-low'
-          break 
+          break
       }
     },
     current() {
@@ -290,7 +291,7 @@ export default {
           break
         case 'sleep':
           return '低挡'
-          break 
+          break
       }
     }
   },

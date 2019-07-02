@@ -1,6 +1,6 @@
-// if(process.env.NODE_ENV == 'development'){
-//   require('../../mock/air_cleaner/index.js')
-// }
+if (argv_is_mock || process.env.NODE_ENV == 'development') {
+  require('../../mock/dehumidifier/index.js')
+}
 
 import Vue from 'vue'
 import App from './App.vue'
@@ -14,4 +14,4 @@ Vue.component('topbar', Topbar)
 new Vue({
   el: '#app',
   render: h => h(App)
-});
+})
