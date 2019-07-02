@@ -1,6 +1,7 @@
 <!-- 首页 -->
 <template>
   <div class="page-index">
+    <status-tip />
     <div class="swiper mar">
       <div 
         v-if="homePageInfo.length === 0"
