@@ -13,10 +13,10 @@ let res = {
     "sleep_mode": "off",// 睡眠模式：开/关
     "wind_direction": "off",// 摆角：未使用/45度/90度/自动
     "target_humidity": "50",// 目标湿度%
-    "time_mode": "off",// 定时模式：开/关/无定时
-    "time": "0",// 设定定时:0是无定时(秒)
-    "env_humidity": "30",// 室内湿度%
-    "env_temperature": "24",// 当前环境温度：只读, 单位为0.1摄氏度, 188就是18.8摄氏度
+    "time_mode": "on",// 定时模式：开/关/无定时
+    "time": "8700",// 设定定时:0是无定时(秒)
+    "env_humidity": "46.4",// 室内湿度%
+    "env_temperature": "26",// 当前环境温度：只读, 单位为0.1摄氏度, 188就是18.8摄氏度
     "error_code": "normal",// 正常/水满报警/温湿度传感器故障/湿度传感器故障/温度传感器故障/自动关机保护/盘管传感器故障
     "alarm_cancel": "on",// 告警解除
     "water_full": "off",// 水满报警：告警触发/告警解除

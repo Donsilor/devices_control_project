@@ -7,7 +7,7 @@
       <!-- 数值展示 -->
       <div class="wrap-filter">
         <div class="filter">
-          <div class="filter-item">{{ model.target_humidity }}<sup>%</sup></div>
+          <div class="filter-item">{{ model.env_humidity }}<sup>%</sup></div>
           <div class="filter-name">相对湿度</div>
         </div>
         <div class="filter">
@@ -88,7 +88,7 @@
           <div
             :class="[btnClass, 'btn center']"
             @click="handeGearClick" />
-          <div class="btn-name">档位</div>
+          <div class="btn-name">档位{{ model.speed=='low'?1:model.speed=='normal'?2:3 }}</div>
         </div>
 
         <div class="btn-wrap">
@@ -98,7 +98,7 @@
           <div class="btn-name">定时</div>
         </div>
       </div>
-
+      <!-- 定时弹框 -->
       <SelectTime
         ref="time"
         @selectedTime="setReserve" />
@@ -153,11 +153,6 @@
           @click.stop="setSpeed('high')">
           <div class="name">高档</div>
         </div>
-        <!-- <div
-          :class="[{ 'item4': animation }, {'btn-loading': btnLoading.cold }, { 'active': btnClass=='btn-very_high' }, 'btn btn-very_high center']"
-          @click.stop="setSpeed('very_high')">
-          <div class="name">超高档</div>
-        </div> -->
 
         <div
           :class="[ { 'item6': animation }, btnClass,'btn center active']"
@@ -224,7 +219,7 @@ export default {
       return this.model.switch_status == 'on' ? false : true
     },
     bakColor() {
-      return this.isClose ? '#000' : '#000'
+      return this.isClose ? '#20282B' : '#20282B'
     },
     isOffline() {
       return this.model.connectivity === 'online' ? false : true
@@ -311,6 +306,7 @@ export default {
         switchStatus = 'on'
       }
       this.controlDevice("switch", switchStatus)
+      this.controlDevice('time_mode', 'off')
     },
     handeModeClick() {
       this.showModeBtns = true
@@ -443,7 +439,6 @@ export default {
   min-height: 100%;
   overflow-x: hidden;
   position: relative;
-  // background: rgba(230, 255, 243, 1);
   background: #ffffff;
 
   &.filter {
@@ -456,7 +451,7 @@ export default {
     justify-content: space-around;
     border-bottom: 1px solid rgba(216, 216, 216, 0.5);
     .filter {
-      color: #232323;
+      color: #20282B;
       margin: 48px 0 37px;
       .filter-item {
         position: relative;
@@ -472,7 +467,7 @@ export default {
       .filter-name {
         opacity: 0.5;
         text-align: center;
-        color: #35353D;
+        color: #20282B;
         font-size: 24px;
       }
     }
@@ -485,7 +480,6 @@ export default {
     margin: 173px auto 298px;
     // 离线提示
     .tips {
-      // background: rgba(0, 0, 0, 1);
       position: fixed;
       top: 64PX;
       left: 0;
@@ -533,7 +527,6 @@ export default {
         left: 0;
         bottom: 0;
         right: 0;
-        // z-index: 9;
         width: 100%;
         background: rgba(0, 0, 0, 0.8);
       }
@@ -546,8 +539,6 @@ export default {
       left: 0;
     }
     .circle {
-      // width: 100%;
-      // height: 100%;
       position: absolute;
       width: 636px;
       top: -94px;
@@ -686,7 +677,7 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid #818181;
+      border: 1px solid rgba(32, 40, 43, 0.5);
       border-radius: 50%;
 
       display: flex;
@@ -698,7 +689,7 @@ export default {
     }
     .btn-name {
       text-align: center;
-      color: #000;
+      color: rgba(32, 40, 43, 0.5);
       margin-top: 14px;
       font-size: 24px;
     }
@@ -804,7 +795,7 @@ export default {
       &.up-index {
         .btn-swich{
           background: transparent;
-          border: 1px solid #20282B;
+          border: 1px solid rgba(32, 40, 43, 0.5);
 
           &::before {
             content: "";
@@ -816,7 +807,7 @@ export default {
           }
         }
         .btn-name {
-          opacity: 0.5;
+          color: rgba(32, 40, 43, 0.5)
         }
       }
     }
@@ -906,7 +897,7 @@ export default {
       margin-right: 40px;
       width: 120px;
       height: 120px;
-      border: 1px solid #fff;
+      border: 1px solid rgba(255, 255, 255, 0.5);
       border-radius: 50%;
 
       display: flex;
@@ -921,7 +912,7 @@ export default {
         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
         border-color: #ffbf00;
         .name {
-          color: #000;
+          color: #20282B;
         }
       }
     }
@@ -1070,7 +1061,7 @@ export default {
       margin-right: 40px;
       width: 120px;
       height: 120px;
-      border: 1px solid #fff;
+      border: 1px solid rgba(255, 255, 255, 0.5);
       border-radius: 50%;
 
       display: flex;
@@ -1082,10 +1073,9 @@ export default {
         color: #fff;
       }
       &.active {
-        // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border-color: #ffbf00;
+        border-color: rgba(255, 198, 0, 0.5);
         .name {
-          color: #FFC600;
+          color: rgba(255, 198, 0, 1);
         }
       }
       &.active-yellow {
