@@ -1,10 +1,12 @@
 <template>
-    <div class="error-page" @click="reload">
-        <div class="error-tip">
-            <img src='../../../lib/base/tv/assets/img_disconnection@2x.png' />
-            <p>加载失败，请点击屏幕刷新</p>
-        </div>
+  <div 
+    class="error-page" 
+    @click="reload">
+    <div class="error-tip">
+      <img src="../../../lib/base/tv/assets/img_disconnection@2x.png" >
+      <p>加载失败，请点击屏幕刷新</p>
     </div>
+  </div>
 </template>
 
 <style>
@@ -36,13 +38,13 @@
 </style>
 
 <script>
-import * as service from "../service";
+import * as service from "../service"
 
 export default {
     methods: {
         reload() {
-            service.onClickEvent("reload");
+            service.onClickEvent("reload")
         }
     }
-};
+}
 </script>

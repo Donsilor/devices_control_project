@@ -3,9 +3,8 @@
 -->
 <template>
   <div class="page-detail">
-
     <topbar 
-      :back="close"
+      :back="goBack"
       :search="false">
       <div class="title">
         {{ title }}
@@ -751,29 +750,6 @@ export default {
         return "更新至" + last + "集"
       }
     },
-    close() {
-      console.log('go')
-      window.history.go(-1)
-      // console.log('go')
-      // if (this.history) {
-      //   // this.$router.go(-1)
-      //   window.history.go(-1)
-      // } else {
-      //   // this.$router.go(-1)
-      //   window.history.go(-1)
-      //   //this.hideDetail()
-      // }
-
-      // if (this.visible) {
-      //   if (this.history) {
-      //     this.$router.go(-1)
-      //   } else {
-      //     this.$router.go(-1)
-      //     this.hideDetail()
-      //   }
-      // }
-      this.loading = false
-    },
     toHTML(str) {
       if (!str) return ""
       return str
@@ -799,6 +775,16 @@ export default {
     },
     showAllClose() {
       this.isShowAll = false
+    },
+    goBack(){
+      if(window.history.length > 1){
+        console.log('go -1')
+        window.history.go(-1)
+      } else {
+        console.log('popWindow')
+        HdSmart.UI.popWindow()
+      }
+      this.loading = false
     }
   }
 }

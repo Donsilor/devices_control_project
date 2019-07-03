@@ -292,8 +292,8 @@
 </style>
 
 <script>
-import * as service from '../service';
-import _ from '../util';
+import * as service from '../service'
+import _ from '../util'
 
 // 关键字加粗
 function splitWord(kw, input) {
@@ -349,7 +349,7 @@ export default {
   watch: {
     word(val) {
       if (val == '') {
-        this.word = ' ';
+        this.word = ' '
         this.curpage = 1
                 this.getHistory()
             }
@@ -367,7 +367,7 @@ export default {
   methods: {
     // 删除搜索词
     clearWord() {
-      this.word = '';
+      this.word = ''
       this.$el.querySelector('.search_input input').focus()
         },
     // 清空搜索历史
@@ -399,8 +399,8 @@ export default {
     doSearch(word) {
       this.curpage = 3
             this.word = word
-            this.current_channel = '';
-      this.current_orderby = '';
+            this.current_channel = ''
+      this.current_orderby = ''
       this.filterData(1)
         },
     // 模糊查询
@@ -425,7 +425,7 @@ export default {
         },
     filterData(page) {
       if (page === 1) this.isFirstLoad = true
-            this.loadState = 'LOADING';
+            this.loadState = 'LOADING'
       service.searchData(
         {
           keyword: this.word.trim(),
@@ -435,7 +435,7 @@ export default {
           pageNo: page
         },
         (err, data) => {
-          this.loadState = 'LOADED';
+          this.loadState = 'LOADED'
           if (err) return
 
                     if (data.data) {
@@ -457,9 +457,9 @@ export default {
                             window.scrollTo(0, 0)
                         }
             if (this.total === 0) {
-              this.loadState = 'NO_DATA';
+              this.loadState = 'NO_DATA'
             } else if (this.pageSize * this.pageNo >= this.total) {
-              this.loadState = 'NO_MORE';
+              this.loadState = 'NO_MORE'
               // HdSmart.UI.toast('已加载全部')
             }
           })
@@ -491,7 +491,7 @@ export default {
                 }
         if (this.loadState === 'NO_MORE') {
           HdSmart.UI.toast('已加载全部')
-                    return;
+                    return
         }
         this.filterData(this.pageNo + 1)
             }
@@ -501,11 +501,11 @@ export default {
         },
     getUpdateSet(count, last) {
       if (!count || !last || count == '0' || last == '0') {
-        return '';
+        return ''
       } else if (last === count) {
-        return count + '集全';
+        return count + '集全'
       } else {
-        return '更新至' + last + '集';
+        return '更新至' + last + '集'
       }
     },
     getThumbPic(pic) {
@@ -531,7 +531,7 @@ export default {
             el.onerror = function() {
         el.src = loading
                 el.onerror = null
-            };
+            }
     })
     },
   destroyed() {
