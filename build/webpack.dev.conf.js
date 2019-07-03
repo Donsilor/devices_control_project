@@ -17,6 +17,7 @@ Object.keys(baseWebpackConfig.entry).forEach(function(name) {
 var app = util.getInputName()
 var buildTime = util.getBuildTime()
 var isMock = util.getIsMock()
+var debug = util.getdebug()
 
 module.exports = merge(baseWebpackConfig, {
   module: {
@@ -28,7 +29,8 @@ module.exports = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': config.dev.env,
       buildTime: JSON.stringify(buildTime),
-      argv_is_mock: isMock
+      argv_is_mock: isMock,
+      debug: debug
     }),
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
     new webpack.HotModuleReplacementPlugin(),

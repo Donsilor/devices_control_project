@@ -12,6 +12,12 @@ if (argv.indexOf('-mock') > -1) {
   isMock = true
 }
 
+var debug = false
+if (argv.indexOf('-debug') > -1) {
+  debug = true
+}
+
+
 if (params.m || params.mobile) {
   product += '_m'
 }
@@ -29,6 +35,9 @@ exports.getIsMock = function() {
   return isMock
 }
 
+exports.getdebug = function() {
+  return debug
+}
 var now = new Date()
 
 exports.getBuildTime = function() {
