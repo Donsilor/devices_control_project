@@ -64,7 +64,7 @@
           <img
             class="timeShow-img"
             src="../../lib/base/dehumidifier/assets/icon-time.png">
-          {{ hour }}小时{{ minute }}分后关机
+          {{ model.time | time_H }}
         </div>
       </div>
 
@@ -210,8 +210,6 @@ export default {
         wind_left_right: false
       },
       timeShow: false,
-      hour: '',
-      minute: ''
     }
   },
   computed: {
@@ -286,14 +284,11 @@ export default {
     setReserve(time) {
       let h = parseInt(time.split(':')[0])
       let m = parseInt(time.split(':')[1])
-      this.controlDevice("time_mode", ((h*60)+m)*60==0?'no_time':'on')
-      this.controlDevice("time", ((h*60)+m)*60)
+      this.controlDevice("time_mode", ((h*60)+m)*60==0?'no_time':'on', {"time": ((h*60)+m)*60})
     },
     timeAssignment() {
       if(this.model.time_mode == 'on') {
         this.timeShow = true
-        this.hour = Math.floor(this.model.time/3600)
-        this.minute = (this.model.time%3600)/60
       } else {
         this.timeShow = false
       }
@@ -305,8 +300,7 @@ export default {
       } else {
         switchStatus = 'on'
       }
-      this.controlDevice("switch", switchStatus)
-      this.controlDevice('time_mode', 'off')
+      this.controlDevice("switch", switchStatus, {"time_mode": "off"})
     },
     handeModeClick() {
       this.showModeBtns = true
