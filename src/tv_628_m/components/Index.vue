@@ -34,11 +34,13 @@
           v-for="(item, idx) in channels"
           :class="['item' + idx, 'item']"
           @click.prevent="toPage(item)">{{ item.channel }}</div>
+        
+        <div class="block"/>
 
-          <!-- <div 
+        <!-- <div 
           class="item4 item "
           @click.prevent="cmd('screenProjectionEvent')">投屏</div> -->
-          <!-- <div 
+        <!-- <div 
           class="item5 item "
           @click.prevent="cmd('remoteControlEvent')">遥控器</div> -->
       </div>
@@ -103,6 +105,13 @@
           @click.prevent="cmd('rcBack')" />
       </div>
 
+      <div class="left add">
+        <div
+          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
+          class="icon-screen center"
+          @click.prevent="cmd('screenProjectionEvent')" />
+      </div>
+
     </div>
   </div>
 </template>
@@ -156,7 +165,6 @@
 
 .icon_grid {
   overflow: hidden;
-  margin-left: 48px;
   .icon_grid_inner {
     display: flex;
     flex-wrap: nowrap;
@@ -185,6 +193,7 @@
     margin-right: 24px;
     &.item0 {
       background: #f05645;
+      margin-left: 48px;
     }
     &.item1 {
       background: #fedd52;
@@ -201,6 +210,9 @@
     &.item5 {
       background: #8bc34a;
     }
+  }
+  .block{
+    width: 24px;
   }
 }
 
@@ -260,10 +272,6 @@
     width: 34px;
     background: #fdde4b;
   }
-}
-
-.list-m60 {
-  // margin: 0 25px;
 }
 .vlist {
   padding-top: 36px;
@@ -388,12 +396,23 @@
   margin: 0 48px;
   height: 136px;
 
+  overflow-x: auto;
+  -webkit-box-orient: horizontal;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   .left{
+    flex-shrink: 0;
     width: 136px;
     margin-right: 16px;
     background: #fff;
     box-shadow: 0 10px 23px 0 rgba(138,138,138,0.63);
     border-radius: 10px;
+    &.add{
+      margin-right: 0;
+      margin-left: 16px;
+    }
     .icon-screen{
       height: 136px;
       &::before {
@@ -407,7 +426,8 @@
     }
   }
   .right{
-    flex: 1;
+    flex-shrink: 0;
+    width: 500px;
     display: flex;
     justify-content: space-around;
     background: #fff;
@@ -550,11 +570,8 @@ export default {
     })
   },
   methods: {
-    back() {
-      HdSmart.UI.popWindow()
-    },
     touchMove(e) {
-      e.preventDefault()
+      // e.preventDefault()
     },
     volupStart(e) {
       this.timeOutEventUp = 1
@@ -589,8 +606,11 @@ export default {
     },
     showDetailInfo(item) {
       this.$store.dispatch('showDetail', item)
+      HdSmart.UI.pushWindow({
+        url: `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
+      })
       // this.$router.push({ name: 'detail', query: { channelId: item.channelId, channel: item.channel } })
-      window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
+      // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
     },
     pageInit() {
       service.getHomePageInfo(data => {
@@ -639,7 +659,7 @@ export default {
 
     toPage(item) {
       HdSmart.UI.pushWindow({
-          url: `index.html#/list?channelId=${item.channelId}&channel=${item.channel}`
+        url: `index.html#/list?channelId=${item.channelId}&channel=${item.channel}`
       })
       // window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${item.channel}`
       // this.$router.push({ name: 'list', query: { channelId: item.channelId, channel: item.channel } })
