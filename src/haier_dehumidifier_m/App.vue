@@ -254,7 +254,7 @@ export default {
   watch: {
   },
   created() {
-    var str_model = window.localStorage.getItem("cleaner_model_attr")
+    var str_model = window.localStorage.getItem("dehumidifier_model_attr")
     if(str_model){
       try {
         // str_model 有可能不是合法的JSON字符串，便会产生异常
@@ -443,7 +443,7 @@ export default {
       this.model = data.attribute
 
       // 将model 保存在 localStorage
-      window.localStorage.setItem('cleaner_model_attr', JSON.stringify(data.attribute))
+      window.localStorage.setItem('dehumidifier_model_attr', JSON.stringify(data.attribute))
       this.timeAssignment()
     },
     confirm(done) {
