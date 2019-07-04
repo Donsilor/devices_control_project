@@ -115,7 +115,8 @@ export default {
       this.time = val
     },
     submit() {
-      this.$emit('selectedTime', this.time || '0:0') //自定义事件，暴露值
+      let val = [this.time || '0:0', 'time']
+      this.$emit('selectedTime', val) //自定义事件，暴露值
       this.time = '0:0'
       this.show = false
     }

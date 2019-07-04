@@ -72,7 +72,7 @@
       <div class="panel-btn center">
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']" >
           <div
-            :class="[{'active': !isClose && !isOffline }, {'btn-loading': btnLoading.switch }, 'btn btn-swich center']"
+            :class="[{'active': !isClose && !isOffline }, {'btn-loading': btnLoading.switch && model.switch_status=='on' }, {'btn-loading-blue': btnLoading.switch && model.switch_status=='off' }, 'btn btn-swich center']"
             @click="setSwitch('switch')" />
           <div class="btn-name">开关</div>
         </div>
@@ -93,7 +93,7 @@
 
         <div class="btn-wrap">
           <div
-            :class="[{'btn-loading': btnLoading.time }, 'btn-more', 'btn center']"
+            :class="[{'btn-loading-blue': btnLoading.time }, 'btn-more', 'btn center']"
             @click="showTime" />
           <div class="btn-name">定时</div>
         </div>
@@ -282,14 +282,15 @@ export default {
       if(!this.isClose) this.$refs.time.show = true
     },
     setReserve(time) {
-      let h = parseInt(time.split(':')[0])
-      let m = parseInt(time.split(':')[1])
+      let h = parseInt(time[0].split(':')[0])
+      let m = parseInt(time[0].split(':')[1])
       this.controlDevice(
         "time_mode",
         ((h*60)+m)*60==0?'no_time':'on',
         {"time": ((h*60)+m)*60},
         () => {},
         () => {},
+        time[1]
       )
     },
     timeAssignment() {
@@ -1206,13 +1207,28 @@ export default {
     }
   }
 }
-.btn-loading{
+.btn-loading {
   position: relative;
   &:after{
     width: 90%;
     height: 90%;
     content: '';
     background-image: url(../../lib/base/air_condition/assets/buffering_mode_white.gif);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+.btn-loading-blue {
+  position: relative;
+  &:after{
+    width: 90%;
+    height: 90%;
+    content: '';
+    background-image: url(../../lib/base/air_condition/assets/buffering_mode_blue.gif);
     background-size: 100% 100%;
     background-repeat: no-repeat;
     position: absolute;
