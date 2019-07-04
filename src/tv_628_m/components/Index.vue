@@ -1,6 +1,14 @@
 <!-- 首页 -->
 <template>
   <div class="page-index">
+
+    <topbar
+      v-if="isShowBar"
+      :title="$store.state.device_name"
+      :more="true"
+      :search="false"
+      :back="back" />
+
     <status-tip />
     <div class="swiper mar">
       <div 
@@ -491,6 +499,8 @@ export default {
   data() {
     const self = this
     return {
+      isShowBar: this.$route.query.showBar == 1,
+
       channelId: '',
       vid: '',
       swiperOption: {
@@ -570,6 +580,9 @@ export default {
     })
   },
   methods: {
+    back() {
+      HdSmart.UI.popWindow()
+    },
     touchMove(e) {
       // e.preventDefault()
     },
