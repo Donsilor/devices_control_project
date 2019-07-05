@@ -83,8 +83,8 @@ export default {
     left: 40px;
     top: 55%;
     display: inline-block;
-    width: 14px;
-    height: 14px;
+    width: 14PX;
+    height: 14PX;
     border: solid #000;
     border-width: 2px 2px 0 0;
     transform: translate(0, -50%) rotate(225deg);

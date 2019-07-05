@@ -3,7 +3,7 @@
  */
 import Mock from 'mockjs'
 
-window.device_name = '柜式空调'
+window.device_name = '加湿器'
 window.device_category_id = 1
 let res = {
     device_uuid: '0000d01ea101000000003876ca400578',
@@ -14,22 +14,23 @@ let res = {
     device_category_id: 1,
     created_at: 1516349498,
     updated_at: 1516349498,
-    device_name: '挂式空调',
-    default_device_name: '挂式空调',
+    device_name: '加湿器',
+    default_device_name: '加湿器',
     attribute: {
-        switchStatus: 'on',
-        temperature: 160,
-        env_temperature: 240,
-        mode: 'cold',
-        speed: 'low',
-        wind_up_down: 'off',
-        wind_left_right: 'off',
-        sleep_mode: 'on',
-        deviceModel: 'KFRd-26GW/FE22BpA',
-        manufactureId: 'tcl',
-        deviceCategory: 'airconditioner.new',
-        deviceSubCategory: 0,
-        connectivity: 'online'
+      switchStatus: "on",
+      constant_humidity: "on",
+      status_fog: "2",
+      current_humidity: "60",
+      heat_switch: "on",
+      target_humidity: "90",
+      water_status: "on",
+      uv: "on",
+      light_switch: "on",
+      error_code: "normal",
+      alarm_cancel: "on",
+      no_atomizing_head: "on",
+      cover_not_closed: "on",
+      connectivity: 'online'
     }
 }
 
@@ -46,8 +47,6 @@ export function set(data) {
     var attr = data.params.attribute
     if (attr.switch) {
         res.attribute.switchStatus = attr.switch
-    } else if (attr.temperature) {
-        res.attribute.temperature = attr.temperature
     } else {
         res.attribute = Object.assign({}, res.attribute, attr)
     }

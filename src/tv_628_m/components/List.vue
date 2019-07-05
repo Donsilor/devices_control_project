@@ -443,7 +443,9 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      title: this.$route.query.channel,
+      isShowBar: this.$route.query.showBar == 1,
+
+      title: decodeURIComponent(this.$route.query.channel),
       channelId: this.$route.query.channelId,
       vid: "",
       //列表数据
@@ -645,7 +647,11 @@ export default {
       })
     },
     goBack(){
-      HdSmart.UI.popWindow()
+      if(this.isShowBar){
+        window.history.go(-1)
+      } else {
+        HdSmart.UI.popWindow()
+      }
     }
   }
 }

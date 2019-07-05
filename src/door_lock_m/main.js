@@ -1,5 +1,5 @@
-if(process.env.NODE_ENV == 'development'){
-    require('../../mock/door_lock/index.js')
+if (process.env.NODE_ENV == 'development') {
+  require('../../mock/door_lock/index.js')
 }
 
 import Vue from 'vue'
@@ -18,74 +18,71 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-      alertPage: false,
-      errStore:[],
+    alertPage: false,
+    errStore: []
   },
   mutations: {
-      showAlertpage(state, errStore) {
-          state.alertPage = true
-          state.errStore = errStore
-          console.log("state11111",state.errStore)
-          // state.activeDetail = payload
-          // service.RemoteController({'show':false});
-      },
-      hideAlertpage(state) {
-         state.alertPage = false
-      },
-      // setDeviceName(state, payload) {
-      //     state.device_name = payload
-      // },
-      // setScreenProjectionStatus(state, payload){
-      //     state.tvStatus = payload
-      // }
+    showAlertpage(state, errStore) {
+      state.alertPage = true
+      state.errStore = errStore
+      console.log('state11111', state.errStore)
+      // state.activeDetail = payload
+      // service.RemoteController({'show':false});
+    },
+    hideAlertpage(state) {
+      state.alertPage = false
+    }
+    // setDeviceName(state, payload) {
+    //     state.device_name = payload
+    // },
+    // setScreenProjectionStatus(state, payload){
+    //     state.tvStatus = payload
+    // }
   },
   actions: {
-      // showDetail({ commit }, item) {
-      //     commit('showDetail', item)
-      // },
-      // hideDetail: ({ commit }) => commit('hideDetail'),
+    // showDetail({ commit }, item) {
+    //     commit('showDetail', item)
+    // },
+    // hideDetail: ({ commit }) => commit('hideDetail'),
   }
 })
-const router =  new Router({
-    routes: [
-      {
-        path: '/',
-        name: 'index',
-        component: Index
-      },
-      {
-        path: '/log',
-        name: 'log',
-        component: Log
-      },
-      {
-        path:'/AlertPage',
-        name:'AlertPage',
-        component: Alertpage
-      }
-    ]
-  })
+const router = new Router({
+  routes: [
+    {
+      path: '/',
+      name: 'index',
+      component: Index
+    },
+    {
+      path: '/log',
+      name: 'log',
+      component: Log
+    },
+    {
+      path: '/AlertPage',
+      name: 'AlertPage',
+      component: Alertpage
+    }
+  ]
+})
 
 //   router.push('log')
 
-  HdSmart.ready(() => {
-
-    router.beforeEach((to, from, next) => {
-        /*if(to.name == 'index'){
+HdSmart.ready(() => {
+  router.beforeEach((to, from, next) => {
+    /*if(to.name == 'index'){
             HdSmart.UI.toggleHeadAndFoot(true)
         }else{
             HdSmart.UI.toggleHeadAndFoot(false)
         }*/
-        next()
-    })
-
+    next()
   })
+})
 
-  new Vue({
-    el: '#app',
-    router,
-    store,
-    template: '<App />',
-    components: { App }
-  });
-
+new Vue({
+  el: '#app',
+  router,
+  store,
+  components: { App },
+  template: '<App />'
+})

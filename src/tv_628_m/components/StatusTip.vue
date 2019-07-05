@@ -4,7 +4,7 @@
     class="status_bar">
     <div class="status_bar_block"/>
     <div
-      :style="{top:(status_bar_height+navigation_bar_height)+'px'}"
+      :style="{top:(status_bar_height + navigation_bar_height - barHeight )+'px'}"
       class="status_bar_fixed">
       <div
         v-if="spVisible"
@@ -115,33 +115,34 @@
 
 
 <script>
-import * as service from "../service";
+import * as service from "../service"
 import {mapState} from 'vuex'
 
 export default {
+    props: ["barHeight"],
     data() {
         return {
             ios: /iPad|iPhone|iPod/.test(navigator.userAgent)
-        };
+        }
     },
     computed: {
         tvStatus() {
-            return this.$store.state.tvStatus;
+            return this.$store.state.tvStatus
         },
         spStatusText() {
             return ["", "图片", "视频", "音乐"][
                 this.tvStatus.screenProjectType
-            ];
+            ]
         },
         spVisible() {
             return (
                 this.tvStatus.tvOnlineStatus == 1 &&
                 this.tvStatus.screenProjectType != 0 &&
                 this.$route.name != "search"
-            );
+            )
         },
         visible() {
-            return this.tvStatus.tvOnlineStatus != 1 || this.spVisible;
+            return this.tvStatus.tvOnlineStatus != 1 || this.spVisible
         },
         ...mapState(['status_bar_height', 'navigation_bar_height', 'isStatusBarShow'])
     },
@@ -149,13 +150,13 @@ export default {
     },
     methods: {
         goToScreenProjectionPage() {
-            service.onClickEvent("screenProjectionStatusClick");
+            service.onClickEvent("screenProjectionStatusClick")
         },
         goToOfflineHelpPage() {
             service.onClickEvent("tvOnlineStatusClick", {
                 tvOnlineStatus: this.tvStatus.tvOnlineStatus
-            });
+            })
         }
     },
-};
+}
 </script>
