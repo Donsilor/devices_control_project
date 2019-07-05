@@ -9,25 +9,35 @@
         <img 
           class="robot"
           src="../../lib/base/sweeping_robot/assets/saodijiqiren@2x.png">
+
+        <div class="wrap-charge">
+          <div class="body-charge">
+            <div class="item-charge"/>
+            <div class="item-charge"/>
+            <div class="item-charge"/>
+            <div class="item-charge"/>
+          </div>
+          <div class="line"/>
+        </div>
       </div>
 
 
-      <!-- <div class="point">
-        <span class="sport sport1" />
-        <span class="sport sport2" />
-        <span class="sport sport3" />
-        <span class="sport sport4" />
-        <span class="sport sport5" />
-        <span class="sport sport6" />
-        <span class="sport sport7" />
-        <span class="sport sport8" />
-        <span class="sport sport9" />
-        <span class="sport sport10" />
-        <span class="sport sport11" />
-        <span class="sport sport12" />
-        <span class="sport sport13" />
-        <span class="sport sport1" />
-      </div> -->
+      <div class="point">
+        <i class="img1 sport1" />
+        <i class="img2 sport2" />
+        <i class="img3 sport3" />
+        <i class="img2 sport4" />
+        <i class="img4 sport5" />
+        <i class="img2 sport6" />
+        <i class="img2 sport7" />
+        <i class="img3 sport8" />
+        <i class="img2 sport9" />
+        <i class="img2 sport10" />
+        <i class="img3 sport11" />
+        <i class="img4 sport12" />
+        <i class="img2 sport13" />
+        <i class="img1 sport14" />
+      </div>
 
       <div 
         v-show="model.status == 'charging'" 
@@ -485,67 +495,91 @@ export default {
 
 
   .point{
-    .sport {
-      display: inline-block;
-      border-radius: 50%;
-      width: 13px;
-      height: 13px;
-      opacity: 0.84;
-      background: #03fd05;
+    i{
+      display: block;
       position: absolute;
     }
-    .sport1 {
-      top: 192px;
-      left: 460px;
+    .img1{
+      width: 26px;
+      height: 26px;
+      background-image: url(../../lib/base/sweeping_robot/assets/img1.png);
+      background-size: 100% 100%;
+    }
+    .img2{
+      width: 20px;
+      height: 20px;
+      background-image: url(../../lib/base/sweeping_robot/assets/img2.png);
+      background-size: 100% 100%;
+    }
+    .img3{
+      width: 26px;
+      height: 26px;
+      background-image: url(../../lib/base/sweeping_robot/assets/img3.png);
+      background-size: 100% 100%;
+    }
+    .img4{
+      width: 6px;
+      height: 6px;
+      background: #FFCE00;
+      border-radius: 50%;
+    }
 
+    .sport1 {
+      top: 256px;
+      left: 150px;
     }
     .sport2 {
-      top: 208px;
-      left: 472px;
+      top: 310px;
+      left: 140px;
     }
     .sport3 {
-      top: 230px;
-      left: 384px;
+      top: 290px;
+      left: 210px;
     }
     .sport4 {
-      top: 265px;
-      left: 368px;
+      top: 250px;
+      left: 270px;
     }
     .sport5 {
-      top: 376px;
-      left: 70px;
+      top: 280px;
+      left: 300px;
     }
     .sport6 {
-      top: 374px;
-      left: 276px;
+      top: 232px;
+      left: 375px;
     }
     .sport7 {
-      top: 390px;
-      left: 616px;
+      top: 284px;
+      left: 365px;
     }
     .sport8 {
-      top: 400px;
-      left: 238px;
+      top: 274px;
+      left: 410px;
     }
     .sport9 {
-      top: 482px;
-      left: 670px;
+      top: 222px;
+      left: 470px;
     }
+
     .sport10 {
-      top: 468px;
-      left: 646px;
+      top: 290px;
+      left: 500px;
     }
     .sport11 {
-      top: 708px;
-      left: 142px;
+      top: 242px;
+      left: 534px;
     }
     .sport12 {
-      top: 690px;
-      left: 502px;
+      top: 320px;
+      left: 552px;
     }
     .sport13 {
-      top: 774px;
-      left: 300px;
+      top: 260px;
+      left: 604px;
+    }
+    .sport14 {
+      top: 310px;
+      left: 614px;
     }
   }
 
