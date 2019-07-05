@@ -105,15 +105,15 @@
 
         <div :class="[{'disable': model.status == 'charging'}, 'btn-wrap']">
           <div 
-            :class="[model.status == 'working' ? 'btn-stop' : 'btn-clean', 'btn center']"
-            @click="setCommand" />
+            :class="[model.status == 'working' ? 'btn-stop' : 'btn-clean', 'btn center']" 
+            @click="setCommand"/>
           <div class="btn-name">清扫</div>
         </div>
 
         <div :class="[{'disable': model.status == 'charging'}, {'disable': model.status == 'working'}, 'btn-wrap']">
           <div 
-            :class="[btnClass, 'btn center btn-plan']"
-            @click="handeModeClick" />
+            :class="[btnClass, 'btn center btn-plan']" 
+            @click="handeModeClick"/>
           <div class="btn-name">规划</div>
         </div>
 
@@ -129,27 +129,27 @@
       @click="hide">
       <div class="items btns">
         <div 
-          :class="[{ 'item1': animation }, {' btn-current': model.mode === 'plan_clean' }, {'btn-loading': btnLoading.low },'btn btn-low center']"
+          :class="[{ 'item1': animation }, {' btn-current': model.mode === 'plan_clean' }, {'btn-loading': btnLoading.plan_clean },'btn btn-low center']"
           @click.stop="setMode('plan_clean')">
           <div class="name">规划</div>
         </div>
         <div 
-          :class="[{ 'item2': animation }, {' btn-current': model.mode === 'single_plan' }, {' btn-loading': btnLoading.middle },'btn btn-middle center']"
+          :class="[{ 'item2': animation }, {' btn-current': model.mode === 'single_plan' }, {' btn-loading': btnLoading.single_plan },'btn btn-middle center']"
           @click.stop="setMode('single_plan')">
           <div class="name">单间</div>
         </div>
         <div 
-          :class="[{ 'item3': animation }, {' btn-current': model.mode === 'edge_clean' }, {' btn-loading': btnLoading.high },'btn btn-high center']"
+          :class="[{ 'item3': animation }, {' btn-current': model.mode === 'edge_clean' }, {' btn-loading': btnLoading.edge_clean },'btn btn-high center']"
           @click.stop="setMode('edge_clean')">
           <div class="name">沿边</div>
         </div>
         <div 
-          :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' }, {' btn-loading': btnLoading.very_high },'btn btn-very_high center']"
+          :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' }, {' btn-loading': btnLoading.design_clean },'btn btn-very_high center']"
           @click.stop="setMode('design_clean')">
           <div class="name">定位</div>
         </div>
         <div 
-          :class="[{ 'item5': animation }, {'btn-current': model.mode === 'mop' }, {' btn-loading': btnLoading.super_high },'btn btn-super_high center']"
+          :class="[{ 'item5': animation }, {'btn-current': model.mode === 'mop' }, {' btn-loading': btnLoading.mop },'btn btn-super_high center']"
           @click.stop="setMode('mop')">
           <div class="name">拖地</div>
         </div>
@@ -234,11 +234,11 @@ export default {
       showModeBtns: false,
       animation: false,
       btnLoading: {
-        low: false,
-        middle: false,
-        high: false,
-        very_high: false,
-        super_high: false,
+        plan_clean: false,
+        single_plan: false,
+        edge_clean: false,
+        design_clean: false,
+        mop: false,
       },
       showSubPage: false
     }
@@ -342,9 +342,14 @@ export default {
       this.controlDevice('mode', mode, {},
        () => {
           if(this.showModeBtns) this.showModeBtns = false
-       }, () => {})
+       }, () => {},mode)
     },
-    setCommand() {
+    setCommand(e) {
+      //如果在充电中，无法点击清扫
+      if(this.model.status == "charging") {
+         e.stopPropatation||e.cancelBubble == true
+        return false
+      }
       // 清扫 暂时
       let cmd = ''
       if (this.model.command == 'stop') {
@@ -383,7 +388,12 @@ export default {
       }
       this.controlDevice("switch", switchStatus)
     },
-    handeModeClick() {
+    handeModeClick(e) {
+      //如果在充电中，无法选择模式
+      if(this.model.status == "charging") {
+         e.stopPropatation||e.cancelBubble == true
+        return false
+      }
       this.showModeBtns = true
       this.$nextTick(() => {
         setTimeout(() => {
@@ -669,7 +679,7 @@ export default {
 
     @keyframes animX1{
       0% {left: 150px;}
-      100% {left: 160px;}
+      100% {left:160px}
     }
     @keyframes animX2{
       0% { left: 140px;}
@@ -829,8 +839,6 @@ export default {
       }
     }
   }
-
-
   .wrap-filter {
     display: flex;
     justify-content: center;
