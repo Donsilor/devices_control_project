@@ -28,7 +28,13 @@
         <div 
           v-show="model.status == 'charging'" 
           class="robot-charging">
-        <div class="line"/></div>
+          <div  
+            class="line"/>
+          <div 
+            v-for="item in batteryList"
+            ref="battery" 
+            class="battery"/>
+        </div>
       </div>
 
       <!-- <div class="point">
@@ -232,6 +238,8 @@ export default {
   },
   data() {
     return {
+      interId: 0,
+      batteryList:[],
       isShowMsg: false,
       msg: '',
       device_name: "",
@@ -379,6 +387,9 @@ export default {
       this.onSuccess(data.result)
     })
   },
+  // destroyed() {
+  //   clearInterval(this.interId)
+  // },
   // mounted(){
   //    //获取图片所在的div对象  
   //   var pic = document.getElementsByClassName('pic')  
@@ -517,7 +528,12 @@ export default {
     setCharging() {
       this.model.status = "charging"
       console.log(this.model.status)
-      
+      this.interId = setInterval(() => {
+        if(this.batteryList.push(1) == 5) {
+          this.batteryList = [],
+          (this.interID)
+        }
+      }, 500)
     },
 
     getSnapShot(cb) {
@@ -583,19 +599,10 @@ export default {
   }
   .wrap-robot {
     text-align: center;
-    // padding-top: 242px;
     position: relative;
     .garbage{
       width: 100%;
       height: 242px;
-      // border: #03fd05 1px solid;
-      // position: relative;
-      // img{
-      //   position: absolute;
-      //   width: 50%;
-      //   height: 50%;
-      //   display: inline-block;
-      // }
     }
     .robot {
       width: 446px;
@@ -610,25 +617,14 @@ export default {
       position: absolute;
       left: 50%;
       bottom: 118px;
-      // transform: translate(-50%);
       margin-left: -23px;
-      background-image: linear-gradient(0deg, white 15%, green 15%);
-      background-repeat: repeat-y;
-      background-size: 100% 20%;
-      background-clip: content-box; /* 将背景限定在内容区域 */
-      box-sizing: content-box;
-      transform: rotate(0deg);
-      display: inline-block;
-      &::after {
-        content: '';
-	width: calc(44px);
-	height: calc(100px - 16px);
-	position: absolute;
-  background-color: #FFF7DB;
-  left: 0px;
-	animation: charge 2s steps(5) infinite alternate;
-	animation-play-state: running;
-
+      transform: rotate(180deg);
+      .battery {
+        background: #12F894;
+        border-radius: 2px;
+        width: 34px;
+        height: 14px;
+        margin: 4px auto 0 auto;
       }
       .line{
         position: absolute;
@@ -637,29 +633,12 @@ export default {
         background: #FFF0B2;
         border-radius: 1px;
         position: absolute;
-        bottom: -60px;
+        bottom: 94px;
         left: 50%;
         transform: translate(-50%)
       }
       
     }
-    @keyframes charge {
-    from {
-          // background-size:  80% 15%;
-          height: calc(100px - 22px);
-
-    }
-80% {
-		height: 0px;
-	}
-	to {
-		height: 0px;
-	}
-
-    // to {
-    //       background-size:  80% 95%;
-    // }
-}
   }
 
   .point {
@@ -789,13 +768,13 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid #b9b9b9;
+      border: 1px solid #C2C2C2;
       border-radius: 50%;
-
       display: flex;
       flex-direction: column;
       // opacity: 0.5;
       &.active {
+        border: 1px solid #818181;
         opacity: 1;
         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
         border-color: #ffbf00;
