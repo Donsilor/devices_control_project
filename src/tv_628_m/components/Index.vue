@@ -9,7 +9,10 @@
       :search="false"
       :back="back" />
 
-    <status-tip :bar-height="barHeight" />
+    <status-tip 
+      v-show="device_uuid" 
+      :bar-height="barHeight" />
+
     <div class="swiper mar">
       <div 
         v-if="homePageInfo.length === 0"
@@ -87,6 +90,7 @@
     </div>
 
     <div class="control">
+      <div class="block" />
       <div class="left">
         <div
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
@@ -116,10 +120,17 @@
       <div class="left add">
         <div
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-screen center"
-          @click.prevent="cmd('screenProjectionEvent')" />
+          class="icon-ykq center"
+          @click.prevent="cmd('remoteControlEvent')" />
       </div>
 
+      <div class="left add">
+        <div
+          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
+          class="icon-detail center"
+          @click.prevent="goDetail" />
+      </div>
+      <div class="block" />
     </div>
   </div>
 </template>
@@ -131,7 +142,7 @@
   align-items: center;
 }
 .page-index {
-  padding: 48px 0 180px;
+  padding: 48px 0 210px;
   background: #f8f8f8;
   .title {
     font-size: 40px;
@@ -395,14 +406,13 @@
 
 .control {
   position: fixed;
-  bottom: 36px;
+  bottom: 16px;
   left: 0;
   right: 0;
 
   display: flex;
   justify-content: space-between;
-  margin: 0 48px;
-  height: 136px;
+  height: 186px;
 
   overflow-x: auto;
   -webkit-box-orient: horizontal;
@@ -411,15 +421,18 @@
   }
 
   .left{
+    margin: 25px 0;
     flex-shrink: 0;
     width: 136px;
-    margin-right: 16px;
+    margin-right: 12px;
     background: #fff;
     box-shadow: 0 10px 23px 0 rgba(138,138,138,0.63);
     border-radius: 10px;
+
+
     &.add{
       margin-right: 0;
-      margin-left: 16px;
+      margin-left: 12px;
     }
     .icon-screen{
       height: 136px;
@@ -432,8 +445,32 @@
         background-size: 100% 100%;
       }
     }
+    .icon-ykq{
+      height: 136px;
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../../lib/base/tv/assets/new/ykq.png);
+        background-size: 100% 100%;
+      }
+    }
+    .icon-detail{
+      height: 136px;
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../../lib/base/tv/assets/new/ykq.png);
+        background-size: 100% 100%;
+      }
+    }
   }
   .right{
+    margin: 25px 0;
+
     flex-shrink: 0;
     width: 500px;
     display: flex;
@@ -485,7 +522,11 @@
       }
     }
   }
-
+  .block{
+    flex-shrink: 0;
+    width: 48px;
+    height: 186px;
+  }
 }
 </style>
 
@@ -499,6 +540,7 @@ export default {
   data() {
     const self = this
     return {
+      device_uuid: window.device_uuid || '',
       isShowBar: this.$route.query.showBar == 1,
 
       channelId: '',
@@ -689,6 +731,9 @@ export default {
       }
       // window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${item.channel}`
       // this.$router.push({ name: 'list', query: { channelId: item.channelId, channel: item.channel } })
+    },
+    goDetail() {
+      HdSmart.UI.goDeviceDetail()
     }
   }
 }
