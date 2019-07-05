@@ -3,14 +3,33 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, {'filter': showModeBtns }, 'page']">
       <topbar 
         :title="device_name"
-        :bak-color="bakColor"/>
+        :bak-color="bakColor" />
       <div class="status">{{ model.status | statusType }}</div>
+      <!-- msg 提示 -->
+      <transition name="fade">
+        <div 
+          v-show="isShowMsg"
+          class="err-tips">{{ msg }}</div>
+      </transition>
       <div class="wrap-robot">
+        <div class="garbage">
+          <img 
+            src="../../lib/base/sweeping_robot/assets/huicheng1@2x.png" 
+            class="pic">
+          <img 
+            src="../../lib/base/sweeping_robot/assets/huicheng2@2x.png" 
+            class="pic">
+          <img 
+            src="../../lib/base/sweeping_robot/assets/huicheng3@2x.png" 
+            class="pic"></div>
         <img 
           class="robot"
-          src="../../lib/base/sweeping_robot/assets/saodijiqiren@2x.png">
+          src="../../lib/base/sweeping_robot/assets/saodirobot@2x.png">
+        <div 
+          v-show="model.status == 'charging'" 
+          class="robot-charging">
+        <div class="line"/></div>
       </div>
-
 
       <!-- <div class="point">
         <span class="sport sport1" />
@@ -30,7 +49,7 @@
       </div> -->
 
       <div 
-        v-show="model.status == 'charging'" 
+        v-show="model.status == 'charging'"
         class="wrap-filter">
         <!-- <div class="filter">
           <div class="filter-item">{{ model.filter_time_remaining }}<sup>%</sup></div>
@@ -42,7 +61,9 @@
         </div>
       </div>
 
-      <div class="wrap-filter detail">
+      <div 
+        v-show="model.status != 'charging'" 
+        class="wrap-filter detail">
         <!-- <div class="filter">
           <div class="filter-item">{{ model.filter_time_remaining }}<sup>%</sup></div>
           <div class="filter-name">剩余滤芯</div>
@@ -56,15 +77,15 @@
           <div class="filter-name">剩余电量</div>
         </div>
         <div class="filter">
-          <div class="filter-item">{{ model.working_time }}<sup>，</sup></div>
+          <div class="filter-item">{{ model.working_time }}<sup class="comma">，</sup></div>
           <div class="filter-name">已扫时间</div>
         </div>
       </div>
 
       <!-- 按钮 -->
       <div class="panel-btn center">
-        <div :class="[{'up-index': !isOffline }, 'btn-wrap']" >
-          <div
+        <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
+          <div 
             :class="[{'active': !isClose && !isOffline }, 'btn btn-swich center']"
             @click="setSwitch" />
           <div class="btn-name">开关</div>
@@ -72,7 +93,7 @@
         <div class="btn-wrap btns">
           <div 
             :class="[model.status == 'charging' ? 'charging' : '', 'btn btn-charging center circleProgress_wrapper']"
-            @click="setCharging">
+            @click="setCharging()">
             <div class="wrapper right">
               <div class="circleProgress rightcircle" />
             </div>
@@ -84,23 +105,23 @@
         </div>
 
         <div class="btn-wrap">
-          <div
+          <div 
             :class="[{'active': model.speed == 'sleep' },'btn btn-clean center']"
             @click="setSleep()" />
           <div class="btn-name">清扫</div>
         </div>
 
         <div class="btn-wrap">
-          <div
+          <div 
             :class="[btnClass, 'btn center btn-plan']"
             @click="handeModeClick" />
           <div class="btn-name">规划</div>
         </div>
 
-
       </div>
 
     </div>
+
     <!-- 模式选择弹框 -->
     <div 
       v-show="showModeBtns"
@@ -109,32 +130,32 @@
       @click="hide">
       <div class="items btns">
         <div 
-          :class="[{ 'item1': animation }, {' btn-loading': btnLoading.wind }, 'btn btn-low center']"
+          :class="[{ 'item1': animation }, {' btn-current': model.speed === 'low' }, {'btn-loading': btnLoading.low },'btn btn-low center']"
           @click.stop="setSpeed('low')">
-          <div class="name">低挡</div>
+          <div class="name">规划</div>
         </div>
         <div 
-          :class="[{ 'item2': animation }, {' btn-loading': btnLoading.heat },'btn btn-middle center']"
+          :class="[{ 'item2': animation }, {' btn-current': model.speed === 'middle' }, {' btn-loading': btnLoading.middle },'btn btn-middle center']"
           @click.stop="setSpeed('middle')">
-          <div class="name">中档</div>
+          <div class="name">单间</div>
         </div>
         <div 
-          :class="[{ 'item3': animation }, {' btn-loading': btnLoading.dehumidify }, 'btn btn-high center']"
+          :class="[{ 'item3': animation }, {' btn-current': model.speed === 'high' }, {' btn-loading': btnLoading.high },'btn btn-high center']"
           @click.stop="setSpeed('high')">
-          <div class="name">高档</div>
+          <div class="name">沿边</div>
         </div>
         <div 
-          :class="[{ 'item4': animation }, {' btn-loading': btnLoading.cold },'btn btn-very_high center']"
+          :class="[{ 'item4': animation }, {' btn-current': model.speed === 'very_high' }, {' btn-loading': btnLoading.very_high },'btn btn-very_high center']"
           @click.stop="setSpeed('very_high')">
-          <div class="name">超高档</div>
+          <div class="name">定位</div>
         </div>
-        <!-- <div 
-          :class="[{ 'item5': animation }, {' btn-loading': btnLoading.auto },'btn btn-super_high center']"
-          @click.stop="setSpeed('super_high')">
-          <div class="name">极速挡</div>
-        </div> -->
         <div 
-          :class="[ { 'item6': animation }, btnClass,'btn center active']"
+          :class="[{ 'item5': animation }, {'btn-current': model.speed === 'super_high' }, {' btn-loading': btnLoading.super_high },'btn btn-super_high center']"
+          @click.stop="setSpeed('super_high')">
+          <div class="name">拖地</div>
+        </div>
+        <div 
+          :class="[ { 'item6': animation }, btnClass,'btn btn-plan center active']"
           @click.stop />
       </div>
     </div>
@@ -183,18 +204,42 @@
 
 <script>
 import SubPage from "./SubPage"
+const tips = {
+  fail: '设置失败',
+  temperature: '温度设置成功',
+  speed_low: '低风切换成功',
+  speed_normal: '中风切换成功',
+  speed_high: '高风切换成功',
+  speed_auto: '自动风速切换成功',
+  mode_cold: '制冷模式切换成功',
+  mode_auto: '智能模式切换成功',
+  mode_heat: '制热模式切换成功',
+  mode_dehumidify: '除湿模式切换成功',
+  mode_wind: '送风模式切换成功',
+  wind_up_down_on: '上下扫风已启动',
+  wind_up_down_off: '上下扫风已关闭',
+  wind_left_right_on: '左右扫风已启动',
+  wind_left_right_off: '左右扫风已关闭',
+  err_temp1: '送风模式下不能设置温度',
+  err_temp2: '温度已调至最高',
+  err_temp3: '温度已调至最低',
+  err_temp4: '送风模式不能设置自动风速',
+  err_temp5: '低风、制冷模式下不支持此温度'
+}
 export default {
   components: {
     SubPage
   },
   data() {
     return {
+      isShowMsg: false,
+      msg: '',
       device_name: "",
-      model:  {
+      model: {
         'switch_status': 'on',
         'mode': 'mop',
         'battery_percentage': '100',
-        'status': 'working',
+        'status': 'charging',
         'sweep_direction': 'right',
         'fan_status': 'normall',
 
@@ -220,21 +265,18 @@ export default {
         'dust_box': 'on',
         'battery_overheat': 'on',
         'fan_err': 'on',
-        
+
 
         'connectivity': 'online'
       },
       showModeBtns: false,
       animation: false,
       btnLoading: {
-        switch: false,
-        auto: false,
-        cold: false,
-        heat: false,
-        dehumidify: false,
-        wind: false,
-        wind_up_down: false,
-        wind_left_right: false
+        low: false,
+        middle: false,
+        high: false,
+        very_high: false,
+        super_high: false,
       },
       showSubPage: false
     }
@@ -269,7 +311,7 @@ export default {
           break
         case 'sleep':
           return 'btn-low'
-          break 
+          break
       }
     },
     current() {
@@ -307,7 +349,7 @@ export default {
           break
         case 'sleep':
           return '低挡'
-          break 
+          break
       }
     }
   },
@@ -315,10 +357,10 @@ export default {
   },
   created() {
     var str_model = window.localStorage.getItem("cleaner_model_attr")
-    if(str_model){
+    if (str_model) {
       try {
         // str_model 有可能不是合法的JSON字符串，便会产生异常
-        this.model =JSON.parse(str_model)
+        this.model = JSON.parse(str_model)
       } catch (e) {
         this.model = {}
       }
@@ -337,7 +379,58 @@ export default {
       this.onSuccess(data.result)
     })
   },
+  // mounted(){
+  //    //获取图片所在的div对象  
+  //   var pic = document.getElementsByClassName('pic')  
+                   
+  //   for (var i=0;i<pic.length;i++) {
+  //         var w=document.body.clientWidth//窗口的大小                 
+  //       //产生随机坐标  
+  //   var x = Math.random()*w  
+       
+  //   var y = Math.random()*242  
+       
+  //   //图片的定位  
+  //   pic[i].style.left=x+"px"  
+       
+  //   pic[i].style.top=y+"px"  
+  //   }
+    
+    
+  // },
   methods: {
+    setSpeed(speed) {
+      // if (this.checkCmd('mode', mode)) return this.showModeBtns = false
+      // this.showModeBtns = false
+      this.controlDevice('speed', speed, speed,
+        () => {
+          if (this.showModeBtns) this.showModeBtns = false
+          this.showMsg(tips['speed' + speed])
+        }, () => { }, speed)
+    },
+      showBtnLoading(attr) {
+      this.btnLoading[attr] = true
+    },
+    hideBtnLoading(attr) {
+      this.btnLoading[attr] = false
+    },
+    showMsg(msg) {
+      if (!msg) return
+      clearTimeout(timer)
+      this.msg = msg
+      this.isShowMsg = true
+      this.$nextTick(() => {
+        timer = setTimeout(() => {
+          this.isShowMsg = false
+        }, 3000)
+      })
+
+    },
+    // 清扫
+    setSleep(){
+      console.log(this.model.status)
+      
+    },
     setSwitch() {
       let switchStatus = ''
       if (this.model.switch_status == 'on') {
@@ -370,7 +463,8 @@ export default {
         this.tip = ""
       }, 2000)
     },
-    controlDevice(attr, val, param, success, error) {
+    controlDevice(attr, val, param, success, error,btnAttr) {
+      this.showBtnLoading(btnAttr)
       var fn = this.confirm
       var params = Object.assign(
         {
@@ -395,9 +489,12 @@ export default {
             }
           },
           () => {
+            this.hideBtnLoading(btnAttr)
+            // this.model.speed[attr] = val
             success && success()
           },
           () => {
+            this.hideBtnLoading(btnAttr)
             error && error()
             this.showTip("操作失败")
           }
@@ -407,7 +504,7 @@ export default {
 
     setControl() {
       let val = ''
-      if(this.model.control_status == 'sleep'){
+      if (this.model.control_status == 'sleep') {
         val = 'manual'
       } else {
         val = 'sleep'
@@ -418,7 +515,9 @@ export default {
       })
     },
     setCharging() {
-
+      this.model.status = "charging"
+      console.log(this.model.status)
+      
     },
 
     getSnapShot(cb) {
@@ -455,7 +554,7 @@ export default {
         done()
       }
     }
-  }
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -464,27 +563,106 @@ export default {
   overflow-x: hidden;
   position: relative;
   background: #fff;
-
+  .err-tips {
+    position: absolute;
+    top: 150px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 26px;
+    color: #ffc600;
+  }
   &.filter {
     filter: blur(12px);
   }
-  .status{
+  .status {
     margin-top: 30px;
     font-size: 24px;
-    color: #35353D;
+    color: #35353d;
     text-align: center;
   }
-  .wrap-robot{
+  .wrap-robot {
     text-align: center;
-    padding-top: 120px;
-    .robot{
+    // padding-top: 242px;
+    position: relative;
+    .garbage{
+      width: 100%;
+      height: 242px;
+      // border: #03fd05 1px solid;
+      // position: relative;
+      // img{
+      //   position: absolute;
+      //   width: 50%;
+      //   height: 50%;
+      //   display: inline-block;
+      // }
+    }
+    .robot {
       width: 446px;
       margin: auto;
     }
+    .robot-charging {
+      width: 46px;
+      height: 100px;
+      background: #FFF7DB;
+      border: 1px solid #FFF0B2;
+      border-radius: 4px;
+      position: absolute;
+      left: 50%;
+      bottom: 118px;
+      // transform: translate(-50%);
+      margin-left: -23px;
+      background-image: linear-gradient(0deg, white 15%, green 15%);
+      background-repeat: repeat-y;
+      background-size: 100% 20%;
+      background-clip: content-box; /* 将背景限定在内容区域 */
+      box-sizing: content-box;
+      transform: rotate(0deg);
+      display: inline-block;
+      &::after {
+        content: '';
+	width: calc(44px);
+	height: calc(100px - 16px);
+	position: absolute;
+  background-color: #FFF7DB;
+  left: 0px;
+	animation: charge 2s steps(5) infinite alternate;
+	animation-play-state: running;
+
+      }
+      .line{
+        position: absolute;
+        width: 4px;
+        height: 60px;
+        background: #FFF0B2;
+        border-radius: 1px;
+        position: absolute;
+        bottom: -60px;
+        left: 50%;
+        transform: translate(-50%)
+      }
+      
+    }
+    @keyframes charge {
+    from {
+          // background-size:  80% 15%;
+          height: calc(100px - 22px);
+
+    }
+80% {
+		height: 0px;
+	}
+	to {
+		height: 0px;
+	}
+
+    // to {
+    //       background-size:  80% 95%;
+    // }
+}
   }
 
-
-  .point{
+  .point {
     .sport {
       display: inline-block;
       border-radius: 50%;
@@ -497,7 +675,6 @@ export default {
     .sport1 {
       top: 192px;
       left: 460px;
-
     }
     .sport2 {
       top: 208px;
@@ -552,37 +729,41 @@ export default {
   .wrap-filter {
     display: flex;
     justify-content: center;
-    margin: 80px 0 109px 0;
-    &.detail{
-      margin: 120px 0 48px 0;
+    margin: 64px 0 218px 0;
+    &.detail {
+      margin: 230px 0 48px 0;
     }
   }
   .filter {
-    color: #35353D;
+    color: #35353d;
     margin: 0 38px;
     .filter-item {
       position: relative;
       font-size: 80px;
       text-align: center;
+      line-height: 113px;
       sup {
         white-space: nowrap;
         font-size: 24px;
         position: absolute;
-        top: 15px;
+        top: -30px;
+        &.comma {
+          font-size: 40px;
+          line-height: 80px;
+        }
       }
     }
     .filter-name {
       text-align: center;
-      color: #35353D;
+      color: #35353d;
       font-size: 24px;
     }
   }
 
   .panel-btn {
-
     height: 306px;
-    background: #FFFFFF;
-    box-shadow: 0 -3px 28px 0 rgba(209,209,209,0.50);
+    background: #ffffff;
+    box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
     border-radius: 42px 42px 0px 0px;
     .btn {
       margin-top: 24px;
@@ -599,7 +780,7 @@ export default {
 
   .btn-wrap {
     margin: 50px 24px 0;
-    &.up-index{
+    &.up-index {
       position: relative;
       z-index: 9999;
     }
@@ -608,16 +789,16 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid #B9B9B9;
+      border: 1px solid #b9b9b9;
       border-radius: 50%;
 
       display: flex;
       flex-direction: column;
-      opacity: .5;
+      // opacity: 0.5;
       &.active {
         opacity: 1;
-        background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
-        border-color: #FFBF00;
+        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        border-color: #ffbf00;
       }
     }
     .btn-name {
@@ -630,8 +811,8 @@ export default {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
         background-size: 100% 100%;
       }
@@ -645,33 +826,47 @@ export default {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         background-image: url(../../lib/base/sweeping_robot/assets/huichong1@2x.png);
         background-size: 100% 100%;
       }
     }
-    .btn-clean{
+    .btn-clean {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         background-image: url(../../lib/base/sweeping_robot/assets/qingsao2@2x.png);
         background-size: 100% 100%;
       }
     }
-    .btn-plan{
+    .btn-plan {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/sweeping_robot/assets/huihua@2x.png);
+        width: 48px;
+        height: 48px;
+        background-image: url(../../lib/base/sweeping_robot/assets/guihua0.png);
         background-size: 100% 100%;
       }
+       &.btn-low::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/guihua@2x.png);
+        }
+        &.btn-middle::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/danjian3.png);
+        }
+        &.btn-high::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/yanbian3.png);
+        }
+        &.btn-very_high::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/dingwei3.png);
+        }
+        &.btn-super_high::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/tuodi3.png);
+        }
     }
-
   }
 
   .circleProgress_wrapper {
@@ -717,6 +912,9 @@ export default {
         left: 0;
         animation: circleLeft 5s linear infinite;
       }
+      &::before {
+        background-image: url('../../lib/base/sweeping_robot/assets/chongdianzhong.png');
+      }
     }
     @keyframes circleRight {
       0% {
@@ -741,7 +939,8 @@ export default {
     }
   }
 
-  &.close,   &.offline {
+  &.close,
+  &.offline {
     &:before {
       content: "";
       position: fixed;
@@ -755,15 +954,15 @@ export default {
     }
     .btn-wrap {
       &.up-index {
-        .btn-swich{
+        .btn-swich {
           background: transparent;
           border: 1px solid #fff;
 
           &::before {
             content: "";
             display: block;
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
             background-size: 100% 100%;
           }
@@ -776,17 +975,17 @@ export default {
       }
     }
   }
-  &.offline{
+  &.offline {
     .btn-wrap {
-      .btn-swich{
+      .btn-swich {
         background: transparent;
         border: 1px solid #000;
 
         &::before {
           content: "";
           display: block;
-          width: 44px;
-          height: 44px;
+          width: 48px;
+          height: 48px;
           background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
           background-size: 100% 100%;
         }
@@ -798,7 +997,6 @@ export default {
       }
     }
   }
-
 }
 
 .btns-panel {
@@ -816,10 +1014,9 @@ export default {
   }
   .items {
     position: fixed;
-    left: 510px;
-    top: 950px;
+    left: 562px;
+    top: 1366px;
     z-index: 999999;
-
     width: 750px;
     min-height: 160px;
     .btn {
@@ -829,24 +1026,24 @@ export default {
       left: 0;
     }
     .item1 {
-      top: -122px;
-      left: 88px;
+      top: -720px;
+      left: 0;
     }
     .item2 {
-      top: -122px;
-      left: -76px;
+      top: -576px;
+      left: 0;
     }
     .item3 {
-      top: 20px;
-      left: -150px;
+      top: -432px;
+      left: 0;
     }
     .item4 {
-      top: 155px;
-      left: -94px;
+      top: -288px;
+      left: 0;
     }
     .item5 {
-      top: 150px;
-      left: 50px;
+      top: -144px;
+      left: 0;
     }
   }
   &.more {
@@ -854,7 +1051,7 @@ export default {
       left: 384px;
     }
   }
-  .btns{
+  .btns {
     justify-content: flex-start;
     transition: all 0.3s ease-in-out;
     margin-top: 57px;
@@ -876,14 +1073,30 @@ export default {
       &.active {
         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
         border-color: #ffbf00;
+
+        &.btn-low::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/guihua@2x.png);
+        }
+        &.btn-middle::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/danjian3.png);
+        }
+        &.btn-high::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/yanbian3.png);
+        }
+        &.btn-very_high::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/dingwei3.png);
+        }
+        &.btn-super_high::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/tuodi3.png);
+        }
       }
     }
     .btn-swich {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
         background-size: 100% 100%;
       }
@@ -893,19 +1106,33 @@ export default {
         }
       }
     }
-
+    .btn-plan {
+      &::before {
+        content: "";
+        display: block;
+        width: 48px;
+        height: 48px;
+        background-image: url(../../lib/base/sweeping_robot/assets/guihua@2x.png);
+        background-size: 100% 100%;
+      }
+    }
     .btn-low {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1-white.png);
+        width: 48px;
+        height: 48px;
+        background-image: url(../../lib/base/sweeping_robot/assets/guihua.png);
         background-size: 100% 100%;
       }
-      &.active {
+
+      &.btn-current {
+        border-color: #ffc600;
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
+          background-image: url(../../lib/base/sweeping_robot/assets/gh-yellow.png);
+        }
+        .name {
+          color: #ffc600;
         }
       }
     }
@@ -913,29 +1140,49 @@ export default {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2-white.png);
+        width: 48px;
+        height: 48px;
+        background-image: url(../../lib/base/sweeping_robot/assets/danjian.png);
         background-size: 100% 100%;
+      }
+        &.btn-current {
+        border-color: #ffc600;
+        &::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/danjian2.png);
+        }
+        .name {
+          color: #ffc600;
+        }
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
+          background-image: url(../../lib/base/sweeping_robot/assets/danjian2.png);
         }
       }
+
+
     }
     .btn-high {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3-white.png);
+        width: 48px;
+        height: 48px;
+        background-image: url(../../lib/base/sweeping_robot/assets/yanbian.png);
         background-size: 100% 100%;
+      }
+         &.btn-current {
+        border-color: #ffc600;
+        &::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/yanbian2.png);
+        }
+        .name {
+          color: #ffc600;
+        }
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
+          background-image: url(../../lib/base/sweeping_robot/assets/yanbian2.png);
         }
       }
     }
@@ -943,14 +1190,23 @@ export default {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4-white.png);
+        width: 48px;
+        height: 48px;
+        background-image: url(../../lib/base/sweeping_robot/assets/dingdian.png);
         background-size: 100% 100%;
+      }
+         &.btn-current {
+        border-color: #ffc600;
+        &::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/dingdian2.png);
+        }
+        .name {
+          color: #ffc600;
+        }
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4.png);
+          background-image: url(../../lib/base/sweeping_robot/assets/dingdian2.png);
         }
       }
     }
@@ -958,14 +1214,23 @@ export default {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5-white.png);
+        width: 48px;
+        height: 48px;
+        background-image: url(../../lib/base/sweeping_robot/assets/tuodi.png);
         background-size: 100% 100%;
+      }
+         &.btn-current {
+        border-color: #ffc600;
+        &::before {
+          background-image: url(../../lib/base/sweeping_robot/assets/tuodi2.png);
+        }
+        .name {
+          color: #ffc600;
+        }
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5.png);
+          background-image: url(../../lib/base/sweeping_robot/assets/tuodi2.png);
         }
       }
     }
@@ -978,7 +1243,7 @@ export default {
 .pm2 {
   padding: 56px 48px;
   font-size: 28px;
-  color: #35353D;
+  color: #35353d;
   text-align: justify;
   .sub-title {
     padding: 48px 0;
@@ -997,19 +1262,19 @@ export default {
       text-align: center;
       margin: 0 1px;
       &.item1 {
-        background: #03FD05;
+        background: #03fd05;
       }
       &.item2 {
-        background: #FFF100;
+        background: #fff100;
       }
       &.item3 {
-        background: #F99F03;
+        background: #f99f03;
       }
       &.item4 {
-        background: #FE0408;
+        background: #fe0408;
       }
       &.item5 {
-        background: #7E0023;
+        background: #7e0023;
       }
     }
   }
@@ -1020,12 +1285,12 @@ export default {
 
     border-radius: 4px;
 
-    border-bottom: 1px solid #35353D;
+    border-bottom: 1px solid #35353d;
 
     display: flex;
     justify-content: space-between;
     li {
-      background: #35353D;
+      background: #35353d;
       width: 1px;
       height: 12px;
     }
