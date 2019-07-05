@@ -597,6 +597,8 @@ export default {
   // props: ['channelId','vid'],
   data() {
     return {
+      isShowBar: this.$route.query.showBar == 1,
+
       //是否显示
       // visible: false,
       cur: {
@@ -777,7 +779,7 @@ export default {
       this.isShowAll = false
     },
     goBack(){
-      if(window.history.length > 1){
+      if(this.isShowBar || window.history.length > 1){
         console.log('go -1')
         window.history.go(-1)
       } else {

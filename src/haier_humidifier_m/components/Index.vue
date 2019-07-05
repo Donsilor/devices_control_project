@@ -1,73 +1,103 @@
 <template>
-  <div :class="[{ 'offline': isOffline }, { 'close': isClose }, 'page']">
-    <div class="bg">
-      <topbar
-        :transparent="true"
-        bak-color="#000"
-        title="卧室的加湿器" />
-      <!-- 离线提示 -->
-      <!-- <div 
-        v-show="isOffline"
-        class="offline">
-        <i class="attention" />
-        设备已离线，查看帮助
-      </div> -->
+  <div>
+    <div :class="[{ 'offline': isOffline }, { 'close': isClose },{'filter': showModeBtns }, 'page']">
+      <div class="bg">
+        <topbar
+          :transparent="true"
+          bak-color="#000"
+          title="卧室的加湿器" />
+        <!-- 离线提示 -->
+        <!-- <div 
+          v-show="isOffline"
+          class="offline">
+          <i class="attention" />
+          设备已离线，查看帮助
+        </div> -->
 
-      <div class="main">
-        <div class="wrap-num">
-          <div class="num-item">
-            <div class="num">46.4<sup>%</sup></div>
-            <div>室外湿度</div>
+        <div class="main">
+          <div class="wrap-num">
+            <div class="num-item">
+              <div class="num">46.4<sup>%</sup></div>
+              <div>室外湿度</div>
+            </div>
+            <div class="num-item">
+              <i class="icon" />
+              <div class="num">26<sup>℃</sup></div>
+              <div>室内温度</div>
+            </div>
           </div>
-          <div class="num-item">
-            <i class="icon" />
-            <div class="num">26<sup>℃</sup></div>
-            <div>室内温度</div>
+
+          <div class="content center">
+            <div class="status">
+              <i :class="[rankClass, 'status-img']" />
+              <div class="num">{{ attr.current_humidity }}<sup>%</sup></div>
+              <div>室内湿度，{{ rankTxt }}</div>
+            </div>
+            <div class="list">
+              <ul>
+                <li 
+                  v-for="i in 19"
+                  :class="['circle' + i, i === rank ? 'active' : '']"
+                  :key="i"/>
+              </ul>
+            </div>
           </div>
         </div>
-
-        <div class="content center">
-          <div class="status">
-            <i class="status-img hot" />
-            <div class="num">20<sup>%</sup></div>
-            <div>室内湿度，干燥</div>
-          </div>
-          <div class="list">
-            <ul>
-              <li 
-                v-for="i in 19"
-                :class="['circle' + i, i === 4 ? 'active' : '']"
-                :key="i"/>
-            </ul>
-          </div>
+      </div>
+      <div class="panel-btn">
+        <div 
+          class="btn-wrap btns swich"
+          @click="setSwitch" >
+          <div class="btn btn-swich center"/>
+          <div class="btn-name">开关</div>
         </div>
-      </div>
-    </div>
-    <div class="panel-btn">
-      <div 
-        class="btn-wrap btns swich"
-        @click="setSwitch" >
-        <div class="btn btn-swich center active"/>
-        <div class="btn-name">开关</div>
-      </div>
 
-      <div class="btn-wrap btns">
-        <div class="btn btn-high center"/>
-        <div class="btn-name">档位3</div>
-      </div>
+        <div 
+          class="btn-wrap btns" 
+          @click="handeModeClick">
+          <div :class="[btnClass,'btn center']"/>
+          <div class="btn-name">档位</div>
+        </div>
 
-      <div 
-        class="btn-wrap btns" 
-        @click="showTime">
-        <div class="btn btn-time center"/>
-        <div class="btn-name">2′25″后关机</div>
+        <!-- <div 
+          class="btn-wrap btns" 
+          @click="showTime">
+          <div class="btn btn-time center"/>
+          <div class="btn-name">2′25″后关机</div>
+        </div> -->
       </div>
+      <model-time 
+        ref="time" 
+        @selectedTime="setReserve" />
     </div>
 
-    <model-time 
-      ref="time" 
-      @selectedTime="setReserve" />
-    
+    <!-- 模式选择弹框 -->
+    <div
+      v-show="showModeBtns"
+      class="btns-panel center"
+      @touchmove.prevent
+      @click="hide">
+      <div class="items btns">
+        <div
+          :class="[{ 'item1': animation }, 'btn btn-low center']"
+          @click.stop="setSpeed('1')">
+          <div class="name">低挡</div>
+        </div>
+        <div
+          :class="[{ 'item2': animation }, 'btn btn-middle center']"
+          @click.stop="setSpeed('2')">
+          <div class="name">中档</div>
+        </div>
+        <div
+          :class="[{ 'item3': animation }, 'btn btn-high center']"
+          @click.stop="setSpeed('3')">
+          <div class="name">高档</div>
+        </div>
+        <div
+          :class="[ { 'item6': animation }, btnClass,'btn center active']"
+          @click.stop />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -80,21 +110,77 @@ export default {
   },
   data() {
     return {
-      deviceInfo: {
-        attribute: {}
+      showModeBtns: false,
+      animation: false,
+
+      attr: {
+        switchStatus: "on",
+        constant_humidity: "on",
+        status_fog: "2",
+        current_humidity: "60",
+        heat_switch: "on",
+        target_humidity: "90",
+        water_status: "on",
+        uv: "on",
+        light_switch: "on",
+        error_code: "normal",
+        alarm_cancel: "on",
+        no_atomizing_head: "on",
+        cover_not_closed: "on",
+        connectivity: 'online'
       },
-      rank: 4,
       tdsModalVisible: false
     }
   },
   computed: {
     isClose() {
-      let status = this.deviceInfo.attribute.switchStatus === 'on' ? false : true
+      let status = this.attr.switchStatus === 'on' ? false : true
       return status
     },
     isOffline() {
-      let status = this.deviceInfo.attribute.connectivity === 'online' ? false : true
+      let status = this.attr.connectivity === 'online' ? false : true
       return status
+    },
+    rank(){
+      return Math.round(this.attr.current_humidity/10) * 2
+    },
+    rankTxt() {
+      if(this.attr.current_humidity < 40 ) {
+        return '干燥'
+      } else if(this.attr.current_humidity < 70 ) {
+        return '舒适'
+      } else {
+        return '潮湿'
+      }
+    },
+    rankClass() {
+      if(this.attr.current_humidity < 40 ) {
+        return 'hot'
+      } else if(this.attr.current_humidity < 70 ) {
+        return 'comfortable'
+      } else {
+        return 'wet'
+      }
+    },
+    btnClass() {
+      /* eslint-disable no-unreachable */
+      switch (this.attr.status_fog) {
+        case '1':
+          return 'btn-low'
+          break
+        case '2':
+          return 'btn-middle'
+          break
+        case '3':
+          return 'btn-high'
+          break
+        case '4':
+          return 'btn-very_high'
+          break
+        case '5':
+          return 'btn-super_high'
+          break
+      }
     },
   },
   watch: {
@@ -126,7 +212,7 @@ export default {
       )
     },
     onSuccess(data) {
-      this.deviceInfo = data
+      this.attr = data.attribute
     },
     controlDevice(attr, val, success) {
       HdSmart.Device.control(
@@ -150,7 +236,7 @@ export default {
     },
     setSwitch() {
       let switchStatus = ''
-      if (this.deviceInfo.attribute.switchStatus == 'on') {
+      if (this.attr.switchStatus == 'on') {
         switchStatus = 'off'
       } else {
         switchStatus = 'on'
@@ -161,6 +247,24 @@ export default {
       let dealTime = parseInt(time.split(':')[0])
       console.log(dealTime)
     },
+    setSpeed(val) {
+      this.controlDevice("status_fog", val, () => {
+        this.hide()
+        this.attr.status_fog = val
+      })
+    },
+    hide() {
+      this.showModeBtns = false
+      this.animation = false
+    },
+    handeModeClick() {
+      this.showModeBtns = true
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.animation = true
+        }, 0)
+      })
+    }
   }
 }
 </script>
@@ -170,6 +274,9 @@ export default {
   background: #fff;
   color: #20282B;
   text-align: center;
+  &.filter {
+    filter: blur(12px);
+  }
   .offline {
     box-sizing: border-box;
     background: rgba(0, 0, 0, 0.3);
@@ -219,7 +326,7 @@ export default {
       justify-content: center;
       border-bottom: 1px solid #737373;
       .num-item{
-        padding: 86px 86px 37px 86px;
+        padding: 30px 86px;
         .num{
           position: relative;
           font-size: 80px;
@@ -418,9 +525,8 @@ export default {
   }
 
   .panel-btn{
-    height: 306px;
     background: #fff;
-    box-shadow: 0 -6px 56px 0 rgba(17,17,17,0.10);
+    box-shadow: 0 -30px 56px 0 rgba(17,17,17,0.10);
     border-radius: 42px 42px 0px 0px;
     display: flex;
     justify-content: center;
@@ -430,7 +536,7 @@ export default {
   .btns {
     
     margin: 0 36px;
-    padding-top: 50px;
+    padding-top: 40px;
     .btn {
       box-sizing: border-box;
       margin: 0 auto;
@@ -481,13 +587,13 @@ export default {
         background-size: 100% 100%;
       }
     }
-    .btn-mid{
+    .btn-middle{
       &::before {
         content: "";
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../../lib/base/haier_humidifier/assets/mid.png);
+        background-image: url(../../../lib/base/haier_humidifier/assets/speed2.png);
         background-size: 100% 100%;
       }
     }
@@ -497,7 +603,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../../lib/base/haier_humidifier/assets/low.png);
+        background-image: url(../../../lib/base/haier_humidifier/assets/speed1.png);
         background-size: 100% 100%;
       }
     }
@@ -524,6 +630,9 @@ export default {
       .btn-swich {
         position: relative;
         z-index: 10;
+        border: 1px solid #fff;
+        background-image: none;
+
         &::before {
           content: "";
           display: block;
@@ -533,8 +642,6 @@ export default {
           background-size: 100% 100%;
         }
         &.active {
-          border: 1px solid #fff;
-          background-image: none;
           &::before {
             background-image: url(../../../lib/base/air_condition/assets/new-air/swich-white.png);
           }
@@ -548,8 +655,189 @@ export default {
       &.swich{
         z-index: 9;
       }
+      .btn-swich{
+        border: 1px solid #20282B;
+        &::before {
+          content: "";
+          display: block;
+          width: 44px;
+          height: 44px;
+          background-image: url(../../../lib/base/haier_humidifier/assets/swich-black.png);
+          background-size: 100% 100%;
+        }
+      }
     }
   }
 }
 
+.btns-panel {
+  &:before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 99999;
+    width: 100%;
+
+    background: rgba(0, 0, 0, 0.8);
+  }
+  .items {
+    position: fixed;
+    left: 410px;
+    top: 999px;
+    z-index: 999999;
+
+    width: 750px;
+    min-height: 160px;
+    .btn {
+      transition: all 0.3s ease-in-out;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .item1 {
+      top: -122px;
+      left: 88px;
+    }
+    .item2 {
+      top: -122px;
+      left: -76px;
+    }
+    .item3 {
+      top: 20px;
+      left: -150px;
+    }
+    .item4 {
+      top: 155px;
+      left: -94px;
+    }
+    .item5 {
+      top: 150px;
+      left: 50px;
+    }
+  }
+  &.more {
+    .items {
+      left: 384px;
+    }
+  }
+  .btns{
+    justify-content: flex-start;
+    transition: all 0.3s ease-in-out;
+    margin-top: 57px;
+    .btn {
+      margin-right: 40px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        margin-top: 8px;
+        font-size: 20px;
+        color: #fff;
+      }
+      &.active {
+        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        border-color: #ffbf00;
+      }
+    }
+    .btn-swich {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../../lib/base/air_cleaner/assets/new-air/swich-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+        }
+      }
+    }
+
+    .btn-low {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../../lib/base/air_cleaner/assets/new-air/speed1-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../../lib/base/air_cleaner/assets/new-air/speed1.png);
+        }
+      }
+    }
+    .btn-middle {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../../lib/base/air_cleaner/assets/new-air/speed2-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../../lib/base/air_cleaner/assets/new-air/speed2.png);
+        }
+      }
+    }
+    .btn-high {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../../lib/base/air_cleaner/assets/new-air/speed3-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../../lib/base/air_cleaner/assets/new-air/speed3.png);
+        }
+      }
+    }
+    .btn-very_high {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../../lib/base/air_cleaner/assets/new-air/speed4-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../../lib/base/air_cleaner/assets/new-air/speed4.png);
+        }
+      }
+    }
+    .btn-super_high {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../../lib/base/air_cleaner/assets/new-air/speed5-white.png);
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url(../../../lib/base/air_cleaner/assets/new-air/speed5.png);
+        }
+      }
+    }
+  }
+}
 </style>

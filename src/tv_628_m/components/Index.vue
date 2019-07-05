@@ -1,7 +1,15 @@
 <!-- 首页 -->
 <template>
   <div class="page-index">
-    <status-tip />
+
+    <topbar
+      v-if="isShowBar"
+      :title="$store.state.device_name"
+      :more="true"
+      :search="false"
+      :back="back" />
+
+    <status-tip :bar-height="barHeight" />
     <div class="swiper mar">
       <div 
         v-if="homePageInfo.length === 0"
@@ -491,6 +499,8 @@ export default {
   data() {
     const self = this
     return {
+      isShowBar: this.$route.query.showBar == 1,
+
       channelId: '',
       vid: '',
       swiperOption: {
@@ -537,6 +547,9 @@ export default {
   computed: {
     detailVisible() {
       return this.$store.state.detailVisible
+    },
+    barHeight() {
+      return this.isShowBar ? 0 : 44
     }
   },
   watch: {
@@ -570,6 +583,9 @@ export default {
     })
   },
   methods: {
+    back() {
+      HdSmart.UI.popWindow()
+    },
     touchMove(e) {
       // e.preventDefault()
     },
@@ -606,9 +622,14 @@ export default {
     },
     showDetailInfo(item) {
       this.$store.dispatch('showDetail', item)
-      HdSmart.UI.pushWindow({
-        url: `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
-      })
+
+      if(this.isShowBar){
+        window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
+      } else {
+        HdSmart.UI.pushWindow({
+          url: `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
+        })
+      }
       // this.$router.push({ name: 'detail', query: { channelId: item.channelId, channel: item.channel } })
       // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
     },
@@ -658,9 +679,14 @@ export default {
     },
 
     toPage(item) {
-      HdSmart.UI.pushWindow({
-        url: `index.html#/list?channelId=${item.channelId}&channel=${item.channel}`
-      })
+      let name = encodeURIComponent(item.channel)
+      if(this.isShowBar){
+        window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
+      } else {
+        HdSmart.UI.pushWindow({
+          url: `index.html#/list?channelId=${item.channelId}&channel=${name}`
+        })
+      }
       // window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${item.channel}`
       // this.$router.push({ name: 'list', query: { channelId: item.channelId, channel: item.channel } })
     }
