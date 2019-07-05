@@ -57,9 +57,9 @@ export function set(data){
     // if(attr.negative_ion_switch){
     //     attr.negative_ion_switch_status = attr.negative_ion_switch
     // }
-    // if(attr.switch){
-    //     attr.switch_status = attr.switch
-    // }
+    if(attr.switch){
+      attr.switch_status = attr.switch
+    }
     res = Object.assign({}, res, attr)
     return Mock.mock({
         code: 0

@@ -11,48 +11,40 @@
           v-show="isShowMsg"
           class="err-tips">{{ msg }}</div>
       </transition>
+      
       <div class="wrap-robot">
-        <div class="garbage">
-          <img 
-            src="../../lib/base/sweeping_robot/assets/huicheng1@2x.png" 
-            class="pic">
-          <img 
-            src="../../lib/base/sweeping_robot/assets/huicheng2@2x.png" 
-            class="pic">
-          <img 
-            src="../../lib/base/sweeping_robot/assets/huicheng3@2x.png" 
-            class="pic"></div>
         <img 
           class="robot"
           src="../../lib/base/sweeping_robot/assets/saodirobot@2x.png">
         <div 
-          v-show="model.status == 'charging'" 
+          v-show="model.status == 'charging'"
           class="robot-charging">
-          <div  
-            class="line"/>
           <div 
-            v-for="item in batteryList"
-            ref="battery" 
-            class="battery"/>
+            v-for="i in 5" 
+            :key="i" 
+            :class="[{'item-charging': chargRank < i }, 'none-charging']"/>
+          <div class="line" />
         </div>
       </div>
 
-      <!-- <div class="point">
-        <span class="sport sport1" />
-        <span class="sport sport2" />
-        <span class="sport sport3" />
-        <span class="sport sport4" />
-        <span class="sport sport5" />
-        <span class="sport sport6" />
-        <span class="sport sport7" />
-        <span class="sport sport8" />
-        <span class="sport sport9" />
-        <span class="sport sport10" />
-        <span class="sport sport11" />
-        <span class="sport sport12" />
-        <span class="sport sport13" />
-        <span class="sport sport1" />
-      </div> -->
+      <div 
+        v-show="model.status == 'working'" 
+        class="huicheng run">
+        <i class="img1 sport1" />
+        <i class="img2 sport2" />
+        <i class="img3 sport3" />
+        <i class="img2 sport4" />
+        <i class="img4 sport5" />
+        <i class="img2 sport6" />
+        <i class="img2 sport7" />
+        <i class="img3 sport8" />
+        <i class="img2 sport9" />
+        <i class="img2 sport10" />
+        <i class="img3 sport11" />
+        <i class="img4 sport12" />
+        <i class="img2 sport13" />
+        <i class="img1 sport14" />
+      </div>
 
       <div 
         v-show="model.status == 'charging'"
@@ -68,7 +60,7 @@
       </div>
 
       <div 
-        v-show="model.status != 'charging'" 
+        v-show="model.status != 'charging'"
         class="wrap-filter detail">
         <!-- <div class="filter">
           <div class="filter-item">{{ model.filter_time_remaining }}<sup>%</sup></div>
@@ -96,7 +88,8 @@
             @click="setSwitch" />
           <div class="btn-name">开关</div>
         </div>
-        <div class="btn-wrap btns">
+
+        <div :class="[{'disable': model.status == 'working'}, 'btn-wrap btns']">
           <div 
             :class="[model.status == 'charging' ? 'charging' : '', 'btn btn-charging center circleProgress_wrapper']"
             @click="setCharging()">
@@ -110,14 +103,14 @@
           <div class="btn-name">回充</div>
         </div>
 
-        <div class="btn-wrap">
+        <div :class="[{'disable': model.status == 'charging'}, 'btn-wrap']">
           <div 
-            :class="[{'active': model.speed == 'sleep' },'btn btn-clean center']"
-            @click="setSleep()" />
+            :class="[model.status == 'working' ? 'btn-stop' : 'btn-clean', 'btn center']"
+            @click="setCommand" />
           <div class="btn-name">清扫</div>
         </div>
 
-        <div class="btn-wrap">
+        <div :class="[{'disable': model.status == 'charging'}, {'disable': model.status == 'working'}, 'btn-wrap']">
           <div 
             :class="[btnClass, 'btn center btn-plan']"
             @click="handeModeClick" />
@@ -136,28 +129,28 @@
       @click="hide">
       <div class="items btns">
         <div 
-          :class="[{ 'item1': animation }, {' btn-current': model.speed === 'low' }, {'btn-loading': btnLoading.low },'btn btn-low center']"
-          @click.stop="setSpeed('low')">
+          :class="[{ 'item1': animation }, {' btn-current': model.mode === 'plan_clean' }, {'btn-loading': btnLoading.low },'btn btn-low center']"
+          @click.stop="setMode('plan_clean')">
           <div class="name">规划</div>
         </div>
         <div 
-          :class="[{ 'item2': animation }, {' btn-current': model.speed === 'middle' }, {' btn-loading': btnLoading.middle },'btn btn-middle center']"
-          @click.stop="setSpeed('middle')">
+          :class="[{ 'item2': animation }, {' btn-current': model.mode === 'single_plan' }, {' btn-loading': btnLoading.middle },'btn btn-middle center']"
+          @click.stop="setMode('single_plan')">
           <div class="name">单间</div>
         </div>
         <div 
-          :class="[{ 'item3': animation }, {' btn-current': model.speed === 'high' }, {' btn-loading': btnLoading.high },'btn btn-high center']"
-          @click.stop="setSpeed('high')">
+          :class="[{ 'item3': animation }, {' btn-current': model.mode === 'edge_clean' }, {' btn-loading': btnLoading.high },'btn btn-high center']"
+          @click.stop="setMode('edge_clean')">
           <div class="name">沿边</div>
         </div>
         <div 
-          :class="[{ 'item4': animation }, {' btn-current': model.speed === 'very_high' }, {' btn-loading': btnLoading.very_high },'btn btn-very_high center']"
-          @click.stop="setSpeed('very_high')">
+          :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' }, {' btn-loading': btnLoading.very_high },'btn btn-very_high center']"
+          @click.stop="setMode('design_clean')">
           <div class="name">定位</div>
         </div>
         <div 
-          :class="[{ 'item5': animation }, {'btn-current': model.speed === 'super_high' }, {' btn-loading': btnLoading.super_high },'btn btn-super_high center']"
-          @click.stop="setSpeed('super_high')">
+          :class="[{ 'item5': animation }, {'btn-current': model.mode === 'mop' }, {' btn-loading': btnLoading.super_high },'btn btn-super_high center']"
+          @click.stop="setMode('mop')">
           <div class="name">拖地</div>
         </div>
         <div 
@@ -165,46 +158,6 @@
           @click.stop />
       </div>
     </div>
-
-    <!-- PM2.5简介 -->
-    <sub-page 
-      v-model="showSubPage"
-      title="PM2.5简介"
-      class="modal-w">
-      <div class="pm2">
-        <p>
-          PM2.5指环境空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
-        </p>
-        <p class="sub-title">
-          PM2.5数值范围说明
-        </p>
-        <div class="items">
-          <div class="item item1">优</div>
-          <div class="item item2">良</div>
-          <div class="item item3">轻度</div>
-          <div class="item item3">中度</div>
-          <div class="item item4">重度</div>
-          <div class="item item5">严重</div>
-        </div>
-        <ul class="ruler">
-          <li />
-          <li />
-          <li />
-          <li />
-          <li />
-          <li />
-        </ul>
-        <ul class="name">
-          <li>0</li>
-          <li>35</li>
-          <li>75</li>
-          <li>115</li>
-          <li>150</li>
-          <li>250+</li>
-          <li />
-        </ul>
-      </div>
-    </sub-page>
   </div>
 </template>
 
@@ -238,8 +191,9 @@ export default {
   },
   data() {
     return {
-      interId: 0,
-      batteryList:[],
+      chargRank: 5,
+      chargTimes: {},
+
       isShowMsg: false,
       msg: '',
       device_name: "",
@@ -301,40 +255,26 @@ export default {
     },
     btnClass() {
       /* eslint-disable no-unreachable */
-      switch (this.model.speed) {
-        case 'low':
+      // idle/plan_clean/edge_clean/design_clean/mop/recharge/manual_control/single_plan
+      // 空闲模式/规划清扫/沿边清扫/定点清扫/拖地模式/回充模式/手动控制/单间规划
+      switch (this.model.mode) {
+        case 'plan_clean':
           return 'btn-low'
           break
-        case 'middle':
+        case 'single_plan':
           return 'btn-middle'
           break
-        case 'high':
+        case 'edge_clean':
           return 'btn-high'
           break
-        case 'very_high':
+        case 'design_clean':
           return 'btn-very_high'
           break
-        case 'super_high':
+        case 'mop':
           return 'btn-super_high'
           break
-        case 'sleep':
-          return 'btn-low'
-          break
-      }
-    },
-    current() {
-      return 4
-      let pm2 = this.model.air_filter_result.PM25[0]
-      if (pm2 < 35) {
-        return 0
-      } else if (pm2 < 75) {
-        return 1
-      } else if (pm2 < 115) {
-        return 2
-      } else if (pm2 >= 150) {
-        return 3
-      } else if (pm2 >= 250) {
-        return 4
+        default:
+          return 'btn-others'
       }
     },
     btnTxt() {
@@ -387,39 +327,37 @@ export default {
       this.onSuccess(data.result)
     })
   },
-  // destroyed() {
-  //   clearInterval(this.interId)
-  // },
-  // mounted(){
-  //    //获取图片所在的div对象  
-  //   var pic = document.getElementsByClassName('pic')  
-                   
-  //   for (var i=0;i<pic.length;i++) {
-  //         var w=document.body.clientWidth//窗口的大小                 
-  //       //产生随机坐标  
-  //   var x = Math.random()*w  
-       
-  //   var y = Math.random()*242  
-       
-  //   //图片的定位  
-  //   pic[i].style.left=x+"px"  
-       
-  //   pic[i].style.top=y+"px"  
-  //   }
-    
-    
-  // },
   methods: {
     setSpeed(speed) {
       // if (this.checkCmd('mode', mode)) return this.showModeBtns = false
       // this.showModeBtns = false
-      this.controlDevice('speed', speed, speed,
+      this.controlDevice('speed', speed, {},
         () => {
           if (this.showModeBtns) this.showModeBtns = false
           this.showMsg(tips['speed' + speed])
         }, () => { }, speed)
     },
-      showBtnLoading(attr) {
+    setMode(mode) {
+      console.log(mode)
+      this.controlDevice('mode', mode, {},
+       () => {
+          if(this.showModeBtns) this.showModeBtns = false
+       }, () => {})
+    },
+    setCommand() {
+      // 清扫 暂时
+      let cmd = ''
+      if (this.model.command == 'stop') {
+        cmd = 'start'
+      } else {
+        cmd = 'stop'
+      }
+      this.controlDevice('command', cmd, {},
+       () => {
+          this.model.command = cmd
+       }, () => {})
+    },
+    showBtnLoading(attr) {
       this.btnLoading[attr] = true
     },
     hideBtnLoading(attr) {
@@ -435,12 +373,6 @@ export default {
           this.isShowMsg = false
         }, 3000)
       })
-
-    },
-    // 清扫
-    setSleep(){
-      console.log(this.model.status)
-      
     },
     setSwitch() {
       let switchStatus = ''
@@ -474,7 +406,7 @@ export default {
         this.tip = ""
       }, 2000)
     },
-    controlDevice(attr, val, param, success, error,btnAttr) {
+    controlDevice(attr, val, param, success, error, btnAttr) {
       this.showBtnLoading(btnAttr)
       var fn = this.confirm
       var params = Object.assign(
@@ -527,13 +459,7 @@ export default {
     },
     setCharging() {
       this.model.status = "charging"
-      console.log(this.model.status)
-      this.interId = setInterval(() => {
-        if(this.batteryList.push(1) == 5) {
-          this.batteryList = [],
-          (this.interID)
-        }
-      }, 500)
+      this.initCharge()
     },
 
     getSnapShot(cb) {
@@ -550,7 +476,6 @@ export default {
     onSuccess(data) {
       this.status = "success"
       this.model = data.attribute
-
       // 将model 保存在 localStorage
       window.localStorage.setItem('cleaner_model_attr', JSON.stringify(data.attribute))
     },
@@ -569,6 +494,14 @@ export default {
       } else {
         done()
       }
+    },
+    initCharge() {
+      clearInterval(this.chargTimes)
+      this.chargRank =  4
+      this.chargTimes = setInterval(() => {
+        this.chargRank--
+        if(this.chargRank < 0) this.chargRank = 4
+      }, 400)
     }
   },
 }
@@ -599,8 +532,10 @@ export default {
   }
   .wrap-robot {
     text-align: center;
+    padding-top: 130px;
     position: relative;
-    .garbage{
+    z-index: 1;
+    .garbage {
       width: 100%;
       height: 242px;
     }
@@ -611,106 +546,297 @@ export default {
     .robot-charging {
       width: 46px;
       height: 100px;
-      background: #FFF7DB;
-      border: 1px solid #FFF0B2;
-      border-radius: 4px;
       position: absolute;
       left: 50%;
       bottom: 118px;
-      margin-left: -23px;
-      transform: rotate(180deg);
-      .battery {
-        background: #12F894;
+      transform: translate(-50%, 0);
+      display: inline-block;
+      background: #FFF7DB;
+      border: 1px solid #FFF0B2;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      .none-charging{
+        flex: 1;
+        background: #fff;
         border-radius: 2px;
-        width: 34px;
-        height: 14px;
-        margin: 4px auto 0 auto;
+        margin: 1.5px 6px;
+        &.item-charging{
+         background: #12F894;
+        }
       }
-      .line{
+      .line {
         position: absolute;
         width: 4px;
         height: 60px;
-        background: #FFF0B2;
+        background: #fff0b2;
         border-radius: 1px;
         position: absolute;
-        bottom: 94px;
+        bottom: -60px;
         left: 50%;
-        transform: translate(-50%)
+        transform: translate(-50%);
       }
-      
     }
   }
 
-  .point {
-    .sport {
-      display: inline-block;
-      border-radius: 50%;
-      width: 13px;
-      height: 13px;
-      opacity: 0.84;
-      background: #03fd05;
+  .huicheng{
+    i{
+      display: block;
       position: absolute;
     }
+    .img1{
+      width: 26px;
+      height: 26px;
+      background-image: url(../../lib/base/sweeping_robot/assets/img1.png);
+      background-size: 100% 100%;
+    }
+    .img2{
+      width: 20px;
+      height: 20px;
+      background-image: url(../../lib/base/sweeping_robot/assets/img2.png);
+      background-size: 100% 100%;
+    }
+    .img3{
+      width: 26px;
+      height: 26px;
+      background-image: url(../../lib/base/sweeping_robot/assets/img3.png);
+      background-size: 100% 100%;
+    }
+    .img4{
+      width: 6px;
+      height: 6px;
+      background: #FFCE00;
+      border-radius: 50%;
+    }
+
     .sport1 {
-      top: 192px;
-      left: 460px;
+      top: 256px;
+      left: 150px;
     }
     .sport2 {
-      top: 208px;
-      left: 472px;
+      top: 310px;
+      left: 140px;
     }
     .sport3 {
-      top: 230px;
-      left: 384px;
+      top: 290px;
+      left: 210px;
     }
     .sport4 {
-      top: 265px;
-      left: 368px;
+      top: 250px;
+      left: 270px;
     }
     .sport5 {
-      top: 376px;
-      left: 70px;
-    }
-    .sport6 {
-      top: 374px;
-      left: 276px;
-    }
-    .sport7 {
-      top: 390px;
-      left: 616px;
-    }
-    .sport8 {
-      top: 400px;
-      left: 238px;
-    }
-    .sport9 {
-      top: 482px;
-      left: 670px;
-    }
-    .sport10 {
-      top: 468px;
-      left: 646px;
-    }
-    .sport11 {
-      top: 708px;
-      left: 142px;
-    }
-    .sport12 {
-      top: 690px;
-      left: 502px;
-    }
-    .sport13 {
-      top: 774px;
+      top: 280px;
       left: 300px;
     }
+    .sport6 {
+      top: 232px;
+      left: 375px;
+    }
+    .sport7 {
+      top: 284px;
+      left: 365px;
+    }
+    .sport8 {
+      top: 274px;
+      left: 410px;
+    }
+    .sport9 {
+      top: 222px;
+      left: 470px;
+    }
+
+    .sport10 {
+      top: 290px;
+      left: 500px;
+    }
+    .sport11 {
+      top: 242px;
+      left: 534px;
+    }
+    .sport12 {
+      top: 320px;
+      left: 552px;
+    }
+    .sport13 {
+      top: 260px;
+      left: 604px;
+    }
+    .sport14 {
+      top: 310px;
+      left: 614px;
+    }
+
+    @keyframes animX1{
+      0% {left: 150px;}
+      100% {left: 160px;}
+    }
+    @keyframes animX2{
+      0% { left: 140px;}
+      100% { left: 160px;}
+    }
+    @keyframes animX3{
+      0% {left: 210px;}
+      100% {left: 230px;}
+    }
+    @keyframes animX4{
+      0% {left: 270px;}
+      100% {left: 290px;}
+    }
+    @keyframes animX5{
+      0% {left: 300px;}
+      100% {left:340px;}
+    }
+    @keyframes animX6{
+      0% {left: 375px;}
+      100% {left: 390px;}
+    }
+    @keyframes animX7{
+      0% {left: 365px;}
+      100% {left: 380px;}
+    }
+    @keyframes animX8{
+      0% {left: 410px;}
+      100% {left: 430px;}
+    }
+    @keyframes animX9{
+      0% {left: 470px;}
+      100% {left: 490px;}
+    }
+
+    @keyframes animX10{
+      0% {left: 500px;;}
+      100% {left: 520px;}
+    }
+    @keyframes animX11{
+      0% {left: 534px;}
+      100% {left: 544px;}
+    }
+    @keyframes animX12{
+      0% {left: 552px;}
+      100% {left: 562px;}
+    }
+    @keyframes animX13{
+      0% {left: 604px;}
+      100% {left: 614px;}
+    }
+    @keyframes animX14{
+      0% {left: 614px;}
+      100% {left: 624px;}
+    }
+
+
+    @keyframes animY1{
+      0% {top: 256px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY2{
+      0% {top: 310px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY3{
+      0% {top: 290px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY4{
+      0% {top: 250px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY5{
+      0% {top: 280px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY6{
+      0% {top: 232px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY7{
+      0% {top: 284px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY8{
+      0% {top: 274px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY9{
+      0% {top: 222px;}
+      100% {top: 320px;}
+    }
+
+    @keyframes animY10{
+      0% {top: 280px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY11{
+      0% {top: 232px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY12{
+      0% {top: 284px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY13{
+      0% {top: 274px;}
+      100% {top: 320px;}
+    }
+    @keyframes animY14{
+      0% {top: 310px;}
+      100% {top: 320px;}
+    }
+    &.run{
+      .sport1{
+        animation: animX1 .5s ease-in-out 0s infinite alternate, animY1 4s ease-in-out 0s infinite;
+      }
+      .sport2{
+        animation: animX2 .5s ease-in-out -.5s infinite alternate, animY2 4s ease-in-out -.5s infinite;
+      }
+      .sport3{
+        animation: animX3 .5s ease-in-out -1s infinite alternate, animY3 4s ease-in-out -1s infinite;
+      }
+      .sport4{
+        animation: animX4 .5s ease-in-out -1.5s infinite alternate, animY4 4s ease-in-out -1.5s infinite;
+      }
+      .sport5{
+        animation: animX5 .5s ease-in-out -2s infinite alternate, animY5 4s ease-in-out -2s infinite;
+      }
+      .sport6{
+        animation: animX6 .5s ease-in-out -2.5s infinite alternate, animY6 4s ease-in-out -2.5s infinite;
+      }
+      .sport7{
+        animation: animX7 .5s ease-in-out -3s infinite alternate, animY7 4s ease-in-out -3s infinite;
+      }
+      .sport8{
+        animation: animX8 .5s ease-in-out -3.5s infinite alternate, animY8 4s ease-in-out -3.5s infinite;
+      }
+      .sport9{
+        animation: animX9 .5s ease-in-out -3.7s infinite alternate, animY9 4s ease-in-out -3.7s infinite;
+      }
+
+      .sport10{
+        animation: animX10 .5s ease-in-out -2s infinite alternate, animY10 4s ease-in-out -2s infinite;
+      }
+      .sport11{
+        animation: animX11 .5s ease-in-out -2.5s infinite alternate, animY11 4s ease-in-out -2.5s infinite;
+      }
+      .sport12{
+        animation: animX12 .5s ease-in-out -3s infinite alternate, animY12 4s ease-in-out -3s infinite;
+      }
+      .sport13{
+        animation: animX13 .5s ease-in-out -3.5s infinite alternate, animY13 4s ease-in-out -3.5s infinite;
+      }
+      .sport14{
+        animation: animX14 .5s ease-in-out -3.7s infinite alternate, animY14 4s ease-in-out -3.7s infinite;
+      }
+    }
   }
+
 
   .wrap-filter {
     display: flex;
     justify-content: center;
-    margin: 64px 0 218px 0;
+    margin: 48px 0;
     &.detail {
-      margin: 230px 0 48px 0;
+      margin: 48px 0;
     }
   }
   .filter {
@@ -759,6 +885,9 @@ export default {
 
   .btn-wrap {
     margin: 50px 24px 0;
+    &.disable{
+      opacity: .2;
+    }
     &.up-index {
       position: relative;
       z-index: 9999;
@@ -768,13 +897,13 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid #C2C2C2;
+      border: 1px solid #b9b9b9;
       border-radius: 50%;
+
       display: flex;
       flex-direction: column;
       // opacity: 0.5;
       &.active {
-        border: 1px solid #818181;
         opacity: 1;
         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
         border-color: #ffbf00;
@@ -821,6 +950,16 @@ export default {
         background-size: 100% 100%;
       }
     }
+    .btn-stop {
+      &::before {
+        content: "";
+        display: block;
+        width: 48px;
+        height: 48px;
+        background-image: url(../../lib/base/sweeping_robot/assets/btn-stop.png);
+        background-size: 100% 100%;
+      }
+    }
     .btn-plan {
       &::before {
         content: "";
@@ -830,21 +969,21 @@ export default {
         background-image: url(../../lib/base/sweeping_robot/assets/guihua0.png);
         background-size: 100% 100%;
       }
-       &.btn-low::before {
-          background-image: url(../../lib/base/sweeping_robot/assets/guihua@2x.png);
-        }
-        &.btn-middle::before {
-          background-image: url(../../lib/base/sweeping_robot/assets/danjian3.png);
-        }
-        &.btn-high::before {
-          background-image: url(../../lib/base/sweeping_robot/assets/yanbian3.png);
-        }
-        &.btn-very_high::before {
-          background-image: url(../../lib/base/sweeping_robot/assets/dingwei3.png);
-        }
-        &.btn-super_high::before {
-          background-image: url(../../lib/base/sweeping_robot/assets/tuodi3.png);
-        }
+      &.btn-low::before {
+        background-image: url(../../lib/base/sweeping_robot/assets/guihua@2x.png);
+      }
+      &.btn-middle::before {
+        background-image: url(../../lib/base/sweeping_robot/assets/danjian3.png);
+      }
+      &.btn-high::before {
+        background-image: url(../../lib/base/sweeping_robot/assets/yanbian3.png);
+      }
+      &.btn-very_high::before {
+        background-image: url(../../lib/base/sweeping_robot/assets/dingwei3.png);
+      }
+      &.btn-super_high::before {
+        background-image: url(../../lib/base/sweeping_robot/assets/tuodi3.png);
+      }
     }
   }
 
@@ -892,7 +1031,7 @@ export default {
         animation: circleLeft 5s linear infinite;
       }
       &::before {
-        background-image: url('../../lib/base/sweeping_robot/assets/chongdianzhong.png');
+        background-image: url("../../lib/base/sweeping_robot/assets/chongdianzhong.png");
       }
     }
     @keyframes circleRight {
@@ -993,8 +1132,8 @@ export default {
   }
   .items {
     position: fixed;
-    left: 562px;
-    top: 1366px;
+    left: 592px;
+    top: 1040px;
     z-index: 999999;
     width: 750px;
     min-height: 160px;
@@ -1124,7 +1263,7 @@ export default {
         background-image: url(../../lib/base/sweeping_robot/assets/danjian.png);
         background-size: 100% 100%;
       }
-        &.btn-current {
+      &.btn-current {
         border-color: #ffc600;
         &::before {
           background-image: url(../../lib/base/sweeping_robot/assets/danjian2.png);
@@ -1138,8 +1277,6 @@ export default {
           background-image: url(../../lib/base/sweeping_robot/assets/danjian2.png);
         }
       }
-
-
     }
     .btn-high {
       &::before {
@@ -1150,7 +1287,7 @@ export default {
         background-image: url(../../lib/base/sweeping_robot/assets/yanbian.png);
         background-size: 100% 100%;
       }
-         &.btn-current {
+      &.btn-current {
         border-color: #ffc600;
         &::before {
           background-image: url(../../lib/base/sweeping_robot/assets/yanbian2.png);
@@ -1174,7 +1311,7 @@ export default {
         background-image: url(../../lib/base/sweeping_robot/assets/dingdian.png);
         background-size: 100% 100%;
       }
-         &.btn-current {
+      &.btn-current {
         border-color: #ffc600;
         &::before {
           background-image: url(../../lib/base/sweeping_robot/assets/dingdian2.png);
@@ -1198,7 +1335,7 @@ export default {
         background-image: url(../../lib/base/sweeping_robot/assets/tuodi.png);
         background-size: 100% 100%;
       }
-         &.btn-current {
+      &.btn-current {
         border-color: #ffc600;
         &::before {
           background-image: url(../../lib/base/sweeping_robot/assets/tuodi2.png);
@@ -1213,72 +1350,6 @@ export default {
         }
       }
     }
-  }
-}
-
-.modal-w.subpage {
-  background: #fff;
-}
-.pm2 {
-  padding: 56px 48px;
-  font-size: 28px;
-  color: #35353d;
-  text-align: justify;
-  .sub-title {
-    padding: 48px 0;
-  }
-  .items {
-    display: flex;
-    justify-content: space-between;
-    .item {
-      width: 124px;
-      height: 96px;
-      line-height: 96px;
-      border-radius: 10px;
-
-      font-size: 24px;
-      color: #fff;
-      text-align: center;
-      margin: 0 1px;
-      &.item1 {
-        background: #03fd05;
-      }
-      &.item2 {
-        background: #fff100;
-      }
-      &.item3 {
-        background: #f99f03;
-      }
-      &.item4 {
-        background: #fe0408;
-      }
-      &.item5 {
-        background: #7e0023;
-      }
-    }
-  }
-  .ruler {
-    margin-top: 26px;
-    list-style: none;
-    opacity: 0.3;
-
-    border-radius: 4px;
-
-    border-bottom: 1px solid #35353d;
-
-    display: flex;
-    justify-content: space-between;
-    li {
-      background: #35353d;
-      width: 1px;
-      height: 12px;
-    }
-  }
-  .name {
-    margin-top: 8px;
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
   }
 }
 </style>
