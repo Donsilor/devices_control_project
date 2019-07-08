@@ -66,6 +66,11 @@ export function set(data){
     }
     if(attr.switch){
       attr.switch_status = attr.switch
+      if(attr.switch_status == 'on'){
+        attr.status = 'working'
+      }else{
+        attr.status = 'standby'
+      }
     }
     res = Object.assign({}, res, attr)
     return Mock.mock({
