@@ -15,3 +15,19 @@ export function nameType(type) {
       break;
   } 
 }
+export function channelName(type) {
+  switch(type) {
+    case '001':
+      return '电影'
+      break;
+    case '002':
+      return '电视剧'
+      break;
+    case '003':
+      return '动漫'
+      break;
+    case '004':
+      return '综艺'
+      break;
+  } 
+}

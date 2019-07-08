@@ -118,3 +118,75 @@
     }
 
 }
+
+.swiper {
+  .swiper-container {
+    border-radius: 11.5px;
+  }
+  .swiper-slide {
+    width: 750px;
+    height: 302px;
+    background: url(../../../lib/base/tv/assets/img_default_recommend.png)
+      no-repeat;
+    background-size: 100%;
+  }
+  a {
+    display: block;
+    width: 750px;
+    height: 302px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    overflow: hidden;
+  }
+  img {
+    width: 100%;
+  }
+  .swiper-slide .title {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    color: #fff;
+    font-size: 28px;
+    height: 120px;
+    width: 100%;
+    padding-top: 50px;
+    padding-left: 30px;
+    background-image: linear-gradient(
+      -180deg,
+      rgba(47, 49, 51, 0) 0%,
+      #2f3133 100%
+    );
+  }
+  .channelName{
+    position: absolute;
+    right: 0;
+    top: 24px;
+
+    text-align: center;
+    width: 80px;
+    height: 48px;
+    line-height: 48px;
+    background: #F05645;
+    border-radius: 11.5px 0px 0px 11.5px;
+    font-size: 24px;
+    color: #fff;
+  }
+  .swiper-container-horizontal > .swiper-pagination-bullets {
+    width: auto;
+    left: auto;
+    right: 30px;
+    bottom: 23px;
+  }
+  .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    opacity: 0.5;
+    background: rgba(220, 225, 234, 0.7);
+    border-radius: 5px;
+    transition: width 0.5s;
+  }
+  .swiper-pagination-bullet-active {
+    width: 34px;
+    background: #fdde4b;
+  }
+}

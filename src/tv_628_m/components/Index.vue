@@ -2,7 +2,7 @@
 <template>
   <div class="page-index">
 
-    <topbar
+    <topbar 
       v-if="isShowBar"
       :title="$store.state.device_name"
       :more="true"
@@ -10,7 +10,7 @@
       :back="back" />
 
     <status-tip 
-      v-show="device_uuid" 
+      v-show="device_uuid"
       :bar-height="barHeight" />
 
     <div class="swiper mar">
@@ -30,6 +30,9 @@
             :style="{backgroundImage:'url('+item.pictureUrl+')'}"
             href="javascript:void(0)">
             <span class="title">{{ item.title }}</span>
+            <span 
+              v-if="+item.channelId < 5"
+              class="channelName">{{ item.channelId | channelName }}</span>
           </a>
         </swiper-slide>
         <div 
@@ -45,21 +48,13 @@
           v-for="(item, idx) in channels"
           :class="['item' + idx, 'item']"
           @click.prevent="toPage(item)">{{ item.channel }}</div>
-        
-        <div class="block"/>
-
-        <!-- <div 
-          class="item4 item "
-          @click.prevent="cmd('screenProjectionEvent')">投屏</div> -->
-        <!-- <div 
-          class="item5 item "
-          @click.prevent="cmd('remoteControlEvent')">遥控器</div> -->
+        <div class="block" />
       </div>
     </div>
 
     <div 
       v-for="(it, idx) in allList"
-      :key="idx" 
+      :key="idx"
       class="mar">
       <div class="title">{{ idx | nameType }}</div>
       <!-- 列表 -->
@@ -70,7 +65,7 @@
           :class="['item-'+ item.channelId, 'vitem']"
           @click="showDetailInfo(item)">
 
-          <img
+          <img 
             v-lazy="getThumbPic(item.pictureUrl)"
             :data-src="item.pictureUrl"
             alt="">
@@ -91,41 +86,37 @@
 
     <div class="control">
       <div class="block" />
-      <div class="left">
-        <div
-          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-screen center"
-          @click.prevent="cmd('screenProjectionEvent')" />
-      </div>
-
       <div class="right">
         <div 
           class="icon-switch center"
           @click.prevent="cmd('rcPower')" />
-        <div
-          v-finger:touch-end="volupEnd"
-          v-finger:touch-move="touchMove"
-          v-finger:long-tap="volupStart"
-          class="icon-add center" />
-        <div
+        <div 
           v-finger:touch-end="voldownEnd"
           v-finger:touch-move="touchMove"
           v-finger:long-tap="voldownStart"
           class="icon-sub center" />
         <div 
+          v-finger:touch-end="volupEnd"
+          v-finger:touch-move="touchMove"
+          v-finger:long-tap="volupStart"
+          class="icon-add center" />
+        <div 
           class="icon-bak center"
           @click.prevent="cmd('rcBack')" />
-      </div>
 
-      <div class="left add">
-        <div
+        <div 
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-ykq center"
           @click.prevent="cmd('remoteControlEvent')" />
       </div>
-
       <div class="left add">
-        <div
+        <div 
+          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
+          class="icon-screen center"
+          @click.prevent="cmd('screenProjectionEvent')" />
+      </div>
+      <div class="left add">
+        <div 
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-detail center"
           @click.prevent="goDetail" />
@@ -136,7 +127,7 @@
 </template>
 
 <style lang="less" scoped>
-.center{
+.center {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -150,7 +141,7 @@
     font-weight: bold;
     padding: 48px 0 40px 0;
   }
-  .mar{
+  .mar {
     margin: 0 48px;
   }
 }
@@ -230,68 +221,11 @@
       background: #8bc34a;
     }
   }
-  .block{
+  .block {
     width: 24px;
   }
 }
 
-.swiper {
-  .swiper-container {
-    border-radius: 11.5px;
-  }
-  .swiper-slide {
-    width: 750px;
-    height: 302px;
-    background: url(../../../lib/base/tv/assets/img_default_recommend.png)
-      no-repeat;
-    background-size: 100%;
-  }
-  a {
-    display: block;
-    width: 750px;
-    height: 302px;
-    background-repeat: no-repeat;
-    background-size: 100%;
-    overflow: hidden;
-  }
-  img {
-    width: 100%;
-  }
-  .title {
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    color: #fff;
-    font-size: 32px;
-    height: 120px;
-    width: 100%;
-    padding-top: 50px;
-    padding-left: 30px;
-    background-image: linear-gradient(
-      -180deg,
-      rgba(47, 49, 51, 0) 0%,
-      #2f3133 100%
-    );
-  }
-  .swiper-container-horizontal > .swiper-pagination-bullets {
-    width: auto;
-    left: auto;
-    right: 30px;
-    bottom: 23px;
-  }
-  .swiper-pagination-bullet {
-    width: 10px;
-    height: 10px;
-    opacity: 0.5;
-    background: rgba(220, 225, 234, 0.7);
-    border-radius: 5px;
-    transition: width 0.5s;
-  }
-  .swiper-pagination-bullet-active {
-    width: 34px;
-    background: #fdde4b;
-  }
-}
 .vlist {
   padding-top: 36px;
   display: flex;
@@ -420,21 +354,20 @@
     display: none;
   }
 
-  .left{
+  .left {
     margin: 25px 0;
     flex-shrink: 0;
     width: 136px;
     margin-right: 12px;
     background: #fff;
-    box-shadow: 0 10px 23px 0 rgba(138,138,138,0.63);
+    box-shadow: 0 10px 23px 0 rgba(138, 138, 138, 0.63);
     border-radius: 10px;
 
-
-    &.add{
+    &.add {
       margin-right: 0;
       margin-left: 12px;
     }
-    .icon-screen{
+    .icon-screen {
       height: 136px;
       &::before {
         content: "";
@@ -445,18 +378,8 @@
         background-size: 100% 100%;
       }
     }
-    .icon-ykq{
-      height: 136px;
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../../lib/base/tv/assets/new/ykq.png);
-        background-size: 100% 100%;
-      }
-    }
-    .icon-detail{
+
+    .icon-detail {
       height: 136px;
       &::before {
         content: "";
@@ -468,20 +391,20 @@
       }
     }
   }
-  .right{
+  .right {
     margin: 25px 0;
 
     flex-shrink: 0;
-    width: 500px;
+    width: 654px;
     display: flex;
     justify-content: space-around;
     background: #fff;
-    box-shadow: 0 10px 23px 0 rgba(138,138,138,0.63);
+    box-shadow: 0 10px 23px 0 rgba(138, 138, 138, 0.63);
     border-radius: 10px;
-    div{
+    div {
       flex: 1;
     }
-    .icon-switch{
+    .icon-switch {
       &::before {
         content: "";
         display: block;
@@ -491,7 +414,7 @@
         background-size: 100% 100%;
       }
     }
-    .icon-add{
+    .icon-add {
       &::before {
         content: "";
         display: block;
@@ -501,7 +424,7 @@
         background-size: 100% 100%;
       }
     }
-    .icon-sub{
+    .icon-sub {
       &::before {
         content: "";
         display: block;
@@ -511,7 +434,7 @@
         background-size: 100% 100%;
       }
     }
-    .icon-bak{
+    .icon-bak {
       &::before {
         content: "";
         display: block;
@@ -521,8 +444,33 @@
         background-size: 100% 100%;
       }
     }
+    .icon-ykq {
+      height: 136px;
+      &::after {
+        position: absolute;
+        left: 0;
+        content: "";
+        width: 1px;
+        height: 80px;
+        background-image: linear-gradient(
+          -180deg,
+          rgba(238, 238, 238, 0) 0%,
+          #d9d9d9 52%,
+          rgba(216, 216, 216, 0) 100%
+        );
+        border-radius: 1px;
+      }
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../../lib/base/tv/assets/new/ykq.png);
+        background-size: 100% 100%;
+      }
+    }
   }
-  .block{
+  .block {
     flex-shrink: 0;
     width: 48px;
     height: 186px;
@@ -665,7 +613,7 @@ export default {
     showDetailInfo(item) {
       this.$store.dispatch('showDetail', item)
 
-      if(this.isShowBar){
+      if (this.isShowBar) {
         window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
       } else {
         HdSmart.UI.pushWindow({
@@ -704,11 +652,11 @@ export default {
     },
     //换成小图地址
     getThumbPic(pic) {
-      let imgObj =  {
+      let imgObj = {
         src: pic.replace(".jpg", "_y.jpg"),
         error: pic
       }
-      return imgObj 
+      return imgObj
     },
     getUpdateSet(count, last) {
       if (!count || !last || count == "0" || last == "0") {
@@ -722,7 +670,7 @@ export default {
 
     toPage(item) {
       let name = encodeURIComponent(item.channel)
-      if(this.isShowBar){
+      if (this.isShowBar) {
         window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
       } else {
         HdSmart.UI.pushWindow({
