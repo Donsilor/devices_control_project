@@ -463,7 +463,7 @@
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../../lib/base/tv/assets/new/ykq.png);
+        background-image: url(../../../lib/base/tv/assets/new/detail.png);
         background-size: 100% 100%;
       }
     }

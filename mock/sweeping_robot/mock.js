@@ -57,6 +57,13 @@ export function set(data){
     // if(attr.negative_ion_switch){
     //     attr.negative_ion_switch_status = attr.negative_ion_switch
     // }
+    if(attr.command){
+      if(attr.command == 'start'){
+        attr.status = 'working'
+      } else {
+        attr.status = 'standby'
+      }
+    }
     if(attr.switch){
       attr.switch_status = attr.switch
     }
