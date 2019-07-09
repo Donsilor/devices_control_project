@@ -4,14 +4,16 @@
       <topbar 
         :title="device_name"
         :bak-color="bakColor" />
-      <div class="status">{{ model.status | statusType }}</div>
+      <div 
+        v-show="model.switch_status == 'on'" 
+        class="status">{{ model.status | statusType }}</div>
       <!-- msg 提示 -->
       <transition name="fade">
         <div 
           v-show="isShowMsg"
           class="err-tips">{{ msg }}</div>
       </transition>
-      
+      <!-- 回充电池 -->
       <div class="wrap-robot">
         <img 
           class="robot"
@@ -129,27 +131,27 @@
       @click="hide">
       <div class="items btns">
         <div 
-          :class="[{ 'item1': animation }, {' btn-current': model.mode === 'plan_clean' }, {'btn-loading': btnLoading.plan_clean },'btn btn-low center']"
+          :class="[{ 'item1': animation }, {' btn-current': model.mode === 'plan_clean' }, {'btn-loading': btnLoading.plan_clean },'btn plan_clean center']"
           @click.stop="setMode('plan_clean')">
           <div class="name">规划</div>
         </div>
         <div 
-          :class="[{ 'item2': animation }, {' btn-current': model.mode === 'single_plan' }, {' btn-loading': btnLoading.single_plan },'btn btn-middle center']"
+          :class="[{ 'item2': animation }, {' btn-current': model.mode === 'single_plan' }, {' btn-loading': btnLoading.single_plan },'btn single_plan center']"
           @click.stop="setMode('single_plan')">
           <div class="name">单间</div>
         </div>
         <div 
-          :class="[{ 'item3': animation }, {' btn-current': model.mode === 'edge_clean' }, {' btn-loading': btnLoading.edge_clean },'btn btn-high center']"
+          :class="[{ 'item3': animation }, {' btn-current': model.mode === 'edge_clean' }, {' btn-loading': btnLoading.edge_clean },'btn edge_clean center']"
           @click.stop="setMode('edge_clean')">
           <div class="name">沿边</div>
         </div>
         <div 
-          :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' }, {' btn-loading': btnLoading.design_clean },'btn btn-very_high center']"
+          :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' }, {' btn-loading': btnLoading.design_clean },'btn design_clean center']"
           @click.stop="setMode('design_clean')">
           <div class="name">定位</div>
         </div>
         <div 
-          :class="[{ 'item5': animation }, {'btn-current': model.mode === 'mop' }, {' btn-loading': btnLoading.mop },'btn btn-super_high center']"
+          :class="[{ 'item5': animation }, {'btn-current': model.mode === 'mop' }, {' btn-loading': btnLoading.mop },'btn mop center']"
           @click.stop="setMode('mop')">
           <div class="name">拖地</div>
         </div>
@@ -201,7 +203,7 @@ export default {
         'switch_status': 'on',
         'mode': 'mop',
         'battery_percentage': '100',
-        'status': 'charging',
+        'status': 'standby',
         'sweep_direction': 'right',
         'fan_status': 'normall',
 
@@ -259,19 +261,19 @@ export default {
       // 空闲模式/规划清扫/沿边清扫/定点清扫/拖地模式/回充模式/手动控制/单间规划
       switch (this.model.mode) {
         case 'plan_clean':
-          return 'btn-low'
+          return 'plan_clean'
           break
         case 'single_plan':
-          return 'btn-middle'
+          return 'single_plan'
           break
         case 'edge_clean':
-          return 'btn-high'
+          return 'edge_clean'
           break
         case 'design_clean':
-          return 'btn-very_high'
+          return 'design_clean'
           break
         case 'mop':
-          return 'btn-super_high'
+          return 'mop'
           break
         default:
           return 'btn-others'
@@ -345,6 +347,7 @@ export default {
        }, () => {},mode)
     },
     setCommand(e) {
+      console.log(this.model.status)
       //如果在充电中，无法点击清扫
       if(this.model.status == "charging") {
          e.stopPropatation||e.cancelBubble == true
@@ -352,15 +355,16 @@ export default {
       }
       // 清扫 暂时
       let cmd = ''
-      if (this.model.command == 'stop') {
-        cmd = 'start'
-      } else {
+      if (this.model.status == 'working') {
         cmd = 'stop'
+      } else {
+        cmd = 'start'
       }
       this.controlDevice('command', cmd, {},
        () => {
           this.model.command = cmd
        }, () => {})
+       
     },
     showBtnLoading(attr) {
       this.btnLoading[attr] = true
@@ -387,6 +391,7 @@ export default {
         switchStatus = 'on'
       }
       this.controlDevice("switch", switchStatus)
+      
     },
     handeModeClick(e) {
       //如果在充电中，无法选择模式
@@ -470,6 +475,8 @@ export default {
     setCharging() {
       this.model.status = "charging"
       this.initCharge()
+      console.log(this.model.status)
+      
     },
 
     getSnapShot(cb) {
@@ -566,11 +573,14 @@ export default {
       border-radius: 4px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
       .none-charging{
         flex: 1;
-        background: #fff;
         border-radius: 2px;
         margin: 1.5px 6px;
+        width: 34px;
+        height: 14px;
         &.item-charging{
          background: #12F894;
         }
@@ -590,6 +600,13 @@ export default {
   }
 
   .huicheng{
+    width:500px;
+    height:130px;
+    // border:1px solid red;
+    position: absolute;
+    left:50%;
+    top:220px;
+    transform:translate(-50%);
     i{
       display: block;
       position: absolute;
@@ -620,178 +637,178 @@ export default {
     }
 
     .sport1 {
-      top: 256px;
-      left: 150px;
+      top: 15px;
+      left: 50px;
     }
     .sport2 {
-      top: 310px;
-      left: 140px;
+      top: 90px;
+      left: 30px;
     }
     .sport3 {
-      top: 290px;
-      left: 210px;
+      top: 40px;
+      left: 100px;
     }
     .sport4 {
-      top: 250px;
-      left: 270px;
+      top: 70px;
+      left: 150px;
     }
     .sport5 {
-      top: 280px;
-      left: 300px;
+      top: 30px;
+      left: 150px;
     }
     .sport6 {
-      top: 232px;
-      left: 375px;
+      top: 50px;
+      left: 250px;
     }
     .sport7 {
-      top: 284px;
+      top: 70px;
       left: 365px;
     }
     .sport8 {
-      top: 274px;
-      left: 410px;
+      top: 55px;
+      left: 200px;
     }
     .sport9 {
-      top: 222px;
-      left: 470px;
+      top: 100px;
+      left: 430px;
     }
 
     .sport10 {
-      top: 290px;
-      left: 500px;
+      top: 10px;
+      left: 220px;
     }
     .sport11 {
-      top: 242px;
-      left: 534px;
+      top: 50px;
+      left: 420px;
     }
     .sport12 {
-      top: 320px;
-      left: 552px;
+      top: 18px;
+      left: 300px;
     }
     .sport13 {
-      top: 260px;
-      left: 604px;
+      top: 16px;
+      left: 400px;
     }
     .sport14 {
-      top: 310px;
-      left: 614px;
+      top: 50px;
+      left: 280px;
     }
 
     @keyframes animX1{
-      0% {left: 150px;}
-      100% {left:160px}
+      0% {left: 50px;}
+      100% {left:60px}
     }
     @keyframes animX2{
-      0% { left: 140px;}
-      100% { left: 160px;}
+      0% { left: 30px;}
+      100% { left: 45px;}
     }
     @keyframes animX3{
-      0% {left: 210px;}
-      100% {left: 230px;}
+      0% {left: 100px;}
+      100% {left: 110px;}
     }
     @keyframes animX4{
-      0% {left: 270px;}
-      100% {left: 290px;}
+      0% {left: 150px;}
+      100% {left: 160px;}
     }
     @keyframes animX5{
-      0% {left: 300px;}
-      100% {left:340px;}
+      0% {left: 150px;}
+      100% {left:160px;}
     }
     @keyframes animX6{
-      0% {left: 375px;}
-      100% {left: 390px;}
+      0% {left: 250px;}
+      100% {left: 260px;}
     }
     @keyframes animX7{
       0% {left: 365px;}
       100% {left: 380px;}
     }
     @keyframes animX8{
-      0% {left: 410px;}
-      100% {left: 430px;}
+      0% {left: 200px;}
+      100% {left: 210px;}
     }
     @keyframes animX9{
-      0% {left: 470px;}
-      100% {left: 490px;}
+      0% {left: 430px;}
+      100% {left: 440px;}
     }
 
     @keyframes animX10{
-      0% {left: 500px;;}
-      100% {left: 520px;}
+      0% {left: 220px;;}
+      100% {left: 230px;}
     }
     @keyframes animX11{
-      0% {left: 534px;}
-      100% {left: 544px;}
+      0% {left: 300px;}
+      100% {left: 310px;}
     }
     @keyframes animX12{
-      0% {left: 552px;}
-      100% {left: 562px;}
+      0% {left: 320px;}
+      100% {left: 330px;}
     }
     @keyframes animX13{
-      0% {left: 604px;}
-      100% {left: 614px;}
+      0% {left: 350px;}
+      100% {left: 364px;}
     }
     @keyframes animX14{
-      0% {left: 614px;}
-      100% {left: 624px;}
+      0% {left: 400px;}
+      100% {left: 410px;}
     }
 
 
     @keyframes animY1{
-      0% {top: 256px;}
-      100% {top: 320px;}
+      0% {top: 15px;}
+      100% {top: 100px;}
     }
     @keyframes animY2{
-      0% {top: 310px;}
-      100% {top: 320px;}
+      0% {top: 90px;}
+      100% {top: 150px;}
     }
     @keyframes animY3{
-      0% {top: 290px;}
-      100% {top: 320px;}
+      0% {top: 40px;}
+      100% {top: 130px;}
     }
     @keyframes animY4{
-      0% {top: 250px;}
-      100% {top: 320px;}
+      0% {top: 70px;}
+      100% {top: 140px;}
     }
     @keyframes animY5{
-      0% {top: 280px;}
-      100% {top: 320px;}
+      0% {top: 30px;}
+      100% {top: 120px;}
     }
     @keyframes animY6{
-      0% {top: 232px;}
-      100% {top: 320px;}
+      0% {top: 50px;}
+      100% {top: 130px;}
     }
     @keyframes animY7{
-      0% {top: 284px;}
-      100% {top: 320px;}
+      0% {top: 70px;}
+      100% {top: 120px;}
     }
     @keyframes animY8{
-      0% {top: 274px;}
-      100% {top: 320px;}
+      0% {top: 55px;}
+      100% {top: 100px;}
     }
     @keyframes animY9{
-      0% {top: 222px;}
-      100% {top: 320px;}
+      0% {top: 100px;}
+      100% {top: 150px;}
     }
 
     @keyframes animY10{
-      0% {top: 280px;}
-      100% {top: 320px;}
+      0% {top: 10px;}
+      100% {top: 80px;}
     }
     @keyframes animY11{
-      0% {top: 232px;}
-      100% {top: 320px;}
+      0% {top: 60px;}
+      100% {top: 130px;}
     }
     @keyframes animY12{
-      0% {top: 284px;}
-      100% {top: 320px;}
+      0% {top: 20px;}
+      100% {top: 120px;}
     }
     @keyframes animY13{
-      0% {top: 274px;}
-      100% {top: 320px;}
+      0% {top: 5px;}
+      100% {top: 80px;}
     }
     @keyframes animY14{
-      0% {top: 310px;}
-      100% {top: 320px;}
+      0% {top: 18px;}
+      100% {top: 110px;}
     }
     &.run{
       .sport1{
@@ -976,20 +993,21 @@ export default {
         height: 48px;
         background-image: url(../../lib/base/sweeping_robot/assets/guihua0.png);
         background-size: 100% 100%;
+        opacity:0.2;
       }
-      &.btn-low::before {
+      &.plan_clean::before {
         background-image: url(../../lib/base/sweeping_robot/assets/guihua@2x.png);
       }
-      &.btn-middle::before {
+      &.single_plan::before {
         background-image: url(../../lib/base/sweeping_robot/assets/danjian3.png);
       }
-      &.btn-high::before {
+      &.edge_clean::before {
         background-image: url(../../lib/base/sweeping_robot/assets/yanbian3.png);
       }
-      &.btn-very_high::before {
+      &.design_clean::before {
         background-image: url(../../lib/base/sweeping_robot/assets/dingwei3.png);
       }
-      &.btn-super_high::before {
+      &.mop::before {
         background-image: url(../../lib/base/sweeping_robot/assets/tuodi3.png);
       }
     }
@@ -1200,19 +1218,19 @@ export default {
         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
         border-color: #ffbf00;
 
-        &.btn-low::before {
+        &.plan_clean::before {
           background-image: url(../../lib/base/sweeping_robot/assets/guihua@2x.png);
         }
-        &.btn-middle::before {
+        &.single_plan::before {
           background-image: url(../../lib/base/sweeping_robot/assets/danjian3.png);
         }
-        &.btn-high::before {
+        &.edge_clean::before {
           background-image: url(../../lib/base/sweeping_robot/assets/yanbian3.png);
         }
-        &.btn-very_high::before {
+        &.design_clean::before {
           background-image: url(../../lib/base/sweeping_robot/assets/dingwei3.png);
         }
-        &.btn-super_high::before {
+        &.mop::before {
           background-image: url(../../lib/base/sweeping_robot/assets/tuodi3.png);
         }
       }
@@ -1242,7 +1260,7 @@ export default {
         background-size: 100% 100%;
       }
     }
-    .btn-low {
+    .plan_clean {
       &::before {
         content: "";
         display: block;
@@ -1262,7 +1280,7 @@ export default {
         }
       }
     }
-    .btn-middle {
+    .single_plan {
       &::before {
         content: "";
         display: block;
@@ -1286,7 +1304,7 @@ export default {
         }
       }
     }
-    .btn-high {
+    .edge_clean {
       &::before {
         content: "";
         display: block;
@@ -1310,7 +1328,7 @@ export default {
         }
       }
     }
-    .btn-very_high {
+    .design_clean {
       &::before {
         content: "";
         display: block;
@@ -1334,7 +1352,7 @@ export default {
         }
       }
     }
-    .btn-super_high {
+    .mop {
       &::before {
         content: "";
         display: block;
