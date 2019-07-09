@@ -4,14 +4,16 @@
       <topbar 
         :title="device_name"
         :bak-color="bakColor" />
-      <div class="status">{{ model.status | statusType }}</div>
+      <div 
+        v-show="model.switch_status == 'on'" 
+        class="status">{{ model.status | statusType }}</div>
       <!-- msg 提示 -->
       <transition name="fade">
         <div 
           v-show="isShowMsg"
           class="err-tips">{{ msg }}</div>
       </transition>
-      
+      <!-- 回充电池 -->
       <div class="wrap-robot">
         <img 
           class="robot"
@@ -571,11 +573,14 @@ export default {
       border-radius: 4px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
       .none-charging{
         flex: 1;
-        background: #fff;
         border-radius: 2px;
         margin: 1.5px 6px;
+        width: 34px;
+        height: 14px;
         &.item-charging{
          background: #12F894;
         }
