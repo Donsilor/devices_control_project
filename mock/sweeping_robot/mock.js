@@ -57,6 +57,11 @@ export function set(data){
     // if(attr.negative_ion_switch){
     //     attr.negative_ion_switch = attr.negative_ion_switch
     // }
+    if(attr.mode){
+      if(attr.mode == 'recharge'){
+        attr.status = 'charging'
+      }
+    }
     if(attr.command){
       if(attr.command == 'start'){
         attr.status = 'working'

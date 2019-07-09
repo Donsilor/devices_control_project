@@ -5,8 +5,11 @@
         :title="device_name"
         :bak-color="bakColor" />
       <div 
-        v-show="model.switch == 'on'" 
+        v-show="model.switch == 'on' && model.mode !== 'recharge'" 
         class="status">{{ model.status | statusType }}</div>
+      <div 
+        v-show="model.mode == 'recharge'" 
+        class="status">回充中</div>
       <!-- msg 提示 -->
       <transition name="fade">
         <div 
@@ -68,23 +71,23 @@
           <div class="filter-item">{{ model.filter_time_remaining }}<sup>%</sup></div>
           <div class="filter-name">剩余滤芯</div>
         </div> -->
-        <div class="filter">
+        <!-- <div class="filter">
           <div class="filter-item">{{ model.battery_percentage }}<sup>m²</sup></div>
           <div class="filter-name">清扫面积</div>
-        </div>
+        </div> -->
         <div class="filter">
           <div class="filter-item">{{ model.battery_percentage }}<sup>%</sup></div>
           <div class="filter-name">剩余电量</div>
         </div>
-        <div class="filter">
+        <!-- <div class="filter">
           <div class="filter-item">{{ model.working_time }}<sup class="comma">，</sup></div>
           <div class="filter-name">已扫时间</div>
-        </div>
+        </div> -->
       </div>
 
       <!-- 按钮 -->
       <div class="panel-btn center">
-        <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
+        <div :class="[{'up-index': !isOffline }, {'disable': model.status == 'charging'}, 'btn-wrap']">
           <div 
             :class="[{'active': !isClose && !isOffline }, 'btn btn-swich center']"
             @click="setSwitch" />
@@ -94,7 +97,7 @@
         <div :class="[{'disable': model.status == 'working'}, 'btn-wrap btns']">
           <div 
             :class="[model.status == 'charging' ? 'charging' : '', 'btn btn-charging center circleProgress_wrapper']"
-            @click="setCharging()">
+            @click="setCharging">
             <div class="wrapper right">
               <div class="circleProgress rightcircle" />
             </div>
@@ -112,7 +115,7 @@
           <div class="btn-name">清扫</div>
         </div>
 
-        <div :class="[{'disable': model.status == 'charging'}, {'disable': model.status == 'working'}, 'btn-wrap']">
+        <div :class="[{'disable': model.status == 'charging'},{'disable': model.status !== 'charging'}, 'btn-wrap']">
           <div 
             :class="[btnClass, 'btn center btn-plan']" 
             @click="handeModeClick"/>
@@ -151,7 +154,7 @@
           <div class="name">定位</div>
         </div>
         <div 
-          :class="[{ 'item5': animation }, {'btn-current': model.mode === 'mop' }, {' btn-loading': btnLoading.mop },'btn mop center']"
+          :class="[{ 'item5': animation }, {'disable': model.status == 'working'},'btn mop center']"
           @click.stop="setMode('mop')">
           <div class="name">拖地</div>
         </div>
@@ -340,11 +343,13 @@ export default {
         }, () => { }, speed)
     },
     setMode(mode) {
-      console.log(mode)
+      if(mode === 'mop') {
+        return false
+      }
       this.controlDevice('mode', mode, {},
        () => {
           if(this.showModeBtns) this.showModeBtns = false
-       }, () => {},mode)
+       }, () => {}, mode)
     },
     setCommand(e) {
       console.log(this.model.status)
@@ -383,7 +388,12 @@ export default {
         }, 3000)
       })
     },
-    setSwitch() {
+    setSwitch(e) {
+       //如果在充电中，无法点击清扫
+      if(this.model.status == "charging") {
+         e.stopPropatation||e.cancelBubble == true
+        return false
+      }
       let switchStatus = ''
       if (this.model.switch == 'on') {
         switchStatus = 'off'
@@ -473,10 +483,11 @@ export default {
       })
     },
     setCharging() {
-      this.model.status = "charging"
-      this.initCharge()
-      console.log(this.model.status)
-      
+      // this.model.status = "charging"
+      this.controlDevice('mode', 'recharge', {},
+       () => {
+          this.initCharge()
+       }, () => {}, 'recharge')
     },
 
     getSnapShot(cb) {
@@ -927,7 +938,6 @@ export default {
 
       display: flex;
       flex-direction: column;
-      // opacity: 0.5;
       &.active {
         opacity: 1;
         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
@@ -948,6 +958,7 @@ export default {
         height: 48px;
         background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
         background-size: 100% 100%;
+
       }
       &.active {
         &::before {
@@ -993,7 +1004,6 @@ export default {
         height: 48px;
         background-image: url(../../lib/base/sweeping_robot/assets/guihua0.png);
         background-size: 100% 100%;
-        opacity:0.2;
       }
       &.plan_clean::before {
         background-image: url(../../lib/base/sweeping_robot/assets/guihua@2x.png);
@@ -1208,7 +1218,9 @@ export default {
 
       display: flex;
       flex-direction: column;
-
+      &.disable {
+        opacity: .2;
+      }
       .name {
         margin-top: 8px;
         font-size: 20px;
@@ -1361,15 +1373,15 @@ export default {
         background-image: url(../../lib/base/sweeping_robot/assets/tuodi.png);
         background-size: 100% 100%;
       }
-      &.btn-current {
-        border-color: #ffc600;
-        &::before {
-          background-image: url(../../lib/base/sweeping_robot/assets/tuodi2.png);
-        }
-        .name {
-          color: #ffc600;
-        }
-      }
+      // &.btn-current {
+      //   border-color: #ffc600;
+      //   &::before {
+      //     background-image: url(../../lib/base/sweeping_robot/assets/tuodi2.png);
+      //   }
+      //   .name {
+      //     color: #ffc600;
+      //   }
+      // }
       &.active {
         &::before {
           background-image: url(../../lib/base/sweeping_robot/assets/tuodi2.png);
