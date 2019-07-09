@@ -441,7 +441,7 @@ export default {
         HdSmart.Device.control(
           {
             method: "dm_set",
-            nodeid: `air_filter.main.${attr}`,
+            nodeid: `Sweepingrobot.main.${attr}`,
             params: {
               attribute: params
             }
