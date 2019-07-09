@@ -4,7 +4,7 @@
 import Mock from 'mockjs'
 
 let res = {
-    'switch_status': 'on',
+    'switch': 'on',
     'mode': 'mop',
     'battery_percentage': '100',
     'status': 'working',
@@ -55,7 +55,7 @@ export function set(data){
     //     attr.control_status = attr.control
     // }
     // if(attr.negative_ion_switch){
-    //     attr.negative_ion_switch_status = attr.negative_ion_switch
+    //     attr.negative_ion_switch = attr.negative_ion_switch
     // }
     if(attr.command){
       if(attr.command == 'start'){
@@ -65,8 +65,8 @@ export function set(data){
       }
     }
     if(attr.switch){
-      attr.switch_status = attr.switch
-      if(attr.switch_status == 'on'){
+      attr.switch = attr.switch
+      if(attr.switch == 'on'){
         attr.status = 'working'
       }else{
         attr.status = 'standby'

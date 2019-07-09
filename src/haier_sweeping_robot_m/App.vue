@@ -5,7 +5,7 @@
         :title="device_name"
         :bak-color="bakColor" />
       <div 
-        v-show="model.switch_status == 'on'" 
+        v-show="model.switch == 'on'" 
         class="status">{{ model.status | statusType }}</div>
       <!-- msg 提示 -->
       <transition name="fade">
@@ -200,7 +200,7 @@ export default {
       msg: '',
       device_name: "",
       model: {
-        'switch_status': 'on',
+        'switch': 'on',
         'mode': 'mop',
         'battery_percentage': '100',
         'status': 'standby',
@@ -247,7 +247,7 @@ export default {
   },
   computed: {
     isClose() {
-      return this.model.switch_status == 'on' ? false : true
+      return this.model.switch == 'on' ? false : true
     },
     bakColor() {
       return this.isClose ? '#fff' : '#000'
@@ -385,7 +385,7 @@ export default {
     },
     setSwitch() {
       let switchStatus = ''
-      if (this.model.switch_status == 'on') {
+      if (this.model.switch == 'on') {
         switchStatus = 'off'
       } else {
         switchStatus = 'on'
