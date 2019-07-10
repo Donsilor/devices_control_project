@@ -119,9 +119,11 @@
           <div 
             :class="[btnClass, 'btn center btn-plan']" 
             @click="handeModeClick"/>
-          <div class="btn-name">{{ btnTxt }}</div>
           <div 
-            v-show="model.status == 'charging'"
+            v-show="model.mode !== 'idle'" 
+            class="btn-name" >{{ btnTxt }}</div>
+          <div 
+            v-show="model.mode == 'idle'"
             class="btn-name">规划</div>
         </div>
 
@@ -207,7 +209,7 @@ export default {
       device_name: "",
       model: {
         'switch': 'on',
-        'mode': 'mop',
+        'mode': 'idle',
         'battery_percentage': '100',
         'status': 'standby',
         'sweep_direction': 'right',
@@ -301,6 +303,12 @@ export default {
           break
         case 'mop':
           return '拖地'
+          break
+        case 'recharge':
+          return '规划'
+          break
+        case 'manual_control':
+          return '规划'
           break
       }
     }
@@ -1011,18 +1019,23 @@ export default {
       }
       &.plan_clean::before {
         background-image: url(../../lib/base/sweeping_robot/assets/guihua@2x.png);
+        opacity: .2;
       }
       &.single_plan::before {
         background-image: url(../../lib/base/sweeping_robot/assets/danjian3.png);
+         opacity: .2;
       }
       &.edge_clean::before {
         background-image: url(../../lib/base/sweeping_robot/assets/yanbian3.png);
+         opacity: .2;
       }
       &.design_clean::before {
         background-image: url(../../lib/base/sweeping_robot/assets/dingwei3.png);
+         opacity: .2;
       }
       &.mop::before {
         background-image: url(../../lib/base/sweeping_robot/assets/tuodi3.png);
+         opacity: .2;
       }
     }
   }

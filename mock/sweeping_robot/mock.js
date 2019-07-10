@@ -5,7 +5,7 @@ import Mock from 'mockjs'
 
 let res = {
     'switch': 'on',
-    'mode': 'mop',
+    'mode': 'idle',
     'battery_percentage': '100',
     'status': 'charge_completed',
     'sweep_direction': 'right',
