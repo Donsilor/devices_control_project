@@ -22,7 +22,7 @@
           class="robot"
           src="../../lib/base/sweeping_robot/assets/saodirobot@2x.png">
         <div 
-          v-show="model.status == 'charging'"
+          v-show="model.status == 'charging' || model.status == 'charge_completed'"
           class="robot-charging">
           <div 
             v-for="i in 5" 
@@ -115,11 +115,11 @@
           <div class="btn-name">清扫</div>
         </div>
 
-        <div :class="[{'disable': model.status == 'charging'},{'disable': model.status !== 'charging'}, 'btn-wrap']">
+        <div :class="[{'disable': model.status == 'charging'||model.status == 'working'}, 'btn-wrap']">
           <div 
             :class="[btnClass, 'btn center btn-plan']" 
             @click="handeModeClick"/>
-          <div class="btn-name">规划</div>
+          <div class="btn-name">{{ btnTxt }}</div>
         </div>
 
       </div>
@@ -130,6 +130,7 @@
     <div 
       v-show="showModeBtns"
       class="btns-panel center"
+      去
       @touchmove.prevent
       @click="hide">
       <div class="items btns">
@@ -151,10 +152,10 @@
         <div 
           :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' }, {' btn-loading': btnLoading.design_clean },'btn design_clean center']"
           @click.stop="setMode('design_clean')">
-          <div class="name">定位</div>
+          <div class="name">定点</div>
         </div>
         <div 
-          :class="[{ 'item5': animation }, {'disable': model.status == 'working'},'btn mop center']"
+          :class="[{ 'item5': animation }, {'disable': model.status !== 'charging'},'btn mop center']"
           @click.stop="setMode('mop')">
           <div class="name">拖地</div>
         </div>
@@ -198,7 +199,6 @@ export default {
     return {
       chargRank: 5,
       chargTimes: {},
-
       isShowMsg: false,
       msg: '',
       device_name: "",
@@ -243,7 +243,6 @@ export default {
         single_plan: false,
         edge_clean: false,
         design_clean: false,
-        mop: false,
       },
       showSubPage: false
     }
@@ -284,29 +283,24 @@ export default {
     },
     btnTxt() {
       /* eslint-disable no-unreachable */
-      switch (this.model.speed) {
-        case 'low':
-          return '低挡'
+      switch (this.model.mode) {
+        case 'plan_clean':
+          return '规划'
           break
-        case 'middle':
-          return '中档'
+        case 'single_plan':
+          return '单间'
           break
-        case 'high':
-          return '高档'
+        case 'edge_clean':
+          return '沿边'
           break
-        case 'very_high':
-          return '超高档'
+        case 'design_clean':
+          return '定点'
           break
-        case 'super_high':
-          return '极速挡'
-          break
-        case 'sleep':
-          return '低挡'
+        case 'mop':
+          return '拖地'
           break
       }
     }
-  },
-  watch: {
   },
   created() {
     var str_model = window.localStorage.getItem("cleaner_model_attr")
@@ -504,6 +498,10 @@ export default {
     onSuccess(data) {
       this.status = "success"
       this.model = data.attribute
+
+      if(data.attribute.status == 'charge_completed') {
+        this.initCharge()
+      }
       // 将model 保存在 localStorage
       window.localStorage.setItem('cleaner_model_attr', JSON.stringify(data.attribute))
     },
@@ -525,6 +523,9 @@ export default {
     },
     initCharge() {
       clearInterval(this.chargTimes)
+      if(this.model.status == 'charge_completed'){
+        return this.chargRank = 0
+      }
       this.chargRank =  4
       this.chargTimes = setInterval(() => {
         this.chargRank--
