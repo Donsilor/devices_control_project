@@ -120,6 +120,9 @@
             :class="[btnClass, 'btn center btn-plan']" 
             @click="handeModeClick"/>
           <div class="btn-name">{{ btnTxt }}</div>
+          <div 
+            v-show="model.status == 'charging'"
+            class="btn-name">规划</div>
         </div>
 
       </div>
