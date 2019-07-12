@@ -7,7 +7,7 @@ let res = {
     'switch': 'on',
     'mode': 'idle',
     'battery_percentage': '100',
-    'status': 'charge_completed',
+    'status': 'charging',
     'sweep_direction': 'right',
     'fan_status': 'normall',
 

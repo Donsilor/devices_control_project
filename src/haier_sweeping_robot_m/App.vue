@@ -135,7 +135,6 @@
     <div 
       v-show="showModeBtns"
       class="btns-panel center"
-      去
       @touchmove.prevent
       @click="hide">
       <div class="items btns">
@@ -353,7 +352,7 @@ export default {
       }
       this.controlDevice('mode', mode, {},
        () => {
-          if(this.showModeBtns) this.showModeBtns = false
+          if(this.showModeBtns) this.hide()
        }, () => {}, mode)
     },
     setCommand(e) {
@@ -509,8 +508,8 @@ export default {
     onSuccess(data) {
       this.status = "success"
       this.model = data.attribute
-
-      if(data.attribute.status == 'charge_completed') {
+      // if(data.attribute.status == 'charging')
+      if(data.attribute.status == 'charge_completed' || data.attribute.status == 'charging') {
         this.initCharge()
       }
       // 将model 保存在 localStorage
@@ -1180,12 +1179,13 @@ export default {
     right: 0;
     z-index: 99999;
     width: 100%;
-
     background: rgba(0, 0, 0, 0.8);
   }
   .items {
     position: fixed;
-    left: 592px;
+    // left: 0;
+    left: 50%;
+    transform: translate(-50%);
     top: 1040px;
     z-index: 999999;
     width: 750px;
@@ -1194,34 +1194,38 @@ export default {
       transition: all 0.3s ease-in-out;
       position: absolute;
       top: 0;
-      left: 0;
+      right: 34px;
     }
     .item1 {
       top: -720px;
-      left: 0;
+      right: 34px;
     }
     .item2 {
       top: -576px;
-      left: 0;
+      right: 34px;
     }
     .item3 {
       top: -432px;
-      left: 0;
+      right: 34px;
     }
     .item4 {
       top: -288px;
-      left: 0;
+      right: 34px;
     }
     .item5 {
       top: -144px;
-      left: 0;
+      right: 34px;
+    }
+     .item6 {
+      top: 0;
+      right: 34px;
     }
   }
-  &.more {
-    .items {
-      left: 384px;
-    }
-  }
+  // &.more {
+  //   .items {
+  //     left: 384px;
+  //   }
+  // }
   .btns {
     justify-content: flex-start;
     transition: all 0.3s ease-in-out;
