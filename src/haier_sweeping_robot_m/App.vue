@@ -1,21 +1,17 @@
 <template>
   <div>
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, {'filter': showModeBtns }, 'page']">
+      <!-- 顶部导航菜单 -->
       <topbar 
         :title="device_name"
         :bak-color="bakColor" />
+      <!-- 工作状态 -->
       <div 
-        v-show="model.switch == 'on' && model.mode !== 'recharge'" 
+        v-show="model.switch == 'on' && model.mode !== 'recharge'"
         class="status">{{ model.status | statusType }}</div>
       <div 
-        v-show="model.mode == 'recharge'" 
+        v-show="model.mode == 'recharge'"
         class="status">回充中</div>
-      <!-- msg 提示 -->
-      <transition name="fade">
-        <div 
-          v-show="isShowMsg"
-          class="err-tips">{{ msg }}</div>
-      </transition>
       <!-- 回充电池 -->
       <div class="wrap-robot">
         <img 
@@ -25,15 +21,15 @@
           v-show="model.status == 'charging' || model.status == 'charge_completed'"
           class="robot-charging">
           <div 
-            v-for="i in 5" 
-            :key="i" 
-            :class="[{'item-charging': chargRank < i }, 'none-charging']"/>
+            v-for="i in 5"
+            :key="i"
+            :class="[{'item-charging': chargRank < i }, 'none-charging']" />
           <div class="line" />
         </div>
       </div>
-
+      <!-- 清扫垃圾动画 -->
       <div 
-        v-show="model.status == 'working'" 
+        v-show="model.status == 'working'"
         class="huicheng run">
         <i class="img1 sport1" />
         <i class="img2 sport2" />
@@ -50,7 +46,7 @@
         <i class="img2 sport13" />
         <i class="img1 sport14" />
       </div>
-
+      <!-- 电量 -->
       <div 
         v-show="model.status == 'charging'"
         class="wrap-filter">
@@ -94,23 +90,19 @@
 
         <div :class="[{'disable': model.status == 'charging'}, 'btn-wrap']">
           <div 
-            :class="[model.status == 'working' ? 'btn-stop' : 'btn-clean', 'btn center']" 
-            @click="setCommand"/>
+            :class="[model.status == 'working' ? 'btn-stop' : 'btn-clean', 'btn center']"
+            @click="setCommand" />
           <div 
-            v-show="model.status !== 'working'" 
-            class="btn-name">清扫</div>
-          <div 
-            v-show="model.status == 'working'" 
-            class="btn-name">暂停</div>
+            class="btn-name">{{ model.status == 'working' ? '暂停': '清扫' }}</div>
         </div>
 
-        <div :class="[{'disable': model.status == 'working'}, 'btn-wrap']">
+        <div class="btn-wrap">
           <div 
-            :class="[btnClass, 'btn center btn-plan']" 
-            @click="handeModeClick"/>
+            :class="[btnClass, 'btn center btn-plan']"
+            @click="handeModeClick" />
           <div 
-            v-show="model.mode !== 'idle'" 
-            class="btn-name" >{{ btnTxt }}</div>
+            v-show="model.mode !== 'idle'"
+            class="btn-name">{{ btnTxt }}</div>
           <div 
             v-show="model.mode == 'idle'"
             class="btn-name">规划</div>
@@ -161,38 +153,12 @@
 </template>
 
 <script>
-import SubPage from "./SubPage"
-const tips = {
-  fail: '设置失败',
-  temperature: '温度设置成功',
-  speed_low: '低风切换成功',
-  speed_normal: '中风切换成功',
-  speed_high: '高风切换成功',
-  speed_auto: '自动风速切换成功',
-  mode_cold: '制冷模式切换成功',
-  mode_auto: '智能模式切换成功',
-  mode_heat: '制热模式切换成功',
-  mode_dehumidify: '除湿模式切换成功',
-  mode_wind: '送风模式切换成功',
-  wind_up_down_on: '上下扫风已启动',
-  wind_up_down_off: '上下扫风已关闭',
-  wind_left_right_on: '左右扫风已启动',
-  wind_left_right_off: '左右扫风已关闭',
-  err_temp1: '送风模式下不能设置温度',
-  err_temp2: '温度已调至最高',
-  err_temp3: '温度已调至最低',
-  err_temp4: '送风模式不能设置自动风速',
-  err_temp5: '低风、制冷模式下不支持此温度'
-}
 export default {
-  components: {
-    SubPage
-  },
   data() {
     return {
       chargRank: 5,
       chargTimes: {},
-      isShowMsg: false,
+
       msg: '',
       device_name: "",
       model: {
@@ -202,21 +168,17 @@ export default {
         'status': 'standby',
         'sweep_direction': 'right',
         'fan_status': 'normall',
-
         'command': 'stop',
         'frequency': '2',
-
         'water_level': 'low',
         'remaining': '10',
         'order_time': '01:20',
-
         'notclean': [],
         'working_time': '60',
         'begin_point': '0',
         'cleaning': '0',
         'cleaned': '0',
         'unclean': '0',
-
         'alarm_cancel': 'on',
         'wheel_overload': 'on',
         'cliff': 'on',
@@ -225,8 +187,6 @@ export default {
         'dust_box': 'on',
         'battery_overheat': 'on',
         'fan_err': 'on',
-
-
         'connectivity': 'online'
       },
       showModeBtns: false,
@@ -252,8 +212,6 @@ export default {
     },
     btnClass() {
       /* eslint-disable no-unreachable */
-      // idle/plan_clean/edge_clean/design_clean/mop/recharge/manual_control/single_plan
-      // 空闲模式/规划清扫/沿边清扫/定点清扫/拖地模式/回充模式/手动控制/单间规划
       switch (this.model.mode) {
         case 'plan_clean':
           return 'plan_clean'
@@ -302,19 +260,22 @@ export default {
     }
   },
   created() {
-    var str_model = window.localStorage.getItem("cleaner_model_attr")
-    if (str_model) {
-      try {
-        // str_model 有可能不是合法的JSON字符串，便会产生异常
-        this.model = JSON.parse(str_model)
-      } catch (e) {
-        this.model = {}
-      }
-    }
     HdSmart.ready(() => {
       if (window.device_name) {
         this.device_name = window.device_name
       }
+      if (window.device_uuid) {
+        var str_model = window.localStorage.getItem(window.device_uuid)
+        if (str_model) {
+          try {
+            // str_model 有可能不是合法的JSON字符串，便会产生异常
+            this.model = JSON.parse(str_model)
+          } catch (e) {
+            this.model = {}
+          }
+        }
+      }
+
       HdSmart.UI.showLoading()
       this.getSnapShot(() => {
         HdSmart.UI.hideLoading()
@@ -326,33 +287,27 @@ export default {
     })
   },
   methods: {
-    setSpeed(speed) {
-      // if (this.checkCmd('mode', mode)) return this.showModeBtns = false
-      // this.showModeBtns = false
-      this.controlDevice('speed', speed, {},
-        () => {
-          if (this.showModeBtns) this.showModeBtns = false
-          this.showMsg(tips['speed' + speed])
-        }, () => { }, speed)
-    },
+    // 切换模式
     setMode(mode) {
-      if(mode === 'mop') {
+      if (mode === 'mop') {
         return false
       }
-      if(this.model.status == 'charging'){
-        if(mode === 'design_clean'){
+      // 充电中不支持定点清扫
+      if (this.model.status == 'charging') {
+        if (mode === 'design_clean') {
           return false
         }
       }
       this.controlDevice('mode', mode, {},
-       () => {
-          if(this.showModeBtns) this.hide()
-       }, () => {}, mode)
+        () => {
+          if (this.showModeBtns) this.hide()
+        }, () => { }, mode)
     },
+    // 清扫和暂停
     setCommand() {
       console.log(this.model.status)
       //如果在充电中，无法点击清扫
-      if(this.model.status == "charging") {
+      if (this.model.status == "charging") {
         return false
       }
       // 清扫 暂时
@@ -363,31 +318,23 @@ export default {
         cmd = 'start'
       }
       this.controlDevice('command', cmd, {},
-       () => {
+        () => {
           this.model.command = cmd
-       }, () => {})
-       
+        }, () => { })
+
     },
+    // 显示按钮点击loading
     showBtnLoading(attr) {
       this.btnLoading[attr] = true
     },
+    // 隐藏按钮点击loading
     hideBtnLoading(attr) {
       this.btnLoading[attr] = false
     },
-    showMsg(msg) {
-      if (!msg) return
-      clearTimeout(timer)
-      this.msg = msg
-      this.isShowMsg = true
-      this.$nextTick(() => {
-        timer = setTimeout(() => {
-          this.isShowMsg = false
-        }, 3000)
-      })
-    },
+    // 设备开关
     setSwitch() {
-       //如果在充电中，无法点击开关机
-      if(this.model.status == "charging") {
+      //如果在充电中，无法点击开关机
+      if (this.model.status == "charging") {
         return false
       }
       let switchStatus = ''
@@ -397,8 +344,9 @@ export default {
         switchStatus = 'on'
       }
       this.controlDevice("switch", switchStatus)
-      
+
     },
+    // 点击模式切换
     handeModeClick() {
       this.showModeBtns = true
       this.$nextTick(() => {
@@ -407,21 +355,12 @@ export default {
         }, 0)
       })
     },
+    // 隐藏模式切换
     hide() {
       this.showModeBtns = false
       this.animation = false
     },
-    toSubPage() {
-      console.log('showSubPage')
-      this.showSubPage = true
-    },
-    showTip(text) {
-      clearTimeout(this.tipTime)
-      this.tip = text
-      this.tipTime = setTimeout(() => {
-        this.tip = ""
-      }, 2000)
-    },
+    // 设备控制
     controlDevice(attr, val, param, success, error, btnAttr) {
       this.showBtnLoading(btnAttr)
       var fn = this.confirm
@@ -449,37 +388,24 @@ export default {
           },
           () => {
             this.hideBtnLoading(btnAttr)
-            // this.model.speed[attr] = val
             success && success()
           },
           () => {
             this.hideBtnLoading(btnAttr)
             error && error()
-            this.showTip("操作失败")
+            HdSmart.UI.toast('操作失败')
           }
         )
       })
     },
-
-    setControl() {
-      let val = ''
-      if (this.model.control_status == 'sleep') {
-        val = 'manual'
-      } else {
-        val = 'sleep'
-      }
-
-      this.controlDevice("control", val, () => {
-        this.model.control_status = val
-      })
-    },
+    // 充电
     setCharging() {
       this.controlDevice('mode', 'recharge', {},
-       () => {
+        () => {
           this.initCharge()
-       }, () => {}, 'recharge')
+        }, () => { }, 'recharge')
     },
-
+    // 获取设备状态
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot(
         data => {
@@ -494,11 +420,14 @@ export default {
     onSuccess(data) {
       this.status = "success"
       this.model = data.attribute
-      if(data.attribute.status == 'charge_completed' || data.attribute.status == 'charging') {
+      if (data.attribute.status == 'charge_completed' || data.attribute.status == 'charging') {
         this.initCharge()
       }
+
       // 将model 保存在 localStorage
-      window.localStorage.setItem('cleaner_model_attr', JSON.stringify(data.attribute))
+      if (window.device_uuid) {
+        window.localStorage.setItem(window.device_uuid, JSON.stringify(data.attribute))
+      }
     },
     confirm(done) {
       if (this.model.child_lock_switch_status == "on") {
@@ -516,15 +445,16 @@ export default {
         done()
       }
     },
+    // 充电动画
     initCharge() {
       clearInterval(this.chargTimes)
-      if(this.model.status == 'charge_completed'){
+      if (this.model.status == 'charge_completed') {
         return this.chargRank = 0
       }
-      this.chargRank =  4
+      this.chargRank = 4
       this.chargTimes = setInterval(() => {
         this.chargRank--
-        if(this.chargRank < 0) this.chargRank = 4
+        if (this.chargRank < 0) this.chargRank = 4
       }, 400)
     }
   },
@@ -578,21 +508,21 @@ export default {
       bottom: 118px;
       transform: translate(-50%, 0);
       display: inline-block;
-      background: #FFF7DB;
-      border: 1px solid #FFF0B2;
+      background: #fff7db;
+      border: 1px solid #fff0b2;
       border-radius: 4px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      .none-charging{
+      .none-charging {
         flex: 1;
         border-radius: 2px;
         margin: 1.5px 6px;
         width: 34px;
         height: 14px;
-        &.item-charging{
-         background: #12F894;
+        &.item-charging {
+          background: #12f894;
         }
       }
       .line {
@@ -609,39 +539,39 @@ export default {
     }
   }
 
-  .huicheng{
-    width:500px;
-    height:130px;
+  .huicheng {
+    width: 500px;
+    height: 130px;
     position: absolute;
-    left:50%;
-    top:250px;
-    transform:translate(-50%);
-    i{
+    left: 50%;
+    top: 250px;
+    transform: translate(-50%);
+    i {
       display: block;
       position: absolute;
     }
-    .img1{
+    .img1 {
       width: 26px;
       height: 26px;
       background-image: url(../../lib/base/sweeping_robot/assets/img1.png);
       background-size: 100% 100%;
     }
-    .img2{
+    .img2 {
       width: 20px;
       height: 20px;
       background-image: url(../../lib/base/sweeping_robot/assets/img2.png);
       background-size: 100% 100%;
     }
-    .img3{
+    .img3 {
       width: 26px;
       height: 26px;
       background-image: url(../../lib/base/sweeping_robot/assets/img3.png);
       background-size: 100% 100%;
     }
-    .img4{
+    .img4 {
       width: 6px;
       height: 6px;
-      background: #FFCE00;
+      background: #ffce00;
       border-radius: 50%;
     }
 
@@ -703,165 +633,290 @@ export default {
       left: 280px;
     }
 
-    @keyframes animX1{
-      0% {left: 50px;}
-      100% {left:60px}
+    @keyframes animX1 {
+      0% {
+        left: 50px;
+      }
+      100% {
+        left: 60px;
+      }
     }
-    @keyframes animX2{
-      0% { left: 30px;}
-      100% { left: 45px;}
+    @keyframes animX2 {
+      0% {
+        left: 30px;
+      }
+      100% {
+        left: 45px;
+      }
     }
-    @keyframes animX3{
-      0% {left: 100px;}
-      100% {left: 110px;}
+    @keyframes animX3 {
+      0% {
+        left: 100px;
+      }
+      100% {
+        left: 110px;
+      }
     }
-    @keyframes animX4{
-      0% {left: 150px;}
-      100% {left: 160px;}
+    @keyframes animX4 {
+      0% {
+        left: 150px;
+      }
+      100% {
+        left: 160px;
+      }
     }
-    @keyframes animX5{
-      0% {left: 150px;}
-      100% {left:160px;}
+    @keyframes animX5 {
+      0% {
+        left: 150px;
+      }
+      100% {
+        left: 160px;
+      }
     }
-    @keyframes animX6{
-      0% {left: 250px;}
-      100% {left: 260px;}
+    @keyframes animX6 {
+      0% {
+        left: 250px;
+      }
+      100% {
+        left: 260px;
+      }
     }
-    @keyframes animX7{
-      0% {left: 365px;}
-      100% {left: 380px;}
+    @keyframes animX7 {
+      0% {
+        left: 365px;
+      }
+      100% {
+        left: 380px;
+      }
     }
-    @keyframes animX8{
-      0% {left: 200px;}
-      100% {left: 210px;}
+    @keyframes animX8 {
+      0% {
+        left: 200px;
+      }
+      100% {
+        left: 210px;
+      }
     }
-    @keyframes animX9{
-      0% {left: 430px;}
-      100% {left: 440px;}
+    @keyframes animX9 {
+      0% {
+        left: 430px;
+      }
+      100% {
+        left: 440px;
+      }
     }
 
-    @keyframes animX10{
-      0% {left: 220px;;}
-      100% {left: 230px;}
+    @keyframes animX10 {
+      0% {
+        left: 220px;
+      }
+      100% {
+        left: 230px;
+      }
     }
-    @keyframes animX11{
-      0% {left: 300px;}
-      100% {left: 310px;}
+    @keyframes animX11 {
+      0% {
+        left: 300px;
+      }
+      100% {
+        left: 310px;
+      }
     }
-    @keyframes animX12{
-      0% {left: 320px;}
-      100% {left: 330px;}
+    @keyframes animX12 {
+      0% {
+        left: 320px;
+      }
+      100% {
+        left: 330px;
+      }
     }
-    @keyframes animX13{
-      0% {left: 350px;}
-      100% {left: 364px;}
+    @keyframes animX13 {
+      0% {
+        left: 350px;
+      }
+      100% {
+        left: 364px;
+      }
     }
-    @keyframes animX14{
-      0% {left: 400px;}
-      100% {left: 410px;}
+    @keyframes animX14 {
+      0% {
+        left: 400px;
+      }
+      100% {
+        left: 410px;
+      }
     }
 
+    @keyframes animY1 {
+      0% {
+        top: 15px;
+      }
+      100% {
+        top: 100px;
+      }
+    }
+    @keyframes animY2 {
+      0% {
+        top: 90px;
+      }
+      100% {
+        top: 150px;
+      }
+    }
+    @keyframes animY3 {
+      0% {
+        top: 40px;
+      }
+      100% {
+        top: 130px;
+      }
+    }
+    @keyframes animY4 {
+      0% {
+        top: 70px;
+      }
+      100% {
+        top: 140px;
+      }
+    }
+    @keyframes animY5 {
+      0% {
+        top: 30px;
+      }
+      100% {
+        top: 120px;
+      }
+    }
+    @keyframes animY6 {
+      0% {
+        top: 50px;
+      }
+      100% {
+        top: 130px;
+      }
+    }
+    @keyframes animY7 {
+      0% {
+        top: 70px;
+      }
+      100% {
+        top: 120px;
+      }
+    }
+    @keyframes animY8 {
+      0% {
+        top: 55px;
+      }
+      100% {
+        top: 100px;
+      }
+    }
+    @keyframes animY9 {
+      0% {
+        top: 100px;
+      }
+      100% {
+        top: 150px;
+      }
+    }
 
-    @keyframes animY1{
-      0% {top: 15px;}
-      100% {top: 100px;}
-    }
-    @keyframes animY2{
-      0% {top: 90px;}
-      100% {top: 150px;}
-    }
-    @keyframes animY3{
-      0% {top: 40px;}
-      100% {top: 130px;}
-    }
-    @keyframes animY4{
-      0% {top: 70px;}
-      100% {top: 140px;}
-    }
-    @keyframes animY5{
-      0% {top: 30px;}
-      100% {top: 120px;}
-    }
-    @keyframes animY6{
-      0% {top: 50px;}
-      100% {top: 130px;}
-    }
-    @keyframes animY7{
-      0% {top: 70px;}
-      100% {top: 120px;}
-    }
-    @keyframes animY8{
-      0% {top: 55px;}
-      100% {top: 100px;}
-    }
-    @keyframes animY9{
-      0% {top: 100px;}
-      100% {top: 150px;}
-    }
-
-    @keyframes animY10{
-      0% {top: 10px;}
-      100% {top: 80px;}
-    }
-    @keyframes animY11{
-      0% {top: 60px;}
-      100% {top: 130px;}
-    }
-    @keyframes animY12{
-      0% {top: 20px;}
-      100% {top: 120px;}
-    }
-    @keyframes animY13{
-      0% {top: 5px;}
-      100% {top: 80px;}
-    }
-    @keyframes animY14{
-      0% {top: 18px;}
-      100% {top: 110px;}
-    }
-    &.run{
-      .sport1{
-        animation: animX1 .5s ease-in-out 0s infinite alternate, animY1 4s ease-in-out 0s infinite;
+    @keyframes animY10 {
+      0% {
+        top: 10px;
       }
-      .sport2{
-        animation: animX2 .5s ease-in-out -.5s infinite alternate, animY2 4s ease-in-out -.5s infinite;
+      100% {
+        top: 80px;
       }
-      .sport3{
-        animation: animX3 .5s ease-in-out -1s infinite alternate, animY3 4s ease-in-out -1s infinite;
+    }
+    @keyframes animY11 {
+      0% {
+        top: 60px;
       }
-      .sport4{
-        animation: animX4 .5s ease-in-out -1.5s infinite alternate, animY4 4s ease-in-out -1.5s infinite;
+      100% {
+        top: 130px;
       }
-      .sport5{
-        animation: animX5 .5s ease-in-out -2s infinite alternate, animY5 4s ease-in-out -2s infinite;
+    }
+    @keyframes animY12 {
+      0% {
+        top: 20px;
       }
-      .sport6{
-        animation: animX6 .5s ease-in-out -2.5s infinite alternate, animY6 4s ease-in-out -2.5s infinite;
+      100% {
+        top: 120px;
       }
-      .sport7{
-        animation: animX7 .5s ease-in-out -3s infinite alternate, animY7 4s ease-in-out -3s infinite;
+    }
+    @keyframes animY13 {
+      0% {
+        top: 5px;
       }
-      .sport8{
-        animation: animX8 .5s ease-in-out -3.5s infinite alternate, animY8 4s ease-in-out -3.5s infinite;
+      100% {
+        top: 80px;
       }
-      .sport9{
-        animation: animX9 .5s ease-in-out -3.7s infinite alternate, animY9 4s ease-in-out -3.7s infinite;
+    }
+    @keyframes animY14 {
+      0% {
+        top: 18px;
+      }
+      100% {
+        top: 110px;
+      }
+    }
+    &.run {
+      .sport1 {
+        animation: animX1 0.5s ease-in-out 0s infinite alternate,
+          animY1 4s ease-in-out 0s infinite;
+      }
+      .sport2 {
+        animation: animX2 0.5s ease-in-out -0.5s infinite alternate,
+          animY2 4s ease-in-out -0.5s infinite;
+      }
+      .sport3 {
+        animation: animX3 0.5s ease-in-out -1s infinite alternate,
+          animY3 4s ease-in-out -1s infinite;
+      }
+      .sport4 {
+        animation: animX4 0.5s ease-in-out -1.5s infinite alternate,
+          animY4 4s ease-in-out -1.5s infinite;
+      }
+      .sport5 {
+        animation: animX5 0.5s ease-in-out -2s infinite alternate,
+          animY5 4s ease-in-out -2s infinite;
+      }
+      .sport6 {
+        animation: animX6 0.5s ease-in-out -2.5s infinite alternate,
+          animY6 4s ease-in-out -2.5s infinite;
+      }
+      .sport7 {
+        animation: animX7 0.5s ease-in-out -3s infinite alternate,
+          animY7 4s ease-in-out -3s infinite;
+      }
+      .sport8 {
+        animation: animX8 0.5s ease-in-out -3.5s infinite alternate,
+          animY8 4s ease-in-out -3.5s infinite;
+      }
+      .sport9 {
+        animation: animX9 0.5s ease-in-out -3.7s infinite alternate,
+          animY9 4s ease-in-out -3.7s infinite;
       }
 
-      .sport10{
-        animation: animX10 .5s ease-in-out -2s infinite alternate, animY10 4s ease-in-out -2s infinite;
+      .sport10 {
+        animation: animX10 0.5s ease-in-out -2s infinite alternate,
+          animY10 4s ease-in-out -2s infinite;
       }
-      .sport11{
-        animation: animX11 .5s ease-in-out -2.5s infinite alternate, animY11 4s ease-in-out -2.5s infinite;
+      .sport11 {
+        animation: animX11 0.5s ease-in-out -2.5s infinite alternate,
+          animY11 4s ease-in-out -2.5s infinite;
       }
-      .sport12{
-        animation: animX12 .5s ease-in-out -3s infinite alternate, animY12 4s ease-in-out -3s infinite;
+      .sport12 {
+        animation: animX12 0.5s ease-in-out -3s infinite alternate,
+          animY12 4s ease-in-out -3s infinite;
       }
-      .sport13{
-        animation: animX13 .5s ease-in-out -3.5s infinite alternate, animY13 4s ease-in-out -3.5s infinite;
+      .sport13 {
+        animation: animX13 0.5s ease-in-out -3.5s infinite alternate,
+          animY13 4s ease-in-out -3.5s infinite;
       }
-      .sport14{
-        animation: animX14 .5s ease-in-out -3.7s infinite alternate, animY14 4s ease-in-out -3.7s infinite;
+      .sport14 {
+        animation: animX14 0.5s ease-in-out -3.7s infinite alternate,
+          animY14 4s ease-in-out -3.7s infinite;
       }
     }
   }
@@ -924,8 +979,8 @@ export default {
 
   .btn-wrap {
     margin: 0 24px 0;
-    &.disable{
-      opacity: .2;
+    &.disable {
+      opacity: 0.2;
     }
     &.up-index {
       position: relative;
@@ -961,7 +1016,6 @@ export default {
         height: 48px;
         background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
         background-size: 100% 100%;
-
       }
       &.active {
         &::before {
@@ -1010,23 +1064,23 @@ export default {
       }
       &.plan_clean::before {
         background-image: url(../../lib/base/sweeping_robot/assets/guihua@2x.png);
-        opacity: .2;
+        opacity: 0.2;
       }
       &.single_plan::before {
         background-image: url(../../lib/base/sweeping_robot/assets/danjian3.png);
-         opacity: .2;
+        opacity: 0.2;
       }
       &.edge_clean::before {
         background-image: url(../../lib/base/sweeping_robot/assets/yanbian3.png);
-         opacity: .2;
+        opacity: 0.2;
       }
       &.design_clean::before {
         background-image: url(../../lib/base/sweeping_robot/assets/dingwei3.png);
-         opacity: .2;
+        opacity: 0.2;
       }
       &.mop::before {
         background-image: url(../../lib/base/sweeping_robot/assets/tuodi3.png);
-         opacity: .2;
+        opacity: 0.2;
       }
     }
   }
@@ -1208,7 +1262,7 @@ export default {
       top: -144px;
       right: 34px;
     }
-     .item6 {
+    .item6 {
       top: 0;
       right: 34px;
     }
@@ -1227,7 +1281,7 @@ export default {
       display: flex;
       flex-direction: column;
       &.disable {
-        opacity: .2;
+        opacity: 0.2;
       }
       .name {
         margin-top: 8px;
