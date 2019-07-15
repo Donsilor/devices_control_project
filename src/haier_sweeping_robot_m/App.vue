@@ -54,10 +54,6 @@
       <div 
         v-show="model.status == 'charging'"
         class="wrap-filter">
-        <!-- <div class="filter">
-          <div class="filter-item">{{ model.filter_time_remaining }}<sup>%</sup></div>
-          <div class="filter-name">剩余滤芯</div>
-        </div> -->
         <div class="filter">
           <div class="filter-item">{{ model.battery_percentage }}<sup>%</sup></div>
           <div class="filter-name">目前电量</div>
@@ -67,22 +63,10 @@
       <div 
         v-show="model.status != 'charging'"
         class="wrap-filter detail">
-        <!-- <div class="filter">
-          <div class="filter-item">{{ model.filter_time_remaining }}<sup>%</sup></div>
-          <div class="filter-name">剩余滤芯</div>
-        </div> -->
-        <!-- <div class="filter">
-          <div class="filter-item">{{ model.battery_percentage }}<sup>m²</sup></div>
-          <div class="filter-name">清扫面积</div>
-        </div> -->
         <div class="filter">
           <div class="filter-item">{{ model.battery_percentage }}<sup>%</sup></div>
           <div class="filter-name">剩余电量</div>
         </div>
-        <!-- <div class="filter">
-          <div class="filter-item">{{ model.working_time }}<sup class="comma">，</sup></div>
-          <div class="filter-name">已扫时间</div>
-        </div> -->
       </div>
 
       <!-- 按钮 -->
@@ -112,10 +96,15 @@
           <div 
             :class="[model.status == 'working' ? 'btn-stop' : 'btn-clean', 'btn center']" 
             @click="setCommand"/>
-          <div class="btn-name">清扫</div>
+          <div 
+            v-show="model.status !== 'working'" 
+            class="btn-name">清扫</div>
+          <div 
+            v-show="model.status == 'working'" 
+            class="btn-name">暂停</div>
         </div>
 
-        <div :class="[{'disable': model.status == 'charging'||model.status == 'working'}, 'btn-wrap']">
+        <div :class="[{'disable': model.status == 'working'}, 'btn-wrap']">
           <div 
             :class="[btnClass, 'btn center btn-plan']" 
             @click="handeModeClick"/>
@@ -135,7 +124,6 @@
     <div 
       v-show="showModeBtns"
       class="btns-panel center"
-      去
       @touchmove.prevent
       @click="hide">
       <div class="items btns">
@@ -155,12 +143,12 @@
           <div class="name">沿边</div>
         </div>
         <div 
-          :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' }, {' btn-loading': btnLoading.design_clean },'btn design_clean center']"
+          :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' },{' btn-loading': btnLoading.design_clean },{'disable': model.status == 'charging'},'btn design_clean center']"
           @click.stop="setMode('design_clean')">
           <div class="name">定点</div>
         </div>
         <div 
-          :class="[{ 'item5': animation }, {'disable': model.status !== 'charging'},'btn mop center']"
+          :class="[{ 'item5': animation }, {'disable': model.status !== 'charging' || model.status == 'charging'},'btn mop center']"
           @click.stop="setMode('mop')">
           <div class="name">拖地</div>
         </div>
@@ -247,7 +235,7 @@ export default {
         plan_clean: false,
         single_plan: false,
         edge_clean: false,
-        design_clean: false,
+        design_clean: false
       },
       showSubPage: false
     }
@@ -351,16 +339,20 @@ export default {
       if(mode === 'mop') {
         return false
       }
+      if(this.model.status == 'charging'){
+        if(mode === 'design_clean'){
+          return false
+        }
+      }
       this.controlDevice('mode', mode, {},
        () => {
-          if(this.showModeBtns) this.showModeBtns = false
+          if(this.showModeBtns) this.hide()
        }, () => {}, mode)
     },
-    setCommand(e) {
+    setCommand() {
       console.log(this.model.status)
       //如果在充电中，无法点击清扫
       if(this.model.status == "charging") {
-         e.stopPropatation||e.cancelBubble == true
         return false
       }
       // 清扫 暂时
@@ -393,10 +385,9 @@ export default {
         }, 3000)
       })
     },
-    setSwitch(e) {
-       //如果在充电中，无法点击清扫
+    setSwitch() {
+       //如果在充电中，无法点击开关机
       if(this.model.status == "charging") {
-         e.stopPropatation||e.cancelBubble == true
         return false
       }
       let switchStatus = ''
@@ -408,12 +399,7 @@ export default {
       this.controlDevice("switch", switchStatus)
       
     },
-    handeModeClick(e) {
-      //如果在充电中，无法选择模式
-      if(this.model.status == "charging") {
-         e.stopPropatation||e.cancelBubble == true
-        return false
-      }
+    handeModeClick() {
       this.showModeBtns = true
       this.$nextTick(() => {
         setTimeout(() => {
@@ -488,7 +474,6 @@ export default {
       })
     },
     setCharging() {
-      // this.model.status = "charging"
       this.controlDevice('mode', 'recharge', {},
        () => {
           this.initCharge()
@@ -509,8 +494,7 @@ export default {
     onSuccess(data) {
       this.status = "success"
       this.model = data.attribute
-
-      if(data.attribute.status == 'charge_completed') {
+      if(data.attribute.status == 'charge_completed' || data.attribute.status == 'charging') {
         this.initCharge()
       }
       // 将model 保存在 localStorage
@@ -548,10 +532,12 @@ export default {
 </script>
 <style lang="less" scoped>
 .page {
-  min-height: 100%;
+  min-height: 100vh;
   overflow-x: hidden;
   position: relative;
   background: #fff;
+  display: flex;
+  flex-direction: column;
   .err-tips {
     position: absolute;
     top: 150px;
@@ -572,7 +558,8 @@ export default {
   }
   .wrap-robot {
     text-align: center;
-    padding-top: 130px;
+    // padding-top: 130px;
+    padding-top: 180px;
     position: relative;
     z-index: 1;
     .garbage {
@@ -625,10 +612,9 @@ export default {
   .huicheng{
     width:500px;
     height:130px;
-    // border:1px solid red;
     position: absolute;
     left:50%;
-    top:220px;
+    top:250px;
     transform:translate(-50%);
     i{
       display: block;
@@ -880,11 +866,13 @@ export default {
     }
   }
   .wrap-filter {
+    flex: 1;
+    width: 100%;
     display: flex;
     justify-content: center;
-    margin: 48px 0;
+    align-items: center;
     &.detail {
-      margin: 48px 0;
+      margin-bottom: 48px;
     }
   }
   .filter {
@@ -915,9 +903,12 @@ export default {
 
   .panel-btn {
     height: 306px;
+    width: 100%;
     background: #ffffff;
     box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
     border-radius: 42px 42px 0px 0px;
+    // position: fixed;
+    // bottom: 0;
     .btn {
       margin-top: 24px;
       width: 100%;
@@ -932,7 +923,7 @@ export default {
   }
 
   .btn-wrap {
-    margin: 50px 24px 0;
+    margin: 0 24px 0;
     &.disable{
       opacity: .2;
     }
@@ -1180,13 +1171,14 @@ export default {
     right: 0;
     z-index: 99999;
     width: 100%;
-
     background: rgba(0, 0, 0, 0.8);
   }
   .items {
     position: fixed;
-    left: 592px;
-    top: 1040px;
+    // left: 0;
+    left: 50%;
+    transform: translate(-50%);
+    bottom: 70px;
     z-index: 999999;
     width: 750px;
     min-height: 160px;
@@ -1194,32 +1186,31 @@ export default {
       transition: all 0.3s ease-in-out;
       position: absolute;
       top: 0;
-      left: 0;
+      right: 34px;
     }
     .item1 {
       top: -720px;
-      left: 0;
+      right: 34px;
     }
     .item2 {
       top: -576px;
-      left: 0;
+      right: 34px;
     }
     .item3 {
       top: -432px;
-      left: 0;
+      right: 34px;
     }
     .item4 {
       top: -288px;
-      left: 0;
+      right: 34px;
     }
     .item5 {
       top: -144px;
-      left: 0;
+      right: 34px;
     }
-  }
-  &.more {
-    .items {
-      left: 384px;
+     .item6 {
+      top: 0;
+      right: 34px;
     }
   }
   .btns {
@@ -1227,7 +1218,7 @@ export default {
     transition: all 0.3s ease-in-out;
     margin-top: 57px;
     .btn {
-      margin-right: 40px;
+      margin-right: 20px;
       width: 120px;
       height: 120px;
       border: 1px solid #fff;
