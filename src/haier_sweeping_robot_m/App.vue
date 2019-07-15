@@ -143,7 +143,7 @@
           <div class="name">沿边</div>
         </div>
         <div 
-          :class="[{ 'item4': animation }, {'disable': model.status !== 'charging' || model.status == 'charging'},'btn design_clean center']"
+          :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' },{' btn-loading': btnLoading.design_clean },{'disable': model.status == 'charging'},'btn design_clean center']"
           @click.stop="setMode('design_clean')">
           <div class="name">定点</div>
         </div>
@@ -235,6 +235,7 @@ export default {
         plan_clean: false,
         single_plan: false,
         edge_clean: false,
+        design_clean: false
       },
       showSubPage: false
     }
@@ -335,19 +336,23 @@ export default {
         }, () => { }, speed)
     },
     setMode(mode) {
-      if(mode === 'mop'|| mode == 'design_clean') {
+      if(mode === 'mop') {
         return false
+      }
+      if(this.model.status == 'charging'){
+        if(mode === 'design_clean'){
+          return false
+        }
       }
       this.controlDevice('mode', mode, {},
        () => {
           if(this.showModeBtns) this.hide()
        }, () => {}, mode)
     },
-    setCommand(e) {
+    setCommand() {
       console.log(this.model.status)
       //如果在充电中，无法点击清扫
       if(this.model.status == "charging") {
-         e.stopPropatation||e.cancelBubble == true
         return false
       }
       // 清扫 暂时
@@ -380,10 +385,9 @@ export default {
         }, 3000)
       })
     },
-    setSwitch(e) {
-       //如果在充电中，无法点击清扫
+    setSwitch() {
+       //如果在充电中，无法点击开关机
       if(this.model.status == "charging") {
-         e.stopPropatation||e.cancelBubble == true
         return false
       }
       let switchStatus = ''
