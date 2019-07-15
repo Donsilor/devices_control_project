@@ -67,7 +67,7 @@
 
       <!-- 按钮 -->
       <div class="panel-btn center">
-        <div :class="[{'up-index': !isOffline }, {'disable': model.status == 'charging'}, 'btn-wrap']">
+        <div :class="[{'up-index': !isOffline }, {'disable': model.status == 'charging' || model.mode == 'mop'}, 'btn-wrap']">
           <div 
             :class="[{'active': !isClose && !isOffline }, 'btn btn-swich center']"
             @click="setSwitch" />
@@ -334,7 +334,7 @@ export default {
     // 设备开关
     setSwitch() {
       //如果在充电中，无法点击开关机
-      if (this.model.status == "charging") {
+      if (this.model.status == "charging" || this.model.mode == 'mop') {
         return false
       }
       let switchStatus = ''
