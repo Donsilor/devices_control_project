@@ -650,6 +650,7 @@ export default {
       if(this.isShowBar){
         window.history.go(-1)
       } else {
+        service.RemoteController({ show: false })
         HdSmart.UI.popWindow()
       }
     }

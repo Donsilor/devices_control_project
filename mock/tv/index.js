@@ -14,7 +14,7 @@ if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
           callback(mockData.getChannelData())
           break
         case 'searchData':
-          callback(mockData.searchData())
+          callback(mockData.searchData(data))
           break
         case 'fuzzySearch':
           callback(mockData.fuzzySearch())

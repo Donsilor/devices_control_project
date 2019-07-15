@@ -780,10 +780,9 @@ export default {
     },
     goBack(){
       if(this.isShowBar || window.history.length > 1){
-        console.log('go -1')
         window.history.go(-1)
       } else {
-        console.log('popWindow')
+        service.RemoteController({ show: false })
         HdSmart.UI.popWindow()
       }
       this.loading = false

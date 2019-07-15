@@ -8,10 +8,10 @@ export function nameType(type) {
       return '同步电视剧'
       break;
     case 2:
-      return '王牌综艺'
+      return '亲子动漫'
       break;
     case 3:
-      return '亲子动漫'
+      return '王牌综艺'
       break;
   } 
 }

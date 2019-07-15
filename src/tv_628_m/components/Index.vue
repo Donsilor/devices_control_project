@@ -1,18 +1,18 @@
 <!-- 首页 -->
 <template>
   <div class="page-index">
-
+    <!-- 顶部导航菜单 -->
     <topbar 
       v-if="isShowBar"
       :title="$store.state.device_name"
       :more="true"
       :search="false"
       :back="back" />
-
+    <!-- 设备状态提示 -->
     <status-tip 
       v-show="device_uuid"
       :bar-height="barHeight" />
-
+    <!-- 栏目分类 -->
     <div class="swiper mar">
       <div 
         v-if="homePageInfo.length === 0"
@@ -51,13 +51,12 @@
         <div class="block" />
       </div>
     </div>
-
+    <!-- 列表 -->
     <div 
       v-for="(it, idx) in allList"
       :key="idx"
       class="mar">
       <div class="title">{{ idx | nameType }}</div>
-      <!-- 列表 -->
       <ul class="vlist list-m60">
         <li 
           v-for="item in it"
@@ -83,33 +82,43 @@
         </li>
       </ul>
     </div>
-
-    <div class="control">
+    <!-- 控制菜单 -->
+    <div :class="[{'hide': hideMenu}, 'control']">
       <div class="block" />
       <div class="right">
         <div 
           class="icon-switch center"
           @click.prevent="cmd('rcPower')" />
-        <div 
+        <!-- <div 
           v-finger:touch-end="voldownEnd"
           v-finger:touch-move="touchMove"
           v-finger:long-tap="voldownStart"
-          class="icon-sub center" />
-        <div 
+          class="icon-sub center" /> -->
+        <!-- <div 
           v-finger:touch-end="volupEnd"
           v-finger:touch-move="touchMove"
           v-finger:long-tap="volupStart"
-          class="icon-add center" />
-        <div 
+          class="icon-add center" /> -->
+        <!-- <div 
           class="icon-bak center"
-          @click.prevent="cmd('rcBack')" />
+          @click.prevent="cmd('rcBack')" /> -->
 
         <div 
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-ykq center"
           @click.prevent="cmd('remoteControlEvent')" />
+
+        <div 
+          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
+          class="icon-screen center"
+          @click.prevent="cmd('screenProjectionEvent')" />
+
+        <div 
+          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
+          class="icon-detail center"
+          @click.prevent="goDetail" />
       </div>
-      <div class="left add">
+      <!-- <div class="left add">
         <div 
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-screen center"
@@ -120,7 +129,7 @@
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-detail center"
           @click.prevent="goDetail" />
-      </div>
+      </div> -->
       <div class="block" />
     </div>
   </div>
@@ -133,7 +142,7 @@
   align-items: center;
 }
 .page-index {
-  padding: 48px 0 210px;
+  padding: 48px 0;
   background: #f8f8f8;
   .title {
     font-size: 40px;
@@ -284,7 +293,7 @@
   .score {
     position: absolute;
     right: 15px;
-    top: 420px;
+    top: 260px;
     background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);
     width: 60px;
     line-height: 30px;
@@ -339,6 +348,8 @@
 }
 
 .control {
+  transition: all .3s ease-out;
+
   position: fixed;
   bottom: 16px;
   left: 0;
@@ -350,6 +361,9 @@
 
   overflow-x: auto;
   -webkit-box-orient: horizontal;
+  &.hide{
+    bottom: -200px;
+  }
   &::-webkit-scrollbar {
     display: none;
   }
@@ -366,29 +380,6 @@
     &.add {
       margin-right: 0;
       margin-left: 12px;
-    }
-    .icon-screen {
-      height: 136px;
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../../lib/base/tv/assets/new/screen.png);
-        background-size: 100% 100%;
-      }
-    }
-
-    .icon-detail {
-      height: 136px;
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../../lib/base/tv/assets/new/detail.png);
-        background-size: 100% 100%;
-      }
     }
   }
   .right {
@@ -446,26 +437,50 @@
     }
     .icon-ykq {
       height: 136px;
-      &::after {
-        position: absolute;
-        left: 0;
-        content: "";
-        width: 1px;
-        height: 80px;
-        background-image: linear-gradient(
-          -180deg,
-          rgba(238, 238, 238, 0) 0%,
-          #d9d9d9 52%,
-          rgba(216, 216, 216, 0) 100%
-        );
-        border-radius: 1px;
-      }
+      // &::after {
+      //   position: absolute;
+      //   left: 0;
+      //   content: "";
+      //   width: 1px;
+      //   height: 80px;
+      //   background-image: linear-gradient(
+      //     -180deg,
+      //     rgba(238, 238, 238, 0) 0%,
+      //     #d9d9d9 52%,
+      //     rgba(216, 216, 216, 0) 100%
+      //   );
+      //   border-radius: 1px;
+      // }
       &::before {
         content: "";
         display: block;
         width: 44px;
         height: 44px;
         background-image: url(../../../lib/base/tv/assets/new/ykq.png);
+        background-size: 100% 100%;
+      }
+    }
+
+    .icon-screen {
+      height: 136px;
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../../lib/base/tv/assets/new/screen.png);
+        background-size: 100% 100%;
+      }
+    }
+
+    .icon-detail {
+      height: 136px;
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../../lib/base/tv/assets/new/detail.png);
         background-size: 100% 100%;
       }
     }
@@ -518,20 +533,22 @@ export default {
       homePageInfo: [],
       ...service.getInitData(),
 
-      allList: [],
+      listDY: [],
+      listDSJ: [],
+      listZY: [],
+      listDM: [],
+
       //排序
       orderby: Object.freeze([
         { text: "最新", orderId: "year" },
         { text: "好评", orderId: "iscore" }
       ]),
-      //当前分类，默认全部
       current_category: "",
-      //当前地区，默认全部
       current_region: "",
-      //当前年份，默认全部
       current_year: "",
-      //当前年份，默认全部
-      current_orderby: "year"
+      current_orderby: "year",
+
+      hideMenu: false
     }
   },
   computed: {
@@ -540,6 +557,9 @@ export default {
     },
     barHeight() {
       return this.isShowBar ? 0 : 44
+    },
+    allList() {
+      return [this.listDY, this.listDSJ, this.listZY, this.listDM]
     }
   },
   watch: {
@@ -553,6 +573,7 @@ export default {
   },
   mounted() {
     document.body.scrollTop = 0
+    this.initFixedMenu()
     service.RemoteController({ show: false })
     this.$nextTick(() => {
       if (!infoCache.length) {
@@ -630,8 +651,6 @@ export default {
       })
     },
     filterData(channelId) {
-      console.log(channelId)
-      console.log('------before-------')
       service.searchData(
         {
           channelId: channelId,
@@ -645,8 +664,16 @@ export default {
           pageNo: 1
         },
         (err, data) => {
-          console.log('------push-------')
-          this.allList.push(data.data.list.slice(0, 6))
+          let cid = data.data.channelId
+          if(cid === '001'){
+            this.listDY = data.data.list.slice(0, 6)
+          } else if(cid === '002') {
+            this.listDSJ = data.data.list.slice(0, 6)
+          } else if(cid === '003') {
+            this.listZY = data.data.list.slice(0, 6)
+          } else if(cid === '004') {
+            this.listDM = data.data.list.slice(0, 6)
+          }
         }
       )
     },
@@ -682,6 +709,18 @@ export default {
     },
     goDetail() {
       HdSmart.UI.goDeviceDetail()
+    },
+    initFixedMenu() {
+      let last_position = 0
+      window.addEventListener('scroll', () => {
+        let current_position = window.scrollY
+        if (current_position < last_position) {
+          this.hideMenu = false
+        } else if (current_position > last_position) {
+          this.hideMenu = true
+        }
+        last_position = current_position
+      })
     }
   }
 }

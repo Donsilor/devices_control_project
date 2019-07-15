@@ -345,7 +345,7 @@ export default {
       loadState: '',
       isFirstLoad: true
     }
-    },
+  },
   watch: {
     word(val) {
       if (val == '') {
@@ -363,6 +363,25 @@ export default {
                 }
       }
     }
+  },
+  mounted() {
+    this.getHistory()
+        service.RemoteController({ 'show': true })
+        setTimeout(() => {
+      this.$el.querySelector('.search_input input').focus()
+        }, 500)
+
+        window.addEventListener('scroll', this.loadMore)
+        this.$Lazyload.$on('error', function({ el, src, loading }) {
+      el.src = el.dataset.src1
+            el.onerror = function() {
+        el.src = loading
+                el.onerror = null
+            }
+    })
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.loadMore)
   },
   methods: {
     // 删除搜索词
@@ -517,25 +536,6 @@ export default {
                 this.historyData = data.data
             })
         }
-  },
-  mounted() {
-    this.getHistory()
-        service.RemoteController({ 'show': true })
-        setTimeout(() => {
-      this.$el.querySelector('.search_input input').focus()
-        }, 500)
-
-        window.addEventListener('scroll', this.loadMore)
-        this.$Lazyload.$on('error', function({ el, src, loading }) {
-      el.src = el.dataset.src1
-            el.onerror = function() {
-        el.src = loading
-                el.onerror = null
-            }
-    })
-    },
-  destroyed() {
-    window.removeEventListener('scroll', this.loadMore)
-    }
+  }
 }
 </script>
