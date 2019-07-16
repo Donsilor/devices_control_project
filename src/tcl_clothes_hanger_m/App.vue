@@ -12,8 +12,9 @@
         <div class="title">{{ device_name }}</div>
         <div class="right">
           <a
-            href=""
+            href="#"
             class="icon-more"
+            @click.prevent="goDetail"
           />
         </div>
 
@@ -168,9 +169,9 @@
 
 
 <script>
-import Modal from "../../lib/components/Modal.vue";
-import Icon from "../../lib/components/SettingIconMobile.vue";
-import SubPage from '../../lib/components/SubPage.vue'
+import Modal from "../../lib/components/Modal.vue"
+import Icon from "../../lib/components/SettingIconMobile.vue"
+import SubPage from './SubPage.vue'
 const tips = {
   moving_up: "正在上升",
   moved_up: "已上升至顶部",
@@ -190,125 +191,125 @@ const tips = {
   // sterilizing: '正在杀菌',
   sterilized: "杀菌已完成",
   sterilize_cancle: "杀菌已取消"
-};
+}
 
-const radio = (document.documentElement.clientWidth || window.innerWidth) / 750 * 75;
+const radio = (document.documentElement.clientWidth || window.innerWidth) / 750 * 75
 
 function getToggle(val) {
-  return val === "on" ? "off" : "on";
+  return val === "on" ? "off" : "on"
 }
 
 function toggleHead(flag) {
   HdSmart.UI.toggleHeadAndFoot(!flag)
 }
 
-const duration = 28000;
-const start_pos = 0.5; //最小高度
-const end_pos = 2.16; //最大高度
-const ch_height = 1.66; //
+const duration = 28000
+const start_pos = 0.5 //最小高度
+const end_pos = 2.16 //最大高度
+const ch_height = 1.66 //
 
-var speed = ch_height / duration * 20;
-var moveRAF;
+var speed = ch_height / duration * 20
+var moveRAF
 
 function setMove(el, dir) {
-  cancelAnimationFrame(moveRAF);
-  var start = Date.now();
-  var height = getHeight(el.style.height);
+  cancelAnimationFrame(moveRAF)
+  var start = Date.now()
+  var height = getHeight(el.style.height)
   var move = function() {
-    var end = Date.now();
-    var p = (end - start) / 20;
-    if (p == 0) p = 1;
-    start = end;
+    var end = Date.now()
+    var p = (end - start) / 20
+    if (p == 0) p = 1
+    start = end
     if (dir == "up") {
-      height -= speed * p;
-      el.style.height = height + "rem";
+      height -= speed * p
+      el.style.height = height + "rem"
       if (height > start_pos) {
-        moveRAF = requestAnimationFrame(move);
+        moveRAF = requestAnimationFrame(move)
       } else {
-        cancelAnimationFrame(moveRAF);
+        cancelAnimationFrame(moveRAF)
       }
     } else if (dir == "down") {
-      height += speed * p;
-      el.style.height = height + "rem";
+      height += speed * p
+      el.style.height = height + "rem"
       if (height < end_pos) {
-        moveRAF = requestAnimationFrame(move);
+        moveRAF = requestAnimationFrame(move)
       } else {
-        cancelAnimationFrame(moveRAF);
+        cancelAnimationFrame(moveRAF)
       }
     }
-  };
-  moveRAF = requestAnimationFrame(move);
+  }
+  moveRAF = requestAnimationFrame(move)
 }
 
 function setStop(el, height) {
   if (height) {
-    el.style.height = height;
+    el.style.height = height
   }
-  cancelAnimationFrame(moveRAF);
+  cancelAnimationFrame(moveRAF)
 }
 
 function getHeight(height) {
   if (height.indexOf("px") >= 0) {
-    height = height.replace("px", "") * 1 / radio;
+    height = height.replace("px", "") * 1 / radio
   } else {
-    height = height.replace("rem", "") * 1;
+    height = height.replace("rem", "") * 1
   }
-  return height;
+  return height
 }
 
 function setDuration(el, dir) {
-  var percentage;
-  var height = el.style.height;
+  var percentage
+  var height = el.style.height
   if (height.indexOf("px") >= 0) {
-    height = height.replace("px", "") * 1 / radio;
+    height = height.replace("px", "") * 1 / radio
   } else {
-    height = height.replace("rem", "") * 1;
+    height = height.replace("rem", "") * 1
   }
   if (dir == "up") {
-    percentage = (height - start_pos) / ch_height * duration;
+    percentage = (height - start_pos) / ch_height * duration
   } else {
-    percentage = (end_pos - height) / ch_height * duration;
+    percentage = (end_pos - height) / ch_height * duration
   }
-  el.style.transitionDuration = percentage + "ms";
+  el.style.transitionDuration = percentage + "ms"
 }
 
 function setPosition(el, pos) {
-  if (!el) return;
+  if (!el) return
   switch (pos) {
     case "top":
-      setStop(el, start_pos + "01rem");
+      setStop(el, start_pos + "01rem")
       // el.style.height = start_pos+'01rem'
       // el.style.transitionDuration = '1000ms'
-      break;
+      break
     case "up":
-      setMove(el, "up");
+      setMove(el, "up")
       // el.style.height = start_pos+'rem'
-      break;
+      break
     case "bottom":
-      setStop(el, end_pos + "01rem");
+      setStop(el, end_pos + "01rem")
       // el.style.height = end_pos+'01rem'
       // el.style.transitionDuration = '1000ms'
-      break;
+      break
     case "down":
-      setMove(el, "down");
+      setMove(el, "down")
       // el.style.height = end_pos+'rem'
-      break;
+      break
     case "pause":
-      setStop();
+      setStop()
       // var computedStyle = document.defaultView.getComputedStyle( el, null )
       // el.style.height = computedStyle.getPropertyValue( "height" )
-      break;
+      break
   }
   if (!el.init) {
-    el.init = true;
+    el.init = true
     if (pos == "pause") {
-      el.style.height = "2rem";
+      el.style.height = "2rem"
     }
     // el.style.transitionDuration = '0ms'
   }
 }
 
-let pauseTipTimer;
+let pauseTipTimer
 
 export default {
   components: { Icon, Modal, SubPage },
@@ -328,7 +329,7 @@ export default {
       air_drying_remain: 0,
       sterilization_remain: 0,
       modeDialogShow: false
-    };
+    }
   },
   watch: {
     status(cur, prev) {
@@ -343,33 +344,39 @@ export default {
   created() {
     HdSmart.ready(() => {
       if (window.device_name) {
-        this.device_name = window.device_name;
+        this.device_name = window.device_name
       }
-      HdSmart.UI.hideLoading();
-      this.getSnapShot();
-    });
+      HdSmart.UI.hideLoading()
+      this.getSnapShot()
+    })
 
     HdSmart.onDeviceStateChange(data => {
-      this.onSuccess(data.result);
-    });
+      this.onSuccess(data.result)
+    })
   },
   methods: {
+    back() {
+      HdSmart.UI.popWindow()
+    },
+    goDetail() {
+      HdSmart.UI.goDeviceDetail()
+    },
     showTip(text, fade) {
-      this.tip = text;
-      clearTimeout(this.tipTime);
+      this.tip = text
+      clearTimeout(this.tipTime)
       if (fade) {
         this.tipTime = setTimeout(() => {
-          this.tip = "";
-        }, 2000);
+          this.tip = ""
+        }, 2000)
       }
     },
     showTip2(text, fade) {
-      this.tip2 = text;
-      clearTimeout(this.tipTime2);
+      this.tip2 = text
+      clearTimeout(this.tipTime2)
       if (fade) {
         this.tipTime2 = setTimeout(() => {
-          this.tip2 = "";
-        }, 2000);
+          this.tip2 = ""
+        }, 2000)
       }
     },
     /*toggleModal(visible) {
@@ -387,129 +394,129 @@ export default {
           }
         },
         () => {
-          success && success();
+          success && success()
         },
         () => {
-          this.showTip("操作失败", true);
+          this.showTip("操作失败", true)
         }
-      );
+      )
     },
     setUp() {
       if (this.status == "top" || this.status == "up") {
         if (this.status == "top") {
-          this.showTip2("已上升至顶部", true);
+          this.showTip2("已上升至顶部", true)
         }
-        return;
+        return
       }
       this.controlDevice("control", "up", () => {
         // this.status = 'up'
-      });
+      })
     },
     setDown() {
       if (this.status == "bottom" || this.status == "down") {
         if (this.status == "bottom") {
-          this.showTip2("已下降至底部", true);
+          this.showTip2("已下降至底部", true)
         }
-        return;
+        return
       }
       this.controlDevice("control", "down", () => {
         // this.status = 'down'
-      });
+      })
     },
     setPause() {
       if (this.status == "pause" || this.status == "top" || this.status == "bottom") {
-        return;
+        return
       }
       this.controlDevice("control", "pause", () => {
         // this.status = 'pause'
         // this.showTip2(tips.move_pause, true)
-      });
+      })
     },
     setLight() {
-      var val = getToggle(this.light);
+      var val = getToggle(this.light)
       this.controlDevice("light", val, () => {
-        this.light = val;
-      });
+        this.light = val
+      })
     },
     setWind() {
-      var val = getToggle(this.air_drying);
+      var val = getToggle(this.air_drying)
       this.controlDevice("air_drying", val, () => {
-        this.air_drying = val;
-      });
+        this.air_drying = val
+      })
     },
     setBake() {
-      var val = getToggle(this.drying);
+      var val = getToggle(this.drying)
       this.controlDevice("drying", val, () => {
-        this.drying = val;
-      });
+        this.drying = val
+      })
     },
     setSterilize() {
-      var val = getToggle(this.sterilization);
+      var val = getToggle(this.sterilization)
       if (val == "on" && this.status != "top") {
-        HdSmart.UI.toast("请先将晾衣机升至顶部，再进行杀菌");
+        HdSmart.UI.toast("请先将晾衣机升至顶部，再进行杀菌")
         // this.showTip('请先将晾衣机升至顶部，再进行杀菌', true)
-        return;
+        return
       }
       this.controlDevice("sterilization", val, () => {
-        this.sterilization = val;
-      });
+        this.sterilization = val
+      })
     },
     setMoveTip(attrs) {
       if (pauseTipTimer) {
-        clearTimeout(pauseTipTimer);
+        clearTimeout(pauseTipTimer)
       }
       if (attrs.connectivity && attrs.connectivity === "offline") {
-        attrs.status = "pause";
+        attrs.status = "pause"
       }
       if (attrs.status == "up") {
-        this.showTip2(tips.moving_up);
-        return;
+        this.showTip2(tips.moving_up)
+        return
       }
       if (attrs.status == "top" && this.status == "up") {
-        this.showTip2(tips.moved_up, true);
-        return;
+        this.showTip2(tips.moved_up, true)
+        return
       }
       if (attrs.status == "down") {
-        this.showTip2(tips.moving_down);
-        return;
+        this.showTip2(tips.moving_down)
+        return
       }
       if (attrs.status == "bottom" && this.status == "down") {
-        this.showTip2(tips.moved_down, true);
-        return;
+        this.showTip2(tips.moved_down, true)
+        return
       }
       if (attrs.status == "pause" && (this.status == "up" || this.status == "down")) {
         pauseTipTimer = setTimeout(() => {
-          this.showTip2(tips.move_pause, true);
-        }, 500);
-        return;
+          this.showTip2(tips.move_pause, true)
+        }, 500)
+        return
       }
     },
     setModeTip(attrs) {
       if (attrs.air_drying == "off" && this.air_drying == "on") {
         if (attrs.air_drying_remain == 0 && this.air_drying_remain == 1) {
-          this.showTip(tips.wind_dryed, true);
+          this.showTip(tips.wind_dryed, true)
         } else {
-          this.showTip(tips.wind_dry_cancle, true);
+          this.showTip(tips.wind_dry_cancle, true)
         }
-        return;
+        return
       }
 
       if (attrs.drying == "off" && this.drying == "on") {
         if (attrs.drying_remain == 0 && this.drying_remain == 1) {
-          this.showTip(tips.bake_dryed, true);
+          this.showTip(tips.bake_dryed, true)
         } else {
-          this.showTip(tips.bake_dry_cancle, true);
+          this.showTip(tips.bake_dry_cancle, true)
         }
-        return;
+        return
       }
 
       if (attrs.sterilization == "off" && this.sterilization == "on") {
         if (attrs.sterilization_remain == 0 && this.sterilization_remain == 1) {
-          this.showTip(tips.sterilized, true);
+          this.showTip(tips.sterilized, true)
         } else {
-          this.showTip(tips.sterilize_cancle, true);
+          this.showTip(tips.sterilize_cancle, true)
         }
-        return;
+        return
       }
 
       // var tip = ''
@@ -530,35 +537,41 @@ export default {
       // }
     },
     onSuccess(result) {
-      if (!result) return;
+      if (!result) return
 
-      var attrs = result.attribute;
+      var attrs = result.attribute
 
-      this.setModeTip(attrs);
-      this.setMoveTip(attrs);
+      this.setModeTip(attrs)
+      this.setMoveTip(attrs)
 
       // connectivity
 
-      this.light = attrs.light;
-      this.air_drying = attrs.air_drying;
-      this.drying = attrs.drying;
-      this.sterilization = attrs.sterilization;
-      this.status = attrs.status;
-      this.drying_remain = attrs.drying_remain;
-      this.air_drying_remain = attrs.air_drying_remain;
-      this.sterilization_remain = attrs.sterilization_remain;
+      this.light = attrs.light
+      this.air_drying = attrs.air_drying
+      this.drying = attrs.drying
+      this.sterilization = attrs.sterilization
+      this.status = attrs.status
+      this.drying_remain = attrs.drying_remain
+      this.air_drying_remain = attrs.air_drying_remain
+      this.sterilization_remain = attrs.sterilization_remain
 
-      setPosition(this.$refs.ani, attrs.status);
+      setPosition(this.$refs.ani, attrs.status)
     },
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot(
         data => {
-          this.onSuccess(data);
-          cb && cb();
+          this.onSuccess(data)
+          cb && cb()
         },
         () => { }
-      );
+      )
     }
   },
-};
+}
 </script>
+<style lang="less" scoped>
+.topbar-fixed{
+  background: transparent;
+}
+</style>
+

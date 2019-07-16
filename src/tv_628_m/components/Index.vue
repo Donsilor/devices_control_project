@@ -665,6 +665,8 @@ export default {
         },
         (err, data) => {
           let cid = data.data.channelId
+          console.log(cid)
+          console.log(data.data.list.slice(0, 6))
           if(cid === '001'){
             this.listDY = data.data.list.slice(0, 6)
           } else if(cid === '002') {
