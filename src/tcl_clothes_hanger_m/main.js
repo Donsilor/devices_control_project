@@ -8,10 +8,8 @@ import App from './App.vue'
 import '../../lib/base/clothes_hanger/index_m.less'
 
 import FastClick from 'fastclick'
-
 FastClick.attach(document.body)
-
 new Vue({
     el: '#app',
     render: h => h(App)
-});
+})
