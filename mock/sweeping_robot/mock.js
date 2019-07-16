@@ -7,7 +7,7 @@ let res = {
     'switch': 'on',
     'mode': 'mop',
     'battery_percentage': '100',
-    'status': 'working',
+    'status': 'standby',
     'sweep_direction': 'right',
     'fan_status': 'normall',
 
@@ -59,7 +59,7 @@ export function set(data){
     // }
     if(attr.mode){
       if(attr.mode == 'recharge'){
-        attr.status = 'charging'
+        // attr.status = 'charging'
       }
     }
     if(attr.mode){

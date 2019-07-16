@@ -29,7 +29,7 @@
       </div>
       <!-- 清扫垃圾动画 -->
       <div 
-        v-show="model.status == 'working'"
+        v-show="model.status == 'working'&&model.mode !== 'recharge'"
         class="huicheng run">
         <i class="img1 sport1" />
         <i class="img2 sport2" />
@@ -67,16 +67,21 @@
 
       <!-- 按钮 -->
       <div class="panel-btn center">
-        <div :class="[{'up-index': !isOffline }, {'disable': model.status == 'charging' || model.mode == 'mop'}, 'btn-wrap']">
+        <!-- 开关机 -->
+        <div :class="[{'up-index': !isOffline }, {'disable': model.status == 'charging' || model.status == 'charge_completed' || model.status == 'working' || model.status == 'recharge'}, 'btn-wrap']">
           <div 
             :class="[{'active': !isClose && !isOffline }, 'btn btn-swich center']"
             @click="setSwitch" />
           <div class="btn-name">开关</div>
         </div>
-
-        <div :class="[{'disable': model.status == 'working'}, 'btn-wrap btns']">
+        <!-- 回充中和充电 -->
+        <div :class="['btn-wrap btns']">
+          <!-- <div 
+            v-if="model.status !== 'charging' && model.mode == 'recharge'"
+            :class="[model.status !== 'charging'&&model.mode == 'recharge' ? 'btn-stop' : 'btn-charging','btn center']"
+            @click="setCharging"/> -->
           <div 
-            :class="[model.status == 'charging' ? 'charging' : '', 'btn btn-charging center circleProgress_wrapper']"
+            :class="[model.status == 'charging' ? 'charging' : '', model.status !== 'charging'&& model.mode == 'recharge'&& model.status !== 'standby' ? 'btn-stop' : 'btn-charging','btn  center circleProgress_wrapper']"
             @click="setCharging">
             <div class="wrapper right">
               <div class="circleProgress rightcircle" />
@@ -85,18 +90,28 @@
               <div class="circleProgress leftcircle" />
             </div>
           </div>
-          <div class="btn-name">回充</div>
+          <!-- 状态不是充电中，但是是在找充电器的过程中 -->
+          <div class="btn-name">{{ model.status !== 'charging'&& model.mode == 'recharge' && model.status !== 'standby' ? '暂停': '回充' }}</div>
         </div>
-
-        <div :class="[{'disable': model.status == 'charging'}, 'btn-wrap']">
+        <!-- 清扫和暂停 -->
+        <div :class="[{'disable': model.status == 'charging' || model.mode == 'recharge'}, 'btn-wrap']">
           <div 
+            v-show="model.mode !== 'recharge'" 
             :class="[model.status == 'working' ? 'btn-stop' : 'btn-clean', 'btn center']"
             @click="setCommand" />
           <div 
+            v-show="model.mode == 'recharge'" 
+            :class="['btn-clean', 'btn center']"
+            @click="setCommand" />
+          <div 
+            v-show="model.mode !== 'recharge'" 
             class="btn-name">{{ model.status == 'working' ? '暂停': '清扫' }}</div>
+          <div 
+            v-show="model.mode == 'recharge'" 
+            class="btn-name">清扫</div>
         </div>
-
-        <div class="btn-wrap">
+        <!-- 切换模式 -->
+        <div :class="[{'disable' : model.mode == 'recharge'&& model.status !== 'charging'}, 'btn-wrap']">
           <div 
             :class="[btnClass, 'btn center btn-plan']"
             @click="handeModeClick" />
@@ -135,7 +150,7 @@
           <div class="name">沿边</div>
         </div>
         <div 
-          :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' },{' btn-loading': btnLoading.design_clean },{'disable': model.status == 'charging'},'btn design_clean center']"
+          :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' },{' btn-loading': btnLoading.design_clean },{'disable': model.status == 'charging'||model.status == 'charge_completed'},'btn design_clean center']"
           @click.stop="setMode('design_clean')">
           <div class="name">定点</div>
         </div>
@@ -150,7 +165,7 @@
       </div>
     </div>
   </div>
-</template>
+</div></template>
 
 <script>
 export default {
@@ -293,7 +308,7 @@ export default {
         return false
       }
       // 充电中不支持定点清扫
-      if (this.model.status == 'charging') {
+      if (this.model.status == 'charging' || this.model.status == 'charge_completed') {
         if (mode === 'design_clean') {
           return false
         }
@@ -307,7 +322,7 @@ export default {
     setCommand() {
       console.log(this.model.status)
       //如果在充电中，无法点击清扫
-      if (this.model.status == "charging") {
+      if (this.model.status == "charging"||this.model.mode == "recharge") {
         return false
       }
       // 清扫 暂时
@@ -321,7 +336,6 @@ export default {
         () => {
           this.model.command = cmd
         }, () => { })
-
     },
     // 显示按钮点击loading
     showBtnLoading(attr) {
@@ -334,7 +348,7 @@ export default {
     // 设备开关
     setSwitch() {
       //如果在充电中，无法点击开关机
-      if (this.model.status == "charging" || this.model.mode == 'mop') {
+      if (this.model.status == "charging" || this.model.status == 'charge_completed' || this.model.status == 'working'||this.model.mode == 'recharge') {
         return false
       }
       let switchStatus = ''
@@ -348,6 +362,9 @@ export default {
     },
     // 点击模式切换
     handeModeClick() {
+       if (this.model.mode == "recharge" && this.model.status !== 'charging') {
+        return false
+      }
       this.showModeBtns = true
       this.$nextTick(() => {
         setTimeout(() => {
@@ -400,6 +417,16 @@ export default {
     },
     // 充电
     setCharging() {
+      let cag = ''
+      if(this.model.status !== 'charging' && this.model.mode == 'recharge') {
+        cag = 'stop'
+      } else {
+        cag = 'start'
+      }
+       this.controlDevice('command', cag, {},
+        () => {
+          this.model.command = cag
+        }, () => { })
       this.controlDevice('mode', 'recharge', {},
         () => {
           this.initCharge()
@@ -1090,6 +1117,11 @@ export default {
     height: 120px;
     margin: 50px auto;
     position: relative;
+    &.recharge {
+      &::before{
+        background-image: url("../../lib/base/sweeping_robot/assets/chongdianzhong.png");
+      }
+    }
     .wrapper {
       width: 60px;
       height: 120px;
@@ -1097,7 +1129,6 @@ export default {
       top: 0;
       overflow: hidden;
     }
-
     .right {
       right: -1px;
     }
