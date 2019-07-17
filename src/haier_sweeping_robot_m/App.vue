@@ -94,7 +94,7 @@
           <div class="btn-name">{{ model.status !== 'charging'&& model.mode == 'recharge' && model.status !== 'standby' ? '暂停': '回充' }}</div>
         </div>
         <!-- 清扫和暂停 -->
-        <div :class="[{'disable': model.status == 'charging' || model.mode == 'recharge'}, 'btn-wrap']">
+        <div :class="[{'disable': model.status == 'charging' || model.mode == 'recharge'&& model.status == 'working'}, 'btn-wrap']">
           <div 
             v-show="model.mode !== 'recharge'" 
             :class="[model.status == 'working' ? 'btn-stop' : 'btn-clean', 'btn center']"
@@ -111,7 +111,7 @@
             class="btn-name">清扫</div>
         </div>
         <!-- 切换模式 -->
-        <div :class="[{'disable' : model.mode == 'recharge'&& model.status !== 'charging'}, 'btn-wrap']">
+        <div :class="[{'disable' : model.mode == 'recharge'&& model.status == 'working'},'btn-wrap']">
           <div 
             :class="[btnClass, 'btn center btn-plan']"
             @click="handeModeClick" />
@@ -417,20 +417,35 @@ export default {
     },
     // 充电
     setCharging() {
+      this.controlDevice('mode', 'recharge', {},
+        () => {
+          // this.initCharge()
+        }, () => { }, 'recharge')
+    // 假设10秒后连接上了充电器，开始充电
+      setTimeout(() => {
+        this.controlDevice('status', 'charging', {},
+        () => {
+
+        }, () => { }, 'charging')
+      }, 1000)
+      if(this.model.status == 'charging') {
+        this.initCharge()
+        return false
+      }
+    // 切换暂停和继续充电
       let cag = ''
       if(this.model.status !== 'charging' && this.model.mode == 'recharge') {
         cag = 'stop'
+          this.controlDevice('mode', 'plan_clean', {},
+            () => {
+          }, () => { },'plan_clean')
       } else {
         cag = 'start'
       }
-       this.controlDevice('command', cag, {},
+      this.controlDevice('command', cag, {},
         () => {
           this.model.command = cag
         }, () => { })
-      this.controlDevice('mode', 'recharge', {},
-        () => {
-          this.initCharge()
-        }, () => { }, 'recharge')
     },
     // 获取设备状态
     getSnapShot(cb) {
@@ -482,7 +497,7 @@ export default {
       this.chargTimes = setInterval(() => {
         this.chargRank--
         if (this.chargRank < 0) this.chargRank = 4
-      }, 400)
+      }, 500)
     }
   },
 }

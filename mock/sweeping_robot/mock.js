@@ -7,7 +7,7 @@ let res = {
     'switch': 'on',
     'mode': 'mop',
     'battery_percentage': '100',
-    'status': 'standby',
+    'status': 'working',
     'sweep_direction': 'right',
     'fan_status': 'normall',
 
@@ -57,11 +57,11 @@ export function set(data){
     // if(attr.negative_ion_switch){
     //     attr.negative_ion_switch = attr.negative_ion_switch
     // }
-    if(attr.mode){
-      if(attr.mode == 'recharge'){
-        // attr.status = 'charging'
-      }
-    }
+    // if(attr.mode){
+    //   if(attr.mode == 'recharge'){
+    //     attr.status = 'charging'
+    //   }
+    // }
     if(attr.mode){
       if(attr.mode == 'plan_clean'|| attr.mode =='single_plan'||attr.mode == 'edge_clean'){
         attr.status = 'working'
