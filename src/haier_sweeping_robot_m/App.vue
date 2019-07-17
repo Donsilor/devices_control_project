@@ -503,6 +503,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+*{
+  touch-action: none;
+}
 .page {
   min-height: 100vh;
   overflow-x: hidden;
