@@ -11,7 +11,7 @@ if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
     setTimeout(() => {
       switch (data.method) {
         case 'getChannelData':
-          callback(mockData.getChannelData())
+          callback(mockData.getChannelData(data))
           break
         case 'searchData':
           callback(mockData.searchData(data))

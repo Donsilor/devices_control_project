@@ -199,9 +199,9 @@ function getToggle(val) {
   return val === "on" ? "off" : "on"
 }
 
-function toggleHead(flag) {
-  HdSmart.UI.toggleHeadAndFoot(!flag)
-}
+// function toggleHead(flag) {
+//   HdSmart.UI.toggleHeadAndFoot(!flag)
+// }
 
 const duration = 28000
 const start_pos = 0.5 //最小高度
@@ -338,8 +338,8 @@ export default {
       } else if (cur == "down") {
         // setDuration(this.$refs.ani, 'down')
       }
-    },
-    modeDialogShow: toggleHead
+    }
+    // modeDialogShow: toggleHead
   },
   created() {
     HdSmart.ready(() => {

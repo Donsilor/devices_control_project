@@ -186,13 +186,21 @@ export default {
           data => {
             this.isLoading = false
             this.firstLoad = false
-            var list = this.formatListData(data.result.list, type)
+
+            let responeData = {}
+            try {
+              responeData = JSON.parse(data.result)
+            } catch (error) {
+              responeData = data.result
+            }
+
+            var list = this.formatListData(responeData.list, type)
             if (!more) {
               this.list = list
             } else {
               this.list = this.list.concat(list)
             }
-            this.more = data.result.more
+            this.more = responeData.more
             this.currentDate = this.date
           },
           data => {
@@ -225,13 +233,19 @@ export default {
             this.isLoading = false
             this.firstLoad = false
 
-            var list = this.formatListData(data.result.list, type)
+            let responeData = {}
+            try {
+              responeData = JSON.parse(data.result)
+            } catch (error) {
+              responeData = data.result
+            }
+            var list = this.formatListData(responeData.list, type)
             if (!more) {
               this.list = list
             } else {
               this.list = this.list.concat(list)
             }
-            this.more = data.result.more
+            this.more = responeData.more
             this.currentDate = this.date
           },
           data => {

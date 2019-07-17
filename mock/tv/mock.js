@@ -70,10 +70,10 @@ export function getInitData() {
   })
 }
 
-export function getChannelData() {
+export function getChannelData(data) {
   return {
     action: 'getChannelData',
-    channelId: '001',
+    channelId: data.params.channelId,
     category: [
       { cate: '剧情', cateId: '剧情' },
       { cate: '喜剧', cateId: '喜剧' },

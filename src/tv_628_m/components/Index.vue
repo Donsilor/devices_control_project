@@ -40,7 +40,9 @@
           class="swiper-pagination" />
       </swiper>
     </div>
-    <div class="title mar">栏目分类</div>
+    <div class="wrap-title">
+      <div class="title mar">栏目分类</div>
+    </div>
 
     <div class="icon_grid">
       <div class="icon_grid_inner">
@@ -56,7 +58,13 @@
       v-for="(it, idx) in allList"
       :key="idx"
       class="mar">
-      <div class="title">{{ idx | nameType }}</div>
+      <div class="wrap-title">
+        <div class="title">{{ idx | nameType }}</div>
+        <div 
+          class="more" 
+          @click="toListPage(idx)">更多&nbsp;></div>
+      </div>
+
       <ul class="vlist list-m60">
         <li 
           v-for="item in it"
@@ -144,12 +152,22 @@
 .page-index {
   padding: 48px 0;
   background: #f8f8f8;
-  .title {
-    font-size: 40px;
-    color: #20282b;
-    font-weight: bold;
-    padding: 48px 0 40px 0;
+  .wrap-title{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    .title {
+      font-size: 40px;
+      color: #20282b;
+      font-weight: bold;
+      padding: 48px 0 40px 0;
+    }
+    .more{
+      font-size: 24px;
+      color: #20282B;
+    }
   }
+
   .mar {
     margin: 0 48px;
   }
@@ -221,7 +239,7 @@
       background: #f891f7;
     }
     &.item3 {
-      background: #2196f3;
+      background: #00BCD4;
     }
     &.item4 {
       background: #009688;
@@ -651,33 +669,51 @@ export default {
       })
     },
     filterData(channelId) {
-      service.searchData(
-        {
-          channelId: channelId,
-          category: this.current_category,
-          region: this.current_region,
-          year: this.current_year,
-          cateId: this.current_category,
-          regionId: this.current_region,
-          orderby: this.current_orderby,
-          pageSize: 6,
-          pageNo: 1
-        },
-        (err, data) => {
-          let cid = data.data.channelId
-          console.log(cid)
-          console.log(data.data.list.slice(0, 6))
-          if(cid === '001'){
-            this.listDY = data.data.list.slice(0, 6)
-          } else if(cid === '002') {
-            this.listDSJ = data.data.list.slice(0, 6)
-          } else if(cid === '003') {
-            this.listZY = data.data.list.slice(0, 6)
-          } else if(cid === '004') {
-            this.listDM = data.data.list.slice(0, 6)
-          }
+      // service.searchData(
+      //   {
+      //     channelId: channelId,
+      //     category: this.current_category,
+      //     region: this.current_region,
+      //     year: this.current_year,
+      //     cateId: this.current_category,
+      //     regionId: this.current_region,
+      //     orderby: this.current_orderby,
+      //     pageSize: 6,
+      //     pageNo: 1
+      //   },
+      //   (err, data) => {
+      //     let cid = data.data.channelId
+      //     console.log(cid)
+      //     console.log(data.data.list.slice(0, 6))
+      //     if(cid === '001'){
+      //       this.listDY = data.data.list.slice(0, 6)
+      //     } else if(cid === '002') {
+      //       this.listDSJ = data.data.list.slice(0, 6)
+      //     } else if(cid === '003') {
+      //       this.listZY = data.data.list.slice(0, 6)
+      //     } else if(cid === '004') {
+      //       this.listDM = data.data.list.slice(0, 6)
+      //     }
+      //   }
+      // )
+      console.log('----getChannelData--------')
+      service.getChannelData(channelId, (err, data) => {
+        if (err) {
+          this.error = true
+          return
         }
-      )
+        let cid = data.channelId
+        console.log(cid)
+        if(cid === '001'){
+          this.listDY = data.data.list.slice(0, 6)
+        } else if(cid === '002') {
+          this.listDSJ = data.data.list.slice(0, 6)
+        } else if(cid === '003') {
+          this.listZY = data.data.list.slice(0, 6)
+        } else if(cid === '004') {
+          this.listDM = data.data.list.slice(0, 6)
+        }
+      })
     },
     //换成小图地址
     getThumbPic(pic) {
@@ -709,6 +745,19 @@ export default {
       // window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${item.channel}`
       // this.$router.push({ name: 'list', query: { channelId: item.channelId, channel: item.channel } })
     },
+    toListPage(idx){
+      let item = {}
+      if(idx == 0){
+        item = { channelId: '001', channel: '电影' }
+      } else if(idx == 1) {
+        item = { channelId: '002', channel: '电视剧'}
+      } else if(idx == 2) {
+        item = { channelId: '003',channel: '动漫'}
+      } else if (idx == 3){
+        item = { channelId: '004',channel: '综艺'}
+      }
+      this.toPage(item)
+    },
     goDetail() {
       HdSmart.UI.goDeviceDetail()
     },
@@ -718,7 +767,7 @@ export default {
         let current_position = window.scrollY
         if (current_position < last_position) {
           this.hideMenu = false
-        } else if (current_position > last_position) {
+        } else if (current_position > last_position && current_position > 180) {
           this.hideMenu = true
         }
         last_position = current_position
