@@ -63,7 +63,7 @@ export function set(data){
     //   }
     // }
     if(attr.mode){
-      if(attr.mode == 'plan_clean'|| attr.mode =='single_plan'||attr.mode == 'edge_clean'){
+      if(attr.mode == 'plan_clean'|| attr.mode =='single_plan'||attr.mode == 'edge_clean'||attr.mode == 'design_clean'){
         attr.status = 'working'
       }
     }

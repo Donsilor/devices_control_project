@@ -422,12 +422,12 @@ export default {
           // this.initCharge()
         }, () => { }, 'recharge')
     // 假设10秒后连接上了充电器，开始充电
-      setTimeout(() => {
-        this.controlDevice('status', 'charging', {},
-        () => {
+      // setTimeout(() => {
+      //   this.controlDevice('status', 'charging', {},
+      //   () => {
 
-        }, () => { }, 'charging')
-      }, 1000)
+      //   }, () => { }, 'charging')
+      // }, 1000)
       if(this.model.status == 'charging') {
         this.initCharge()
         return false
