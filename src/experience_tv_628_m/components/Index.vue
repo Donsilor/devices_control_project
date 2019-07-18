@@ -3,15 +3,11 @@
   <div class="page-index">
     <!-- 顶部导航菜单 -->
     <topbar 
-      v-if="isShowBar"
       :title="$store.state.device_name"
       :more="true"
       :search="false"
       :back="back" />
-    <!-- 设备状态提示 -->
-    <status-tip 
-      v-show="device_uuid"
-      :bar-height="barHeight" />
+
     <!-- 栏目分类 -->
     <div class="swiper mar">
       <div 
@@ -58,9 +54,7 @@
       v-for="(it, idx) in allList"
       :key="idx"
       class="mar">
-      <div 
-        v-show="it && it.length > 0" 
-        class="wrap-title">
+      <div class="wrap-title">
         <div class="title">{{ idx | nameType }}</div>
         <div 
           class="more" 
@@ -576,7 +570,7 @@ export default {
       return this.$store.state.detailVisible
     },
     barHeight() {
-      return this.isShowBar ? 0 : 64
+      return this.isShowBar ? 0 : 44
     },
     allList() {
       return [this.listDY, this.listDSJ, this.listZY, this.listDM]
@@ -615,7 +609,18 @@ export default {
   },
   methods: {
     back() {
-      HdSmart.UI.popWindow()
+      if(argv_is_mock){
+        let t= new Date().getTime()
+        let url = ''
+        if (process.env.NODE_ENV == 'development'){
+          url = `/experience.html?_=${t}`
+        } else {
+          url = `/scattered-pages-in-app/dist/experience.html?_=${t}`
+        }
+        window.location.replace(url)
+      } else {
+        HdSmart.UI.popWindow()
+      }
     },
     touchMove(e) {
       // e.preventDefault()

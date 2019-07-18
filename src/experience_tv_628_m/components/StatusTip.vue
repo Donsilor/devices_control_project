@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="visible"
     class="status_bar">
     <div class="status_bar_block"/>
     <div
@@ -29,6 +30,7 @@
           <i class="icon-arrow"/>
         </div>
         <div
+          v-if="tvStatus.tvOnlineStatus==-3"
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <i class="icon-error"/>设备已离线 &nbsp;
@@ -45,7 +47,7 @@
 
 <style>
 .status_bar_block{
-    height: 0;
+    height: 40PX;
 }
 .status_bar_fixed{
     position:fixed;
