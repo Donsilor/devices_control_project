@@ -184,6 +184,8 @@ export default {
             }
           },
           data => {
+            console.log('-----warn--------')
+            console.log(data)
             this.isLoading = false
             this.firstLoad = false
 
@@ -230,6 +232,8 @@ export default {
             }
           },
           data => {
+            console.log('-----open--------')
+            console.log(data)
             this.isLoading = false
             this.firstLoad = false
 

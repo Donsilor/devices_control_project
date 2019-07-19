@@ -584,20 +584,11 @@ export default {
         document.documentElement.scrollTop ||
         window.pageYOffset ||
         document.body.scrollTop
-      if (
-        scrollTop > 0 &&
-        scrollTop + window.innerHeight >=
-        document.documentElement.scrollHeight - 15
-      ) {
-        if (this.$store.state.detailVisible) {
-          return
-        }
-        if (
-          this.loadState === "LOADING" ||
-          this.loadState === "NO_DATA"
-        ) {
-          return
-        }
+      if ( scrollTop > 0 && scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 15) {
+        // if (this.$store.state.detailVisible) {
+        //   return
+        // }
+        if ( this.loadState === "LOADING" || this.loadState === "NO_DATA") { return }
         if (this.loadState === "NO_MORE") {
           HdSmart.UI.toast("已加载全部")
           return

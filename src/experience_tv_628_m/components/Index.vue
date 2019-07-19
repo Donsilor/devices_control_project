@@ -54,7 +54,9 @@
       v-for="(it, idx) in allList"
       :key="idx"
       class="mar">
-      <div class="wrap-title">
+      <div 
+        v-show="it && it.length > 0" 
+        class="wrap-title">
         <div class="title">{{ idx | nameType }}</div>
         <div 
           class="more" 
@@ -93,20 +95,6 @@
         <div 
           class="icon-switch center"
           @click.prevent="cmd('rcPower')" />
-        <!-- <div 
-          v-finger:touch-end="voldownEnd"
-          v-finger:touch-move="touchMove"
-          v-finger:long-tap="voldownStart"
-          class="icon-sub center" /> -->
-        <!-- <div 
-          v-finger:touch-end="volupEnd"
-          v-finger:touch-move="touchMove"
-          v-finger:long-tap="volupStart"
-          class="icon-add center" /> -->
-        <!-- <div 
-          class="icon-bak center"
-          @click.prevent="cmd('rcBack')" /> -->
-
         <div 
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-ykq center"
@@ -122,18 +110,6 @@
           class="icon-detail center"
           @click.prevent="goDetail" />
       </div>
-      <!-- <div class="left add">
-        <div 
-          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-screen center"
-          @click.prevent="cmd('screenProjectionEvent')" />
-      </div>
-      <div class="left add">
-        <div 
-          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-detail center"
-          @click.prevent="goDetail" />
-      </div> -->
       <div class="block" />
     </div>
   </div>
@@ -654,20 +630,12 @@ export default {
       e.preventDefault()
     },
     cmd(name) {
-      service.onClickEvent(name)
+      HdSmart.UI.toast('添加设备后才能体验，改功能！')
+      // service.onClickEvent(name)
     },
     showDetailInfo(item) {
       this.$store.dispatch('showDetail', item)
-
-      if (this.isShowBar) {
-        window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
-      } else {
-        HdSmart.UI.pushWindow({
-          url: `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
-        })
-      }
-      // this.$router.push({ name: 'detail', query: { channelId: item.channelId, channel: item.channel } })
-      // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
+      this.$router.push({ name: 'detail', query: { channelId: item.channelId, vid: item.vid, ispay: item.ispay } })
     },
     pageInit() {
       service.getHomePageInfo(data => {
@@ -742,15 +710,7 @@ export default {
 
     toPage(item) {
       let name = encodeURIComponent(item.channel)
-      if (this.isShowBar) {
-        window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
-      } else {
-        HdSmart.UI.pushWindow({
-          url: `index.html#/list?channelId=${item.channelId}&channel=${name}`
-        })
-      }
-      // window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${item.channel}`
-      // this.$router.push({ name: 'list', query: { channelId: item.channelId, channel: item.channel } })
+      this.$router.push({ name: 'list', query: { channelId: item.channelId, channel: name } })
     },
     toListPage(idx){
       let item = {}
@@ -766,7 +726,7 @@ export default {
       this.toPage(item)
     },
     goDetail() {
-      HdSmart.UI.goDeviceDetail()
+      HdSmart.UI.toast('添加设备后才能体验，改功能！')
     },
     initFixedMenu() {
       let last_position = 0

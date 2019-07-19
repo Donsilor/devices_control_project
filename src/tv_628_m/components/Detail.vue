@@ -779,6 +779,7 @@ export default {
       this.isShowAll = false
     },
     goBack(){
+      this.hideDetail()
       if(this.isShowBar || window.history.length > 1){
         window.history.go(-1)
       } else {

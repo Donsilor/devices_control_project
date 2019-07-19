@@ -338,10 +338,19 @@ html {
     }
 }
 
+.wrap-golog{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 100px;
+
+}
 .btn-golog {
     display: inline-block;
     width: 96px;
     height: 96px;
+    &.icon-recode:before {
+      color: #fff;
+    }
 }
 
 .alert-wraper {
@@ -438,6 +447,12 @@ html {
         position: absolute;
         top: 44px;
         right: 0;
+        .icon-detail {
+          width: 44px;
+          height: 44px;
+          background-image: url(../../../lib/base/tv/assets/new/detail.png);
+          background-size: 100% 100%;
+        }
     }
     .title {
         text-align: center;

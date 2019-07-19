@@ -776,12 +776,9 @@ export default {
       this.isShowAll = false
     },
     goBack(){
-      if(this.isShowBar || window.history.length > 1){
-        window.history.go(-1)
-      } else {
-        service.RemoteController({ show: false })
-        HdSmart.UI.popWindow()
-      }
+      this.hideDetail()
+      service.RemoteController({ show: false })
+      this.$router.go(-1)
       this.loading = false
     }
   }

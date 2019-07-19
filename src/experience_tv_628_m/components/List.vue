@@ -588,9 +588,9 @@ export default {
         scrollTop + window.innerHeight >=
         document.documentElement.scrollHeight - 15
       ) {
-        if (this.$store.state.detailVisible) {
-          return
-        }
+        // if (this.$store.state.detailVisible) {
+        //   return
+        // }
         if (
           this.loadState === "LOADING" ||
           this.loadState === "NO_DATA"
@@ -646,12 +646,8 @@ export default {
       })
     },
     goBack(){
-      if(this.isShowBar){
-        window.history.go(-1)
-      } else {
-        service.RemoteController({ show: false })
-        HdSmart.UI.popWindow()
-      }
+      service.RemoteController({ show: false })
+      this.$router.go(-1)
     }
   }
 }
