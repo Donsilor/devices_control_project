@@ -10,7 +10,7 @@
         v-show="model.switch == 'on' && model.mode !== 'recharge'"
         class="status">{{ model.status | statusType }}</div>
       <div 
-        v-show="model.mode == 'recharge'"
+        v-show="model.mode == 'recharge' && model.status == 'working'"
         class="status">回充中</div>
       <!-- 回充电池 -->
       <div class="wrap-robot">
@@ -81,8 +81,8 @@
             :class="[model.status !== 'charging'&&model.mode == 'recharge' ? 'btn-stop' : 'btn-charging','btn center']"
             @click="setCharging"/> -->
           <div 
-            :class="[model.status == 'charging' ? 'charging' : '', model.status !== 'charging'&& model.mode == 'recharge'&& model.status !== 'standby' ? 'btn-stop' : 'btn-charging','btn  center circleProgress_wrapper']"
-            @click="setCharging">
+            :class="[model.status == 'charging' ? 'charging' : '', model.mode == 'recharge' && model.status == 'working' ? 'btn-stop' : 'btn-charging','btn  center circleProgress_wrapper']"
+            @click="handeBtnClick">
             <div class="wrapper right">
               <div class="circleProgress rightcircle" />
             </div>
@@ -165,7 +165,8 @@
       </div>
     </div>
   </div>
-</div></template>
+</div>
+</template>
 
 <script>
 export default {
@@ -302,6 +303,14 @@ export default {
     })
   },
   methods: {
+    // 点击回充按钮或者暂停按钮
+    handeBtnClick() {
+      if(this.model.mode == 'recharge' && this.model.status !== 'charging') {
+        this.setCommand('rechargeStop')
+      } else {
+        this.setCharging()
+      }
+    },
     // 切换模式
     setMode(mode) {
       if (mode === 'mop') {
@@ -319,10 +328,11 @@ export default {
         }, () => { }, mode)
     },
     // 清扫和暂停
-    setCommand() {
-      console.log(this.model.status)
+    setCommand(rechargeStop) {
+      // 回充按钮点击暂停
+      if(rechargeStop !== 'rechargeStop' && this.model.mode == 'recharge' ) return
       //如果在充电中，无法点击清扫
-      if (this.model.status == "charging"||this.model.mode == "recharge") {
+      if (this.model.status == "charging") {
         return false
       }
       // 清扫 暂时
@@ -417,35 +427,21 @@ export default {
     },
     // 充电
     setCharging() {
+      if(this.model.mode === 'recharge' || this.model.status === 'charging' ) return
+
       this.controlDevice('mode', 'recharge', {},
         () => {
+          // setTimeout(() => {
+          //   this.model.status = 'charging'
+          // }, 6000)
           // this.initCharge()
         }, () => { }, 'recharge')
-    // 假设10秒后连接上了充电器，开始充电
-      // setTimeout(() => {
-      //   this.controlDevice('status', 'charging', {},
-      //   () => {
 
-      //   }, () => { }, 'charging')
-      // }, 1000)
+
       if(this.model.status == 'charging') {
         this.initCharge()
         return false
       }
-    // 切换暂停和继续充电
-      let cag = ''
-      if(this.model.status !== 'charging' && this.model.mode == 'recharge') {
-        cag = 'stop'
-          this.controlDevice('mode', 'plan_clean', {},
-            () => {
-          }, () => { },'plan_clean')
-      } else {
-        cag = 'start'
-      }
-      this.controlDevice('command', cag, {},
-        () => {
-          this.model.command = cag
-        }, () => { })
     },
     // 获取设备状态
     getSnapShot(cb) {

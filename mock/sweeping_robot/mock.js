@@ -63,7 +63,7 @@ export function set(data){
     //   }
     // }
     if(attr.mode){
-      if(attr.mode == 'plan_clean'|| attr.mode =='single_plan'||attr.mode == 'edge_clean'||attr.mode == 'design_clean'){
+      if(attr.mode == 'plan_clean'|| attr.mode =='single_plan'||attr.mode == 'edge_clean'||attr.mode == 'design_clean' || attr.mode == 'recharge'){
         attr.status = 'working'
       }
     }
@@ -72,6 +72,7 @@ export function set(data){
         attr.status = 'working'
       } else {
         attr.status = 'standby'
+        attr.mode = 'idle'
       }
     }
     if(attr.switch){
