@@ -99,20 +99,6 @@
         <div 
           class="icon-switch center"
           @click.prevent="cmd('rcPower')" />
-        <!-- <div 
-          v-finger:touch-end="voldownEnd"
-          v-finger:touch-move="touchMove"
-          v-finger:long-tap="voldownStart"
-          class="icon-sub center" /> -->
-        <!-- <div 
-          v-finger:touch-end="volupEnd"
-          v-finger:touch-move="touchMove"
-          v-finger:long-tap="volupStart"
-          class="icon-add center" /> -->
-        <!-- <div 
-          class="icon-bak center"
-          @click.prevent="cmd('rcBack')" /> -->
-
         <div 
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-ykq center"
@@ -128,18 +114,6 @@
           class="icon-detail center"
           @click.prevent="goDetail" />
       </div>
-      <!-- <div class="left add">
-        <div 
-          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-screen center"
-          @click.prevent="cmd('screenProjectionEvent')" />
-      </div>
-      <div class="left add">
-        <div 
-          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-detail center"
-          @click.prevent="goDetail" />
-      </div> -->
       <div class="block" />
     </div>
   </div>
@@ -152,6 +126,7 @@
   align-items: center;
 }
 .page-index {
+  padding-top: 12px;
   padding-bottom: 48px;
   background: #f8f8f8;
   .wrap-title{
@@ -585,13 +560,13 @@ export default {
     }
   },
   watch: {
-    detailVisible(visible) {
-      if (visible) {
-        this.$refs.swiper.swiper.autoplay.stop()
-      } else {
-        this.$refs.swiper.swiper.autoplay.start()
-      }
-    }
+    // detailVisible(visible) {
+    //   if (visible) {
+    //     this.$refs.swiper.swiper.autoplay.stop()
+    //   } else {
+    //     this.$refs.swiper.swiper.autoplay.start()
+    //   }
+    // }
   },
   mounted() {
     document.body.scrollTop = 0

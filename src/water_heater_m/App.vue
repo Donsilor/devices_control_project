@@ -4,17 +4,18 @@
       <topbar
         :title="device_name"
         bak-color="#000"/>
-      <div class="c-status">时段预约：6:00-9:00</div>
-
+      <!-- <div class="c-status">时段预约：6:00-9:00</div> -->
       <div
         class="main center">
         <div class="wrap-circle">
           <div class="circle-gray" />
-          <div class="circle" />
+          <div 
+            :style="{ transform: 'rotate(' + cRotate + 'deg)'}" 
+            class="circle" />
           <div class="cover">
             <span class="point left" />
             <span class="point right" />
-            <span class="txt left">0<sup>°C</sup></span>
+            <span class="txt left">35<sup>°C</sup></span>
             <span class="txt right">75<sup>°C</sup></span>
           </div>
         </div>
@@ -31,21 +32,21 @@
       <div class="control center">
         <div 
           class="reduce" 
-          @click="setTemperature(-1)">-</div>
+          @click="setTemperature(-1)"/>
         <div class="main-control"><i class="icon" /> 预设温度 {{ model.set_temperature }}°C</div>
         <div 
           class="add" 
-          @click="setTemperature(1)">+</div>
+          @click="setTemperature(1)"/>
       </div>
 
       <!-- 按钮 -->
       <div class="panel-btn center">
-        <div 
+        <!-- <div 
           class="more" 
           @click="handleMore">
           <div :class="[isOpen ? 'up': 'down', 'arrow']">></div>
           <div>{{ isOpen ? '收起' : '查看更多' }}</div>
-        </div>
+        </div> -->
 
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']" >
           <div
@@ -53,7 +54,7 @@
             @click="setSwitch" />
           <div class="btn-name">关机</div>
         </div>
-
+        <!-- 
         <div class="btn-wrap">
           <div
             class="btn-time btn center"/>
@@ -84,7 +85,7 @@
           <div
             class="btn btn-znyj center"/>
           <div class="btn-name">智能抑菌 </div>
-        </div>
+        </div> -->
       </div>
 
     </div>
@@ -92,14 +93,7 @@
 </template>
 
 <script>
-import SelectTime from '../../lib/components/time/time.vue'
-import Modal from '../../lib/components/Modal.vue'
-
 export default {
-  components: {
-    SelectTime,
-    Modal
-  },
   data() {
     return {
       isOpen: false,
@@ -130,89 +124,8 @@ export default {
     isOffline() {
       return this.model.connectivity === 'online' ? false : true
     },
-    btnClass() {
-      /* eslint-disable no-unreachable */
-      switch (this.model.speed) {
-        case 'low':
-          return 'btn-low'
-          break
-        case 'middle':
-          return 'btn-middle'
-          break
-        case 'high':
-          return 'btn-high'
-          break
-        case 'very_high':
-          return 'btn-very_high'
-          break
-        case 'super_high':
-          return 'btn-super_high'
-          break
-        case 'sleep':
-          return 'btn-low'
-          break
-      }
-    },
-    btnTxt() {
-      /* eslint-disable no-unreachable */
-      switch (this.model.speed) {
-        case 'low':
-          return '低挡'
-          break
-        case 'middle':
-          return '中档'
-          break
-        case 'high':
-          return '高档'
-          break
-        case 'very_high':
-          return '超高档'
-          break
-        case 'super_high':
-          return '极速挡'
-          break
-        case 'sleep':
-          return '低挡'
-          break
-      }
-    },
-    modeBtnClass(){
-      /* eslint-disable no-unreachable */
-      switch(this.model.mode) {
-        case 'strong_wash':
-          return 'btn-mode'
-          break
-        case 'high_speed_15m':
-          return 'btn-mode-15'
-          break
-        case 'spin':
-          return 'btn-ts'
-          break
-        case 'odor_removal':
-          return 'btn-jzj'
-          break
-
-        case 'mix':
-            return 'btn-hh'
-            break
-        case 'cotton':
-            return 'btn-ms'
-            break
-          case 'synthetic':
-            return 'btn-hq'
-            break
-          case 'cardigan':
-            return 'btn-ym'
-            break
-          case 'cowboy_suit':
-            return 'btn-nz'
-            break
-          case 'down_coat':
-            return 'btn-ylf'
-            break 
-          default:
-            return 'btn-others'
-      }
+    cRotate() {
+      return (+this.model.temperature - 35) * 4.5 - 45
     }
   },
   watch: {
@@ -257,7 +170,7 @@ export default {
       this.controlDevice("switch", switchStatus)
     },
     setTemperature(step) {
-      let val = this.model.set_temperature + step
+      let val = +this.model.set_temperature + step
       if(val > 75) {
         val = 75
         HdSmart.UI.toast('温度最高为75℃')
@@ -280,7 +193,7 @@ export default {
     },
     onSuccess(data) {
       this.model = data.attribute
-
+      this.model.temperature = 75
       // 将model 保存在 localStorage
       if (window.device_uuid) {
         window.localStorage.setItem(window.device_uuid, JSON.stringify(data.attribute))
@@ -318,6 +231,7 @@ export default {
     filter: blur(12px);
   }
   .c-status{
+    margin-top: 30px;
     font-size: 24px;
     color: #35353D;
     text-align: center;
@@ -352,7 +266,7 @@ export default {
       .circle{
         box-sizing: border-box;
         border: 4px solid;
-        border-color: transparent transparent #FF210E;
+        border-color: transparent transparent #FF210E #FF210E;
         border-radius: 50%;
         width: 434px;
         height: 434px;
@@ -383,13 +297,13 @@ export default {
           &.left{
             position: absolute;
             top: -8px;
-            left: -1px;
+            left: -5px;
             background: #FF210E;
           }
           &.right{
             position: absolute;
             top: -8px;
-            right: -1px;
+            right: -5px;
             background: #D8D8D8;
           }
         }
@@ -398,12 +312,12 @@ export default {
           color: #000;
           &.left{
             position: absolute;
-            top: 8px;
+            top: 16px;
             left: -28px;
           }
           &.right{
             position: absolute;
-            top: 8px;
+            top: 16px;
             right: -28px;
           }
         }
@@ -457,6 +371,7 @@ export default {
   .control{
     margin: 40px 0;
     .reduce, .add{
+      position: relative;
       background: #fff;
       border: 1px solid #F1F1F1;
       width: 72px;
@@ -466,9 +381,28 @@ export default {
       border-radius: 50%;
       text-align: center;
       margin: 0 32px;
-
-      font-size: 86px;
     }
+    .reduce{
+      &::before{
+        font-size: 90px;
+        content: '-';
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+    .add{
+      &::before{
+        font-size: 70px;
+        content: '+';
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
     .main-control{
       width: 276px;
       height: 72px;
@@ -488,7 +422,7 @@ export default {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 38px 0 30px 40px;
+    padding: 38px 0;
     z-index: 9999;
 
     background: #FFFFFF;
@@ -496,7 +430,7 @@ export default {
     border-radius: 42px 42px 0px 0px;
 
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: center;
 
     .more{
       width: 750px;
