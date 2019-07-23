@@ -193,7 +193,6 @@ export default {
     },
     onSuccess(data) {
       this.model = data.attribute
-      this.model.temperature = 75
       // 将model 保存在 localStorage
       if (window.device_uuid) {
         window.localStorage.setItem(window.device_uuid, JSON.stringify(data.attribute))
