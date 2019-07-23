@@ -3,7 +3,6 @@
 -->
 <template>
   <div class="page-index">
-
     <topbar
       :title="$store.state.device_name"
       :more="true"
@@ -354,8 +353,8 @@ export default {
     })
 
     document.addEventListener('contextmenu', function(e){
-        e.preventDefault();
-    });
+        e.preventDefault()
+    })
   },
   methods: {
     back() {

@@ -152,7 +152,7 @@
   align-items: center;
 }
 .page-index {
-  padding: 48px 0;
+  padding-bottom: 48px;
   background: #f8f8f8;
   .wrap-title{
     display: flex;

@@ -102,12 +102,12 @@
               <div :class="[{ 'active': model.mode == 'spin' }, 'btn btn-ts center']"/>
               <div class="btn-name">单脱水</div>
             </div>
-            <div 
+            <!-- <div 
               class="btn-wrap"
               @click="setMode('odor_removal')">
               <div :class="[{ 'active': model.mode == 'odor_removal' }, 'btn btn-jzj center']"/>
               <div class="btn-name">筒自洁</div>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -495,6 +495,9 @@ export default {
     setMode(mode) {
       if (this.model.mode == mode) {
         return
+      }
+      if (this.isRun || this.isPause) {
+        return HdSmart.UI.toast('运行或者暂停，无法切换模式')
       }
       this.controlDevice('mode', mode, () => {
         this.model.mode = mode

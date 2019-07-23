@@ -27,7 +27,7 @@
     <div 
       v-if="!error"
       :class="{active:filterVisible}"
-      :style="{top: isStatusBarShow ? (status_bar_height + navigation_bar_height + 40) + 'px' : (status_bar_height + navigation_bar_height) + 'px' }"
+      :style="{top: (status_bar_height + navigation_bar_height) + 'px'}"
       class="filters">
       <!-- 地区 -->
       <dl 
