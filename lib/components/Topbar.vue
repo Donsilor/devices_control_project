@@ -19,7 +19,7 @@
           @click.prevent="goBack">
           <a 
             :style="{ 'border-color': bakColor }"
-            href="#/"
+            href="javascript:void(0);"
             class="icon-return" />
         </div>
         <div class="right">
@@ -28,14 +28,14 @@
               v-for="(item, index) in buttons"
               :key="index"
               :class="[item.className]"
-              href="#/"
+              href="javascript:void(0);"
               @click.prevent="item.callback" />
           </template>
           <template v-else>
             <a 
               :style="{ 'color': bakColor }"
-              href="#/"
-              class="icon-more"
+              href="javascript:void(0);"
+              class="icon-more center"
               @click.prevent="goDetail" />
           </template>
         </div>

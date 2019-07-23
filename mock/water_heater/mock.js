@@ -8,7 +8,7 @@ var res = {
   "switch": "on",
   "fault": "normal",
   "heat_status": "heat",
-  "temperature": 33,
+  "temperature": 37,
   "deviceModel": "LPB100",
   "manufactureId": "Whirlpool",
   "deviceCategory": "water_heater.sn",

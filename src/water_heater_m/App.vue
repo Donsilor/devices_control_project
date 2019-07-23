@@ -1,34 +1,41 @@
 <template>
   <div class="body">
-    <div :class="[{ 'offline': isOffline }, {'close': isClose}, {'filter': showModeBtns }, 'page']">
+    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <topbar
         :title="device_name"
         bak-color="#000"/>
       <div class="c-status">时段预约：6:00-9:00</div>
 
       <div
-        class="main center"
-        @click="toSubPage">
+        class="main center">
         <div class="wrap-circle">
+          <div class="circle-gray" />
           <div class="circle" />
-          <div class="cover" />
-          <span class="point left" />
-          <span class="point right" />
+          <div class="cover">
+            <span class="point left" />
+            <span class="point right" />
+            <span class="txt left">0<sup>°C</sup></span>
+            <span class="txt right">75<sup>°C</sup></span>
+          </div>
         </div>
 
         <div class="bg center">
           <div class="bg2 center">
             <div class="num">加热中</div>
-            <div class="time">38<sup>°C</sup></div>
+            <div class="time">{{ model.temperature }}<sup>°C</sup></div>
             <div class="cmode">当前温度</div>
           </div>
         </div>
       </div>
 
       <div class="control center">
-        <div class="reduce">-</div>
-        <div class="main-control"><i class="icon" /> 预设温度 60°C</div>
-        <div class="add">+</div>
+        <div 
+          class="reduce" 
+          @click="setTemperature(-1)">-</div>
+        <div class="main-control"><i class="icon" /> 预设温度 {{ model.set_temperature }}°C</div>
+        <div 
+          class="add" 
+          @click="setTemperature(1)">+</div>
       </div>
 
       <!-- 按钮 -->
@@ -42,136 +49,45 @@
 
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']" >
           <div
-            :class="[ isRun ? 'btn-stop': 'btn-start', 'btn center']"
+            :class="[ isRun ? 'btn-stop': 'btn-start', 'btn-swich btn center']"
             @click="setSwitch" />
-          <div class="btn-name">启动</div>
+          <div class="btn-name">关机</div>
         </div>
 
         <div class="btn-wrap">
           <div
-            :class="[modeBtnClass, 'btn center']"
-            @click="showMode" />
-          <div class="btn-name">模式</div>
+            class="btn-time btn center"/>
+          <div class="btn-name">时段预约</div>
         </div>
 
         <div class="btn-wrap">
           <div
-            class="btn btn-time center"
-            @click="showTime" />
-          <div class="btn-name">预约</div>
+            class="btn btn-heat center"/>
+          <div class="btn-name">速热增容</div>
         </div>
         <div class="btn-wrap">
           <div
-            class="btn btn-time center"
-            @click="showTime" />
-          <div class="btn-name">预约</div>
+            class="btn btn-znsw center"/>
+          <div class="btn-name">智能水温</div>
         </div>
 
         <div 
           v-show="isOpen" 
           class="btn-wrap">
           <div
-            class="btn btn-time center"
-            @click="showTime" />
-          <div class="btn-name">预约</div>
+            class="btn btn-bpsr center"/>
+          <div class="btn-name">变频速热</div>
         </div>
         <div 
           v-show="isOpen" 
           class="btn-wrap">
           <div
-            class="btn btn-time center"
-            @click="showTime" />
-          <div class="btn-name">预约</div>
+            class="btn btn-znyj center"/>
+          <div class="btn-name">智能抑菌 </div>
         </div>
       </div>
 
     </div>
-    <!-- 模式选择弹框 -->
-    <Modal 
-      v-model="showModeBtns" 
-      title="选择模式">
-      <div class="items">
-        <div class="btns">
-          <div 
-            class="btn-wrap" 
-            @click="setMode('strong_wash')">
-            <div :class="[{ 'active': model.mode == 'strong_wash' }, 'btn btn-mode1 center']" />
-            <div class="btn-name">五谷</div>
-          </div>
-
-          <div 
-            class="btn-wrap"
-            @click="setMode('high_speed_15m')">
-            <div :class="[{ 'active': model.mode == 'mode2' }, 'btn btn-mode2 center']"/>
-            <div class="btn-name">米糊</div>
-          </div>
-
-          <div 
-            class="btn-wrap"
-            @click="setMode('spin')">
-            <div :class="[{ 'active': model.mode == 'spin' }, 'btn btn-mode3 center']"/>
-            <div class="btn-name">绵粥</div>
-          </div>
-          <div 
-            class="btn-wrap"
-            @click="setMode('odor_removal')">
-            <div :class="[{ 'active': model.mode == 'odor_removal' }, 'btn btn-mode4 center']"/>
-            <div class="btn-name">浓汤</div>
-          </div>
-        </div>
-      </div>
-      <div class="items">
-        <div class="btns">
-          <div 
-            class="btn-wrap" 
-            @click="setMode('strong_wash')">
-            <div :class="[{ 'active': model.mode == 'mode2' }, 'btn btn-mode5 center']" />
-            <div class="btn-name">蒸煮</div>
-          </div>
-
-          <div 
-            class="btn-wrap"
-            @click="setMode('high_speed_15m')">
-            <div :class="[{ 'active': model.mode == 'high_speed_15m' }, 'btn btn-mode6 center']"/>
-            <div class="btn-name">研磨</div>
-          </div>
-
-          <div 
-            class="btn-wrap"
-            @click="setMode('spin')">
-            <div :class="[{ 'active': model.mode == 'spin' }, 'btn btn-mode7 center']"/>
-            <div class="btn-name">果蔬</div>
-          </div>
-          <div 
-            class="btn-wrap"
-            @click="setMode('odor_removal')">
-            <div :class="[{ 'active': model.mode == 'odor_removal' }, 'btn btn-mode8 center']"/>
-            <div class="btn-name">奶昔</div>
-          </div>
-        </div>
-      </div>
-      <div class="items">
-        <div class="btns">
-          <div 
-            class="btn-wrap" 
-            @click="setMode('strong_wash')">
-            <div :class="[{ 'active': model.mode == 'mode2' }, 'btn btn-mode9 center']" />
-            <div class="btn-name">沙冰</div>
-          </div>
-          <div 
-            class="btn-wrap"
-            @click="setMode('high_speed_15m')">
-            <div :class="[{ 'active': model.mode == 'high_speed_15m' }, 'btn btn-mode10 center']"/>
-            <div class="btn-name">温热</div>
-          </div>
-        </div>
-      </div>
-    </Modal>
-    <!-- 时间选择 -->
-    <SelectTime 
-      ref="time" 
-      @selectedTime="setReserve" />
-
   </div>
 </template>
 
@@ -189,33 +105,19 @@ export default {
       isOpen: false,
       device_name: "",
       model: {
-        "progress": 60,
-        "machine_mode": 'grains',
-        "order_time": 440,
-        "step": 3,
-        "speed_tem": 10,
-        "run_time": 40,
-        "machine_status": 'standby',
-        "order_mode": 'gruel',
-        "realtime_tem": 79,
-        "realtime_speed": 3,
-        "no_cup": 'on',
-        "dry_heat": 'on',
+        "reserve": 880,
+        "mode": "max_volume",
+        "set_temperature": 50,
+        "switch": "on",
+        "fault": "normal",
+        "heat_status": "heat",
+        "temperature": 37,
+        "deviceModel": "LPB100",
+        "manufactureId": "Whirlpool",
+        "deviceCategory": "water_heater.sn",
+        "deviceSubCategory": 0,
         "connectivity": "online"
-      },
-      showModeBtns: false,
-      animation: false,
-      btnLoading: {
-        switch: false,
-        auto: false,
-        cold: false,
-        heat: false,
-        dehumidify: false,
-        wind: false,
-        wind_up_down: false,
-        wind_left_right: false
-      },
-      showSubPage: false
+      }
     }
   },
   computed: {
@@ -223,7 +125,7 @@ export default {
       return this.model.status == 'run'
     },
     isClose() {
-      return this.model.switch_status !== 'on' ? false : true 
+      return this.model.switch == 'on' ? false : true
     },
     isOffline() {
       return this.model.connectivity === 'online' ? false : true
@@ -316,18 +218,20 @@ export default {
   watch: {
   },
   created() {
-    var str_model = window.localStorage.getItem("cleaner_model_attr")
-    if(str_model){
-      try {
-        // str_model 有可能不是合法的JSON字符串，便会产生异常
-        this.model =JSON.parse(str_model)
-      } catch (e) {
-        this.model = {}
-      }
-    }
     HdSmart.ready(() => {
       if (window.device_name) {
         this.device_name = window.device_name
+      }
+      if (window.device_uuid) {
+        var str_model = window.localStorage.getItem(window.device_uuid)
+        if (str_model) {
+          try {
+            // str_model 有可能不是合法的JSON字符串，便会产生异常
+            this.model = JSON.parse(str_model)
+          } catch (e) {
+            this.model = {}
+          }
+        }
       }
       HdSmart.UI.showLoading()
       this.getSnapShot(() => {
@@ -343,129 +247,25 @@ export default {
     handleMore() {
       this.isOpen = !this.isOpen
     },
-    showMode() {
-      this.showModeBtns = true
-    },
-    showTime() {
-      if(!this.isClose) this.$refs.time.show = true
-    },
-    setReserve(time) {
-      if (this.isRun) {
-        HdSmart.UI.toast('运行中无法设置预约')
-        return
-      }
-      let h = parseInt(time.split(':')[0])
-      let m = parseInt(time.split(':')[1]) > 0 ? 0.5 : 0
-      this.controlDevice('reserve_wash', h + m)
-    },
-
     setSwitch() {
       let switchStatus = ''
-      if (this.model.switch_status == 'on') {
+      if (this.model.switch == 'on') {
         switchStatus = 'off'
       } else {
         switchStatus = 'on'
       }
       this.controlDevice("switch", switchStatus)
     },
-    handeModeClick() {
-      this.showModeBtns = true
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.animation = true
-        }, 0)
-      })
-    },
-    hide() {
-      this.showModeBtns = false
-      this.animation = false
-    },
-    toSubPage() {
-      console.log('showSubPage')
-      this.showSubPage = true
-    },
-    showTip(text) {
-      clearTimeout(this.tipTime)
-      this.tip = text
-      this.tipTime = setTimeout(() => {
-        this.tip = ""
-      }, 2000)
-    },
-    controlDevice(attr, val, param, success, error) {
-      var fn = this.confirm
-      var params = Object.assign(
-        {
-          [attr]: val
-        },
-        param
-      )
-
-      if (attr == "child_lock_switch") {
-        fn = function(cb) {
-          cb()
-        }
+    setTemperature(step) {
+      let val = this.model.set_temperature + step
+      if(val > 75) {
+        val = 75
+        HdSmart.UI.toast('温度最高为75℃')
+      } else if(val < 35) {
+        val = 35
+        HdSmart.UI.toast('温度最低为35℃')
       }
-
-      fn(() => {
-        HdSmart.Device.control(
-          {
-            method: "dm_set",
-            nodeid: `air_filter.main.${attr}`,
-            params: {
-              attribute: params
-            }
-          },
-          () => {
-            success && success()
-          },
-          () => {
-            error && error()
-            this.showTip("操作失败")
-          }
-        )
-      })
-    },
-
-    setControl() {
-      let val = ''
-      if(this.model.control_status == 'sleep'){
-        val = 'manual'
-      } else {
-        val = 'sleep'
-      }
-
-      this.controlDevice("control", val, () => {
-        this.model.control_status = val
-      })
-    },
-    setSleep() {
-      let speed = ''
-      if(this.model.speed == 'sleep'){
-        speed = 'low'
-      } else {
-         speed = 'sleep'
-      }
-      this.setSpeed(speed)
-    },
-    setSpeed(val) {
-      this.controlDevice("speed", val, {}, () => {
-        this.hide()
-        this.model.speed = val
-      })
-    },
-    setChildLock() {
-      if (this.model.control_status == "sleep") {
-        HdSmart.UI.toast("睡眠模式下不能开启童锁")
-        return
-      }
-      var val = this.model.child_lock_switch_status == "on" ? "off" : "on"
-      this.controlDevice(
-        "child_lock_switch",
-        val,
-        { control: this.model.control_status },
-        () => {},
-        () => {}
-      )
+      this.controlDevice('set_temperature', val)
     },
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot(
@@ -479,28 +279,27 @@ export default {
       )
     },
     onSuccess(data) {
-      this.status = "success"
       this.model = data.attribute
 
       // 将model 保存在 localStorage
-      window.localStorage.setItem('cleaner_model_attr', JSON.stringify(data.attribute))
-    },
-    confirm(done) {
-      if (this.model.child_lock_switch_status == "on") {
-        HdSmart.UI.alert(
-          {
-            title: "解除童锁",
-            message: "解除童锁后才能控制此设备，\n是否解除？",
-            dialogStyle: 2
-          },
-          val => {
-            if (val) this.setChildLock()
-          }
-        )
-      } else {
-        done()
+      if (window.device_uuid) {
+        window.localStorage.setItem(window.device_uuid, JSON.stringify(data.attribute))
       }
-    }
+    },
+    controlDevice(attr, value) {
+      HdSmart.Device.control(
+        {
+          nodeid: `water_heater.main.${attr === 'mode' ? 'custom' : attr}`,
+          params: {
+            attribute: {
+              [attr]: value
+            }
+          }
+        },
+        () => { },
+        () => { }
+      )
+    },
   }
 }
 </script>
@@ -550,13 +349,22 @@ export default {
       position: absolute;
       top: -31px;
       border-radius: 50%;
-      background: #000;
       .circle{
         box-sizing: border-box;
-        border: 4px solid #FF210E;
+        border: 4px solid;
+        border-color: transparent transparent #FF210E;
         border-radius: 50%;
+        width: 434px;
+        height: 434px;
 
-        border-color: transparent transparent#FF210E #FF210E;
+        transform: rotate(90deg);
+      }
+      .circle-gray{
+        position: absolute;
+        top: 0;
+        border: 4px solid #D8D8D8;
+        border-radius: 50%;
+        box-sizing: border-box;
         width: 432px;
         height: 432px;
       }
@@ -566,6 +374,44 @@ export default {
         background: #F4F7FE;
         width: 100%;
         height: 216px;
+        .point{
+          display: block;
+          background: #FF210E;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          &.left{
+            position: absolute;
+            top: -8px;
+            left: -1px;
+            background: #FF210E;
+          }
+          &.right{
+            position: absolute;
+            top: -8px;
+            right: -1px;
+            background: #D8D8D8;
+          }
+        }
+        .txt{
+          font-size: 24px;
+          color: #000;
+          &.left{
+            position: absolute;
+            top: 8px;
+            left: -28px;
+          }
+          &.right{
+            position: absolute;
+            top: 8px;
+            right: -28px;
+          }
+        }
+        sup{
+          font-size: 10px;
+          position: absolute;
+          top: -2px;
+        }
       }
     }
 
@@ -643,6 +489,7 @@ export default {
     left: 0;
     right: 0;
     padding: 38px 0 30px 40px;
+    z-index: 9999;
 
     background: #FFFFFF;
     box-shadow: 0 -3px 28px 0 rgba(209,209,209,0.50);
@@ -749,7 +596,46 @@ export default {
         background-size: 100% 100%;
       }
     }
-
+    .btn-heat{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/electric_water_heater/assets/new/heat.png);
+        background-size: 100% 100%;
+      }
+    }
+    .btn-znsw{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/electric_water_heater/assets/new/znsw.png);
+        background-size: 100% 100%;
+      }
+    }
+    .btn-bpsr{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/electric_water_heater/assets/new/bpsr.png);
+        background-size: 100% 100%;
+      }
+    }
+    .btn-znyj{
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/electric_water_heater/assets/new/znyj.png);
+        background-size: 100% 100%;
+      }
+    }
 
     .btn-swich {
       &::before {
@@ -757,7 +643,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
+        background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
         background-size: 100% 100%;
       }
       &.active {
@@ -854,6 +740,9 @@ export default {
       .bg .bg2{
         background-image: url(../../lib/base/blend/assets/bg2.png);
         background-size: 100% 100%;
+      }
+      .cover{
+        background: #fff;
       }
     }
     .btn-wrap{

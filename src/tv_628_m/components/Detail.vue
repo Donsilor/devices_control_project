@@ -669,6 +669,8 @@ export default {
     }
   },
   created() {
+    service.RemoteController({ 'show': true })
+
     this.$watch("cur.desc", this.getDescLine)
     //详情页添加history change
     this.$watch("$route.query.detail", (newVal, oldVal) => {
@@ -780,10 +782,10 @@ export default {
     },
     goBack(){
       this.hideDetail()
+      service.RemoteController({ show: false })
       if(this.isShowBar || window.history.length > 1){
         window.history.go(-1)
       } else {
-        service.RemoteController({ show: false })
         HdSmart.UI.popWindow()
       }
       this.loading = false

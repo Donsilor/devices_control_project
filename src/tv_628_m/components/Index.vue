@@ -514,6 +514,7 @@
 </style>
 
 <script>
+import { mapState } from 'vuex'
 import * as service from '../service'
 import Icon from '../../../lib/components/SettingIconMobile.vue'
 let infoCache = []
@@ -572,11 +573,12 @@ export default {
     }
   },
   computed: {
+    ...mapState(['status_bar_height', 'navigation_bar_height']),
     detailVisible() {
       return this.$store.state.detailVisible
     },
     barHeight() {
-      return this.isShowBar ? 0 : 64
+      return this.status_bar_height + this.navigation_bar_height
     },
     allList() {
       return [this.listDY, this.listDSJ, this.listZY, this.listDM]
