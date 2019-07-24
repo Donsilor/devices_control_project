@@ -4,43 +4,67 @@
       <topbar
         :title="device_name"
         bak-color="#000"/>
+      <div class="timebox">
+        <div 
+          v-show="model.order_time > 0 && model.connectivity == 'online'" 
+          class="appointment">
+          <img src="../../lib/base/blend/assets/time-black.png">
+          2小时25分后启动运行
+        </div>
+      </div>
       <div
         class="main center"
         @click="toSubPage">
         <div class="bg center">
           <div class="bg2 center">
-            <div class="num">预计运行时间</div>
-            <div class="time">30:00</div>
-            <div class="cmode">绵粥</div>
+            <div class="num">{{ model.machine_status == 'working' ? '剩余时间' : '预计运行时间' }}</div>
+            <!-- 离线的时候显示的时间 -->
+            <div 
+              v-show="model.connectivity == 'offline'" 
+              class="offtime">--:--</div>
+            <div 
+              v-show="model.machine_status !== 'working'&& model.connectivity !== 'offline'" 
+              class="time">{{ model['h-t10'] }}:{{ model['h-t11'] }}</div>
+            <!-- <div class="time">{{ model['h-t10'] }}:{{ model['h-t11'] }}</div> -->
+            <div 
+              v-show="model.machine_status == 'working'" 
+              class="time">{{ model.remaining_run_time }}</div>
+            <div 
+              v-show="model.connectivity !== 'offline'" 
+              class="cmode">{{ btnTxt }}</div>
           </div>
         </div>
       </div>
-      <div class="status">运行中…</div>
+      <div 
+        v-show="model.machine_status == 'working'" 
+        class="status">运行中…</div>
 
       <!-- 按钮 -->
       <div class="panel-btn center">
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']" >
-          <div
+          <!-- <div
             :class="[ isRun ? 'btn-stop': 'btn-start', 'btn center']"
+            @click="setSwitch" /> -->
+          <div
+            :class="[ model.machine_status == 'standby' ? 'btn-start': 'btn-stop', 'btn center']"
             @click="setSwitch" />
           <div class="btn-name">启动</div>
         </div>
 
-        <div class="btn-wrap">
+        <div :class="[{'disable' : model.machine_status == 'working' || model.order_time > 0},'btn-wrap']">
           <div
-            :class="[modeBtnClass, 'btn center']"
-            @click="showMode" />
+            :class="[modeBtnClass, 'btn center btn-mode']"
+            @click="handeModeClick" />
           <div class="btn-name">模式</div>
         </div>
 
-        <div class="btn-wrap">
+        <div :class="[{'disable' : model.machine_status == 'working'},'btn-wrap']">
           <div
             class="btn btn-time center"
             @click="showTime" />
           <div class="btn-name">预约</div>
         </div>
       </div>
-
     </div>
     <!-- 模式选择弹框 -->
     <Modal 
@@ -50,28 +74,28 @@
         <div class="btns">
           <div 
             class="btn-wrap" 
-            @click="setMode('strong_wash')">
-            <div :class="[{ 'active': model.mode == 'strong_wash' }, 'btn btn-mode1 center']" />
+            @click="setMode('grains')">
+            <div :class="[{ 'active': model.machine_mode == 'grains' },{'btn-loading': btnLoading.grains }, 'btn btn-mode1 center']" />
             <div class="btn-name">五谷</div>
           </div>
 
           <div 
             class="btn-wrap"
-            @click="setMode('high_speed_15m')">
-            <div :class="[{ 'active': model.mode == 'mode2' }, 'btn btn-mode2 center']"/>
+            @click="setMode('rice_paste')">
+            <div :class="[{ 'active': model.machine_mode == 'rice_paste' }, {'btn-loading': btnLoading.rice_paste }, 'btn btn-mode2 center']"/>
             <div class="btn-name">米糊</div>
           </div>
 
           <div 
             class="btn-wrap"
-            @click="setMode('spin')">
-            <div :class="[{ 'active': model.mode == 'spin' }, 'btn btn-mode3 center']"/>
+            @click="setMode('gruel')">
+            <div :class="[{ 'active': model.machine_mode == 'gruel' }, {'btn-loading': btnLoading.gruel }, 'btn btn-mode3 center']"/>
             <div class="btn-name">绵粥</div>
           </div>
           <div 
             class="btn-wrap"
-            @click="setMode('odor_removal')">
-            <div :class="[{ 'active': model.mode == 'odor_removal' }, 'btn btn-mode4 center']"/>
+            @click="setMode('pottage')">
+            <div :class="[{ 'active': model.machine_mode == 'pottage' }, {'btn-loading': btnLoading.pottage }, 'btn btn-mode4 center']"/>
             <div class="btn-name">浓汤</div>
           </div>
         </div>
@@ -80,28 +104,28 @@
         <div class="btns">
           <div 
             class="btn-wrap" 
-            @click="setMode('strong_wash')">
-            <div :class="[{ 'active': model.mode == 'mode2' }, 'btn btn-mode5 center']" />
+            @click="setMode('stewing')">
+            <div :class="[{ 'active': model.order_mode == 'stewing' }, {'btn-loading': btnLoading.stewing }, 'btn btn-mode5 center']" />
             <div class="btn-name">蒸煮</div>
           </div>
 
           <div 
             class="btn-wrap"
-            @click="setMode('high_speed_15m')">
-            <div :class="[{ 'active': model.mode == 'high_speed_15m' }, 'btn btn-mode6 center']"/>
+            @click="setMode('grind')">
+            <div :class="[{ 'active': model.order_mode == 'grind' }, {'btn-loading': btnLoading.grind }, 'btn btn-mode6 center']"/>
             <div class="btn-name">研磨</div>
           </div>
 
           <div 
             class="btn-wrap"
-            @click="setMode('spin')">
-            <div :class="[{ 'active': model.mode == 'spin' }, 'btn btn-mode7 center']"/>
+            @click="setMode('fruit_vegdtable')">
+            <div :class="[{ 'active': model.order_mode == 'fruit_vegdtable' }, {'btn-loading': btnLoading.fruit_vegdtable }, 'btn btn-mode7 center']"/>
             <div class="btn-name">果蔬</div>
           </div>
           <div 
             class="btn-wrap"
-            @click="setMode('odor_removal')">
-            <div :class="[{ 'active': model.mode == 'odor_removal' }, 'btn btn-mode8 center']"/>
+            @click="setMode('milk_shake')">
+            <div :class="[{ 'active': model.order_mode == 'milk_shake' }, {'btn-loading': btnLoading.milk_shake }, 'btn btn-mode8 center']"/>
             <div class="btn-name">奶昔</div>
           </div>
         </div>
@@ -110,14 +134,14 @@
         <div class="btns">
           <div 
             class="btn-wrap" 
-            @click="setMode('strong_wash')">
-            <div :class="[{ 'active': model.mode == 'mode2' }, 'btn btn-mode9 center']" />
+            @click="setMode('water_ice')">
+            <div :class="[{ 'active': model.machine_mode == 'water_ice' }, {'btn-loading': btnLoading.water_ice }, 'btn btn-mode9 center']" />
             <div class="btn-name">沙冰</div>
           </div>
           <div 
             class="btn-wrap"
-            @click="setMode('high_speed_15m')">
-            <div :class="[{ 'active': model.mode == 'high_speed_15m' }, 'btn btn-mode10 center']"/>
+            @click="setMode('tepidity')">
+            <div :class="[{ 'active': model.machine_mode == 'tepidity' }, {'btn-loading': btnLoading.tepidity }, 'btn btn-mode10 center']"/>
             <div class="btn-name">温热</div>
           </div>
         </div>
@@ -156,119 +180,120 @@ export default {
         "realtime_speed": 3,
         "no_cup": 'on',
         "dry_heat": 'on',
-        "connectivity": "online"
+        "connectivity": "online",
+         "h-t10": "00",
+         "h-t11": "00"
       },
       showModeBtns: false,
       animation: false,
       btnLoading: {
-        switch: false,
-        auto: false,
-        cold: false,
-        heat: false,
-        dehumidify: false,
-        wind: false,
-        wind_up_down: false,
-        wind_left_right: false
+        grains: false,
+        rice_paste: false,
+        gruel: false,
+        pottage: false,
+        stewing: false,
+        grind: false,
+        fruit_vegdtable: false,
+        milk_shake: false,
+        water_ice: false,
+        tepidity: false
       },
       showSubPage: false
     }
   },
   computed: {
     isRun() {
-      return this.model.status == 'run'
+      return this.model.machine_status == 'standby'
     },
     isClose() {
-      return this.model.switch_status == 'on' ? false : true
+      return this.model.switch == 'on' ? true : false
     },
     isOffline() {
       return this.model.connectivity === 'online' ? false : true
     },
-    btnClass() {
-      /* eslint-disable no-unreachable */
-      switch (this.model.speed) {
-        case 'low':
-          return 'btn-low'
-          break
-        case 'middle':
-          return 'btn-middle'
-          break
-        case 'high':
-          return 'btn-high'
-          break
-        case 'very_high':
-          return 'btn-very_high'
-          break
-        case 'super_high':
-          return 'btn-super_high'
-          break
-        case 'sleep':
-          return 'btn-low'
-          break
-      }
-    },
     btnTxt() {
-      /* eslint-disable no-unreachable */
-      switch (this.model.speed) {
-        case 'low':
-          return '低挡'
+       switch(this.model.order_mode) {
+        case 'grains':
+          return '五谷'
           break
-        case 'middle':
-          return '中档'
+        case 'rice_paste':
+          return '米糊'
           break
-        case 'high':
-          return '高档'
+        case 'gruel':
+          return '绵粥'
           break
-        case 'very_high':
-          return '超高档'
+        case 'pottage':
+          return '浓汤'
           break
-        case 'super_high':
-          return '极速挡'
-          break
-        case 'sleep':
-          return '低挡'
-          break
+
+        case 'stewing':
+            return '蒸煮'
+            break
+        case 'grind':
+            return '研磨'
+            break
+          case 'fruit_vegdtable':
+            return '果蔬'
+            break
+          case 'milk_shake':
+            return '奶昔'
+            break
+          case 'water_ice':
+            return '沙冰'
+            break
+          case 'tepidity':
+            return '温热'
+            break 
+          default:
+            return '绵粥'
       }
     },
     modeBtnClass(){
       /* eslint-disable no-unreachable */
-      switch(this.model.mode) {
-        case 'strong_wash':
-          return 'btn-mode'
+      switch(this.model.order_mode) {
+        case 'grains':
+          return 'grains'
           break
-        case 'high_speed_15m':
-          return 'btn-mode-15'
+        case 'rice_paste':
+          return 'rice_paste'
           break
-        case 'spin':
-          return 'btn-ts'
+        case 'gruel':
+          return 'gruel'
           break
-        case 'odor_removal':
-          return 'btn-jzj'
+        case 'pottage':
+          return 'pottage'
           break
 
-        case 'mix':
-            return 'btn-hh'
+        case 'stewing':
+            return 'stewing'
             break
-        case 'cotton':
-            return 'btn-ms'
+        case 'grind':
+            return 'grind'
             break
-          case 'synthetic':
-            return 'btn-hq'
+          case 'fruit_vegdtable':
+            return 'fruit_vegdtable'
             break
-          case 'cardigan':
-            return 'btn-ym'
+          case 'milk_shake':
+            return 'milk_shake'
             break
-          case 'cowboy_suit':
-            return 'btn-nz'
+          case 'water_ice':
+            return 'water_ice'
             break
-          case 'down_coat':
-            return 'btn-ylf'
+          case 'tepidity':
+            return 'tepidity'
             break 
           default:
-            return 'btn-others'
+            return 'gruel'
       }
-    }
+    },
   },
   watch: {
+    "model.order_mode":function() {
+      this.controlDevice('order_time', 0, {},
+        () => {
+          if (this.showModeBtns) this.hide()
+        }, () => { }, 'order_time')
+    }
   },
   created() {
     var str_model = window.localStorage.getItem("cleaner_model_attr")
@@ -295,32 +320,45 @@ export default {
     })
   },
   methods: {
-    showMode() {
-      this.showModeBtns = true
-    },
     showTime() {
+      if(this.model.machine_status == 'working'){
+        return false
+      }
       if(!this.isClose) this.$refs.time.show = true
     },
     setReserve(time) {
-      if (this.isRun) {
+      if (this.model.machine_status == 'working') {
         HdSmart.UI.toast('运行中无法设置预约')
         return
       }
       let h = parseInt(time.split(':')[0])
       let m = parseInt(time.split(':')[1]) > 0 ? 0.5 : 0
-      this.controlDevice('reserve_wash', h + m)
+      this.controlDevice('order_time', h + m)
     },
 
     setSwitch() {
-      let switchStatus = ''
-      if (this.model.switch_status == 'on') {
-        switchStatus = 'off'
-      } else {
-        switchStatus = 'on'
+      // 切换启动按钮，mock的woking状态
+      if(this.model.machine_status == 'standby') {
+        this.controlDevice('order_mode', this.model.order_mode, {},
+        () => {
+          if (this.showModeBtns) this.hide()
+        }, () => { }, 'working')
       }
-      this.controlDevice("switch", switchStatus)
+      if(this.model.machine_status == 'working') {
+        this.controlDevice('machine_status', 'standby', {},
+        () => {
+          if (this.showModeBtns) this.hide()
+        }, () => { }, 'standby')
+      }
+      
+
     },
+    // 点击模式
     handeModeClick() {
+      // 所有模式互斥
+      if (this.model.machine_status == 'working' || this.model.order_time > 0 ) {
+        return false
+      }
       this.showModeBtns = true
       this.$nextTick(() => {
         setTimeout(() => {
@@ -328,9 +366,28 @@ export default {
         }, 0)
       })
     },
+    // 切换模式
+    setMode(mode) {
+      // // 所有模式互斥
+      // if (this.model.machine_status == 'working') {
+      //   return false
+      // }
+      this.controlDevice('machine_mode', mode, {},
+        () => {
+          if (this.showModeBtns) this.hide()
+        }, () => { }, mode)
+    },
     hide() {
       this.showModeBtns = false
       this.animation = false
+    },
+    // 显示按钮点击loading
+    showBtnLoading(attr) {
+      this.btnLoading[attr] = true
+    },
+    // 隐藏按钮点击loading
+    hideBtnLoading(attr) {
+      this.btnLoading[attr] = false
     },
     toSubPage() {
       console.log('showSubPage')
@@ -343,7 +400,8 @@ export default {
         this.tip = ""
       }, 2000)
     },
-    controlDevice(attr, val, param, success, error) {
+    controlDevice(attr, val, param, success, error,btnAttr) {
+      this.showBtnLoading(btnAttr)
       var fn = this.confirm
       var params = Object.assign(
         {
@@ -368,9 +426,11 @@ export default {
             }
           },
           () => {
+            this.hideBtnLoading(btnAttr)
             success && success()
           },
           () => {
+            this.hideBtnLoading(btnAttr)
             error && error()
             this.showTip("操作失败")
           }
@@ -433,7 +493,6 @@ export default {
     onSuccess(data) {
       this.status = "success"
       this.model = data.attribute
-
       // 将model 保存在 localStorage
       window.localStorage.setItem('cleaner_model_attr', JSON.stringify(data.attribute))
     },
@@ -457,6 +516,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+*{
+  touch-action: none;
+}
 .body{
   min-height: 100%;
 }
@@ -470,11 +532,30 @@ export default {
   &.filter {
     filter: blur(12px);
   }
+  .timebox{
+    width: 100%;
+    height: 32px;
+    margin-top: 40px;
+    .appointment{
+      font-size: 24px;
+      color: #20282B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align:middle;
+    >img{
+      width: 25px;
+      height: 25px;
+      margin-right: 10px;
+    }
+  }
+  }
   .bg{
     width: 750px;
     height: 750px;
     background-image: url(../../lib/base/blend/assets/bg3.png);
     background-size: 100% 100%;
+    margin: 60px auto;
     .bg2{
       flex-direction: column;
       width: 620px;
@@ -495,6 +576,11 @@ export default {
       font-size: 24px;
       color: #20282B;
       text-align: center;
+    }
+    .offtime {
+      font-size: 112px;
+      color: #20282B;
+      letter-spacing: 0;
     }
     .time {
       font-size: 112px;
@@ -518,7 +604,7 @@ export default {
     }
   }
   .status{
-    margin-top: 60px;
+    margin-top: 40px;
     font-size: 24px;
     color: #20282B;
     text-align: center;
@@ -550,7 +636,7 @@ export default {
   }
 
   .btn-wrap {
-    margin: 50px 24px 0;
+    margin: -40px 36px 0;
     &.up-index{
       position: relative;
       z-index: 9999;
@@ -572,7 +658,7 @@ export default {
     }
     .btn-name {
       text-align: center;
-      color: #000;
+      color: #818181;
       margin-top: 16px;
       font-size: 24px;
     }
@@ -585,11 +671,6 @@ export default {
         background-image: url(../../lib/base/blend/assets/start.png);
         background-size: 100% 100%;
       }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/start.png);
-        }
-      }
     }
     .btn-stop {
       &::before {
@@ -599,11 +680,6 @@ export default {
         height: 44px;
         background-image: url(../../lib/base/blend/assets/btn-stop.png);
         background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-stop.png);
-        }
       }
     }
     .btn-time {
@@ -616,23 +692,6 @@ export default {
         background-size: 100% 100%;
       }
     }
-
-
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
-        }
-      }
-    }
     .btn-mode {
       &::before {
         content: "";
@@ -642,66 +701,79 @@ export default {
         background-image: url(../../lib/base/blend/assets/btn-mode1.png);
         background-size: 100% 100%;
       }
-    }
-    .btn-low {
-      &::before {
-        content: "";
+      &.grains::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
+        background-image: url(../../lib/base/blend/assets/btn-mode1.png);
         background-size: 100% 100%;
       }
-    }
-    .btn-middle {
-      &::before {
-        content: "";
+      &.rice_paste::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
+        background-image: url(../../lib/base/blend/assets/btn-mode2.png);
         background-size: 100% 100%;
       }
-    }
-    .btn-high {
-      &::before {
-        content: "";
+      &.gruel::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
+        background-image: url(../../lib/base/blend/assets/btn-mode3.png);
         background-size: 100% 100%;
       }
-    }
-    .btn-very_high {
-      &::before {
-        content: "";
+      &.pottage::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4.png);
+        background-image: url(../../lib/base/blend/assets/btn-mode4.png);
         background-size: 100% 100%;
       }
-    }
-    .btn-super_high {
-      &::before {
-        content: "";
+      &.stewing::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5.png);
+        background-image: url(../../lib/base/blend/assets/btn-mode5.png);
         background-size: 100% 100%;
       }
-    }
-    .btn-more {
-      &::before {
-        content: "";
+      &.grind::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/more.png);
+        background-image: url(../../lib/base/blend/assets/btn-mode6.png);
         background-size: 100% 100%;
       }
+      &.fruit_vegdtable::before {
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/blend/assets/btn-mode7.png);
+        background-size: 100% 100%;
+      }
+      &.milk_shake::before {
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/blend/assets/btn-mode8.png);
+        background-size: 100% 100%;
+      }
+      &.water_ice::before {
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/blend/assets/btn-mode9.png);
+        background-size: 100% 100%;
+      }
+      &.tepidity::before {
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url(../../lib/base/blend/assets/btn-mode10.png);
+        background-size: 100% 100%;
+      }
+    }
+    &.disable {
+     opacity: 0.2;
     }
   }
   &.close,  &.offline {
@@ -806,97 +878,6 @@ export default {
         border-color: #ffbf00;
       }
     }
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
-        }
-      }
-    }
-
-    .btn-low {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
-        }
-      }
-    }
-    .btn-middle {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
-        }
-      }
-    }
-    .btn-high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
-        }
-      }
-    }
-    .btn-very_high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4.png);
-        }
-      }
-    }
-    .btn-super_high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5.png);
-        }
-      }
-    }
   }
 }
 .items{
@@ -932,90 +913,75 @@ export default {
         border: none;
       }
     }
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_condition/assets/new-air/swich-black.png);
-        }
-      }
-    }
-    .btn-start {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/haier_washer/assets/btn-start.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-        }
-      }
-    }
-    .btn-stop {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-        }
-      }
-    }
-    .btn-mode {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/haier_washer/assets/btn-mode-white58.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/haier_washer/assets/btn-mode-black58.png);
-        }
-      }
-    }
-    .btn-time {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_condition/assets/new-air/time-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_condition/assets/new-air/time-black.png);
-        }
-      }
-      &.btn-current {
-        border-color: #FFC600;
-        &::before {
-          background-image: url(../../lib/base/air_condition/assets/new-air/time-yellow.png);
-        }
-        .name{
-          color: #FFC600;
-        }
-      }
-    }
+    // .btn-start {
+    //   &::before {
+    //     content: "";
+    //     display: block;
+    //     width: 44px;
+    //     height: 44px;
+    //     background-image: url(../../lib/base/haier_washer/assets/btn-start.png);
+    //     background-size: 100% 100%;
+    //   }
+    //   &.active {
+    //     &::before {
+    //       background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
+    //     }
+    //   }
+    // }
+    // .btn-stop {
+    //   &::before {
+    //     content: "";
+    //     display: block;
+    //     width: 44px;
+    //     height: 44px;
+    //     background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
+    //     background-size: 100% 100%;
+    //   }
+    //   &.active {
+    //     &::before {
+    //       background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
+    //     }
+    //   }
+    // }
+    // .btn-mode {
+    //   &::before {
+    //     content: "";
+    //     display: block;
+    //     width: 44px;
+    //     height: 44px;
+    //     background-image: url(../../lib/base/haier_washer/assets/btn-mode-white58.png);
+    //     background-size: 100% 100%;
+    //   }
+    //   &.active {
+    //     &::before {
+    //       background-image: url(../../lib/base/haier_washer/assets/btn-mode-black58.png);
+    //     }
+    //   }
+    // }
+    // .btn-time {
+    //   &::before {
+    //     content: "";
+    //     display: block;
+    //     width: 44px;
+    //     height: 44px;
+    //     background-image: url(../../lib/base/air_condition/assets/new-air/time-white.png);
+    //     background-size: 100% 100%;
+    //   }
+    //   &.active {
+    //     &::before {
+    //       background-image: url(../../lib/base/air_condition/assets/new-air/time-black.png);
+    //     }
+    //   }
+    //   &.btn-current {
+    //     border-color: #FFC600;
+    //     &::before {
+    //       background-image: url(../../lib/base/air_condition/assets/new-air/time-yellow.png);
+    //     }
+    //     .name{
+    //       color: #FFC600;
+    //     }
+    //   }
+    // }
 
     .btn-mode1 {
       &::before {
