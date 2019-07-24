@@ -1,13 +1,13 @@
 <template>
-  <div 
-    id="app" 
+  <div
+    id="app"
     :class="[{ 'offline': isOffline }, { 'close': isClose }]">
     <div class="page">
       <topbar
         :title="device_name"
         :bak-color="bakColor"/>
       <!-- 离线提示 原生实现了 该功能注释掉-->
-      <!-- <div 
+      <!-- <div
         v-show="isOffline"
         class="tips">
         <i class="attention" />
@@ -46,16 +46,16 @@
         </div>
         <div class="wrap-btns">
           <div class="btns center">
-            <div 
+            <div
               class="btn  btn-swich center"
               @click.stop="setSwitch('off')"/>
-            <div 
+            <div
               :class="[ isRun ? 'btn-stop': 'btn-start', 'btn center']"
               @click.stop="setControl"/>
-            <div 
+            <div
               :class="[modeBtnClass, 'btn center']"
               @click.stop="showModelPanel"/>
-              <!-- <div 
+              <!-- <div
               class="btn btn-time center"
               @click.stop="showTime"/> -->
           </div>
@@ -68,41 +68,41 @@
         </div>
       </div>
 
-      <SelectTime 
-        ref="time" 
+      <SelectTime
+        ref="time"
         @selectedTime="setReserve" />
     </div>
 
     <!-- 更多 -->
-    <sub-page 
-      v-model="modeModalVisible" 
-      title="模式" 
+    <sub-page
+      v-model="modeModalVisible"
+      title="模式"
       class="modal-w modal-more backControl">
       <div class="more-wrap">
         <div class="mode-group">
           <div class="title">洗涤清洁</div>
           <div class="btns">
-            <div 
-              class="btn-wrap" 
+            <div
+              class="btn-wrap"
               @click="setMode('strong_wash')">
               <div :class="[{ 'active': model.mode == 'strong_wash' }, 'btn btn-mode center']" />
               <div class="btn-name">标准洗</div>
             </div>
 
-            <div 
+            <div
               class="btn-wrap"
               @click="setMode('high_speed_15m')">
               <div :class="[{ 'active': model.mode == 'high_speed_15m' }, 'btn btn-mode-15 center']"/>
               <div class="btn-name">速洗15′</div>
             </div>
 
-            <div 
+            <div
               class="btn-wrap"
               @click="setMode('spin')">
               <div :class="[{ 'active': model.mode == 'spin' }, 'btn btn-ts center']"/>
               <div class="btn-name">单脱水</div>
             </div>
-            <!-- <div 
+            <!-- <div
               class="btn-wrap"
               @click="setMode('odor_removal')">
               <div :class="[{ 'active': model.mode == 'odor_removal' }, 'btn btn-jzj center']"/>
@@ -114,41 +114,41 @@
         <div class="mode-group">
           <div class="title">洗涤清洁</div>
           <div class="btns">
-            <div 
+            <div
               class="btn-wrap"
               @click="setMode('mix')">
               <div :class="[{ 'active': model.mode == 'mix' }, 'btn btn-hh center']" />
               <div class="btn-name">混合</div>
             </div>
 
-            <div 
+            <div
               class="btn-wrap"
               @click="setMode('cotton')">
               <div :class="[{ 'active': model.mode == 'cotton' }, 'btn btn-ms center']"/>
               <div class="btn-name">棉麻</div>
             </div>
 
-            <div 
+            <div
               class="btn-wrap"
               @click="setMode('synthetic')">
               <div :class="[{ 'active': model.mode == 'synthetic' }, 'btn btn-hq center']" />
               <div class="btn-name">化纤</div>
             </div>
 
-            <div 
+            <div
               class="btn-wrap"
               @click="setMode('cardigan')">
               <div :class="[{ 'active': model.mode == 'cardigan' }, 'btn btn-ym center']"/>
               <div class="btn-name">羊毛</div>
             </div>
-            <div 
+            <div
               class="btn-wrap"
               @click="setMode('cowboy_suit')">
               <div :class="[{ 'active': model.mode == 'cowboy_suit' }, 'btn btn-nz center']"/>
               <div class="btn-name">牛仔</div>
             </div>
 
-            <div 
+            <div
               class="btn-wrap"
               @click="setMode('down_coat')">
               <div :class="[{ 'active': model.mode == 'down_coat' }, 'btn btn-ylf center']"/>
@@ -160,21 +160,21 @@
     </sub-page>
 
     <!-- 弹框 -->
-    <modal 
-      v-model="showModel" 
-      title="预约洗衣" 
+    <modal
+      v-model="showModel"
+      title="预约洗衣"
       class="modal-w">
       <div class="reserve-wrap">
         content
       </div>
       <div class="reserve-foot">
-        <a 
-          href="" 
-          class="cancel" 
+        <a
+          href=""
+          class="cancel"
           @click.prevent="cancelReserve">取消</a>
-        <a 
-          href="" 
-          class="submit" 
+        <a
+          href=""
+          class="submit"
           @click.prevent="submitReserve">确定</a>
       </div>
     </modal>
@@ -265,7 +265,7 @@ export default {
       return this.model.status == 'run'
     },
     isPause() {
-      return this.model.status == 'halt'
+      return this.model.status.trim() == 'halt'
     },
     isStandby() {
       return this.model.status == 'standby' && this.model.operation == 'none'
@@ -367,7 +367,7 @@ export default {
             break
           case 'down_coat':
             return 'btn-ylf'
-            break 
+            break
           default:
             return 'btn-others'
       }
@@ -780,7 +780,7 @@ export default {
 
   .main{
     position: absolute;
-    top: 0; 
+    top: 0;
     left:50%;
     transform: translate(-50%, 0);
     z-index: 1;
@@ -790,7 +790,7 @@ export default {
     padding: 122px 0;
     width: 548px;
     height: 548px;
-    
+
     background-image: url(../../lib/base/haier_washer/assets/bg-circle.png);
     background-size: 100% 100%;
     color: #000;
@@ -805,15 +805,15 @@ export default {
       .wrap-time{
         position: relative;
         display: inline;
+        .time-unit{
+          font-size: 24px;
+          position: absolute;
+          top: 60px;
+          right: -40px;
+          width: 40px;
+          color: #20282B;
+        }
       }
-    }
-    .time-unit{
-      font-size: 24px;
-      position: absolute;
-      top: 60px;
-      right: -40px;
-      width: 40px;
-      color: #20282B;
     }
     .status{
       color: #fff;
@@ -882,7 +882,7 @@ export default {
       &.bubble2{
         width: 28px;
         height: 28px;
-        position: absolute; 
+        position: absolute;
         left: 170px;
       }
       &.bubble3{
@@ -1254,7 +1254,7 @@ export default {
       margin-top: 8px;
       font-size: 20px;
       color: #fff;
-    }  
+    }
   }
   &.offline,
   &.close {
@@ -1364,7 +1364,7 @@ export default {
             background-image: url(../../lib/base/haier_washer/assets/btn-mode-black15.png);
             background-size: 100% 100%;
           }
-    
+
         }
         .btn-ts{
           &::before {

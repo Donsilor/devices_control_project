@@ -17,7 +17,7 @@ let res = {
     "sterilization": "off",
     "switch": "on",
     "temperature": 28,
-    "time_left": '15',
+    "time_left": '757',
     "connectivity": "online"
 }
 
@@ -41,7 +41,7 @@ export function set(data){
             attr.status = 'run'
         }
         if(attr.status == 'halt'){
-            attr.status = 'standby'
+            attr.status = 'halt'
             attr.operation = 'wash'
         }
     }
