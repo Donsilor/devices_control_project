@@ -17,9 +17,7 @@
       <div class="main">
         <div class="mode">{{ model.mode | modeType }}模式 </div>
         <div class="time">
-          <div class="wrap-time">
-            {{ model.time_left }}
-            <sup class="time-unit">分</sup>
+          <div class="wrap-time">{{ model.time_left }}<sup>分</sup>
           </div>
         </div>
 
@@ -804,14 +802,13 @@ export default {
       font-size: 200px;
       .wrap-time{
         position: relative;
-        display: inline;
-        .time-unit{
+        text-align: center;
+        sup{
           font-size: 24px;
           position: absolute;
-          top: 60px;
-          right: -40px;
-          width: 40px;
+          top: 30px;
           color: #20282B;
+          white-space: nowrap;
         }
       }
     }
