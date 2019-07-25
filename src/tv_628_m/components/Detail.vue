@@ -434,7 +434,7 @@
     .bd-num-all {
       width: 100%;
       padding-top: 30px;
-      height: 670px;
+      max-height: 670px;
       padding-left: 32px;
       overflow-y: auto;
     }
@@ -463,6 +463,7 @@
     overflow-x: auto;
     display: -webkit-box;
     margin-bottom: 30px;
+    -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
       display: none;
     }

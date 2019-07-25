@@ -26,6 +26,9 @@
             <div class="time">{{ model.temperature }}<sup>°C</sup></div>
             <div class="cmode">当前温度</div>
           </div>
+          <div 
+            :style="{ transform: 'rotate(' + arrowRotate + 'deg)'}"
+            class="bg2 pos-ab" ><i class="circle-arrow" /></div>
         </div>
       </div>
 
@@ -50,10 +53,34 @@
 
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']" >
           <div
-            :class="[ isClose ? '': 'active', 'btn-swich btn center']"
+            :class="[{ 'active': !isClose }, 'btn-swich btn center']"
             @click="setSwitch" />
           <div class="btn-name">关机</div>
         </div>
+
+        
+        <div 
+          class="btn-wrap" 
+          @click="setMode('dy_expansion')">
+          <div
+            :class="[{ 'active': model.mode == 'dy_expansion' }, 'btn btn-heat center']"/>
+          <div class="btn-name">速热增容</div>
+        </div>
+        <div 
+          class="btn-wrap" 
+          @click="setMode('heat_keep')">
+          <div
+            :class="[ { 'active': model.mode == 'heat_keep' }, 'btn btn-znsw center']"/>
+          <div class="btn-name">智能水温</div>
+        </div>
+        <div 
+          class="btn-wrap" 
+          @click="setMode('sterilization')">
+          <div
+            :class="[ { 'active': model.mode == 'sterilization' }, 'btn btn-znyj center']"/>
+          <div class="btn-name">智能抑菌 </div>
+        </div>
+
         <!-- 
         <div class="btn-wrap">
           <div
@@ -126,6 +153,9 @@ export default {
     },
     cRotate() {
       return (+this.model.temperature - 35) * 4.5 - 45
+    },
+    arrowRotate() {
+      return (+this.model.temperature - 35) * 4.5
     }
   },
   watch: {
@@ -159,6 +189,10 @@ export default {
   methods: {
     handleMore() {
       this.isOpen = !this.isOpen
+    },
+    setMode(val) {
+      if(this.isClose) return
+      this.controlDevice('mode', val)
     },
     setSwitch() {
       let switchStatus = ''
@@ -201,7 +235,7 @@ export default {
     controlDevice(attr, value) {
       HdSmart.Device.control(
         {
-          nodeid: `water_heater.main.${attr === 'mode' ? 'custom' : attr}`,
+          nodeid: `water_heater.main.${attr}`,
           params: {
             attribute: {
               [attr]: value
@@ -250,6 +284,25 @@ export default {
       background: #fff;
       border-radius: 50%;
       flex-direction: column;
+      &.pos-ab{
+        background: transparent;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+    .circle-arrow{
+      
+      display: block;
+      width: 60px;
+      height: 60px;
+      background-image: url(../../lib/base/electric_water_heater/assets/new/arrow.png);
+      background-size: 100% 100%;
+
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(-0, -50%);
     }
   }
   .main {
@@ -311,13 +364,13 @@ export default {
           color: #000;
           &.left{
             position: absolute;
-            top: 16px;
+            top: 28px;
             left: -28px;
           }
           &.right{
             position: absolute;
-            top: 16px;
-            right: -28px;
+            top: 28px;
+            right: -10px;
           }
         }
         sup{

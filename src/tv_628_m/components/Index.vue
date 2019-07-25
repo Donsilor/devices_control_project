@@ -84,7 +84,6 @@
 
           <div class="name">{{ item.title }}</div>
           <span class="update">
-            更新至12集
             {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
           </span>
           <!-- <span 
@@ -194,6 +193,7 @@
     overflow-x: auto;
     display: -webkit-box;
     -webkit-box-orient: horizontal;
+    -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
       display: none;
     }
@@ -361,6 +361,7 @@
 
   overflow-x: auto;
   -webkit-box-orient: horizontal;
+  -webkit-overflow-scrolling: touch;
   &.hide{
     bottom: -200px;
   }
