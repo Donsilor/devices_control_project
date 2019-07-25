@@ -1,6 +1,9 @@
 <!-- 首页 -->
 <template>
   <div class="page-index">
+    <div 
+      v-show="ios" 
+      class="space-block" />
     <!-- 顶部导航菜单 -->
     <topbar 
       v-if="isShowBar"
@@ -81,12 +84,13 @@
 
           <div class="name">{{ item.title }}</div>
           <span class="update">
+            更新至12集
             {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
           </span>
-          <span 
+          <!-- <span 
             v-if="item.ispay && item.ispay !== '1'"
-            class="isvip">付费</span>
-          <span class="score">{{ item.score }}</span>
+            class="isvip">付费</span> -->
+          <!-- <span class="score">{{ item.score }}</span> -->
           <!--<div class="label">-->
           <!--</div>-->
         </li>
@@ -126,9 +130,12 @@
   align-items: center;
 }
 .page-index {
-  padding-top: 12px;
   padding-bottom: 48px;
   background: #f8f8f8;
+
+  .space-block{
+    height: 26px;
+  }
   .wrap-title{
     display: flex;
     justify-content: space-between;
@@ -231,7 +238,6 @@
 }
 
 .vlist {
-  padding-top: 36px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -255,15 +261,14 @@
   }
   .update {
     position: absolute;
-    left: 0;
-    bottom: 100px;
-    background: rgba(0, 0, 0, 0.5);
+    right: 0;
+    bottom: 85px;
     color: #fff;
     line-height: 30px;
     font-size: 24px;
     padding: 0 12px;
-    border-radius: 0 3px 3px 0;
-    display: none;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.50);
+    // display: none;
   }
   /*.label {
         position: absolute;
@@ -499,6 +504,7 @@ export default {
   data() {
     const self = this
     return {
+      ios: /iPad|iPhone|iPod/.test(navigator.userAgent),
       device_uuid: window.device_uuid || '',
       isShowBar: this.$route.query.showBar == 1,
 

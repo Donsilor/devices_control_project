@@ -50,7 +50,7 @@
 
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']" >
           <div
-            :class="[ isRun ? 'btn-stop': 'btn-start', 'btn-swich btn center']"
+            :class="[ isClose ? '': 'active', 'btn-swich btn center']"
             @click="setSwitch" />
           <div class="btn-name">关机</div>
         </div>
@@ -286,7 +286,7 @@ export default {
         top: 50%;
         background: #F4F7FE;
         width: 100%;
-        height: 216px;
+        height: 220px;
         .point{
           display: block;
           background: #FF210E;
@@ -677,6 +677,9 @@ export default {
       .cover{
         background: #fff;
       }
+    }
+    .panel-btn{
+      background: #efefef;
     }
     .btn-wrap{
       opacity: .2;

@@ -14,7 +14,7 @@
       </div>
     </topbar>
 
-    <status-tip />
+    <status-tip v-show="device_uuid" />
 
     <div class="detail-bd">
       <div 
@@ -597,6 +597,7 @@ export default {
   // props: ['channelId','vid'],
   data() {
     return {
+      device_uuid: window.device_uuid || '',
       isShowBar: this.$route.query.showBar == 1,
 
       //是否显示

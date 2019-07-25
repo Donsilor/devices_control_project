@@ -19,7 +19,7 @@
       :back="goBack" 
       :title="title" />
 
-    <status-tip />
+    <status-tip v-show="device_uuid" />
     <!-- 条件 -->
     <div 
       :class="{active:filterVisible}"
@@ -27,7 +27,7 @@
     <div 
       v-if="!error"
       :class="{active:filterVisible}"
-      :style="{top: (status_bar_height + navigation_bar_height) + 'px'}"
+      :style="{top: isStatusBarShow ? (status_bar_height + navigation_bar_height + 40) + 'px' : (status_bar_height + navigation_bar_height) + 'px' }"
       class="filters">
       <!-- 地区 -->
       <dl 
@@ -443,6 +443,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   data() {
     return {
+      device_uuid: window.device_uuid || '',
       isShowBar: this.$route.query.showBar == 1,
 
       title: decodeURIComponent(this.$route.query.channel),

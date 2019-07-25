@@ -76,7 +76,7 @@ const store = new Vuex.Store({
   },
   getters: {
     isStatusBarShow(state)  {
-        return state.tvStatus.screenProjectType != 0 || state.tvStatus.tvOnlineStatus != 1
+      return window.device_uuid && (state.tvStatus.screenProjectType != 0 || state.tvStatus.tvOnlineStatus != 1)
     }
   },
   mutations: {
