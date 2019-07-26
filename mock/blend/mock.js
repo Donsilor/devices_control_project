@@ -11,7 +11,7 @@ let res = {
     "speed_tem": 10,
     "run_time": 40,
     "machine_status": 'standby',
-    "order_mode": 'gruel',
+    "order_mode": 'grains',
     "realtime_tem": 79,
     "realtime_speed": 3,
     "no_cup": 'on',
@@ -35,10 +35,13 @@ export function generateSnapShot() {
 
 export function set(data){
     var attr = data.params.attribute
-    if(attr.order_mode){
-        attr.machine_status = attr.order_mode
-        attr.machine_mode = attr.order_mode
-    }
+    // if(attr.order_mode){
+    //     attr.machine_status = attr.order_mode
+    //     attr.machine_mode = attr.order_mode
+    // }
+    if(attr.machine_mode){
+      attr.order_mode = attr.machine_mode
+  }
     if(attr.negative_ion_switch){
         attr.negative_ion_switch_status = attr.negative_ion_switch
     }

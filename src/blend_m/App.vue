@@ -17,17 +17,18 @@
         @click="toSubPage">
         <div class="bg center">
           <div class="bg2 center">
-            <div class="num">{{ model.machine_status == 'working' ? '剩余时间' : '预计运行时间' }}</div>
+            <div class="num">{{ model.machine_status == 'standby' ? '预计运行时间' : '剩余时间' }}</div>
             <!-- 离线的时候显示的时间 -->
             <div 
               v-show="model.connectivity == 'offline'" 
               class="offtime">--:--</div>
+            <!-- 预计运行时间 -->
             <div 
-              v-show="model.machine_status !== 'working'&& model.connectivity !== 'offline'" 
+              v-show="model.machine_status == 'standby'&& model.connectivity == 'online'" 
               class="time">{{ model['h-t10'] }}:{{ model['h-t11'] }}</div>
-            <!-- <div class="time">{{ model['h-t10'] }}:{{ model['h-t11'] }}</div> -->
+            <!-- 剩余运行时间 -->
             <div 
-              v-show="model.machine_status == 'working'" 
+              v-show="model.machine_status !== 'standby'" 
               class="time">{{ model.remaining_run_time }}</div>
             <div 
               v-show="model.connectivity !== 'offline'" 
@@ -36,29 +37,26 @@
         </div>
       </div>
       <div 
-        v-show="model.machine_status == 'working'" 
+        v-show="model.machine_status !== 'standby'" 
         class="status">运行中…</div>
 
       <!-- 按钮 -->
       <div class="panel-btn center">
-        <div :class="[{'up-index': !isOffline }, 'btn-wrap']" >
-          <!-- <div
-            :class="[ isRun ? 'btn-stop': 'btn-start', 'btn center']"
-            @click="setSwitch" /> -->
+        <div :class="[{'up-index': !isOffline },{'disable' : model.order_time > 0 }, 'btn-wrap']" >
           <div
             :class="[ model.machine_status == 'standby' ? 'btn-start': 'btn-stop', 'btn center']"
             @click="setSwitch" />
-          <div class="btn-name">启动</div>
+          <div class="btn-name">{{ model.machine_status == 'standby' ? '启动' : '暂停' }}</div>
         </div>
 
-        <div :class="[{'disable' : model.machine_status == 'working' || model.order_time > 0},'btn-wrap']">
+        <div :class="[{'disable' : model.machine_status !== 'standby' || model.order_time > 0},'btn-wrap']">
           <div
             :class="[modeBtnClass, 'btn center btn-mode']"
             @click="handeModeClick" />
           <div class="btn-name">模式</div>
         </div>
 
-        <div :class="[{'disable' : model.machine_status == 'working'},'btn-wrap']">
+        <div :class="[{'disable' : model.machine_status !== 'standby'},'btn-wrap']">
           <div
             class="btn btn-time center"
             @click="showTime" />
@@ -105,27 +103,27 @@
           <div 
             class="btn-wrap" 
             @click="setMode('stewing')">
-            <div :class="[{ 'active': model.order_mode == 'stewing' }, {'btn-loading': btnLoading.stewing }, 'btn btn-mode5 center']" />
+            <div :class="[{ 'active': model.machine_mode == 'stewing' }, {'btn-loading': btnLoading.stewing }, 'btn btn-mode5 center']" />
             <div class="btn-name">蒸煮</div>
           </div>
 
           <div 
             class="btn-wrap"
             @click="setMode('grind')">
-            <div :class="[{ 'active': model.order_mode == 'grind' }, {'btn-loading': btnLoading.grind }, 'btn btn-mode6 center']"/>
+            <div :class="[{ 'active': model.machine_mode == 'grind' }, {'btn-loading': btnLoading.grind }, 'btn btn-mode6 center']"/>
             <div class="btn-name">研磨</div>
           </div>
 
           <div 
             class="btn-wrap"
             @click="setMode('fruit_vegdtable')">
-            <div :class="[{ 'active': model.order_mode == 'fruit_vegdtable' }, {'btn-loading': btnLoading.fruit_vegdtable }, 'btn btn-mode7 center']"/>
+            <div :class="[{ 'active': model.machine_mode == 'fruit_vegdtable' }, {'btn-loading': btnLoading.fruit_vegdtable }, 'btn btn-mode7 center']"/>
             <div class="btn-name">果蔬</div>
           </div>
           <div 
             class="btn-wrap"
             @click="setMode('milk_shake')">
-            <div :class="[{ 'active': model.order_mode == 'milk_shake' }, {'btn-loading': btnLoading.milk_shake }, 'btn btn-mode8 center']"/>
+            <div :class="[{ 'active': model.machine_mode == 'milk_shake' }, {'btn-loading': btnLoading.milk_shake }, 'btn btn-mode8 center']"/>
             <div class="btn-name">奶昔</div>
           </div>
         </div>
@@ -175,13 +173,13 @@ export default {
         "speed_tem": 10,
         "run_time": 40,
         "machine_status": 'standby',
-        "order_mode": 'gruel',
+        "order_mode": 'grains',
         "realtime_tem": 79,
         "realtime_speed": 3,
         "no_cup": 'on',
         "dry_heat": 'on',
         "connectivity": "online",
-         "h-t10": "00",
+         "h-t10": "30",
          "h-t11": "00"
       },
       showModeBtns: false,
@@ -206,13 +204,13 @@ export default {
       return this.model.machine_status == 'standby'
     },
     isClose() {
-      return this.model.switch == 'on' ? true : false
+      return this.model.machine_mode == 'off' ? true : false
     },
     isOffline() {
       return this.model.connectivity === 'online' ? false : true
     },
     btnTxt() {
-       switch(this.model.order_mode) {
+       switch(this.model.machine_mode) {
         case 'grains':
           return '五谷'
           break
@@ -250,7 +248,7 @@ export default {
     },
     modeBtnClass(){
       /* eslint-disable no-unreachable */
-      switch(this.model.order_mode) {
+      switch(this.model.machine_mode) {
         case 'grains':
           return 'grains'
           break
@@ -288,26 +286,29 @@ export default {
     },
   },
   watch: {
-    "model.order_mode":function() {
-      this.controlDevice('order_time', 0, {},
-        () => {
-          if (this.showModeBtns) this.hide()
-        }, () => { }, 'order_time')
-    }
+    // 当切换模式的时候，预约的时间将作废
+    // "model.machine_mode":function() {
+    //   this.controlDevice('order_time', 0, {},
+    //     () => {
+    //       if (this.showModeBtns) this.hide()
+    //     }, () => { }, 'order_time')
+    // }
   },
   created() {
-    var str_model = window.localStorage.getItem("cleaner_model_attr")
-    if(str_model){
-      try {
-        // str_model 有可能不是合法的JSON字符串，便会产生异常
-        this.model =JSON.parse(str_model)
-      } catch (e) {
-        this.model = {}
-      }
-    }
     HdSmart.ready(() => {
       if (window.device_name) {
         this.device_name = window.device_name
+      }
+      if (window.device_uuid) {
+        var str_model = window.localStorage.getItem(window.device_uuid)
+        if (str_model) {
+          try {
+            // str_model 有可能不是合法的JSON字符串，便会产生异常
+            this.model = JSON.parse(str_model)
+          } catch (e) {
+            this.model = {}
+          }
+        }
       }
       HdSmart.UI.showLoading()
       this.getSnapShot(() => {
@@ -321,13 +322,13 @@ export default {
   },
   methods: {
     showTime() {
-      if(this.model.machine_status == 'working'){
+      if(this.model.machine_status !== 'standby'){
         return false
       }
       if(!this.isClose) this.$refs.time.show = true
     },
     setReserve(time) {
-      if (this.model.machine_status == 'working') {
+      if (this.model.machine_status !== 'standby') {
         HdSmart.UI.toast('运行中无法设置预约')
         return
       }
@@ -337,26 +338,23 @@ export default {
     },
 
     setSwitch() {
-      // 切换启动按钮，mock的woking状态
-      if(this.model.machine_status == 'standby') {
-        this.controlDevice('order_mode', this.model.order_mode, {},
-        () => {
-          if (this.showModeBtns) this.hide()
-        }, () => { }, 'working')
+      if (this.model.order_time > 0) {
+        return false
       }
-      if(this.model.machine_status == 'working') {
+      if(this.model.machine_status == 'standby') {
+        this.controlDevice('machine_status', this.model.machine_mode, {},
+        () => {
+        }, () => { }, this.model.machine_mode)
+      }else{
         this.controlDevice('machine_status', 'standby', {},
         () => {
-          if (this.showModeBtns) this.hide()
         }, () => { }, 'standby')
       }
-      
-
     },
     // 点击模式
     handeModeClick() {
       // 所有模式互斥
-      if (this.model.machine_status == 'working' || this.model.order_time > 0 ) {
+      if (this.model.machine_status !== 'standby' || this.model.order_time > 0 ) {
         return false
       }
       this.showModeBtns = true
@@ -368,10 +366,6 @@ export default {
     },
     // 切换模式
     setMode(mode) {
-      // // 所有模式互斥
-      // if (this.model.machine_status == 'working') {
-      //   return false
-      // }
       this.controlDevice('machine_mode', mode, {},
         () => {
           if (this.showModeBtns) this.hide()
@@ -494,7 +488,9 @@ export default {
       this.status = "success"
       this.model = data.attribute
       // 将model 保存在 localStorage
-      window.localStorage.setItem('cleaner_model_attr', JSON.stringify(data.attribute))
+      if (window.device_uuid) {
+        window.localStorage.setItem(window.device_uuid, JSON.stringify(data.attribute))
+      }
     },
     confirm(done) {
       if (this.model.child_lock_switch_status == "on") {
@@ -516,6 +512,21 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.btn-loading{
+  position: relative;
+  &:after{
+    width: 90%;
+    height: 90%;
+    content: '';
+    background-image: url(../../lib/base/blend/assets/blueloading.gif);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
 *{
   touch-action: none;
 }
@@ -535,7 +546,7 @@ export default {
   .timebox{
     width: 100%;
     height: 32px;
-    margin-top: 40px;
+    margin-top: 10px;
     .appointment{
       font-size: 24px;
       color: #20282B;
@@ -555,7 +566,7 @@ export default {
     height: 750px;
     background-image: url(../../lib/base/blend/assets/bg3.png);
     background-size: 100% 100%;
-    margin: 60px auto;
+    // margin: 60px auto;
     .bg2{
       flex-direction: column;
       width: 620px;
@@ -604,7 +615,7 @@ export default {
     }
   }
   .status{
-    margin-top: 40px;
+    margin-top: 25px;
     font-size: 24px;
     color: #20282B;
     text-align: center;
