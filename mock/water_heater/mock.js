@@ -7,7 +7,7 @@ var res = {
   "set_temperature": 50,
   "switch": "on",
   "fault": "normal",
-  "heat_status": "heat",
+  "work_status": "heat",
   "temperature": 37,
   "deviceModel": "LPB100",
   "manufactureId": "Whirlpool",

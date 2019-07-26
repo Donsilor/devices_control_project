@@ -13,8 +13,7 @@
         </div>
       </div>
       <div
-        class="main center"
-        @click="toSubPage">
+        class="main center">
         <div class="bg center">
           <div class="bg2 center">
             <div class="num">{{ model.machine_status == 'standby' ? '预计运行时间' : '剩余时间' }}</div>
@@ -195,8 +194,7 @@ export default {
         milk_shake: false,
         water_ice: false,
         tepidity: false
-      },
-      showSubPage: false
+      }
     }
   },
   computed: {
@@ -210,6 +208,7 @@ export default {
       return this.model.connectivity === 'online' ? false : true
     },
     btnTxt() {
+      /* eslint-disable no-unreachable */
        switch(this.model.machine_mode) {
         case 'grains':
           return '五谷'
@@ -223,27 +222,26 @@ export default {
         case 'pottage':
           return '浓汤'
           break
-
         case 'stewing':
             return '蒸煮'
             break
         case 'grind':
             return '研磨'
             break
-          case 'fruit_vegdtable':
-            return '果蔬'
-            break
-          case 'milk_shake':
-            return '奶昔'
-            break
-          case 'water_ice':
-            return '沙冰'
-            break
-          case 'tepidity':
-            return '温热'
-            break 
-          default:
-            return '绵粥'
+        case 'fruit_vegdtable':
+          return '果蔬'
+          break
+        case 'milk_shake':
+          return '奶昔'
+          break
+        case 'water_ice':
+          return '沙冰'
+          break
+        case 'tepidity':
+          return '温热'
+          break 
+        default:
+          return '绵粥'
       }
     },
     modeBtnClass(){
@@ -268,20 +266,20 @@ export default {
         case 'grind':
             return 'grind'
             break
-          case 'fruit_vegdtable':
-            return 'fruit_vegdtable'
-            break
-          case 'milk_shake':
-            return 'milk_shake'
-            break
-          case 'water_ice':
-            return 'water_ice'
-            break
-          case 'tepidity':
-            return 'tepidity'
-            break 
-          default:
-            return 'gruel'
+        case 'fruit_vegdtable':
+          return 'fruit_vegdtable'
+          break
+        case 'milk_shake':
+          return 'milk_shake'
+          break
+        case 'water_ice':
+          return 'water_ice'
+          break
+        case 'tepidity':
+          return 'tepidity'
+          break 
+        default:
+          return 'gruel'
       }
     },
   },
@@ -383,95 +381,31 @@ export default {
     hideBtnLoading(attr) {
       this.btnLoading[attr] = false
     },
-    toSubPage() {
-      console.log('showSubPage')
-      this.showSubPage = true
-    },
-    showTip(text) {
-      clearTimeout(this.tipTime)
-      this.tip = text
-      this.tipTime = setTimeout(() => {
-        this.tip = ""
-      }, 2000)
-    },
     controlDevice(attr, val, param, success, error,btnAttr) {
       this.showBtnLoading(btnAttr)
-      var fn = this.confirm
       var params = Object.assign(
-        {
-          [attr]: val
-        },
+        { [attr]: val },
         param
       )
 
-      if (attr == "child_lock_switch") {
-        fn = function(cb) {
-          cb()
-        }
-      }
-
-      fn(() => {
-        HdSmart.Device.control(
-          {
-            method: "dm_set",
-            nodeid: `air_filter.main.${attr}`,
-            params: {
-              attribute: params
-            }
-          },
-          () => {
-            this.hideBtnLoading(btnAttr)
-            success && success()
-          },
-          () => {
-            this.hideBtnLoading(btnAttr)
-            error && error()
-            this.showTip("操作失败")
+      HdSmart.Device.control(
+        {
+          method: "dm_set",
+          nodeid: `airconditioner.main.${attr}`,
+          params: {
+            attribute: params
           }
-        )
-      })
-    },
-
-    setControl() {
-      let val = ''
-      if(this.model.control_status == 'sleep'){
-        val = 'manual'
-      } else {
-        val = 'sleep'
-      }
-
-      this.controlDevice("control", val, () => {
-        this.model.control_status = val
-      })
-    },
-    setSleep() {
-      let speed = ''
-      if(this.model.speed == 'sleep'){
-        speed = 'low'
-      } else {
-         speed = 'sleep'
-      }
-      this.setSpeed(speed)
-    },
-    setSpeed(val) {
-      this.controlDevice("speed", val, {}, () => {
-        this.hide()
-        this.model.speed = val
-      })
-    },
-    setChildLock() {
-      if (this.model.control_status == "sleep") {
-        HdSmart.UI.toast("睡眠模式下不能开启童锁")
-        return
-      }
-      var val = this.model.child_lock_switch_status == "on" ? "off" : "on"
-      this.controlDevice(
-        "child_lock_switch",
-        val,
-        { control: this.model.control_status },
-        () => {},
-        () => {}
+        },
+        () => {
+          this.hideBtnLoading(btnAttr)
+          success && success()
+        },
+        () => {
+          this.hideBtnLoading(btnAttr)
+          error && error()
+        }
       )
+
     },
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot(
@@ -490,22 +424,6 @@ export default {
       // 将model 保存在 localStorage
       if (window.device_uuid) {
         window.localStorage.setItem(window.device_uuid, JSON.stringify(data.attribute))
-      }
-    },
-    confirm(done) {
-      if (this.model.child_lock_switch_status == "on") {
-        HdSmart.UI.alert(
-          {
-            title: "解除童锁",
-            message: "解除童锁后才能控制此设备，\n是否解除？",
-            dialogStyle: 2
-          },
-          val => {
-            if (val) this.setChildLock()
-          }
-        )
-      } else {
-        done()
       }
     }
   }
@@ -566,7 +484,6 @@ export default {
     height: 750px;
     background-image: url(../../lib/base/blend/assets/bg3.png);
     background-size: 100% 100%;
-    // margin: 60px auto;
     .bg2{
       flex-direction: column;
       width: 620px;
@@ -584,6 +501,7 @@ export default {
     }
 
     .num {
+      margin-bottom: 20px;
       font-size: 24px;
       color: #20282B;
       text-align: center;
@@ -599,6 +517,7 @@ export default {
       text-align: center;
     }
     .cmode{
+      margin-top: 30px;
       font-size: 32px;
       color: #20282B;
       text-align: center;
@@ -627,7 +546,6 @@ export default {
     bottom: 0;
     left: 0;
     right: 0;
-
 
     height: 306px;
     background: #FFFFFF;
@@ -808,86 +726,6 @@ export default {
     }
     .btn-wrap{
       opacity: .2;
-    }
-  }
-}
-
-.btns-panel {
-  &:before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 99999;
-    width: 100%;
-
-    background: rgba(0, 0, 0, 0.8);
-  }
-  .items {
-    position: fixed;
-    left: 510px;
-    top: 950px;
-    z-index: 999999;
-
-    width: 750px;
-    min-height: 160px;
-    .btn {
-      transition: all 0.3s ease-in-out;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    .item1 {
-      top: -122px;
-      left: 88px;
-    }
-    .item2 {
-      top: -122px;
-      left: -76px;
-    }
-    .item3 {
-      top: 20px;
-      left: -150px;
-    }
-    .item4 {
-      top: 155px;
-      left: -94px;
-    }
-    .item5 {
-      top: 150px;
-      left: 50px;
-    }
-  }
-  &.more {
-    .items {
-      left: 384px;
-    }
-  }
-  .btns{
-    justify-content: flex-start;
-    transition: all 0.3s ease-in-out;
-    margin-top: 57px;
-    .btn {
-      margin-right: 40px;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-
-      display: flex;
-      flex-direction: column;
-
-      .name {
-        margin-top: 8px;
-        font-size: 20px;
-        color: #fff;
-      }
-      &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border-color: #ffbf00;
-      }
     }
   }
 }
