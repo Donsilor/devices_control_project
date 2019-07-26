@@ -13,8 +13,7 @@
         </div>
       </div>
       <div
-        class="main center"
-        @click="toSubPage">
+        class="main center">
         <div class="bg center">
           <div class="bg2 center">
             <div class="num">{{ model.machine_status == 'standby' ? '预计运行时间' : '剩余时间' }}</div>
@@ -196,7 +195,6 @@ export default {
         water_ice: false,
         tepidity: false
       },
-      showSubPage: false
     }
   },
   computed: {
@@ -383,10 +381,6 @@ export default {
     hideBtnLoading(attr) {
       this.btnLoading[attr] = false
     },
-    toSubPage() {
-      console.log('showSubPage')
-      this.showSubPage = true
-    },
     showTip(text) {
       clearTimeout(this.tipTime)
       this.tip = text
@@ -430,48 +424,6 @@ export default {
           }
         )
       })
-    },
-
-    setControl() {
-      let val = ''
-      if(this.model.control_status == 'sleep'){
-        val = 'manual'
-      } else {
-        val = 'sleep'
-      }
-
-      this.controlDevice("control", val, () => {
-        this.model.control_status = val
-      })
-    },
-    setSleep() {
-      let speed = ''
-      if(this.model.speed == 'sleep'){
-        speed = 'low'
-      } else {
-         speed = 'sleep'
-      }
-      this.setSpeed(speed)
-    },
-    setSpeed(val) {
-      this.controlDevice("speed", val, {}, () => {
-        this.hide()
-        this.model.speed = val
-      })
-    },
-    setChildLock() {
-      if (this.model.control_status == "sleep") {
-        HdSmart.UI.toast("睡眠模式下不能开启童锁")
-        return
-      }
-      var val = this.model.child_lock_switch_status == "on" ? "off" : "on"
-      this.controlDevice(
-        "child_lock_switch",
-        val,
-        { control: this.model.control_status },
-        () => {},
-        () => {}
-      )
     },
     getSnapShot(cb) {
       HdSmart.Device.getSnapShot(
@@ -620,8 +572,6 @@ export default {
     color: #20282B;
     text-align: center;
   }
-
-
   .panel-btn {
     position: fixed;
     bottom: 0;
@@ -808,86 +758,6 @@ export default {
     }
     .btn-wrap{
       opacity: .2;
-    }
-  }
-}
-
-.btns-panel {
-  &:before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 99999;
-    width: 100%;
-
-    background: rgba(0, 0, 0, 0.8);
-  }
-  .items {
-    position: fixed;
-    left: 510px;
-    top: 950px;
-    z-index: 999999;
-
-    width: 750px;
-    min-height: 160px;
-    .btn {
-      transition: all 0.3s ease-in-out;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    .item1 {
-      top: -122px;
-      left: 88px;
-    }
-    .item2 {
-      top: -122px;
-      left: -76px;
-    }
-    .item3 {
-      top: 20px;
-      left: -150px;
-    }
-    .item4 {
-      top: 155px;
-      left: -94px;
-    }
-    .item5 {
-      top: 150px;
-      left: 50px;
-    }
-  }
-  &.more {
-    .items {
-      left: 384px;
-    }
-  }
-  .btns{
-    justify-content: flex-start;
-    transition: all 0.3s ease-in-out;
-    margin-top: 57px;
-    .btn {
-      margin-right: 40px;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-
-      display: flex;
-      flex-direction: column;
-
-      .name {
-        margin-top: 8px;
-        font-size: 20px;
-        color: #fff;
-      }
-      &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border-color: #ffbf00;
-      }
     }
   }
 }
