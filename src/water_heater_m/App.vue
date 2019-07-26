@@ -22,7 +22,7 @@
 
         <div class="bg center">
           <div class="bg2 center">
-            <div class="num">加热中</div>
+            <div class="num">{{ model.work_status == 'heat' ? '加热' : '保温' }}中</div>
             <div class="time">{{ model.temperature }}<sup>°C</sup></div>
             <div class="cmode">当前温度</div>
           </div>
@@ -131,7 +131,7 @@ export default {
         "set_temperature": 50,
         "switch": "on",
         "fault": "normal",
-        "heat_status": "heat",
+        "work_status": "heat",
         "temperature": 37,
         "deviceModel": "LPB100",
         "manufactureId": "Whirlpool",
@@ -302,7 +302,7 @@ export default {
       position: absolute;
       top: 50%;
       left: 0;
-      transform: translate(-0, -50%);
+      transform: rotate(25deg) translate(-0, -50%);
     }
   }
   .main {
@@ -385,6 +385,7 @@ export default {
       font-size: 24px;
       color: #000;
       text-align: center;
+      margin-bottom: 30px;
     }
     .time {
       font-size: 112px;
@@ -399,6 +400,7 @@ export default {
       }
     }
     .cmode{
+      margin-top: 20px;
       font-size: 24px;
       color: #000;
       text-align: center;
