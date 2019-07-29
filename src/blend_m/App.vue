@@ -1,6 +1,7 @@
 <template>
   <div class="body">
-    <div :class="[{ 'offline': isOffline }, {'close': isClose}, {'filter': showModeBtns }, 'page']">
+    <!-- {'close': isClose},  -->
+    <div :class="[{ 'offline': isOffline }, {'filter': showModeBtns }, 'page']">
       <topbar
         :title="device_name"
         bak-color="#000"/>
@@ -9,26 +10,26 @@
           v-show="model.order_time > 0 && model.connectivity == 'online'" 
           class="appointment">
           <img src="../../lib/base/blend/assets/time-black.png">
-          2小时25分后启动运行
+          {{ model.order_time | order_time }}
         </div>
       </div>
       <div
         class="main center">
         <div class="bg center">
           <div class="bg2 center">
-            <div class="num">{{ model.machine_status == 'standby' ? '预计运行时间' : '剩余时间' }}</div>
+            <div class="num">{{ model.machine_mode == 'off' ? '预计运行时间' : '完成进度' }}</div>
             <!-- 离线的时候显示的时间 -->
             <div 
               v-show="model.connectivity == 'offline'" 
               class="offtime">--:--</div>
             <!-- 预计运行时间 -->
             <div 
-              v-show="model.machine_status == 'standby'&& model.connectivity == 'online'" 
-              class="time">{{ model['h-t10'] }}:{{ model['h-t11'] }}</div>
-            <!-- 剩余运行时间 -->
+              v-show="model.machine_mode == 'off'&& model.connectivity == 'online'" 
+              class="time">{{ model.run_time | run_time }}</div>
+            <!-- 完成进度 -->
             <div 
-              v-show="model.machine_status !== 'standby'" 
-              class="time">{{ model.remaining_run_time }}</div>
+              v-show="model.machine_mode !== 'off'" 
+              class="time">{{ model.progress }}%</div>
             <div 
               v-show="model.connectivity !== 'offline'" 
               class="cmode">{{ btnTxt }}</div>
@@ -36,26 +37,26 @@
         </div>
       </div>
       <div 
-        v-show="model.machine_status !== 'standby'" 
+        v-show="model.machine_mode !== 'off'" 
         class="status">运行中…</div>
 
       <!-- 按钮 -->
       <div class="panel-btn center">
         <div :class="[{'up-index': !isOffline },{'disable' : model.order_time > 0 }, 'btn-wrap']" >
           <div
-            :class="[ model.machine_status == 'standby' ? 'btn-start': 'btn-stop', 'btn center']"
+            :class="[model.machine_mode == 'off' ? 'btn-start' : 'btn-stop','btn center']"
             @click="setSwitch" />
-          <div class="btn-name">{{ model.machine_status == 'standby' ? '启动' : '暂停' }}</div>
+          <div class="btn-name">{{ model.machine_mode == 'off' ? '启动' : '暂停' }}</div>
         </div>
 
-        <div :class="[{'disable' : model.machine_status !== 'standby' || model.order_time > 0},'btn-wrap']">
+        <div :class="[{'disable' : model.machine_mode !== 'off' || model.order_time > 0},'btn-wrap']">
           <div
             :class="[modeBtnClass, 'btn center btn-mode']"
             @click="handeModeClick" />
           <div class="btn-name">模式</div>
         </div>
 
-        <div :class="[{'disable' : model.machine_status !== 'standby'},'btn-wrap']">
+        <div :class="[{'disable' : model.machine_mode !== 'off'},'btn-wrap']">
           <div
             class="btn btn-time center"
             @click="showTime" />
@@ -72,27 +73,27 @@
           <div 
             class="btn-wrap" 
             @click="setMode('grains')">
-            <div :class="[{ 'active': model.machine_mode == 'grains' },{'btn-loading': btnLoading.grains }, 'btn btn-mode1 center']" />
+            <div :class="[{ 'active': model.machine_mode == 'grains'||model.machine_status == 'grains'},{'btn-loading': btnLoading.grains }, 'btn btn-mode1 center']" />
             <div class="btn-name">五谷</div>
           </div>
 
           <div 
             class="btn-wrap"
             @click="setMode('rice_paste')">
-            <div :class="[{ 'active': model.machine_mode == 'rice_paste' }, {'btn-loading': btnLoading.rice_paste }, 'btn btn-mode2 center']"/>
+            <div :class="[{ 'active': model.machine_mode == 'rice_paste'||model.machine_status == 'rice_paste'}, {'btn-loading': btnLoading.rice_paste }, 'btn btn-mode2 center']"/>
             <div class="btn-name">米糊</div>
           </div>
 
           <div 
             class="btn-wrap"
             @click="setMode('gruel')">
-            <div :class="[{ 'active': model.machine_mode == 'gruel' }, {'btn-loading': btnLoading.gruel }, 'btn btn-mode3 center']"/>
+            <div :class="[{ 'active': model.machine_mode == 'gruel'||model.machine_status == 'gruel' }, {'btn-loading': btnLoading.gruel }, 'btn btn-mode3 center']"/>
             <div class="btn-name">绵粥</div>
           </div>
           <div 
             class="btn-wrap"
             @click="setMode('pottage')">
-            <div :class="[{ 'active': model.machine_mode == 'pottage' }, {'btn-loading': btnLoading.pottage }, 'btn btn-mode4 center']"/>
+            <div :class="[{ 'active': model.machine_mode == 'pottage'||model.machine_status == 'pottage' }, {'btn-loading': btnLoading.pottage }, 'btn btn-mode4 center']"/>
             <div class="btn-name">浓汤</div>
           </div>
         </div>
@@ -102,27 +103,27 @@
           <div 
             class="btn-wrap" 
             @click="setMode('stewing')">
-            <div :class="[{ 'active': model.machine_mode == 'stewing' }, {'btn-loading': btnLoading.stewing }, 'btn btn-mode5 center']" />
+            <div :class="[{ 'active': model.machine_mode == 'stewing'||model.machine_status == 'stewing' }, {'btn-loading': btnLoading.stewing }, 'btn btn-mode5 center']" />
             <div class="btn-name">蒸煮</div>
           </div>
 
           <div 
             class="btn-wrap"
             @click="setMode('grind')">
-            <div :class="[{ 'active': model.machine_mode == 'grind' }, {'btn-loading': btnLoading.grind }, 'btn btn-mode6 center']"/>
+            <div :class="[{ 'active': model.machine_mode == 'grind'||model.machine_status == 'grind' }, {'btn-loading': btnLoading.grind }, 'btn btn-mode6 center']"/>
             <div class="btn-name">研磨</div>
           </div>
 
           <div 
             class="btn-wrap"
             @click="setMode('fruit_vegdtable')">
-            <div :class="[{ 'active': model.machine_mode == 'fruit_vegdtable' }, {'btn-loading': btnLoading.fruit_vegdtable }, 'btn btn-mode7 center']"/>
+            <div :class="[{ 'active': model.machine_mode == 'fruit_vegdtable'||model.machine_status == 'fruit_vegdtable' }, {'btn-loading': btnLoading.fruit_vegdtable }, 'btn btn-mode7 center']"/>
             <div class="btn-name">果蔬</div>
           </div>
           <div 
             class="btn-wrap"
             @click="setMode('milk_shake')">
-            <div :class="[{ 'active': model.machine_mode == 'milk_shake' }, {'btn-loading': btnLoading.milk_shake }, 'btn btn-mode8 center']"/>
+            <div :class="[{ 'active': model.machine_mode == 'milk_shake'||model.machine_status == 'milk_shake' }, {'btn-loading': btnLoading.milk_shake }, 'btn btn-mode8 center']"/>
             <div class="btn-name">奶昔</div>
           </div>
         </div>
@@ -132,13 +133,13 @@
           <div 
             class="btn-wrap" 
             @click="setMode('water_ice')">
-            <div :class="[{ 'active': model.machine_mode == 'water_ice' }, {'btn-loading': btnLoading.water_ice }, 'btn btn-mode9 center']" />
+            <div :class="[{ 'active': model.machine_mode == 'water_ice'||model.machine_status == 'water_ice' }, {'btn-loading': btnLoading.water_ice }, 'btn btn-mode9 center']" />
             <div class="btn-name">沙冰</div>
           </div>
           <div 
             class="btn-wrap"
             @click="setMode('tepidity')">
-            <div :class="[{ 'active': model.machine_mode == 'tepidity' }, {'btn-loading': btnLoading.tepidity }, 'btn btn-mode10 center']"/>
+            <div :class="[{ 'active': model.machine_mode == 'tepidity'||model.machine_status == 'tepidity'  }, {'btn-loading': btnLoading.tepidity }, 'btn btn-mode10 center']"/>
             <div class="btn-name">温热</div>
           </div>
         </div>
@@ -198,12 +199,6 @@ export default {
     }
   },
   computed: {
-    isRun() {
-      return this.model.machine_status == 'standby'
-    },
-    isClose() {
-      return this.model.machine_mode == 'off' ? true : false
-    },
     isOffline() {
       return this.model.connectivity === 'online' ? false : true
     },
@@ -279,7 +274,7 @@ export default {
           return 'tepidity'
           break 
         default:
-          return 'gruel'
+          return 'grains'
       }
     },
   },
@@ -320,39 +315,41 @@ export default {
   },
   methods: {
     showTime() {
-      if(this.model.machine_status !== 'standby'){
+      if(this.model.machine_mode !== 'off'){
         return false
       }
       if(!this.isClose) this.$refs.time.show = true
     },
     setReserve(time) {
-      if (this.model.machine_status !== 'standby') {
+      if (this.model.machine_mode !== 'off') {
         HdSmart.UI.toast('运行中无法设置预约')
         return
       }
       let h = parseInt(time.split(':')[0])
       let m = parseInt(time.split(':')[1]) > 0 ? 0.5 : 0
-      this.controlDevice('order_time', h + m)
+      this.controlDevice('order_time', (h + m)*60)
+      this.controlDevice('order_mode', this.model.machine_status)
     },
-
     setSwitch() {
       if (this.model.order_time > 0) {
         return false
       }
-      if(this.model.machine_status == 'standby') {
-        this.controlDevice('machine_status', this.model.machine_mode, {},
-        () => {
-        }, () => { }, this.model.machine_mode)
+      if(this.model.machine_mode !== 'off'){
+         this.controlDevice('machine_mode', 'off', {},
+            () => {
+            }, () => { }, 'off')
       }else{
-        this.controlDevice('machine_status', 'standby', {},
+        this.controlDevice('machine_mode', this.model.machine_status, {},
         () => {
-        }, () => { }, 'standby')
+          if (this.showModeBtns) this.hide()
+        }, () => { }, this.model.machine_status)
       }
+
     },
     // 点击模式
     handeModeClick() {
       // 所有模式互斥
-      if (this.model.machine_status !== 'standby' || this.model.order_time > 0 ) {
+      if (this.model.machine_mode !== 'off' || this.model.order_time > 0 ) {
         return false
       }
       this.showModeBtns = true
@@ -368,6 +365,10 @@ export default {
         () => {
           if (this.showModeBtns) this.hide()
         }, () => { }, mode)
+        // 切换模式后自动运行
+        // this.controlDevice('machine_status', mode, {},
+        // () => {
+        // }, () => { }, mode)
     },
     hide() {
       this.showModeBtns = false

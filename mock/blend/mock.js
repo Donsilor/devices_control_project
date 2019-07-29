@@ -9,9 +9,9 @@ let res = {
     "order_time": 0,
     "step": 3,
     "speed_tem": 10,
-    "run_time": 40,
-    "machine_status": 'standby',
-    "order_mode": 'grains',
+    "run_time": 1800,
+    "machine_status": 'grains',
+    "order_mode": 'off',
     "realtime_tem": 79,
     "realtime_speed": 3,
     "no_cup": 'on',
@@ -39,9 +39,9 @@ export function set(data){
     //     attr.machine_status = attr.order_mode
     //     attr.machine_mode = attr.order_mode
     // }
-    if(attr.machine_mode){
-      attr.order_mode = attr.machine_mode
-  }
+  //   if(attr.machine_mode){
+  //     attr.order_mode = attr.machine_mode
+  // }
     if(attr.negative_ion_switch){
         attr.negative_ion_switch_status = attr.negative_ion_switch
     }
