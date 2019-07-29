@@ -230,10 +230,10 @@ export default {
       let val = +this.model.set_temperature + step
       if(val > 75) {
         val = 75
-        HdSmart.UI.toast('温度最高为75℃')
+        return HdSmart.UI.toast('温度最高为75℃')
       } else if(val < 35) {
         val = 35
-        HdSmart.UI.toast('温度最低为35℃')
+        return HdSmart.UI.toast('温度最低为35℃')
       }
       this.controlDevice('set_temperature', val)
     },
@@ -256,6 +256,7 @@ export default {
       }
     },
     controlDevice(attr, value) {
+      HdSmart.UI.showLoading()
       HdSmart.Device.control(
         {
           nodeid: `water_heater.main.${attr}`,
@@ -265,8 +266,12 @@ export default {
             }
           }
         },
-        () => { },
-        () => { }
+        () => {
+          HdSmart.UI.hideLoading()
+        },
+        () => {
+          HdSmart.UI.hideLoading()
+        }
       )
     },
   }

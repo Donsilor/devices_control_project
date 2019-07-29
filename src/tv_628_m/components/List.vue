@@ -221,6 +221,7 @@
     -webkit-box-orient: horizontal;
     -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
+      width: 0 !important;
       display: none;
     }
   }
@@ -617,6 +618,7 @@ export default {
     },
     reload() {
       if (this.error) {
+        service.RemoteController({ 'show': true })
         this.error = false
         this.onPageInit()
       }
@@ -626,6 +628,7 @@ export default {
       service.getChannelData(this.channelId, (err, data) => {
         this.loadState = "LOADED"
         if (err) {
+          service.RemoteController({ 'show': false })
           this.error = true
           return
         }
