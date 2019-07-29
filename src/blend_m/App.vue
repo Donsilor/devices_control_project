@@ -139,7 +139,7 @@
           <div 
             class="btn-wrap"
             @click="setMode('tepidity')">
-            <div :class="[{ 'active': model.machine_mode == 'tepidity'||model.machine_status == 'tepidity'  }, {'btn-loading': btnLoading.tepidity }, 'btn btn-mode10 center']"/>
+            <div :class="[{ 'active': model.machine_mode == 'tepidity'||model.machine_status == 'tepidity' }, {'btn-loading': btnLoading.tepidity }, 'btn btn-mode10 center']"/>
             <div class="btn-name">温热</div>
           </div>
         </div>
@@ -236,7 +236,7 @@ export default {
           return '温热'
           break 
         default:
-          return '绵粥'
+          return '五谷'
       }
     },
     modeBtnClass(){
@@ -338,7 +338,10 @@ export default {
          this.controlDevice('machine_mode', 'off', {},
             () => {
             }, () => { }, 'off')
-      }else{
+      } else {
+        if(this.model.machine_status == 'sleep' || this.model.machine_status == 'standby'){
+          this.model.machine_status = 'grains'
+        }
         this.controlDevice('machine_mode', this.model.machine_status, {},
         () => {
           if (this.showModeBtns) this.hide()
@@ -382,7 +385,7 @@ export default {
     hideBtnLoading(attr) {
       this.btnLoading[attr] = false
     },
-    controlDevice(attr, val, param, success, error,btnAttr) {
+    controlDevice(attr, val, param, success, error, btnAttr) {
       this.showBtnLoading(btnAttr)
       var params = Object.assign(
         { [attr]: val },

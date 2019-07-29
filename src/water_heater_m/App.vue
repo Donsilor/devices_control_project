@@ -16,28 +16,42 @@
             <span class="point left" />
             <span class="point right" />
             <span class="txt left">35<sup>°C</sup></span>
-            <span class="txt right">75<sup>°C</sup></span>
+            <span class="txt right">{{ model.mode == 'sterilization' ? 80 : 75 }}<sup>°C</sup></span>
           </div>
         </div>
 
         <div class="bg center">
-          <div class="bg2 center">
+          <div 
+            v-if="isClose"
+            class="bg2 center">
+            <div class="num">--</div>
+            <div class="time">--<sup>°C</sup></div>
+            <div class="cmode">当前温度</div>
+          </div>
+          <div 
+            v-else
+            class="bg2 center">
             <div class="num">{{ model.work_status == 'heat' ? '加热' : '保温' }}中</div>
             <div class="time">{{ model.temperature }}<sup>°C</sup></div>
             <div class="cmode">当前温度</div>
           </div>
+
           <div 
             :style="{ transform: 'rotate(' + arrowRotate + 'deg)'}"
             class="bg2 pos-ab" ><i class="circle-arrow" /></div>
+
+          
         </div>
       </div>
 
       <div class="control center">
-        <div 
+        <div
+          v-show="!model.mode || model.mode == 'free'"
           class="reduce" 
           @click="setTemperature(-1)"/>
         <div class="main-control"><i class="icon" /> 预设温度 {{ model.set_temperature }}°C</div>
-        <div 
+        <div
+          v-show="!model.mode || model.mode == 'free'"
           class="add" 
           @click="setTemperature(1)"/>
       </div>
@@ -71,7 +85,7 @@
           @click="setMode('heat_keep')">
           <div
             :class="[ { 'active': model.mode == 'heat_keep' }, 'btn btn-znsw center']"/>
-          <div class="btn-name">智能水温</div>
+          <div class="btn-name">智能温水</div>
         </div>
         <div 
           class="btn-wrap" 
@@ -152,13 +166,19 @@ export default {
       return this.model.connectivity === 'online' ? false : true
     },
     cRotate() {
-      return (+this.model.temperature - 35) * 4.5 - 45
+      if(this.isClose){
+        return -45
+      } else {
+        return (+this.model.temperature - 35) * 4.5 - 45
+      }
     },
     arrowRotate() {
-      return (+this.model.temperature - 35) * 4.5
+      if(this.isClose){
+        return 0
+      } else {
+        return (+this.model.temperature - 35) * 4.5
+      }
     }
-  },
-  watch: {
   },
   created() {
     HdSmart.ready(() => {
@@ -191,6 +211,9 @@ export default {
       this.isOpen = !this.isOpen
     },
     setMode(val) {
+      if(val == this.model.mode){
+        val = 'free'
+      }
       if(this.isClose) return
       this.controlDevice('mode', val)
     },
@@ -725,12 +748,13 @@ export default {
     }
     &.page{
       background: #fff;
-      .bg .bg2{
-        background-image: url(../../lib/base/blend/assets/bg2.png);
-        background-size: 100% 100%;
-      }
       .cover{
         background: #fff;
+        .point{
+          &.left{
+            background: #D8D8D8;
+          }
+        }
       }
     }
     .panel-btn{
@@ -738,6 +762,12 @@ export default {
     }
     .btn-wrap{
       opacity: .2;
+      .btn{
+        &.active{
+          background: #fff;
+          border: none;
+        }
+      }
     }
   }
 }
