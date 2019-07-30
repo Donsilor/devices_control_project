@@ -17,19 +17,19 @@
         class="main center">
         <div class="bg center">
           <div class="bg2 center">
-            <div class="num">{{ model.machine_mode == 'off' ? '预计运行时间' : '完成进度' }}</div>
+            <div class="num">运行进度</div>
             <!-- 离线的时候显示的时间 -->
             <div 
               v-show="model.connectivity == 'offline'" 
-              class="offtime">--:--</div>
+              class="offtime">-- <span class="percent">%</span></div>
             <!-- 预计运行时间 -->
             <div 
               v-show="model.machine_mode == 'off'&& model.connectivity == 'online'" 
-              class="time">{{ model.run_time | run_time }}</div>
-            <!-- 完成进度 -->
+              class="time">{{ model.run_time }} <span class="percent">%</span> </div>
+            <!-- 运行进度 -->
             <div 
-              v-show="model.machine_mode !== 'off'" 
-              class="time">{{ model.progress }}%</div>
+              v-show="model.machine_mode !== 'off'&& model.connectivity == 'online'" 
+              class="time">{{ model.progress }} <span class="percent">%</span> </div>
             <div 
               v-show="model.connectivity !== 'offline'" 
               class="cmode">{{ btnTxt }}</div>
@@ -73,27 +73,27 @@
           <div 
             class="btn-wrap" 
             @click="setMode('grains')">
-            <div :class="[{ 'active': model.machine_mode == 'grains'||model.machine_status == 'grains'},{'btn-loading': btnLoading.grains }, 'btn btn-mode1 center']" />
+            <div :class="[{ 'active': currentMode == 'grains'},{'btn-loading': btnLoading.grains }, 'btn btn-mode1 center']" />
             <div class="btn-name">五谷</div>
           </div>
 
           <div 
             class="btn-wrap"
             @click="setMode('rice_paste')">
-            <div :class="[{ 'active': model.machine_mode == 'rice_paste'||model.machine_status == 'rice_paste'}, {'btn-loading': btnLoading.rice_paste }, 'btn btn-mode2 center']"/>
+            <div :class="[{ 'active': currentMode == 'rice_paste'}, {'btn-loading': btnLoading.rice_paste }, 'btn btn-mode2 center']"/>
             <div class="btn-name">米糊</div>
           </div>
 
           <div 
             class="btn-wrap"
             @click="setMode('gruel')">
-            <div :class="[{ 'active': model.machine_mode == 'gruel'||model.machine_status == 'gruel' }, {'btn-loading': btnLoading.gruel }, 'btn btn-mode3 center']"/>
+            <div :class="[{ 'active': currentMode == 'gruel' }, {'btn-loading': btnLoading.gruel }, 'btn btn-mode3 center']"/>
             <div class="btn-name">绵粥</div>
           </div>
           <div 
             class="btn-wrap"
             @click="setMode('pottage')">
-            <div :class="[{ 'active': model.machine_mode == 'pottage'||model.machine_status == 'pottage' }, {'btn-loading': btnLoading.pottage }, 'btn btn-mode4 center']"/>
+            <div :class="[{ 'active': currentMode == 'pottage' }, {'btn-loading': btnLoading.pottage }, 'btn btn-mode4 center']"/>
             <div class="btn-name">浓汤</div>
           </div>
         </div>
@@ -103,27 +103,27 @@
           <div 
             class="btn-wrap" 
             @click="setMode('stewing')">
-            <div :class="[{ 'active': model.machine_mode == 'stewing'||model.machine_status == 'stewing' }, {'btn-loading': btnLoading.stewing }, 'btn btn-mode5 center']" />
+            <div :class="[{ 'active': currentMode == 'stewing' }, {'btn-loading': btnLoading.stewing }, 'btn btn-mode5 center']" />
             <div class="btn-name">蒸煮</div>
           </div>
 
           <div 
             class="btn-wrap"
             @click="setMode('grind')">
-            <div :class="[{ 'active': model.machine_mode == 'grind'||model.machine_status == 'grind' }, {'btn-loading': btnLoading.grind }, 'btn btn-mode6 center']"/>
+            <div :class="[{ 'active': currentMode == 'grind' }, {'btn-loading': btnLoading.grind }, 'btn btn-mode6 center']"/>
             <div class="btn-name">研磨</div>
           </div>
 
           <div 
             class="btn-wrap"
             @click="setMode('fruit_vegdtable')">
-            <div :class="[{ 'active': model.machine_mode == 'fruit_vegdtable'||model.machine_status == 'fruit_vegdtable' }, {'btn-loading': btnLoading.fruit_vegdtable }, 'btn btn-mode7 center']"/>
+            <div :class="[{ 'active': currentMode == 'fruit_vegdtable' }, {'btn-loading': btnLoading.fruit_vegdtable }, 'btn btn-mode7 center']"/>
             <div class="btn-name">果蔬</div>
           </div>
           <div 
             class="btn-wrap"
             @click="setMode('milk_shake')">
-            <div :class="[{ 'active': model.machine_mode == 'milk_shake'||model.machine_status == 'milk_shake' }, {'btn-loading': btnLoading.milk_shake }, 'btn btn-mode8 center']"/>
+            <div :class="[{ 'active': currentMode == 'milk_shake' }, {'btn-loading': btnLoading.milk_shake }, 'btn btn-mode8 center']"/>
             <div class="btn-name">奶昔</div>
           </div>
         </div>
@@ -133,13 +133,13 @@
           <div 
             class="btn-wrap" 
             @click="setMode('water_ice')">
-            <div :class="[{ 'active': model.machine_mode == 'water_ice'||model.machine_status == 'water_ice' }, {'btn-loading': btnLoading.water_ice }, 'btn btn-mode9 center']" />
+            <div :class="[{ 'active': currentMode == 'water_ice' }, {'btn-loading': btnLoading.water_ice }, 'btn btn-mode9 center']" />
             <div class="btn-name">沙冰</div>
           </div>
           <div 
             class="btn-wrap"
             @click="setMode('tepidity')">
-            <div :class="[{ 'active': model.machine_mode == 'tepidity'||model.machine_status == 'tepidity'  }, {'btn-loading': btnLoading.tepidity }, 'btn btn-mode10 center']"/>
+            <div :class="[{ 'active': currentMode == 'tepidity'  }, {'btn-loading': btnLoading.tepidity }, 'btn btn-mode10 center']"/>
             <div class="btn-name">温热</div>
           </div>
         </div>
@@ -165,6 +165,7 @@ export default {
   data() {
     return {
       device_name: "",
+      currentMode:'grains',
       model: {
         "progress": 60,
         "machine_mode": 'grains',
@@ -204,7 +205,7 @@ export default {
     },
     btnTxt() {
       /* eslint-disable no-unreachable */
-       switch(this.model.machine_mode) {
+       switch(this.currentMode) {
         case 'grains':
           return '五谷'
           break
@@ -235,8 +236,8 @@ export default {
         case 'tepidity':
           return '温热'
           break 
-        default:
-          return '绵粥'
+        // default:
+        //   return 
       }
     },
     modeBtnClass(){
@@ -274,7 +275,7 @@ export default {
           return 'tepidity'
           break 
         default:
-          return 'grains'
+          return this.currentMode
       }
     },
   },
@@ -327,8 +328,11 @@ export default {
       }
       let h = parseInt(time.split(':')[0])
       let m = parseInt(time.split(':')[1]) > 0 ? 0.5 : 0
-      this.controlDevice('order_time', (h + m)*60)
-      this.controlDevice('order_mode', this.model.machine_status)
+      // this.controlDevice('order_time', (h + m)*60,{'order_mode':this.currentMode})
+      this.controlDevice('pre_order',{
+        order_time:(h + m)*60,
+        order_mode:this.currentMode
+      })
     },
     setSwitch() {
       if (this.model.order_time > 0) {
@@ -339,10 +343,10 @@ export default {
             () => {
             }, () => { }, 'off')
       }else{
-        this.controlDevice('machine_mode', this.model.machine_status, {},
+        this.controlDevice('machine_mode', this.currentMode, {},
         () => {
           if (this.showModeBtns) this.hide()
-        }, () => { }, this.model.machine_status)
+        }, () => { }, this.currentMode)
       }
 
     },
@@ -361,14 +365,27 @@ export default {
     },
     // 切换模式
     setMode(mode) {
-      this.controlDevice('machine_mode', mode, {},
-        () => {
-          if (this.showModeBtns) this.hide()
-        }, () => { }, mode)
-        // 切换模式后自动运行
-        // this.controlDevice('machine_status', mode, {},
-        // () => {
-        // }, () => { }, mode)
+      this.currentMode = mode
+      
+      
+      // this.showBtnLoading(this.currentMode)
+      // this.animation = false
+      this.showBtnLoading(this.currentMode)
+      setTimeout(()=> {
+        if (this.showModeBtns){
+          this.hide()
+        }
+        this.hideBtnLoading(this.currentMode)
+      }, 300)
+      
+      // this.controlDevice('machine_mode', mode, {},
+      //   () => {
+      //     if (this.showModeBtns) this.hide()
+      //   }, () => { }, mode)
+      //   // 切换模式后自动运行
+      //   // this.controlDevice('machine_status', mode, {},
+      //   // () => {
+      //   // }, () => { }, mode)
     },
     hide() {
       this.showModeBtns = false
@@ -500,7 +517,6 @@ export default {
     &.center{
       flex-direction: column;
     }
-
     .num {
       margin-bottom: 20px;
       font-size: 24px;
@@ -508,14 +524,32 @@ export default {
       text-align: center;
     }
     .offtime {
-      font-size: 112px;
+      font-size: 122px;
       color: #20282B;
       letter-spacing: 0;
+      position: relative;
+      .percent{
+        opacity: 0.5;
+        font-size: 24px;
+        color: #20282B; 
+        position: absolute;
+        top: 0;
+        right: -20px;
+      }
     }
     .time {
       font-size: 112px;
       color: #20282B;
       text-align: center;
+      position: relative;
+      .percent{
+        opacity: 0.5;
+        font-size: 24px;
+        color: #20282B; 
+        position: absolute;
+        top: 0;
+        right: -20px;
+      }
     }
     .cmode{
       margin-top: 30px;
@@ -523,7 +557,6 @@ export default {
       color: #20282B;
       text-align: center;
     }
-
     .nuit {
       opacity: 0.5;
       color: #03FD05;
