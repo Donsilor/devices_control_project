@@ -139,7 +139,7 @@
           <div 
             class="btn-wrap"
             @click="setMode('tepidity')">
-            <div :class="[{ 'active': currentMode == 'tepidity'  }, {'btn-loading': btnLoading.tepidity }, 'btn btn-mode10 center']"/>
+            <div :class="[{ 'active': currentMode == 'tepidity' }, {'btn-loading': btnLoading.tepidity }, 'btn btn-mode10 center']"/>
             <div class="btn-name">温热</div>
           </div>
         </div>
@@ -148,13 +148,15 @@
     <!-- 时间选择 -->
     <SelectTime 
       ref="time" 
+      :preOrder="model"
       @selectedTime="setReserve" />
 
   </div>
 </template>
 
 <script>
-import SelectTime from '../../lib/components/time/time.vue'
+// import SelectTime from '../../lib/components/time/time.vue'
+import SelectTime from '../blend_m/time/time.vue'
 import Modal from '../../lib/components/Modal.vue'
 
 export default {
@@ -279,15 +281,6 @@ export default {
       }
     },
   },
-  watch: {
-    // 当切换模式的时候，预约的时间将作废
-    // "model.machine_mode":function() {
-    //   this.controlDevice('order_time', 0, {},
-    //     () => {
-    //       if (this.showModeBtns) this.hide()
-    //     }, () => { }, 'order_time')
-    // }
-  },
   created() {
     HdSmart.ready(() => {
       if (window.device_name) {
@@ -329,10 +322,20 @@ export default {
       let h = parseInt(time.split(':')[0])
       let m = parseInt(time.split(':')[1]) > 0 ? 0.5 : 0
       // this.controlDevice('order_time', (h + m)*60,{'order_mode':this.currentMode})
-      this.controlDevice('pre_order',{
-        order_time:(h + m)*60,
-        order_mode:this.currentMode
+      // if (h+m == 0) {
+      //   this.controlDevice('machine_mode','off')
+      // }else{
+        if(this.model.order_time == 0 &&this.model.order_mode == 'off'){
+          this.controlDevice('pre_order',{
+          order_time:(h + m)*60,
+          order_mode:this.currentMode
       })
+        }
+
+      // }
+      if (this.model.order_time > 0) {
+        this.controlDevice('machine_mode','off')
+      }
     },
     setSwitch() {
       if (this.model.order_time > 0) {
@@ -366,10 +369,6 @@ export default {
     // 切换模式
     setMode(mode) {
       this.currentMode = mode
-      
-      
-      // this.showBtnLoading(this.currentMode)
-      // this.animation = false
       this.showBtnLoading(this.currentMode)
       setTimeout(()=> {
         if (this.showModeBtns){
@@ -377,15 +376,6 @@ export default {
         }
         this.hideBtnLoading(this.currentMode)
       }, 300)
-      
-      // this.controlDevice('machine_mode', mode, {},
-      //   () => {
-      //     if (this.showModeBtns) this.hide()
-      //   }, () => { }, mode)
-      //   // 切换模式后自动运行
-      //   // this.controlDevice('machine_status', mode, {},
-      //   // () => {
-      //   // }, () => { }, mode)
     },
     hide() {
       this.showModeBtns = false
@@ -405,7 +395,6 @@ export default {
         { [attr]: val },
         param
       )
-
       HdSmart.Device.control(
         {
           method: "dm_set",
@@ -773,14 +762,12 @@ export default {
     .btn-wrap{
       margin-right: 20px;
     }
-
     .btn-name{
       margin-top: 16px;
       font-size: 24px;
       color: #20282B;
       text-align: center;
-    }
-    
+    } 
     .btn {
       box-sizing: border-box;
       margin: 0 5px;
@@ -788,7 +775,6 @@ export default {
       height: 110px;
       border: 1px solid #20282B;
       border-radius: 50%;
-
       display: flex;
       flex-direction: column;
       &.active {
@@ -796,84 +782,27 @@ export default {
         border: none;
       }
     }
-    // .btn-start {
-    //   &::before {
-    //     content: "";
-    //     display: block;
-    //     width: 44px;
-    //     height: 44px;
-    //     background-image: url(../../lib/base/haier_washer/assets/btn-start.png);
-    //     background-size: 100% 100%;
-    //   }
-    //   &.active {
-    //     &::before {
-    //       background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-    //     }
-    //   }
-    // }
-    // .btn-stop {
-    //   &::before {
-    //     content: "";
-    //     display: block;
-    //     width: 44px;
-    //     height: 44px;
-    //     background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-    //     background-size: 100% 100%;
-    //   }
-    //   &.active {
-    //     &::before {
-    //       background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-    //     }
-    //   }
-    // }
-    // .btn-mode {
-    //   &::before {
-    //     content: "";
-    //     display: block;
-    //     width: 44px;
-    //     height: 44px;
-    //     background-image: url(../../lib/base/haier_washer/assets/btn-mode-white58.png);
-    //     background-size: 100% 100%;
-    //   }
-    //   &.active {
-    //     &::before {
-    //       background-image: url(../../lib/base/haier_washer/assets/btn-mode-black58.png);
-    //     }
-    //   }
-    // }
-    // .btn-time {
-    //   &::before {
-    //     content: "";
-    //     display: block;
-    //     width: 44px;
-    //     height: 44px;
-    //     background-image: url(../../lib/base/air_condition/assets/new-air/time-white.png);
-    //     background-size: 100% 100%;
-    //   }
-    //   &.active {
-    //     &::before {
-    //       background-image: url(../../lib/base/air_condition/assets/new-air/time-black.png);
-    //     }
-    //   }
-    //   &.btn-current {
-    //     border-color: #FFC600;
-    //     &::before {
-    //       background-image: url(../../lib/base/air_condition/assets/new-air/time-yellow.png);
-    //     }
-    //     .name{
-    //       color: #FFC600;
-    //     }
-    //   }
-    // }
-
-    .btn-mode1 {
+    .btn-mode1,
+    .btn-mode2,
+    .btn-mode3,
+    .btn-mode4,
+    .btn-mode5,
+    .btn-mode6,
+    .btn-mode7,
+    .btn-mode8,
+    .btn-mode9,
+    .btn-mode10{
       &::before {
         content: "";
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode1.png);
         background-size: 100% 100%;
+      }
+    }
+    .btn-mode1 {
+      &::before {
+        background-image: url(../../lib/base/blend/assets/btn-mode1.png);
       }
       &.active {
         &::before {
@@ -883,12 +812,7 @@ export default {
     }
     .btn-mode2 {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url(../../lib/base/blend/assets/btn-mode2.png);
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -898,12 +822,7 @@ export default {
     }
     .btn-mode3 {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url(../../lib/base/blend/assets/btn-mode3.png);
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -913,12 +832,7 @@ export default {
     }
     .btn-mode4 {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url(../../lib/base/blend/assets/btn-mode4.png);
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -928,12 +842,7 @@ export default {
     }
     .btn-mode5 {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url(../../lib/base/blend/assets/btn-mode5.png);
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -943,12 +852,7 @@ export default {
     }
     .btn-mode6 {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url(../../lib/base/blend/assets/btn-mode6.png);
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -958,12 +862,7 @@ export default {
     }
     .btn-mode7 {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url(../../lib/base/blend/assets/btn-mode7.png);
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -973,12 +872,7 @@ export default {
     }
     .btn-mode8 {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url(../../lib/base/blend/assets/btn-mode8.png);
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -988,12 +882,7 @@ export default {
     }
     .btn-mode9 {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url(../../lib/base/blend/assets/btn-mode9.png);
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -1003,12 +892,7 @@ export default {
     }
     .btn-mode10 {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url(../../lib/base/blend/assets/btn-mode10.png);
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -1016,8 +900,6 @@ export default {
         }
       }
     }
-
-
   }
 }
 
