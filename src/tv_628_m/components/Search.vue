@@ -302,17 +302,17 @@
 }
 
 .vlist {
-  padding: 36px 32px 0 32px;
+  padding: 36px 0 0 38px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   // align-content: space-between;
 }
 .vitem {
   width: 200px;
   margin: 0;
   position: relative;
-
+  margin-right: 36px;
   img {
     border-radius: 10px;
     width: 200px;

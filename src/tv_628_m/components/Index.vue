@@ -195,6 +195,7 @@
     -webkit-box-orient: horizontal;
     -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
+      width: 0 !important;
       display: none;
     }
   }
@@ -366,6 +367,7 @@
     bottom: -200px;
   }
   &::-webkit-scrollbar {
+    width: 0 !important;
     display: none;
   }
 

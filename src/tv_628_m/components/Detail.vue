@@ -465,6 +465,7 @@
     margin-bottom: 30px;
     -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
+      width: 0 !important;
       display: none;
     }
     li {
