@@ -1,6 +1,5 @@
 <template>
   <div class="body">
-    <!-- {'close': isClose},  -->
     <div :class="[{ 'offline': isOffline }, {'filter': showModeBtns }, 'page']">
       <topbar
         :title="device_name"
@@ -148,14 +147,13 @@
     <!-- 时间选择 -->
     <SelectTime 
       ref="time" 
-      :preOrder="model"
+      :pre-order="model"
       @selectedTime="setReserve" />
 
   </div>
 </template>
 
 <script>
-// import SelectTime from '../../lib/components/time/time.vue'
 import SelectTime from '../blend_m/time/time.vue'
 import Modal from '../../lib/components/Modal.vue'
 
@@ -182,8 +180,6 @@ export default {
         "no_cup": 'on',
         "dry_heat": 'on',
         "connectivity": "online",
-         "h-t10": "30",
-         "h-t11": "00"
       },
       showModeBtns: false,
       animation: false,
@@ -321,18 +317,12 @@ export default {
       }
       let h = parseInt(time.split(':')[0])
       let m = parseInt(time.split(':')[1]) > 0 ? 0.5 : 0
-      // this.controlDevice('order_time', (h + m)*60,{'order_mode':this.currentMode})
-      // if (h+m == 0) {
-      //   this.controlDevice('machine_mode','off')
-      // }else{
-        if(this.model.order_time == 0 &&this.model.order_mode == 'off'){
+        if(this.model.order_time == 0 && this.model.order_mode == 'off'){
           this.controlDevice('pre_order',{
-          order_time:(h + m)*60,
-          order_mode:this.currentMode
-      })
+            order_time:(h + m)*60,
+            order_mode:this.currentMode
+          })
         }
-
-      // }
       if (this.model.order_time > 0) {
         this.controlDevice('machine_mode','off')
       }
@@ -901,6 +891,6 @@ export default {
       }
     }
   }
-}
+} 
 
 </style>
