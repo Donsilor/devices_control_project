@@ -219,9 +219,7 @@
     overflow-x: auto;
     display: -webkit-box;
     -webkit-box-orient: horizontal;
-    -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
-      width: 0 !important;
       display: none;
     }
   }
