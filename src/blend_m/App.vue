@@ -418,6 +418,10 @@ export default {
     onSuccess(data) {
       this.status = "success"
       this.model = data.attribute
+      if(data.attribute.machine_mode !== 'off'){
+        this.currentMode = data.attribute.machine_mode
+      }
+      
       // 将model 保存在 localStorage
       if (window.device_uuid) {
         window.localStorage.setItem(window.device_uuid, JSON.stringify(data.attribute))
