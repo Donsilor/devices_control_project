@@ -3,7 +3,7 @@ import Mock from 'mockjs'
 
 var res = {
   "reserve": 880,
-  "mode": "max_volume",
+  "mode": "dy_expansion",
   "set_temperature": 50,
   "switch": "on",
   "fault": "normal",

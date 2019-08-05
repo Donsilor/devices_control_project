@@ -1,22 +1,21 @@
 <template>
   <div class="body">
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
-      <topbar
-        :title="device_name"
-        bak-color="#000"/>
+      <topbar 
+        :title="device.device_name"
+        bak-color="#000" />
       <!-- <div class="c-status">时段预约：6:00-9:00</div> -->
-      <div
-        class="main center">
+      <div class="main center">
         <div class="wrap-circle">
           <div class="circle-gray" />
           <div 
-            :style="{ transform: 'rotate(' + cRotate + 'deg)'}" 
+            :style="{ transform: 'rotate(' + cRotate + 'deg)'}"
             class="circle" />
           <div class="cover">
             <span class="point left" />
             <span class="point right" />
             <span class="txt left">35<sup>°C</sup></span>
-            <span class="txt right">{{ model.mode == 'sterilization' ? 80 : 75 }}<sup>°C</sup></span>
+            <span class="txt right">{{ deviceAttrs.mode == 'sterilization' ? 80 : 75 }}<sup>°C</sup></span>
           </div>
         </div>
 
@@ -31,29 +30,28 @@
           <div 
             v-else
             class="bg2 center">
-            <div class="num">{{ model.work_status == 'heat' ? '加热' : '保温' }}中</div>
-            <div class="time">{{ model.temperature }}<sup>°C</sup></div>
+            <div class="num">{{ deviceAttrs.work_status == 'heat' ? '加热' : '保温' }}中</div>
+            <div class="time">{{ deviceAttrs.temperature }}<sup>°C</sup></div>
             <div class="cmode">当前温度</div>
           </div>
 
           <div 
             :style="{ transform: 'rotate(' + arrowRotate + 'deg)'}"
-            class="bg2 pos-ab" ><i class="circle-arrow" /></div>
+            class="bg2 pos-ab"><i class="circle-arrow" /></div>
 
-          
         </div>
       </div>
 
       <div class="control center">
-        <div
-          v-show="!model.mode || model.mode == 'free'"
-          class="reduce" 
-          @click="setTemperature(-1)"/>
-        <div class="main-control"><i class="icon" /> 预设温度 {{ model.set_temperature }}°C</div>
-        <div
-          v-show="!model.mode || model.mode == 'free'"
-          class="add" 
-          @click="setTemperature(1)"/>
+        <div 
+          v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
+          class="reduce"
+          @click="setTemperature(-1)" />
+        <div class="main-control"><i class="icon" /> 预设温度 {{ deviceAttrs.set_temperature }}°C</div>
+        <div 
+          v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
+          class="add"
+          @click="setTemperature(1)" />
       </div>
 
       <!-- 按钮 -->
@@ -65,33 +63,29 @@
           <div>{{ isOpen ? '收起' : '查看更多' }}</div>
         </div> -->
 
-        <div :class="[{'up-index': !isOffline }, 'btn-wrap']" >
-          <div
+        <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
+          <div 
             :class="[{ 'active': !isClose }, 'btn-swich btn center']"
             @click="setSwitch" />
           <div class="btn-name">关机</div>
         </div>
 
-        
         <div 
-          class="btn-wrap" 
+          class="btn-wrap"
           @click="setMode('dy_expansion')">
-          <div
-            :class="[{ 'active': model.mode == 'dy_expansion' }, 'btn btn-heat center']"/>
+          <div :class="[{ 'active': deviceAttrs.mode == 'dy_expansion' }, 'btn btn-heat center']" />
           <div class="btn-name">速热增容</div>
         </div>
         <div 
-          class="btn-wrap" 
+          class="btn-wrap"
           @click="setMode('heat_keep')">
-          <div
-            :class="[ { 'active': model.mode == 'heat_keep' }, 'btn btn-znsw center']"/>
+          <div :class="[ { 'active': deviceAttrs.mode == 'heat_keep' }, 'btn btn-znsw center']" />
           <div class="btn-name">智能温水</div>
         </div>
         <div 
-          class="btn-wrap" 
+          class="btn-wrap"
           @click="setMode('sterilization')">
-          <div
-            :class="[ { 'active': model.mode == 'sterilization' }, 'btn btn-znyj center']"/>
+          <div :class="[ { 'active': deviceAttrs.mode == 'sterilization' }, 'btn btn-znyj center']" />
           <div class="btn-name">智能抑菌 </div>
         </div>
 
@@ -134,151 +128,86 @@
 </template>
 
 <script>
+import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   data() {
     return {
       isOpen: false,
-      device_name: "",
-      model: {
-        "reserve": 880,
-        "mode": "max_volume",
-        "set_temperature": 50,
-        "switch": "on",
-        "fault": "normal",
-        "work_status": "heat",
-        "temperature": 37,
-        "deviceModel": "LPB100",
-        "manufactureId": "Whirlpool",
-        "deviceCategory": "water_heater.sn",
-        "deviceSubCategory": 0,
-        "connectivity": "online"
-      }
     }
   },
   computed: {
+    ...mapGetters(['isClose', 'isOffline']),
+    ...mapState(['device', 'deviceAttrs']),
     isRun() {
-      return this.model.status == 'run'
-    },
-    isClose() {
-      return this.model.switch == 'on' ? false : true
-    },
-    isOffline() {
-      return this.model.connectivity === 'online' ? false : true
+      return this.deviceAttrs.status == 'run'
     },
     cRotate() {
-      if(this.isClose){
+      if (this.isClose) {
         return -45
       } else {
-        return (+this.model.temperature - 35) * 4.5 - 45
+        return (+this.deviceAttrs.temperature - 35) * 4.5 - 45
       }
     },
     arrowRotate() {
-      if(this.isClose){
+      if (this.isClose) {
         return 0
       } else {
-        return (+this.model.temperature - 35) * 4.5
+        return (+this.deviceAttrs.temperature - 35) * 4.5
       }
     }
   },
   created() {
-    HdSmart.ready(() => {
-      if (window.device_name) {
-        this.device_name = window.device_name
-      }
-      if (window.device_uuid) {
-        var str_model = window.localStorage.getItem(window.device_uuid)
-        if (str_model) {
-          try {
-            // str_model 有可能不是合法的JSON字符串，便会产生异常
-            this.model = JSON.parse(str_model)
-          } catch (e) {
-            this.model = {}
-          }
-        }
-      }
-      HdSmart.UI.showLoading()
-      this.getSnapShot(() => {
-        HdSmart.UI.hideLoading()
-      })
-    })
-
-    HdSmart.onDeviceStateChange(data => {
-      this.onSuccess(data.result)
-    })
   },
   methods: {
+    ...mapActions(['doControlDevice']),
     handleMore() {
       this.isOpen = !this.isOpen
     },
     setMode(val) {
-      if(val == this.model.mode){
+      if (val == this.deviceAttrs.mode) {
         val = 'free'
       }
-      if(this.isClose) return
+      if (this.isClose) return
       this.controlDevice('mode', val)
     },
     setSwitch() {
       let switchStatus = ''
-      if (this.model.switch == 'on') {
+      if (this.deviceAttrs.switch == 'on') {
         switchStatus = 'off'
       } else {
         switchStatus = 'on'
       }
       this.controlDevice("switch", switchStatus)
+        .then(() => {
+          console.log('setSwitch success')
+        })
     },
     setTemperature(step) {
-      let val = +this.model.set_temperature + step
-      if(val > 75) {
+      let val = +this.deviceAttrs.set_temperature + step
+      if (val > 75) {
         val = 75
         return HdSmart.UI.toast('温度最高为75℃')
-      } else if(val < 35) {
+      } else if (val < 35) {
         val = 35
         return HdSmart.UI.toast('温度最低为35℃')
       }
       this.controlDevice('set_temperature', val)
     },
-    getSnapShot(cb) {
-      HdSmart.Device.getSnapShot(
-        data => {
-          this.onSuccess(data)
-          cb && cb()
-        },
-        () => {
-          cb && cb()
-        }
-      )
-    },
-    onSuccess(data) {
-      this.model = data.attribute
-      // 将model 保存在 localStorage
-      if (window.device_uuid) {
-        window.localStorage.setItem(window.device_uuid, JSON.stringify(data.attribute))
-      }
-    },
     controlDevice(attr, value) {
-      HdSmart.UI.showLoading()
-      HdSmart.Device.control(
-        {
-          nodeid: `water_heater.main.${attr}`,
-          params: {
-            attribute: {
-              [attr]: value
-            }
+      return this.doControlDevice({
+        nodeid: `water_heater.main.${attr}`,
+        params: {
+          attribute: {
+            [attr]: value
           }
-        },
-        () => {
-          HdSmart.UI.hideLoading()
-        },
-        () => {
-          HdSmart.UI.hideLoading()
         }
-      )
+      })
     },
   }
 }
 </script>
 <style lang="less" scoped>
-.body{
+.body {
   min-height: 100%;
 }
 .page {
@@ -286,41 +215,40 @@ export default {
   min-height: 550px;
   overflow-x: hidden;
   position: relative;
-  background: #F4F7FE;
+  background: #f4f7fe;
 
   &.filter {
     filter: blur(12px);
   }
-  .c-status{
+  .c-status {
     margin-top: 30px;
     font-size: 24px;
-    color: #35353D;
+    color: #35353d;
     text-align: center;
   }
-  .bg{
+  .bg {
     position: relative;
     z-index: 1;
 
     width: 370px;
     height: 370px;
-    background: #F3F6FD;
+    background: #f3f6fd;
     border-radius: 50%;
     padding: 10px;
-    .bg2{
+    .bg2 {
       width: 100%;
       height: 100%;
       background: #fff;
       border-radius: 50%;
       flex-direction: column;
-      &.pos-ab{
+      &.pos-ab {
         background: transparent;
         position: absolute;
         top: 0;
         left: 0;
       }
     }
-    .circle-arrow{
-      
+    .circle-arrow {
       display: block;
       width: 60px;
       height: 60px;
@@ -336,72 +264,72 @@ export default {
   .main {
     margin-top: 80px;
     position: relative;
-    &.center{
+    &.center {
       flex-direction: column;
     }
-    .wrap-circle{
+    .wrap-circle {
       position: absolute;
       top: -31px;
       border-radius: 50%;
-      .circle{
+      .circle {
         box-sizing: border-box;
         border: 4px solid;
-        border-color: transparent transparent #FF210E #FF210E;
+        border-color: transparent transparent #ff210e #ff210e;
         border-radius: 50%;
         width: 434px;
         height: 434px;
 
         transform: rotate(90deg);
       }
-      .circle-gray{
+      .circle-gray {
         position: absolute;
         top: 0;
-        border: 4px solid #D8D8D8;
+        border: 4px solid #d8d8d8;
         border-radius: 50%;
         box-sizing: border-box;
         width: 432px;
         height: 432px;
       }
-      .cover{
+      .cover {
         position: absolute;
         top: 50%;
-        background: #F4F7FE;
+        background: #f4f7fe;
         width: 100%;
         height: 220px;
-        .point{
+        .point {
           display: block;
-          background: #FF210E;
+          background: #ff210e;
           width: 18px;
           height: 18px;
           border-radius: 50%;
-          &.left{
+          &.left {
             position: absolute;
             top: -8px;
             left: -5px;
-            background: #FF210E;
+            background: #ff210e;
           }
-          &.right{
+          &.right {
             position: absolute;
             top: -8px;
             right: -5px;
-            background: #D8D8D8;
+            background: #d8d8d8;
           }
         }
-        .txt{
+        .txt {
           font-size: 24px;
           color: #000;
-          &.left{
+          &.left {
             position: absolute;
             top: 28px;
             left: -28px;
           }
-          &.right{
+          &.right {
             position: absolute;
             top: 28px;
             right: -10px;
           }
         }
-        sup{
+        sup {
           font-size: 10px;
           position: absolute;
           top: -2px;
@@ -417,17 +345,17 @@ export default {
     }
     .time {
       font-size: 112px;
-      color: #20282B;
+      color: #20282b;
       text-align: center;
       position: relative;
       sup {
         font-size: 24px;
-        color: #2E2E2E;
+        color: #2e2e2e;
         position: absolute;
         top: 30px;
       }
     }
-    .cmode{
+    .cmode {
       margin-top: 20px;
       font-size: 24px;
       color: #000;
@@ -436,7 +364,7 @@ export default {
 
     .nuit {
       opacity: 0.5;
-      color: #03FD05;
+      color: #03fd05;
       font-size: 24px;
       letter-spacing: 0;
       text-align: center;
@@ -444,18 +372,19 @@ export default {
       top: 145px;
     }
   }
-  .status{
+  .status {
     margin-top: 60px;
     font-size: 24px;
-    color: #20282B;
+    color: #20282b;
     text-align: center;
   }
-  .control{
+  .control {
     margin: 40px 0;
-    .reduce, .add{
+    .reduce,
+    .add {
       position: relative;
       background: #fff;
-      border: 1px solid #F1F1F1;
+      border: 1px solid #f1f1f1;
       width: 72px;
       height: 72px;
       line-height: 72px;
@@ -464,20 +393,20 @@ export default {
       text-align: center;
       margin: 0 32px;
     }
-    .reduce{
-      &::before{
+    .reduce {
+      &::before {
         font-size: 90px;
-        content: '-';
+        content: "-";
         position: absolute;
         top: 45%;
         left: 50%;
         transform: translate(-50%, -50%);
       }
     }
-    .add{
-      &::before{
+    .add {
+      &::before {
         font-size: 70px;
-        content: '+';
+        content: "+";
         position: absolute;
         top: 45%;
         left: 50%;
@@ -485,19 +414,18 @@ export default {
       }
     }
 
-    .main-control{
+    .main-control {
       width: 276px;
       height: 72px;
 
       line-height: 72px;
-      background: #F3E9F1;
+      background: #f3e9f1;
       border-radius: 22px;
       font-size: 24px;
       text-align: center;
-      color: #FF210E;
+      color: #ff210e;
     }
   }
-
 
   .panel-btn {
     position: fixed;
@@ -507,28 +435,28 @@ export default {
     padding: 38px 0;
     z-index: 9999;
 
-    background: #FFFFFF;
-    box-shadow: 0 -3px 28px 0 rgba(209,209,209,0.50);
+    background: #ffffff;
+    box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
     border-radius: 42px 42px 0px 0px;
 
     flex-wrap: wrap;
     justify-content: center;
 
-    .more{
+    .more {
       width: 750px;
-      color: #9E9E9E;
+      color: #9e9e9e;
       font-size: 24px;
       text-align: center;
       position: absolute;
       left: 0;
       top: -100px;
-      .arrow{
+      .arrow {
         font-size: 32px;
-        &.up{
-          transform: rotate(90deg)
+        &.up {
+          transform: rotate(90deg);
         }
-        &.down{
-          transform: rotate(-90deg)
+        &.down {
+          transform: rotate(-90deg);
         }
       }
     }
@@ -547,7 +475,7 @@ export default {
 
   .btn-wrap {
     margin: 0 24px 24px;
-    &.up-index{
+    &.up-index {
       position: relative;
       z-index: 9999;
     }
@@ -562,8 +490,8 @@ export default {
       display: flex;
       flex-direction: column;
       &.active {
-        background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
-        border-color: #FFBF00;
+        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        border-color: #ffbf00;
       }
     }
     .btn-name {
@@ -612,7 +540,7 @@ export default {
         background-size: 100% 100%;
       }
     }
-    .btn-heat{
+    .btn-heat {
       &::before {
         content: "";
         display: block;
@@ -622,7 +550,7 @@ export default {
         background-size: 100% 100%;
       }
     }
-    .btn-znsw{
+    .btn-znsw {
       &::before {
         content: "";
         display: block;
@@ -632,7 +560,7 @@ export default {
         background-size: 100% 100%;
       }
     }
-    .btn-bpsr{
+    .btn-bpsr {
       &::before {
         content: "";
         display: block;
@@ -642,7 +570,7 @@ export default {
         background-size: 100% 100%;
       }
     }
-    .btn-znyj{
+    .btn-znyj {
       &::before {
         content: "";
         display: block;
@@ -739,11 +667,12 @@ export default {
       }
     }
   }
-  &.close,  &.offline {
+  &.close,
+  &.offline {
     &:before {
       content: "";
       position: fixed;
-      top: 64PX;
+      top: 64px;
       left: 0;
       bottom: 0;
       right: 0;
@@ -751,24 +680,24 @@ export default {
       width: 100%;
       background: rgba(0, 0, 0, 0.1);
     }
-    &.page{
+    &.page {
       background: #fff;
-      .cover{
+      .cover {
         background: #fff;
-        .point{
-          &.left{
-            background: #D8D8D8;
+        .point {
+          &.left {
+            background: #d8d8d8;
           }
         }
       }
     }
-    .panel-btn{
+    .panel-btn {
       background: #efefef;
     }
-    .btn-wrap{
-      opacity: .2;
-      .btn{
-        &.active{
+    .btn-wrap {
+      opacity: 0.2;
+      .btn {
+        &.active {
           background: #fff;
           border: none;
         }
@@ -830,7 +759,7 @@ export default {
       left: 384px;
     }
   }
-  .btns{
+  .btns {
     justify-content: flex-start;
     transition: all 0.3s ease-in-out;
     margin-top: 57px;
@@ -947,30 +876,30 @@ export default {
     }
   }
 }
-.items{
+.items {
   margin-bottom: 30px;
   .btns {
     display: flex;
     justify-content: center;
     justify-content: flex-start;
     padding: 10px 30px;
-    .btn-wrap{
+    .btn-wrap {
       margin-right: 20px;
     }
 
-    .btn-name{
+    .btn-name {
       margin-top: 16px;
       font-size: 24px;
-      color: #20282B;
+      color: #20282b;
       text-align: center;
     }
-    
+
     .btn {
       box-sizing: border-box;
       margin: 0 5px;
       width: 110px;
       height: 110px;
-      border: 1px solid #20282B;
+      border: 1px solid #20282b;
       border-radius: 50%;
 
       display: flex;
@@ -1055,12 +984,12 @@ export default {
         }
       }
       &.btn-current {
-        border-color: #FFC600;
+        border-color: #ffc600;
         &::before {
           background-image: url(../../lib/base/air_condition/assets/new-air/time-yellow.png);
         }
-        .name{
-          color: #FFC600;
+        .name {
+          color: #ffc600;
         }
       }
     }
@@ -1215,9 +1144,6 @@ export default {
         }
       }
     }
-
-
   }
 }
-
 </style>
