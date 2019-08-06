@@ -1,6 +1,6 @@
 <template>
   <div class="wrap-off">
-    <div class="topbar topbar-fixed">
+    <!-- <div class="topbar topbar-fixed">
       <div class="left">
         <a
           href="#/"
@@ -15,7 +15,12 @@
           @click.prevent="goDetail"/>
       </div>
 
-    </div>
+    </div> -->
+    <topbar
+      :transparent="true"
+      :title="device.name"
+      :back="back"
+      bak-color="#000" />
 
     <!--<div class="bg"></div>-->
 
@@ -42,7 +47,7 @@
 </template>
 
 <script>
-import Icon from '../../../lib/components/SettingIconMobile.vue';
+import Icon from '@lib/components/SettingIconMobile.vue'
 export default {
     components: {
         Icon
@@ -56,7 +61,7 @@ export default {
         }
     },
     data() {
-        return {};
+        return {}
     },
     mounted() {
         HdSmart.UI.setStatusBarColor(2)
@@ -69,8 +74,8 @@ export default {
             HdSmart.UI.popWindow()
         },
         setOn(event) {
-            this.control('switch', 'on', event.target);
+            this.control('switch', 'on', event.target)
         }
     }
-};
+}
 </script>

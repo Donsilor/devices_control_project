@@ -1,13 +1,13 @@
 <template>
-  <div 
-    id="app" 
+  <div
+    id="app"
     :class="{warn:level>=4}">
 
     <template v-if="success">
 
-      <div 
-        v-if="hasTDS" 
-        :style="inPage('index')" 
+      <div
+        v-if="hasTDS"
+        :style="inPage('index')"
         class="page-on">
         <div class="mainTitle">
           <div class="name">{{ device_name }}
@@ -27,23 +27,23 @@
           </div>
         </div>
 
-        <div 
-          :class="{washing:washing}" 
+        <div
+          :class="{washing:washing}"
           class="wash">
-          <a 
-            href="#" 
+          <a
+            href="#"
             @click.prevent="setClean">一键冲洗</a>
           <div class="progress"/>
         </div>
 
-        <div 
-          v-if="hasTDS" 
-          class="record_panle" 
+        <div
+          v-if="hasTDS"
+          class="record_panle"
           @click="tdsModalVisibleControl">
 
           <div class="value">{{ nowTDS }}</div>
-          <div 
-            :class="{'pic_100':nowTDS>=100}" 
+          <div
+            :class="{'pic_100':nowTDS>=100}"
             class="pic">TDS</div>
 
           <div class="text">
@@ -57,24 +57,24 @@
         <div class="water_wave ww1"/>
         <div class="water_wave ww2"/>
         <div class="water_wave ww3"/>
-        <a 
-          v-if="hasTDS" 
-          class="view" 
-          href="" 
+        <a
+          v-if="hasTDS"
+          class="view"
+          href=""
           @click.prevent="currentPage='list'">
           <span v-if="expired_num > 0">{{ expired_num }}个滤芯已过期，点击查看详情</span>
           <span v-else-if="expiring_num > 0">{{ expiring_num }}个滤芯将到期，点击查看详情</span>
           <span v-else>查看滤芯寿命</span>
         </a>
         <!-- 告警按钮-->
-        <alert-button-mobile 
-          :alert-model="alertModel" 
+        <alert-button-mobile
+          :alert-model="alertModel"
           @goAlertpage = "goAlertpage('water_cleaner_error')"/>
       </div>
       <!-- 没有TDS的机器的样式 -->
-      <div 
-        v-if="!hasTDS" 
-        :style="inPage('index')" 
+      <div
+        v-if="!hasTDS"
+        :style="inPage('index')"
         class="hasNotTDs">
         <div class="mainTitle">
           <div class="name">{{ device_name }}
@@ -93,50 +93,51 @@
             <p>{{ statusTip }}</p>
           </div>
         </div>
-        <div 
-          :class="{washing:washing}" 
+        <div
+          :class="{washing:washing}"
           class="wash">
-          <a 
-            href="#" 
+          <a
+            href="#"
             @click.prevent="setClean">一键冲洗</a>
           <div class="progress"/>
         </div>
-        <filter-items 
-          :items="filterItems" 
-          :view-filter="viewFilter" 
-          :has-tds="hasTDS" 
+        <filter-items
+          :items="filterItems"
+          :view-filter="viewFilter"
+          :has-tds="hasTDS"
           :toggle-modal-visible="toggleModalVisible" />
         <!-- 告警按钮-->
-        <alert-button-mobile 
-          :alert-model="alertModel" 
+        <alert-button-mobile
+          :alert-model="alertModel"
           @goAlertpage = "goAlertpage('water_cleaner_error')"/>
       </div>
-      <div 
-        v-if="hasTDS" 
-        :style="inPage('list')" 
+      <div
+        v-if="hasTDS"
+        :style="inPage('list')"
         class="page-sec">
         <div class="topbar">
           <div class="left">
-            <a 
-              href="" 
-              class="arrow" 
+            <a
+              href=""
+              class="arrow"
               @click.prevent="currentPage='index'"/>
           </div>
           <div class="title">滤芯寿命</div>
         </div>
-        <filter-items 
-          :items="filterItems" 
-          :view-filter="viewFilter" 
-          :now-tds="nowTDS" 
-          :level="level" 
-          :has-tds="hasTDS" 
-v-model="tdsModalVisible" :toggle-modal-visible="toggleModalVisible" />
+        <filter-items
+          :items="filterItems"
+          :view-filter="viewFilter"
+          :now-tds="nowTDS"
+          :level="level"
+          :has-tds="hasTDS"
+          v-model="tdsModalVisible"
+          :toggle-modal-visible="toggleModalVisible" />
       </div>
 
     </template>
 
-    <div 
-      v-if="!success" 
+    <div
+      v-if="!success"
       class="page-nodata">
       <div class="mainTitle">
         <div class="name">{{ device_name }}
@@ -146,25 +147,25 @@ v-model="tdsModalVisible" :toggle-modal-visible="toggleModalVisible" />
       <div class="pic1"/>
     </div>
 
-    <sub-page 
-      v-model="tdsModalVisible" 
-      title="TDS简介" 
+    <sub-page
+      v-model="tdsModalVisible"
+      title="TDS简介"
       class="modal-w">
       <div class="tds">
         <p class="tds_text">
           对日常自来水而言，TDS是较为常用且有效的水质指标，可以反映出净水器的实际效果， 数值越低代表过滤效果越好。但对于含有致病菌、悬浮物等有害物质的水源，TDS并不适用。
         </p>
-        <img src="../../../lib/base/water_cleaner/assets/waterpurifier_img_tdsppm@2x.png" >
+        <img src="~@lib/base/water_cleaner/assets/waterpurifier_img_tdsppm@2x.png" >
       </div>
     </sub-page>
 
-    <modal 
-      v-for="item in expiredFilter" 
-      :key="item.index" 
-      v-model="item.timeoutModalVisible" 
-      :show-close-btn="false" 
-      :overlay-clickable="false" 
-title="净水器滤芯到期">
+    <modal
+      v-for="item in expiredFilter"
+      :key="item.index"
+      v-model="item.timeoutModalVisible"
+      :show-close-btn="false"
+      :overlay-clickable="false"
+      title="净水器滤芯到期">
       <div class="alarm">
         <div class="alert">
         <i/>“净水器”的滤芯{{ item.index+1 }}已到期</div>
@@ -174,13 +175,13 @@ title="净水器滤芯到期">
         </div>
 
         <div class="btn">
-          <a 
-            href="#" 
-            class="" 
+          <a
+            href="#"
+            class=""
             @click.prevent="viewExpired(item)">查看详情</a>
-          <a 
-            href="#" 
-            class="btn-default" 
+          <a
+            href="#"
+            class="btn-default"
             @click.prevent="confirmExpired(item)">我知道了</a>
         </div>
       </div>
@@ -202,15 +203,15 @@ title="净水器滤芯到期">
         </modal>
         -->
 
-    <sub-page 
-      v-model="statusModalVisible" 
-      title="滤芯状态" 
+    <sub-page
+      v-model="statusModalVisible"
+      title="滤芯状态"
       class="modal-w">
       <div class="lx_status">
         <div class="p1">滤芯{{ currentFilter.index+1 }}</div>
         <div class="p2">{{ getName(currentFilter.index) }} </div>
-        <circle-pie 
-          :value="toPercent(currentFilter.remaining, currentFilter.total)" 
+        <circle-pie
+          :value="toPercent(currentFilter.remaining, currentFilter.total)"
           class="pie">
           <p class="p3">预计剩余寿命</p>
           <p class="p4">{{ currentFilter.remaining | toDays }}
@@ -220,16 +221,16 @@ title="净水器滤芯到期">
         </circle-pie>
         <div class="msg">更换滤芯后请重置剩余时间</div>
         <div class="btn">
-          <div 
-            :class="{active:isFilterResetActive}" 
+          <div
+            :class="{active:isFilterResetActive}"
             class="btn-block">
-            <a 
-              href="" 
-              class="reset" 
+            <a
+              href=""
+              class="reset"
               @click.prevent="confirmFilterReset">重置剩余时间</a>
-            <a 
-              href="" 
-              class="reset_submit" 
+            <a
+              href=""
+              class="reset_submit"
               @click.prevent="submitFilterReset">确定重置</a>
           </div>
         </div>
@@ -241,13 +242,13 @@ title="净水器滤芯到期">
 </template>
 
 <script>
-import Modal from '../../../lib/components/Modal'
+import Modal from '@lib/components/Modal'
 import CirclePie from './CirclePie.vue'
 import FilterItems from './FilterItems.vue'
-import SubPage from '../../../lib/components/SubPage.vue'
-import Icon from '../../../lib/components/SettingIconMobile.vue'
+import SubPage from './SubPage.vue'
+import Icon from '@lib/components/SettingIconMobile.vue'
 import { WARN_CODE } from "./consts"
-import AlertButtonMobile from '../../../lib/components/AlertButtonMobile'
+import AlertButtonMobile from '@lib/components/AlertButtonMobile'
 
 const TDS_VALUE = [0, 50, 100, 300, 500]
 const TDS_ANGLE = [-136, -74, 0, 74, 136]
@@ -613,9 +614,9 @@ export default {
                         })
                     }else{
                         return
-                    }     
+                    }
                     store.setItem(ERROR_STORE_KEY,JSON.stringify(this.errorStore))//设置新的告警信息
-                    //  console.log(9999999999,JSON.parse(window.localStorage.getItem(ERROR_STORE_KEY)))  
+                    //  console.log(9999999999,JSON.parse(window.localStorage.getItem(ERROR_STORE_KEY)))
                 }
                 this.alertModel = this.errorStore.filter((item,index)=>{
                     // console.log(index,item.clicked)
@@ -662,8 +663,8 @@ export default {
                             })
                         }else{
                             return
-                        }     
-                    })    
+                        }
+                    })
                     store.setItem(ERROR_STORE_KEY,JSON.stringify(this.errorStore))//设置新的告警信息
                 }
                 // console.log(99999,JSON.parse(window.localStorage.getItem(ERROR_STORE_KEY)))
@@ -710,7 +711,7 @@ export default {
                 }else if(parseInt(item.status,10)===0){//0：告警消除，把他从里面删除
                     return
                 }
-                
+
             }
             return errorsStorage
         },

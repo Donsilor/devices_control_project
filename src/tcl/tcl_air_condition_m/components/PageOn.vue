@@ -3,7 +3,7 @@
     :class="[ac.mode]"
     class="wrap-on"
   >
-    <div class="topbar topbar-fixed">
+    <!-- <div class="topbar topbar-fixed">
       <div class="left">
         <a
           href="#/"
@@ -20,7 +20,12 @@
         />
       </div>
 
-    </div>
+    </div> -->
+    <topbar
+      :transparent="true"
+      :title="device.name"
+      :back="back"
+      bak-color="#fff" />
 
     <div class="bg" />
 
@@ -258,9 +263,9 @@
 </template>
 
 <script>
-import Modal from '../../../lib/components/Modal.vue';
-import SubPage from "../../../lib/components/SubPage.vue";
-import Icon from '../../../lib/components/SettingIconMobile.vue';
+import Modal from '@lib/components/Modal.vue'
+import SubPage from "./SubPage.vue"
+import Icon from '@lib/components/SettingIconMobile.vue'
 
 const tips = {
   fail: '设置失败',
@@ -281,11 +286,11 @@ const tips = {
   err_temp1: '送风模式下不能设置温度',
   err_temp2: '温度已调至最高',
   err_temp3: '温度已调至最低'
-};
-const SPEED = ['low', 'normal', 'high'];
-const [MIN_TEMP, MAX_TEMP] = [16, 31];
+}
+const SPEED = ['low', 'normal', 'high']
+const [MIN_TEMP, MAX_TEMP] = [16, 31]
 let tempDelay,
-  tempFlag = true;
+  tempFlag = true
 
 export default {
   components: {
@@ -312,7 +317,7 @@ export default {
       modeDialogShow: false,
       speedDialogShow: false,
       tip: ''
-    };
+    }
   },
   computed: {
     modeText() {
@@ -322,7 +327,7 @@ export default {
         dehumidify: '除湿模式',
         auto: '智能模式',
         wind: '送风模式'
-      }[this.ac.mode];
+      }[this.ac.mode]
     },
     speedText() {
       return {
@@ -332,7 +337,7 @@ export default {
         overnormal: '中风',
         high: '高风'
         // 'auto': '自动风'
-      }[this.ac.speed];
+      }[this.ac.speed]
     }
   },
   mounted() {
@@ -369,54 +374,54 @@ export default {
     //同步
     syncTemp() {
       if (tempFlag) {
-        this.temperature = this.ac.temperature;
+        this.temperature = this.ac.temperature
       }
     },
     setOff(event) {
-      this.control('switch', 'off', event.target, () => { }, this.onSetError());
+      this.control('switch', 'off', event.target, () => { }, this.onSetError())
     },
     setTemperature(val, event) {
       if (this.ac.mode === 'wind') {
-        this.showTip('送风模式下不能设置温度');
-        return;
+        this.showTip('送风模式下不能设置温度')
+        return
       }
       if (this.ac.mode === 'auto') {
-        this.showTip('智能模式下不能设置温度');
-        return;
+        this.showTip('智能模式下不能设置温度')
+        return
       }
       if (this.ac.mode == 'dehumidify') {
-        this.showTip('除湿模式下不能设置温度');
-        return;
+        this.showTip('除湿模式下不能设置温度')
+        return
       }
 
-      var temp = this.temperature + val;
+      var temp = this.temperature + val
 
       if (temp < MIN_TEMP) {
         if (this.ac.temperature == MIN_TEMP) {
-          this.showTip(tips.err_temp3);
-          return;
+          this.showTip(tips.err_temp3)
+          return
         } else {
-          temp = MIN_TEMP;
+          temp = MIN_TEMP
         }
       }
 
       if (temp > MAX_TEMP) {
         if (this.ac.temperature == MAX_TEMP) {
-          this.showTip(tips.err_temp2);
-          return;
+          this.showTip(tips.err_temp2)
+          return
         } else {
-          temp = MAX_TEMP;
+          temp = MAX_TEMP
         }
       }
 
-      this.temperature = temp;
-      clearTimeout(tempDelay);
-      tempFlag = false;
+      this.temperature = temp
+      clearTimeout(tempDelay)
+      tempFlag = false
       tempDelay = setTimeout(() => {
-        tempFlag = true;
+        tempFlag = true
         if (this.checkCmd('temperature', temp)) {
-          this.syncTemp();
-          return;
+          this.syncTemp()
+          return
         }
         this.control(
           'temperature',
@@ -424,73 +429,73 @@ export default {
           event.target,
           this.onSetSuccess(tips.temperature),
           this.onSetError(true)
-        );
-      }, 500);
+        )
+      }, 500)
     },
     setSpeed(event, speed) {
       if (this.ac.mode == 'dehumidify') {
-        this.showTip('除湿模式下不可设置风速');
-        return;
+        this.showTip('除湿模式下不可设置风速')
+        return
       }
 
       // var index = SPEED.indexOf(this.ac.speed);
       // var next = index === SPEED.length - 1 ? 0 : index + 1;
       // var speed = SPEED[next];
       if (this.checkCmd('speed', speed)) {
-        return;
+        return
       }
-      this.control('speed', speed, event.target, this.onSetSuccess(tips['speed_' + speed]), this.onSetError());
+      this.control('speed', speed, event.target, this.onSetSuccess(tips['speed_' + speed]), this.onSetError())
     },
     setMode(mode, event) {
       if (this.checkCmd('mode', mode)) {
-        return;
+        return
       }
 
-      this.control('mode', mode, event.target, this.onSetSuccess(tips['mode_' + mode]), this.onSetError());
+      this.control('mode', mode, event.target, this.onSetSuccess(tips['mode_' + mode]), this.onSetError())
     },
     setWind(attr, event) {
-      var val = this.ac[attr] === 'on' ? 'off' : 'on';
-      this.control(attr, val, event.target, this.onSetSuccess(tips[attr + '_' + val]), this.onSetError());
+      var val = this.ac[attr] === 'on' ? 'off' : 'on'
+      this.control(attr, val, event.target, this.onSetSuccess(tips[attr + '_' + val]), this.onSetError())
     },
     showMore() {
-      this.toggle = !this.toggle;
+      this.toggle = !this.toggle
     },
     showTip(text) {
-      if (!text) return;
-      this.tip = text;
-      this.tipVisible = true;
-      clearTimeout(this.tipDelay);
+      if (!text) return
+      this.tip = text
+      this.tipVisible = true
+      clearTimeout(this.tipDelay)
       this.tipDelay = setTimeout(() => {
-        this.tipVisible = false;
-      }, 3000);
+        this.tipVisible = false
+      }, 3000)
     },
     onSetSuccess(text) {
       return () => {
-        this.showTip(text);
-      };
+        this.showTip(text)
+      }
     },
     onSetError(isTemp) {
       return () => {
-        this.showTip(tips.fail);
+        this.showTip(tips.fail)
         if (isTemp) {
-          this.syncTemp();
+          this.syncTemp()
         }
-      };
+      }
     },
     checkCmd(attr, val) {
-      var ac = JSON.parse(JSON.stringify(this.ac));
-      ac[attr] = val;
+      var ac = JSON.parse(JSON.stringify(this.ac))
+      ac[attr] = val
 
       if (attr != 'temperature') {
-        ac.temperature = this.temperature;
+        ac.temperature = this.temperature
       }
 
       if (ac.temperature == MAX_TEMP && ac.speed == 'low' && ac.mode == 'cold') {
-        this.showTip('低风、制冷模式下不支持此温度，请调整后重试');
-        return true;
+        this.showTip('低风、制冷模式下不支持此温度，请调整后重试')
+        return true
       }
-      return false;
+      return false
     }
   }
-};
+}
 </script>

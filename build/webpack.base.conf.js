@@ -28,6 +28,7 @@ module.exports = {
       vue$: 'vue/dist/vue.esm.js',
       '@': path.resolve('src'),
       '@lib': path.resolve('lib'),
+      '@mock': path.resolve('mock'),
       '~': path.resolve('./')
     }
   },

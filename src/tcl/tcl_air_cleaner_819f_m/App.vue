@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div 
+    <div
       v-if="status == 'error' || model.switch_status == 'on'"
       class="page-on">
       <div class="mainTitle">
@@ -12,26 +12,26 @@
           <p v-show="!tip && remain_tip">{{ remain_tip }}</p>
         </div>
       </div>
-      <a 
+      <a
         v-if="ab.child_lock_switch || ab.negative_ion_switch"
         href=""
         class="btn-more"
         @click.prevent="moreModalVisible = true" />
       <div class="pm25">
         <div class="circle">
-          <span 
+          <span
             v-for="i in 5"
             v-show="i==(pm25_level>5?5:pm25_level)"
             :key="i"
             :class="'c'+i" />
         </div>
-        <div 
+        <div
           :style="{transform:'rotate('+ pm25_rotate +'deg)'}"
           class="arrow" />
-        <div 
+        <div
           class="value"
           v-html="pm25_text" />
-        <div 
+        <div
           class="pic"
           @click="togglePMPop">PM 2.5</div>
         <div class="attrs">
@@ -41,13 +41,13 @@
       </div>
 
       <div class="btns btns-fn">
-        <a 
+        <a
           href=""
           class="btn-on"
           @click.prevent="setSwitch('off')">
           <i /> 开关
         </a>
-        <a 
+        <a
           :class="{active:model.control_status == 'sleep'}"
           href=""
           class="btn-sleep"
@@ -57,21 +57,21 @@
         <!-- <a href="" class="btn-sleep"  @click.prevent="setControl('manual')">
                 <i></i> 手动
             </a> -->
-        <a 
+        <a
           v-if="model.control_status == 'auto'"
           href=""
           class="btn-auto active"
           @click.prevent="showSpeedModal">
           <i /> 自动
         </a>
-        <a 
+        <a
           v-else-if="model.control_status == 'manual'"
           :class="speedCss"
           href=""
           @click.prevent="showSpeedModal">
           <i /> {{ speedText }}
         </a>
-        <a 
+        <a
           v-else
           href=""
           class="btn-speed"
@@ -80,12 +80,12 @@
         </a>
       </div>
 
-      <modal 
+      <modal
         v-model="speedModalVisible"
         title="风档"
         class="windControl">
         <div class="btns btns-speed">
-          <a 
+          <a
             v-for="item in speedItems"
             :key="item.value"
             :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]"
@@ -93,7 +93,7 @@
             @click.prevent="setSpeed(item.value)">
             <i /> {{ item.text }}
           </a>
-          <a 
+          <a
             :class="{active: model.control_status == 'auto'}"
             href=""
             class="btn1-auto"
@@ -103,11 +103,11 @@
         </div>
       </modal>
 
-      <modal 
+      <modal
         v-model="moreModalVisible"
         title="更多">
         <div class="btns btns-more">
-          <a 
+          <a
             v-if="ab.negative_ion_switch"
             :class="{active:model.negative_ion_switch_status == 'on'}"
             href=""
@@ -115,7 +115,7 @@
             @click.prevent="setNegativeIon">
             <i /> 负离子
           </a>
-          <a 
+          <a
             v-if="ab.child_lock_switch"
             :class="{active:model.child_lock_switch_status == 'on'}"
             href=""
@@ -125,7 +125,7 @@
           </a>
         </div>
       </modal>
-      <sub-page 
+      <sub-page
         v-model="pmPopVisible"
         title="PM2.5简介"
         class="modal-w"
@@ -135,14 +135,14 @@
             PM2.5指环境空气中空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
           </p>
           <div class="pm-range">
-            <img src="../../lib/base/air_cleaner/assets/PM2.5_scale@3x.png">
+            <img src="~@lib/base/air_cleaner/assets/PM2.5_scale@3x.png">
           </div>
         </div>
       </sub-page>
 
     </div>
 
-    <div 
+    <div
       v-if="model.switch_status == 'off'"
       class="page-off">
       <div class="name">{{ device_name }}
@@ -151,18 +151,18 @@
       <div class="tip">已关闭</div>
       <div class="air_cleaner" />
       <div class="btns btns-fn">
-        <a 
+        <a
           href="javascript:void(0)"
           class="btn-off"
           @click.prevent="setSwitch('on')">
           <i /> 开关
         </a>
-        <a 
+        <a
           href="javascript:void(0)"
           class="btn-sleep disable">
           <i /> 睡眠
         </a>
-        <a 
+        <a
           href="javascript:void(0)"
           class="btn-speed disable">
           <i /> 风档
@@ -175,9 +175,9 @@
 </template>
 
 <script>
-import Modal from "../../lib/components/Modal"
-import SubPage from "../../lib/components/SubPage"
-import Icon from "../../lib/components/SettingIconMobile.vue"
+import Modal from "@lib/components/Modal"
+import SubPage from "./SubPage"
+import Icon from "@lib/components/SettingIconMobile.vue"
 
 const SPEED_TEXT1 = [
   { text: "低速", className: "1", value: "low" },
@@ -250,14 +250,14 @@ function throttle(func, wait, options) {
     result = func.apply(context, args)
     if (!timeout) context = args = null
   }
-  var wait = wait || 500
+  var waits = wait || 500
   return function() {
     var now = new Date().getTime()
     if (!previous && options.leading === false) previous = now
-    var remaining = wait - (now - previous)
+    var remaining = waits - (now - previous)
     context = this
     args = arguments
-    if (remaining <= 0 || remaining > wait) {
+    if (remaining <= 0 || remaining > waits) {
       if (timeout) {
         clearTimeout(timeout)
         timeout = null
@@ -335,13 +335,36 @@ export default {
     }
   },
   watch: {
-    pmPopVisible(val) {
+    pmPopVisible() {
       if (this.pmPopVisible) {
         HdSmart.UI.toggleHeadAndFoot(false)
       } else {
         HdSmart.UI.toggleHeadAndFoot(true)
       }
     }
+  },
+  created() {
+    this.$watch("model.control_status", (newVal, oldVal) => {
+      this.prevModel.control_status = oldVal || "auto"
+    })
+
+    this.$watch("model.speed", (newVal, oldVal) => {
+      this.prevModel.speed = oldVal || ""
+    })
+
+    HdSmart.ready(() => {
+      if (window.device_name) {
+        this.device_name = window.device_name
+      }
+      HdSmart.UI.showLoading()
+      this.getSnapShot(() => {
+        HdSmart.UI.hideLoading()
+      })
+    })
+
+    HdSmart.onDeviceStateChange(data => {
+      this.onSuccess(data.result)
+    })
   },
   methods: {
     togglePMPop() {
@@ -510,28 +533,6 @@ export default {
       }
     }
   },
-  created() {
-    this.$watch("model.control_status", (newVal, oldVal) => {
-      this.prevModel.control_status = oldVal || "auto"
-    })
 
-    this.$watch("model.speed", (newVal, oldVal) => {
-      this.prevModel.speed = oldVal || ""
-    })
-
-    HdSmart.ready(() => {
-      if (window.device_name) {
-        this.device_name = window.device_name
-      }
-      HdSmart.UI.showLoading()
-      this.getSnapShot(() => {
-        HdSmart.UI.hideLoading()
-      })
-    })
-
-    HdSmart.onDeviceStateChange(data => {
-      this.onSuccess(data.result)
-    })
-  }
 }
 </script>

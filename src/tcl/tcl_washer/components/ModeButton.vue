@@ -1,7 +1,10 @@
 <template>
-  <a href="" :class="btnStyle" @click.prevent="onClick">
-      <i></i>
-      <slot />
+  <a
+    :class="btnStyle"
+    href=""
+    @click.prevent="onClick">
+    <i/>
+    <slot />
   </a>
 </template>
 
