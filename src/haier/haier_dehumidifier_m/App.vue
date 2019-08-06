@@ -30,11 +30,11 @@
           <img
             v-show="model.switch_status == 'on'"
             class="circle"
-            src="../../lib/base/dehumidifier/assets/animation_dh_circle.png">
+            src="../../../lib/base/dehumidifier/assets/animation_dh_circle.png">
           <img
             v-show="model.switch_status == 'off'"
             class="circle"
-            src="../../lib/base/dehumidifier/assets/animation_dh_circle_black.png"
+            src="../../../lib/base/dehumidifier/assets/animation_dh_circle_black.png"
             alt="">
         </div>
         <div class="block">
@@ -63,7 +63,7 @@
           class="timeShow">
           <img
             class="timeShow-img"
-            src="../../lib/base/dehumidifier/assets/icon-time.png">
+            src="../../../lib/base/dehumidifier/assets/icon-time.png">
           {{ model.time | time_H }}
         </div>
       </div>
@@ -466,6 +466,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@lib: '../../../lib';
 .page {
   min-height: 100%;
   overflow-x: hidden;
@@ -532,7 +533,7 @@ export default {
         display: inline-block;
         width: 36px;
         height: 36px;
-        background-image: url(../../lib/base/air_condition/assets/new-air/icon-tips.png);
+        background-image: url('@{lib}/base/air_condition/assets/new-air/icon-tips.png');
         background-size: 100% 100%;
         margin-right: 12px;
         z-index: 99;
@@ -597,7 +598,7 @@ export default {
       border-radius: 50%;
       position: absolute;
       display: inline-block;
-      background-image: url(../../lib/base/dehumidifier/assets/animation_dh_bubble.png);
+      background-image: url('@{lib}/base/dehumidifier/assets/animation_dh_bubble.png');
     }
     .sport1 {
       top: -50px;
@@ -730,12 +731,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
+        background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+          background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-black.png');
         }
       }
     }
@@ -745,7 +746,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_dry_hl.png);
+        background-image: url('@{lib}/base/dehumidifier/assets/btn_dh_mode_dry_hl.png');
         background-size: 100% 100%;
       }
     }
@@ -755,7 +756,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_drycloth_hl.png);
+        background-image: url('@{lib}/base/dehumidifier/assets/btn_dh_mode_drycloth_hl.png');
         background-size: 100% 100%;
       }
     }
@@ -765,7 +766,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/dehumidifier/assets/auto-black.png);
+        background-image: url('@{lib}/base/dehumidifier/assets/auto-black.png');
         background-size: 100% 100%;
       }
     }
@@ -775,7 +776,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
+        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed1.png');
         background-size: 100% 100%;
       }
     }
@@ -785,7 +786,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
+        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed2.png');
         background-size: 100% 100%;
       }
     }
@@ -795,7 +796,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
+        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed3.png');
         background-size: 100% 100%;
       }
     }
@@ -805,7 +806,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/dehumidifier/assets/time-black.png);
+        background-image: url('@{lib}/base/dehumidifier/assets/time-black.png');
         background-size: 100% 100%;
       }
     }
@@ -833,7 +834,7 @@ export default {
             display: block;
             width: 44px;
             height: 44px;
-            background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+            background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-black.png');
             background-size: 100% 100%;
           }
         }
@@ -854,12 +855,12 @@ export default {
           display: block;
           width: 44px;
           height: 44px;
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+          background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-black.png');
           background-size: 100% 100%;
         }
         &.active {
           &::before {
-            background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+            background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-black.png');
           }
         }
       }
@@ -953,12 +954,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
+        background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+          background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-black.png');
         }
       }
     }
@@ -969,12 +970,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1-white.png);
+        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed1-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
+          background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed1.png');
         }
       }
     }
@@ -984,12 +985,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2-white.png);
+        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed2-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
+          background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed2.png');
         }
       }
     }
@@ -999,12 +1000,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3-white.png);
+        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed3-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
+          background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed3.png');
         }
       }
     }
@@ -1014,12 +1015,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4-white.png);
+        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed4-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4.png);
+          background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed4.png');
         }
       }
     }
@@ -1029,12 +1030,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5-white.png);
+        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed5-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5.png);
+          background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed5.png');
         }
       }
     }
@@ -1120,12 +1121,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
+        background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+          background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-black.png');
         }
       }
     }
@@ -1136,12 +1137,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_dry.png);
+        background-image: url('@{lib}/base/dehumidifier/assets/btn_dh_mode_dry.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_dry_chose.png);
+          background-image: url('@{lib}/base/dehumidifier/assets/btn_dh_mode_dry_chose.png');
         }
       }
     }
@@ -1151,12 +1152,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_drycloth.png);
+        background-image: url('@{lib}/base/dehumidifier/assets/btn_dh_mode_drycloth.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_drycloth_chose.png);
+          background-image: url('@{lib}/base/dehumidifier/assets/btn_dh_mode_drycloth_chose.png');
         }
       }
     }
@@ -1166,12 +1167,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/dehumidifier/assets/auto-white.png);
+        background-image: url('@{lib}/base/dehumidifier/assets/auto-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/dehumidifier/assets/auto-yellow.png);
+          background-image: url('@{lib}/base/dehumidifier/assets/auto-yellow.png');
         }
       }
     }
@@ -1181,7 +1182,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_dry_hl.png);
+        background-image: url('@{lib}/base/dehumidifier/assets/btn_dh_mode_dry_hl.png');
         background-size: 100% 100%;
       }
     }
@@ -1191,7 +1192,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/dehumidifier/assets/btn_dh_mode_drycloth_hl.png);
+        background-image: url('@{lib}/base/dehumidifier/assets/btn_dh_mode_drycloth_hl.png');
         background-size: 100% 100%;
       }
     }
@@ -1201,7 +1202,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/dehumidifier/assets/auto-black.png);
+        background-image: url('@{lib}/base/dehumidifier/assets/auto-black.png');
         background-size: 100% 100%;
       }
     }
@@ -1213,7 +1214,7 @@ export default {
     width: 90%;
     height: 90%;
     content: '';
-    background-image: url(../../lib/base/air_condition/assets/buffering_mode_white.gif);
+    background-image: url('@{lib}/base/air_condition/assets/buffering_mode_white.gif');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     position: absolute;
@@ -1228,7 +1229,7 @@ export default {
     width: 90%;
     height: 90%;
     content: '';
-    background-image: url(../../lib/base/air_condition/assets/buffering_mode_blue.gif);
+    background-image: url('@{lib}/base/air_condition/assets/buffering_mode_blue.gif');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     position: absolute;

@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV == 'development') {
-  require('../../mock/humidifier/index.js')
+  require('../../../mock/humidifier/index.js')
 }
 
 import Vue from 'vue'
@@ -8,10 +8,10 @@ import Vuex from 'vuex'
 
 import Index from './components/Index.vue' //路由页面，router-view
 import App from './App.vue'
-import Topbar from '../../lib/components/Topbar.vue'
+import Topbar from '@lib/components/Topbar.vue'
 
 
-import '../../lib/base/haier_humidifier/index_m.less'
+import '@lib/base/haier_humidifier/index_m.less'
 
 import FastClick from 'fastclick'
 

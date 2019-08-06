@@ -1,180 +1,255 @@
 <template>
-    <div id="app">
-        <!-- off -->
-        <div class="page-off wrapper" v-if="model.switch==='off'">
-            <div class="name">{{device_name}}
-                <icon />
-            </div>
-            <div class="tip">已关闭</div>
-            <div class="oven"></div>
-            <div class="off_button">
-                <a href="" class="btn btn-off" @click.prevent="setSwitch('on')">
-                    <i></i>
-                </a>
-            </div>
+  <div id="app">
+    <!-- off -->
+    <div 
+      v-if="model.switch==='off'" 
+      class="page-off wrapper">
+      <div class="name">{{ device_name }}
+        <icon />
+      </div>
+      <div class="tip">已关闭</div>
+      <div class="oven"/>
+      <div class="off_button">
+        <a 
+          href="" 
+          class="btn btn-off" 
+          @click.prevent="setSwitch('on')">
+          <i/>
+        </a>
+      </div>
+    </div>
+    <!-- on -->
+    <div 
+      v-if="model.switch==='on'" 
+      class="page-on wrapper">
+      <h3 class="main-title">{{ device_name }}
+        <icon />
+      </h3>
+      <div class="pannel">
+        <p class="p-model">{{ getModeName(allAttribute.mode) }}模式</p>
+        <p class="color-gray p-status">
+          <!-- todo back -->
+          <!-- <span v-if="allAttribute.status==='start'">({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span> -->
+          <span>({{ allAttribute.step === 'bake' ? '烘烤中' : '预约中' }})</span>
+        </p>
+        <div class="p-main-time">
+          <p 
+            class="p-num" 
+            v-html="remainingText"/>
+            <!-- todo cut -->
+            <!-- <p class="color-gray">{{allAttribute.status==='start'? '剩余时间' : '总时间'}}</p> -->
         </div>
-        <!-- on -->
-        <div class="page-on wrapper" v-if="model.switch==='on'">
-            <h3 class="main-title">{{device_name}}
-                <icon />
-            </h3>
-            <div class="pannel">
-                <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
-                <p class="color-gray p-status">
-                    <!-- todo back -->
-                    <!-- <span v-if="allAttribute.status==='start'">({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span> -->
-                    <span>({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span>
-                </p>
-                <div class="p-main-time">
-                    <p class="p-num" v-html="remainingText"></p>
-                    <!-- todo cut -->
-                    <!-- <p class="color-gray">{{allAttribute.status==='start'? '剩余时间' : '总时间'}}</p> -->
-                </div>
-                <p class="color-gray tempDetail">
-                    <span>{{allAttribute.fire}}</span>
-                    设定温度
-                    <span class="p-wendu">{{allAttribute.temperature}}</span>℃
-                </p>
-            </div>
-            <div class="offButton">
-                <button @click="stopOven">
-                    <i class="c-stop"></i>停止</button>
-            </div>
-            <div class="controls">
-                <button @click="startOven" v-if="allAttribute.status==='stop'">
-                    <i class="c-firing"></i>启动</button>
-                <button @click="showModelLayer">
-                    <i class="c-model"></i>模式设定</button>
-                <button @click="showModelLayer">
-                    <i class="c-preheat"></i>辅助预热</button>
-                <button @click="showModelBarbicueTime">
-                    <i class="c-barbicue"></i>预约烧烤</button>
-            </div>
-            <!-- 查看更多的按钮 -->
-            <span class="more-btn" @click="showMoreLayer"></span>
-            <!-- 预约烘烤时间弹窗 -->
-            <modal v-model="barbicueTimeAlert" title="预约烧烤结束时间" class="subpagebakControl2">
-                <mt-datetime-picker day-format="{value}" hour-format="{value} 时" minute-format="{value} 分" ref='picker' type="clock" :clockStartData="barbicueTimestart" :clockEndData="barbicueTimeend" :item-height="50" :visible-item-count="5" @confirm="selectBarbicueTime">
-                </mt-datetime-picker>
-                <div class="buttongroup">
-                    <div class="cancle" @click="barbicueTimeAlert = false">取消</div>
-                    <div class="sure" @click="handleChange">确定</div>
-                </div>
-            </modal>
+        <p class="color-gray tempDetail">
+          <span>{{ allAttribute.fire }}</span>
+          设定温度
+          <span class="p-wendu">{{ allAttribute.temperature }}</span>℃
+        </p>
+      </div>
+      <div class="offButton">
+        <button @click="stopOven">
+        <i class="c-stop"/>停止</button>
+      </div>
+      <div class="controls">
+        <button 
+          v-if="allAttribute.status==='stop'" 
+          @click="startOven">
+        <i class="c-firing"/>启动</button>
+        <button @click="showModelLayer">
+        <i class="c-model"/>模式设定</button>
+        <button @click="showModelLayer">
+        <i class="c-preheat"/>辅助预热</button>
+        <button @click="showModelBarbicueTime">
+        <i class="c-barbicue"/>预约烧烤</button>
+      </div>
+      <!-- 查看更多的按钮 -->
+      <span 
+        class="more-btn" 
+        @click="showMoreLayer"/>
+      <!-- 预约烘烤时间弹窗 -->
+      <modal 
+        v-model="barbicueTimeAlert" 
+        title="预约烧烤结束时间" 
+        class="subpagebakControl2">
+        <mt-datetime-picker 
+          ref="picker" 
+          :clock-start-data="barbicueTimestart" 
+          :clock-end-data="barbicueTimeend" 
+          :item-height="50" 
+          :visible-item-count="5" 
+          day-format="{value}" 
+          hour-format="{value} 时" 
+          minute-format="{value} 分" 
+          type="clock" 
+          @confirm="selectBarbicueTime"/>
+        <div class="buttongroup">
+          <div 
+            class="cancle" 
+            @click="barbicueTimeAlert = false">取消</div>
+          <div 
+            class="sure" 
+            @click="handleChange">确定</div>
         </div>
+      </modal>
+    </div>
 
-        <sub-page class="model-select-layer backControl" v-model="modelLayerShow" title="模式">
-            <div class="layer-body" :class="allAttribute.status === 'start' ? 'disable' : ''">
-                <ul class="model-list">
-                    <li @click="seleteMode(item)" v-for="item in modeList" :key="`${item.name}`">
-                        <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
-                        <div class="mode-name">{{item.name}}</div>
-                    </li>
-                </ul>
-                <div class="select-param" @click="toggleShowSlider('wendu')">
-                    <div class="hasDisable">
-                        <p>烘烤温度</p>
-                        <span class="value-wendu">{{allAttribute.temperature}}℃
-                            <i class="icon-arrow-down"></i>
-                        </span>
-                    </div>
-                </div>
-                <modal title="烘烤温度" class="modalControl" v-model="wenduSelectFlag">
-                    <picker :slots="wenduSlot" @change="selectWendu" :valueKey="'value'" :item-height="40" :visible-item-count="7"></picker>
-                    <div class="button_temperature" @click="wenduSelectFlag = false">完成</div>
-                </modal>
-                <!-- <div class="slide-list" v-show="wenduSelectFlag">
+    <sub-page 
+      v-model="modelLayerShow" 
+      class="model-select-layer backControl" 
+      title="模式">
+      <div 
+        :class="allAttribute.status === 'start' ? 'disable' : ''" 
+        class="layer-body">
+        <ul class="model-list">
+          <li 
+            v-for="item in modeList" 
+            :key="`${item.name}`" 
+            @click="seleteMode(item)">
+            <a 
+              :class="[item.icon,allAttribute.mode==item.mode?'active':'']" 
+              href="javascript:void(0)"/>
+            <div class="mode-name">{{ item.name }}</div>
+          </li>
+        </ul>
+        <div 
+          class="select-param" 
+          @click="toggleShowSlider('wendu')">
+          <div class="hasDisable">
+            <p>烘烤温度</p>
+            <span class="value-wendu">{{ allAttribute.temperature }}℃
+              <i class="icon-arrow-down"/>
+            </span>
+          </div>
+        </div>
+        <modal 
+          v-model="wenduSelectFlag" 
+          title="烘烤温度" 
+          class="modalControl">
+          <picker 
+            :slots="wenduSlot" 
+            :value-key="'value'" 
+            :item-height="40" 
+            :visible-item-count="7" 
+            @change="selectWendu"/>
+          <div 
+            class="button_temperature" 
+            @click="wenduSelectFlag = false">完成</div>
+        </modal>
+        <!-- <div class="slide-list" v-show="wenduSelectFlag">
                     <picker :slots="wenduSlot" @change="selectWendu" :valueKey="'value'" :item-height="30" :visible-item-count="3"></picker>
                 </div> -->
-                <div class="select-param" @click="toggleShowSlider('time')">
-                    <div class="hasDisable">
-                        <p>烘烤时长</p>
-                        <span class="value-wendu">{{allAttribute.bake_duration}}分钟
-                            <i class="icon-arrow-down"></i>
-                        </span>
-                    </div>
-                </div>
-                <modal title="烘烤时长" class="modalControl" v-model="timeSelectFlag">
-                    <picker :slots="timeSlot" @change="selectTime" :valueKey="'value'" :item-height="40" :visible-item-count="7"></picker>
-                    <div class="button_temperature" @click="timeSelectFlag = false">预约</div>
-                </modal>
-                <!-- <div class="slide-list" v-show="timeSelectFlag">
+        <div 
+          class="select-param" 
+          @click="toggleShowSlider('time')">
+          <div class="hasDisable">
+            <p>烘烤时长</p>
+            <span class="value-wendu">{{ allAttribute.bake_duration }}分钟
+              <i class="icon-arrow-down"/>
+            </span>
+          </div>
+        </div>
+        <modal 
+          v-model="timeSelectFlag" 
+          title="烘烤时长" 
+          class="modalControl">
+          <picker 
+            :slots="timeSlot" 
+            :value-key="'value'" 
+            :item-height="40" 
+            :visible-item-count="7" 
+            @change="selectTime"/>
+          <div 
+            class="button_temperature" 
+            @click="timeSelectFlag = false">预约</div>
+        </modal>
+        <!-- <div class="slide-list" v-show="timeSelectFlag">
                     <picker :slots="timeSlot" @change="selectTime" :valueKey="'value'" :item-height="30" :visible-item-count="3"></picker>
                 </div> -->
-                <div class="sureButtongroup">
-                    <div class="cancle">取消</div>
-                    <div class="sure">确定</div>
-                </div>
-            </div>
-        </sub-page>
+        <div class="sureButtongroup">
+          <div class="cancle">取消</div>
+          <div class="sure">确定</div>
+        </div>
+      </div>
+    </sub-page>
 
-        <sub-page v-model="moreLayerShow" title="更多" class="subpagebakControl">
-            <div class="buttonchoose">
-                <div class="chooseTitle">更多模式</div>
-                <div class="pattern">
-                    <!-- 照明模式 -->
-                    <div @click="lighting" class="lighting">
-                        <i class="c-lighting"></i>
-                        <span>照明</span>
-                    </div>
-                    <!-- 时间同步 -->
-                    <div @click="timeSynchronization">
-                        <i class="c-time"></i>
-                        <span>时间同步</span>
-                    </div>
-                </div>
-            </div>
-            <div class="selectbox lockDetail" :class="{disable:!isRun}">
-                <div class="hd">
-                    <div class="left">童锁</div>
-                    <div class="right sb-wrap">
-                        <switch-button :value="childLockSwitch" :sync="true" :disabled="!isRun" />
-                        <div class="sb-btn" @click="confirmChildLock"></div>
-                    </div>
-                </div>
-            </div>
-        </sub-page>
-    </div>
+    <sub-page 
+      v-model="moreLayerShow" 
+      title="更多" 
+      class="subpagebakControl">
+      <div class="buttonchoose">
+        <div class="chooseTitle">更多模式</div>
+        <div class="pattern">
+          <!-- 照明模式 -->
+          <div 
+            class="lighting" 
+            @click="lighting">
+            <i class="c-lighting"/>
+            <span>照明</span>
+          </div>
+          <!-- 时间同步 -->
+          <div @click="timeSynchronization">
+            <i class="c-time"/>
+            <span>时间同步</span>
+          </div>
+        </div>
+      </div>
+      <div 
+        :class="{disable:!isRun}" 
+        class="selectbox lockDetail">
+        <div class="hd">
+          <div class="left">童锁</div>
+          <div class="right sb-wrap">
+            <switch-button 
+              :value="childLockSwitch" 
+              :sync="true" 
+              :disabled="!isRun" />
+            <div 
+              class="sb-btn" 
+              @click="confirmChildLock"/>
+          </div>
+        </div>
+      </div>
+    </sub-page>
+  </div>
 </template>
 <script>
 const getWenduList = (begin, end) => {
-    let arr = [];
+    let arr = []
     for (let i = begin; i <= end; i += 5) {
-        arr.push({ name: i, value: i, active: false });
+        arr.push({ name: i, value: i, active: false })
     }
-    return arr;
-};
+    return arr
+}
 const getTimeList = (begin, end) => {
-    let arr = [];
+    let arr = []
     for (let i = begin; i <= end; i++) {
-        arr.push({ name: i, value: i, active: false });
+        arr.push({ name: i, value: i, active: false })
     }
-    return arr;
-};
+    return arr
+}
 
 function findIndex(array, fn) {
     for (var i = 0; i < array.length; i++) {
         if (fn(array[i])) {
-            return i;
+            return i
         }
     }
-    return -1;
+    return -1
 }
 
-import SwitchButton from '../../lib/components/SwitchButton.vue';
-import Picker from '../../lib/components/Picker/picker';
-import AllConfig from './config';
-import SubPage from '../../lib/components/SubPage';
-import ModeButton from './components/ModeButton.vue';
-import Modal from '../../lib/components/Modal';
-import Vue from 'vue';
-import DatetimePicker from '../../lib/components/datetime-picker';
-import Icon from '../../lib/components/SettingIconMobile.vue';
+import SwitchButton from '@lib/components/SwitchButton.vue'
+import Picker from '@lib/components/Picker/picker'
+import AllConfig from './config'
+import SubPage from '@lib/components/SubPage'
+import ModeButton from './components/ModeButton.vue'
+import Modal from '@lib/components/Modal'
+import Vue from 'vue'
+import DatetimePicker from '@lib/components/datetime-picker'
+import Icon from '@lib/components/SettingIconMobile.vue'
 
-Vue.component(DatetimePicker.name, DatetimePicker);
+Vue.component(DatetimePicker.name, DatetimePicker)
 
 export default {
-    name: 'app',
+    name: 'App',
     components: {
         SwitchButton,
         Picker,
@@ -266,31 +341,20 @@ export default {
                 }
             ],
             device_name: ''
-        };
-    },
-    watch: {
-        'allAttribute.status'(val) {
-            if (val == 'start') {
-                this.wenduSelectFlag = false;
-                this.timeSelectFlag = false;
-                if (this.modelLayerShow) {
-                    this.closeModelLayer();
-                }
-            }
         }
     },
     computed: {
         isRun() {
-            console.log('run', this.model.status == 'run');
-            return this.model.status == 'run'; //正在运行
+            console.log('run', this.model.status == 'run')
+            return this.model.status == 'run' //正在运行
         },
         childLockSwitch() {
-            return this.model.child_lock_switch == 'on' ? true : false;
+            return this.model.child_lock_switch == 'on' ? true : false
         },
         wenduSlot() {
             var current = findIndex(this.allAttribute.wenduList, item => {
-                return this.allAttribute.temperature == item.value;
-            });
+                return this.allAttribute.temperature == item.value
+            })
 
             return [
                 {
@@ -299,12 +363,12 @@ export default {
                     values: this.allAttribute.wenduList,
                     className: 'slot1'
                 }
-            ];
+            ]
         },
         timeSlot() {
             var current = findIndex(this.allAttribute.timeList, item => {
-                return this.allAttribute.bake_duration == item.value;
-            });
+                return this.allAttribute.bake_duration == item.value
+            })
 
             return [
                 {
@@ -313,53 +377,64 @@ export default {
                     values: this.allAttribute.timeList,
                     className: 'slot2'
                 }
-            ];
+            ]
         },
         remainingText() {
-            var total = this.allAttribute.remaining;
+            var total = this.allAttribute.remaining
             if (this.allAttribute.status == 'start' && this.allAttribute.step == 'reserve') {
-                total = total - this.allAttribute.bake_duration;
+                total = total - this.allAttribute.bake_duration
             }
-            var h = Math.floor(total / 60);
-            var m = total % 60;
-            var s = '';
+            var h = Math.floor(total / 60)
+            var m = total % 60
+            var s = ''
             if (h > 0) {
-                s += `<strong>${h}</strong>小时 &nbsp;&nbsp;`;
+                s += `<strong>${h}</strong>小时 &nbsp;&nbsp;`
             }
             if (m > 0) {
-                s += `<strong>${m}</strong>分钟`;
+                s += `<strong>${m}</strong>分钟`
             }
-            return s;
+            return s
+        }
+    },
+    watch: {
+        'allAttribute.status'(val) {
+            if (val == 'start') {
+                this.wenduSelectFlag = false
+                this.timeSelectFlag = false
+                if (this.modelLayerShow) {
+                    this.closeModelLayer()
+                }
+            }
         }
     },
     mounted() {
         HdSmart.ready(() => {
             if (window.device_name) {
-                this.device_name = window.device_name;
+                this.device_name = window.device_name
             }
             // HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
-            HdSmart.UI.showLoading();
-            this.getSnapShot();
-        });
+            HdSmart.UI.showLoading()
+            this.getSnapShot()
+        })
         HdSmart.onDeviceStateChange(data => {
-            this.onSuccess(data.result);
-        });
+            this.onSuccess(data.result)
+        })
     },
     methods: {
         setSwitch(val) {
             //烤箱开关的控制
-            console.log('开关', val);
-            this.controlDevice('switch', val);
+            console.log('开关', val)
+            this.controlDevice('switch', val)
         },
         controlDevice(attr, val, success, error) {
             if (this.model.child_lock_switch == 'on' && attr != 'child_lock_switch') {
-                HdSmart.UI.toast('请先关闭童锁');
-                return;
+                HdSmart.UI.toast('请先关闭童锁')
+                return
             }
 
             var params = {
                 [attr]: val
-            };
+            }
 
             if (attr == 'mode') {
                 //要切到待机模式
@@ -374,169 +449,169 @@ export default {
                     }
                 },
                 () => {
-                    success && success();
+                    success && success()
                 },
                 () => {
-                    error && error();
+                    error && error()
                 }
-            );
+            )
         },
         setMode(mode) {
-            console.log('mode', mode);
+            console.log('mode', mode)
             if (this.isRun || this.isPause) {
-                return;
+                return
             }
             if (this.model.mode == mode) {
-                return;
+                return
             }
             this.controlDevice('mode', mode, () => {
-                this.model.mode = mode;
-            });
+                this.model.mode = mode
+            })
         },
         confirmChildLock() {
             //童锁的设置
-            console.log('童锁设置');
+            console.log('童锁设置')
             if (this.childLockSwitch) {
                 // this.confirmChildLockVisible = true;
             } else {
                 if (this.isRun) {
                     this.setChildLock('on', () => {
-                        this.model.child_lock_switch = 'on';
-                    });
+                        this.model.child_lock_switch = 'on'
+                    })
                 } else {
-                    HdSmart.UI.toast('运行中才能开启童锁');
+                    HdSmart.UI.toast('运行中才能开启童锁')
                 }
             }
         },
         lighting() {
-            console.log('lighting');
+            console.log('lighting')
         },
         timeSynchronization() {
-            console.log('timeSynchronization');
+            console.log('timeSynchronization')
         },
         closeMoreLayer() {
-            this.moreLayerShow = false;
+            this.moreLayerShow = false
         },
         closeModelLayer() {
-            this.modelLayerShow = false;
+            this.modelLayerShow = false
         },
         showMoreLayer() {
-            this.moreLayerShow = true;
+            this.moreLayerShow = true
         },
         showModelLayer() {
-            this.modelLayerShow = true;
+            this.modelLayerShow = true
         },
         showModelBarbicueTime() {
             //预约烘烤时间
             //todo
-            this.$refs.picker.open(); //显示时间控件
-            this.barbicueTimeAlert = true;
-            this.barbicueTimeSlot = true;
-            var timeNow = new Date().getTime(); //当前时间戳
-            var total = this.allAttribute.remaining; //单位：分钟
-            var totalChange = total * 60 * 1000; //将当前模式时间转化为毫秒
-            var startTime = timeNow + totalChange; //预约开始时间节点
-            var endTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 当前时间+24小时
-            var list = [];
-            var endTimestamp = new Date().setDate(new Date().getDate() + 1);
+            this.$refs.picker.open() //显示时间控件
+            this.barbicueTimeAlert = true
+            this.barbicueTimeSlot = true
+            var timeNow = new Date().getTime() //当前时间戳
+            var total = this.allAttribute.remaining //单位：分钟
+            var totalChange = total * 60 * 1000 //将当前模式时间转化为毫秒
+            var startTime = timeNow + totalChange //预约开始时间节点
+            var endTime = new Date().getTime() + 24 * 60 * 60 * 1000 // 当前时间+24小时
+            var list = []
+            var endTimestamp = new Date().setDate(new Date().getDate() + 1)
 
-            this.barbicueTimestart = String(startTime);
-            this.barbicueTimeend = String(endTime);
-            console.log(1, startTime);
-            console.log(2, endTime);
+            this.barbicueTimestart = String(startTime)
+            this.barbicueTimeend = String(endTime)
+            console.log(1, startTime)
+            console.log(2, endTime)
         },
         selectBarbicueTime(value) {
-            console.log(value, 88888888888);
+            console.log(value, 88888888888)
         },
         handleChange() {
-            this.$refs.picker.confirm();
+            this.$refs.picker.confirm()
             // this.$refs.picker.confirm.call(this.$refs.picker2, this.$refs.picker2.currentValue);
-            this.barbicueTimeAlert = false;
+            this.barbicueTimeAlert = false
         },
         seleteMode(item) {
             // 如果正在工作 不能选模式
             if (this.allAttribute.status === 'start') {
-                return;
+                return
             }
-            this.allAttribute.mode = item.mode;
-            let currentData = AllConfig[item.mode];
+            this.allAttribute.mode = item.mode
+            let currentData = AllConfig[item.mode]
             for (let attr in currentData) {
-                this.allAttribute[attr] = currentData[attr];
+                this.allAttribute[attr] = currentData[attr]
             }
-            this.allAttribute.remaining = this.allAttribute.bake_duration;
+            this.allAttribute.remaining = this.allAttribute.bake_duration
         },
         toggleShowSlider(val) {
             if (this.allAttribute.status === 'start') {
-                return;
+                return
             }
             if (val === 'wendu') {
-                this.wenduSelectFlag = !this.wenduSelectFlag;
+                this.wenduSelectFlag = !this.wenduSelectFlag
                 if (this.wenduSelectFlag && this.timeSelectFlag) {
-                    this.timeSelectFlag = false;
+                    this.timeSelectFlag = false
                 }
             } else {
-                this.timeSelectFlag = !this.timeSelectFlag;
+                this.timeSelectFlag = !this.timeSelectFlag
                 if (this.wenduSelectFlag && this.timeSelectFlag) {
-                    this.wenduSelectFlag = false;
+                    this.wenduSelectFlag = false
                 }
             }
         },
         selectWendu(picker, values) {
-            console.log('wendu', values);
+            console.log('wendu', values)
             if (values.length && values[0] && this.wenduSelectFlag) {
-                this.allAttribute.temperature = values[0].value;
+                this.allAttribute.temperature = values[0].value
             }
         },
         selectTime(picker, values) {
-            console.log('time', values);
+            console.log('time', values)
             if (values.length && values[0] && this.timeSelectFlag) {
-                this.allAttribute.bake_duration = values[0].value;
-                this.allAttribute.remaining = values[0].value;
+                this.allAttribute.bake_duration = values[0].value
+                this.allAttribute.remaining = values[0].value
             }
         },
         getModeName(val) {
-            let text = '';
+            let text = ''
             // var modeList = this.modeList.concat(this.elseModeList);
-            var modeList = this.modeList;
+            var modeList = this.modeList
             var currentMode = modeList.filter(item => {
-                return item.mode == val;
-            });
+                return item.mode == val
+            })
             if (currentMode.length) {
-                return currentMode[0].name;
+                return currentMode[0].name
             }
-            return '';
+            return ''
         },
         getSnapShot(cb) {
             HdSmart.Device.getSnapShot(
                 data => {
-                    console.log(1111);
-                    this.onSuccess(data);
-                    cb && cb();
+                    console.log(1111)
+                    this.onSuccess(data)
+                    cb && cb()
                 },
                 () => {
-                    cb && cb();
+                    cb && cb()
                 }
-            );
+            )
         },
         onSuccess(data) {
-            console.log('dataall', data);
-            HdSmart.UI.hideLoading();
-            let attributes = data.attribute;
-            this.model = attributes;
-            let curAttributes = this.allAttribute;
-            let config = AllConfig[attributes.mode || 'barbecues'];
+            console.log('dataall', data)
+            HdSmart.UI.hideLoading()
+            let attributes = data.attribute
+            this.model = attributes
+            let curAttributes = this.allAttribute
+            let config = AllConfig[attributes.mode || 'barbecues']
             //剩余时间设置为烘干时间，避免没有该字段显示异常
-            config.remaining = config.bake_duration;
+            config.remaining = config.bake_duration
 
             if (attributes.mode) {
                 //烘烤时间设置为默认时间，设备不保存，上报bake_duration为剩余时间
-                attributes.bake_duration = config.bake_duration;
+                attributes.bake_duration = config.bake_duration
             }
-            attributes = Object.assign({}, config, attributes);
+            attributes = Object.assign({}, config, attributes)
 
             for (let attr in attributes) {
                 if (attributes[attr]) {
-                    curAttributes[attr] = attributes[attr];
+                    curAttributes[attr] = attributes[attr]
                 }
             }
         },
@@ -559,8 +634,8 @@ export default {
         // },
         // 启动
         startOven() {
-            const obj = this;
-            let curParam = this.allAttribute;
+            const obj = this
+            let curParam = this.allAttribute
             let paramObj = {
                 control: 'start',
                 mode: curParam.mode,
@@ -570,32 +645,33 @@ export default {
                 //                    convection: curParam.convection,
                 //                    rotisserie: curParam.rotisserie
                 //                    remaining: curParam.remaining
-            };
-            this.controlDevice(paramObj);
+            }
+            this.controlDevice(paramObj)
         },
         // 停止
         stopOven() {
-            const obj = this;
-            this.controlDevice({ control: 'stop' });
+            const obj = this
+            this.controlDevice({ control: 'stop' })
         },
         // 设置热风对流
         changeConvection(obj) {
-            let self = this;
+            let self = this
             this.controlDevice({ convection: obj.value ? 'on' : 'off' }, () => {
-                self.allAttribute.convection = self.value ? 'on' : 'off';
-            });
+                self.allAttribute.convection = self.value ? 'on' : 'off'
+            })
         },
         // 设置转叉
         changeRotisserie(obj) {
-            let self = this;
+            let self = this
             this.controlDevice({ rotisserie: obj.value ? 'on' : 'off' }, () => {
-                self.allAttribute.rotisserie = self.value ? 'on' : 'off';
-            });
+                self.allAttribute.rotisserie = self.value ? 'on' : 'off'
+            })
         }
     }
-};
+}
 </script>
 <style lang="less">
+@lib: '../../../lib';
 html,
 body {
     margin: 0;
@@ -666,7 +742,7 @@ strong {
         left: 50%;
         top: 33.6%;
         transform: translate(-50%, 0);
-        background: url(../../lib/base/haier_oven/assets/img_ovenline@2x.png) no-repeat;
+        background: url('@{lib}/base/haier_oven/assets/img_ovenline@2x.png') no-repeat;
         background-size: 100% 100%;
     }
     .off_button {
@@ -684,7 +760,7 @@ strong {
                 width: 100%;
                 height: 100%;
                 display: block;
-                background: url(../../lib/base/washer/assets/btn_power@2x.png) no-repeat center;
+                background: url('@{lib}/base/washer/assets/btn_power@2x.png') no-repeat center;
                 background-size: 100% 100%;
             }
         }
@@ -697,7 +773,7 @@ strong {
     width: 36px;
     height: 36px;
     top: 166px;
-    background-image: url('../../lib/base/oven/assets/btn_more@2x.png');
+    background-image: url('@{lib}/base/oven/assets/btn_more@2x.png');
     background-size: 100% 100%;
 }
 .wrapper {
@@ -809,22 +885,22 @@ strong {
                 background-size: 100% 100%;
             }
             .c-stop {
-                background-image: url('../../lib/base/haier_oven/assets/icn_shutdown_active@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_shutdown_active@2x.png');
                 &.disable {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_shutdown_disabled@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_shutdown_disabled@2x.png');
                 }
             }
             .c-model {
-                background-image: url('../../lib/base/haier_oven/assets/icn_modepreset_active@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_modepreset_active@2x.png');
             }
             .c-firing {
-                background-image: url('../../lib/base/haier_oven/assets/icn_open_active@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_open_active@2x.png');
             }
             .c-preheat {
-                background-image: url('../../lib/base/haier_oven/assets/icn_Auxiliarywa-up_active@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_Auxiliarywa-up_active@2x.png');
             }
             .c-barbicue {
-                background-image: url('../../lib/base/haier_oven/assets/icn_reservebaking_active@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_reservebaking_active@2x.png');
             }
         }
     }
@@ -849,28 +925,28 @@ strong {
                 opacity: 0.3;
             }
             a.traditional-baking {
-                background-image: url('../../lib/base/oven/assets/btn_bread_g.png');
+                background-image: url('@{lib}/base/oven/assets/btn_bread_g.png');
             }
             a.ico-3d {
-                background-image: url('../../lib/base/oven/assets/btn_biscuits_g.png');
+                background-image: url('@{lib}/base/oven/assets/btn_biscuits_g.png');
             }
             a.ico-convective-baking {
-                background-image: url('../../lib/base/oven/assets/btn_cake_g.png');
+                background-image: url('@{lib}/base/oven/assets/btn_cake_g.png');
             }
             a.ico-barking {
-                background-image: url('../../lib/base/oven/assets/btn_pizza_g.png');
+                background-image: url('@{lib}/base/oven/assets/btn_pizza_g.png');
             }
             a.ico-hot-air-barbecue {
-                background-image: url('../../lib/base/oven/assets/btn_barbecue_g.png');
+                background-image: url('@{lib}/base/oven/assets/btn_barbecue_g.png');
             }
             a.ico-up-barbecue {
-                background-image: url('../../lib/base/oven/assets/btn_fishandshrimp_g.png');
+                background-image: url('@{lib}/base/oven/assets/btn_fishandshrimp_g.png');
             }
             a.ico-whole-barbecue {
-                background-image: url('../../lib/base/oven/assets/btn_pachyrhizus_g.png');
+                background-image: url('@{lib}/base/oven/assets/btn_pachyrhizus_g.png');
             }
             a.ico-pizza {
-                background-image: url('../../lib/base/oven/assets/btn_chicken_g.png');
+                background-image: url('@{lib}/base/oven/assets/btn_chicken_g.png');
             }
         }
     }
@@ -897,75 +973,75 @@ strong {
                 background-size: 100% 100%;
             }
             .traditional-baking {
-                background-image: url('../../lib/base/haier_oven/assets/icn_traditionalbaking_norma.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_traditionalbaking_norma.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_traditionalbaking_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_traditionalbaking_active@2x.png');
                 }
             }
             .ico-3d {
-                background-image: url('../../lib/base/haier_oven/assets/icn_3Dhotair_normal@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_3Dhotair_normal@2x.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_3Dhotair_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_3Dhotair_active@2x.png');
                 }
             }
             .ico-convective-baking {
-                background-image: url('../../lib/base/haier_oven/assets/icn_convectionbake_normal@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_convectionbake_normal@2x.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_convectionbake_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_convectionbake_active@2x.png');
                 }
             }
             .ico-barking {
-                background-image: url('../../lib/base/haier_oven/assets/icn_baking_normal@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_baking_normal@2x.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_baking_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_baking_active@2x.png');
                 }
             }
             .ico-hot-air-barbecue {
-                background-image: url('../../lib/base/haier_oven/assets/icn_hotairbarbecue_normal@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_hotairbarbecue_normal@2x.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_hotairbarbecue_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_hotairbarbecue_active@2x.png');
                 }
             }
             .ico-up-barbecue {
-                background-image: url('../../lib/base/haier_oven/assets/icn_upthebarbecue_normal@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_upthebarbecue_normal@2x.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_upthebarbecue_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_upthebarbecue_active@2x.png');
                 }
             }
             .ico-whole-barbecue {
-                background-image: url('../../lib/base/haier_oven/assets/icn_wholebarbecue_normal@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_wholebarbecue_normal@2x.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_wholebarbecue_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_wholebarbecue_active@2x.png');
                 }
             }
             .ico-pizza {
-                background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_active@2x.png');
                 }
             }
             .ico-pizza {
-                background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_active@2x.png');
                 }
             }
             .ico-pizza {
-                background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_pizzamode_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_active@2x.png');
                 }
             }
             .ico-upper-fermentation {
-                background-image: url('../../lib/base/haier_oven/assets/icn_fermentation_normal@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_fermentation_normal@2x.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_fermentation_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_fermentation_active@2x.png');
                 }
             }
             .icon-thaw {
-                background-image: url('../../lib/base/haier_oven/assets/icn_thaw_normal@2x.png');
+                background-image: url('@{lib}/base/haier_oven/assets/icn_thaw_normal@2x.png');
                 &.active {
-                    background-image: url('../../lib/base/haier_oven/assets/icn_thaw_active@2x.png');
+                    background-image: url('@{lib}/base/haier_oven/assets/icn_thaw_active@2x.png');
                 }
             }
         }
@@ -1017,10 +1093,10 @@ strong {
         }
         .icon-arrow-down {
             transform: rotate(-90deg);
-            background-image: url('../../lib/base/oven/assets/arrow_down.png');
+            background-image: url('@{lib}/base/oven/assets/arrow_down.png');
         }
         .icon-arrow-up {
-            background-image: url('../../lib/base/oven/assets/arrow_up.png');
+            background-image: url('@{lib}/base/oven/assets/arrow_up.png');
         }
     }
     .vue-js-switch {
@@ -1111,11 +1187,11 @@ strong {
                 color: #76787a;
             }
             .c-lighting {
-                background: url(../../lib/base/haier_oven/assets/icn_illumination_normal@2x.png) no-repeat center center;
+                background: url('@{lib}/base/haier_oven/assets/icn_illumination_normal@2x.png') no-repeat center center;
                 background-size: 100% 100%;
             }
             .c-time {
-                background: url(../../lib/base/haier_oven/assets/icn_timesynchronization_normal@2x.png) no-repeat center center;
+                background: url('@{lib}/base/haier_oven/assets/icn_timesynchronization_normal@2x.png') no-repeat center center;
                 background-size: 100% 100%;
             }
         }
@@ -1149,7 +1225,7 @@ strong {
                 display: inline-block;
                 width: 30px;
                 height: 30px;
-                background: url(../../lib/base/washer/assets/arrow_down.png) no-repeat;
+                background: url('@{lib}/base/washer/assets/arrow_down.png') no-repeat;
                 background-size: 100% 100%;
                 vertical-align: -6px;
                 margin-left: 10px;

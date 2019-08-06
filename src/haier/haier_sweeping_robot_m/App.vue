@@ -499,6 +499,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@lib: '../../../lib';
 *{
   touch-action: none;
 }
