@@ -1,10 +1,13 @@
 <template>
-    <alert-page-mobile :title="title" :queryInfo="queryInfo" v-on:closeItem="closeItem"></alert-page-mobile>
+  <alert-page-mobile
+    :title="title"
+    :query-info="queryInfo"
+    @closeItem="closeItem"/>
 </template>
 
 <script>
-import Vue from "vue";
-import AlertPageMobile from '../../../lib/components/AlertPageMobile'
+import Vue from "vue"
+import AlertPageMobile from '@lib/components/AlertPageMobile'
 export default {
     components: {
        AlertPageMobile,
@@ -14,18 +17,29 @@ export default {
             title:'净水器告警',
             queryInfo:[],
             localStorageName:''
-        };
+        }
     },
     watch: {
-        
+
+    },
+    created() {
+        this.queryInfo = this.$store.state.errStore.queryInfo || []//返回的告警信息
+        this.localStorageName = this.$store.state.errStore.localStorageName//告警的localStorage字段名
+        console.log(99999,this.title,this.queryInfo,this.localStorageName)
+    },
+    mounted() {
+
+    },
+    destroyed() {
+
     },
     methods: {
         closeItem(itemClicked){
-            let store = window.localStorage;
-            let errorsStorage =  JSON.parse(store.getItem(this.localStorageName)) || [];
+            let store = window.localStorage
+            let errorsStorage =  JSON.parse(store.getItem(this.localStorageName)) || []
             errorsStorage.forEach((item,index)=>{//点击了某一条
                 if(item.code === itemClicked.code){
-                    item.clicked = true;//已经被点击
+                    item.clicked = true//已经被点击
                     return
                 }
             })
@@ -38,16 +52,5 @@ export default {
             }
         }
     },
-    created() {
-        this.queryInfo = this.$store.state.errStore.queryInfo || []//返回的告警信息
-        this.localStorageName = this.$store.state.errStore.localStorageName//告警的localStorage字段名
-        console.log(99999,this.title,this.queryInfo,this.localStorageName)
-    },
-    mounted() {
-       
-    },
-    destroyed() {
-        
-    }
-};
+}
 </script>

@@ -160,7 +160,7 @@
 
     <!-- <div class="page-error" v-if="0">
         <div class="error-tip">
-            <img src='../../lib/base/clothes_hanger/assets/init_err.png' />
+            <img src='~@lib/base/clothes_hanger/assets/init_err.png' />
             <p>加载失败，请点击屏幕刷新</p>
         </div>
     </div> -->
@@ -169,8 +169,8 @@
 
 
 <script>
-import Modal from "../../lib/components/Modal.vue"
-import Icon from "../../lib/components/SettingIconMobile.vue"
+import Modal from "@lib/components/Modal.vue"
+import Icon from "@lib/components/SettingIconMobile.vue"
 import SubPage from './SubPage.vue'
 const tips = {
   moving_up: "正在上升",

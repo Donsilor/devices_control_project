@@ -1,7 +1,7 @@
 <template>
-    <div class="devider">
-        <span class="devider-content">{{content}}</span>
-    </div>
+  <div class="devider">
+    <span class="devider-content">{{ content }}</span>
+  </div>
 </template>
 
 <script>

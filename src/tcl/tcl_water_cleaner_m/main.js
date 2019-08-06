@@ -1,5 +1,5 @@
 if(process.env.NODE_ENV == 'development'){
-    require('../../mock/water_cleaner/index.js')
+    require('@mock/water_cleaner/index.js')
 }
 
 import Vue from 'vue'
@@ -11,7 +11,8 @@ import App from './App.vue'
 
 import Alertpage from './components/AlertPage'
 
-import '../../lib/base/water_cleaner/index_m.less'
+import '@lib/base/water_cleaner/index_m.less'
+import Topbar from '@lib/components/Topbar.vue'
 
 import FastClick from 'fastclick'
 
@@ -19,8 +20,9 @@ Vue.use(Router)
 Vue.use(Vuex)
 
 FastClick.attach(document.body)
+Vue.component('topbar', Topbar)
 
-Vue.filter('toDays', function (val) {
+Vue.filter('toDays', function(val) {
     return Math.ceil(val/24)
 })
 
@@ -62,13 +64,13 @@ const store = new Vuex.Store({
         }
       ]
     })
-  
+
 new Vue({
     el: '#app',
     router,
     store,
+    components: { App },
     template: '<App />',
-    components: { App }
-  });
+  })
 
 
