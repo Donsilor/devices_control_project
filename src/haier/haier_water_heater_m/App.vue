@@ -118,7 +118,7 @@
 
 <script>
 import Slider from './components/Slider.vue'
-import Icon from '../../lib/components/SettingIconMobile.vue'
+import Icon from '../../../lib/components/SettingIconMobile.vue'
 
 const [TEMP_MIN, TEMP_MAX] = [30, 75]
 

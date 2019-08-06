@@ -468,7 +468,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@lib: '../../../lib';
+@lib: '../../../lib/base/air_cleaner/assets/new-air';
 .page {
   min-height: 100%;
   overflow-x: hidden;
@@ -699,12 +699,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-white.png');
+        background-image: url('@{lib}/swich-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-black.png');
+          background-image: url('@{lib}/swich-black.png');
         }
       }
     }
@@ -714,7 +714,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/btn_ac_mode_heat@2x.png');
+        background-image: url('@{lib}/btn_ac_mode_heat@2x.png');
         background-size: 100% 100%;
       }
     }
@@ -724,7 +724,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed1.png');
+        background-image: url('@{lib}/speed1.png');
         background-size: 100% 100%;
       }
     }
@@ -734,7 +734,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed2.png');
+        background-image: url('@{lib}/speed2.png');
         background-size: 100% 100%;
       }
     }
@@ -744,7 +744,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed3.png');
+        background-image: url('@{lib}/speed3.png');
         background-size: 100% 100%;
       }
     }
@@ -754,7 +754,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed4.png');
+        background-image: url('@{lib}/speed4.png');
         background-size: 100% 100%;
       }
     }
@@ -764,7 +764,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed5.png');
+        background-image: url('@{lib}/speed5.png');
         background-size: 100% 100%;
       }
     }
@@ -774,7 +774,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/more.png');
+        background-image: url('@{lib}/more.png');
         background-size: 100% 100%;
       }
     }
@@ -802,12 +802,12 @@ export default {
             display: block;
             width: 44px;
             height: 44px;
-            background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-white.png');
+            background-image: url('@{lib}/swich-white.png');
             background-size: 100% 100%;
           }
           &.active {
             &::before {
-              background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-white.png');
+              background-image: url('@{lib}/swich-white.png');
             }
           }
         }
@@ -825,12 +825,12 @@ export default {
           display: block;
           width: 44px;
           height: 44px;
-          background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-black.png');
+          background-image: url('@{lib}/swich-black.png');
           background-size: 100% 100%;
         }
         &.active {
           &::before {
-            background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-black.png');
+            background-image: url('@{lib}/swich-black.png');
           }
         }
       }
@@ -922,12 +922,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-white.png');
+        background-image: url('@{lib}/swich-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/base/air_cleaner/assets/new-air/swich-black.png');
+          background-image: url('@{lib}/swich-black.png');
         }
       }
     }
@@ -938,12 +938,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed1-white.png');
+        background-image: url('@{lib}/speed1-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed1.png');
+          background-image: url('@{lib}/speed1.png');
         }
       }
     }
@@ -953,12 +953,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed2-white.png');
+        background-image: url('@{lib}/speed2-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed2.png');
+          background-image: url('@{lib}/speed2.png');
         }
       }
     }
@@ -968,12 +968,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed3-white.png');
+        background-image: url('@{lib}/speed3-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed3.png');
+          background-image: url('@{lib}/speed3.png');
         }
       }
     }
@@ -983,12 +983,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed4-white.png');
+        background-image: url('@{lib}/speed4-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed4.png');
+          background-image: url('@{lib}/speed4.png');
         }
       }
     }
@@ -998,12 +998,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed5-white.png');
+        background-image: url('@{lib}/speed5-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/base/air_cleaner/assets/new-air/speed5.png');
+          background-image: url('@{lib}/speed5.png');
         }
       }
     }

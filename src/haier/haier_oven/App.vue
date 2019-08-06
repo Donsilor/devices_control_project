@@ -724,7 +724,7 @@ strong {
 #app {
     width: 100%;
     min-height: 100%;
-    height: auto;
+    height: 100vh;
     overflow: hidden;
     position: relative;
     box-sizing: border-box;

@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV == 'development') {
-  require('../../mock/water_cleaner/index.js')
+  require('../../../mock/water_cleaner/index.js')
 }
 
 import Vue from 'vue'
@@ -8,10 +8,10 @@ import Vuex from 'vuex'
 
 import Index from './components/Index.vue' //路由页面，router-view
 import App from './App.vue'
-import Topbar from '../../lib/components/Topbar.vue'
+import Topbar from '../../../lib/components/Topbar.vue'
 
 
-import '../../lib/base/haier_water_cleaner/index_m.less'
+import '../../../lib/base/haier_water_cleaner/index_m.less'
 
 import FastClick from 'fastclick'
 import * as filters from './filters' // global filters

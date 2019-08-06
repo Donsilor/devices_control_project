@@ -598,7 +598,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@lib: '../../../lib';
+@lib: '../../../lib/base/air_condition/assets/new-air';
 
 @keyframes temperatureUp {
     from {
@@ -651,12 +651,12 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url('@{lib}/base/air_condition/assets/new-air/swich-white.png');
+      background-image: url('@{lib}/swich-white.png');
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/swich-black.png');
+        background-image: url('@{lib}/swich-black.png');
       }
     }
   }
@@ -666,12 +666,12 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url('@{lib}/base/air_condition/assets/new-air/heat-white.png');
+      background-image: url('@{lib}/heat-white.png');
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/heat-black.png');
+        background-image: url('@{lib}/heat-black.png');
       }
     }
   }
@@ -681,12 +681,12 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url('@{lib}/base/air_condition/assets/new-air/more-white.png');
+      background-image: url('@{lib}/more-white.png');
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/more-black.png');
+        background-image: url('@{lib}/more-black.png');
       }
     }
   }
@@ -697,18 +697,18 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url('@{lib}/base/air_condition/assets/new-air/wind-white.png');
+      background-image: url('@{lib}/wind-white.png');
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/wind-black.png');
+        background-image: url('@{lib}/wind-black.png');
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/wind-yellow.png');
+        background-image: url('@{lib}/wind-yellow.png');
       }
       .name{
         color: #FFC600;
@@ -721,18 +721,18 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url('@{lib}/base/air_condition/assets/new-air/heat-white.png');
+      background-image: url('@{lib}/heat-white.png');
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/heat-black.png');
+        background-image: url('@{lib}/heat-black.png');
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/heat-yellow.png');
+        background-image: url('@{lib}/heat-yellow.png');
       }
       .name{
         color: #FFC600;
@@ -745,18 +745,18 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url('@{lib}/base/air_condition/assets/new-air/dehumidify-white.png');
+      background-image: url('@{lib}/dehumidify-white.png');
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/dehumidify-black.png');
+        background-image: url('@{lib}/dehumidify-black.png');
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/dehumidify-yellow.png');
+        background-image: url('@{lib}/dehumidify-yellow.png');
       }
       .name{
         color: #FFC600;
@@ -769,18 +769,18 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url('@{lib}/base/air_condition/assets/new-air/cold-white.png');
+      background-image: url('@{lib}/cold-white.png');
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/cold-black.png');
+        background-image: url('@{lib}/cold-black.png');
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/cold-yellow.png');
+        background-image: url('@{lib}/cold-yellow.png');
       }
       .name{
         color: #FFC600;
@@ -793,18 +793,18 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url('@{lib}/base/air_condition/assets/new-air/auto-white.png');
+      background-image: url('@{lib}/auto-white.png');
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/auto-black.png');
+        background-image: url('@{lib}/auto-black.png');
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/auto-yellow.png');
+        background-image: url('@{lib}/auto-yellow.png');
       }
       .name{
         color: #FFC600;
@@ -817,18 +817,18 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url('@{lib}/base/air_condition/assets/new-air/time-white.png');
+      background-image: url('@{lib}/time-white.png');
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/time-black.png');
+        background-image: url('@{lib}/time-black.png');
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/time-yellow.png');
+        background-image: url('@{lib}/time-yellow.png');
       }
       .name{
         color: #FFC600;
@@ -841,18 +841,18 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url('@{lib}/base/air_condition/assets/new-air/wind-dir-w.png');
+      background-image: url('@{lib}/wind-dir-w.png');
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/wind-dir-b.png');
+        background-image: url('@{lib}/wind-dir-b.png');
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-        background-image: url('@{lib}/base/air_condition/assets/new-air/wind-dir-y.png');
+        background-image: url('@{lib}/wind-dir-y.png');
       }
       .name{
         color: #FFC600;
@@ -953,7 +953,7 @@ export default {
         display: inline-block;
         width: 36px;
         height: 36px;
-        background-image: url('@{lib}/base/air_condition/assets/new-air/icon-tips.png');
+        background-image: url('@{lib}/icon-tips.png');
         background-size: 100% 100%;
         margin-right: 12px;
       }
@@ -1004,7 +1004,7 @@ export default {
 
       border-radius: 50%;
 
-      background-image: url('@{lib}/base/air_condition/assets/new-air/dial-yellow.png');
+      background-image: url('@{lib}/dial-yellow.png');
       background-size: 100% 100%;
 
       &.temperatureUp {
@@ -1047,7 +1047,7 @@ export default {
         display: inline-block;
         width: 36px;
         height: 36px;
-        background-image: url('@{lib}/base/air_condition/assets/new-air/icon-time.png');
+        background-image: url('@{lib}/icon-time.png');
         background-size: 100% 100%;
         margin-right: 12px;
       }
@@ -1084,19 +1084,19 @@ export default {
         height: 36px;
         margin-right: 17px;
         &.low{
-          background-image: url('@{lib}/base/air_condition/assets/new-air/icon-min.png');
+          background-image: url('@{lib}/icon-min.png');
           background-size: 100% 100%;
         }
         &.normal {
-          background-image: url('@{lib}/base/air_condition/assets/new-air/icon-normal.png');
+          background-image: url('@{lib}/icon-normal.png');
           background-size: 100% 100%;
         }
         &.high {
-          background-image: url('@{lib}/base/air_condition/assets/new-air/icon-big.png');
+          background-image: url('@{lib}/icon-big.png');
           background-size: 100% 100%;
         }
         &.auto {
-           background-image: url('@{lib}/base/air_condition/assets/new-air/icon-min.png');
+           background-image: url('@{lib}/icon-min.png');
           background-size: 100% 100%;
         }
       }
@@ -1146,14 +1146,14 @@ export default {
           display: block;
           width: 34px;
           height: 34px;
-          background-image: url('@{lib}/base/air_condition/assets/new-air/speed-white.png');
+          background-image: url('@{lib}/speed-white.png');
           background-size: 100% 100%;
         }
         &.active{
           background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
           border-color: #ffbf00;
           &::before {
-            background-image: url('@{lib}/base/air_condition/assets/new-air/speed-black.png');
+            background-image: url('@{lib}/speed-black.png');
             background-size: 100% 100%;
           }
         }
@@ -1213,7 +1213,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/base/air_condition/assets/new-air/speed-white.png');
+        background-image: url('@{lib}/speed-white.png');
         background-size: 100% 100%;
       }
     }
@@ -1222,7 +1222,7 @@ export default {
     }
     .dial {
       z-index: 999;
-      background-image: url('@{lib}/base/air_condition/assets/new-air/dial-off.png');
+      background-image: url('@{lib}/dial-off.png');
     }
     .btns {
       .btn-swich {
@@ -1233,12 +1233,12 @@ export default {
           display: block;
           width: 44px;
           height: 44px;
-          background-image: url('@{lib}/base/air_condition/assets/new-air/swich-white.png');
+          background-image: url('@{lib}/swich-white.png');
           background-size: 100% 100%;
         }
         &.active {
           &::before {
-            background-image: url('@{lib}/base/air_condition/assets/new-air/swich-black.png');
+            background-image: url('@{lib}/swich-black.png');
           }
         }
       }
