@@ -1,16 +1,24 @@
 <template>
-    <div :class="className">
-        <div class="overlay" v-show="visible" @click="overlayClick"></div>
-        <div class="modal" v-show="visible">
-            <div class="modal-header">
-                <div class="modal-title">{{title}}</div>
-                <div class="modal-close" v-show="showCloseBtn" @click="close"></div>
-            </div>
-            <div class="modal-body">
-                <slot />
-            </div>
-        </div>
+  <div :class="className">
+    <div 
+      v-show="visible" 
+      class="overlay" 
+      @click="overlayClick"/>
+    <div 
+      v-show="visible" 
+      class="modal">
+      <div class="modal-header">
+        <div class="modal-title">{{ title }}</div>
+        <div 
+          v-show="showCloseBtn" 
+          class="modal-close" 
+          @click="close"/>
+      </div>
+      <div class="modal-body">
+        <slot />
+      </div>
     </div>
+  </div>
 </template>
 
 <style lang="less">

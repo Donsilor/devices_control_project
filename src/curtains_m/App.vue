@@ -19,8 +19,7 @@
 
     <topbar
       :transparent="true"
-      :title="device_name"
-    />
+      :title="device_name" />
 
     <div class="curtain-wrap">
 
@@ -31,17 +30,14 @@
             </div>-->
       <div
         v-if="show && tip"
-        class="tip"
-      >{{ tip }}</div>
+        class="tip">{{ tip }}</div>
       <navigator
         v-once
-        class="navigator"
-      />
+        class="navigator"/>
       <curtain
         :is_ready="is_ready"
         :open_percentage="target_percentage"
-        class="curtain"
-      />
+        class="curtain"/>
 
     </div>
     <control
@@ -50,8 +46,7 @@
       @onOpen="onOpen"
       @onPause="onPause"
       @onClose="onClose"
-      @onGoPercentage="onGoPercentage"
-    />
+      @onGoPercentage="onGoPercentage"/>
   </div>
 </template>
 
@@ -69,7 +64,7 @@ export default {
   data() {
     return {
       // 用于确定数据是否加载完成，加载完成后渲染动态的UI
-      is_ready: false,
+      is_ready: true,
       // 当前窗帘打开的幅度，请注意,硬件不修改属性依旧使用close_percentage
       open_percentage: 0,
       // 目标幅度，用于动画
@@ -94,30 +89,16 @@ export default {
     }
   },
   mounted() {
-    HdSmart.onDeviceListen(res => {
-      if(!argv_is_mock) return
-      var switchStatus = res.params.attribute.switch
-      var open_percentage = res.params.attribute.open_percentage
-      var flag = false
-
-      if( switchStatus === 'on'){
-        open_percentage = 100
-      } else if(switchStatus === 'off'){
-        open_percentage = 0
-      } else if (switchStatus === 'pause'){
-        open_percentage = this.target_percentage
-        flag = false
-      }
-      this.animateToTargetPercentage(open_percentage, flag)
-    })
-
     HdSmart.ready(() => {
+      console.log('ready')
       if (window.device_name) {
         this.device_name = window.device_name
       }
       // 获取快照
       HdSmart.Device.getSnapShot(
         data => {
+          console.log('getSnapShot')
+          console.log(data)
           HdSmart.UI.hideLoading()
           this.is_ready = true
           if (data && data.attribute) {
@@ -143,14 +124,16 @@ export default {
         this.cbFunc = null
       }
       try {
+        console.log('onDeviceStateChange')
+        console.log(data)
         this.animateToTargetPercentage(data.result.attribute.open_percentage, isFirstLoad)
         isFirstLoad = false
-      } catch (error) { }
+      } catch (error) {}
     })
   },
   methods: {
     goDetail() {
-      HdSmart.UI.goDeviceDetail()
+        HdSmart.UI.goDeviceDetail()
     },
     back() {
       HdSmart.UI.popWindow()
@@ -302,7 +285,7 @@ export default {
           }
         },
         () => {},
-        () => { }
+        () => {}
       )
     },
     clearTargetTip() {

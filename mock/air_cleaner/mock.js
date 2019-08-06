@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2017/7/10.
  */
-import Mock from 'mockjs';
+import Mock from 'mockjs'
 
 let res = {
     "air_filter_result": {
@@ -37,7 +37,6 @@ export function generateSnapShot() {
             "attribute": res
         }
     })
-
 }
 
 export function set(data){

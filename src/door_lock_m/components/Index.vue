@@ -10,12 +10,17 @@
       </div>
       <div class="title">{{ device_name }}</div>
       <div class="right">
-        <router-link
+
+
+        <!-- <router-link
           v-if="family_id"
           :to="{name:'log',query:{device_id:device_id,family_id:family_id, category_id: device_category_id}}"
           class="btn-golog icon-recode"
-        />
-        <!--<a href="" class="icon-more"></a>-->
+        /> -->
+        <a 
+          href="javascript:void(0)" 
+          class="icon-more"
+          @click.prevent="goDetail"/>
       </div>
 
     </div>
@@ -37,6 +42,17 @@
       </div>
     </div>
 
+
+    <!-- 跳转记录页 -->
+    <div class="wrap-golog">
+      <router-link
+        v-show="family_id"
+        :to="{name:'log',query:{device_id:device_id,family_id:family_id, category_id: device_category_id}}"
+        class="btn-golog icon-recode"
+      />
+    </div>
+
+    <!-- 开锁 -->
     <a
       :class="{disabled:btnDisabled}"
       href="#"
@@ -404,7 +420,10 @@ export default {
       // this.onAlarm(data.attribute);
       this.onAlarmError(data.attribute)
     },
-    onError() { }
+    onError() { },
+    goDetail() {
+      HdSmart.UI.goDeviceDetail()
+    }
   }
 }
 </script>

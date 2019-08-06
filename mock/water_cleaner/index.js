@@ -1,13 +1,13 @@
 /**
  * Created by lenovo on 2017/6/27.
  */
-import on from '../app';
+import on from '../app'
 import {apiList} from '../app/constant'
-import * as mockData from './mock';
+import * as mockData from './mock'
 
 if (location.search.indexOf('env=desktop') != -1) {
 
-    window.device_name = '净水机'
+    window.device_name = '净水器'
 
     on(apiList.device_getsnapshot, function(data, done){
         done(mockData.generateSnapShot())

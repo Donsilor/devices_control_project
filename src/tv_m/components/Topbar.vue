@@ -3,37 +3,37 @@
 -->
 <template>
   <div class="topbar">
-    <div 
+    <div
       :style="{height:(status_bar_height + navigation_bar_height) +'px'}"
       class="topbar-block" />
     <div class="topbar-fixed">
-      <div 
+      <div
         :style="{height:status_bar_height+'px'}"
-        class="statusbar" />
-      <div 
+        class="statusbar"/>
+      <div
         :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
-        class="navbar">
+        class="navbar" >
         <div class="left">
-          <a 
+          <a
             href="#/"
             class="icon-return"
-            @click.prevent="goBack" />
+            @click.prevent="goBack"/>
         </div>
         <div class="right">
-          <router-link 
+          <router-link
             v-if="search"
             to="/search"
-            class="icon-search" />
-          <a 
+            class="icon-search"/>
+          <a
             v-if="more"
             href=""
             class="icon-more"
-            @click.prevent="goDetail" />
+            @click.prevent="goDetail"/>
         </div>
-        <div 
+        <div
           v-if="title"
           class="title">{{ title }}</div>
-        <slot />
+        <slot/>
       </div>
     </div>
   </div>
@@ -48,12 +48,12 @@ export default {
     title: String,
     back: Function,
     search: {
-      type: Boolean,
-      default: true
+        type: Boolean,
+        default: true
     },
     more: {
-      type: Boolean,
-      default: false
+        type: Boolean,
+        default: false
     }
   },
   data() {
@@ -62,39 +62,15 @@ export default {
   computed: mapState(['status_bar_height', 'navigation_bar_height']),
   methods: {
     goDetail() {
-      HdSmart.UI.goDeviceDetail()
+        HdSmart.UI.goDeviceDetail()
     },
     goBack() {
-      if (typeof this.back === 'function') {
-        this.back()
-      } else {
-        this.$router.back()
-      }
+        if(typeof this.back === 'function'){
+            this.back()
+        }else{
+             this.$router.back()
+        }
     }
   }
 }
 </script>
-
-<style lang="less">
-/* topbar */
-.topbar .navbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  .left a.icon-return {
-    position: absolute;
-    left: 40px;
-    top: 50%;
-    display: inline-block;
-    width: 22px;
-    height: 22px;
-    border: solid #000;
-    border-width: 2px 2px 0 0;
-    transform: translate(0, -50%) rotate(225deg);
-  }
-
-  .right a.icon-more {
-    display: inline-block;
-  }
-}
-</style>

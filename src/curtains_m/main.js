@@ -1,6 +1,5 @@
-console.log(`argv_is_mock: ${argv_is_mock}`)
-if (argv_is_mock || process.env.NODE_ENV == 'development') {
-  require('../../mock/curtains/index.js')
+if(argv_is_mock || process.env.NODE_ENV == 'development'){
+    require('../../mock/curtains/index.js')
 }
 
 import Vue from 'vue'
@@ -20,7 +19,8 @@ Vue.component('control', Control)
 
 FastClick.attach(document.body)
 
+
 new Vue({
-  el: '#app',
-  render: h => h(App)
+    el: '#app',
+    render: h => h(App)
 })

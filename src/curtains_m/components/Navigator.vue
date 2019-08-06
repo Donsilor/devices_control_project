@@ -1,12 +1,12 @@
 <template>
-  <div class="wrap">
-    <!--<div class="left circle"></div>-->
-    <div class="line" />
-    <!--<div class="right circle"></div>-->
-  </div>
+    <div class="wrap">
+        <!--<div class="left circle"></div>-->
+        <div class="line"></div>
+        <!--<div class="right circle"></div>-->
+    </div>
 </template>
 
 
 <script>
-export default {}
+    export default {}
 </script>

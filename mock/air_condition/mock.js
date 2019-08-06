@@ -5,7 +5,7 @@ import Mock from 'mockjs'
 
 window.device_name = '柜式空调'
 window.device_category_id = 1
-let res = {
+var res = {
     device_uuid: '0000d01ea101000000003876ca400578',
     user_id: 1012,
     device_id: 62082850489720,
@@ -43,13 +43,20 @@ export function generateSnapShot() {
 }
 
 export function set(data) {
-    var attr = data.params.attribute
+    console.log('---------set-------')
+    console.log(data)
+    try {
+      var attr = data.params.attribute
+    } catch (error) {
+      attr = data.content.params.attribute
+    }
+
     if (attr.switch) {
-        res.attribute.switchStatus = attr.switch
+      res.attribute.switchStatus = attr.switch
     } else if (attr.temperature) {
-        res.attribute.temperature = attr.temperature
+      res.attribute.temperature = attr.temperature
     } else {
-        res.attribute = Object.assign({}, res.attribute, attr)
+      res.attribute = Object.assign({}, res.attribute, attr)
     }
     return Mock.mock({
         code: 0
