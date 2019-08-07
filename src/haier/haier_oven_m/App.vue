@@ -672,6 +672,9 @@ export default {
 </script>
 <style lang="less">
 @lib: '../../../lib';
+@lib1: '../../../lib/base/haier_oven/assets';
+@lib2: '../../../lib/base/washer/assets';
+@lib3: '../../../lib/base/oven/assets';
 html,
 body {
     margin: 0;
@@ -742,7 +745,7 @@ strong {
         left: 50%;
         top: 33.6%;
         transform: translate(-50%, 0);
-        background: url('@{lib}/base/haier_oven/assets/img_ovenline@2x.png') no-repeat;
+        background: url('@{lib1}/img_ovenline@2x.png') no-repeat;
         background-size: 100% 100%;
     }
     .off_button {
@@ -760,7 +763,7 @@ strong {
                 width: 100%;
                 height: 100%;
                 display: block;
-                background: url('@{lib}/base/washer/assets/btn_power@2x.png') no-repeat center;
+                background: url('@{lib2}/btn_power@2x.png') no-repeat center;
                 background-size: 100% 100%;
             }
         }
@@ -773,7 +776,7 @@ strong {
     width: 36px;
     height: 36px;
     top: 166px;
-    background-image: url('@{lib}/base/oven/assets/btn_more@2x.png');
+    background-image: url('@{lib3}/btn_more@2x.png');
     background-size: 100% 100%;
 }
 .wrapper {
@@ -885,22 +888,22 @@ strong {
                 background-size: 100% 100%;
             }
             .c-stop {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_shutdown_active@2x.png');
+                background-image: url('@{lib1}/icn_shutdown_active@2x.png');
                 &.disable {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_shutdown_disabled@2x.png');
+                    background-image: url('@{lib1}/icn_shutdown_disabled@2x.png');
                 }
             }
             .c-model {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_modepreset_active@2x.png');
+                background-image: url('@{lib1}/icn_modepreset_active@2x.png');
             }
             .c-firing {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_open_active@2x.png');
+                background-image: url('@{lib1}/icn_open_active@2x.png');
             }
             .c-preheat {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_Auxiliarywa-up_active@2x.png');
+                background-image: url('@{lib1}/icn_Auxiliarywa-up_active@2x.png');
             }
             .c-barbicue {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_reservebaking_active@2x.png');
+                background-image: url('@{lib1}/icn_reservebaking_active@2x.png');
             }
         }
     }
@@ -925,28 +928,28 @@ strong {
                 opacity: 0.3;
             }
             a.traditional-baking {
-                background-image: url('@{lib}/base/oven/assets/btn_bread_g.png');
+                background-image: url('@{lib3}/btn_bread_g.png');
             }
             a.ico-3d {
-                background-image: url('@{lib}/base/oven/assets/btn_biscuits_g.png');
+                background-image: url('@{lib3}/btn_biscuits_g.png');
             }
             a.ico-convective-baking {
-                background-image: url('@{lib}/base/oven/assets/btn_cake_g.png');
+                background-image: url('@{lib3}/btn_cake_g.png');
             }
             a.ico-barking {
-                background-image: url('@{lib}/base/oven/assets/btn_pizza_g.png');
+                background-image: url('@{lib3}/btn_pizza_g.png');
             }
             a.ico-hot-air-barbecue {
-                background-image: url('@{lib}/base/oven/assets/btn_barbecue_g.png');
+                background-image: url('@{lib3}/btn_barbecue_g.png');
             }
             a.ico-up-barbecue {
-                background-image: url('@{lib}/base/oven/assets/btn_fishandshrimp_g.png');
+                background-image: url('@{lib3}/btn_fishandshrimp_g.png');
             }
             a.ico-whole-barbecue {
-                background-image: url('@{lib}/base/oven/assets/btn_pachyrhizus_g.png');
+                background-image: url('@{lib3}/btn_pachyrhizus_g.png');
             }
             a.ico-pizza {
-                background-image: url('@{lib}/base/oven/assets/btn_chicken_g.png');
+                background-image: url('@{lib3}/btn_chicken_g.png');
             }
         }
     }
@@ -973,75 +976,75 @@ strong {
                 background-size: 100% 100%;
             }
             .traditional-baking {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_traditionalbaking_norma.png');
+                background-image: url('@{lib1}/icn_traditionalbaking_norma.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_traditionalbaking_active@2x.png');
+                    background-image: url('@{lib1}/icn_traditionalbaking_active@2x.png');
                 }
             }
             .ico-3d {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_3Dhotair_normal@2x.png');
+                background-image: url('@{lib1}/icn_3Dhotair_normal@2x.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_3Dhotair_active@2x.png');
+                    background-image: url('@{lib1}/icn_3Dhotair_active@2x.png');
                 }
             }
             .ico-convective-baking {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_convectionbake_normal@2x.png');
+                background-image: url('@{lib1}/icn_convectionbake_normal@2x.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_convectionbake_active@2x.png');
+                    background-image: url('@{lib1}/icn_convectionbake_active@2x.png');
                 }
             }
             .ico-barking {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_baking_normal@2x.png');
+                background-image: url('@{lib1}/icn_baking_normal@2x.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_baking_active@2x.png');
+                    background-image: url('@{lib1}/icn_baking_active@2x.png');
                 }
             }
             .ico-hot-air-barbecue {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_hotairbarbecue_normal@2x.png');
+                background-image: url('@{lib1}/icn_hotairbarbecue_normal@2x.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_hotairbarbecue_active@2x.png');
+                    background-image: url('@{lib1}/icn_hotairbarbecue_active@2x.png');
                 }
             }
             .ico-up-barbecue {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_upthebarbecue_normal@2x.png');
+                background-image: url('@{lib1}/icn_upthebarbecue_normal@2x.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_upthebarbecue_active@2x.png');
+                    background-image: url('@{lib1}/icn_upthebarbecue_active@2x.png');
                 }
             }
             .ico-whole-barbecue {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_wholebarbecue_normal@2x.png');
+                background-image: url('@{lib1}/icn_wholebarbecue_normal@2x.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_wholebarbecue_active@2x.png');
+                    background-image: url('@{lib1}/icn_wholebarbecue_active@2x.png');
                 }
             }
             .ico-pizza {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
+                background-image: url('@{lib1}/icn_pizzamode_normal@2x.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_active@2x.png');
+                    background-image: url('@{lib1}/icn_pizzamode_active@2x.png');
                 }
             }
             .ico-pizza {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
+                background-image: url('@{lib1}/icn_pizzamode_normal@2x.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_active@2x.png');
+                    background-image: url('@{lib1}/icn_pizzamode_active@2x.png');
                 }
             }
             .ico-pizza {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_normal@2x.png');
+                background-image: url('@{lib1}/icn_pizzamode_normal@2x.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_pizzamode_active@2x.png');
+                    background-image: url('@{lib1}/icn_pizzamode_active@2x.png');
                 }
             }
             .ico-upper-fermentation {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_fermentation_normal@2x.png');
+                background-image: url('@{lib1}/icn_fermentation_normal@2x.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_fermentation_active@2x.png');
+                    background-image: url('@{lib1}/icn_fermentation_active@2x.png');
                 }
             }
             .icon-thaw {
-                background-image: url('@{lib}/base/haier_oven/assets/icn_thaw_normal@2x.png');
+                background-image: url('@{lib1}/icn_thaw_normal@2x.png');
                 &.active {
-                    background-image: url('@{lib}/base/haier_oven/assets/icn_thaw_active@2x.png');
+                    background-image: url('@{lib1}/icn_thaw_active@2x.png');
                 }
             }
         }
@@ -1093,10 +1096,10 @@ strong {
         }
         .icon-arrow-down {
             transform: rotate(-90deg);
-            background-image: url('@{lib}/base/oven/assets/arrow_down.png');
+            background-image: url('@{lib3}/arrow_down.png');
         }
         .icon-arrow-up {
-            background-image: url('@{lib}/base/oven/assets/arrow_up.png');
+            background-image: url('@{lib3}/arrow_up.png');
         }
     }
     .vue-js-switch {
@@ -1187,11 +1190,11 @@ strong {
                 color: #76787a;
             }
             .c-lighting {
-                background: url('@{lib}/base/haier_oven/assets/icn_illumination_normal@2x.png') no-repeat center center;
+                background: url('@{lib1}/icn_illumination_normal@2x.png') no-repeat center center;
                 background-size: 100% 100%;
             }
             .c-time {
-                background: url('@{lib}/base/haier_oven/assets/icn_timesynchronization_normal@2x.png') no-repeat center center;
+                background: url('@{lib1}/icn_timesynchronization_normal@2x.png') no-repeat center center;
                 background-size: 100% 100%;
             }
         }
@@ -1225,7 +1228,7 @@ strong {
                 display: inline-block;
                 width: 30px;
                 height: 30px;
-                background: url('@{lib}/base/washer/assets/arrow_down.png') no-repeat;
+                background: url('@{lib2}/arrow_down.png') no-repeat;
                 background-size: 100% 100%;
                 vertical-align: -6px;
                 margin-left: 10px;

@@ -500,6 +500,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @lib: '../../../lib/base/sweeping_robot/assets/';
+@lib1: '../../../lib/base/air_cleaner/assets/new-air';
 *{
   touch-action: none;
 }
@@ -1056,12 +1057,12 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url(../../../lib/base/air_cleaner/assets/new-air/swich-white.png);
+        background-image: url('@{lib1}/swich-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+          background-image: url('@{lib1}/swich-black.png');
         }
       }
     }
@@ -1225,12 +1226,12 @@ export default {
             display: block;
             width: 48px;
             height: 48px;
-            background-image: url(../../../lib/base/air_cleaner/assets/new-air/swich-white.png);
+            background-image: url('@{lib1}/swich-white.png');
             background-size: 100% 100%;
           }
           &.active {
             &::before {
-              background-image: url(../../../lib/base/air_cleaner/assets/new-air/swich-white.png);
+              background-image: url('@{lib1}/swich-white.png');
             }
           }
         }
@@ -1248,12 +1249,12 @@ export default {
           display: block;
           width: 48px;
           height: 48px;
-          background-image: url(../../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+          background-image: url('@{lib1}/swich-black.png');
           background-size: 100% 100%;
         }
         &.active {
           &::before {
-            background-image: url(../../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+            background-image: url('@{lib1}/swich-black.png');
           }
         }
       }
@@ -1361,12 +1362,12 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url(../../../lib/base/air_cleaner/assets/new-air/swich-white.png);
+        background-image: url('@{lib1}/swich-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+          background-image: url('@{lib1}/swich-black.png');
         }
       }
     }

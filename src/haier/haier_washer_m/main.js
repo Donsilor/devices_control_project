@@ -6,7 +6,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import Topbar from './components/Topbar.vue'
 
-import '../../../lib/base/haier_washer/index_m.less'
+import '@lib/base/haier_washer/index_m.less'
 
 import FastClick from 'fastclick'
 import * as filters from './filters' // global filters

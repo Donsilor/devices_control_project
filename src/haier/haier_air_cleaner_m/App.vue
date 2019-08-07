@@ -11,11 +11,11 @@
           <img
             class="circle"
             src="../../../lib/base/air_cleaner/assets/new-air/yuanquan@2x.png">
-          <img
+          <!-- <img
             v-if="current==0"
             class="pointer-excellent"
             src="../../../lib/base/air_cleaner/assets/new-air/jiejing@2x.png"
-          >
+          > -->
           <img
             v-if="current==1"
             class="pointer-good"
@@ -469,6 +469,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @lib: '../../../lib/base/air_cleaner/assets/new-air';
+@yellow: #ffbf00;
 .page {
   min-height: 100%;
   overflow-x: hidden;
@@ -683,8 +684,8 @@ export default {
       display: flex;
       flex-direction: column;
       &.active {
-        background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
-        border-color: #FFBF00;
+        background-image: linear-gradient(-90deg, #FFD500 0%, @yellow 100%);
+        border-color: @yellow;
       }
     }
     .btn-name {
@@ -912,8 +913,8 @@ export default {
         color: #fff;
       }
       &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border-color: #ffbf00;
+        background-image: linear-gradient(-90deg, #ffd500 0%, @yellow 100%);
+        border-color: @yellow;
       }
     }
     .btn-swich {
