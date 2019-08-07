@@ -4,10 +4,10 @@ if (argv_is_mock || process.env.NODE_ENV == 'development') {
 }
 import Vue from 'vue'
 import App from './App.vue'
-import Topbar from '../../../lib/components/Topbar.vue'
+import Topbar from '@lib/components/Topbar.vue'
 
-import '../../../lib/base/reset.less'
-import '../../../lib/base/common.less'
+import '@lib/base/reset.less'
+import '@lib/base/common.less'
 
 // import FastClick from 'fastclick'
 // FastClick.attach(document.body)

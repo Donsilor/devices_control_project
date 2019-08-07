@@ -6,7 +6,7 @@
         bak-color="#000"/>
       <div class="timebox">
         <div 
-          v-show="model.order_time > 0 && model.connectivity == 'online'" 
+          v-show="model.order_time > 0 && model.order_mode !== 'off' && model.connectivity == 'online'" 
           class="appointment">
           <img src="../../lib/base/blend/assets/time-black.png">
           {{ model.order_time | order_time }}
@@ -41,14 +41,14 @@
 
       <!-- 按钮 -->
       <div class="panel-btn center">
-        <div :class="[{'up-index': !isOffline },{'disable' : model.order_time > 0 }, 'btn-wrap']" >
+        <div :class="[{'up-index': !isOffline },{'disable' : model.order_time > 0 && model.order_mode !== 'off' }, 'btn-wrap']" >
           <div
             :class="[model.machine_mode == 'off' ? 'btn-start' : 'btn-stop','btn center']"
             @click="setSwitch" />
           <div class="btn-name">{{ model.machine_mode == 'off' ? '启动' : '暂停' }}</div>
         </div>
 
-        <div :class="[{'disable' : model.machine_mode !== 'off' || model.order_time > 0},'btn-wrap']">
+        <div :class="[{'disable' : model.machine_mode !== 'off' || model.order_time > 0 && model.order_mode !== 'off'},'btn-wrap']">
           <div
             :class="[modeBtnClass, 'btn center btn-mode']"
             @click="handeModeClick" />
@@ -323,12 +323,12 @@ export default {
             order_mode:this.currentMode
           })
         }
-      if (this.model.order_time > 0) {
+      if (this.model.order_time > 0 && this.model.order_mode !== 'off') {
         this.controlDevice('machine_mode','off')
       }
     },
     setSwitch() {
-      if (this.model.order_time > 0) {
+      if (this.model.order_time > 0 && this.model.order_mode !== 'off') {
         return false
       }
       if(this.model.machine_mode !== 'off'){
@@ -346,7 +346,7 @@ export default {
     // 点击模式
     handeModeClick() {
       // 所有模式互斥
-      if (this.model.machine_mode !== 'off' || this.model.order_time > 0 ) {
+      if (this.model.machine_mode !== 'off' || this.model.order_time > 0 && this.model.order_mode !== 'off') {
         return false
       }
       this.showModeBtns = true

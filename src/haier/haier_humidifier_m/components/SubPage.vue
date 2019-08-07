@@ -54,14 +54,14 @@ export default {
     data() {
         return {
             visible: this.value
-        };
+        }
     },
     watch: {
         value(val) {
-            this.visible = val;
+            this.visible = val
         },
         visible(val) {
-            this.$emit("on-visible-change", val);
+            this.$emit("on-visible-change", val)
             if(!val){
                 this.$emit('close')
             }
@@ -69,10 +69,10 @@ export default {
     },
     methods: {
         close() {
-            this.visible = false;
-            this.$emit("input", false);
-            this.$emit("on-cancel");
+            this.visible = false
+            this.$emit("input", false)
+            this.$emit("on-cancel")
         }
     }
-};
+}
 </script>

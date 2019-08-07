@@ -14,7 +14,7 @@
         <button 
           class="submit" 
           type="button"
-          @click="submit" >{{ preOrder.order_time > 0 ? '取消预约':'开启预约' }}</button>
+          @click="submit" >{{ preOrder.order_mode !== 'off' && preOrder.order_time > 0 ? '取消预约':'开启预约' }}</button>
         <div 
           class="cancel" 
           @click="show = false">取消</div>
