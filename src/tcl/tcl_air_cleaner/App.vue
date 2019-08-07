@@ -293,7 +293,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['isDeviceStatus', 'device', 'deviceAttrs']),
+        ...mapState(['isLoadError', 'device', 'deviceAttrs']),
         currentSpeed() {
             var item = this.speedItems.filter(item => {
                 return item.value == this.deviceAttrs.speed
@@ -326,11 +326,11 @@ export default {
         },
         pm25_text() {
             return this.pm25 == 0 ? "--" : this.pm25 + "<small>μg/m³</small>"
-        }
+        },
     },
     watch: {
-      isDeviceStatus() {
-        if(this.isDeviceStatus == true) {
+      isLoadError() {
+        if(this.isLoadError == false) {
           this.onSuccess()
         } else {
           this.onError()
@@ -345,20 +345,6 @@ export default {
         this.$watch("deviceAttrs.speed", (newVal, oldVal) => {
             this.prevModel.speed = oldVal || ""
         })
-
-        // HdSmart.ready(() => {
-        //     if (window.device_name) {
-        //         this.device_name = window.device_name
-        //     }
-        //     HdSmart.UI.showLoading()
-        //     this.getSnapShot(() => {
-        //         HdSmart.UI.hideLoading()
-        //     })
-        // })
-
-        // HdSmart.onDeviceStateChange(data => {
-        //     this.onSuccess(data.result)
-        // })
     },
     methods: {
       ...mapActions(['doControlDevice']),
@@ -380,7 +366,7 @@ export default {
             }
           })
           .then()
-          .catch( () => {
+          .catch(() => {
             this.showTip("操作失败")
           })
         },
@@ -456,18 +442,6 @@ export default {
                 this.speedModalVisible = true
             }
         },
-        // getSnapShot(cb) {
-        //     HdSmart.Device.getSnapShot(
-        //         data => {
-        //             this.onSuccess(data)
-        //             cb && cb()
-        //         },
-        //         () => {
-        //             this.onError()
-        //             cb && cb()
-        //         }
-        //     )
-        // },
         onSuccess() {
             this.status = "success"
 

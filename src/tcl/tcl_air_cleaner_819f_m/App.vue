@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <div
-      v-if="status == 'error' || model.switch_status == 'on'"
+      v-if="status == 'error' || deviceAttrs.switch_status == 'on'"
       class="page-on">
       <div class="mainTitle">
-        <div class="name">{{ device_name }}
+        <div class="name">{{ device.device_name }}
           <icon class="redact-white" />
         </div>
         <div class="tip">
@@ -35,8 +35,8 @@
           class="pic"
           @click="togglePMPop">PM 2.5</div>
         <div class="attrs">
-          <span v-if="model.temperature && model.temperature!='0'">温度：{{ model.temperature }}℃</span>
-          <span v-if="model.humidity && model.humidity!='0'">湿度：{{ model.humidity }}%</span>
+          <span v-if="deviceAttrs.temperature && deviceAttrs.temperature!='0'">温度：{{ deviceAttrs.temperature }}℃</span>
+          <span v-if="deviceAttrs.humidity && deviceAttrs.humidity!='0'">湿度：{{ deviceAttrs.humidity }}%</span>
         </div>
       </div>
 
@@ -48,7 +48,7 @@
           <i /> 开关
         </a>
         <a
-          :class="{active:model.control_status == 'sleep'}"
+          :class="{active:deviceAttrs.control_status == 'sleep'}"
           href=""
           class="btn-sleep"
           @click.prevent="setSleep">
@@ -58,14 +58,14 @@
                 <i></i> 手动
             </a> -->
         <a
-          v-if="model.control_status == 'auto'"
+          v-if="deviceAttrs.control_status == 'auto'"
           href=""
           class="btn-auto active"
           @click.prevent="showSpeedModal">
           <i /> 自动
         </a>
         <a
-          v-else-if="model.control_status == 'manual'"
+          v-else-if="deviceAttrs.control_status == 'manual'"
           :class="speedCss"
           href=""
           @click.prevent="showSpeedModal">
@@ -88,13 +88,13 @@
           <a
             v-for="item in speedItems"
             :key="item.value"
-            :class="['btn1-speed'+item.className,{active:model.control_status == 'manual' && model.speed == item.value}]"
+            :class="['btn1-speed'+item.className,{active:deviceAttrs.control_status == 'manual' && deviceAttrs.speed == item.value}]"
             href=""
             @click.prevent="setSpeed(item.value)">
             <i /> {{ item.text }}
           </a>
           <a
-            :class="{active: model.control_status == 'auto'}"
+            :class="{active: deviceAttrs.control_status == 'auto'}"
             href=""
             class="btn1-auto"
             @click.prevent="setControl('auto')">
@@ -109,7 +109,7 @@
         <div class="btns btns-more">
           <a
             v-if="ab.negative_ion_switch"
-            :class="{active:model.negative_ion_switch_status == 'on'}"
+            :class="{active:deviceAttrs.negative_ion_switch_status == 'on'}"
             href=""
             class="btn-ni"
             @click.prevent="setNegativeIon">
@@ -117,7 +117,7 @@
           </a>
           <a
             v-if="ab.child_lock_switch"
-            :class="{active:model.child_lock_switch_status == 'on'}"
+            :class="{active:deviceAttrs.child_lock_switch_status == 'on'}"
             href=""
             class="btn-cl"
             @click.prevent="setChildLock">
@@ -143,9 +143,9 @@
     </div>
 
     <div
-      v-if="model.switch_status == 'off'"
+      v-if="deviceAttrs.switch_status == 'off'"
       class="page-off">
-      <div class="name">{{ device_name }}
+      <div class="name">{{ device.device_name }}
         <icon />
       </div>
       <div class="tip">已关闭</div>
@@ -178,6 +178,7 @@
 import Modal from "@lib/components/Modal"
 import SubPage from "./SubPage"
 import Icon from "@lib/components/SettingIconMobile.vue"
+import { mapState, mapActions } from 'vuex'
 
 const SPEED_TEXT1 = [
   { text: "低速", className: "1", value: "low" },
@@ -300,9 +301,10 @@ export default {
     }
   },
   computed: {
+    ...mapState(['isLoadError', 'device', 'deviceAttrs']),
     currentSpeed() {
       var item = this.speedItems.filter(item => {
-        return item.value == this.model.speed
+        return item.value == this.deviceAttrs.speed
       })
       if (item.length) {
         return item[0]
@@ -341,32 +343,26 @@ export default {
       } else {
         HdSmart.UI.toggleHeadAndFoot(true)
       }
+    },
+    isLoadError() {
+      if(this.isLoadError == false) {
+        this.onSuccess()
+      } else {
+        this.onError()
+      }
     }
   },
   created() {
-    this.$watch("model.control_status", (newVal, oldVal) => {
+    this.$watch("deviceAttrs.control_status", (newVal, oldVal) => {
       this.prevModel.control_status = oldVal || "auto"
     })
 
-    this.$watch("model.speed", (newVal, oldVal) => {
+    this.$watch("deviceAttrs.speed", (newVal, oldVal) => {
       this.prevModel.speed = oldVal || ""
-    })
-
-    HdSmart.ready(() => {
-      if (window.device_name) {
-        this.device_name = window.device_name
-      }
-      HdSmart.UI.showLoading()
-      this.getSnapShot(() => {
-        HdSmart.UI.hideLoading()
-      })
-    })
-
-    HdSmart.onDeviceStateChange(data => {
-      this.onSuccess(data.result)
     })
   },
   methods: {
+    ...mapActions(['doControlDevice']),
     togglePMPop() {
       //pm2.5
       this.pmPopVisible = !this.pmPopVisible
@@ -378,133 +374,101 @@ export default {
         this.tip = ""
       }, 2000)
     },
-    controlDevice(attr, val, param, success, error) {
-      var fn = this.confirm
-      var params = Object.assign(
-        {
-          [attr]: val
-        },
-        param
-      )
-
-      if (attr == "child_lock_switch") {
-        fn = function(cb) {
-          cb()
-        }
-      }
-
-      fn(() => {
-        HdSmart.Device.control(
-          {
-            method: "dm_set",
-            nodeid: `air_filter.main.${attr}`,
-            params: {
-              attribute: params
-            }
-          },
-          () => {
-            success && success()
-          },
-          () => {
-            error && error()
-            this.showTip("操作失败")
+    controlDevice(attr, val, param) {
+      return this.doControlDevice({
+        nodeid: `air_filter.main.${attr}`,
+        params: {
+          attribute: {
+            [attr]: val,
+            ...param
           }
-        )
+        }
+      })
+      .then()
+      .catch(() => {
+        this.showTip("操作失败")
       })
     },
     setSwitch(val) {
       this.controlDevice("switch", val)
     },
     setControl: throttle(function(val) {
-      if (this.model.control_status == val) {
+      if (this.deviceAttrs.control_status == val) {
         return
       }
       this.controlDevice("control", val, () => {
-        this.model.control_status = val
+        this.deviceAttrs.control_status = val
       })
     }),
     setSleep() {
-      if (this.model.negative_ion_switch_status == "on") {
+      if (this.deviceAttrs.negative_ion_switch_status == "on") {
         this.controlDevice("negative_ion_switch", "off", { control: "sleep" }, () => {
-          this.model.control_status = "sleep"
+          this.deviceAttrs.control_status = "sleep"
         })
       } else {
         this.setControl("sleep")
       }
     },
     setSpeed: throttle(function(val) {
-      if (this.model.control_status == "manual" && this.model.speed == val) {
+      if (this.deviceAttrs.control_status == "manual" && this.deviceAttrs.speed == val) {
         return
       }
       this.controlDevice("speed", val, { control: "manual" }, () => {
-        this.model.control_status = "manual"
-        this.model.speed = val
+        this.deviceAttrs.control_status = "manual"
+        this.deviceAttrs.speed = val
       })
     }),
     setNegativeIon: throttle(function() {
-      if (this.model.child_lock_switch_status == "on") {
+      if (this.deviceAttrs.child_lock_switch_status == "on") {
         HdSmart.UI.toast("解除童锁后才能控制此设备")
         return
       }
-      var val = getToggle(this.model.negative_ion_switch_status)
+      var val = getToggle(this.deviceAttrs.negative_ion_switch_status)
       this.controlDevice(
         "negative_ion_switch",
         val,
         {
           control:
-            this.model.control_status == "sleep" ? this.prevModel.control_status : this.model.control_status
+            this.deviceAttrs.control_status == "sleep" ? this.prevModel.control_status : this.deviceAttrs.control_status
         },
         () => {
-          this.model.negative_ion_switch_status = val
+          this.deviceAttrs.negative_ion_switch_status = val
         }
       )
     }),
     setChildLock: throttle(function() {
-      // if(this.model.control_status == 'sleep'){
+      // if(this.deviceAttrs.control_status == 'sleep'){
       //     HdSmart.UI.toast('睡眠模式下不能开启童锁')
       //     return
       // }
-      var val = getToggle(this.model.child_lock_switch_status)
-      this.controlDevice("child_lock_switch", val, { control: this.model.control_status }, () => {
-        this.model.child_lock_switch_status = val
+      var val = getToggle(this.deviceAttrs.child_lock_switch_status)
+      this.controlDevice("child_lock_switch", val, { control: this.deviceAttrs.control_status }, () => {
+        this.deviceAttrs.child_lock_switch_status = val
       })
     }),
     showSpeedModal() {
-      if (this.model.child_lock_switch_status == "on") {
+      if (this.deviceAttrs.child_lock_switch_status == "on") {
         this.confirm()
       } else {
         this.speedModalVisible = true
       }
     },
-    getSnapShot(cb) {
-      HdSmart.Device.getSnapShot(
-        data => {
-          this.onSuccess(data)
-          cb && cb()
-        },
-        () => {
-          this.onError()
-          cb && cb()
-        }
-      )
-    },
-    onSuccess(data) {
+    onSuccess() {
       this.status = "success"
-      this.model = data.attribute
 
-      if (this.model.filter_time_remaining <= 0) {
+      if (this.deviceAttrs.filter_time_remaining <= 0) {
         this.remain_tip = "需更换滤网"
-      } else if (this.model.filter_time_remaining <= 120) {
-        this.remain_tip = `滤芯寿命剩余${this.model.filter_time_remaining}小时`
+      } else if (this.deviceAttrs.filter_time_remaining <= 120) {
+        this.remain_tip = `滤芯寿命剩余${this.deviceAttrs.filter_time_remaining}小时`
       } else {
         this.remain_tip = ""
       }
 
-      var pm25 = this.model.air_filter_result.PM25
+      var pm25 = this.deviceAttrs.air_filter_result.PM25
       this.pm25 = pm25.length == 2 ? pm25[1] : pm25[0]
 
       // 根据设备型号判断功能点，后边从开放平台拉取
-      this.ab = Object.assign(DEVICE_DEFAULT, DEVICE_MODEL[this.model.deviceModel] || {})
+      this.ab = Object.assign(DEVICE_DEFAULT, DEVICE_MODEL[this.deviceAttrs.deviceModel] || {})
       if (this.ab.speed == 5) {
         this.speedItems = SPEED_TEXT1
       } else if (this.ab.speed == 4) {
@@ -517,7 +481,7 @@ export default {
       this.status = "error"
     },
     confirm(done) {
-      if (this.model.child_lock_switch_status == "on") {
+      if (this.deviceAttrs.child_lock_switch_status == "on") {
         HdSmart.UI.alert(
           {
             title: "解除童锁",
