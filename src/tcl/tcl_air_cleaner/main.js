@@ -6,6 +6,9 @@ import Vue from 'vue'
 import App from './App.vue'
 
 import '@lib/base/air_cleaner/index.less'
+
+import store from '@lib/store/index.js'
+
 import Topbar from '@lib/components/Topbar.vue'
 
 import FastClick from 'fastclick'
@@ -15,5 +18,6 @@ Vue.component('topbar', Topbar)
 
 new Vue({
     el: '#app',
+    store,
     render: h => h(App)
 })
