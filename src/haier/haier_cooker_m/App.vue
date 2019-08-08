@@ -47,9 +47,9 @@ export default {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
      fireTxt() {
-       console.log(this.deviceAttrs.fire_status.stove_0);
+       if(!this.deviceAttrs.fire_status) return
       /* eslint-disable no-unreachable */
-       switch('this.deviceAttrs.fire_status.stove_0') {
+       switch(this.deviceAttrs.fire_status.stove_0) {
         case 'no':
           return '无火'
           break
