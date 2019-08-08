@@ -217,7 +217,7 @@ export default {
       return this.model.switch_status == 'on' ? false : true
     },
     bakColor() {
-      return this.isClose ? '#20282B' : '#20282B'
+      return this.isClose ? '@bgColor' : '@bgColor'
     },
     isOffline() {
       return this.model.connectivity === 'online' ? false : true
@@ -469,6 +469,23 @@ export default {
 @lib: '../../../lib/base/dehumidifier/assets';
 @lib1: '../../../lib/base/air_condition/assets';
 @lib2: '../../../lib/base/air_cleaner/assets/new-air';
+@bgColor: #20282B;
+    .btn-swich,
+    .panel-btn-dehumidification,
+    .panel-btn-dry,
+    .panel-btn-auto,
+    .btn-low,
+    .btn-normal,
+    .btn-high,
+    .btn-more {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-size: 100% 100%;
+      }
+    }
 .page {
   min-height: 100%;
   overflow-x: hidden;
@@ -485,7 +502,7 @@ export default {
     justify-content: space-around;
     border-bottom: 1px solid rgba(216, 216, 216, 0.5);
     .filter {
-      color: #20282B;
+      color: @bgColor;
       margin: 48px 0 37px;
       .filter-item {
         position: relative;
@@ -501,7 +518,7 @@ export default {
       .filter-name {
         opacity: 0.5;
         text-align: center;
-        color: #20282B;
+        color: @bgColor;
         font-size: 24px;
       }
     }
@@ -580,7 +597,7 @@ export default {
     }
     .block {
       padding: 184px 0 362px;
-      color: #20282B;
+      color: @bgColor;
       text-align: center;
       .num {
         font-size: 48px;
@@ -729,12 +746,7 @@ export default {
     }
     .btn-swich {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib2}/swich-white.png');
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -744,72 +756,37 @@ export default {
     }
     .panel-btn-dehumidification {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib}/btn_dh_mode_dry_hl.png');
-        background-size: 100% 100%;
       }
     }
     .panel-btn-dry {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib}/btn_dh_mode_drycloth_hl.png');
-        background-size: 100% 100%;
       }
     }
     .panel-btn-auto {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib}/auto-black.png');
-        background-size: 100% 100%;
       }
     }
     .btn-low {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib2}/speed1.png');
-        background-size: 100% 100%;
       }
     }
     .btn-normal {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib2}/speed2.png');
-        background-size: 100% 100%;
       }
     }
     .btn-high {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib2}/speed3.png');
-        background-size: 100% 100%;
       }
     }
     .btn-more {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib}/time-black.png');
-        background-size: 100% 100%;
       }
     }
   }
@@ -832,12 +809,7 @@ export default {
           border: 1px solid rgba(32, 40, 43, 0.5);
 
           &::before {
-            content: "";
-            display: block;
-            width: 44px;
-            height: 44px;
             background-image: url('@{lib2}/swich-black.png');
-            background-size: 100% 100%;
           }
         }
         .btn-name {
@@ -853,12 +825,7 @@ export default {
         border: 1px solid #000;
 
         &::before {
-          content: "";
-          display: block;
-          width: 44px;
-          height: 44px;
           background-image: url('@{lib2}/swich-black.png');
-          background-size: 100% 100%;
         }
         &.active {
           &::before {
@@ -946,18 +913,13 @@ export default {
         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
         border-color: #ffbf00;
         .name {
-          color: #20282B;
+          color: @bgColor;
         }
       }
     }
     .btn-swich {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib2}/swich-white.png');
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -968,12 +930,7 @@ export default {
 
     .btn-low {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib2}/speed1-white.png');
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -983,12 +940,7 @@ export default {
     }
     .btn-normal {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib2}/speed2-white.png');
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -998,12 +950,7 @@ export default {
     }
     .btn-high {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib2}/speed3-white.png');
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -1013,12 +960,7 @@ export default {
     }
     .btn-very_high {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib2}/speed4-white.png');
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -1028,12 +970,7 @@ export default {
     }
     .btn-super_high {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib2}/speed5-white.png');
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -1119,12 +1056,7 @@ export default {
     }
     .btn-swich {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib2}/swich-white.png');
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -1135,12 +1067,7 @@ export default {
 
     .btn-dehumidification {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib}/btn_dh_mode_dry.png');
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -1150,12 +1077,7 @@ export default {
     }
     .btn-dry {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib}/btn_dh_mode_drycloth.png');
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -1165,12 +1087,7 @@ export default {
     }
     .btn-auto {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib}/auto-white.png');
-        background-size: 100% 100%;
       }
       &.active {
         &::before {
@@ -1180,32 +1097,17 @@ export default {
     }
     .panel-btn-dehumidification {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib}/btn_dh_mode_dry_hl.png');
-        background-size: 100% 100%;
       }
     }
     .panel-btn-dry {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib}/btn_dh_mode_drycloth_hl.png');
-        background-size: 100% 100%;
       }
     }
     .panel-btn-auto {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
         background-image: url('@{lib}/auto-black.png');
-        background-size: 100% 100%;
       }
     }
   }

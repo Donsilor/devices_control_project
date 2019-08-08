@@ -598,14 +598,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-<<<<<<< HEAD
 @lib: '../../../lib/base/air_condition/assets/new-air';
-=======
 @imgPath: 'base/air_condition/assets/new-air';
 
 @bgColor: #20282b;
 @yellow: #ffbf00;
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
 
 @keyframes temperatureUp {
     from {
@@ -650,9 +647,6 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-<<<<<<< HEAD
-      background-image: url('@{lib}/swich-white.png');
-=======
     }
     &.active {
       background-image: linear-gradient(-90deg, #ffd500 0%, @yellow 100%);
@@ -662,96 +656,51 @@ export default {
   .btn-swich {
     &::before {
       background-image: url('~@lib/@{imgPath}/swich-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/swich-black.png');
-=======
         background-image: url('~@lib/@{imgPath}/swich-black.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
     }
   }
   .btn-mode {
     &::before {
-<<<<<<< HEAD
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url('@{lib}/heat-white.png');
-=======
       background-image: url('~@lib/@{imgPath}/heat-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/heat-black.png');
-=======
         background-image: url('~@lib/@{imgPath}/heat-black.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
     }
   }
   .btn-menu {
     &::before {
-<<<<<<< HEAD
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url('@{lib}/more-white.png');
-=======
       background-image: url('~@lib/@{imgPath}/more-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/more-black.png');
-=======
         background-image: url('~@lib/@{imgPath}/more-black.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
     }
   }
 
   .btn-wind {
     &::before {
-<<<<<<< HEAD
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url('@{lib}/wind-white.png');
-=======
       background-image: url('~@lib/@{imgPath}/wind-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/wind-black.png');
-=======
         background-image: url('~@lib/@{imgPath}/wind-black.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/wind-yellow.png');
-=======
         background-image: url('~@lib/@{imgPath}/wind-yellow.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
       .name{
         color: #FFC600;
@@ -760,34 +709,18 @@ export default {
   }
   .btn-heat {
     &::before {
-<<<<<<< HEAD
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url('@{lib}/heat-white.png');
-=======
       background-image: url('~@lib/@{imgPath}/heat-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/heat-black.png');
-=======
         background-image: url('~@lib/@{imgPath}/heat-black.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/heat-yellow.png');
-=======
         background-image: url('~@lib/@{imgPath}/heat-yellow.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
       .name{
         color: #FFC600;
@@ -796,34 +729,18 @@ export default {
   }
   .btn-dehumidify {
     &::before {
-<<<<<<< HEAD
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url('@{lib}/dehumidify-white.png');
-=======
       background-image: url('~@lib/@{imgPath}/dehumidify-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/dehumidify-black.png');
-=======
         background-image: url('~@lib/@{imgPath}/dehumidify-black.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/dehumidify-yellow.png');
-=======
         background-image: url('~@lib/@{imgPath}/dehumidify-yellow.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
       .name{
         color: #FFC600;
@@ -832,34 +749,18 @@ export default {
   }
   .btn-cold {
     &::before {
-<<<<<<< HEAD
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url('@{lib}/cold-white.png');
-=======
       background-image: url('~@lib/@{imgPath}/cold-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/cold-black.png');
-=======
         background-image: url('~@lib/@{imgPath}/cold-black.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/cold-yellow.png');
-=======
         background-image: url('~@lib/@{imgPath}/cold-yellow.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
       .name{
         color: #FFC600;
@@ -868,34 +769,18 @@ export default {
   }
   .btn-auto {
     &::before {
-<<<<<<< HEAD
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url('@{lib}/auto-white.png');
-=======
       background-image: url('~@lib/@{imgPath}/auto-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/auto-black.png');
-=======
         background-image: url('~@lib/@{imgPath}/auto-black.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/auto-yellow.png');
-=======
         background-image: url('~@lib/@{imgPath}/auto-yellow.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
       .name{
         color: #FFC600;
@@ -904,34 +789,18 @@ export default {
   }
   .btn-time {
     &::before {
-<<<<<<< HEAD
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url('@{lib}/time-white.png');
-=======
       background-image: url('~@lib/@{imgPath}/time-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/time-black.png');
-=======
         background-image: url('~@lib/@{imgPath}/time-black.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/time-yellow.png');
-=======
         background-image: url('~@lib/@{imgPath}/time-yellow.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
       .name{
         color: #FFC600;
@@ -940,34 +809,18 @@ export default {
   }
   .btn-swing {
     &::before {
-<<<<<<< HEAD
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url('@{lib}/wind-dir-w.png');
-=======
       background-image: url('~@lib/@{imgPath}/wind-dir-w.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/wind-dir-b.png');
-=======
         background-image: url('~@lib/@{imgPath}/wind-dir-b.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
     }
     &.btn-current {
       border-color: #FFC600;
       &::before {
-<<<<<<< HEAD
-        background-image: url('@{lib}/wind-dir-y.png');
-=======
         background-image: url('~@lib/@{imgPath}/wind-dir-y.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       }
       .name{
         color: #FFC600;
@@ -1065,11 +918,7 @@ export default {
         display: inline-block;
         width: 36px;
         height: 36px;
-<<<<<<< HEAD
-        background-image: url('@{lib}/icon-tips.png');
-=======
         background-image: url('~@lib/@{imgPath}/icon-tips.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
         background-size: 100% 100%;
         margin-right: 12px;
       }
@@ -1119,12 +968,7 @@ export default {
       height: 1080px;
 
       border-radius: 50%;
-<<<<<<< HEAD
-
-      background-image: url('@{lib}/dial-yellow.png');
-=======
       background-image: url('~@lib/base/air_condition/assets/new-air/dial-yellow.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
       background-size: 100% 100%;
 
       &.temperatureUp {
@@ -1167,11 +1011,7 @@ export default {
         display: inline-block;
         width: 36px;
         height: 36px;
-<<<<<<< HEAD
-        background-image: url('@{lib}/icon-time.png');
-=======
         background-image: url('~@lib/@{imgPath}/icon-time.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
         background-size: 100% 100%;
         margin-right: 12px;
       }
@@ -1208,21 +1048,6 @@ export default {
         height: 36px;
         margin-right: 17px;
         &.low{
-<<<<<<< HEAD
-          background-image: url('@{lib}/icon-min.png');
-          background-size: 100% 100%;
-        }
-        &.normal {
-          background-image: url('@{lib}/icon-normal.png');
-          background-size: 100% 100%;
-        }
-        &.high {
-          background-image: url('@{lib}/icon-big.png');
-          background-size: 100% 100%;
-        }
-        &.auto {
-           background-image: url('@{lib}/icon-min.png');
-=======
           background-image: url('~@lib/@{imgPath}/icon-min.png');
           background-size: 100% 100%;
         }
@@ -1236,7 +1061,6 @@ export default {
         }
         &.auto {
            background-image: url('~@lib/@{imgPath}/icon-min.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
           background-size: 100% 100%;
         }
       }
@@ -1286,22 +1110,14 @@ export default {
           display: block;
           width: 34px;
           height: 34px;
-<<<<<<< HEAD
-          background-image: url('@{lib}/speed-white.png');
-=======
           background-image: url('~@lib/@{imgPath}/speed-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
           background-size: 100% 100%;
         }
         &.active{
           background-image: linear-gradient(-90deg, #ffd500 0%, @yellow 100%);
           border-color: @yellow;
           &::before {
-<<<<<<< HEAD
-            background-image: url('@{lib}/speed-black.png');
-=======
             background-image: url('~@lib/@{imgPath}/speed-black.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
             background-size: 100% 100%;
           }
         }
@@ -1360,11 +1176,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-<<<<<<< HEAD
-        background-image: url('@{lib}/speed-white.png');
-=======
         background-image: url('~@lib/@{imgPath}/speed-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
         background-size: 100% 100%;
       }
     }
@@ -1373,11 +1185,7 @@ export default {
     }
     .dial {
       z-index: 999;
-<<<<<<< HEAD
-      background-image: url('@{lib}/dial-off.png');
-=======
       background-image: url('~@lib/@{imgPath}/dial-off.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
     }
     .btns {
       .btn-swich {
@@ -1388,20 +1196,12 @@ export default {
           display: block;
           width: 44px;
           height: 44px;
-<<<<<<< HEAD
-          background-image: url('@{lib}/swich-white.png');
-=======
           background-image: url('~@lib/@{imgPath}/swich-white.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
           background-size: 100% 100%;
         }
         &.active {
           &::before {
-<<<<<<< HEAD
-            background-image: url('@{lib}/swich-black.png');
-=======
             background-image: url('~@lib/@{imgPath}/swich-black.png');
->>>>>>> 8646f22942e2efaee80b6f58413ee1cbe1ff291e
           }
         }
       }

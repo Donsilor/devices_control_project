@@ -10,7 +10,7 @@ let res = {
     "step": 3,
     "speed_tem": 10,
     "run_time": 0,
-    "machine_status": 'grains',
+    "machine_status": 'standby',
     "order_mode": 'off',
     "realtime_tem": 79,
     "realtime_speed": 3,
