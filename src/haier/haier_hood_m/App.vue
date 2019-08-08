@@ -7,10 +7,15 @@
       <div class="main center">
         <div class="wrap-circle center">
           <p class="wind">风速档位</p>
-          <p class="speed">0</p>
+          <p class="speed">{{ !isClose?deviceAttrs.speed_pct:"- -" }}</p>
           <p class="switch">关</p>
         </div>
       </div>
+      <div class="tips">
+        <i/>
+        <span>照明已开启</span>
+      </div>
+
       <!-- 按钮 -->
       <div class="panel-btn center">
         <div 
@@ -26,7 +31,6 @@
             @click="setSwitch" />
           <div class="btn-name">关机</div>
         </div>
-
         <div 
           class="btn-wrap"
           @click="setMode('dy_expansion')">
@@ -42,12 +46,10 @@
         <div 
           class="btn-wrap"
           @click="setMode('sterilization')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'sterilization' }, 'btn btn-zs center']" />
-          <div class="btn-name">中速</div>
+          <div :class="[ { 'active': deviceAttrs.mode == 'sterilization' }, 'btn btn-gs center']" />
+          <div class="btn-name">高速</div>
         </div>
         
-
-
         <div 
           v-show="isOpen" 
           class="btn-wrap">
@@ -71,25 +73,53 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   data(){
     return {
-      isOffline:false,
-      isClose:false,
+      // isOffline:false,
+      // isClose:false,
       isOpen:false
     }
   },
   computed:{
-    ...mapState(['device', 'deviceAttrs'])
+    ...mapGetters(['isClose', 'isOffline']),
+    ...mapState(['device', 'deviceAttrs']),
+    
   },
   methods:{
-    setMode(){
-
+    ...mapActions(['doControlDevice']),
+    setMode(val) {
+      if (val == this.deviceAttrs.mode) {
+        val = 'free'
+      }
+      // if (this.isClose) return
+      // this.controlDevice('mode', val)
     },
     setSwitch(){
-
+      console.log('点击了开关')
+       let switchStatus = ''
+      if (this.deviceAttrs.switch == 'on') {
+        switchStatus = 'off'
+      } else {
+        switchStatus = 'on'
+      }
+      console.log(switchStatus,this.isClose)
+      this.controlDevice("switch", switchStatus)
+        .then(() => {
+          console.log('setSwitch success')
+        })
+    },
+    controlDevice(attr, value) {
+      return this.doControlDevice({
+        nodeid: `haier_hood.main.${attr}`,
+        params: {
+          attribute: {
+            [attr]: value
+          }
+        }
+      })
     },
     handleMore(){
       this.isOpen = !this.isOpen
     }
-  }
+  },
 
 }
 </script>
@@ -98,7 +128,7 @@ export default {
 @lib:"../../../lib/base/haier_hood/assets";
 @lib1:"../../../lib";
 .wrap-circle{
-  margin-top: 166px;
+  margin-top: 60px;
   background: url('@{lib}/yanji_img_animation.png') no-repeat;
   background-size: 100% 100%;
   width: 524px;
@@ -116,7 +146,21 @@ export default {
   }
 }
 
-
+.tips{
+  font-size:20px;
+  text-align: center;
+  i{
+       content: "";
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-image: url('@{lib}/yanji_ico_light.png');
+        background-size: 100% 100%;
+  }
+  span{
+    width: 100px;
+  } 
+}
 .panel-btn {
     position: fixed;
     bottom: 0;
@@ -205,21 +249,7 @@ export default {
         }
       }
     }
-    .btn-stop {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-stop.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/btn-stop.png');
-        }
-      }
-    }
+
     .btn-zm {
       &::before {
         content: "";
@@ -270,7 +300,7 @@ export default {
         background-size: 100% 100%;
       }
     }
-    .btn-zs {
+    .btn-gs {
       &::before {
         content: "";
         display: block;
@@ -294,76 +324,6 @@ export default {
         &::before {
           background-image: url('@{lib1}/base/air_cleaner/assets/new-air/swich-black.png');
         }
-      }
-    }
-    .btn-mode {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-mode1.png');
-        background-size: 100% 100%;
-      }
-    }
-    .btn-low {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed1.png');
-        background-size: 100% 100%;
-      }
-    }
-    .btn-middle {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed2.png');
-        background-size: 100% 100%;
-      }
-    }
-    .btn-high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed3.png');
-        background-size: 100% 100%;
-      }
-    }
-    .btn-very_high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed4.png');
-        background-size: 100% 100%;
-      }
-    }
-    .btn-super_high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed5.png');
-        background-size: 100% 100%;
-      }
-    }
-    .btn-more {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/more.png');
-        background-size: 100% 100%;
       }
     }
   }
@@ -403,448 +363,7 @@ export default {
         }
       }
     }
-  }
-
-
-.btns-panel {
-  &:before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 99999;
-    width: 100%;
-
-    background: rgba(0, 0, 0, 0.8);
-  }
-  .items {
-    position: fixed;
-    left: 510px;
-    top: 950px;
-    z-index: 999999;
-
-    width: 750px;
-    min-height: 160px;
-    .btn {
-      transition: all 0.3s ease-in-out;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    .item1 {
-      top: -122px;
-      left: 88px;
-    }
-    .item2 {
-      top: -122px;
-      left: -76px;
-    }
-    .item3 {
-      top: 20px;
-      left: -150px;
-    }
-    .item4 {
-      top: 155px;
-      left: -94px;
-    }
-    .item5 {
-      top: 150px;
-      left: 50px;
-    }
-  }
-  &.more {
-    .items {
-      left: 384px;
-    }
-  }
-  .btns {
-    justify-content: flex-start;
-    transition: all 0.3s ease-in-out;
-    margin-top: 57px;
-    .btn {
-      margin-right: 40px;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-
-      display: flex;
-      flex-direction: column;
-
-      .name {
-        margin-top: 8px;
-        font-size: 20px;
-        color: #fff;
-      }
-      &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border-color: #ffbf00;
-      }
-    }
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/swich-white.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/air_cleaner/assets/new-air/swich-black.png');
-        }
-      }
-    }
-
-    .btn-low {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed1-white.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed1.png');
-        }
-      }
-    }
-    .btn-middle {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed2-white.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed2.png');
-        }
-      }
-    }
-    .btn-high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed3-white.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed3.png');
-        }
-      }
-    }
-    .btn-very_high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed4-white.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed4.png');
-        }
-      }
-    }
-    .btn-super_high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed5-white.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/air_cleaner/assets/new-air/speed5.png');
-        }
-      }
-    }
-  }
-}
-.items {
-  margin-bottom: 30px;
-  .btns {
-    display: flex;
-    justify-content: center;
-    justify-content: flex-start;
-    padding: 10px 30px;
-    .btn-wrap {
-      margin-right: 20px;
-    }
-
-    .btn-name {
-      margin-top: 16px;
-      font-size: 24px;
-      color: #20282b;
-      text-align: center;
-    }
-
-    .btn {
-      box-sizing: border-box;
-      margin: 0 5px;
-      width: 110px;
-      height: 110px;
-      border: 1px solid #20282b;
-      border-radius: 50%;
-
-      display: flex;
-      flex-direction: column;
-      &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border: none;
-      }
-    }
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_condition/assets/new-air/swich-white.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/air_condition/assets/new-air/swich-black.png');
-        }
-      }
-    }
-    .btn-start {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/haier_washer/assets/btn-start.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/haier_washer/assets/btn-stop.png');
-        }
-      }
-    }
-    .btn-stop {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/haier_washer/assets/btn-stop.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/haier_washer/assets/btn-stop.png');
-        }
-      }
-    }
-    .btn-mode {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/haier_washer/assets/btn-mode-white58.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/haier_washer/assets/btn-mode-black58.png');
-        }
-      }
-    }
-    .btn-time {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_condition/assets/new-air/time-white.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/air_condition/assets/new-air/time-black.png');
-        }
-      }
-      &.btn-current {
-        border-color: #ffc600;
-        &::before {
-          background-image: url('@{lib1}/base/air_condition/assets/new-air/time-yellow.png');
-        }
-        .name {
-          color: #ffc600;
-        }
-      }
-    }
-
-    .btn-mode1 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-mode1.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/btn-mode1.png');
-        }
-      }
-    }
-    .btn-mode2 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-mode2.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/btn-mode2.png');
-        }
-      }
-    }
-    .btn-mode3 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-mode3.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/btn-mode3.png');
-        }
-      }
-    }
-    .btn-mode4 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-mode4.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/btn-mode4.png');
-        }
-      }
-    }
-    .btn-mode5 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-mode5.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/btn-mode5.png');
-        }
-      }
-    }
-    .btn-mode6 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-mode6.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/btn-mode6.png');
-        }
-      }
-    }
-    .btn-mode7 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-mode7.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/btn-mode7.png');
-        }
-      }
-    }
-    .btn-mode8 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-mode8.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/btn-mode8.png');
-        }
-      }
-    }
-    .btn-mode9 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-mode9.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/btn-mode9.png');
-        }
-      }
-    }
-    .btn-mode10 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/btn-mode10.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/btn-mode10.png');
-        }
-      }
-    }
-  }
+  
 }
 </style>
 
