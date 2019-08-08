@@ -1,0 +1,45 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+a {
+  text-decoration: none;
+}
+.page-on {
+  background: #46bcff;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.page-off {
+  background: #f2f2f2;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.name {
+  position: absolute;
+  left: 0;
+  top: 156px;
+  width: 100%;
+  text-align: center;
+  font-size: 30px;
+  color: #ffffff;
+}
+.tip {
+  position: absolute;
+  left: 0;
+  top: 200px;
+  width: 100%;
+  text-align: center;
+  font-size: 30px;
+  color: #ffffff;
+  opacity: 0.5;
+}
