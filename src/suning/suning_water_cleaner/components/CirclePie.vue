@@ -1,15 +1,19 @@
 <template>
-<div class="circle-pie">
+  <div class="circle-pie">
     <div class="pie-right">
-        <p class="right" :style="rightPieStyle"></p>
+      <p 
+        :style="rightPieStyle" 
+        class="right"/>
     </div>
     <div class="pie-left">
-        <p class="left" :style="leftPieStyle"></p>
+      <p 
+        :style="leftPieStyle" 
+        class="left"/>
     </div>
     <div class="mask">
-        <slot />
+      <slot />
     </div>
-</div>
+  </div>
 </template>
 
 <style lang="less" scoped>
