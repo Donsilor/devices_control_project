@@ -421,7 +421,24 @@ export default {
       if(data.attribute.machine_mode !== 'off'){
         this.currentMode = data.attribute.machine_mode
       }
-      
+      if(data.attribute.operation == 'abnormal'){
+        this.model = {    
+          "progress": 0,
+          "machine_mode": 'off',
+          "order_time": 0,
+          "step": 3,
+          "speed_tem": 10,
+          "run_time": 0,
+          "machine_status": 'standby',
+          "order_mode": 'off',
+          "realtime_tem": 79,
+          "realtime_speed": 3,
+          "no_cup": 'on',
+          "dry_heat": 'on',
+          "connectivity": "online"
+        }
+        return HdSmart.UI.toast('获取设备属性异常')
+      }
       // 将model 保存在 localStorage
       if (window.device_uuid) {
         window.localStorage.setItem(window.device_uuid, JSON.stringify(data.attribute))

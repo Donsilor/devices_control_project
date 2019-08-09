@@ -7,40 +7,40 @@ let res = {
     "switch": 'off',
     "work_st": 'standby',
     "stove_tem": {
-      stove_0: 1,
-      stove_1: 1,
+      "stove_0": '1',
+      "stove_1": '1',
     },
     "prevent_dry": {
-      stove_0: 1,
-      stove_1: 1,
+      "stove_0": '1',
+      "stove_1": '1',
     },
     "ignite_time": {
-      stove_0: 1,
-      stove_1: 1,
+      "stove_0": '1',
+      "stove_1": '1',
     },
     "ignite_status": {
-      stove_0: 'no',
-      stove_1: 'no',
+      "stove_0": 'no',
+      "stove_1": 'no',
     },
     "fire_status": {
-      stove_0: 'no',
-      stove_1: 'low',
+      "stove_0": 'high_30',
+      "stove_1": 'low',
     },
     "stove_status": {
-      stove_0: 'true',
-      stove_1: 'true',
+      "stove_0": 'true',
+      "stove_1": 'true',
     },
     "lampblack_status": 'no',
     "combustible_gas":'no',
     "dry_heat": {
-      stove_0:'off',
-      stove_1:'off',
-    },//分左右灶
+      "stove_0":'off',
+      "stove_1":'off',
+    },
     "accident_out": {
-      stove_0: 'off',
-      stove_1: 'off',
-    },//分左右灶
-    "connection": "offline"
+      "stove_0": 'off',
+      "stove_1": 'off',
+    },
+    "connection": "online"
   }
 
 export function generateSnapShot() {

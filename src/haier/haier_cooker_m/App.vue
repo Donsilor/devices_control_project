@@ -8,21 +8,55 @@
       <div class="main center">
         <div class="wrap-circle">
           <div class="circle-left">
-            <div class="circle-gray">
-              <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
+            <div :class="[{'active': leftStatus !== 'no'}, 'circle-gray']">
+              <circle-pie 
+                :left-status="leftStatus" 
+                class="pie">
+                <p class="icon">
+                  <img 
+                    v-show="leftStatus == 'no'" 
+                    src="../../../lib/base/haier_cooker/assets/no_fire.png" >
+                  <img 
+                    v-show="leftStatus == 'low' || leftStatus == 'low_60'" 
+                    src="../../../lib/base/haier_cooker/assets/small_fire.png" >
+                  <img 
+                    v-show="leftStatus == 'nomal'" 
+                    src="../../../lib/base/haier_cooker/assets/middle_fire.png" >
+                  <img 
+                    v-show="leftStatus == 'high' || leftStatus == 'high_30'" 
+                    src="../../../lib/base/haier_cooker/assets/big_fire.png" >
+                </p>
+              </circle-pie>
             </div>
             <div class="left-cooker">
               <div class="cooker-name">左灶</div>
-              <div class="fire">{{ fireTxt }}</div>
+              <div class="fire">{{ leftTxt }}</div>
             </div>
           </div>
           <div class="circle-right">
-            <div class="circle-gray">
-              <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
+            <div :class="[{'active': rightStatus !== 'no'}, 'circle-gray']">
+              <circle-pie 
+                :right-status="leftStatus" 
+                class="pie">
+                <p class="icon">
+                  <img 
+                    v-show="rightStatus == 'no'" 
+                    src="../../../lib/base/haier_cooker/assets/no_fire.png" >
+                  <img 
+                    v-show="rightStatus == 'low' || rightStatus == 'low_60'" 
+                    src="../../../lib/base/haier_cooker/assets/small_fire.png" >
+                  <img 
+                    v-show="rightStatus == 'nomal'" 
+                    src="../../../lib/base/haier_cooker/assets/middle_fire.png" >
+                  <img 
+                    v-show="rightStatus == 'high' || rightStatus == 'high_30'" 
+                    src="../../../lib/base/haier_cooker/assets/big_fire.png" >
+                </p>
+              </circle-pie>
             </div>
             <div class="right-cooker">
               <div class="cooker-name">右灶</div>
-              <div class="fire">无火</div>
+              <div class="fire">{{ rightTxt }}</div>
             </div>
           </div>
         </div>
@@ -36,8 +70,10 @@
 </template>
 
 <script>
+import CirclePie from "./components/CirclePie.vue"
 import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
+  components: {CirclePie},
   data() {
     return {
       isOpen: false,
@@ -46,7 +82,7 @@ export default {
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-     fireTxt() {
+    leftTxt() {
        if(!this.deviceAttrs.fire_status) return
       /* eslint-disable no-unreachable */
        switch(this.deviceAttrs.fire_status.stove_0) {
@@ -62,15 +98,60 @@ export default {
         case 'high':
           return '大火'
           break
+        case 'high_30':
+          return '大火'
+          break
+        case 'low_60':
+          return '小火'
+          break
         // default:
         //   return 
       }
     },
+    rightTxt() {
+       if(!this.deviceAttrs.fire_status) return
+      /* eslint-disable no-unreachable */
+       switch(this.deviceAttrs.fire_status.stove_1) {
+        case 'no':
+          return '无火'
+          break
+        case 'low':
+          return '小火'
+          break
+        case 'nomal':
+          return '中火'
+          break
+        case 'high':
+          return '大火'
+          break
+        case 'high_30':
+          return '大火'
+          break
+        case 'low_60':
+          return '小火'
+          break
+        // default:
+        //   return 
+      }
+    },
+    leftStatus() {
+      if(this.deviceAttrs.fire_status) return this.deviceAttrs.fire_status.stove_0
+    },
+    rightStatus() {
+      if(this.deviceAttrs.fire_status) return this.deviceAttrs.fire_status.stove_1
+    },
   },
   created() {
   },
+  mounted() {
+  },
   methods: {
     ...mapActions(['doControlDevice']),
+
+
+
+
+
     handleMore() {
       this.isOpen = !this.isOpen
     },
@@ -153,21 +234,31 @@ export default {
         justify-content: center;
         align-items: center;
         margin-bottom: 40px;
-        >img {
-          width: 92px;
+        .icon {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          >img{
+            width: 92px;
+          }
         }
       }
-        .cooker-name {
-          font-size: 28px;
-          margin-bottom: 14px;
-          color: #000000;
-          text-align: center;
-        }
-        .fire {
-          font-size: 40px;
-          color: #000000;
-          text-align: center;
-        }
+      .circle-gray.active {
+        border:2px solid #ff6026;
+      }
+      .cooker-name {
+        font-size: 28px;
+        margin-bottom: 14px;
+        color: #000000;
+        text-align: center;
+      }
+      .fire {
+        font-size: 40px;
+        color: #000000;
+        text-align: center;
+      }
     }
   }
   .footer {
