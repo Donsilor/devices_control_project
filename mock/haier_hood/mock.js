@@ -2,10 +2,10 @@ import Mock from 'mockjs'
 
 let res = {
     "connectivity": "online", //l
-    "switch": 'on', //开关
+    "switch": 'off', //开关
     "light": 'off', //照明灯
     "delay": 'off',// 延时
-    "speed_pct": 5, // 风速
+    "speed": 'off', // 风速
   }
 
 export function generateSnapShot() {
