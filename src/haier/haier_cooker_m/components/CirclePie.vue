@@ -42,10 +42,10 @@
     background:#fff;
 }
 .pie-right, .right {
-    clip: rect(0, auto, auto, 132px);
+    clip: rect(0, auto, auto, 131px);
 }
 .pie-left, .left {
-    clip: rect(0, 130px, auto, 0);
+    clip: rect(0, 131px, auto, 0);
 }
 .mask {
     position: absolute;

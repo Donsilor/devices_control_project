@@ -8,7 +8,7 @@
       <div class="main">
         <div class="item">
           <div class="title">
-            <div class="left"><i class="icon icon-cold" />冷藏室<span class="tm">7℃</span></div>
+            <div class="left"><i class="icon icon-cold" />冷藏室<span class="tm">{{ deviceAttrs.tempContainer | filterTm }}℃</span></div>
             <div class="right icon-swich"/>
           </div>
           <div class="control-tm">
@@ -23,14 +23,14 @@
         <div class="line"/>
         <div class="item">
           <div class="title">
-            <div class="left"><i class="icon icon-change" />变温室<span class="tm">7℃</span></div>
+            <div class="left"><i class="icon icon-change" />变温室<span class="tm">{{ deviceAttrs.tempVarTempChamber | filterTm }}℃</span></div>
             <div class="right icon-swich"/>
           </div>
           <div class="control-tm">
             <button class="control reduce"/>
             <div class="tm-progress">
-              <div class="low">2℃</div>
-              <div class="high">8℃</div>
+              <div class="low">-18℃</div>
+              <div class="high">5℃</div>
             </div>
             <button class="control add"/>
           </div>
@@ -38,13 +38,13 @@
         <div class="line"/>
         <div class="item">
           <div class="title">
-            <div class="left"><i class="icon icon-freeze" />冷冻室<span class="tm">7℃</span></div>
+            <div class="left"><i class="icon icon-freeze" />冷冻室<span class="tm">{{ deviceAttrs.tempFreezer | filterTm }}℃</span></div>
           </div>
           <div class="control-tm">
             <button class="control reduce"/>
             <div class="tm-progress">
-              <div class="low">2℃</div>
-              <div class="high">8℃</div>
+              <div class="low">-25℃</div>
+              <div class="high">-15℃</div>
             </div>
             <button class="control add"/>
           </div>
