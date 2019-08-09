@@ -4,22 +4,19 @@
 import Mock from 'mockjs'
 
 let res = {
-    "progress": 60,
-    "machine_mode": 'grains',
+    "progress": 0,
+    "machine_mode": 'off',
     "order_time": 0,
     "step": 3,
     "speed_tem": 10,
     "run_time": 0,
-    "machine_status": 'grains',
+    "machine_status": 'standby',
     "order_mode": 'off',
     "realtime_tem": 79,
     "realtime_speed": 3,
     "no_cup": 'on',
     "dry_heat": 'on',
     "connectivity": "online",
-    "h-t10": "30",
-    "h-t11": "00",
-    "remaining_run_time": "24:28"//模拟的剩余运行时间
   }
 
 export function generateSnapShot() {

@@ -1,5 +1,5 @@
 <template>
-<div></div>
+  <div/>
 </template>
 
 
@@ -158,7 +158,7 @@ export default {
             start: this.value
         }, this.options)
 
-        noUiSlider.create(this.$el, options);
+        noUiSlider.create(this.$el, options)
         this.slider = this.$el.noUiSlider
         this.isDraging = false
         this.setTimer = null
@@ -168,35 +168,35 @@ export default {
             this.$el.setAttribute('disabled', true)
         }
 
-        this.slider.on('update', function ( values, handle ) {
+        this.slider.on('update', function( values, handle ) {
             // console.log('update')
             self.$emit('input', parseInt(values[handle]))
             if(self.init){
                 self.isUpdating = true
             }
             self.init = true
-        });
-        this.slider.on('change', function ( values, handle ) {
+        })
+        this.slider.on('change', function( values, handle ) {
             self.$emit('input', parseInt(values[handle]))
             // console.log('change')
-        });
-        this.slider.on('slide', function ( values, handle ) {
+        })
+        this.slider.on('slide', function( values, handle ) {
             // console.log('slide')
-        });
-        this.slider.on('set', function ( values, handle ) {
+        })
+        this.slider.on('set', function( values, handle ) {
             // console.log('set')
             clearTimeout(self.setTimer)
             self.setTimer = setTimeout(function() {
                 self.isUpdating = false
                 self.$emit('change', parseInt(values[handle]))
             }, 500)
-        });
-        this.slider.on('start', function ( values, handle ) {
+        })
+        this.slider.on('start', function( values, handle ) {
             self.isDraging = true
-        });
-        this.slider.on('end', function ( values, handle ) {
+        })
+        this.slider.on('end', function( values, handle ) {
             self.isDraging = false
-        });
+        })
 
     },
     beforeDestroy() {

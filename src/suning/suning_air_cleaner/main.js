@@ -14,4 +14,4 @@ FastClick.attach(document.body)
 new Vue({
     el: '#app',
     render: h => h(App)
-});
+})

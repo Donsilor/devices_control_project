@@ -1,122 +1,175 @@
 <template>
-    <div id="app">
+  <div id="app">
 
-        <div class="wrapper">
-            <h3 class="main-title">{{device_name}}
-                <icon />
-            </h3>
-            <div class="pannel">
-                <p class="p-model">{{getModeName(allAttribute.mode)}}模式</p>
-                <p class="color-gray p-status">
-                    <span v-if="allAttribute.status==='start'">({{allAttribute.step === 'bake' ? '烘烤中' : '预约中'}})</span>
-                </p>
-                <div class="p-main-time">
-                    <p class="p-num" v-html="remainingText"></p>
-                    <p class="color-gray">{{allAttribute.status==='start'? '剩余时间' : '总时间'}}</p>
-                </div>
-                <p class="color-gray">
-                    <span>{{allAttribute.fire}}</span>
-                    设定温度
-                    <span class="p-wendu">{{allAttribute.temperature}}</span>℃</p>
-            </div>
-            <div class="controls">
-                <button @click="startOven" v-if="allAttribute.status==='stop'">
-                    <i class="c-firing"></i>启动</button>
-                <button @click="stopOven" v-if="allAttribute.status==='start'">
-                    <i class="c-stop"></i>停止</button>
-                <button @click="showModelLayer">
-                    <i class="c-model"></i>模式</button>
-            </div>
+    <div class="wrapper">
+      <h3 class="main-title">{{ device_name }}
+        <icon />
+      </h3>
+      <div class="pannel">
+        <p class="p-model">{{ getModeName(allAttribute.mode) }}模式</p>
+        <p class="color-gray p-status">
+          <span v-if="allAttribute.status==='start'">({{ allAttribute.step === 'bake' ? '烘烤中' : '预约中' }})</span>
+        </p>
+        <div class="p-main-time">
+          <p 
+            class="p-num" 
+            v-html="remainingText"/>
+          <p class="color-gray">{{ allAttribute.status==='start'? '剩余时间' : '总时间' }}</p>
         </div>
-        <span class="more-btn" @click="showMoreLayer"></span>
-        <sub-page class="model-select-layer" v-model="modelLayerShow" title="模式">
-            <div class="layer-body" :class="allAttribute.status === 'start' ? 'disable' : ''">
-                <ul class="model-list">
-                    <li @click="seleteMode(item)" v-for="item in modeList" :key="item.mode">
-                        <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
-                        <div class="mode-name">{{item.name}}</div>
-                    </li>
-                    <li @click="seleteMode(item)" v-for="item in elseModeList" :key="item.mode">
-                        <a href="javascript:void(0)" :class="[item.icon,allAttribute.mode==item.mode?'active':'']"></a>
-                        <div class="mode-name">{{item.name}}</div>
-                    </li>
-                </ul>
-                <div class="select-param" @click="toggleShowSlider('wendu')">
-                    <div class="hasDisable">
-                        <p>烘烤温度</p>
-                        <span class="value-wendu">{{allAttribute.temperature}}℃
-                            <i :class="wenduSelectFlag?'icon-arrow-up':'icon-arrow-down'"></i>
-                        </span>
-                    </div>
-                </div>
-                <div class="slide-list" v-show="wenduSelectFlag">
-                    <picker :slots="wenduSlot" @change="selectWendu" :valueKey="'value'" :item-height="30" :visible-item-count="3"></picker>
-                </div>
-                <div class="select-param" @click="toggleShowSlider('time')">
-                    <div class="hasDisable">
-                        <p>烘烤时长</p>
-                        <span class="value-wendu">{{allAttribute.bake_duration}}分钟
-                            <i :class="timeSelectFlag?'icon-arrow-up':'icon-arrow-down'"></i>
-                        </span>
-                    </div>
-                </div>
-                <div class="slide-list" v-show="timeSelectFlag">
-                    <picker :slots="timeSlot" @change="selectTime" :valueKey="'value'" :item-height="30" :visible-item-count="3"></picker>
-                </div>
-            </div>
-        </sub-page>
-
-        <sub-page v-model="moreLayerShow" title="更多">
-            <div class="layer-body">
-                <div class="main-select-con" :class="{disable:allAttribute.status!='start'}">
-                    <div class="select-param noborder hasDisable">
-                        <p>热风对流</p>
-                        <switch-button :sync="true" :disabled="allAttribute.status!='start'" :value="allAttribute.convection==='on'" @change="changeConvection" />
-                    </div>
-                    <div class="select-param hasDisable">
-                        <p>烤叉旋转</p>
-                        <switch-button :sync="true" :disabled="allAttribute.status!='start'" :value="allAttribute.rotisserie==='on'" @change="changeRotisserie" />
-                        <i class="switch off"></i>
-                    </div>
-                </div>
-            </div>
-        </sub-page>
+        <p class="color-gray">
+          <span>{{ allAttribute.fire }}</span>
+          设定温度
+        <span class="p-wendu">{{ allAttribute.temperature }}</span>℃</p>
+      </div>
+      <div class="controls">
+        <button 
+          v-if="allAttribute.status==='stop'" 
+          @click="startOven">
+        <i class="c-firing"/>启动</button>
+        <button 
+          v-if="allAttribute.status==='start'" 
+          @click="stopOven">
+        <i class="c-stop"/>停止</button>
+        <button @click="showModelLayer">
+        <i class="c-model"/>模式</button>
+      </div>
     </div>
+    <span 
+      class="more-btn" 
+      @click="showMoreLayer"/>
+    <sub-page 
+      v-model="modelLayerShow" 
+      class="model-select-layer" 
+      title="模式">
+      <div 
+        :class="allAttribute.status === 'start' ? 'disable' : ''" 
+        class="layer-body">
+        <ul class="model-list">
+          <li 
+            v-for="item in modeList" 
+            :key="item.mode" 
+            @click="seleteMode(item)">
+            <a 
+              :class="[item.icon,allAttribute.mode==item.mode?'active':'']" 
+              href="javascript:void(0)"/>
+            <div class="mode-name">{{ item.name }}</div>
+          </li>
+          <li 
+            v-for="item in elseModeList" 
+            :key="item.mode" 
+            @click="seleteMode(item)">
+            <a 
+              :class="[item.icon,allAttribute.mode==item.mode?'active':'']" 
+              href="javascript:void(0)"/>
+            <div class="mode-name">{{ item.name }}</div>
+          </li>
+        </ul>
+        <div 
+          class="select-param" 
+          @click="toggleShowSlider('wendu')">
+          <div class="hasDisable">
+            <p>烘烤温度</p>
+            <span class="value-wendu">{{ allAttribute.temperature }}℃
+              <i :class="wenduSelectFlag?'icon-arrow-up':'icon-arrow-down'"/>
+            </span>
+          </div>
+        </div>
+        <div 
+          v-show="wenduSelectFlag" 
+          class="slide-list">
+          <picker 
+            :slots="wenduSlot" 
+            :value-key="'value'" 
+            :item-height="30" 
+            :visible-item-count="3" 
+            @change="selectWendu"/>
+        </div>
+        <div 
+          class="select-param" 
+          @click="toggleShowSlider('time')">
+          <div class="hasDisable">
+            <p>烘烤时长</p>
+            <span class="value-wendu">{{ allAttribute.bake_duration }}分钟
+              <i :class="timeSelectFlag?'icon-arrow-up':'icon-arrow-down'"/>
+            </span>
+          </div>
+        </div>
+        <div 
+          v-show="timeSelectFlag" 
+          class="slide-list">
+          <picker 
+            :slots="timeSlot" 
+            :value-key="'value'" 
+            :item-height="30" 
+            :visible-item-count="3" 
+            @change="selectTime"/>
+        </div>
+      </div>
+    </sub-page>
+
+    <sub-page 
+      v-model="moreLayerShow" 
+      title="更多">
+      <div class="layer-body">
+        <div 
+          :class="{disable:allAttribute.status!='start'}" 
+          class="main-select-con">
+          <div class="select-param noborder hasDisable">
+            <p>热风对流</p>
+            <switch-button 
+              :sync="true" 
+              :disabled="allAttribute.status!='start'" 
+              :value="allAttribute.convection==='on'" 
+              @change="changeConvection" />
+          </div>
+          <div class="select-param hasDisable">
+            <p>烤叉旋转</p>
+            <switch-button 
+              :sync="true" 
+              :disabled="allAttribute.status!='start'" 
+              :value="allAttribute.rotisserie==='on'" 
+              @change="changeRotisserie" />
+            <i class="switch off"/>
+          </div>
+        </div>
+      </div>
+    </sub-page>
+  </div>
 </template>
 <script>
 const getWenduList = (begin, end) => {
-    let arr = [];
+    let arr = []
     for (let i = begin; i <= end; i += 5) {
-        arr.push({ name: i, value: i, active: false });
+        arr.push({ name: i, value: i, active: false })
     }
-    return arr;
-};
+    return arr
+}
 const getTimeList = (begin, end) => {
-    let arr = [];
+    let arr = []
     for (let i = begin; i <= end; i++) {
-        arr.push({ name: i, value: i, active: false });
+        arr.push({ name: i, value: i, active: false })
     }
-    return arr;
-};
+    return arr
+}
 
 function findIndex(array, fn) {
     for (var i = 0; i < array.length; i++) {
         if (fn(array[i])) {
-            return i;
+            return i
         }
     }
-    return -1;
+    return -1
 }
 
-import SwitchButton from '@lib/components/SwitchButton.vue';
-import Picker from '@lib/components/Picker/picker.vue';
-import AllConfig from './config';
-import SubPage from '@lib/components/SubPage';
-import Icon from '@lib/components/SettingIconMobile.vue';
+import SwitchButton from '@lib/components/SwitchButton.vue'
+import Picker from '@lib/components/Picker/picker.vue'
+import AllConfig from './config'
+import SubPage from '@lib/components/SubPage'
+import Icon from '@lib/components/SettingIconMobile.vue'
 // import IScroll from 'iscroll/build/iscroll-lite';
 
 export default {
-    name: 'app',
+    name: 'App',
     components: {
         SwitchButton,
         Picker,
@@ -207,24 +260,13 @@ export default {
                 }
             ],
             device_name: ''
-        };
-    },
-    watch: {
-        'allAttribute.status'(val) {
-            if (val == 'start') {
-                this.wenduSelectFlag = false;
-                this.timeSelectFlag = false;
-                if (this.modelLayerShow) {
-                    this.closeModelLayer();
-                }
-            }
         }
     },
     computed: {
         wenduSlot() {
             var current = findIndex(this.allAttribute.wenduList, item => {
-                return this.allAttribute.temperature == item.value;
-            });
+                return this.allAttribute.temperature == item.value
+            })
 
             return [
                 {
@@ -233,12 +275,12 @@ export default {
                     values: this.allAttribute.wenduList,
                     className: 'slot1'
                 }
-            ];
+            ]
         },
         timeSlot() {
             var current = findIndex(this.allAttribute.timeList, item => {
-                return this.allAttribute.bake_duration == item.value;
-            });
+                return this.allAttribute.bake_duration == item.value
+            })
 
             return [
                 {
@@ -247,130 +289,141 @@ export default {
                     values: this.allAttribute.timeList,
                     className: 'slot2'
                 }
-            ];
+            ]
         },
         remainingText() {
-            var total = this.allAttribute.remaining;
+            var total = this.allAttribute.remaining
             if (this.allAttribute.status == 'start' && this.allAttribute.step == 'reserve') {
-                total = total - this.allAttribute.bake_duration;
+                total = total - this.allAttribute.bake_duration
             }
-            var h = Math.floor(total / 60);
-            var m = total % 60;
-            var s = '';
+            var h = Math.floor(total / 60)
+            var m = total % 60
+            var s = ''
             if (h > 0) {
-                s += `<strong>${h}</strong>小时 &nbsp;&nbsp;`;
+                s += `<strong>${h}</strong>小时 &nbsp;&nbsp;`
             }
             if (m > 0) {
-                s += `<strong>${m}</strong>分钟`;
+                s += `<strong>${m}</strong>分钟`
             }
-            return s;
+            return s
+        }
+    },
+    watch: {
+        'allAttribute.status'(val) {
+            if (val == 'start') {
+                this.wenduSelectFlag = false
+                this.timeSelectFlag = false
+                if (this.modelLayerShow) {
+                    this.closeModelLayer()
+                }
+            }
         }
     },
     mounted() {
         HdSmart.ready(() => {
             if (window.device_name) {
-                this.device_name = window.device_name;
+                this.device_name = window.device_name
             }
             // HdSmart.UI.setWebViewTouchRect(0, 0, '100%', '100%');
-            HdSmart.UI.showLoading();
-            this.getSnapShot();
-        });
+            HdSmart.UI.showLoading()
+            this.getSnapShot()
+        })
         HdSmart.onDeviceStateChange(data => {
-            this.onSuccess(data.result);
-        });
+            this.onSuccess(data.result)
+        })
     },
     methods: {
         closeMoreLayer() {
-            this.moreLayerShow = false;
+            this.moreLayerShow = false
         },
         closeModelLayer() {
-            this.modelLayerShow = false;
+            this.modelLayerShow = false
         },
         showMoreLayer() {
-            this.moreLayerShow = true;
+            this.moreLayerShow = true
         },
         showModelLayer() {
-            this.modelLayerShow = true;
+            this.modelLayerShow = true
         },
         seleteMode(item) {
             // 如果正在工作 不能选模式
             if (this.allAttribute.status === 'start') {
-                return;
+                return
             }
-            this.allAttribute.mode = item.mode;
-            let currentData = AllConfig[item.mode];
+            this.allAttribute.mode = item.mode
+            let currentData = AllConfig[item.mode]
             for (let attr in currentData) {
-                this.allAttribute[attr] = currentData[attr];
+                this.allAttribute[attr] = currentData[attr]
             }
-            this.allAttribute.remaining = this.allAttribute.bake_duration;
+            this.allAttribute.remaining = this.allAttribute.bake_duration
         },
         toggleShowSlider(val) {
             if (this.allAttribute.status === 'start') {
-                return;
+                return
             }
             if (val === 'wendu') {
-                this.wenduSelectFlag = !this.wenduSelectFlag;
+                this.wenduSelectFlag = !this.wenduSelectFlag
                 if (this.wenduSelectFlag && this.timeSelectFlag) {
-                    this.timeSelectFlag = false;
+                    this.timeSelectFlag = false
                 }
             } else {
-                this.timeSelectFlag = !this.timeSelectFlag;
+                this.timeSelectFlag = !this.timeSelectFlag
                 if (this.wenduSelectFlag && this.timeSelectFlag) {
-                    this.wenduSelectFlag = false;
+                    this.wenduSelectFlag = false
                 }
             }
         },
         selectWendu(picker, values) {
             if (values.length && values[0] && this.wenduSelectFlag) {
-                this.allAttribute.temperature = values[0].value;
+                this.allAttribute.temperature = values[0].value
             }
         },
         selectTime(picker, values) {
             if (values.length && values[0] && this.timeSelectFlag) {
-                this.allAttribute.bake_duration = values[0].value;
-                this.allAttribute.remaining = values[0].value;
+                this.allAttribute.bake_duration = values[0].value
+                this.allAttribute.remaining = values[0].value
             }
         },
         getModeName(val) {
-            let text = '';
-            var modeList = this.modeList.concat(this.elseModeList);
+            let text = ''
+            var modeList = this.modeList.concat(this.elseModeList)
             var currentMode = modeList.filter(item => {
-                return item.mode == val;
-            });
+                return item.mode == val
+            })
             if (currentMode.length) {
-                return currentMode[0].name;
+                return currentMode[0].name
             }
-            return '';
+            return ''
         },
         getSnapShot(cb) {
             HdSmart.Device.getSnapShot(
                 data => {
-                    this.onSuccess(data);
-                    cb && cb();
+                    this.onSuccess(data)
+                    cb && cb()
                 },
                 () => {
-                    cb && cb();
+                    cb && cb()
                 }
-            );
+            )
         },
         onSuccess(data) {
-            console.log('data66666666', data);
-            HdSmart.UI.hideLoading();
-            let attributes = data.attribute;
-            let curAttributes = this.allAttribute;
-            let config = AllConfig[attributes.mode || 'barbecues'];
+            console.log('data66666666', data)
+            HdSmart.UI.hideLoading()
+            let attributes = data.attribute
+            let curAttributes = this.allAttribute
+            let config = AllConfig[attributes.mode || 'barbecues']
             //剩余时间设置为烘干时间，避免没有该字段显示异常
-            config.remaining = config.bake_duration;
+            config.remaining = config.bake_duration
 
             if (attributes.mode) {
                 //烘烤时间设置为默认时间，设备不保存，上报bake_duration为剩余时间
-                attributes.bake_duration = config.bake_duration;
+                attributes.bake_duration = config.bake_duration
             }
-            attributes = Object.assign({}, config, attributes);
+            attributes = Object.assign({}, config, attributes)
 
             for (let attr in attributes) {
                 if (attributes[attr]) {
-                    curAttributes[attr] = attributes[attr];
+                    curAttributes[attr] = attributes[attr]
                 }
             }
         },
@@ -384,17 +437,17 @@ export default {
                     }
                 },
                 () => {
-                    success && success();
+                    success && success()
                 },
                 () => {
-                    error && error();
+                    error && error()
                 }
-            );
+            )
         },
         // 启动
         startOven() {
-            const obj = this;
-            let curParam = this.allAttribute;
+            const obj = this
+            let curParam = this.allAttribute
             let paramObj = {
                 control: 'start',
                 mode: curParam.mode,
@@ -404,30 +457,30 @@ export default {
                 //                    convection: curParam.convection,
                 //                    rotisserie: curParam.rotisserie
                 //                    remaining: curParam.remaining
-            };
-            this.controlDevice(paramObj);
+            }
+            this.controlDevice(paramObj)
         },
         // 停止
         stopOven() {
-            const obj = this;
-            this.controlDevice({ control: 'stop' });
+            const obj = this
+            this.controlDevice({ control: 'stop' })
         },
         // 设置热风对流
         changeConvection(obj) {
-            let self = this;
+            let self = this
             this.controlDevice({ convection: obj.value ? 'on' : 'off' }, () => {
-                self.allAttribute.convection = self.value ? 'on' : 'off';
-            });
+                self.allAttribute.convection = self.value ? 'on' : 'off'
+            })
         },
         // 设置转叉
         changeRotisserie(obj) {
-            let self = this;
+            let self = this
             this.controlDevice({ rotisserie: obj.value ? 'on' : 'off' }, () => {
-                self.allAttribute.rotisserie = self.value ? 'on' : 'off';
-            });
+                self.allAttribute.rotisserie = self.value ? 'on' : 'off'
+            })
         }
     }
-};
+}
 </script>
 <style lang="less">
 @lib: '../../../lib/base/oven/assets';
