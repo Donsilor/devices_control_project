@@ -27,7 +27,7 @@
 .pie-right, .pie-left {
     position: absolute;
     top: 0;
-    left: 0;;
+    left: 0;
     width:262px;
     height:262px;
     border-radius: 50%;
@@ -42,10 +42,10 @@
     background:#fff;
 }
 .pie-right, .right {
-    clip: rect(0, auto, auto, 131px);
+    clip: rect(0, auto, auto, 132px);
 }
 .pie-left, .left {
-    clip: rect(0, 131px, auto, 0);
+    clip: rect(0, 130px, auto, 0);
 }
 .mask {
     position: absolute;

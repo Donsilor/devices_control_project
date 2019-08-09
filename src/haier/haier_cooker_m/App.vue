@@ -147,11 +147,6 @@ export default {
   },
   methods: {
     ...mapActions(['doControlDevice']),
-
-
-
-
-
     handleMore() {
       this.isOpen = !this.isOpen
     },
