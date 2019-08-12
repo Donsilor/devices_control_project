@@ -27,7 +27,7 @@
 .pie-right, .pie-left {
     position: absolute;
     top: 0;
-    left: 0;;
+    left: 0;
     width:262px;
     height:262px;
     border-radius: 50%;

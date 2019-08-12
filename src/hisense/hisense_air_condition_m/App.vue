@@ -1,14 +1,14 @@
 <template>
   <div class="body">
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
-      <topbar
+      <topbar 
         :title="device.device_name"
         bak-color="#000" />
       <!-- <div class="c-status">时段预约：6:00-9:00</div> -->
       <div class="main center">
         <div class="wrap-circle">
           <div class="circle-gray" />
-          <div
+          <div 
             :style="{ transform: 'rotate(' + cRotate + 'deg)'}"
             class="circle" />
           <div class="cover">
@@ -20,14 +20,14 @@
         </div>
 
         <div class="bg center">
-          <div
+          <div 
             v-if="isClose"
             class="bg2 center">
             <div class="num">--</div>
             <div class="time">--<sup>°C</sup></div>
             <div class="cmode">当前温度</div>
           </div>
-          <div
+          <div 
             v-else
             class="bg2 center">
             <div class="num">{{ deviceAttrs.work_status == 'heat' ? '加热' : '保温' }}中</div>
@@ -35,7 +35,7 @@
             <div class="cmode">当前温度</div>
           </div>
 
-          <div
+          <div 
             :style="{ transform: 'rotate(' + arrowRotate + 'deg)'}"
             class="bg2 pos-ab"><i class="circle-arrow" /></div>
 
@@ -43,12 +43,12 @@
       </div>
 
       <div class="control center">
-        <div
+        <div 
           v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
           class="reduce"
           @click="setTemperature(-1)" />
         <div class="main-control"><i class="icon" /> 预设温度 {{ deviceAttrs.set_temperature }}°C</div>
-        <div
+        <div 
           v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
           class="add"
           @click="setTemperature(1)" />
@@ -56,40 +56,40 @@
 
       <!-- 按钮 -->
       <div class="panel-btn center">
-        <!-- <div
-          class="more"
+        <!-- <div 
+          class="more" 
           @click="handleMore">
           <div :class="[isOpen ? 'up': 'down', 'arrow']">></div>
           <div>{{ isOpen ? '收起' : '查看更多' }}</div>
         </div> -->
 
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
-          <div
+          <div 
             :class="[{ 'active': !isClose }, 'btn-swich btn center']"
             @click="setSwitch" />
           <div class="btn-name">关机</div>
         </div>
 
-        <div
+        <div 
           class="btn-wrap"
           @click="setMode('dy_expansion')">
           <div :class="[{ 'active': deviceAttrs.mode == 'dy_expansion' }, 'btn btn-heat center']" />
           <div class="btn-name">速热增容</div>
         </div>
-        <div
+        <div 
           class="btn-wrap"
           @click="setMode('heat_keep')">
           <div :class="[ { 'active': deviceAttrs.mode == 'heat_keep' }, 'btn btn-znsw center']" />
           <div class="btn-name">智能温水</div>
         </div>
-        <div
+        <div 
           class="btn-wrap"
           @click="setMode('sterilization')">
           <div :class="[ { 'active': deviceAttrs.mode == 'sterilization' }, 'btn btn-znyj center']" />
           <div class="btn-name">智能抑菌 </div>
         </div>
 
-        <!--
+        <!-- 
         <div class="btn-wrap">
           <div
             class="btn-time btn center"/>
@@ -107,15 +107,15 @@
           <div class="btn-name">智能水温</div>
         </div>
 
-        <div
-          v-show="isOpen"
+        <div 
+          v-show="isOpen" 
           class="btn-wrap">
           <div
             class="btn btn-bpsr center"/>
           <div class="btn-name">变频速热</div>
         </div>
-        <div
-          v-show="isOpen"
+        <div 
+          v-show="isOpen" 
           class="btn-wrap">
           <div
             class="btn btn-znyj center"/>
