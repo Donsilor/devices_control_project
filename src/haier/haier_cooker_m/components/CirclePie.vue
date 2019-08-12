@@ -64,20 +64,34 @@ export default {
     props: ['leftStatus','rightStatus'],
     computed: {
         rotate() {
-          if (this.leftStatus == 'no') {
-            return 0
+          if(this.leftStatus){
+            if (this.leftStatus == 'no') {
+              return 0
+            }
+            if (this.leftStatus == 'low' || this.leftStatus == 'low_60') {
+              return 120
+            }
+            if (this.leftStatus == 'nomal') {
+              return 240
+            }
+            if (this.leftStatus == 'high'|| this.leftStatus == 'high_30') {
+              return 360
+            }
           }
-          if (this.leftStatus == 'low' || this.leftStatus == 'low_60') {
-            return 120
+         if(this.rightStatus) {
+            if (this.rightStatus == 'no') {
+              return 0
+            }
+            if (this.rightStatus == 'low' || this.rightStatus == 'low_60') {
+              return 120
+            }
+            if (this.rightStatus == 'nomal') {
+              return 240
+            }
+            if (this.rightStatus == 'high'|| this.rightStatus == 'high_30') {
+              return 360
+            }
           }
-          if (this.leftStatus == 'nomal') {
-            return 240
-          }
-          if (this.leftStatus == 'high'|| this.leftStatus == 'high_30') {
-            return 360
-          }
-            // return (100-this.value) * 3.6
-            // return 120
         },
         rightPieStyle() {
             var r = this.rotate < 180 ? this.rotate : 180
