@@ -4,7 +4,7 @@
  * @author songwh
  *
  * Created at     : 2019-08-05 11:32:49
- * Last modified  : 2019-08-09 15:17:57
+ * Last modified  : 2019-08-09 17:51:37
  */
 import Mock from 'mockjs'
 
@@ -15,7 +15,7 @@ let res = {
   tempContainer: 60,
   tempFreezer: -200,
   tempVarTempChamber: 20,
-  mode: 'cold',
+  mode: 'cool',
   queryMode: 'low',
   connectivity: 'online'
 }
@@ -38,7 +38,7 @@ export function set(data) {
     } catch (error) {
       attr = data.content.params.attribute
     }
-    res.attribute = Object.assign({}, res.attribute, attr)
+    res = Object.assign({}, res, attr)
     return Mock.mock({
         code: 0
     })
