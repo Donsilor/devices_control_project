@@ -1,7 +1,7 @@
 /**
  * Created by lenovo on 2017/7/10.
  */
-import Mock from 'mockjs';
+import Mock from 'mockjs'
 const getWenduList = (begin,end) => {
     let arr = []
     for (let i = begin; i<=end; i += 5) {
