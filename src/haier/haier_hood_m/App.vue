@@ -7,8 +7,18 @@
       <div class="main center">
         <div :class="[{'animation': !isClose },{'greycircle': isClose },'wrap-circle' ,'center']">
           <p class="wind">风速档位</p>
-          <p class="speed">{{ !isClose ? speedNum : '- -' }}</p>
-          <p class="switch">{{ !isClose ? speedText : "" }}</p>
+          <p 
+            v-if="!isClose&&!isOffline" 
+            class="speed">{{ speedNum }}</p>
+          <p 
+            v-else 
+            class="speed">- -</p>
+          <p 
+            v-if="!isClose&&!isOffline" 
+            class="switch">{{ speedText }}</p>
+          <p 
+            v-else 
+            class="switch">0</p>
         </div>
       </div>
       <div 
@@ -126,9 +136,9 @@ export default {
   methods:{
     ...mapActions(['doControlDevice']),
     setSpeed(val) {
-      // if (val == this.deviceAttrs.speed) {
-      //   val = 'free'
-      // }
+      if (val == this.deviceAttrs.speed) {
+        val = 'off'
+      }
       if (this.isClose) return  // 关机状态点击无效
       this.controlDevice('speed', val)
     },
@@ -140,11 +150,10 @@ export default {
       } else {
         switchStatus = 'on'
       }
-      console.log(switchStatus,this.isClose)
       this.controlDevice("switch", switchStatus)
-        .then(() => {
-          console.log('setSwitch success')
-        })
+      this.controlDevice("light", 'off')
+      this.controlDevice("speed", 'off')
+      this.controlDevice("delay", 'off')
     },
     setLight(){
       if (this.isClose) return  // 关机状态点击无效
