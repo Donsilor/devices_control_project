@@ -14,9 +14,6 @@
         class="check" 
         type="button"
         @click="cancelEvent" >关闭</button>
-      <!-- <div 
-        class="cancel" 
-        @click="cancelEvent">关闭</div> -->
     </div>
   </div>
 </template>

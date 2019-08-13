@@ -8,7 +8,7 @@
         <div class="wrap-circle">
           <div class="circle-left">
             <div 
-              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'" 
+              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'|| leftStatus == 'no'" 
               class="circle-gray">
               <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
             </div>
@@ -19,9 +19,6 @@
                 :left-status="leftStatus" 
                 class="pie">
                 <p class="icon">
-                  <img 
-                    v-show="leftStatus == 'no'" 
-                    src="../../../lib/base/haier_cooker/assets/no_fire.png" >
                   <img 
                     v-show="leftStatus == 'low' || leftStatus == 'low_60'" 
                     src="../../../lib/base/haier_cooker/assets/small_fire.png" >
@@ -41,7 +38,7 @@
           </div>
           <div class="circle-right">
             <div 
-              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'" 
+              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'|| rightStatus == 'no'" 
               class="circle-gray">
               <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
             </div>
@@ -52,9 +49,6 @@
                 :right-status="rightStatus" 
                 class="pie">
                 <p class="icon">
-                  <img 
-                    v-show="rightStatus == 'no'" 
-                    src="../../../lib/base/haier_cooker/assets/no_fire.png" >
                   <img 
                     v-show="rightStatus == 'low' || rightStatus == 'low_60'" 
                     src="../../../lib/base/haier_cooker/assets/small_fire.png" >
@@ -211,6 +205,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+*{
+  touch-action:none;
+}
 .body {
   min-height: 100%;
 }
