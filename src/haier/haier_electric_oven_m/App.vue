@@ -225,12 +225,15 @@ export default {
     ...mapState(['device', 'deviceAttrs']),
   },
   created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+    })
     if(document.body.clientHeight/document.body.clientWidth < 2) {
       this.isMin = true
     }
   },
   methods: {
-    ...mapActions(['doControlDevice']),
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
     showMode() {
       this.seletModal = true
     },

@@ -105,7 +105,6 @@ export default {
   computed:{
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-    
   },
   watch:{
     deviceAttrs: {
@@ -133,8 +132,13 @@ export default {
       immediate: true
     }
   },
+  created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+    })
+  },
   methods:{
-    ...mapActions(['doControlDevice']),
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setSpeed(val) {
       if (val == this.deviceAttrs.speed) {
         val = 'off'
