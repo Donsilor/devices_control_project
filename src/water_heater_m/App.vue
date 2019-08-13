@@ -157,9 +157,12 @@ export default {
     }
   },
   created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+    })
   },
   methods: {
-    ...mapActions(['doControlDevice']),
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
     handleMore() {
       this.isOpen = !this.isOpen
     },

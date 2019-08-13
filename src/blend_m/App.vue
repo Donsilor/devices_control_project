@@ -437,7 +437,7 @@ export default {
           "dry_heat": 'on',
           "connectivity": "online"
         }
-        return HdSmart.UI.toast('获取设备属性异常')
+        return HdSmart.UI.toast('无法获取设备属性，请稍后再试')
       }
       // 将model 保存在 localStorage
       if (window.device_uuid) {

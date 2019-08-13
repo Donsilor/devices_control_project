@@ -8,92 +8,110 @@
       <div class="main">
         <div class="item">
           <div class="title">
-            <div class="left"><i class="icon icon-cold" />冷藏室<span class="tm">7℃</span></div>
-            <div class="right icon-swich"/>
+            <div class="left"><i class="icon icon-cold" />冷藏室<span class="tm">{{ deviceAttrs.tempContainer | filterTm }}℃</span></div>
+            <!-- <div class="right icon-swich"/> -->
           </div>
           <div class="control-tm">
-            <button class="control reduce"/>
+            <button 
+              class="control reduce" 
+              @click="setTemperature('tempContainer', -10, [20, 80])"/>
             <div class="tm-progress">
-              <div class="low">2℃</div>
-              <div class="high">8℃</div>
+              <div 
+                :style="{ width: progress1 +'%' }" 
+                class="low" ><span>2℃</span></div>
+              <div class="high"><span>8℃</span></div>
             </div>
-            <button class="control add"/>
+            <button 
+              class="control add" 
+              @click="setTemperature('tempContainer', 10, [20, 80])"/>
           </div>
         </div>
         <div class="line"/>
         <div class="item">
           <div class="title">
-            <div class="left"><i class="icon icon-change" />变温室<span class="tm">7℃</span></div>
-            <div class="right icon-swich"/>
+            <div class="left"><i class="icon icon-change" />变温室<span class="tm">{{ deviceAttrs.tempVarTempChamber | filterTm }}℃</span></div>
+            <!-- <div class="right icon-swich"/> -->
           </div>
           <div class="control-tm">
-            <button class="control reduce"/>
+            <button 
+              class="control reduce"
+              @click="setTemperature('tempVarTempChamber', -10, [-180, 50])"/>
             <div class="tm-progress">
-              <div class="low">2℃</div>
-              <div class="high">8℃</div>
+              <div 
+                :style="{ width: progress2 +'%' }" 
+                class="low" ><span>-18℃</span></div>
+              <div class="high"><span>5℃</span></div>
             </div>
-            <button class="control add"/>
+            <button 
+              class="control add"
+              @click="setTemperature('tempVarTempChamber', 10, [-180, 50])"/>
           </div>
         </div>
         <div class="line"/>
         <div class="item">
           <div class="title">
-            <div class="left"><i class="icon icon-freeze" />冷冻室<span class="tm">7℃</span></div>
+            <div class="left"><i class="icon icon-freeze" />冷冻室<span class="tm">{{ deviceAttrs.tempFreezer | filterTm }}℃</span></div>
           </div>
           <div class="control-tm">
-            <button class="control reduce"/>
+            <button 
+              class="control reduce"
+              @click="setTemperature('tempFreezer', -10, [-250, -150])"/>
             <div class="tm-progress">
-              <div class="low">2℃</div>
-              <div class="high">8℃</div>
+              <div 
+                :style="{ width: progress3 +'%' }" 
+                class="low" ><span>-25℃</span></div>
+              <div class="high"><span>-15℃</span></div>
             </div>
-            <button class="control add"/>
+            <button 
+              class="control add"
+              @click="setTemperature('tempFreezer', 10, [-250, -150])"/>
           </div>
         </div>
-        <div class="c-status">速冻模式</div>
+        <div class="c-status">{{ deviceAttrs.mode | modeType }}模式</div>
       </div>
       <!-- 按钮 -->
       <div class="panel-btn center">
         <div 
           class="more" 
           @click="handleMore">
-          <div :class="[isOpen ? 'up': 'down', 'arrow']">></div>
+          <span :class="[isOpen ? 'up': 'down', 'arrow']">></span>
           <div>{{ isOpen ? '收起' : '查看更多' }}</div>
         </div>
-
-        <div class="btn-wrap">
+        <div 
+          class="btn-wrap"
+          @click="setMode('cool')">
           <div 
-            class="btn-cold btn center" />
+            :class="[{ 'active': deviceAttrs.mode == 'cool' }, 'btn-cold btn center']"/>
           <div class="btn-name">速冷</div>
         </div>
 
         <div 
           class="btn-wrap"
-          @click="setMode('dy_expansion')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dy_expansion' }, 'btn btn-freeze center']" />
+          @click="setMode('frozen')">
+          <div :class="[{ 'active': deviceAttrs.mode == 'frozen' }, 'btn btn-freeze center']" />
           <div class="btn-name">速冻</div>
         </div>
         <div 
           class="btn-wrap"
-          @click="setMode('heat_keep')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'heat_keep' }, 'btn btn-auto center']" />
+          @click="setMode('smart')">
+          <div :class="[ { 'active': deviceAttrs.mode == 'smart' }, 'btn btn-auto center']" />
           <div class="btn-name">智能</div>
         </div>
         <div 
           class="btn-wrap"
-          @click="setMode('sterilization')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'sterilization' }, 'btn btn-holiday center']" />
+          @click="setMode('holiday')">
+          <div :class="[ { 'active': deviceAttrs.mode == 'holiday' }, 'btn btn-holiday center']" />
           <div class="btn-name">假日 </div>
         </div>
 
         <div 
-          v-show="isOpen" 
-          class="btn-wrap">
-          <div
-            class="btn btn-energy center"/>
+          v-show="isOpen"
+          class="btn-wrap"
+          @click="setMode('energySave')">
+          <div :class="[ { 'active': deviceAttrs.mode == 'energySave' }, 'btn btn-energy center']" />
           <div class="btn-name">节能</div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -109,16 +127,74 @@ export default {
   computed: {
     ...mapGetters(['isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    progress1() {
+      let x = +this.deviceAttrs.tempContainer
+      let [min, max ] = [20, 80]
+      if(x < min){
+        return 0
+      } else if(x > max){
+        return 100
+      } else {
+        return (x-min) / (max - min) * 100
+      }
+    },
+    progress2() {
+      let x = +this.deviceAttrs.tempVarTempChamber
+      let [min, max ] = [-180, 50]
+      if(x < min){
+        return 0
+      } else if(x > max){
+        return 100
+      } else {
+        return (x-min) / (max - min) * 100
+      }
+    },
+    progress3() {
+      let x = +this.deviceAttrs.tempFreezer
+      let [min, max ] = [-250, -150]
+      if(x < min){
+        return 0
+      } else if(x > max){
+        return 100
+      } else {
+        return (x-min) / (max - min) * 100
+      }
+    },
   },
   created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+    })
   },
   methods: {
-    ...mapActions(['doControlDevice']),
+    ...mapActions(['getDeviceInfo','doControlDevice']),
     handleMore() {
       this.isOpen = !this.isOpen
     },
-    setMode() {
-
+    setMode(val) {
+      if (this.isClose || val == this.deviceAttrs.mode) return
+      this.controlDevice('mode', val)
+    },
+    setTemperature(attr, step, [min, max ]) {
+      console.log(min)
+      var temp = this.deviceAttrs[attr] + step
+      // 最小温度
+      if (temp < min) {
+        if (this.deviceAttrs[attr] == min) {
+          return HdSmart.UI.toast(`温度最低为${min/10}℃`)
+        } else {
+          temp = min
+        }
+      }
+      // 最大温度
+      if (temp > max) {
+        if (this.deviceAttrs[attr] == max) {
+          return HdSmart.UI.toast(`温度最高为${max/10}℃`)
+        } else {
+          temp = max
+        }
+      }
+      this.controlDevice(attr, temp)
     },
     controlDevice(attr, value) {
       return this.doControlDevice({
@@ -207,6 +283,10 @@ export default {
           }
         }
         .tm-progress{
+          border-radius: 44px;
+          overflow: hidden;
+
+          position: relative;
           flex: 1;
           margin: 45px 20px;
           height: 68px;
@@ -220,24 +300,31 @@ export default {
           font-size: 24px;
           color: #9E9E9E;
           .low{
-            padding-left: 16px;
             display: flex;
             align-items: center;
             height: 100%;
             width: 50%;
             background: #00D5FF;
             border-radius: 44px 0 0 44px;
+            span{
+              position: absolute;
+              left: 16px;
+            }
           }
           .high{
-            padding-left: 16px;
+            flex: 1;
             display: flex;
             justify-content: flex-end;
             align-items: center;
             text-align: right;
             height: 100%;
-            width: 50%;
+
             background: rgba(255,255,255,0.50);
             border-radius: 0 44px 44px 0;
+            span{
+              position: absolute;
+              right: 16px;
+            }
           }
         }
       }
@@ -277,6 +364,7 @@ export default {
       left: 0;
       top: -75px;
       .arrow {
+        display: inline-block;
         font-size: 32px;
         &.up {
           transform: rotate(90deg);
@@ -287,7 +375,7 @@ export default {
       }
     }
   }
-
+  /*********** 按钮 ***********/
   .btn-wrap {
     margin: 0 24px 24px;
     .btn {
@@ -349,6 +437,7 @@ export default {
       }
     }
   }
+  /*********** 离线和关机 ***********/
   &.close,
   &.offline {
     .main {

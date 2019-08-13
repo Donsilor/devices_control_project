@@ -4,171 +4,214 @@
       <topbar 
         :title="device.device_name"
         bak-color="#000" />
-      <!-- <div class="c-status">时段预约：6:00-9:00</div> -->
       <div class="main center">
         <div class="wrap-circle">
-          <div class="circle-gray" />
-          <div 
-            :style="{ transform: 'rotate(' + cRotate + 'deg)'}"
-            class="circle" />
-          <div class="cover">
-            <span class="point left" />
-            <span class="point right" />
-            <span class="txt left">35<sup>°C</sup></span>
-            <span class="txt right">{{ deviceAttrs.mode == 'sterilization' ? 80 : 75 }}<sup>°C</sup></span>
+          <div class="bg">
+            <div class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup></div>
+            <i :class="[deviceAttrs.mode, 'c-mode']"/>
           </div>
+          <circle-progress
+            v-if="isShow"
+            id="myId"
+            ref="$circle"
+            key="animation-model"
+            :is-animation="true"
+            :is-round="true"
+            :width="width"
+            :radius="radius"
+            :progress="progress"
+            :bar-color="barColor"
+            :duration="duration"
+            :delay="delay"
+            :background-color="backgroundColor"
+            class="progress"
+          />
         </div>
-
-        <div class="bg center">
-          <div 
-            v-if="isClose"
-            class="bg2 center">
-            <div class="num">--</div>
-            <div class="time">--<sup>°C</sup></div>
-            <div class="cmode">当前温度</div>
-          </div>
-          <div 
-            v-else
-            class="bg2 center">
-            <div class="num">{{ deviceAttrs.work_status == 'heat' ? '加热' : '保温' }}中</div>
-            <div class="time">{{ deviceAttrs.temperature }}<sup>°C</sup></div>
-            <div class="cmode">当前温度</div>
-          </div>
-
-          <div 
-            :style="{ transform: 'rotate(' + arrowRotate + 'deg)'}"
-            class="bg2 pos-ab"><i class="circle-arrow" /></div>
-
+        <div class="control-tm center">
+          <button 
+            class="control reduce" 
+            @click="setTemperature(-10)"/>
+          <button 
+            class="control add" 
+            @click="setTemperature(10)"/>
         </div>
       </div>
-
-      <div class="control center">
-        <div 
-          v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
-          class="reduce"
-          @click="setTemperature(-1)" />
-        <div class="main-control"><i class="icon" /> 预设温度 {{ deviceAttrs.set_temperature }}°C</div>
-        <div 
-          v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
-          class="add"
-          @click="setTemperature(1)" />
+      <!-- 当前状态 -->
+      <div 
+        class="status">
+        <i class="icon-status" />
+        正在{{ deviceAttrs.mode | modeType }}
+        {{ deviceAttrs.wind_up_down === 'on' ? '上下扫风':'' }}
+        {{ deviceAttrs.wind_left_right === 'on' ? '左右扫风': '' }}
       </div>
-
-      <!-- 按钮 -->
+      <!-- 底部按钮 -->
       <div class="panel-btn center">
-        <!-- <div 
+        <div 
           class="more" 
           @click="handleMore">
-          <div :class="[isOpen ? 'up': 'down', 'arrow']">></div>
+          <span :class="[isOpen ? 'up': 'down', 'arrow']">></span>
           <div>{{ isOpen ? '收起' : '查看更多' }}</div>
-        </div> -->
-
+        </div>
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
           <div 
             :class="[{ 'active': !isClose }, 'btn-swich btn center']"
             @click="setSwitch" />
-          <div class="btn-name">关机</div>
-        </div>
-
-        <div 
-          class="btn-wrap"
-          @click="setMode('dy_expansion')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dy_expansion' }, 'btn btn-heat center']" />
-          <div class="btn-name">速热增容</div>
+          <div class="btn-name">开关</div>
         </div>
         <div 
           class="btn-wrap"
-          @click="setMode('heat_keep')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'heat_keep' }, 'btn btn-znsw center']" />
-          <div class="btn-name">智能温水</div>
+          @click="setMode('cold')">
+          <div :class="[{ 'active': deviceAttrs.mode == 'cold' }, 'btn btn-cold center']" />
+          <div class="btn-name">制冷</div>
         </div>
         <div 
           class="btn-wrap"
-          @click="setMode('sterilization')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'sterilization' }, 'btn btn-znyj center']" />
-          <div class="btn-name">智能抑菌 </div>
+          @click="setMode('heat')">
+          <div :class="[ { 'active': deviceAttrs.mode == 'heat' }, 'btn btn-heat center']" />
+          <div class="btn-name">制热</div>
         </div>
-
-        <!-- 
-        <div class="btn-wrap">
-          <div
-            class="btn-time btn center"/>
-          <div class="btn-name">时段预约</div>
-        </div>
-
-        <div class="btn-wrap">
-          <div
-            class="btn btn-heat center"/>
-          <div class="btn-name">速热增容</div>
-        </div>
-        <div class="btn-wrap">
-          <div
-            class="btn btn-znsw center"/>
-          <div class="btn-name">智能水温</div>
-        </div>
-
         <div 
-          v-show="isOpen" 
-          class="btn-wrap">
-          <div
-            class="btn btn-bpsr center"/>
-          <div class="btn-name">变频速热</div>
+          class="btn-wrap"
+          @click="showMode">
+          <div :class="[ { 'active': modeIsActive }, modeClass, 'btn center']" />
+          <div class="btn-name">模式 </div>
         </div>
         <div 
           v-show="isOpen" 
-          class="btn-wrap">
-          <div
-            class="btn btn-znyj center"/>
-          <div class="btn-name">智能抑菌 </div>
-        </div> -->
+          class="btn-wrap"
+          @click="showSpeed">
+          <div :class="[ { 'active': speedIsActive }, speedClass, 'btn center']" />
+          <div class="btn-name">风速</div>
+        </div>
+        <div 
+          v-show="isOpen"
+          class="btn-wrap"
+          @click="showSwing">
+          <div :class="[ { 'active': windIsActive }, 'btn btn-up center']" />
+          <div class="btn-name">摆风 </div>
+        </div>
       </div>
-
+      <!--选择摆风-->
+      <model-swing 
+        ref="swing"
+        :wind_up_down="deviceAttrs.wind_up_down"
+        :wind_left_right="deviceAttrs.wind_left_right"
+        @setWind="setWind" />
+      <!--选择模式-->
+      <model-mode 
+        ref="mode"
+        :mode="deviceAttrs.mode"
+        @setMode="setMode" />
+      <!--选择风速-->
+      <model-speed 
+        ref="speed"
+        :speed="deviceAttrs.speed"
+        @setSpeed="setSpeed" />
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
+import circleProgress from './components/circle-progress'
+import modelSwing from './components/model-swing'
+import modelMode from './components/model-mode'
+import modelSpeed from './components/model-speed'
+const [MIN_TEMP, MAX_TEMP] = [160, 300]
 export default {
+  components: {
+    'circle-progress': circleProgress,
+    'model-swing': modelSwing,
+    'model-mode': modelMode,
+    'model-speed': modelSpeed,
+  },
   data() {
     return {
       isOpen: false,
+      isShow: true,
+      width: 220,
+      radius: 8,
+      progress: 30, // 0~70
+      duration: 0,
+      delay: 0,
+      barColor: '#D8D8D8',
+      backgroundColor: '#ececec',
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-    isRun() {
-      return this.deviceAttrs.status == 'run'
+    modeIsActive() {
+      return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
     },
-    cRotate() {
-      if (this.isClose) {
-        return -45
+    speedIsActive() {
+      if(this.deviceAttrs.mode == 'wind') {
+        return false
       } else {
-        return (+this.deviceAttrs.temperature - 35) * 4.5 - 45
+        return true
       }
     },
-    arrowRotate() {
-      if (this.isClose) {
-        return 0
-      } else {
-        return (+this.deviceAttrs.temperature - 35) * 4.5
+    windIsActive() {
+      return this.deviceAttrs.wind_up_down == 'on' || this.deviceAttrs.wind_left_right == 'on' 
+    },
+    modeClass() {
+      /* eslint-disable no-unreachable */
+      switch (this.deviceAttrs.mode) {
+        case 'auto':
+          return 'btn-auto'
+          break
+        case 'dehumidify':
+          return 'btn-dehumidify'
+          break
+        case 'wind':
+          return 'btn-wind'
+          break
+        default:
+          return 'btn-wind'
       }
-    }
+    },
+    speedClass() {
+      /* eslint-disable no-unreachable */
+      switch (this.deviceAttrs.speed) {
+        case 'low':
+          return 'btn-low'
+          break
+        case 'normal':
+          return 'btn-normal'
+          break
+        case 'high':
+          return 'btn-high'
+          break
+        case 'auto':
+          return 'btn-auto'
+          break
+        default:
+          return 'btn-low'
+      }
+    },
   },
   created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+        .then(() => {
+          this.reset()
+        })
+    })
   },
   methods: {
-    ...mapActions(['doControlDevice']),
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
     handleMore() {
+      if (this.isClose) return
       this.isOpen = !this.isOpen
     },
     setMode(val) {
-      if (val == this.deviceAttrs.mode) {
-        val = 'free'
-      }
-      if (this.isClose) return
+      if (val == this.deviceAttrs.mode || this.isClose) return
       this.controlDevice('mode', val)
+        .then(() => {
+          this.deviceAttrs.mode = val
+          this.reset()
+          this.hide()
+        })
     },
     setSwitch() {
       let switchStatus = ''
@@ -178,24 +221,58 @@ export default {
         switchStatus = 'on'
       }
       this.controlDevice("switch", switchStatus)
-        .then(() => {
-          console.log('setSwitch success')
-        })
     },
     setTemperature(step) {
-      let val = +this.deviceAttrs.set_temperature + step
-      if (val > 75) {
-        val = 75
-        return HdSmart.UI.toast('温度最高为75℃')
-      } else if (val < 35) {
-        val = 35
-        return HdSmart.UI.toast('温度最低为35℃')
+      // 送风模式不能设置温度
+      if (this.deviceAttrs.mode === 'wind') {
+        return HdSmart.UI.toast('送风模式下不能设置温度')
       }
-      this.controlDevice('set_temperature', val)
+      let temp = +this.deviceAttrs.temperature + step
+      // 最小温度
+      if (temp < MIN_TEMP) {
+        if (this.deviceAttrs.temperature == MIN_TEMP) {
+          return HdSmart.UI.toast('温度已调至最低')
+        } else {
+          temp = MIN_TEMP
+        }
+      }
+      // 最大温度
+      if (temp > MAX_TEMP) {
+        if (this.deviceAttrs.temperature == MAX_TEMP) {
+          return HdSmart.UI.toast('温度已调至最高')
+        } else {
+          temp = MAX_TEMP
+        }
+      }
+      this.controlDevice('temperature', temp)
+        .then(() => {
+          this.deviceAttrs.temperature = temp
+          this.reset()
+        })
+    },
+    setWind(attr) {
+      if (this.isClose) return
+      var val = this.deviceAttrs[attr] === 'on' ? 'off' : 'on'
+      this.controlDevice(attr, val)
+        .then(() =>{
+          this.hide()
+        })
+    },
+    setSpeed(speed) {
+      if (this.deviceAttrs.temperature == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
+        return HdSmart.UI.toast('低风、制冷模式下不支持此温度')
+      }
+      if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
+        return HdSmart.UI.toast('送风模式不能设置自动风速')
+      }
+      this.controlDevice('speed', speed)
+        .then(() =>{
+          this.hide()
+        })
     },
     controlDevice(attr, value) {
       return this.doControlDevice({
-        nodeid: `water_heater.main.${attr}`,
+        nodeid: `airconditioner.main.${attr}`,
         params: {
           attribute: {
             [attr]: value
@@ -203,10 +280,57 @@ export default {
         }
       })
     },
+    // 重置动画
+    reset() {
+      this.barColor = this.getBarColor()
+      this.progress = this.getProgress()
+      console.log('progress = ' + this.progress)
+      this.$nextTick(() => {
+        this.$refs.$circle.init()
+      })
+    },
+    showSwing() {
+      if (this.isClose) return
+      this.$refs.swing.show = true
+    },
+    showMode() {
+      if (this.isClose) return
+      this.$refs.mode.show = true
+    },
+    showSpeed() {
+      if (this.isClose) return
+      this.$refs.speed.show = true
+    },
+    hide(){
+      if(this.$refs.swing.show) this.$refs.swing.show = false
+      if(this.$refs.mode.show) this.$refs.mode.show = false
+      if(this.$refs.speed.show) this.$refs.speed.show = false
+    },
+    getBarColor() {
+      if(this.isClose || this.isOffline) return '#D8D8D8'
+      /* eslint-disable no-unreachable */
+      switch (this.deviceAttrs.mode) {
+        case 'cold':
+          return '#00D5FF'
+          break
+        case 'heat':
+          return '#FF5F00'
+          break
+        default:
+          return '#0FDC66'
+      }
+    },
+    getProgress() {
+      console.log(this.deviceAttrs.temperature)
+      // 计算温度进度条
+      return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+    }
   }
 }
 </script>
 <style lang="less" scoped>
+@imgPath: 'base/air_condition/assets/new-air';
+
 .body {
   min-height: 100%;
 }
@@ -220,219 +344,115 @@ export default {
   &.filter {
     filter: blur(12px);
   }
+  .progress{
+    transform: rotate(-126deg);
+  }
   .c-status {
     margin-top: 30px;
     font-size: 24px;
     color: #35353d;
     text-align: center;
   }
-  .bg {
+  .control-tm{
     position: relative;
-    z-index: 1;
+    top: -40px;
+    z-index: 9;
 
-    width: 370px;
-    height: 370px;
-    background: #f3f6fd;
-    border-radius: 50%;
-    padding: 10px;
-    .bg2 {
-      width: 100%;
-      height: 100%;
-      background: #fff;
+    width: 190PX;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .control{
+      outline: none;
+      border: none;
+      width: 72px;
+      height: 72px;
+      background:#efefef;
       border-radius: 50%;
-      flex-direction: column;
-      &.pos-ab {
-        background: transparent;
-        position: absolute;
-        top: 0;
-        left: 0;
+      &.add{
+        background-image: url(~@lib/base/fridge/assets/add.png);
+        background-size: 100% 100%;
       }
-    }
-    .circle-arrow {
-      display: block;
-      width: 60px;
-      height: 60px;
-      background-image: url(../../lib/base/electric_water_heater/assets/new/arrow.png);
-      background-size: 100% 100%;
-
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: rotate(25deg) translate(-0, -50%);
+      &.reduce{
+        background-image: url(~@lib/base/fridge/assets/reduce.png);
+        background-size: 100% 100%;
+      }
     }
   }
   .main {
-    margin-top: 80px;
+    margin-top: 5vh;
     position: relative;
     &.center {
       flex-direction: column;
     }
-    .wrap-circle {
-      position: absolute;
-      top: -31px;
-      border-radius: 50%;
-      .circle {
-        box-sizing: border-box;
-        border: 4px solid;
-        border-color: transparent transparent #ff210e #ff210e;
-        border-radius: 50%;
-        width: 434px;
-        height: 434px;
-
-        transform: rotate(90deg);
-      }
-      .circle-gray {
-        position: absolute;
-        top: 0;
-        border: 4px solid #d8d8d8;
-        border-radius: 50%;
-        box-sizing: border-box;
-        width: 432px;
-        height: 432px;
-      }
-      .cover {
+    .wrap-circle{
+      position: relative;
+      .bg{
         position: absolute;
         top: 50%;
-        background: #f4f7fe;
-        width: 100%;
-        height: 220px;
-        .point {
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        background: #FFFFFF;
+        box-shadow: inset 0 0 16px 0 rgba(0,0,0,0.10);
+        border-radius: 50%;
+        width: 84%;
+        height: 84%;
+        .tm{
+          margin-top: 60PX;
+          position: relative;
+          font-size: 144px;
+          color: #20282B;
+          text-align: center;
+          sup{
+            opacity: .5;
+            position: absolute;
+            top: 20px;
+            font-size: 24px;
+            color: #20282B;
+          }
+        }
+        .c-mode{
+          margin: auto;
           display: block;
-          background: #ff210e;
-          width: 18px;
-          height: 18px;
-          border-radius: 50%;
-          &.left {
-            position: absolute;
-            top: -8px;
-            left: -5px;
-            background: #ff210e;
+          margin-top: 20PX;
+          width: 33px;
+          height: 33px;
+          &.cold{
+            background-image: url('~@lib/@{imgPath}/icon-cold.png');
+            background-size: 100% 100%;
           }
-          &.right {
-            position: absolute;
-            top: -8px;
-            right: -5px;
-            background: #d8d8d8;
+          &.wind{
+            background-image: url('~@lib/@{imgPath}/icon-wind.png');
+            background-size: 100% 100%;
           }
-        }
-        .txt {
-          font-size: 24px;
-          color: #000;
-          &.left {
-            position: absolute;
-            top: 28px;
-            left: -28px;
+          &.dehumidify{
+            background-image: url('~@lib/@{imgPath}/icon-dehumidify.png');
+            background-size: 100% 100%;
           }
-          &.right {
-            position: absolute;
-            top: 28px;
-            right: -10px;
+          &.heat{
+            background-image: url('~@lib/@{imgPath}/icon-heat.png');
+            background-size: 100% 100%;
           }
-        }
-        sup {
-          font-size: 10px;
-          position: absolute;
-          top: -2px;
+          &.auto{
+            background-image: url('~@lib/@{imgPath}/icon-auto.png');
+            background-size: 100% 100%;
+          }
         }
       }
-    }
-
-    .num {
-      font-size: 24px;
-      color: #000;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .time {
-      font-size: 112px;
-      color: #20282b;
-      text-align: center;
-      position: relative;
-      sup {
-        font-size: 24px;
-        color: #2e2e2e;
-        position: absolute;
-        top: 30px;
-      }
-    }
-    .cmode {
-      margin-top: 20px;
-      font-size: 24px;
-      color: #000;
-      text-align: center;
-    }
-
-    .nuit {
-      opacity: 0.5;
-      color: #03fd05;
-      font-size: 24px;
-      letter-spacing: 0;
-      text-align: center;
-      position: absolute;
-      top: 145px;
     }
   }
-  .status {
-    margin-top: 60px;
-    font-size: 24px;
-    color: #20282b;
+  .status{
     text-align: center;
+    font-size: 24px;
+    color: #20282B;
   }
-  .control {
-    margin: 40px 0;
-    .reduce,
-    .add {
-      position: relative;
-      background: #fff;
-      border: 1px solid #f1f1f1;
-      width: 72px;
-      height: 72px;
-      line-height: 72px;
-
-      border-radius: 50%;
-      text-align: center;
-      margin: 0 32px;
-    }
-    .reduce {
-      &::before {
-        font-size: 90px;
-        content: "-";
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-    .add {
-      &::before {
-        font-size: 70px;
-        content: "+";
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-
-    .main-control {
-      width: 276px;
-      height: 72px;
-
-      line-height: 72px;
-      background: #f3e9f1;
-      border-radius: 22px;
-      font-size: 24px;
-      text-align: center;
-      color: #ff210e;
-    }
-  }
-
   .panel-btn {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 38px 0;
+    padding: 20px 38px 0;
     z-index: 9999;
 
     background: #ffffff;
@@ -440,8 +460,7 @@ export default {
     border-radius: 42px 42px 0px 0px;
 
     flex-wrap: wrap;
-    justify-content: center;
-
+    justify-content: flex-start;
     .more {
       width: 750px;
       color: #9e9e9e;
@@ -449,8 +468,9 @@ export default {
       text-align: center;
       position: absolute;
       left: 0;
-      top: -100px;
+      top: -75px;
       .arrow {
+        display: inline-block;
         font-size: 32px;
         &.up {
           transform: rotate(90deg);
@@ -460,25 +480,10 @@ export default {
         }
       }
     }
-
-    .btn {
-      margin-top: 24px;
-      width: 100%;
-      border-radius: 40px 40px 0 0;
-      background: #ffffff;
-      box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-    }
   }
-
+  /*********** 按钮 ***********/
   .btn-wrap {
     margin: 0 24px 24px;
-    &.up-index {
-      position: relative;
-      z-index: 9999;
-    }
     .btn {
       box-sizing: border-box;
       margin: 0 auto;
@@ -489,6 +494,12 @@ export default {
 
       display: flex;
       flex-direction: column;
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+      }
       &.active {
         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
         border-color: #ffbf00;
@@ -500,170 +511,106 @@ export default {
       margin-top: 16px;
       font-size: 24px;
     }
-    .btn-start {
+
+    .btn-swich {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/start.png);
+        background-image: url('~@lib/@{imgPath}/swich-black.png');
         background-size: 100% 100%;
       }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/start.png);
-        }
-      }
     }
-    .btn-stop {
+    .btn-cold {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-stop.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-stop.png);
-        }
-      }
-    }
-    .btn-time {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/time-black.png);
+        background-image: url('~@lib/@{imgPath}/cold.png');
         background-size: 100% 100%;
       }
     }
     .btn-heat {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/electric_water_heater/assets/new/heat.png);
+        background-image: url('~@lib/@{imgPath}/heat.png');
         background-size: 100% 100%;
-      }
-    }
-    .btn-znsw {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/electric_water_heater/assets/new/znsw.png);
-        background-size: 100% 100%;
-      }
-    }
-    .btn-bpsr {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/electric_water_heater/assets/new/bpsr.png);
-        background-size: 100% 100%;
-      }
-    }
-    .btn-znyj {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/electric_water_heater/assets/new/znyj.png);
-        background-size: 100% 100%;
-      }
-    }
-
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
-        }
       }
     }
     .btn-mode {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode1.png);
+        background-image: url('~@lib/@{imgPath}/mode.png');
         background-size: 100% 100%;
       }
     }
-    .btn-low {
+
+    .btn-menu {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
+        background-image: url('~@lib/@{imgPath}/more-black.png');
         background-size: 100% 100%;
       }
     }
-    .btn-middle {
+
+    .btn-wind {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
+        background-image: url('~@lib/@{imgPath}/wind.png');
         background-size: 100% 100%;
       }
     }
-    .btn-high {
+
+    .btn-dehumidify {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
+        background-image: url('~@lib/@{imgPath}/dehumidify-black.png');
         background-size: 100% 100%;
       }
     }
-    .btn-very_high {
+    .btn-low{
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4.png);
+        background-image: url('~@lib/@{imgPath}/speed3.png');
         background-size: 100% 100%;
       }
     }
-    .btn-super_high {
+    .btn-normal{
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5.png);
+        background-image: url('~@lib/@{imgPath}/speed4.png');
         background-size: 100% 100%;
       }
     }
-    .btn-more {
+    .btn-normal{
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/more.png);
+        background-image: url('~@lib/@{imgPath}/speed4.png');
         background-size: 100% 100%;
+      }
+    }
+    .btn-high{
+      &::before {
+        background-image: url('~@lib/@{imgPath}/speed5.png');
+        background-size: 100% 100%;
+      }
+    }
+    .btn-auto{
+      &::before {
+        background-image: url('~@lib/@{imgPath}/auto.png');
+        background-size: 100% 100%;
+      }
+    }
+    .btn-left{
+      &::before {
+        background-image: url('~@lib/@{imgPath}/left.png');
+        background-size: 100% 100%;
+      }
+    }
+    .btn-up{
+      &::before {
+        background-image: url('~@lib/@{imgPath}/up.png');
+        background-size: 100% 100%;
+      }
+    }
+  }
+  &.close {
+    .btn-wrap {
+      &.up-index{
+        opacity: 1;
+      }
+    }
+  }
+  &.offline {
+    .btn-wrap {
+      &.up-index{
+        opacity: .2;
       }
     }
   }
@@ -672,7 +619,7 @@ export default {
     &:before {
       content: "";
       position: fixed;
-      top: 64px;
+      top: 64PX;
       left: 0;
       bottom: 0;
       right: 0;
@@ -682,6 +629,9 @@ export default {
     }
     &.page {
       background: #fff;
+      .control-tm{
+        background: #fff;
+      }
       .cover {
         background: #fff;
         .point {
@@ -695,15 +645,16 @@ export default {
       background: #efefef;
     }
     .btn-wrap {
-      opacity: 0.2;
+      opacity: .2;
       .btn {
         &.active {
           background: #fff;
-          border: none;
+          border: 1px solid #818181;
         }
       }
     }
   }
+
 }
 
 .btns-panel {
@@ -774,9 +725,9 @@ export default {
       flex-direction: column;
 
       .name {
-        margin-top: 8px;
-        font-size: 20px;
-        color: #fff;
+        margin-top: 16px;
+        font-size: 24px;
+        color: #20282B;
       }
       &.active {
         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
@@ -789,12 +740,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-black.png);
         }
       }
     }
@@ -805,12 +756,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed1-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed1.png);
         }
       }
     }
@@ -820,12 +771,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed2-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed2.png);
         }
       }
     }
@@ -835,12 +786,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed3-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed3.png);
         }
       }
     }
@@ -850,12 +801,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed4-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed4.png);
         }
       }
     }
@@ -865,282 +816,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed5-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5.png);
-        }
-      }
-    }
-  }
-}
-.items {
-  margin-bottom: 30px;
-  .btns {
-    display: flex;
-    justify-content: center;
-    justify-content: flex-start;
-    padding: 10px 30px;
-    .btn-wrap {
-      margin-right: 20px;
-    }
-
-    .btn-name {
-      margin-top: 16px;
-      font-size: 24px;
-      color: #20282b;
-      text-align: center;
-    }
-
-    .btn {
-      box-sizing: border-box;
-      margin: 0 5px;
-      width: 110px;
-      height: 110px;
-      border: 1px solid #20282b;
-      border-radius: 50%;
-
-      display: flex;
-      flex-direction: column;
-      &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border: none;
-      }
-    }
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_condition/assets/new-air/swich-black.png);
-        }
-      }
-    }
-    .btn-start {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/haier_washer/assets/btn-start.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-        }
-      }
-    }
-    .btn-stop {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-        }
-      }
-    }
-    .btn-mode {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/haier_washer/assets/btn-mode-white58.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/haier_washer/assets/btn-mode-black58.png);
-        }
-      }
-    }
-    .btn-time {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_condition/assets/new-air/time-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_condition/assets/new-air/time-black.png);
-        }
-      }
-      &.btn-current {
-        border-color: #ffc600;
-        &::before {
-          background-image: url(../../lib/base/air_condition/assets/new-air/time-yellow.png);
-        }
-        .name {
-          color: #ffc600;
-        }
-      }
-    }
-
-    .btn-mode1 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode1.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode1.png);
-        }
-      }
-    }
-    .btn-mode2 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode2.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode2.png);
-        }
-      }
-    }
-    .btn-mode3 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode3.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode3.png);
-        }
-      }
-    }
-    .btn-mode4 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode4.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode4.png);
-        }
-      }
-    }
-    .btn-mode5 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode5.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode5.png);
-        }
-      }
-    }
-    .btn-mode6 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode6.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode6.png);
-        }
-      }
-    }
-    .btn-mode7 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode7.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode7.png);
-        }
-      }
-    }
-    .btn-mode8 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode8.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode8.png);
-        }
-      }
-    }
-    .btn-mode9 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode9.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode9.png);
-        }
-      }
-    }
-    .btn-mode10 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode10.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode10.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed5.png);
         }
       }
     }

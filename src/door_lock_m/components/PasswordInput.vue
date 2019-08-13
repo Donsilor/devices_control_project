@@ -1,19 +1,41 @@
 <template>
-  <div v-show="visible" class="password-input">
+  <div 
+    v-show="visible" 
+    class="password-input">
     <div class="password-input-container">
       <div class="password-input-title">
-          <p class="close-box"><a href="javascript:void(0)" class="close" @click="close"/></p>
-          <h3>{{ msg }}</h3>
+        <p class="close-box"><a 
+          href="javascript:void(0)" 
+          class="close" 
+          @click="close"/></p>
+        <h3>{{ msg }}</h3>
       </div>
       <div class="password-input-content">
-        <input :value="psw_str" type="password" readonly>
+        <input 
+          :value="psw_str" 
+          type="password" 
+          readonly>
         <div class="password-input-mask"/>
-        <a v-show="psw.length>0" href="javascript:void(0)" class="del" @touchstart="delNum"/>
+        <a 
+          v-show="psw.length>0" 
+          href="javascript:void(0)" 
+          class="del" 
+          @touchstart="delNum"/>
         <div class="password-input-btns">
-          <a v-for="(item,index) in btns" :key="item" :class="['btn-item',(index+1)%3==0 ? 'item-wrap' : '']" href="javascript:void(0)" @touchstart="numberPressed(item)">{{ item }}
+          <a 
+            v-for="(item,index) in btns" 
+            :key="item" 
+            :class="['btn-item',(index+1)%3==0 ? 'item-wrap' : '']" 
+            href="javascript:void(0)" 
+            @touchstart="numberPressed(item)">{{ item }}
           </a>
-          <a href="javascript:void(0)" class="unlock" @click="unlock">
-            <span :class="{'unlock-disabled':disabled}" class="unlock-btn">开锁</span>
+          <a 
+            href="javascript:void(0)" 
+            class="unlock" 
+            @click="unlock">
+            <span 
+              :class="{'unlock-disabled':disabled}" 
+              class="unlock-btn">开锁</span>
           </a>
         </div>
       </div>

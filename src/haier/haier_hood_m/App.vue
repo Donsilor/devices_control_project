@@ -5,15 +5,30 @@
         title="厨房的烟机"
         bak-color="#000" />
       <div class="main center">
-        <div class="wrap-circle center">
+        <div :class="[{'animation': !isClose },{'greycircle': isClose },'wrap-circle' ,'center']">
           <p class="wind">风速档位</p>
-          <p class="speed">{{ !isClose?deviceAttrs.speed_pct:"- -" }}</p>
-          <p class="switch">关</p>
+          <p 
+            v-if="!isClose&&!isOffline" 
+            class="speed">{{ speedNum }}</p>
+          <p 
+            v-else 
+            class="speed">- -</p>
+          <p 
+            v-if="!isClose&&!isOffline" 
+            class="switch">{{ speedText }}</p>
         </div>
       </div>
-      <div class="tips">
+      <div 
+        v-show="deviceAttrs.light == 'on'" 
+        class="tips">
         <i/>
         <span>照明已开启</span>
+      </div>
+      <div 
+        v-show="deviceAttrs.delay == 'on'" 
+        class="tips tips2">
+        <i/>
+        <span>{{ m1 }}分{{ s1 }}秒后关机</span>
       </div>
 
       <!-- 按钮 -->
@@ -33,36 +48,38 @@
         </div>
         <div 
           class="btn-wrap"
-          @click="setMode('dy_expansion')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dy_expansion' }, 'btn btn-rs center']" />
+          @click="setSpeed('low')">
+          <div :class="[{ 'active': deviceAttrs.speed == 'low' }, 'btn btn-rs center']" />
           <div class="btn-name">柔速</div>
         </div>
         <div 
           class="btn-wrap"
-          @click="setMode('heat_keep')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'heat_keep' }, 'btn btn-ds center']" />
+          @click="setSpeed('overlow')">
+          <div :class="[ { 'active': deviceAttrs.speed == 'overlow' }, 'btn btn-ds center']" />
           <div class="btn-name">低速</div>
         </div>
         <div 
           class="btn-wrap"
-          @click="setMode('sterilization')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'sterilization' }, 'btn btn-gs center']" />
+          @click="setSpeed('normal')">
+          <div :class="[ { 'active': deviceAttrs.speed == 'normal' }, 'btn btn-gs center']" />
           <div class="btn-name">高速</div>
         </div>
         
         <div 
           v-show="isOpen" 
-          class="btn-wrap">
+          class="btn-wrap"
+          @click="setLight()">
           <div
-            class="btn-zm btn center"/>
+            :class="[{ 'active': deviceAttrs.light == 'on' },'btn-zm', 'btn' ,'center']"/>
           <div class="btn-name">照明</div>
         </div>
 
         <div 
           v-show="isOpen" 
-          class="btn-wrap">
+          :class="[{'disabled':deviceAttrs.speed=='off'&& deviceAttrs.light == 'off' },'btn-wrap']"
+          @click="setDelay()">
           <div
-            class="btn btn-yc center"/>
+            :class="[{ 'active': deviceAttrs.delay == 'on' },'btn', 'btn-yc' ,'center']"/>
           <div class="btn-name">延迟</div>
         </div>
       </div> 
@@ -73,24 +90,56 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   data(){
     return {
-      // isOffline:false,
-      // isClose:false,
-      isOpen:false
+      isOpen:false,
+      speedNum:0,
+      speedText:'关',
+      m1:2,
+      s1:25
     }
   },
   computed:{
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-    
+  },
+  watch:{
+    deviceAttrs: {
+      handler(newName) {
+        switch(newName.speed){
+          case "off":
+            this.speedNum = 0
+            this.speedText = "关"
+            break
+          case "low":
+            this.speedNum = 1
+            this.speedText = "柔速"
+            break
+          case "overlow":
+            this.speedNum = 2
+            this.speedText = "中速"
+            break
+          case "normal":
+            this.speedNum = 3
+            this.speedText = "高速"
+            break
+        }
+      },
+      deep: true,
+      immediate: true
+    }
+  },
+  created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+    })
   },
   methods:{
-    ...mapActions(['doControlDevice']),
-    setMode(val) {
-      if (val == this.deviceAttrs.mode) {
-        val = 'free'
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    setSpeed(val) {
+      if (val == this.deviceAttrs.speed) {
+        val = 'off'
       }
-      // if (this.isClose) return
-      // this.controlDevice('mode', val)
+      if (this.isClose) return  // 关机状态点击无效
+      this.controlDevice('speed', val)
     },
     setSwitch(){
       console.log('点击了开关')
@@ -100,10 +149,54 @@ export default {
       } else {
         switchStatus = 'on'
       }
-      console.log(switchStatus,this.isClose)
       this.controlDevice("switch", switchStatus)
+      this.controlDevice("light", 'off')
+      this.controlDevice("speed", 'off')
+      this.controlDevice("delay", 'off')
+    },
+    setLight(){
+      if (this.isClose) return  // 关机状态点击无效
+      console.log('点击了灯光')
+      let switchStatus = ''
+      if (this.deviceAttrs.light == 'on') {
+        switchStatus = 'off'
+      } else {
+        switchStatus = 'on'
+      }
+      console.log(switchStatus,this.isClose)
+      this.controlDevice("light", switchStatus)
         .then(() => {
-          console.log('setSwitch success')
+          console.log('setLight success')
+        })
+    },
+    setDelay(){
+      if (this.isClose || (this.deviceAttrs.speed=='off'&& this.deviceAttrs.light == 'off')) return  // 关机状态或者风速灯光都没开启点击无效
+      console.log('点击了延迟')
+      let switchStatus = ''
+      if (this.deviceAttrs.delay == 'on') {
+        switchStatus = 'off'
+      } else {
+        switchStatus = 'on'
+      }
+      console.log(switchStatus,this.isClose)
+      this.controlDevice("delay", switchStatus)
+        .then(() => {
+          console.log('setDelay success')
+          const date1 = new Date()
+          const m = date1.getMinutes()
+          const s = date1.getSeconds()
+          date1.setMinutes(m+2)
+          date1.setSeconds(s+25)
+          const dateObj = setInterval(()=>{
+            const date = new Date()
+            const a = date1.getTime() - date.getTime()
+            this.s1 = Math.floor(a/1000%60)
+            this.m1 = Math.floor(a/(1000*60)%60)
+            if(this.m1<=0&&this.s1<=0){
+              clearInterval(dateObj)
+              this.setSwitch()
+            }
+        },1000)
         })
     },
     controlDevice(attr, value) {
@@ -129,8 +222,6 @@ export default {
 @lib1:"../../../lib";
 .wrap-circle{
   margin-top: 60px;
-  background: url('@{lib}/yanji_img_animation.png') no-repeat;
-  background-size: 100% 100%;
   width: 524px;
   height: 524px;
   flex-direction: column;
@@ -144,6 +235,14 @@ export default {
   .switch{
     margin-top: 40px;
   }
+}
+.animation{
+    background: url('@{lib}/yanji_img_animation.png') no-repeat;
+    background-size: 100% 100%;
+}
+.greycircle{
+    background: url('@{lib}/yanji_img_greycircle.png') no-repeat;
+    background-size: 100% 100%;
 }
 
 .tips{
@@ -161,12 +260,17 @@ export default {
     width: 100px;
   } 
 }
+.tips2{
+  i{
+        background-image: url('@{lib1}/base/blend/assets/time-black.png');
+  }
+}
 .panel-btn {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 38px 0;
+    padding: 40px 30px 30px;;
     z-index: 9999;
 
     background: #ffffff;
@@ -174,7 +278,7 @@ export default {
     border-radius: 42px 42px 0px 0px;
 
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
 
     .more {
       width: 750px;
@@ -206,7 +310,9 @@ export default {
       align-items: center;
     }
   }
-
+    .disabled{
+      opacity: 0.2;
+    }
   .btn-wrap {
     margin: 0 24px 24px;
     &.up-index {
@@ -270,6 +376,7 @@ export default {
         background-size: 100% 100%;
       }
     }
+
     .btn-rs {
       &::before {
         content: "";

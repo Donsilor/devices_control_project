@@ -4,18 +4,21 @@
       <topbar 
         :title="device.device_name"
         bak-color="#20282B" />
-
       <div class="main center">
         <div class="wrap-circle">
           <div class="circle-left">
-            <div :class="[{'active': leftStatus !== 'no'}, 'circle-gray']">
+            <div 
+              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'|| leftStatus == 'no'" 
+              class="circle-gray">
+              <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
+            </div>
+            <div 
+              v-else 
+              :class="[{'active': leftStatus !== 'no'}, 'circle-gray']">
               <circle-pie 
                 :left-status="leftStatus" 
                 class="pie">
                 <p class="icon">
-                  <img 
-                    v-show="leftStatus == 'no'" 
-                    src="../../../lib/base/haier_cooker/assets/no_fire.png" >
                   <img 
                     v-show="leftStatus == 'low' || leftStatus == 'low_60'" 
                     src="../../../lib/base/haier_cooker/assets/small_fire.png" >
@@ -30,18 +33,22 @@
             </div>
             <div class="left-cooker">
               <div class="cooker-name">左灶</div>
-              <div class="fire">{{ leftTxt }}</div>
+              <div class="fire">{{ deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'? '无火': leftTxt }}</div>
             </div>
           </div>
           <div class="circle-right">
-            <div :class="[{'active': rightStatus !== 'no'}, 'circle-gray']">
+            <div 
+              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'|| rightStatus == 'no'" 
+              class="circle-gray">
+              <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
+            </div>
+            <div 
+              v-else 
+              :class="[{'active': rightStatus !== 'no'}, 'circle-gray']">
               <circle-pie 
-                :right-status="leftStatus" 
+                :right-status="rightStatus" 
                 class="pie">
                 <p class="icon">
-                  <img 
-                    v-show="rightStatus == 'no'" 
-                    src="../../../lib/base/haier_cooker/assets/no_fire.png" >
                   <img 
                     v-show="rightStatus == 'low' || rightStatus == 'low_60'" 
                     src="../../../lib/base/haier_cooker/assets/small_fire.png" >
@@ -56,10 +63,21 @@
             </div>
             <div class="right-cooker">
               <div class="cooker-name">右灶</div>
-              <div class="fire">{{ rightTxt }}</div>
+              <div class="fire">{{ deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off' ? '无火': rightTxt }}</div>
             </div>
           </div>
         </div>
+        <!-- 警告 -->
+        <warn-Box 
+          v-if="accidentOut&&stalling"
+          :left-stalling="leftStalling"
+          @stallingEvent ="stallingEvent"
+        />
+        <warn-Box 
+          v-if="dryHeat&&dryFire"
+          :dry-heat="true"
+          @dryheatEvent ="dryheatEvent"
+        />
       </div>
       <div class="footer">
         <p>温馨提示：国家规定不能远程控制燃气灶，</p>
@@ -71,18 +89,28 @@
 
 <script>
 import CirclePie from "./components/CirclePie.vue"
+import warnBox from "./components/warnBox.vue"
 import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
-  components: {CirclePie},
+  components: {CirclePie,warnBox},
   data() {
     return {
-      isOpen: false,
+      stalling:true,
+      dryFire:true
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    // 意外熄火弹框
+    accidentOut() {
+        return this.leftStalling === 'on'|| this.rightStalling === 'on'
+    },
+    dryHeat(){
+      return this.leftDryfire === 'on' || this.rightDryfire === 'on'
+    },
     leftTxt() {
+      console.log(this.accidentOut)
        if(!this.deviceAttrs.fire_status) return
       /* eslint-disable no-unreachable */
        switch(this.deviceAttrs.fire_status.stove_0) {
@@ -134,6 +162,18 @@ export default {
         //   return 
       }
     },
+    leftStalling(){
+      if(this.deviceAttrs.accident_out) return this.deviceAttrs.accident_out.stove_0
+    },
+    rightStalling(){
+      if(this.deviceAttrs.accident_out) return this.deviceAttrs.accident_out.stove_1
+    },
+    leftDryfire(){
+      if(this.deviceAttrs.dry_heat) return this.deviceAttrs.dry_heat.stove_0
+    },
+    rightDryfire(){
+      if(this.deviceAttrs.dry_heat) return this.deviceAttrs.dry_heat.stove_1
+    },
     leftStatus() {
       if(this.deviceAttrs.fire_status) return this.deviceAttrs.fire_status.stove_0
     },
@@ -142,47 +182,15 @@ export default {
     },
   },
   created() {
-  },
-  mounted() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+    })
   },
   methods: {
-    ...mapActions(['doControlDevice']),
-    handleMore() {
-      this.isOpen = !this.isOpen
-    },
-    setMode(val) {
-      if (val == this.deviceAttrs.mode) {
-        val = 'free'
-      }
-      if (this.isClose) return
-      this.controlDevice('mode', val)
-    },
-    setSwitch() {
-      let switchStatus = ''
-      if (this.deviceAttrs.switch == 'on') {
-        switchStatus = 'off'
-      } else {
-        switchStatus = 'on'
-      }
-      this.controlDevice("switch", switchStatus)
-        .then(() => {
-          console.log('setSwitch success')
-        })
-    },
-    setTemperature(step) {
-      let val = +this.deviceAttrs.set_temperature + step
-      if (val > 75) {
-        val = 75
-        return HdSmart.UI.toast('温度最高为75℃')
-      } else if (val < 35) {
-        val = 35
-        return HdSmart.UI.toast('温度最低为35℃')
-      }
-      this.controlDevice('set_temperature', val)
-    },
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
     controlDevice(attr, value) {
       return this.doControlDevice({
-        nodeid: `water_heater.main.${attr}`,
+        nodeid: `haier_cooker.main.${attr}`,
         params: {
           attribute: {
             [attr]: value
@@ -190,10 +198,19 @@ export default {
         }
       })
     },
+    stallingEvent(){
+      this.stalling = false
+    },
+    dryheatEvent(){
+      this.dryFire = false
+    }
   }
 }
 </script>
 <style lang="less" scoped>
+*{
+  touch-action:none;
+}
 .body {
   min-height: 100%;
 }
@@ -204,7 +221,7 @@ export default {
   min-height: 550px;
   overflow-x: hidden;
   position: relative;
-  background: #f4f7fe;
+  background: #fff;
 
   &.filter {
     filter: blur(12px);
@@ -229,6 +246,9 @@ export default {
         justify-content: center;
         align-items: center;
         margin-bottom: 40px;
+        >img{
+          width: 92px;
+        }
         .icon {
           width: 100%;
           height: 100%;
