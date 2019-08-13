@@ -192,7 +192,7 @@ export default {
             const a = date1.getTime() - date.getTime()
             this.s1 = Math.floor(a/1000%60)
             this.m1 = Math.floor(a/(1000*60)%60)
-            if(this.m1==0&&this.s1==0){
+            if(this.m1<=0&&this.s1<=0){
               clearInterval(dateObj)
               this.setSwitch()
             }
