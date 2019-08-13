@@ -2,7 +2,13 @@
 export function toThousandFilter(num) {
   return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
-
+export function filterTm(tm) {
+  let tmp = '--'
+  if(tm || tm == 0){
+    tmp = (+tm)/10
+  }
+  return tmp
+}
 export function modeType(type) {
   switch(type) {
     case 'auto':

@@ -5,20 +5,26 @@
     @click.self="show = false"
     @touchmove.prevent>
     <div class="main">
-      <p class="title">选择摆风</p>
+      <p class="title">选择模式</p>
       <div class="items btns">
         <div 
           class="btn" 
-          @click="setWind('wind_up_down')">
-          <div :class="[wind_up_down === 'on' ? 'active' : '', {'btn-loading': btn_wind_up_down }, 'btn-swing center']" />
+          @click="setMode('auto')">
+          <div :class="[mode === 'auto' ? 'active' : '', 'btn-auto center']" />
           <div 
-            class="name" >上下风</div>
+            class="name" >智能</div>
         </div>
         <div 
           class="btn"
-          @click="setWind('wind_left_right')">
-          <div :class="[wind_left_right === 'on' ? 'active' : '', {'btn-loading': btn_wind_left_right }, 'btn-swing horizontal center']" />
-          <div class="name">左右风</div>
+          @click="setMode('dehumidify')">
+          <div :class="[mode === 'dehumidify' ? 'active' : '', 'btn-dehumidify center']" />
+          <div class="name">除湿</div>
+        </div>
+        <div 
+          class="btn"
+          @click="setMode('wind')">
+          <div :class="[mode === 'wind' ? 'active' : '', 'btn-wind center']" />
+          <div class="name">送风</div>
         </div>
       </div>
       <div 
@@ -72,11 +78,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-top: 78px;
+        margin-top: 68px;
         .btn{
-          margin: 0 54px;
+          margin: 0 32px;
           text-align: center;
-          .btn-swing{
+
+          .btn-auto{
             width: 120px;
             height: 120px;
             border: 1px solid #818181;
@@ -86,21 +93,46 @@
               display: block;
               width: 44px;
               height: 44px;
-              background-image: url('~@lib/@{imgPath}/up.png');
+              background-image: url('~@lib/@{imgPath}/auto.png');
               background-size: 100% 100%;
             }
-            &.active{
-              background-image: linear-gradient(90deg, #FFD500 0%, #FFBF00 100%);
-              border: none;
-            }
-            &.horizontal{
-              transform: rotate(90deg)
+          }
+          .btn-dehumidify{
+            width: 120px;
+            height: 120px;
+            border: 1px solid #818181;
+            border-radius: 50%;
+            &::before{
+              content: '';
+              display: block;
+              width: 44px;
+              height: 44px;
+              background-image: url('~@lib/@{imgPath}/dehumidify.png');
+              background-size: 100% 100%;
             }
           }
+          .btn-wind{
+            width: 120px;
+            height: 120px;
+            border: 1px solid #818181;
+            border-radius: 50%;
+            &::before{
+              content: '';
+              display: block;
+              width: 44px;
+              height: 44px;
+              background-image: url('~@lib/@{imgPath}/wind.png');
+              background-size: 100% 100%;
+            }
+          }
+          .active{
+            background-image: linear-gradient(90deg, #FFD500 0%, #FFBF00 100%);
+            border: none;
+          }
           .name{
-            margin-top: 20px;
+            margin-top: 16px;
             font-size: 24px;
-            color: #fff;
+            color: #20282B;
           }
         }
       }
@@ -117,7 +149,7 @@
 </style>
 <script>
 export default {
-  props: ['wind_up_down', 'wind_left_right', 'btn_wind_up_down', 'btn_wind_left_right'],
+  props: ['mode'],
   data() {
     return {
       show: false
@@ -126,8 +158,8 @@ export default {
   mounted() {
   },
   methods: {
-    setWind(attr){
-      this.$emit('setWind', attr)
+    setMode(attr){
+      this.$emit('setMode', attr)
     }
   }
 }
