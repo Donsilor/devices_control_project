@@ -16,9 +16,6 @@
           <p 
             v-if="!isClose&&!isOffline" 
             class="switch">{{ speedText }}</p>
-          <p 
-            v-else 
-            class="switch">0</p>
         </div>
       </div>
       <div 
@@ -93,8 +90,6 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   data(){
     return {
-      // isOffline:false,
-      // isClose:false,
       isOpen:false,
       speedNum:0,
       speedText:'关',
@@ -187,6 +182,21 @@ export default {
       this.controlDevice("delay", switchStatus)
         .then(() => {
           console.log('setDelay success')
+          const date1 = new Date()
+          const m = date1.getMinutes()
+          const s = date1.getSeconds()
+          date1.setMinutes(m+2)
+          date1.setSeconds(s+25)
+          const dateObj = setInterval(()=>{
+            const date = new Date()
+            const a = date1.getTime() - date.getTime()
+            this.s1 = Math.floor(a/1000%60)
+            this.m1 = Math.floor(a/(1000*60)%60)
+            if(this.m1==0&&this.s1==0){
+              clearInterval(dateObj)
+              this.setSwitch()
+            }
+        },1000)
         })
     },
     controlDevice(attr, value) {
