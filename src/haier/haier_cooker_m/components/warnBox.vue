@@ -13,10 +13,10 @@
       <button 
         class="check" 
         type="button"
-        @click="check" >查看</button>
-      <div 
+        @click="cancelEvent" >关闭</button>
+      <!-- <div 
         class="cancel" 
-        @click="cancelEvent">忽略</div>
+        @click="cancelEvent">关闭</div> -->
     </div>
   </div>
 </template>
@@ -42,9 +42,6 @@ export default {
     }
   },
   methods:{
-    check(){
-        this.$router.push({name:'list'})
-    },
     cancelEvent(){
       this.$emit('stallingEvent')
       this.$emit('dryheatEvent')
@@ -93,7 +90,7 @@ export default {
         color: #A4A9AF;
         letter-spacing: 0;
         line-height: 40px;
-        margin: 32px 0 56px 0;
+        margin: 54px 0 96px 0;
       }
       .check{
         margin-top: 50px;
@@ -106,21 +103,6 @@ export default {
         width: 542px;
         height: 100px;
         margin: auto;
-      }
-      .cancel {
-        outline: none;
-        border: none;
-        color: #FFC700;
-        background: #FFFFFF;
-        border-radius: 71px;
-        font-size: 32px;
-        text-align: center;
-        width: 542px;
-        height: 100px;
-
-        margin: auto;
-        margin-top: 10px;
-        line-height: 100px;
       }
     }
   }
