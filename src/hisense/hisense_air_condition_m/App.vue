@@ -7,154 +7,147 @@
       <!-- <div class="c-status">时段预约：6:00-9:00</div> -->
       <div class="main center">
         <div class="wrap-circle">
-          <div class="circle-gray" />
-          <div 
-            :style="{ transform: 'rotate(' + cRotate + 'deg)'}"
-            class="circle" />
-          <div class="cover">
-            <span class="point left" />
-            <span class="point right" />
-            <span class="txt left">35<sup>°C</sup></span>
-            <span class="txt right">{{ deviceAttrs.mode == 'sterilization' ? 80 : 75 }}<sup>°C</sup></span>
+          <div class="bg">
+            <div class="tm">28<sup>°C</sup></div>
+            <i class="c-mode"/>
           </div>
+          <circle-progress
+            v-if="isShow"
+            id="myId"
+            ref="$circle"
+            key="animation-model"
+            :is-animation="true"
+            :is-round="true"
+            :width="width"
+            :radius="radius"
+            :progress="progress"
+            :bar-color="barColor"
+            :duration="duration"
+            :delay="delay"
+            :background-color="backgroundColor"
+            class="progress"
+          />
         </div>
-
-        <div class="bg center">
-          <div 
-            v-if="isClose"
-            class="bg2 center">
-            <div class="num">--</div>
-            <div class="time">--<sup>°C</sup></div>
-            <div class="cmode">当前温度</div>
-          </div>
-          <div 
-            v-else
-            class="bg2 center">
-            <div class="num">{{ deviceAttrs.work_status == 'heat' ? '加热' : '保温' }}中</div>
-            <div class="time">{{ deviceAttrs.temperature }}<sup>°C</sup></div>
-            <div class="cmode">当前温度</div>
-          </div>
-
-          <div 
-            :style="{ transform: 'rotate(' + arrowRotate + 'deg)'}"
-            class="bg2 pos-ab"><i class="circle-arrow" /></div>
-
+        <div class="control-tm center">
+          <button 
+            class="control reduce" 
+            @click="setTemperature('tempContainer', -10, [20, 80])"/>
+          <button 
+            class="control add" 
+            @click="setTemperature('tempContainer', 10, [20, 80])"/>
         </div>
       </div>
 
-      <div class="control center">
-        <div 
-          v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
-          class="reduce"
-          @click="setTemperature(-1)" />
-        <div class="main-control"><i class="icon" /> 预设温度 {{ deviceAttrs.set_temperature }}°C</div>
-        <div 
-          v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
-          class="add"
-          @click="setTemperature(1)" />
-      </div>
 
+      <div 
+        class="status">
+        <i class="icon-status" />
+        正在{{ deviceAttrs.mode | modeType }}
+        {{ deviceAttrs.wind_up_down === 'on' ? '上下扫风':'' }}
+        {{ deviceAttrs.wind_left_right === 'on' ? '左右扫风': '' }}
+      </div>
       <!-- 按钮 -->
       <div class="panel-btn center">
-        <!-- <div 
+        <div 
           class="more" 
           @click="handleMore">
-          <div :class="[isOpen ? 'up': 'down', 'arrow']">></div>
+          <span :class="[isOpen ? 'up': 'down', 'arrow']">></span>
           <div>{{ isOpen ? '收起' : '查看更多' }}</div>
-        </div> -->
+        </div>
 
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
           <div 
             :class="[{ 'active': !isClose }, 'btn-swich btn center']"
             @click="setSwitch" />
-          <div class="btn-name">关机</div>
+          <div class="btn-name">开关</div>
         </div>
 
         <div 
           class="btn-wrap"
           @click="setMode('dy_expansion')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dy_expansion' }, 'btn btn-heat center']" />
-          <div class="btn-name">速热增容</div>
+          <div :class="[{ 'active': deviceAttrs.mode == 'dy_expansion' }, 'btn btn-cold center']" />
+          <div class="btn-name">制冷</div>
         </div>
         <div 
           class="btn-wrap"
           @click="setMode('heat_keep')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'heat_keep' }, 'btn btn-znsw center']" />
-          <div class="btn-name">智能温水</div>
+          <div :class="[ { 'active': deviceAttrs.mode == 'heat_keep' }, 'btn btn-heat center']" />
+          <div class="btn-name">制热</div>
         </div>
         <div 
           class="btn-wrap"
           @click="setMode('sterilization')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'sterilization' }, 'btn btn-znyj center']" />
-          <div class="btn-name">智能抑菌 </div>
-        </div>
-
-        <!-- 
-        <div class="btn-wrap">
-          <div
-            class="btn-time btn center"/>
-          <div class="btn-name">时段预约</div>
-        </div>
-
-        <div class="btn-wrap">
-          <div
-            class="btn btn-heat center"/>
-          <div class="btn-name">速热增容</div>
-        </div>
-        <div class="btn-wrap">
-          <div
-            class="btn btn-znsw center"/>
-          <div class="btn-name">智能水温</div>
-        </div>
-
-        <div 
-          v-show="isOpen" 
-          class="btn-wrap">
-          <div
-            class="btn btn-bpsr center"/>
-          <div class="btn-name">变频速热</div>
+          <div :class="[ { 'active': deviceAttrs.mode == 'sterilization' }, 'btn btn-wind center']" />
+          <div class="btn-name">模式 </div>
         </div>
         <div 
           v-show="isOpen" 
           class="btn-wrap">
           <div
-            class="btn btn-znyj center"/>
-          <div class="btn-name">智能抑菌 </div>
-        </div> -->
+            class="btn btn-speed5 center"/>
+          <div class="btn-name">风速</div>
+        </div>
+        <div 
+          v-show="isOpen"
+          class="btn-wrap"
+          @click="showSwing">
+          <div
+            class="btn btn-up center"/>
+          <div class="btn-name">摆风 </div>
+        </div>
       </div>
 
+      <model-swing 
+        ref="swing"
+        :wind_up_down="deviceAttrs.wind_up_down"
+        :wind_left_right="deviceAttrs.wind_left_right"
+        @setWind="setWind" />
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
+import CircleProgress from './components/circle-progress'
+import model from './components/model'
+
 export default {
+  components: {
+    CircleProgress,
+    'model-swing': model,
+  },
   data() {
     return {
       isOpen: false,
+
+      isShow: true,
+      width: 220,
+      radius: 8,
+      progress: 30, // 0~70
+      duration: 0,
+      delay: 0,
+      barColor: '#0FDC66',
+      backgroundColor: '#ececec',
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-    isRun() {
-      return this.deviceAttrs.status == 'run'
-    },
-    cRotate() {
-      if (this.isClose) {
-        return -45
-      } else {
-        return (+this.deviceAttrs.temperature - 35) * 4.5 - 45
-      }
-    },
-    arrowRotate() {
-      if (this.isClose) {
-        return 0
-      } else {
-        return (+this.deviceAttrs.temperature - 35) * 4.5
-      }
-    }
+    // barColor() {
+    //   if(this.isClose || this.isOffline) return '#D8D8D8'
+    //   /* eslint-disable no-unreachable */
+    //   switch (this.deviceAttrs.mode) {
+    //     case 'cold':
+    //       return ' #00D5FF;'
+    //       break
+    //     case 'heat':
+    //       return '#FF5F00'
+    //       break
+
+    //     default:
+    //       return '#0FDC66'
+    //   }
+    // },
   },
   created() {
   },
@@ -192,6 +185,10 @@ export default {
         return HdSmart.UI.toast('温度最低为35℃')
       }
       this.controlDevice('set_temperature', val)
+        .then(() => {
+          this.progress = 60
+          this.reset()
+        })
     },
     controlDevice(attr, value) {
       return this.doControlDevice({
@@ -203,10 +200,32 @@ export default {
         }
       })
     },
+    // 重置动画
+    reset() {
+      this.isShow = false
+      this.$nextTick(() => {
+        this.isShow = true
+      })
+    },
+    showSwing() {
+      this.$refs.swing.show = true
+    },
+    setWind(attr) {
+      var val = this.deviceInfo.attribute[attr] === 'on' ? 'off' : 'on'
+
+      this.controlDevice(attr, val, attr,
+        () => {
+          this.showMsg(tips[attr + '_' + val])
+          this.$refs.swing.show = false
+        },
+        () => { })
+    },
   }
 }
 </script>
 <style lang="less" scoped>
+@imgPath: 'base/air_condition/assets/new-air';
+
 .body {
   min-height: 100%;
 }
@@ -220,219 +239,97 @@ export default {
   &.filter {
     filter: blur(12px);
   }
+  .progress{
+    transform: rotate(-126deg);
+  }
   .c-status {
     margin-top: 30px;
     font-size: 24px;
     color: #35353d;
     text-align: center;
   }
-  .bg {
+  .control-tm{
     position: relative;
-    z-index: 1;
+    top: -40px;
+    z-index: 9;
 
-    width: 370px;
-    height: 370px;
-    background: #f3f6fd;
-    border-radius: 50%;
-    padding: 10px;
-    .bg2 {
-      width: 100%;
-      height: 100%;
-      background: #fff;
+    width: 190PX;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .control{
+      outline: none;
+      border: none;
+      width: 72px;
+      height: 72px;
+      background:#efefef;
       border-radius: 50%;
-      flex-direction: column;
-      &.pos-ab {
-        background: transparent;
-        position: absolute;
-        top: 0;
-        left: 0;
+      &.add{
+        background-image: url(~@lib/base/fridge/assets/add.png);
+        background-size: 100% 100%;
       }
-    }
-    .circle-arrow {
-      display: block;
-      width: 60px;
-      height: 60px;
-      background-image: url(../../lib/base/electric_water_heater/assets/new/arrow.png);
-      background-size: 100% 100%;
-
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: rotate(25deg) translate(-0, -50%);
+      &.reduce{
+        background-image: url(~@lib/base/fridge/assets/reduce.png);
+        background-size: 100% 100%;
+      }
     }
   }
   .main {
-    margin-top: 80px;
+    margin-top: 5vh;
     position: relative;
     &.center {
       flex-direction: column;
     }
-    .wrap-circle {
-      position: absolute;
-      top: -31px;
-      border-radius: 50%;
-      .circle {
-        box-sizing: border-box;
-        border: 4px solid;
-        border-color: transparent transparent #ff210e #ff210e;
-        border-radius: 50%;
-        width: 434px;
-        height: 434px;
-
-        transform: rotate(90deg);
-      }
-      .circle-gray {
-        position: absolute;
-        top: 0;
-        border: 4px solid #d8d8d8;
-        border-radius: 50%;
-        box-sizing: border-box;
-        width: 432px;
-        height: 432px;
-      }
-      .cover {
+    .wrap-circle{
+      position: relative;
+      .bg{
         position: absolute;
         top: 50%;
-        background: #f4f7fe;
-        width: 100%;
-        height: 220px;
-        .point {
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        background: #FFFFFF;
+        box-shadow: inset 0 0 16px 0 rgba(0,0,0,0.10);
+        border-radius: 50%;
+        width: 84%;
+        height: 84%;
+        .tm{
+          margin-top: 60PX;
+          position: relative;
+          font-size: 144px;
+          color: #20282B;
+          text-align: center;
+          sup{
+            opacity: .5;
+            position: absolute;
+            top: 20px;
+            font-size: 24px;
+            color: #20282B;
+          }
+        }
+        .c-mode{
+          margin: auto;
           display: block;
-          background: #ff210e;
-          width: 18px;
-          height: 18px;
-          border-radius: 50%;
-          &.left {
-            position: absolute;
-            top: -8px;
-            left: -5px;
-            background: #ff210e;
-          }
-          &.right {
-            position: absolute;
-            top: -8px;
-            right: -5px;
-            background: #d8d8d8;
-          }
-        }
-        .txt {
-          font-size: 24px;
-          color: #000;
-          &.left {
-            position: absolute;
-            top: 28px;
-            left: -28px;
-          }
-          &.right {
-            position: absolute;
-            top: 28px;
-            right: -10px;
-          }
-        }
-        sup {
-          font-size: 10px;
-          position: absolute;
-          top: -2px;
+          margin-top: 20PX;
+          width: 33px;
+          height: 33px;
+          background-image: url('~@lib/@{imgPath}/icon-wind.png');
+          background-size: 100% 100%;
         }
       }
-    }
-
-    .num {
-      font-size: 24px;
-      color: #000;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .time {
-      font-size: 112px;
-      color: #20282b;
-      text-align: center;
-      position: relative;
-      sup {
-        font-size: 24px;
-        color: #2e2e2e;
-        position: absolute;
-        top: 30px;
-      }
-    }
-    .cmode {
-      margin-top: 20px;
-      font-size: 24px;
-      color: #000;
-      text-align: center;
-    }
-
-    .nuit {
-      opacity: 0.5;
-      color: #03fd05;
-      font-size: 24px;
-      letter-spacing: 0;
-      text-align: center;
-      position: absolute;
-      top: 145px;
     }
   }
-  .status {
-    margin-top: 60px;
-    font-size: 24px;
-    color: #20282b;
+  .status{
     text-align: center;
+    font-size: 24px;
+    color: #20282B;
   }
-  .control {
-    margin: 40px 0;
-    .reduce,
-    .add {
-      position: relative;
-      background: #fff;
-      border: 1px solid #f1f1f1;
-      width: 72px;
-      height: 72px;
-      line-height: 72px;
-
-      border-radius: 50%;
-      text-align: center;
-      margin: 0 32px;
-    }
-    .reduce {
-      &::before {
-        font-size: 90px;
-        content: "-";
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-    .add {
-      &::before {
-        font-size: 70px;
-        content: "+";
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-
-    .main-control {
-      width: 276px;
-      height: 72px;
-
-      line-height: 72px;
-      background: #f3e9f1;
-      border-radius: 22px;
-      font-size: 24px;
-      text-align: center;
-      color: #ff210e;
-    }
-  }
-
   .panel-btn {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 38px 0;
+    padding: 20px 38px 0;
     z-index: 9999;
 
     background: #ffffff;
@@ -440,8 +337,7 @@ export default {
     border-radius: 42px 42px 0px 0px;
 
     flex-wrap: wrap;
-    justify-content: center;
-
+    justify-content: flex-start;
     .more {
       width: 750px;
       color: #9e9e9e;
@@ -449,8 +345,9 @@ export default {
       text-align: center;
       position: absolute;
       left: 0;
-      top: -100px;
+      top: -75px;
       .arrow {
+        display: inline-block;
         font-size: 32px;
         &.up {
           transform: rotate(90deg);
@@ -460,25 +357,10 @@ export default {
         }
       }
     }
-
-    .btn {
-      margin-top: 24px;
-      width: 100%;
-      border-radius: 40px 40px 0 0;
-      background: #ffffff;
-      box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-    }
   }
-
+  /*********** 按钮 ***********/
   .btn-wrap {
     margin: 0 24px 24px;
-    &.up-index {
-      position: relative;
-      z-index: 9999;
-    }
     .btn {
       box-sizing: border-box;
       margin: 0 auto;
@@ -489,6 +371,12 @@ export default {
 
       display: flex;
       flex-direction: column;
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+      }
       &.active {
         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
         border-color: #ffbf00;
@@ -500,169 +388,89 @@ export default {
       margin-top: 16px;
       font-size: 24px;
     }
-    .btn-start {
+
+    .btn-swich {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/start.png);
+        background-image: url('~@lib/@{imgPath}/swich-black.png');
         background-size: 100% 100%;
       }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/start.png);
-        }
-      }
     }
-    .btn-stop {
+    .btn-cold {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-stop.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-stop.png);
-        }
-      }
-    }
-    .btn-time {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/time-black.png);
+        background-image: url('~@lib/@{imgPath}/cold.png');
         background-size: 100% 100%;
       }
     }
     .btn-heat {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/electric_water_heater/assets/new/heat.png);
+        background-image: url('~@lib/@{imgPath}/heat.png');
         background-size: 100% 100%;
-      }
-    }
-    .btn-znsw {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/electric_water_heater/assets/new/znsw.png);
-        background-size: 100% 100%;
-      }
-    }
-    .btn-bpsr {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/electric_water_heater/assets/new/bpsr.png);
-        background-size: 100% 100%;
-      }
-    }
-    .btn-znyj {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/electric_water_heater/assets/new/znyj.png);
-        background-size: 100% 100%;
-      }
-    }
-
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
-        }
       }
     }
     .btn-mode {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode1.png);
+        background-image: url('~@lib/@{imgPath}/mode.png');
         background-size: 100% 100%;
       }
     }
-    .btn-low {
+
+    .btn-menu {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
+        background-image: url('~@lib/@{imgPath}/more-black.png');
         background-size: 100% 100%;
       }
     }
-    .btn-middle {
+
+    .btn-wind {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
+        background-image: url('~@lib/@{imgPath}/wind.png');
         background-size: 100% 100%;
       }
     }
-    .btn-high {
+
+    .btn-dehumidify {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
+        background-image: url('~@lib/@{imgPath}/dehumidify-black.png');
         background-size: 100% 100%;
       }
     }
-    .btn-very_high {
+
+    .btn-auto {
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4.png);
+        background-image: url('~@lib/@{imgPath}/auto-white.png');
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url('~@lib/@{imgPath}/auto-black.png');
+        }
+      }
+      &.btn-current {
+        border-color: #FFC600;
+        &::before {
+          background-image: url('~@lib/@{imgPath}/auto-yellow.png');
+        }
+        .name{
+          color: #FFC600;
+        }
+      }
+    }
+
+    .btn-speed5{
+      &::before {
+        background-image: url('~@lib/@{imgPath}/speed5.png');
         background-size: 100% 100%;
       }
     }
-    .btn-super_high {
+    .btn-left{
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5.png);
+        background-image: url('~@lib/@{imgPath}/left.png');
         background-size: 100% 100%;
       }
     }
-    .btn-more {
+    .btn-up{
       &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/more.png);
+        background-image: url('~@lib/@{imgPath}/up.png');
         background-size: 100% 100%;
       }
     }
@@ -672,7 +480,7 @@ export default {
     &:before {
       content: "";
       position: fixed;
-      top: 64px;
+      top: 64PX;
       left: 0;
       bottom: 0;
       right: 0;
@@ -682,6 +490,9 @@ export default {
     }
     &.page {
       background: #fff;
+      .control-tm{
+        background: #fff;
+      }
       .cover {
         background: #fff;
         .point {
@@ -789,12 +600,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/swich-black.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-black.png);
         }
       }
     }
@@ -805,12 +616,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed1-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed1.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed1.png);
         }
       }
     }
@@ -820,12 +631,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed2-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed2.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed2.png);
         }
       }
     }
@@ -835,12 +646,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed3-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed3.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed3.png);
         }
       }
     }
@@ -850,12 +661,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed4-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed4.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed4.png);
         }
       }
     }
@@ -865,282 +676,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5-white.png);
+        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed5-white.png);
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/air_cleaner/assets/new-air/speed5.png);
-        }
-      }
-    }
-  }
-}
-.items {
-  margin-bottom: 30px;
-  .btns {
-    display: flex;
-    justify-content: center;
-    justify-content: flex-start;
-    padding: 10px 30px;
-    .btn-wrap {
-      margin-right: 20px;
-    }
-
-    .btn-name {
-      margin-top: 16px;
-      font-size: 24px;
-      color: #20282b;
-      text-align: center;
-    }
-
-    .btn {
-      box-sizing: border-box;
-      margin: 0 5px;
-      width: 110px;
-      height: 110px;
-      border: 1px solid #20282b;
-      border-radius: 50%;
-
-      display: flex;
-      flex-direction: column;
-      &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border: none;
-      }
-    }
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_condition/assets/new-air/swich-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_condition/assets/new-air/swich-black.png);
-        }
-      }
-    }
-    .btn-start {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/haier_washer/assets/btn-start.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-        }
-      }
-    }
-    .btn-stop {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/haier_washer/assets/btn-stop.png);
-        }
-      }
-    }
-    .btn-mode {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/haier_washer/assets/btn-mode-white58.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/haier_washer/assets/btn-mode-black58.png);
-        }
-      }
-    }
-    .btn-time {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/air_condition/assets/new-air/time-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/air_condition/assets/new-air/time-black.png);
-        }
-      }
-      &.btn-current {
-        border-color: #ffc600;
-        &::before {
-          background-image: url(../../lib/base/air_condition/assets/new-air/time-yellow.png);
-        }
-        .name {
-          color: #ffc600;
-        }
-      }
-    }
-
-    .btn-mode1 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode1.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode1.png);
-        }
-      }
-    }
-    .btn-mode2 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode2.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode2.png);
-        }
-      }
-    }
-    .btn-mode3 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode3.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode3.png);
-        }
-      }
-    }
-    .btn-mode4 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode4.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode4.png);
-        }
-      }
-    }
-    .btn-mode5 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode5.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode5.png);
-        }
-      }
-    }
-    .btn-mode6 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode6.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode6.png);
-        }
-      }
-    }
-    .btn-mode7 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode7.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode7.png);
-        }
-      }
-    }
-    .btn-mode8 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode8.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode8.png);
-        }
-      }
-    }
-    .btn-mode9 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode9.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode9.png);
-        }
-      }
-    }
-    .btn-mode10 {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode10.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode10.png);
+          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed5.png);
         }
       }
     }
