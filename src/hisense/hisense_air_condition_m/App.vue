@@ -120,10 +120,10 @@ import modelSpeed from './components/model-speed'
 const [MIN_TEMP, MAX_TEMP] = [160, 300]
 export default {
   components: {
-    'circle-progress': circleProgress,
-    'model-swing': modelSwing,
-    'model-mode': modelMode,
-    'model-speed': modelSpeed,
+    circleProgress,
+    modelSwing,
+    modelMode,
+    modelSpeed,
   },
   data() {
     return {
@@ -284,7 +284,6 @@ export default {
     reset() {
       this.barColor = this.getBarColor()
       this.progress = this.getProgress()
-      console.log('progress = ' + this.progress)
       this.$nextTick(() => {
         this.$refs.$circle.init()
       })
@@ -321,7 +320,6 @@ export default {
       }
     },
     getProgress() {
-      console.log(this.deviceAttrs.temperature)
       // 计算温度进度条
       return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
     }

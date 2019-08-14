@@ -8,7 +8,7 @@
         <div 
           v-show="model.order_time > 0 && model.order_mode !== 'off' && model.connectivity == 'online'" 
           class="appointment">
-          <img src="../../lib/base/blend/assets/time-black.png">
+          <img src="'~@lib/base/blend/assets/time-black.png">
           {{ model.order_time | order_time }}
         </div>
       </div>
@@ -154,8 +154,8 @@
 </template>
 
 <script>
-import SelectTime from '../blend_m/time/time.vue'
-import Modal from '../../lib/components/Modal.vue'
+import SelectTime from './time/time.vue'
+import Modal from '@lib/components/Modal.vue'
 
 export default {
   components: {
@@ -455,7 +455,7 @@ export default {
     width: 90%;
     height: 90%;
     content: '';
-    background-image: url(../../lib/base/blend/assets/blueloading.gif);
+    background-image: url('~@lib/base/blend/assets/blueloading.gif');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     position: absolute;
@@ -501,14 +501,14 @@ export default {
   .bg{
     width: 750px;
     height: 750px;
-    background-image: url(../../lib/base/blend/assets/bg3.png);
+    background-image: url('~@lib/base/blend/assets/bg3.png');
     background-size: 100% 100%;
     .bg2{
       flex-direction: column;
       width: 620px;
       height: 620px;
       margin: auto;
-      background-image: url(../../lib/base/blend/assets/bg1.png);
+      background-image: url('~@lib/base/blend/assets/bg1.png');
       background-size: 100% 100%;
     }
   }
@@ -632,7 +632,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/start.png);
+        background-image: url('~@lib/base/blend/assets/start.png');
         background-size: 100% 100%;
       }
     }
@@ -642,7 +642,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-stop.png);
+        background-image: url('~@lib/base/blend/assets/btn-stop.png');
         background-size: 100% 100%;
       }
     }
@@ -652,7 +652,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/time-black.png);
+        background-image: url('~@lib/base/blend/assets/time-black.png');
         background-size: 100% 100%;
       }
     }
@@ -662,77 +662,77 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode1.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode1.png');
         background-size: 100% 100%;
       }
       &.grains::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode1.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode1.png');
         background-size: 100% 100%;
       }
       &.rice_paste::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode2.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode2.png');
         background-size: 100% 100%;
       }
       &.gruel::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode3.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode3.png');
         background-size: 100% 100%;
       }
       &.pottage::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode4.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode4.png');
         background-size: 100% 100%;
       }
       &.stewing::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode5.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode5.png');
         background-size: 100% 100%;
       }
       &.grind::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode6.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode6.png');
         background-size: 100% 100%;
       }
       &.fruit_vegdtable::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode7.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode7.png');
         background-size: 100% 100%;
       }
       &.milk_shake::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode8.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode8.png');
         background-size: 100% 100%;
       }
       &.water_ice::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode9.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode9.png');
         background-size: 100% 100%;
       }
       &.tepidity::before {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url(../../lib/base/blend/assets/btn-mode10.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode10.png');
         background-size: 100% 100%;
       }
     }
@@ -755,7 +755,7 @@ export default {
     &.page{
       background: #fff;
       .bg .bg2{
-        background-image: url(../../lib/base/blend/assets/bg2.png);
+        background-image: url('~@lib/base/blend/assets/bg2.png');
         background-size: 100% 100%;
       }
     }
@@ -814,101 +814,101 @@ export default {
     }
     .btn-mode1 {
       &::before {
-        background-image: url(../../lib/base/blend/assets/btn-mode1.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode1.png');
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode1.png);
+          background-image: url('~@lib/base/blend/assets/btn-mode1.png');
         }
       }
     }
     .btn-mode2 {
       &::before {
-        background-image: url(../../lib/base/blend/assets/btn-mode2.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode2.png');
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode2.png);
+          background-image: url('~@lib/base/blend/assets/btn-mode2.png');
         }
       }
     }
     .btn-mode3 {
       &::before {
-        background-image: url(../../lib/base/blend/assets/btn-mode3.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode3.png');
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode3.png);
+          background-image: url('~@lib/base/blend/assets/btn-mode3.png');
         }
       }
     }
     .btn-mode4 {
       &::before {
-        background-image: url(../../lib/base/blend/assets/btn-mode4.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode4.png');
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode4.png);
+          background-image: url('~@lib/base/blend/assets/btn-mode4.png');
         }
       }
     }
     .btn-mode5 {
       &::before {
-        background-image: url(../../lib/base/blend/assets/btn-mode5.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode5.png');
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode5.png);
+          background-image: url('~@lib/base/blend/assets/btn-mode5.png');
         }
       }
     }
     .btn-mode6 {
       &::before {
-        background-image: url(../../lib/base/blend/assets/btn-mode6.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode6.png');
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode6.png);
+          background-image: url('~@lib/base/blend/assets/btn-mode6.png');
         }
       }
     }
     .btn-mode7 {
       &::before {
-        background-image: url(../../lib/base/blend/assets/btn-mode7.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode7.png');
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode7.png);
+          background-image: url('~@lib/base/blend/assets/btn-mode7.png');
         }
       }
     }
     .btn-mode8 {
       &::before {
-        background-image: url(../../lib/base/blend/assets/btn-mode8.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode8.png');
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode8.png);
+          background-image: url('~@lib/base/blend/assets/btn-mode8.png');
         }
       }
     }
     .btn-mode9 {
       &::before {
-        background-image: url(../../lib/base/blend/assets/btn-mode9.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode9.png');
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode9.png);
+          background-image: url('~@lib/base/blend/assets/btn-mode9.png');
         }
       }
     }
     .btn-mode10 {
       &::before {
-        background-image: url(../../lib/base/blend/assets/btn-mode10.png);
+        background-image: url('~@lib/base/blend/assets/btn-mode10.png');
       }
       &.active {
         &::before {
-          background-image: url(../../lib/base/blend/assets/btn-mode10.png);
+          background-image: url('~@lib/base/blend/assets/btn-mode10.png');
         }
       }
     }
