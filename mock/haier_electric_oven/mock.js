@@ -5,7 +5,7 @@ import Mock from 'mockjs'
 
 let res = {
     "switch": 'on', //开关机: on--- 开启 off--- 关闭
-    "status": 'start', //运行/停止/完成
+    "status": 'stop', //运行/停止/完成
     "control": '', //运行/停止/完成
     "reserve_bake": 1, //单位为分钟，表示从当前时间开始需要多长时间结束整个烘烤过程
     "remaining": 88, //预约剩余时间，单位为分钟
