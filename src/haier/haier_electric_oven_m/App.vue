@@ -3,7 +3,7 @@
     <div :class="[{'minHeight': isOpen && isMin}, {'offline': isOffline }, {'close': isClose}, 'page']">
       <!-- 顶部 -->
       <topbar
-        title="电烤箱"
+        :title="device.device_name"
         bg-color="#fff"
         bak-color="#000" />
       <!-- 圆圈 -->
