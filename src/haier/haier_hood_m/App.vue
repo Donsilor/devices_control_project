@@ -5,38 +5,42 @@
         title="厨房的烟机"
         bak-color="#000" />
       <div class="main center">
-        <div :class="[{'animation': !isClose },{'greycircle': isClose },'wrap-circle' ,'center']">
+        <div class="wrap-circle center">
+          <div :class="[{'animation': !isClose }, {'greycircle': isClose }, rotateClass, 'bg']" />
           <p class="wind">风速档位</p>
           <p 
-            v-if="!isClose&&!isOffline" 
+            v-if="!isClose&&!isOffline"
             class="speed">{{ speedNum }}</p>
-          <p 
+          <div 
             v-else 
-            class="speed">- -</p>
+            class="speed speed-close">
+            <span/>
+            <span/>
+          </div>
           <p 
-            v-if="!isClose&&!isOffline" 
+            v-if="!isClose&&!isOffline"
             class="switch">{{ speedText }}</p>
         </div>
       </div>
       <div 
-        v-show="deviceAttrs.light == 'on'" 
+        v-show="deviceAttrs.light == 'on'"
         class="tips">
-        <i/>
+        <i />
         <span>照明已开启</span>
       </div>
       <div 
-        v-show="deviceAttrs.delay == 'on'" 
+        v-show="deviceAttrs.delay == 'on'"
         class="tips tips2">
-        <i/>
+        <i />
         <span>{{ m1 }}分{{ s1 }}秒后关机</span>
       </div>
 
       <!-- 按钮 -->
       <div class="panel-btn center">
         <div 
-          class="more" 
+          class="more"
           @click="handleMore">
-          <div :class="[isOpen ? 'up': 'down', 'arrow']">></div>
+          <span :class="[isOpen ? 'up': 'down', 'arrow']">></span>
           <div>{{ isOpen ? '收起' : '查看更多' }}</div>
         </div>
 
@@ -64,47 +68,72 @@
           <div :class="[ { 'active': deviceAttrs.speed == 'normal' }, 'btn btn-gs center']" />
           <div class="btn-name">高速</div>
         </div>
-        
+
         <div 
-          v-show="isOpen" 
+          v-show="isOpen"
           class="btn-wrap"
           @click="setLight()">
-          <div
-            :class="[{ 'active': deviceAttrs.light == 'on' },'btn-zm', 'btn' ,'center']"/>
+          <div :class="[{ 'active': deviceAttrs.light == 'on' },'btn-zm', 'btn' ,'center']" />
           <div class="btn-name">照明</div>
         </div>
 
         <div 
-          v-show="isOpen" 
+          v-show="isOpen"
           :class="[{'disabled':deviceAttrs.speed=='off'&& deviceAttrs.light == 'off' },'btn-wrap']"
           @click="setDelay()">
-          <div
-            :class="[{ 'active': deviceAttrs.delay == 'on' },'btn', 'btn-yc' ,'center']"/>
+          <div :class="[{ 'active': deviceAttrs.delay == 'on' },'btn', 'btn-yc' ,'center']" />
           <div class="btn-name">延迟</div>
         </div>
-      </div> 
-</div></div></template>
+      </div>
+    </div>
+  </div>
+</template>
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
-  data(){
+  data() {
     return {
-      isOpen:false,
-      speedNum:0,
-      speedText:'关',
-      m1:2,
-      s1:25
+      isOpen: false,
+      speedNum: 0,
+      speedText: '关',
+      m1: 2,
+      s1: 25
     }
   },
-  computed:{
+  computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    rotateClass() {
+      /* eslint-disable no-unreachable */
+      switch (this.deviceAttrs.speed) {
+        case 'low':
+          return 'rotate-low'
+          break
+        case 'overlow':
+          return 'rotate-overlow'
+          break
+        case 'normal':
+          return 'rotate-normal'
+          break
+        case 'overnormal':
+          return 'rotate-overnormal'
+          break
+        case 'high':
+          return 'rotate-high'
+          break
+        case 'auto':
+          return 'rotate-low'
+          break 
+        default:
+          return ''
+      }
+    },
   },
-  watch:{
+  watch: {
     deviceAttrs: {
       handler(newName) {
-        switch(newName.speed){
+        switch (newName.speed) {
           case "off":
             this.speedNum = 0
             this.speedText = "关"
@@ -132,7 +161,7 @@ export default {
       this.getDeviceInfo()
     })
   },
-  methods:{
+  methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setSpeed(val) {
       if (val == this.deviceAttrs.speed) {
@@ -141,62 +170,56 @@ export default {
       if (this.isClose) return  // 关机状态点击无效
       this.controlDevice('speed', val)
     },
-    setSwitch(){
-      console.log('点击了开关')
-       let switchStatus = ''
+    setSwitch() {
+      let switchStatus = ''
       if (this.deviceAttrs.switch == 'on') {
         switchStatus = 'off'
       } else {
         switchStatus = 'on'
       }
       this.controlDevice("switch", switchStatus)
-      this.controlDevice("light", 'off')
-      this.controlDevice("speed", 'off')
-      this.controlDevice("delay", 'off')
+      // this.controlDevice("light", 'off')
+      // this.controlDevice("speed", 'off')
+      // this.controlDevice("delay", 'off')
     },
-    setLight(){
+    setLight() {
       if (this.isClose) return  // 关机状态点击无效
-      console.log('点击了灯光')
       let switchStatus = ''
       if (this.deviceAttrs.light == 'on') {
         switchStatus = 'off'
       } else {
         switchStatus = 'on'
       }
-      console.log(switchStatus,this.isClose)
       this.controlDevice("light", switchStatus)
         .then(() => {
           console.log('setLight success')
         })
     },
-    setDelay(){
-      if (this.isClose || (this.deviceAttrs.speed=='off'&& this.deviceAttrs.light == 'off')) return  // 关机状态或者风速灯光都没开启点击无效
-      console.log('点击了延迟')
+    setDelay() {
+      if (this.isClose || (this.deviceAttrs.speed == 'off' && this.deviceAttrs.light == 'off')) return  // 关机状态或者风速灯光都没开启点击无效
       let switchStatus = ''
       if (this.deviceAttrs.delay == 'on') {
         switchStatus = 'off'
       } else {
         switchStatus = 'on'
       }
-      console.log(switchStatus,this.isClose)
       this.controlDevice("delay", switchStatus)
         .then(() => {
-          console.log('setDelay success')
           const date1 = new Date()
           const m = date1.getMinutes()
           const s = date1.getSeconds()
-          date1.setMinutes(m+2)
-          date1.setSeconds(s+25)
-          const dateObj = setInterval(()=>{
+          date1.setMinutes(m + 2)
+          date1.setSeconds(s + 25)
+          const dateObj = setInterval(() => {
             const date = new Date()
             const a = date1.getTime() - date.getTime()
-            this.s1 = Math.floor(a/1000%60)
-            this.m1 = Math.floor(a/(1000*60)%60)
-            if(this.m1<=0&&this.s1<=0){
+            this.s1 = Math.floor(a / 1000 % 60)
+            this.m1 = Math.floor(a / (1000 * 60) % 60)
+            if (this.m1 <= 0 && this.s1 <= 0) {
               clearInterval(dateObj)
               this.setSwitch()
             }
-        },1000)
+          }, 1000)
         })
     },
     controlDevice(attr, value) {
@@ -209,7 +232,7 @@ export default {
         }
       })
     },
-    handleMore(){
+    handleMore() {
       this.isOpen = !this.isOpen
     }
   },
@@ -218,259 +241,319 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@lib:"../../../lib/base/haier_hood/assets";
-@lib1:"../../../lib";
-.wrap-circle{
+@lib: "../../../lib/base/haier_hood/assets";
+@lib1: "../../../lib";
+@keyframes rotate {
+    from {
+      transform:rotate(0deg);
+    }
+    to {
+      transform:rotate(360deg);
+    }
+}
+.wrap-circle {
+  position: relative;
   margin-top: 60px;
   width: 524px;
   height: 524px;
   flex-direction: column;
-  font-size: 30px;
-  .wind{
-    margin-bottom: 40px;
+  color: #20282B;
+  .bg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
-  .speed{
-    font-size: 120px
+  .wind {
+    margin-bottom: 30px;
+    font-size: 24px;
   }
-  .switch{
-    margin-top: 40px;
-  }
-}
-.animation{
-    background: url('@{lib}/yanji_img_animation.png') no-repeat;
-    background-size: 100% 100%;
-}
-.greycircle{
-    background: url('@{lib}/yanji_img_greycircle.png') no-repeat;
-    background-size: 100% 100%;
-}
-
-.tips{
-  font-size:20px;
-  text-align: center;
-  i{
-       content: "";
+  .speed {
+    font-size: 120px;
+    &.speed-close{
+      display: flex;
+      align-items: center;
+      height: 152px;
+      margin-bottom: 20px;
+      span{
+        margin: 0 10px;
         display: inline-block;
-        width: 30px;
-        height: 30px;
-        background-image: url('@{lib}/yanji_ico_light.png');
-        background-size: 100% 100%;
+        background:#757575;
+        width: 70px;
+        height: 10px;
+      }
+    }
   }
-  span{
-    width: 100px;
-  } 
+  .switch {
+    margin-top: 20px;
+    font-size: 32px;
+  }
 }
-.tips2{
-  i{
-        background-image: url('@{lib1}/base/blend/assets/time-black.png');
+.animation {
+  background: url("@{lib}/yanji_img_animation.png") no-repeat;
+  background-size: 100% 100%;
+  &.rotate-low{
+    animation: rotate 10s linear 0s infinite;
+  }
+  &.rotate-overlow{
+    animation: rotate 8s linear 0s infinite;
+  }
+  &.rotate-normal{
+    animation: rotate 6s linear 0s infinite;
+  }
+  &.rotate-overnormal{
+    animation: rotate 4s linear 0s infinite;
+  }
+  &.rotate-high{
+    animation: rotate 2s linear 0s infinite;
+  }
+}
+.greycircle {
+  background: url("@{lib}/yanji_img_greycircle.png") no-repeat;
+  background-size: 100% 100%;
+}
+.tips {
+  margin-top: 20px;
+  font-size: 20px;
+  text-align: center;
+  i {
+    vertical-align: sub;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-image: url("@{lib}/yanji_ico_light.png");
+    background-size: 100% 100%;
+  }
+  span {
+    width: 100px;
+  }
+}
+.tips2 {
+  i {
+    background-image: url("@{lib1}/base/blend/assets/time-black.png");
   }
 }
 .panel-btn {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 40px 30px 30px;;
-    z-index: 9999;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px 30px 30px;
+  z-index: 9999;
 
+  background: #ffffff;
+  box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
+  border-radius: 42px 42px 0px 0px;
+
+  flex-wrap: wrap;
+  justify-content: flex-start;
+
+  .more {
+    width: 750px;
+    color: #9e9e9e;
+    font-size: 24px;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    top: -75px;
+    .arrow {
+      display: inline-block;
+      font-size: 32px;
+      &.up {
+        transform: rotate(90deg);
+      }
+      &.down {
+        transform: rotate(-90deg);
+      }
+    }
+  }
+
+  .btn {
+    margin-top: 24px;
+    width: 100%;
+    border-radius: 40px 40px 0 0;
     background: #ffffff;
     box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
-    border-radius: 42px 42px 0px 0px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+}
+.disabled {
+  opacity: 0.2;
+}
+.btn-wrap {
+  margin: 0 24px 24px;
+  &.up-index {
+    position: relative;
+    z-index: 9999;
+  }
+  .btn {
+    box-sizing: border-box;
+    margin: 0 auto;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #818181;
+    border-radius: 50%;
 
-    flex-wrap: wrap;
-    justify-content: flex-start;
-
-    .more {
-      width: 750px;
-      color: #9e9e9e;
-      font-size: 24px;
-      text-align: center;
-      position: absolute;
-      left: 0;
-      top: -100px;
-      .arrow {
-        font-size: 32px;
-        &.up {
-          transform: rotate(90deg);
-        }
-        &.down {
-          transform: rotate(-90deg);
-        }
-      }
-    }
-
-    .btn {
-      margin-top: 24px;
-      width: 100%;
-      border-radius: 40px 40px 0 0;
-      background: #ffffff;
-      box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
+    display: flex;
+    flex-direction: column;
+    &.active {
+      background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+      border-color: #ffbf00;
     }
   }
-    .disabled{
-      opacity: 0.2;
-    }
-  .btn-wrap {
-    margin: 0 24px 24px;
-    &.up-index {
-      position: relative;
-      z-index: 9999;
-    }
-    .btn {
-      box-sizing: border-box;
-      margin: 0 auto;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #818181;
-      border-radius: 50%;
-
-      display: flex;
-      flex-direction: column;
-      &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border-color: #ffbf00;
-      }
-    }
-    .btn-name {
-      text-align: center;
-      color: #000;
-      margin-top: 16px;
-      font-size: 24px;
-    }
-    .btn-start {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/start.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/blend/assets/start.png');
-        }
-      }
-    }
-
-    .btn-zm {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib}/yanji_btn_light.png');
-        background-size: 100% 100%;
-      }
-    }
-    .btn-yc {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/blend/assets/time-black.png');
-        background-size: 100% 100%;
-      }
-    }
-
-    .btn-rs {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib}/yanji_btn_fan01.png');
-        background-size: 100% 100%;
-      }
-    }
-    .btn-ds {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib}/yanji_btn_fan02.png');
-        background-size: 100% 100%;
-      }
-    }
-    .btn-bpsr {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib}/yanji_btn_fan03.png');
-        background-size: 100% 100%;
-      }
-    }
-    .btn-gs {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib}/yanji_btn_fan03.png');
-        background-size: 100% 100%;
-      }
-    }
-
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('@{lib1}/base/air_cleaner/assets/new-air/swich-black.png');
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url('@{lib1}/base/air_cleaner/assets/new-air/swich-black.png');
-        }
-      }
-    }
+  .btn-name {
+    text-align: center;
+    color: #000;
+    margin-top: 16px;
+    font-size: 24px;
   }
-  &.close,
-  &.offline {
-    &:before {
+  .btn-start {
+    &::before {
       content: "";
-      position: fixed;
-      top: 64px;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      z-index: 999;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.1);
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url("@{lib1}/base/blend/assets/start.png");
+      background-size: 100% 100%;
     }
-    &.page {
+    &.active {
+      &::before {
+        background-image: url("@{lib1}/base/blend/assets/start.png");
+      }
+    }
+  }
+
+  .btn-zm {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url("@{lib}/yanji_btn_light.png");
+      background-size: 100% 100%;
+    }
+  }
+  .btn-yc {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url("@{lib1}/base/blend/assets/time-black.png");
+      background-size: 100% 100%;
+    }
+  }
+
+  .btn-rs {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url("@{lib}/yanji_btn_fan01.png");
+      background-size: 100% 100%;
+    }
+  }
+  .btn-ds {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url("@{lib}/yanji_btn_fan02.png");
+      background-size: 100% 100%;
+    }
+  }
+  .btn-bpsr {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url("@{lib}/yanji_btn_fan03.png");
+      background-size: 100% 100%;
+    }
+  }
+  .btn-gs {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url("@{lib}/yanji_btn_fan03.png");
+      background-size: 100% 100%;
+    }
+  }
+
+  .btn-swich {
+    &::before {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url("@{lib1}/base/air_cleaner/assets/new-air/swich-black.png");
+      background-size: 100% 100%;
+    }
+    &.active {
+      &::before {
+        background-image: url("@{lib1}/base/air_cleaner/assets/new-air/swich-black.png");
+      }
+    }
+  }
+}
+&.close {
+  .btn-wrap {
+    &.up-index{
+      opacity: 1;
+    }
+  }
+}
+&.offline {
+  .btn-wrap {
+    &.up-index{
+      opacity: .2;
+    }
+  }
+}
+&.close,
+&.offline {
+  &:before {
+    content: "";
+    position: fixed;
+    top: 64PX;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 999;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.1);
+  }
+  &.page {
+    background: #fff;
+    .cover {
       background: #fff;
-      .cover {
+      .point {
+        &.left {
+          background: #d8d8d8;
+        }
+      }
+    }
+  }
+  .panel-btn {
+    background: #efefef;
+  }
+  .btn-wrap {
+    opacity: .2;
+    .btn {
+      &.active {
         background: #fff;
-        .point {
-          &.left {
-            background: #d8d8d8;
-          }
-        }
+        border: 1px solid #818181;
       }
     }
-    .panel-btn {
-      background: #efefef;
-    }
-    .btn-wrap {
-      opacity: 0.2;
-      .btn {
-        &.active {
-          background: #fff;
-          border: none;
-        }
-      }
-    }
-  
+  }
 }
 </style>
 
