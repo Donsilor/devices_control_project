@@ -771,7 +771,7 @@ export default {
     justify-content: center;
 
     .more {
-      width: 750px;
+      width: 100%;
       color: #9e9e9e;
       font-size: 24px;
       text-align: center;
