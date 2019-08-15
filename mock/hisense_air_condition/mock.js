@@ -50,10 +50,7 @@ export function set(data) {
     } catch (error) {
       attr = data.content.params.attribute
     }
-
-    if (attr.switch) {
-      res.attribute.switchStatus = attr.switch
-    } else if (attr.temperature) {
+    if (attr.temperature) {
       res.attribute.temperature = attr.temperature
     } else {
       res.attribute = Object.assign({}, res.attribute, attr)

@@ -112,7 +112,6 @@
           <div class="btn-name">节能</div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -163,9 +162,12 @@ export default {
     },
   },
   created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+    })
   },
   methods: {
-    ...mapActions(['doControlDevice']),
+    ...mapActions(['getDeviceInfo','doControlDevice']),
     handleMore() {
       this.isOpen = !this.isOpen
     },
@@ -462,11 +464,11 @@ export default {
     &.page{
       background: #fff;
       .btn-wrap {
+        opacity: .2;
         .btn {
-          opacity: .2;
           &.active {
-            background-image: #fff;
-            border-color: none;
+            background: #fff;
+            border: 1px solid #818181;
           }
         }
       }

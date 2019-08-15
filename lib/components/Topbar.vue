@@ -56,7 +56,7 @@ let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelR
 
 export default {
   props: {
-    back: {
+    onBack: {
       type: Function,
       default: null
     },
@@ -105,8 +105,10 @@ export default {
   },
   methods: {
     goBack() {
-      if (typeof this.back === 'function') {
-        this.back()
+      console.log('goBack')
+      if (typeof this.onBack === 'function') {
+        console.log('goBack123123')
+        this.onBack()
       } else if (argv_is_mock) {
         let t = new Date().getTime()
         let url = ''

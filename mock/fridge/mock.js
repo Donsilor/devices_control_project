@@ -4,7 +4,7 @@
  * @author songwh
  *
  * Created at     : 2019-08-05 11:32:49
- * Last modified  : 2019-08-09 17:51:37
+ * Last modified  : 2019-08-15 11:15:59
  */
 import Mock from 'mockjs'
 
@@ -27,6 +27,7 @@ export function generateSnapShot() {
         result: {
           "device_name": "冰箱",
           "device_uuid": '112233123',
+          "device_access_type": 1,
           "attribute": res
         }
     })

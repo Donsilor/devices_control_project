@@ -3,63 +3,100 @@
     <div :class="[{'minHeight': isOpen && isMin}, {'offline': isOffline }, {'close': isClose}, 'page']">
       <!-- 顶部 -->
       <topbar
-        title="电烤箱"
+        :title="device.device_name"
         bg-color="#fff"
         bak-color="#000" />
       <!-- 圆圈 -->
       <div class="main center">
         <div class="bg center">
-          <div :class="['circle', {'start': deviceAttrs.mode == 'start' && !isClose }]"/>
+          <div :class="['circle', {'start': deviceAttrs.status == 'start' && !isClose }]"/>
           <div class="bg-middle center">
-            <div :class="['circle', {'start': deviceAttrs.mode == 'start' && !isClose }]"/>
-            <div
-              v-if="isClose"
-              class="bg2 center">
-              <div class="temperature opac">--<sup>°C</sup></div>
-              <div class="cmodeNo"/>
-            </div>
-            <div
-              v-else
-              class="bg2 center">
-              <div class="temperature">126<sup>°C</sup></div>
-              <div class="cmode"/>
-            </div>
+            <div :class="['circle', {'start': deviceAttrs.status == 'start' && !isClose }]"/>
+            <div class="back-circle">
+              <div
+                v-if="isClose"
+                class="back center">
+                <div class="temperature opac">--<sup>°C</sup></div>
+                <div class="cmodeNo"/>
+              </div>
+              <div
+                v-else
+                class="back center">
+                <div class="temperature">{{ deviceAttrs.temperature }}<sup>°C</sup></div>
+                <div class="cmode"/>
+              </div>
 
-            <div class="bg2 pos-ab">
-              <i class="circle-arrow" />
+              <div
+                v-show="!isClose"
+                class="bg2 pos-ab">
+                <div
+                  v-show="rotate>-42"
+                  :style="deg_42"
+                  class="circle-arrow-min pos1" />
+                <div
+                  v-show="rotate2>-88"
+                  :style="deg_88"
+                  class="circle-arrow-min pos2" />
+                <div
+                  v-show="rotate3>-133"
+                  :style="deg_133"
+                  class="circle-arrow-min pos3" />
+                <div
+                  v-show="rotate4>-178"
+                  :style="deg_178"
+                  class="circle-arrow-min pos4" />
+                <div
+                  v-show="rotate5>-220"
+                  :style="deg_220"
+                  class="circle-arrow-min pos5" />
+                <div
+                  v-show="rotate6>-230"
+                  :style="deg_230"
+                  class="circle-arrow-min pos6" />
+                <div
+                  v-show="rotate7>-286"
+                  :style="deg_286"
+                  class="circle-arrow-min pos7" />
+                <div class="circle-arrow-min white"/>
+              </div>
+
             </div>
           </div>
         </div>
-        <div class="operator reduce"/>
-        <div class="operator plus"/>
+        <div
+          class="operator reduce"
+          @click="reduce"/>
+        <div
+          class="operator plus"
+          @click="plus"/>
       </div>
       <!-- 信息 -->
       <div class="control center">
         <div v-show="!isClose">
-          <div class="baking">正在烘焙 &nbsp;快速预热</div>
-          <div class="bakingTime">烘焙时间 : &nbsp;30分10秒</div>
+          <div class="baking">{{ deviceAttrs.status=='start'?'正在烘焙':'' }} &nbsp;{{ modeName }}</div>
+          <div class="bakingTime">烘焙时间 : &nbsp;{{ deviceAttrs.bake_duration | time_H }}</div>
         </div>
       </div>
       <!-- 按钮 -->
       <div class="panel-btn center">
-        <div
+        <!-- <div
           class="more"
           @click="handleMore">
           <div :class="[isOpen ? 'up': 'down', 'arrow']">></div>
           <div>{{ isOpen ? '收起' : '查看更多' }}</div>
-        </div>
+        </div> -->
 
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
           <div
-            :class="[{ 'active': !isClose }, 'btn-switch btn center']"
+            :class="[{ 'active': !isClose }, {'btn-loading': btnLoading.switch && deviceAttrs.switch=='on' }, {'btn-loading-blue': btnLoading.switch && deviceAttrs.switch=='off' }, 'btn-switch btn center']"
             @click="setSwitch" />
           <div class="btn-name">开关</div>
         </div>
 
         <div
           class="btn-wrap"
-          @click="setMode('start')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'start' }, 'btn btn-start center']" />
+          @click="setStart">
+          <div :class="[{ 'active': deviceAttrs.status == 'start' }, {'btn-loading': btnLoading.status && deviceAttrs.status=='start' }, {'btn-loading-blue': btnLoading.status && deviceAttrs.status=='stop' }, 'btn btn-start center']" />
           <div class="btn-name">启动</div>
         </div>
         <div
@@ -71,11 +108,11 @@
         <div
           class="btn-wrap"
           @click="showTime">
-          <div :class="[{ 'active': deviceAttrs.mode == 'time' }, 'btn btn-time center']" />
+          <div :class="[{'btn-loading-blue': btnLoading.time }, 'btn btn-time center']" />
           <div class="btn-name">时间</div>
         </div>
 
-        <div
+        <!-- <div
           v-show="isOpen"
           class="btn-wrap"
           @click="setMode('preheat')">
@@ -99,7 +136,7 @@
           class="btn-wrap">
           <div :class="['btn center bor']" />
           <div class="btn-name"/>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- 定时弹框 -->
@@ -112,81 +149,83 @@
       title="选择模式">
       <div class="items">
         <div class="btns">
-          <div
+          <!-- <div
             class="btn-wrap"
             @click="setMode('grains')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'grains'},{'btn-loading': btnLoading.grains }, 'btn btn-mode1 center']" />
+            <div :class="[{ 'active': deviceAttrs.mode == 'grains'},{'btn-loading-blue': btnLoading.grains }, 'btn btn-mode1 center']" />
             <div class="btn-name">上内</div>
-          </div>
+          </div> -->
 
           <div
             class="btn-wrap"
-            @click="setMode('rice_paste')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'rice_paste'}, {'btn-loading': btnLoading.rice_paste }, 'btn btn-mode2 center']"/>
+            @click="setMode('broil', 'on')">
+            <div :class="[{ 'active': deviceAttrs.mode == 'broil'&&deviceAttrs.convection == 'on'}, {'btn-loading-blue': btnLoading.broil && btnLoading.loading }, 'btn btn-mode2 center']"/>
             <div class="btn-name">上内+风</div>
           </div>
 
           <div
             class="btn-wrap"
-            @click="setMode('gruel')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'gruel' }, {'btn-loading': btnLoading.gruel }, 'btn btn-mode3 center']"/>
+            @click="setMode('broil')">
+            <div :class="[{ 'active': deviceAttrs.mode == 'broil'&&deviceAttrs.convection == 'off' }, {'btn-loading-blue': btnLoading.broil && !btnLoading.loading }, 'btn btn-mode3 center']"/>
             <div class="btn-name">上内+上外</div>
           </div>
           <div
             class="btn-wrap"
-            @click="setMode('pottage')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'pottage' }, {'btn-loading': btnLoading.pottage }, 'btn btn-mode4 center']"/>
+            @click="setMode('roast')">
+            <div :class="[{ 'active': deviceAttrs.mode == 'roast'&&deviceAttrs.convection == 'off' }, {'btn-loading-blue': btnLoading.roast && !btnLoading.loading }, 'btn btn-mode4 center']"/>
             <div class="btn-name">上内+下</div>
+          </div>
+          <div
+            class="btn-wrap"
+            @click="setMode('roast', 'on')">
+            <div :class="[{ 'active': deviceAttrs.mode == 'roast'&&deviceAttrs.convection == 'on'},{'btn-loading-blue': btnLoading.roast && btnLoading.loading }, 'btn btn-mode5 center']" />
+            <div class="btn-name">上下+风</div>
           </div>
         </div>
       </div>
       <div class="items">
         <div class="btns">
-          <div
-            class="btn-wrap"
-            @click="setMode('grains1')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'grains1'},{'btn-loading': btnLoading.grains }, 'btn btn-mode5 center']" />
-            <div class="btn-name">上下+风</div>
-          </div>
+
 
           <div
             class="btn-wrap"
-            @click="setMode('rice_paste1')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'rice_paste1'}, {'btn-loading': btnLoading.rice_paste }, 'btn btn-mode6 center']"/>
+            @click="setMode('bake')">
+            <div :class="[{ 'active': deviceAttrs.mode == 'bake' }, {'btn-loading-blue': btnLoading.bake }, 'btn btn-mode6 center']"/>
             <div class="btn-name">下加热</div>
           </div>
 
-          <div
+          <!-- <div
             class="btn-wrap"
             @click="setMode('gruel1')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'gruel1' }, {'btn-loading': btnLoading.gruel }, 'btn btn-mode7 center']"/>
+            <div :class="[{ 'active': deviceAttrs.mode == 'gruel1' }, {'btn-loading-blue': btnLoading.gruel }, 'btn btn-mode7 center']"/>
             <div class="btn-name">后背+风</div>
-          </div>
-          <div
+          </div> -->
+          <!-- <div
             class="btn-wrap"
             @click="setMode('pottage1')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'pottage1' }, {'btn-loading': btnLoading.pottage }, 'btn btn-mode8 center']"/>
+            <div :class="[{ 'active': deviceAttrs.mode == 'pottage1' }, {'btn-loading-blue': btnLoading.pottage }, 'btn btn-mode8 center']"/>
             <div class="btn-name">后背+下+风</div>
-          </div>
-        </div>
-      </div>
-      <div class="items">
-        <div class="btns">
+          </div> -->
           <div
             class="btn-wrap"
-            @click="setMode('grains2')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'grains2'},{'btn-loading': btnLoading.grains }, 'btn btn-mode9 center']" />
+            @click="setMode('ferment')">
+            <div :class="[{ 'active': deviceAttrs.mode == 'ferment' },{'btn-loading-blue': btnLoading.ferment }, 'btn btn-mode9 center']" />
             <div class="btn-name">发酵</div>
           </div>
 
           <div
             class="btn-wrap"
-            @click="setMode('rice_paste2')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'rice_paste2'}, {'btn-loading': btnLoading.rice_paste }, 'btn btn-mode10 center']"/>
+            @click="setMode('defrost')">
+            <div :class="[{ 'active': deviceAttrs.mode == 'defrost' }, {'btn-loading-blue': btnLoading.defrost }, 'btn btn-mode10 center']"/>
             <div class="btn-name">解冻</div>
           </div>
         </div>
       </div>
+      <!-- <div class="items">
+        <div class="btns">
+
+        </div>
+      </div> -->
     </SelectModal>
   </div>
 </template>
@@ -206,31 +245,149 @@ export default {
       isOpen: false,
       isMin: false,
       seletModal: false,
+      rotate: 0,
+      rotate2: -42,
+      rotate3: -88,
+      rotate4: -133,
+      rotate5: -178,
+      rotate6: -220,
+      rotate7: -240,
       btnLoading: {
-        grains: false,
-        rice_paste: false,
-        gruel: false,
-        pottage: false,
-        stewing: false,
-        grind: false,
-        fruit_vegdtable: false,
-        milk_shake: false,
-        water_ice: false,
-        tepidity: false
+        loading: false,
+        switch: false,
+        status: false,
+        defrost: false,
+        ferment: false,
+        bake: false,
+        roast: false,
+        broil: false,
+        time: false,
       }
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    deg_42() {
+      return {'transform': `rotate(${this.rotate}deg)`}
+    },
+    deg_88() {
+      return {'transform': `rotate(${this.rotate2}deg)`}
+    },
+    deg_133() {
+      return {'transform': `rotate(${this.rotate3}deg)`}
+    },
+    deg_178() {
+      return {'transform': `rotate(${this.rotate4}deg)`}
+    },
+    deg_220() {
+      return {'transform': `rotate(${this.rotate5}deg)`}
+    },
+    deg_230() {
+      return {'transform': `rotate(${this.rotate6}deg)`}
+    },
+    deg_286() {
+      if(this.deviceAttrs.temperature || this.deviceAttrs.temperature==0) {
+        this.tempDeg()
+      }
+      return {'transform': `rotate(${this.rotate7}deg)`}
+    },
+    modeName() {
+      /* eslint-disable no-unreachable */
+      switch (this.deviceAttrs.mode) {
+        case 'broil':
+          return this.deviceAttrs.convection=='on'?'上内+风':'上内+上外'
+          break
+        case 'roast':
+          return this.deviceAttrs.convection=='on'?'上下+风':'上内+下'
+          break
+        case 'bake':
+          return '下加热'
+          break
+        case 'ferment':
+          return '发酵'
+          break
+        case 'defrost':
+          return '解冻'
+          break
+        default: ''
+          break
+      }
+    }
   },
   created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+    })
     if(document.body.clientHeight/document.body.clientWidth < 2) {
       this.isMin = true
     }
   },
   methods: {
-    ...mapActions(['doControlDevice']),
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    reduce() {
+      if(this.deviceAttrs.temperature > 0) {
+        this.controlDevice('temperature', this.deviceAttrs.temperature-1)
+        .then(() => {
+          this.tempDeg()
+        })
+        .catch()
+      }
+    },
+    plus() {
+      if(this.deviceAttrs.temperature < 140) {
+        this.controlDevice('temperature', this.deviceAttrs.temperature+1)
+        .then(() => {
+          this.tempDeg()
+        })
+        .catch()
+      }
+    },
+    tempDeg() {
+      if(this.deviceAttrs.temperature > 119) {
+        this.rotate = (-(140 - this.deviceAttrs.temperature) * 2)
+        return
+      } else if(this.deviceAttrs.temperature>96) {
+        this.rotate = -42
+        this.rotate2 = (-(140 - this.deviceAttrs.temperature) * 2)
+        return
+      } else if(this.deviceAttrs.temperature>74) {
+        this.rotate = -42
+        this.rotate2 = -88
+        this.rotate3 = (-(140 - this.deviceAttrs.temperature) * 2)
+        return
+      } else if(this.deviceAttrs.temperature>51) {
+        this.rotate = -42
+        this.rotate2 = -88
+        this.rotate3 = -133
+        this.rotate4 = (-(140 - this.deviceAttrs.temperature) * 2)
+        return
+      } else if(this.deviceAttrs.temperature>30) {
+        this.rotate = -42
+        this.rotate2 = -88
+        this.rotate3 = -133
+        this.rotate4 = -178
+        this.rotate5 = (-(140 - this.deviceAttrs.temperature) * 2)
+        return
+      } else if(this.deviceAttrs.temperature>25) {
+        this.rotate = -42
+        this.rotate2 = -88
+        this.rotate3 = -133
+        this.rotate4 = -178
+        this.rotate5 = -220
+        this.rotate6 = (-(140 - this.deviceAttrs.temperature) * 2)
+        return
+      } else if(this.deviceAttrs.temperature>=0) {
+        this.rotate = -42
+        this.rotate2 = -88
+        this.rotate3 = -133
+        this.rotate4 = -178
+        this.rotate5 = -220
+        this.rotate6 = -230
+        this.rotate7 = this.deviceAttrs.temperature==0?-286:(-(140 - this.deviceAttrs.temperature) * 2)
+        return
+      }
+    },
     showMode() {
       this.seletModal = true
     },
@@ -238,16 +395,16 @@ export default {
       if(!this.isClose) this.$refs.time.show = true
     },
     setReserve(time) {
+      this.btnLoading['time'] = true
       let h = parseInt(time[0].split(':')[0])
       let m = parseInt(time[0].split(':')[1])
-      this.controlDevice(
-        "time_mode",
-        ((h*60)+m)*60==0?'no_time':'on',
-        {"time": ((h*60)+m)*60},
-        () => {},
-        () => {},
-        time[1]
-      )
+      this.controlDevice("bake_duration", ((h*60)+m)*60)
+      .then(() => {
+        this.btnLoading['time'] = false
+      })
+      .catch(() => {
+        this.btnLoading['time'] = false
+      })
     },
     handleMore() {
       this.isOpen = !this.isOpen
@@ -257,32 +414,59 @@ export default {
         }, 0)
       }
     },
-    setMode(val) {
-      this.seletModal = false
-      if (val == this.deviceAttrs.mode) {
-        val = 'free'
-      }
+    setStart() {
       if (this.isClose) return
-      this.controlDevice('mode', val)
+      this.btnLoading['status'] = true
+      this.controlDevice('control', this.deviceAttrs.status == 'stop' ? 'start' : 'stop')
+      .then(() => {
+        this.btnLoading['status'] = false
+      })
+      .catch(() => {
+        this.btnLoading['status'] = false
+      })
+    },
+    setMode(val, param) {
+      if (this.isClose) return
+      if(param) {
+        if(this.deviceAttrs.convection == param && this.deviceAttrs.mode == val) return
+        this.btnLoading['loading'] = true
+      } else if(this.deviceAttrs.mode == val && this.deviceAttrs.convection=='off') return
+      this.btnLoading[val] = true
+      this.controlDevice('mode', val, !param?{convection:'off'}:{convection: 'on'})
+      .then(() => {
+        this.btnLoading['loading'] = false
+        this.btnLoading[val] = false
+        this.seletModal = false
+      })
+      .catch(() => {
+        this.btnLoading['loading'] = false
+        this.btnLoading[val] = false
+        this.seletModal = false
+      })
     },
     setSwitch() {
+      this.btnLoading['switch'] = true
       let switchStatus = ''
       if (this.deviceAttrs.switch == 'on') {
         switchStatus = 'off'
       } else {
         switchStatus = 'on'
       }
-      this.controlDevice("switch", switchStatus)
+      this.controlDevice("switch", switchStatus, {control: 'stop'})
         .then(() => {
-          console.log('setSwitch success')
+          this.btnLoading['switch'] = false
+        })
+        .catch(() => {
+          this.btnLoading['switch'] = false
         })
     },
-    controlDevice(attr, value) {
+    controlDevice(attr, value, param) {
       return this.doControlDevice({
         nodeid: `water_heater.main.${attr}`,
         params: {
           attribute: {
-            [attr]: value
+            [attr]: value,
+            ...param
           }
         }
       })
@@ -292,6 +476,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@imgPath: 'base/haier_electric_oven/assets';
+@100: 100% 100%;
 @keyframes circle-opacity{
   from {
       opacity: 1;
@@ -305,6 +491,7 @@ export default {
 .body {
   min-height: 100%;
   height: 100vh;
+  touch-action: manipulation;
 }
 .page {
   overflow-x: hidden;
@@ -336,6 +523,15 @@ export default {
     .bg-middle {
       width: 500px;
       height: 500px;
+      .back-circle {
+        width: 418px;
+        height: 418px;
+        background: rgb(237, 237, 237);
+        border-radius: 50%;
+        position: absolute;
+        top: 66px;
+        left: 72px;
+      }
       .start {
         animation: circle-opacity 1.5s .2s infinite;
       }
@@ -357,18 +553,130 @@ export default {
           position: absolute;
           top: 0;
           left: 0;
+          transform-origin: center center;
         }
       }
-      .circle-arrow {
+      .back {
+        width: 418px;
+        height: 418px;
+        position: absolute;
+        background-image: url('~@lib/@{imgPath}/btn_ac_zhezhao.png');
+        background-size: @100;
+        border-radius: 50%;
+        z-index: 8;
+        top: 1px;
+      }
+      .circle-arrow-min {
         display: block;
         width: 418px;
         height: 418px;
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_jhuo.png');
-        background-size: 100% 100%;
         position: absolute;
-        top: 12%;
-        left: 13%;
+      }
+      .circle-arrow-min::after {
+        content: '';
+        position: absolute;
+        transform: translate(-50%, -50%);
+      }
+      .pos1 {
         transform: rotate(0deg);
+        z-index: 6;
+      }
+      .pos2 {
+        transform: rotate(-42deg);
+        z-index: 5;
+      }
+      .pos3 {
+        transform: rotate(-88deg);
+        z-index: 4;
+      }
+      .pos4 {
+        transform: rotate(-133deg);
+        z-index: 3;
+      }
+      .pos5 {
+        transform: rotate(-178deg);
+        z-index: 2;
+      }
+      .pos6 {
+        transform: rotate(-220deg);
+        z-index: 1;
+      }
+      .pos7 {
+        transform: rotate(-240deg);
+        z-index: 0;
+      }
+      .pos1::after {
+        width: calc(~"154px / 1.5");
+        height: calc(~"252px / 1.5");
+        top: 200px;
+        left: 315px;
+        transform: rotate(0deg);
+        background-image: url('~@lib/@{imgPath}/jq.png');
+        background-size: @100;
+      }
+      .pos2::after {
+        width: calc(~"154px / 1.5");
+        height: calc(~"252px / 1.5");
+        top: 200px;
+        left: 315px;
+        transform: rotate(0deg);
+        background-image: url('~@lib/@{imgPath}/jq.png');
+        background-size: @100;
+      }
+      .pos3::after {
+        width: calc(~"154px / 1.5");
+        height: calc(~"252px / 1.5");
+        top: 200px;
+        left: 315px;
+        transform: rotate(0deg);
+        background-image: url('~@lib/@{imgPath}/jq.png');
+        background-size: @100;
+      }
+      .pos4::after {
+        width: calc(~"154px / 1.5");
+        height: calc(~"252px / 1.5");
+        top: 200px;
+        left: 315px;
+        transform: rotate(0deg);
+        background-image: url('~@lib/@{imgPath}/jq.png');
+        background-size: @100;
+      }
+      .pos5::after {
+        width: calc(~"154px / 1.5");
+        height: calc(~"252px / 1.5");
+        top: 200px;
+        left: 315px;
+        transform: rotate(0deg);
+        background-image: url('~@lib/@{imgPath}/jq.png');
+        background-size: @100;
+      }
+      .pos6::after {
+        width: calc(~"154px / 1.5");
+        height: calc(~"252px / 1.5");
+        top: 200px;
+        left: 315px;
+        transform: rotate(0deg);
+        background-image: url('~@lib/@{imgPath}/jq.png');
+        background-size: @100;
+      }
+      .pos7::after {
+        width: calc(~"154px / 1.5");
+        height: calc(~"252px / 1.5");
+        top: 200px;
+        left: 315px;
+        transform: rotate(0deg);
+        background-image: url('~@lib/@{imgPath}/jq.png');
+        background-size: @100;
+      }
+      .white {
+        border: 1px solid #fff;
+        opacity: 0.2;
+        border-radius: 50%;
+        width: 378px;
+        height: 378px;
+        z-index: 7;
+        left: 20px;
+        top: 20px;
       }
     }
   }
@@ -382,7 +690,7 @@ export default {
       &.opac {
         opacity: 0.5;
       }
-      font-size: 144px;
+      font-size: 140px;
       color: #20282b;
       text-align: center;
       position: relative;
@@ -396,23 +704,24 @@ export default {
     }
     .cmode {
       position: absolute;
-      top: 406px;
+      top: 310px;
       width: 100px;
       height: 100px;
-      background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_fire2.png');
-      background-size: 100% 100%;
+      background-image: url('~@lib/@{imgPath}/btn_ac_fire2.png');
+      background-size: @100;
       text-align: center;
     }
     .cmodeNo {
       position: absolute;
-      top: 406px;
+      top: 310px;
       width: 100px;
       height: 100px;
-      background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_fire.png');
-      background-size: 100% 100%;
+      background-image: url('~@lib/@{imgPath}/btn_ac_fire.png');
+      background-size: @100;
       text-align: center;
     }
     .operator {
+      z-index: 2;
       width: 72px;
       height: 72px;
       background: #F8F8F8;
@@ -422,14 +731,14 @@ export default {
     .reduce {
       left: -220px;
       top: -60px;
-      background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_jian1.png');
-      background-size: 100% 100%;
+      background-image: url('~@lib/@{imgPath}/btn_ac_jian1.png');
+      background-size: @100;
     }
     .plus {
       left: 220px;
       top: -132px;
-      background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_jia1.png');
-      background-size: 100% 100%;
+      background-image: url('~@lib/@{imgPath}/btn_ac_jia1.png');
+      background-size: @100;
     }
   }
   .control {
@@ -462,7 +771,7 @@ export default {
     justify-content: center;
 
     .more {
-      width: 750px;
+      width: 100%;
       color: #9e9e9e;
       font-size: 24px;
       text-align: center;
@@ -531,8 +840,8 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_switch.png');
-        background-size: 100% 100%;
+        background-image: url('~@lib/@{imgPath}/btn_ac_switch.png');
+        background-size: @100;
       }
     }
     .btn-mode {
@@ -541,8 +850,8 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_Pattern.png');
-        background-size: 100% 100%;
+        background-image: url('~@lib/@{imgPath}/btn_ac_Pattern.png');
+        background-size: @100;
       }
     }
     .btn-start {
@@ -551,8 +860,8 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_play.png');
-        background-size: 100% 100%;
+        background-image: url('~@lib/@{imgPath}/btn_ac_play.png');
+        background-size: @100;
       }
     }
     .btn-time {
@@ -561,8 +870,8 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_time.png');
-        background-size: 100% 100%;
+        background-image: url('~@lib/@{imgPath}/btn_ac_time.png');
+        background-size: @100;
       }
     }
     .btn-preheat {
@@ -571,8 +880,8 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_heating.png');
-        background-size: 100% 100%;
+        background-image: url('~@lib/@{imgPath}/btn_ac_heating.png');
+        background-size: @100;
       }
     }
   }
@@ -657,109 +966,139 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-size: 100% 100%;
+        background-size: @100;
       }
     }
     .btn-mode1 {
       &::before {
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_mode_shangnei.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_mode_shangnei.png');
       }
       &.active {
         &::before {
-          background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_mode_shangnei.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_mode_shangnei.png');
         }
       }
     }
     .btn-mode2 {
       &::before {
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_shangxiafeng.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_shangxiafeng.png');
       }
       &.active {
         &::before {
-          background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_shangxiafeng.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_shangxiafeng.png');
         }
       }
     }
     .btn-mode3 {
       &::before {
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_shangxiafeng.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_shangneishangjiawai.png');
       }
       &.active {
         &::before {
-          background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_shangxiafeng.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_shangxiafeng.png');
         }
       }
     }
     .btn-mode4 {
       &::before {
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_shangneixia.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_shangneixia.png');
       }
       &.active {
         &::before {
-          background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_shangneixia.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_shangneixia.png');
         }
       }
     }
     .btn-mode5 {
       &::before {
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_shangxiafeng2.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_shangxiafeng2.png');
       }
       &.active {
         &::before {
-          background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_shangxiafeng2.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_shangxiafeng2.png');
         }
       }
     }
     .btn-mode6 {
       &::before {
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_xiajiare.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_xiajiare.png');
       }
       &.active {
         &::before {
-          background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_xiajiare.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_xiajiare.png');
         }
       }
     }
     .btn-mode7 {
       &::before {
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_houbeifeng.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_houbeifeng.png');
       }
       &.active {
         &::before {
-          background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_houbeifeng.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_houbeifeng.png');
         }
       }
     }
     .btn-mode8 {
       &::before {
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_houbeixiafeng.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_houbeixiafeng.png');
       }
       &.active {
         &::before {
-          background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_houbeixiafeng.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_houbeixiafeng.png');
         }
       }
     }
     .btn-mode9 {
       &::before {
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_fajiao.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_fajiao.png');
       }
       &.active {
         &::before {
-          background-image: url('~@lib/base/haier_electric_oven/assets/btn_ac_fajiao.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_fajiao.png');
         }
       }
     }
     .btn-mode10 {
       &::before {
-        background-image: url('~@lib/base/haier_electric_oven/assets/btn_dh_jiedong.png');
+        background-image: url('~@lib/@{imgPath}/btn_dh_jiedong.png');
       }
       &.active {
         &::before {
-          background-image: url('~@lib/base/haier_electric_oven/assets/btn_dh_jiedong.png');
+          background-image: url('~@lib/@{imgPath}/btn_dh_jiedong.png');
         }
       }
     }
+  }
+}
+.btn-loading {
+  position: relative;
+  &:after{
+    width: 90%;
+    height: 90%;
+    content: '';
+    background-image: url('~@lib/@{imgPath}/buffering_mode_white.gif');
+    background-size: @100;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+.btn-loading-blue {
+  position: relative;
+  &:after{
+    width: 90%;
+    height: 90%;
+    content: '';
+    background-image: url('~@lib/@{imgPath}/buffering_mode_blue.gif');
+    background-size: @100;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 </style>

@@ -182,9 +182,12 @@ export default {
     },
   },
   created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+    })
   },
   methods: {
-    ...mapActions(['doControlDevice']),
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
     controlDevice(attr, value) {
       return this.doControlDevice({
         nodeid: `haier_cooker.main.${attr}`,

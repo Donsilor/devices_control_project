@@ -84,6 +84,7 @@ export default {
   },
   methods: {
     init() {
+      console.log('init =' + this.progress)
       if (this.isAnimation) {
         // 重复定义判断
         if (document.getElementById(this.idStr)) {

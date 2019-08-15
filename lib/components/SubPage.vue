@@ -1,5 +1,5 @@
 <template>
-  <div
+  <div 
     v-show="visible"
     class="subpage">
     <!-- <div class="topbar">
@@ -10,10 +10,11 @@
       </div>
       <div class="title">{{ title }}</div>
     </div> -->
-    <topbar
+    <topbar 
       :title="title"
-      :back="close"
-      :buttons="[]" />
+      :buttons="[]"
+      :on-back="handleBack"
+      bak-color="#000" />
 
     <div class="subpage-body">
       <slot />
@@ -29,50 +30,53 @@
   width: 100%;
   left: 0;
   top: 0;
-  z-index: 999;
+  z-index: 9999;
   .navbar .left a.icon-return {
     border-color: #000;
   }
 }
 </style>
 
-
-
 <script>
+import Topbar from './Topbar.vue'
 export default {
-    props: {
-        title: {
-            type: String,
-            default: ''
-        },
-        value: {
-            type: Boolean,
-            default: false
-        },
-        className: ""
+  components: {
+    Topbar
+  },
+  props: {
+    title: {
+      type: String,
+      default: ''
     },
-    data() {
-        return {
-            visible: this.value
-        };
+    value: {
+      type: Boolean,
+      default: false
     },
-    watch: {
-        value(val) {
-            this.visible = val;
-        },
-        visible(val) {
-            this.$emit("on-visible-change", val);
-            if(!val){
-                this.$emit('close')
-            }
-        }
-    },
-    methods: {
-        close() {
-            this.visible = false;
-            this.$emit("input", false);
-            this.$emit("on-cancel");
-        }
+    className: ""
+  },
+  data() {
+    return {
+      visible: this.value
     }
-};
+  },
+  watch: {
+    value(val) {
+      this.visible = val
+    },
+    visible(val) {
+      this.$emit("on-visible-change", val)
+      if (!val) {
+        this.$emit('close')
+      }
+    }
+  },
+  methods: {
+    handleBack() {
+      console.log('click back')
+      this.visible = false
+      this.$emit("input", false)
+      this.$emit("on-cancel")
+    }
+  }
+}
 </script>
