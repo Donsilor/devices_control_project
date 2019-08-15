@@ -29,10 +29,10 @@
         <span>照明已开启</span>
       </div>
       <div 
-        v-show="deviceAttrs.delay == 'on'"
+        v-show="deviceAttrs.delay == 'on'&&deviceAttrs.switch=='on'"
         class="tips tips2">
         <i />
-        <span>{{ m1 }}分{{ s1 }}秒后关机</span>
+        <span>{{ minute }}分{{ second }}秒后关机</span>
       </div>
 
       <!-- 按钮 -->
@@ -97,8 +97,10 @@ export default {
       isOpen: false,
       speedNum: 0,
       speedText: '关',
-      m1: 2,
-      s1: 25
+      time:0,
+      dateObj:null,
+      minute: '--',
+      second: '--'
     }
   },
   computed: {
@@ -205,22 +207,20 @@ export default {
       }
       this.controlDevice("delay", switchStatus)
         .then(() => {
-          const date1 = new Date()
-          const m = date1.getMinutes()
-          const s = date1.getSeconds()
-          date1.setMinutes(m + 2)
-          date1.setSeconds(s + 25)
-          const dateObj = setInterval(() => {
-            const date = new Date()
-            const a = date1.getTime() - date.getTime()
-            this.s1 = Math.floor(a / 1000 % 60)
-            this.m1 = Math.floor(a / (1000 * 60) % 60)
-            if (this.m1 <= 0 && this.s1 <= 0) {
-              clearInterval(dateObj)
-              this.setSwitch()
-            }
-          }, 1000)
+          this.time = 2*60+25
+          this.countdown()
+          clearInterval(this.dateObj)
+          this.dateObj = setInterval(this.countdown, 1000)
         })
+    },
+    countdown(){
+          this.second = Math.floor(this.time  % 60)
+          this.minute = Math.floor(this.time /  60 % 60)
+          if (this.minute <= 0 && this.second <= 0) {
+            clearInterval(this.dateObj)
+            this.setSwitch()
+          }
+          this.time--
     },
     controlDevice(attr, value) {
       return this.doControlDevice({
