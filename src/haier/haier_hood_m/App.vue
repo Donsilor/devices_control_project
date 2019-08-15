@@ -241,8 +241,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@lib: "../../../lib/base/haier_hood/assets";
-@lib1: "../../../lib";
+@imgPath: "base/haier_hood/assets";
+@imgPath1: "base/blend/assets";
+@imgPath2: "base/air_cleaner/assets/new-air";
 @keyframes rotate {
     from {
       transform:rotate(0deg);
@@ -291,7 +292,7 @@ export default {
   }
 }
 .animation {
-  background: url("@{lib}/yanji_img_animation.png") no-repeat;
+  background: url("~@lib/@{imgPath}/yanji_img_animation.png") no-repeat;
   background-size: 100% 100%;
   &.rotate-low{
     animation: rotate 10s linear 0s infinite;
@@ -310,7 +311,7 @@ export default {
   }
 }
 .greycircle {
-  background: url("@{lib}/yanji_img_greycircle.png") no-repeat;
+  background: url("~@lib/@{imgPath}/yanji_img_greycircle.png") no-repeat;
   background-size: 100% 100%;
 }
 .tips {
@@ -322,7 +323,7 @@ export default {
     display: inline-block;
     width: 30px;
     height: 30px;
-    background-image: url("@{lib}/yanji_ico_light.png");
+    background-image: url("~@lib/@{imgPath}/yanji_ico_light.png");
     background-size: 100% 100%;
   }
   span {
@@ -331,7 +332,7 @@ export default {
 }
 .tips2 {
   i {
-    background-image: url("@{lib1}/base/blend/assets/time-black.png");
+    background-image: url("~@lib/@{imgPath1}/time-black.png");
   }
 }
 .panel-btn {
@@ -416,12 +417,12 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url("@{lib1}/base/blend/assets/start.png");
+      background-image: url("~@lib/@{imgPath1}/start.png");
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url("@{lib1}/base/blend/assets/start.png");
+        background-image: url("~@lib/@{imgPath1}/start.png");
       }
     }
   }
@@ -432,7 +433,7 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url("@{lib}/yanji_btn_light.png");
+      background-image: url("~@lib/@{imgPath}/yanji_btn_light.png");
       background-size: 100% 100%;
     }
   }
@@ -442,7 +443,7 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url("@{lib1}/base/blend/assets/time-black.png");
+      background-image: url("~@lib/@{imgPath1}/time-black.png");
       background-size: 100% 100%;
     }
   }
@@ -453,7 +454,7 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url("@{lib}/yanji_btn_fan01.png");
+      background-image: url("~@lib/@{imgPath}/yanji_btn_fan01.png");
       background-size: 100% 100%;
     }
   }
@@ -463,7 +464,7 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url("@{lib}/yanji_btn_fan02.png");
+      background-image: url("~@lib/@{imgPath}/yanji_btn_fan02.png");
       background-size: 100% 100%;
     }
   }
@@ -473,7 +474,7 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url("@{lib}/yanji_btn_fan03.png");
+      background-image: url("~@lib/@{imgPath}/yanji_btn_fan03.png");
       background-size: 100% 100%;
     }
   }
@@ -483,7 +484,7 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url("@{lib}/yanji_btn_fan03.png");
+      background-image: url("~@lib/@{imgPath}/yanji_btn_fan03.png");
       background-size: 100% 100%;
     }
   }
@@ -494,12 +495,12 @@ export default {
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url("@{lib1}/base/air_cleaner/assets/new-air/swich-black.png");
+      background-image: url("~@lib/@{imgPath2}/swich-black.png");
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url("@{lib1}/base/air_cleaner/assets/new-air/swich-black.png");
+        background-image: url("~@lib/@{imgPath2}/swich-black.png");
       }
     }
   }
