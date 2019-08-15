@@ -16,13 +16,65 @@
   </div>
 </template>
 
+<script>
+  export default {
+    props: ['leftStatus','rightStatus'],
+    computed: {
+        rotate() {
+          if(this.leftStatus){
+            if (this.leftStatus == 'no') {
+              return 360
+            }
+            if (this.leftStatus == 'low' || this.leftStatus == 'low_60') {
+              return 240
+            }
+            if (this.leftStatus == 'nomal') {
+              return 120
+            }
+            if (this.leftStatus == 'high'|| this.leftStatus == 'high_30') {
+              return 0
+            }
+          }
+         if(this.rightStatus) {
+            if (this.rightStatus == 'no') {
+              return 360
+            }
+            if (this.rightStatus == 'low' || this.rightStatus == 'low_60') {
+              return 240
+            }
+            if (this.rightStatus == 'nomal') {
+              return 120
+            }
+            if (this.rightStatus == 'high'|| this.rightStatus == 'high_30') {
+              return 0
+            }
+          }
+        },
+        rightPieStyle() {
+            var r = this.rotate < 180 ? this.rotate : 180
+            return {
+                'transform': `rotate(${r}deg)`
+            }
+        },
+        leftPieStyle() {
+            var r = this.rotate < 180 ? 0 : this.rotate-180
+            return {
+                'transform': `rotate(${r}deg)`
+            }
+        }
+    }
+  }
+</script>
+
 <style lang="less" scoped>
 .circle-pie {
     width:262px;
     height:262px;
     border-radius: 50%;
-    background: #ff6026;
+    // background: #ff6026;
+    background:#fff; 
     position: relative;
+    
 }
 .pie-right, .pie-left {
     position: absolute;
@@ -31,6 +83,7 @@
     width:262px;
     height:262px;
     border-radius: 50%;
+    transform: rotate(120deg)
 }
 .right, .left {
     position: absolute;
@@ -39,7 +92,8 @@
     width:262px;
     height:262px;
     border-radius: 50%;
-    background:#fff;
+    // background:#fff; 
+    background: #ff6026;
 }
 .pie-right, .right {
     clip: rect(0, auto, auto, 131px);
@@ -57,54 +111,3 @@
     background-color: #fff;
 }
 </style>
-
-
-<script>
-export default {
-    props: ['leftStatus','rightStatus'],
-    computed: {
-        rotate() {
-          if(this.leftStatus){
-            if (this.leftStatus == 'no') {
-              return 0
-            }
-            if (this.leftStatus == 'low' || this.leftStatus == 'low_60') {
-              return 120
-            }
-            if (this.leftStatus == 'nomal') {
-              return 240
-            }
-            if (this.leftStatus == 'high'|| this.leftStatus == 'high_30') {
-              return 360
-            }
-          }
-         if(this.rightStatus) {
-            if (this.rightStatus == 'no') {
-              return 0
-            }
-            if (this.rightStatus == 'low' || this.rightStatus == 'low_60') {
-              return 120
-            }
-            if (this.rightStatus == 'nomal') {
-              return 240
-            }
-            if (this.rightStatus == 'high'|| this.rightStatus == 'high_30') {
-              return 360
-            }
-          }
-        },
-        rightPieStyle() {
-            var r = this.rotate < 180 ? this.rotate : 180
-            return {
-                'transform': `rotate(${r}deg)`
-            }
-        },
-        leftPieStyle() {
-            var r = this.rotate < 180 ? 0 : this.rotate-180
-            return {
-                'transform': `rotate(${r}deg)`
-            }
-        }
-    }
-}
-</script>

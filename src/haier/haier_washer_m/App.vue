@@ -671,8 +671,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@newair: '../../../lib/base/air_condition/assets/new-air';
-@lib: '../../../lib/base/haier_washer/assets';
+@imgPath: 'base/air_condition/assets/new-air';
+@imgPath1: 'base/haier_washer/assets';
 @keyframes wave1 {
     from {
         background-position-x: 0;
@@ -759,7 +759,7 @@ export default {
       display: inline-block;
       width: 36px;
       height: 36px;
-      background-image: url('@{newair}/icon-tips.png');
+      background-image: url('~@lib/@{imgPath}/icon-tips.png');
       background-size: 100% 100%;
       margin-right: 12px;
     }
@@ -791,7 +791,7 @@ export default {
     width: 548px;
     height: 548px;
 
-    background-image: url('@{lib}/bg-circle.png');
+    background-image: url('~@lib/@{imgPath1}/bg-circle.png');
     background-size: 100% 100%;
     color: #000;
     font-size: 24px;
@@ -830,7 +830,7 @@ export default {
         display: block;
         width: 30px;
         height: 30px;
-        background-image: url('@{lib}/icon-time.png');
+        background-image: url('~@lib/@{imgPath1}/icon-time.png');
         background-size: 100% 100%;
       }
     }
@@ -852,11 +852,11 @@ export default {
     background-size: 250% 100%;
   }
   .wave1 {
-    background-image: url('@{lib}/wave1.png');
+    background-image: url('~@lib/@{imgPath1}/wave1.png');
     background-position-x: -560px;
   }
   .wave2 {
-    background-image: url('@{lib}/wave2.png');
+    background-image: url('~@lib/@{imgPath1}/wave2.png');
     background-position-x: -520px;
   }
 
@@ -870,7 +870,7 @@ export default {
       list-style: none;
     }
     .bubble{
-      background-image: url('@{lib}/bubble.png');
+      background-image: url('~@lib/@{imgPath1}/bubble.png');
       background-size: 100% 100%;
       &.bubble1{
         width: 18px;
@@ -1019,12 +1019,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{newair}/swich-white.png');
+        background-image: url('~@lib/@{imgPath}/swich-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{newair}/swich-black.png');
+          background-image: url('~@lib/@{imgPath}/swich-black.png');
         }
       }
     }
@@ -1034,12 +1034,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/btn-start.png');
+        background-image: url('~@lib/@{imgPath1}/btn-start.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/btn-stop.png');
+          background-image: url('~@lib/@{imgPath1}/btn-stop.png');
         }
       }
     }
@@ -1049,12 +1049,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/btn-stop.png');
+        background-image: url('~@lib/@{imgPath1}/btn-stop.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/btn-stop.png');
+          background-image: url('~@lib/@{imgPath1}/btn-stop.png');
         }
       }
     }
@@ -1064,12 +1064,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/btn-mode-white58.png');
+        background-image: url('~@lib/@{imgPath1}/btn-mode-white58.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/btn-mode-black58.png');
+          background-image: url('~@lib/@{imgPath1}/btn-mode-black58.png');
         }
       }
     }
@@ -1079,18 +1079,18 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{newair}/time-white.png');
+        background-image: url('~@lib/@{imgPath}/time-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{newair}/time-black.png');
+          background-image: url('~@lib/@{imgPath}/time-black.png');
         }
       }
       &.btn-current {
         border-color: #FFC600;
         &::before {
-          background-image: url('@{newair}/time-yellow.png');
+          background-image: url('~@lib/@{imgPath}/time-yellow.png');
         }
         .name{
           color: #FFC600;
@@ -1104,12 +1104,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/btn-mode-white15.png');
+        background-image: url('~@lib/@{imgPath1}/btn-mode-white15.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/btn-mode-black15.png');
+          background-image: url('~@lib/@{imgPath1}/btn-mode-black15.png');
         }
       }
     }
@@ -1119,12 +1119,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/ts-white.png');
+        background-image: url('~@lib/@{imgPath1}/ts-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/ts-black.png');
+          background-image: url('~@lib/@{imgPath1}/ts-black.png');
         }
       }
     }
@@ -1134,12 +1134,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/jzj-white.png');
+        background-image: url('~@lib/@{imgPath1}/jzj-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/jzj-black.png');
+          background-image: url('~@lib/@{imgPath1}/jzj-black.png');
         }
       }
     }
@@ -1149,12 +1149,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/hh-white.png');
+        background-image: url('~@lib/@{imgPath1}/hh-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/hh-black.png');
+          background-image: url('~@lib/@{imgPath1}/hh-black.png');
         }
       }
     }
@@ -1164,12 +1164,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/ms-white.png');
+        background-image: url('~@lib/@{imgPath1}/ms-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/ms-black.png');
+          background-image: url('~@lib/@{imgPath1}/ms-black.png');
         }
       }
     }
@@ -1179,12 +1179,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/hq-white.png');
+        background-image: url('~@lib/@{imgPath1}/hq-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/hq-black.png');
+          background-image: url('~@lib/@{imgPath1}/hq-black.png');
         }
       }
     }
@@ -1194,12 +1194,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/ym-white.png');
+        background-image: url('~@lib/@{imgPath1}/ym-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/ym-black.png');
+          background-image: url('~@lib/@{imgPath1}/ym-black.png');
         }
       }
     }
@@ -1209,12 +1209,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/nz-white.png');
+        background-image: url('~@lib/@{imgPath1}/nz-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/nz-black.png');
+          background-image: url('~@lib/@{imgPath1}/nz-black.png');
         }
       }
     }
@@ -1224,12 +1224,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/ylf-white.png');
+        background-image: url('~@lib/@{imgPath1}/ylf-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/ylf-black.png');
+          background-image: url('~@lib/@{imgPath1}/ylf-black.png');
         }
       }
     }
@@ -1239,7 +1239,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/btn-others.png');
+        background-image: url('~@lib/@{imgPath1}/btn-others.png');
         background-size: 100% 100%;
       }
     }
@@ -1283,11 +1283,11 @@ export default {
     }
 
     // .wave1 {
-    //   background-image: url('@{lib}/wave-close1.png');
+    //   background-image: url('~@lib/@{imgPath1}/wave-close1.png');
     //   background-position-x: -560px;
     // }
     // .wave2 {
-    //   background-image: url('@{lib}/wave-close2.png');
+    //   background-image: url('~@lib/@{imgPath1}/wave-close2.png');
     //   background-position-x: -520px;
     // }
     .btns {
@@ -1299,12 +1299,12 @@ export default {
           display: block;
           width: 44px;
           height: 44px;
-          background-image: url('@{newair}/swich-white.png');
+          background-image: url('~@lib/@{imgPath}/swich-white.png');
           background-size: 100% 100%;
         }
         &.active {
           &::before {
-            background-image: url('@{newair}/swich-black.png');
+            background-image: url('~@lib/@{imgPath}/swich-black.png');
           }
         }
       }
@@ -1354,62 +1354,62 @@ export default {
         }
         .btn-mode{
           &::before {
-            background-image: url('@{lib}/btn-mode-black58.png');
+            background-image: url('~@lib/@{imgPath1}/btn-mode-black58.png');
             background-size: 100% 100%;
           }
         }
         .btn-mode-15 {
           &::before {
-            background-image: url('@{lib}/btn-mode-black15.png');
+            background-image: url('~@lib/@{imgPath1}/btn-mode-black15.png');
             background-size: 100% 100%;
           }
 
         }
         .btn-ts{
           &::before {
-            background-image: url('@{lib}/ts-black.png');
+            background-image: url('~@lib/@{imgPath1}/ts-black.png');
             background-size: 100% 100%;
           }
         }
         .btn-jzj{
           &::before {
-            background-image: url('@{lib}/jzj-black.png');
+            background-image: url('~@lib/@{imgPath1}/jzj-black.png');
             background-size: 100% 100%;
           }
         }
         .btn-hh{
           &::before {
-            background-image: url('@{lib}/hh-black.png');
+            background-image: url('~@lib/@{imgPath1}/hh-black.png');
             background-size: 100% 100%;
           }
         }
         .btn-ms{
           &::before {
-            background-image: url('@{lib}/ms-black.png');
+            background-image: url('~@lib/@{imgPath1}/ms-black.png');
             background-size: 100% 100%;
           }
         }
         .btn-hq{
           &::before {
-            background-image: url('@{lib}/hq-black.png');
+            background-image: url('~@lib/@{imgPath1}/hq-black.png');
             background-size: 100% 100%;
           }
         }
         .btn-ym{
           &::before {
-            background-image: url('@{lib}/ym-black.png');
+            background-image: url('~@lib/@{imgPath1}/ym-black.png');
             background-size: 100% 100%;
           }
         }
         .btn-nz{
           &::before {
-            background-image: url('@{lib}/nz-black.png');
+            background-image: url('~@lib/@{imgPath1}/nz-black.png');
             background-size: 100% 100%;
           }
         }
         .btn-ylf{
           &::before {
-            background-image: url('@{lib}/ylf-black.png');
+            background-image: url('~@lib/@{imgPath1}/ylf-black.png');
             background-size: 100% 100%;
           }
         }

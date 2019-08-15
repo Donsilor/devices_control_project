@@ -499,8 +499,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@lib: '../../../lib/base/sweeping_robot/assets/';
-@lib1: '../../../lib/base/air_cleaner/assets/new-air';
+@imgPath: 'base/sweeping_robot/assets/';
+@imgPath1: 'base/air_cleaner/assets/new-air';
 *{
   touch-action: none;
 }
@@ -596,19 +596,19 @@ export default {
     .img1 {
       width: 26px;
       height: 26px;
-      background-image: url('@{lib}img1.png');
+      background-image: url('~@lib/@{imgPath}img1.png');
       background-size: 100% 100%;
     }
     .img2 {
       width: 20px;
       height: 20px;
-      background-image: url('@{lib}img2.png');
+      background-image: url('~@lib/@{imgPath}img2.png');
       background-size: 100% 100%;
     }
     .img3 {
       width: 26px;
       height: 26px;
-      background-image: url('@{lib}img3.png');
+      background-image: url('~@lib/@{imgPath}img3.png');
       background-size: 100% 100%;
     }
     .img4 {
@@ -1057,12 +1057,12 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib1}/swich-white.png');
+        background-image: url('~@lib/@{imgPath1}/swich-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib1}/swich-black.png');
+          background-image: url('~@lib/@{imgPath1}/swich-black.png');
         }
       }
     }
@@ -1072,7 +1072,7 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib}huichong1@2x.png');
+        background-image: url('~@lib/@{imgPath}huichong1@2x.png');
         background-size: 100% 100%;
       }
     }
@@ -1082,7 +1082,7 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib}qingsao2@2x.png');
+        background-image: url('~@lib/@{imgPath}qingsao2@2x.png');
         background-size: 100% 100%;
       }
     }
@@ -1092,7 +1092,7 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib}btn-stop.png');
+        background-image: url('~@lib/@{imgPath}btn-stop.png');
         background-size: 100% 100%;
       }
     }
@@ -1102,27 +1102,27 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib}guihua0.png');
+        background-image: url('~@lib/@{imgPath}guihua0.png');
         background-size: 100% 100%;
       }
       &.plan_clean::before {
-        background-image: url('@{lib}guihua@2x.png');
+        background-image: url('~@lib/@{imgPath}guihua@2x.png');
         opacity: 0.2;
       }
       &.single_plan::before {
-        background-image: url('@{lib}danjian3.png');
+        background-image: url('~@lib/@{imgPath}danjian3.png');
         opacity: 0.2;
       }
       &.edge_clean::before {
-        background-image: url('@{lib}yanbian3.png');
+        background-image: url('~@lib/@{imgPath}yanbian3.png');
         opacity: 0.2;
       }
       &.design_clean::before {
-        background-image: url('@{lib}dingwei3.png');
+        background-image: url('~@lib/@{imgPath}dingwei3.png');
         opacity: 0.2;
       }
       &.mop::before {
-        background-image: url('@{lib}tuodi3.png');
+        background-image: url('~@lib/@{imgPath}tuodi3.png');
         opacity: 0.2;
       }
     }
@@ -1135,7 +1135,7 @@ export default {
     position: relative;
     &.recharge {
       &::before{
-        background-image: url('@{lib}chongdianzhong.png');
+        background-image: url('~@lib/@{imgPath}chongdianzhong.png');
       }
     }
     .wrapper {
@@ -1176,7 +1176,7 @@ export default {
         animation: circleLeft 5s linear infinite;
       }
       &::before {
-        background-image: url('@{lib}chongdianzhong.png');
+        background-image: url('~@lib/@{imgPath}chongdianzhong.png');
       }
     }
     @keyframes circleRight {
@@ -1226,12 +1226,12 @@ export default {
             display: block;
             width: 48px;
             height: 48px;
-            background-image: url('@{lib1}/swich-white.png');
+            background-image: url('~@lib/@{imgPath1}/swich-white.png');
             background-size: 100% 100%;
           }
           &.active {
             &::before {
-              background-image: url('@{lib1}/swich-white.png');
+              background-image: url('~@lib/@{imgPath1}/swich-white.png');
             }
           }
         }
@@ -1249,12 +1249,12 @@ export default {
           display: block;
           width: 48px;
           height: 48px;
-          background-image: url('@{lib1}/swich-black.png');
+          background-image: url('~@lib/@{imgPath1}/swich-black.png');
           background-size: 100% 100%;
         }
         &.active {
           &::before {
-            background-image: url('@{lib1}/swich-black.png');
+            background-image: url('~@lib/@{imgPath1}/swich-black.png');
           }
         }
       }
@@ -1340,19 +1340,19 @@ export default {
         border-color: #ffbf00;
 
         &.plan_clean::before {
-          background-image: url('@{lib}guihua@2x.png');
+          background-image: url('~@lib/@{imgPath}guihua@2x.png');
         }
         &.single_plan::before {
-          background-image: url('@{lib}danjian3.png');
+          background-image: url('~@lib/@{imgPath}danjian3.png');
         }
         &.edge_clean::before {
-          background-image: url('@{lib}yanbian3.png');
+          background-image: url('~@lib/@{imgPath}yanbian3.png');
         }
         &.design_clean::before {
-          background-image: url('@{lib}dingwei3.png');
+          background-image: url('~@lib/@{imgPath}dingwei3.png');
         }
         &.mop::before {
-          background-image: url('@{lib}tuodi3.png');
+          background-image: url('~@lib/@{imgPath}tuodi3.png');
         }
       }
     }
@@ -1362,12 +1362,12 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib1}/swich-white.png');
+        background-image: url('~@lib/@{imgPath1}/swich-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib1}/swich-black.png');
+          background-image: url('~@lib/@{imgPath1}/swich-black.png');
         }
       }
     }
@@ -1377,7 +1377,7 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib}guihua@2x.png');
+        background-image: url('~@lib/@{imgPath}guihua@2x.png');
         background-size: 100% 100%;
       }
     }
@@ -1387,14 +1387,14 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib}guihua.png');
+        background-image: url('~@lib/@{imgPath}guihua.png');
         background-size: 100% 100%;
       }
 
       &.btn-current {
         border-color: #ffc600;
         &::before {
-          background-image: url('@{lib}gh-yellow.png');
+          background-image: url('~@lib/@{imgPath}gh-yellow.png');
         }
         .name {
           color: #ffc600;
@@ -1407,13 +1407,13 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib}danjian.png');
+        background-image: url('~@lib/@{imgPath}danjian.png');
         background-size: 100% 100%;
       }
       &.btn-current {
         border-color: #ffc600;
         &::before {
-          background-image: url('@{lib}danjian2.png');
+          background-image: url('~@lib/@{imgPath}danjian2.png');
         }
         .name {
           color: #ffc600;
@@ -1421,7 +1421,7 @@ export default {
       }
       &.active {
         &::before {
-          background-image: url('@{lib}danjian2.png');
+          background-image: url('~@lib/@{imgPath}danjian2.png');
         }
       }
     }
@@ -1431,13 +1431,13 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib}yanbian.png');
+        background-image: url('~@lib/@{imgPath}yanbian.png');
         background-size: 100% 100%;
       }
       &.btn-current {
         border-color: #ffc600;
         &::before {
-          background-image: url('@{lib}yanbian2.png');
+          background-image: url('~@lib/@{imgPath}yanbian2.png');
         }
         .name {
           color: #ffc600;
@@ -1445,7 +1445,7 @@ export default {
       }
       &.active {
         &::before {
-          background-image: url('@{lib}yanbian2.png');
+          background-image: url('~@lib/@{imgPath}yanbian2.png');
         }
       }
     }
@@ -1455,13 +1455,13 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib}dingdian.png');
+        background-image: url('~@lib/@{imgPath}dingdian.png');
         background-size: 100% 100%;
       }
       &.btn-current {
         border-color: #ffc600;
         &::before {
-          background-image: url('@{lib}dingdian2.png');
+          background-image: url('~@lib/@{imgPath}dingdian2.png');
         }
         .name {
           color: #ffc600;
@@ -1469,7 +1469,7 @@ export default {
       }
       &.active {
         &::before {
-          background-image: url('@{lib}dingdian2.png');
+          background-image: url('~@lib/@{imgPath}dingdian2.png');
         }
       }
     }
@@ -1479,13 +1479,13 @@ export default {
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('@{lib}tuodi.png');
+        background-image: url('~@lib/@{imgPath}tuodi.png');
         background-size: 100% 100%;
       }
       // &.btn-current {
       //   border-color: #ffc600;
       //   &::before {
-      //     background-image: url('@{lib}tuodi2.png');
+      //     background-image: url('~@lib/@{imgPath}tuodi2.png');
       //   }
       //   .name {
       //     color: #ffc600;
@@ -1493,7 +1493,7 @@ export default {
       // }
       &.active {
         &::before {
-          background-image: url('@{lib}tuodi2.png');
+          background-image: url('~@lib/@{imgPath}tuodi2.png');
         }
       }
     }

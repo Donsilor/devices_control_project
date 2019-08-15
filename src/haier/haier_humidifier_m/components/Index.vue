@@ -269,9 +269,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@lib: '../../../../lib/base/haier_humidifier/assets';
-@lib1: '../../../../lib/base/air_condition/assets/new-air';
-@lib2: '../../../../lib//base/air_cleaner/assets/new-air';
+@imgPath: 'base/haier_humidifier/assets';
+@imgPath1: 'base/air_condition/assets/new-air';
+@imgPath2: 'base/air_cleaner/assets/new-air';
 .page{
   min-height: 100%;
   background: #fff;
@@ -301,7 +301,7 @@ export default {
       display: inline-block;
       width: 36px;
       height: 36px;
-      background-image: url('@{lib1}/icon-tips.png');
+      background-image: url('~@lib/@{imgPath1}/icon-tips.png');
       background-size: 100% 100%;
       margin-right: 12px;
     }
@@ -347,15 +347,15 @@ export default {
         height: 48px;
         margin: auto;
         &.comfortable{
-          background-image: url('@{lib}/comfortable.png');
+          background-image: url('~@lib/@{imgPath}/comfortable.png');
           background-size: 100% 100%;
         }
         &.hot{
-          background-image: url('@{lib}/hot.png');
+          background-image: url('~@lib/@{imgPath}/hot.png');
           background-size: 100% 100%;
         }
         &.wet{
-          background-image: url('@{lib}/wet.png');
+          background-image: url('~@lib/@{imgPath}/wet.png');
           background-size: 100% 100%;
         }
       }
@@ -390,7 +390,7 @@ export default {
         &.circle2{
           background: #f66a0f;
           &.active{
-            background-image: url('@{lib}/ico_hm_10.png');
+            background-image: url('~@lib/@{imgPath}/ico_hm_10.png');
             background-size: 100% 100%;
           }
         }
@@ -400,7 +400,7 @@ export default {
         &.circle4{
           background: #c57a24;
           &.active{
-            background-image: url('@{lib}/ico_hm_20.png');
+            background-image: url('~@lib/@{imgPath}/ico_hm_20.png');
             background-size: 100% 100%;
           }
         }
@@ -410,7 +410,7 @@ export default {
         &.circle6{
           background: #b3812c;
           &.active{
-            background-image: url('@{lib}/ico_hm_30.png');
+            background-image: url('~@lib/@{imgPath}/ico_hm_30.png');
             background-size: 100% 100%;
           }
         }
@@ -420,7 +420,7 @@ export default {
         &.circle8{
           background: #649c4e;
           &.active{
-            background-image: url('@{lib}/ico_hm_40.png');
+            background-image: url('~@lib/@{imgPath}/ico_hm_40.png');
             background-size: 100% 100%;
           }
         }
@@ -430,7 +430,7 @@ export default {
         &.circle10{
           background: #37ab61;
           &.active{
-            background-image: url('@{lib}/ico_hm_50.png');
+            background-image: url('~@lib/@{imgPath}/ico_hm_50.png');
             background-size: 100% 100%;
           }
         }
@@ -440,7 +440,7 @@ export default {
         &.circle12{
           background: #02bc7a;
           &.active{
-            background-image: url('@{lib}/ico_hm_60.png');
+            background-image: url('~@lib/@{imgPath}/ico_hm_60.png');
             background-size: 100% 100%;
           }
         }
@@ -450,7 +450,7 @@ export default {
         &.circle14{
           background: #02b681;
           &.active{
-            background-image: url('@{lib}/ico_hm_70.png');
+            background-image: url('~@lib/@{imgPath}/ico_hm_70.png');
             background-size: 100% 100%;
           }
         }
@@ -460,7 +460,7 @@ export default {
         &.circle16{
           background: #029ea1;
           &.active{
-            background-image: url('@{lib}/ico_hm_80.png');
+            background-image: url('~@lib/@{imgPath}/ico_hm_80.png');
             background-size: 100% 100%;
           }
         }
@@ -470,7 +470,7 @@ export default {
         &.circle18{
           background: #0294ae;
           &.active{
-            background-image: url('@{lib}/ico_hm_90.png');
+            background-image: url('~@lib/@{imgPath}/ico_hm_90.png');
             background-size: 100% 100%;
           }
         }
@@ -566,7 +566,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/swich-black.png');
+        background-image: url('~@lib/@{imgPath}/swich-black.png');
         background-size: 100% 100%;
       }
     }
@@ -576,7 +576,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/time-black.png');
+        background-image: url('~@lib/@{imgPath}/time-black.png');
         background-size: 100% 100%;
       }
     }
@@ -586,7 +586,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/speed3.png');
+        background-image: url('~@lib/@{imgPath}/speed3.png');
         background-size: 100% 100%;
       }
     }
@@ -596,7 +596,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/speed2.png');
+        background-image: url('~@lib/@{imgPath}/speed2.png');
         background-size: 100% 100%;
       }
     }
@@ -606,7 +606,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/speed1.png');
+        background-image: url('~@lib/@{imgPath}/speed1.png');
         background-size: 100% 100%;
       }
     }
@@ -641,12 +641,12 @@ export default {
           display: block;
           width: 44px;
           height: 44px;
-          background-image: url('@{lib1}/swich-white.png');
+          background-image: url('~@lib/@{imgPath1}/swich-white.png');
           background-size: 100% 100%;
         }
         &.active {
           &::before {
-            background-image: url('@{lib1}/swich-white.png');
+            background-image: url('~@lib/@{imgPath1}/swich-white.png');
           }
         }
       }
@@ -665,7 +665,7 @@ export default {
           display: block;
           width: 44px;
           height: 44px;
-          background-image: url('@{lib}/swich-black.png');
+          background-image: url('~@lib/@{imgPath}/swich-black.png');
           background-size: 100% 100%;
         }
       }
@@ -756,12 +756,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib2}/swich-white.png');
+        background-image: url('~@lib/@{imgPath2}/swich-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/swich-black.png');
+          background-image: url('~@lib/@{imgPath2}/swich-black.png');
         }
       }
     }
@@ -772,12 +772,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib2}/speed1-white.png');
+        background-image: url('~@lib/@{imgPath2}/speed1-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/speed1.png');
+          background-image: url('~@lib/@{imgPath2}/speed1.png');
         }
       }
     }
@@ -787,12 +787,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib2}/speed2-white.png');
+        background-image: url('~@lib/@{imgPath2}/speed2-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/speed2.png');
+          background-image: url('~@lib/@{imgPath2}/speed2.png');
         }
       }
     }
@@ -802,12 +802,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib2}/speed3-white.png');
+        background-image: url('~@lib/@{imgPath2}/speed3-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/speed3.png');
+          background-image: url('~@lib/@{imgPath2}/speed3.png');
         }
       }
     }
@@ -817,12 +817,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib2}/speed4-white.png');
+        background-image: url('~@lib/@{imgPath2}/speed4-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/speed4.png');
+          background-image: url('~@lib/@{imgPath2}/speed4.png');
         }
       }
     }
@@ -832,12 +832,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib2}/speed5-white.png');
+        background-image: url('~@lib/@{imgPath2}/speed5-white.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/speed5.png');
+          background-image: url('~@lib/@{imgPath2}/speed5.png');
         }
       }
     }

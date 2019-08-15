@@ -287,7 +287,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@lib: '../../../../lib/base/haier_water_cleaner/assets';
+@imgPath: 'base/haier_water_cleaner/assets';
 @keyframes wave {
     from {
         background-position-x: 0;
@@ -337,7 +337,7 @@ export default {
     border-radius: 0 0 750px 750px;
   }
   .wave {
-    background-image: url('@{lib}/wave.png');
+    background-image: url('~@lib/@{imgPath}/wave.png');
     background-size: 200% 100%;
 
     width: 100%;
@@ -412,7 +412,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('@{lib}/btn.png');
+        background-image: url('~@lib/@{imgPath}/btn.png');
         background-size: 100% 100%;
       }
     }

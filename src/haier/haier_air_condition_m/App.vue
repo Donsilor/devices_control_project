@@ -598,9 +598,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@lib: '../../../lib/base/air_condition/assets/new-air';
 @imgPath: 'base/air_condition/assets/new-air';
-
 @bgColor: #20282b;
 @yellow: #ffbf00;
 

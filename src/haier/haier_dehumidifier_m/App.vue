@@ -466,9 +466,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@lib: '../../../lib/base/dehumidifier/assets';
-@lib1: '../../../lib/base/air_condition/assets';
-@lib2: '../../../lib/base/air_cleaner/assets/new-air';
+@imgPath: 'base/dehumidifier/assets';
+@imgPath1: 'base/air_condition/assets';
+@imgPath2: 'base/air_cleaner/assets/new-air';
 @bgColor: #20282B;
     .btn-swich,
     .panel-btn-dehumidification,
@@ -552,7 +552,7 @@ export default {
         display: inline-block;
         width: 36px;
         height: 36px;
-        background-image: url('@{lib1}/new-air/icon-tips.png');
+        background-image: url('~@lib/@{imgPath1}/new-air/icon-tips.png');
         background-size: 100% 100%;
         margin-right: 12px;
         z-index: 99;
@@ -617,7 +617,7 @@ export default {
       border-radius: 50%;
       position: absolute;
       display: inline-block;
-      background-image: url('@{lib}/animation_dh_bubble.png');
+      background-image: url('~@lib/@{imgPath}/animation_dh_bubble.png');
     }
     .sport1 {
       top: -50px;
@@ -746,47 +746,47 @@ export default {
     }
     .btn-swich {
       &::before {
-        background-image: url('@{lib2}/swich-white.png');
+        background-image: url('~@lib/@{imgPath2}/swich-white.png');
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/swich-black.png');
+          background-image: url('~@lib/@{imgPath2}/swich-black.png');
         }
       }
     }
     .panel-btn-dehumidification {
       &::before {
-        background-image: url('@{lib}/btn_dh_mode_dry_hl.png');
+        background-image: url('~@lib/@{imgPath}/btn_dh_mode_dry_hl.png');
       }
     }
     .panel-btn-dry {
       &::before {
-        background-image: url('@{lib}/btn_dh_mode_drycloth_hl.png');
+        background-image: url('~@lib/@{imgPath}/btn_dh_mode_drycloth_hl.png');
       }
     }
     .panel-btn-auto {
       &::before {
-        background-image: url('@{lib}/auto-black.png');
+        background-image: url('~@lib/@{imgPath}/auto-black.png');
       }
     }
     .btn-low {
       &::before {
-        background-image: url('@{lib2}/speed1.png');
+        background-image: url('~@lib/@{imgPath2}/speed1.png');
       }
     }
     .btn-normal {
       &::before {
-        background-image: url('@{lib2}/speed2.png');
+        background-image: url('~@lib/@{imgPath2}/speed2.png');
       }
     }
     .btn-high {
       &::before {
-        background-image: url('@{lib2}/speed3.png');
+        background-image: url('~@lib/@{imgPath2}/speed3.png');
       }
     }
     .btn-more {
       &::before {
-        background-image: url('@{lib}/time-black.png');
+        background-image: url('~@lib/@{imgPath}/time-black.png');
       }
     }
   }
@@ -809,7 +809,7 @@ export default {
           border: 1px solid rgba(32, 40, 43, 0.5);
 
           &::before {
-            background-image: url('@{lib2}/swich-black.png');
+            background-image: url('~@lib/@{imgPath2}/swich-black.png');
           }
         }
         .btn-name {
@@ -825,11 +825,11 @@ export default {
         border: 1px solid #000;
 
         &::before {
-          background-image: url('@{lib2}/swich-black.png');
+          background-image: url('~@lib/@{imgPath2}/swich-black.png');
         }
         &.active {
           &::before {
-            background-image: url('@{lib2}/swich-black.png');
+            background-image: url('~@lib/@{imgPath2}/swich-black.png');
           }
         }
       }
@@ -919,62 +919,62 @@ export default {
     }
     .btn-swich {
       &::before {
-        background-image: url('@{lib2}/swich-white.png');
+        background-image: url('~@lib/@{imgPath2}/swich-white.png');
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/swich-black.png');
+          background-image: url('~@lib/@{imgPath2}/swich-black.png');
         }
       }
     }
 
     .btn-low {
       &::before {
-        background-image: url('@{lib2}/speed1-white.png');
+        background-image: url('~@lib/@{imgPath2}/speed1-white.png');
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/speed1.png');
+          background-image: url('~@lib/@{imgPath2}/speed1.png');
         }
       }
     }
     .btn-normal {
       &::before {
-        background-image: url('@{lib2}/speed2-white.png');
+        background-image: url('~@lib/@{imgPath2}/speed2-white.png');
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/speed2.png');
+          background-image: url('~@lib/@{imgPath2}/speed2.png');
         }
       }
     }
     .btn-high {
       &::before {
-        background-image: url('@{lib2}/speed3-white.png');
+        background-image: url('~@lib/@{imgPath2}/speed3-white.png');
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/speed3.png');
+          background-image: url('~@lib/@{imgPath2}/speed3.png');
         }
       }
     }
     .btn-very_high {
       &::before {
-        background-image: url('@{lib2}/speed4-white.png');
+        background-image: url('~@lib/@{imgPath2}/speed4-white.png');
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/speed4.png');
+          background-image: url('~@lib/@{imgPath2}/speed4.png');
         }
       }
     }
     .btn-super_high {
       &::before {
-        background-image: url('@{lib2}/speed5-white.png');
+        background-image: url('~@lib/@{imgPath2}/speed5-white.png');
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/speed5.png');
+          background-image: url('~@lib/@{imgPath2}/speed5.png');
         }
       }
     }
@@ -1056,58 +1056,58 @@ export default {
     }
     .btn-swich {
       &::before {
-        background-image: url('@{lib2}/swich-white.png');
+        background-image: url('~@lib/@{imgPath2}/swich-white.png');
       }
       &.active {
         &::before {
-          background-image: url('@{lib2}/swich-black.png');
+          background-image: url('~@lib/@{imgPath2}/swich-black.png');
         }
       }
     }
 
     .btn-dehumidification {
       &::before {
-        background-image: url('@{lib}/btn_dh_mode_dry.png');
+        background-image: url('~@lib/@{imgPath}/btn_dh_mode_dry.png');
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/btn_dh_mode_dry_chose.png');
+          background-image: url('~@lib/@{imgPath}/btn_dh_mode_dry_chose.png');
         }
       }
     }
     .btn-dry {
       &::before {
-        background-image: url('@{lib}/btn_dh_mode_drycloth.png');
+        background-image: url('~@lib/@{imgPath}/btn_dh_mode_drycloth.png');
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/btn_dh_mode_drycloth_chose.png');
+          background-image: url('~@lib/@{imgPath}/btn_dh_mode_drycloth_chose.png');
         }
       }
     }
     .btn-auto {
       &::before {
-        background-image: url('@{lib}/auto-white.png');
+        background-image: url('~@lib/@{imgPath}/auto-white.png');
       }
       &.active {
         &::before {
-          background-image: url('@{lib}/auto-yellow.png');
+          background-image: url('~@lib/@{imgPath}/auto-yellow.png');
         }
       }
     }
     .panel-btn-dehumidification {
       &::before {
-        background-image: url('@{lib}/btn_dh_mode_dry_hl.png');
+        background-image: url('~@lib/@{imgPath}/btn_dh_mode_dry_hl.png');
       }
     }
     .panel-btn-dry {
       &::before {
-        background-image: url('@{lib}/btn_dh_mode_drycloth_hl.png');
+        background-image: url('~@lib/@{imgPath}/btn_dh_mode_drycloth_hl.png');
       }
     }
     .panel-btn-auto {
       &::before {
-        background-image: url('@{lib}/auto-black.png');
+        background-image: url('~@lib/@{imgPath}/auto-black.png');
       }
     }
   }
@@ -1118,7 +1118,7 @@ export default {
     width: 90%;
     height: 90%;
     content: '';
-    background-image: url('@{lib1}/buffering_mode_white.gif');
+    background-image: url('~@lib/@{imgPath1}/buffering_mode_white.gif');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     position: absolute;
@@ -1133,7 +1133,7 @@ export default {
     width: 90%;
     height: 90%;
     content: '';
-    background-image: url('@{lib1}/buffering_mode_blue.gif');
+    background-image: url('~@lib/@{imgPath1}/buffering_mode_blue.gif');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     position: absolute;

@@ -5,7 +5,7 @@ import Mock from 'mockjs'
 
 let res = {
     "switch": 'on',
-    "work_st": 'standby',
+    "work_status": 'start',
     "stove_tem": {
       "stove_0": '1',
       "stove_1": '1',
@@ -23,8 +23,8 @@ let res = {
       "stove_1": 'no',
     },
     "fire_status": {
-      "stove_0": 'high',
-      "stove_1": 'no',
+      "stove_0": 'nomal',
+      "stove_1": 'low',
     },
     "stove_status": {
       "stove_0": 'true',
@@ -38,7 +38,7 @@ let res = {
     },
     "accident_out": {
       "stove_0": 'off',
-      "stove_1": 'on',
+      "stove_1": 'off',
     },
     "connectivity": "online"
   }

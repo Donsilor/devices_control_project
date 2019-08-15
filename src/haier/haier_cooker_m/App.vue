@@ -200,7 +200,14 @@ export default {
     },
     dryheatEvent(){
       this.dryFire = false
-    }
+    },
+    // workStatus(){
+    //   if(this.leftStatus || this.rightStatus !== 'no'){
+    //     this.controlDevice('work_status','start')
+    //   }else{
+    //     this.controlDevice('work_status','standby')
+    //   }
+    // }
   }
 }
 </script>
