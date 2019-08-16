@@ -71,19 +71,17 @@
     width:262px;
     height:262px;
     border-radius: 50%;
-    // background: #ff6026;
     background:#fff; 
     position: relative;
-    
 }
-.pie-right, .pie-left {
+.pie-right,.pie-left {
     position: absolute;
     top: 0;
     left: 0;
     width:262px;
     height:262px;
     border-radius: 50%;
-    transform: rotate(120deg)
+    transform: rotateY(0deg);
 }
 .right, .left {
     position: absolute;
@@ -92,7 +90,6 @@
     width:262px;
     height:262px;
     border-radius: 50%;
-    // background:#fff; 
     background: #ff6026;
 }
 .pie-right, .right {
