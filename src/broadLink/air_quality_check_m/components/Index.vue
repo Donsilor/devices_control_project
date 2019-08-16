@@ -298,6 +298,7 @@ i{
     }
     .information{
       display: flex;
+      justify-content:space-between;
       font-size: 36px;
       width: 720px;
      
