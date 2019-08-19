@@ -23,7 +23,7 @@
           <span class="text">温度 {{ deviceAttrs.temperature | temperatureText }}</span>
         </p>
         <p>
-          <span> <i class="num">{{ deviceAttrs.humidity | fixVal }}</i> <i class="unit">%</i></span>
+          <span> <i class="num">{{ deviceAttrs.humidity | fixVal2 }}</i> <i class="unit">%</i></span>
           <span class="text">湿度 {{ deviceAttrs.humidity | humidityText }}</span>
         </p>
         <p>

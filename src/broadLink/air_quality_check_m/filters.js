@@ -11,6 +11,14 @@ export function fixVal(val) {
   } 
 }
 
+export function fixVal2(val) {
+  if (val) {
+    return val / 100
+  } else {
+    return '---'
+  } 
+}
+
 export function pm25Text(pm2) {
   if (pm2 && pm2 > 0) {
     if (pm2 > 0 && pm2 <= 350) {
