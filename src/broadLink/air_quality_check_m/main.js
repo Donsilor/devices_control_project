@@ -17,6 +17,12 @@ import '@lib/base/common.less'
 import store from '@lib/store/index.js'
 import Topbar from '@lib/components/Topbar.vue'
 
+import * as filters from './filters' // global filters
+// register global utility filters.
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
+
 
 const router = new Router({
   routes: [{
@@ -25,8 +31,8 @@ const router = new Router({
     component: Index
   },
   {
-    path: '/PMsynopsis',
-    name: 'PMsynopsis',
+    path: '/pmsynopsis',
+    name: 'pmsynopsis',
     component: PMsynopsis
   }
   ]

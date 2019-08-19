@@ -13,7 +13,7 @@ export function generateSnapShot() {
         method: 'dr_report_dev_status',
         code: 0,
         result: {
-            "device_name": "空气检测仪",
+            "device_name": "空气检查仪",
             "attribute": res
         }
     })

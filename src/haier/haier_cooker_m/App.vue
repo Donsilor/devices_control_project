@@ -245,10 +245,10 @@ export default {
       justify-content: space-around;
       .circle-gray {
         border: 2px solid #BFBFBF;
+        padding: 2px;
         border-radius: 50%;
         box-sizing: border-box;
-        width: 276px;
-        height: 276px;
+
         display: flex;
         justify-content: center;
         align-items: center;
