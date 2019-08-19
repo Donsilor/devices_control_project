@@ -8,6 +8,7 @@
         <div 
           :class="[ rotateClass, 'bg', 'rotate-low']" 
           @click="PMsynopsis()" />
+        <div :class="['bgc',rotateClass2]"/>
         <div 
           class="PM PM-close">
           <span class="num">{{ computePM25 }}</span>
@@ -77,6 +78,25 @@ export default {
         return '----'
       }
     },
+    rotateClass2(){
+      if(this.deviceAttrs['pm2.5']&&this.deviceAttrs['pm2.5']>0){
+        if(this.deviceAttrs['pm2.5']>0&&this.deviceAttrs['pm2.5']<=350){
+          return 'lvs22'
+        }else if(this.deviceAttrs['pm2.5']>350&&this.deviceAttrs['pm2.5']<=750){
+          return 'huangs2'
+        }else if(this.deviceAttrs['pm2.5']>750&&this.deviceAttrs['pm2.5']<=1150){
+          return 'huangs2'
+        }else if(this.deviceAttrs['pm2.5']>1150&&this.deviceAttrs['pm2.5']<=1500){
+          return 'hongse2'
+        }else if(this.deviceAttrs['pm2.5']>1500&&this.deviceAttrs['pm2.5']<=2550){
+          return 'shenghong2'
+        }else{
+          return 'shenheng2'
+        }
+      }else{
+        return '----'
+      }
+    },
     computePM25(){
       if(this.deviceAttrs['pm2.5']){
         return  this.deviceAttrs['pm2.5']/10
@@ -91,13 +111,13 @@ export default {
         }else if(this.deviceAttrs['pm2.5']>350&&this.deviceAttrs['pm2.5']<=750){
           return '良'
         }else if(this.deviceAttrs['pm2.5']>750&&this.deviceAttrs['pm2.5']<=1150){
-          return '轻度污染'
+          return '轻度'
         }else if(this.deviceAttrs['pm2.5']>1150&&this.deviceAttrs['pm2.5']<=1500){
-          return '中度污染'
+          return '中度'
         }else if(this.deviceAttrs['pm2.5']>1500&&this.deviceAttrs['pm2.5']<=2550){
-          return '重度污染'
+          return '重度'
         }else{
-          return '严重污染'
+          return '严重'
         }
       }else{
         return '----'
@@ -221,6 +241,7 @@ export default {
 <style lang="less" scoped>
 @lib: "../../../../lib/base/haier_hood/assets";
 @lib1: "../../../lib";
+@bgcW:440px;
 i{
    font-style:normal
 }
@@ -265,6 +286,34 @@ i{
         background: url("~@lib/base/air_quality_check/assets/shenheng.png") no-repeat;
         background-size: 100% 100%;
         }
+        .lvs22 {
+        background: #30D80A;
+        background-size: 100% 100%;
+        }
+      .huangs2 {
+        background:  #F5D100;
+        background-size: 100% 100%;
+        }
+      
+      .huangs2 {
+        background:  #F99F03;
+        background-size: 100% 100%;
+        }
+      
+      .hongse2 {
+        background: #E31717;
+        background-size: 100% 100%;
+        }
+      
+      .shenghong2 {
+        background: #99004C;
+        background-size: 100% 100%;
+        }
+      
+      .shenheng2 {
+        background: #7E0023;
+        background-size: 100% 100%;
+        }
     }
       
       .bg{
@@ -274,6 +323,16 @@ i{
         width: 100%;
         height: 100%;
       }
+      .bgc{
+        position: fixed;
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        width: 420px;
+        height: 420px;
+        border-radius: 50%;
+      }
 
       .PM {
         &.PM-close{
@@ -282,9 +341,13 @@ i{
           height: 152px;
         }
         .num{
+          color: #fff;
+          position: relative;
           font-size: 120px;
         }
         .unit{
+          opacity: 0.5;
+          color: #fff;
           font-size: 20px;
           position: relative;
           top: -40px;
@@ -293,6 +356,8 @@ i{
        
       }
        .describe{
+        color: #fff;
+         position: relative;
           font-size: 32px;
         }
     }
@@ -328,9 +393,13 @@ i{
           font-size: 24px;
           position: relative;
           top:-40px;
+          color: #35353D;
+          opacity: 0.5;
         }
         .text{
           font-size: 24px;
+          color: #35353D;
+          opacity: 0.5;
         }
       }
     }
@@ -339,5 +408,7 @@ i{
         flex: 1
       }
     }
-  
+  .unit{
+
+  }
 </style>
