@@ -189,11 +189,7 @@ i {
     height: 100%;
   }
   .bgc {
-    position: fixed;
-    top: auto;
-    left: auto;
-    right: auto;
-    bottom: auto;
+    position: absolute;
     width: 420px;
     height: 420px;
     border-radius: 50%;
