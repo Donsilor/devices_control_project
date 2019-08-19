@@ -288,31 +288,25 @@ i{
         }
         .lvs22 {
         background: #30D80A;
-        background-size: 100% 100%;
         }
       .huangs2 {
         background:  #F5D100;
-        background-size: 100% 100%;
         }
       
       .huangs2 {
         background:  #F99F03;
-        background-size: 100% 100%;
         }
       
       .hongse2 {
         background: #E31717;
-        background-size: 100% 100%;
         }
       
       .shenghong2 {
         background: #99004C;
-        background-size: 100% 100%;
         }
       
       .shenheng2 {
         background: #7E0023;
-        background-size: 100% 100%;
         }
     }
       
