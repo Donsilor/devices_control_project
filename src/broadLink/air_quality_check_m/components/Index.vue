@@ -4,10 +4,11 @@
       title="空气检查仪"
       bak-color="#000" />
     <div class="main center">
-      <div class="wrap-circle center">
+      <div 
+        class="wrap-circle center" 
+        @click="pmsynopsis()">
         <div 
-          :class="[ rotateClass, 'bg', 'rotate-low']"
-          @click="PMsynopsis()" />
+          :class="[ rotateClass, 'bg', 'rotate-low']"/>
         <div :class="['bgc',rotateClass2]" />
         <div class="PM PM-close">
           <span class="num">{{ deviceAttrs['pm2.5'] | fixVal }}</span>
@@ -102,8 +103,8 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo']),
-    PMsynopsis() {
-      this.$router.push('/PMsynopsis')
+    pmsynopsis() {
+      this.$router.push('/pmsynopsis')
     }
   }
 }
