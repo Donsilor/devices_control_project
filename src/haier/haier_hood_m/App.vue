@@ -64,8 +64,8 @@
         </div>
         <div 
           class="btn-wrap"
-          @click="setSpeed('normal')">
-          <div :class="[ { 'active': deviceAttrs.speed == 'normal' }, 'btn btn-gs center']" />
+          @click="setSpeed('overnormal')">
+          <div :class="[ { 'active': deviceAttrs.speed == 'overnormal' }, 'btn btn-gs center']" />
           <div class="btn-name">高速</div>
         </div>
 
@@ -148,7 +148,7 @@ export default {
             this.speedNum = 2
             this.speedText = "中速"
             break
-          case "normal":
+          case "overnormal":
             this.speedNum = 3
             this.speedText = "高速"
             break
@@ -307,7 +307,7 @@ export default {
     animation: rotate 4s linear 0s infinite;
   }
   &.rotate-high{
-    animation: rotate 2s linear 0s infinite;
+    animation: rotate 5s linear 0s infinite;
   }
 }
 .greycircle {
