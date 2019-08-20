@@ -249,9 +249,13 @@ export default {
         border: 2px solid #BFBFBF;
         border-radius: 50%;
         box-sizing: border-box;
+<<<<<<< HEAD
         // width: 276px;
         // height: 276px;
         padding: 1px;
+=======
+
+>>>>>>> 7770b2f649f773e892dea8264e1bed2eec862169
         display: flex;
         justify-content: center;
         align-items: center;
