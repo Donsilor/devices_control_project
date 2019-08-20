@@ -8,17 +8,18 @@
         <div class="wrap-circle">
           <div class="circle-left">
             <div 
-              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'|| leftStatus == 'no'" 
+              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'" 
               class="circle-gray">
               <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
             </div>
             <div 
               v-else 
               :class="[{'active': leftStatus !== 'no'}, 'circle-gray']">
-              <circle-pie 
-                :left-status="leftStatus" 
-                class="pie">
+              <canvas-circle :left-status="leftStatus">   
                 <p class="icon">
+                  <img 
+                    v-show="leftStatus == 'no'" 
+                    src="../../../lib/base/haier_cooker/assets/no_fire.png" >
                   <img 
                     v-show="leftStatus == 'low' || leftStatus == 'low_60'" 
                     src="../../../lib/base/haier_cooker/assets/small_fire.png" >
@@ -29,7 +30,7 @@
                     v-show="leftStatus == 'high' || leftStatus == 'high_30'" 
                     src="../../../lib/base/haier_cooker/assets/big_fire.png" >
                 </p>
-              </circle-pie>
+              </canvas-circle>
             </div>
             <div class="left-cooker">
               <div class="cooker-name">左灶</div>
@@ -38,17 +39,18 @@
           </div>
           <div class="circle-right">
             <div 
-              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'|| rightStatus == 'no'" 
+              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'" 
               class="circle-gray">
               <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
             </div>
             <div 
               v-else 
               :class="[{'active': rightStatus !== 'no'}, 'circle-gray']">
-              <circle-pie 
-                :right-status="rightStatus" 
-                class="pie">
+              <canvas-circle :right-status="rightStatus">   
                 <p class="icon">
+                  <img 
+                    v-show="rightStatus == 'no'" 
+                    src="../../../lib/base/haier_cooker/assets/no_fire.png" >
                   <img 
                     v-show="rightStatus == 'low' || rightStatus == 'low_60'" 
                     src="../../../lib/base/haier_cooker/assets/small_fire.png" >
@@ -59,7 +61,7 @@
                     v-show="rightStatus == 'high' || rightStatus == 'high_30'" 
                     src="../../../lib/base/haier_cooker/assets/big_fire.png" >
                 </p>
-              </circle-pie>
+              </canvas-circle>
             </div>
             <div class="right-cooker">
               <div class="cooker-name">右灶</div>
@@ -88,15 +90,15 @@
 </template>
 
 <script>
-import CirclePie from "./components/CirclePie.vue"
+import canvasCircle from "./components/canvasCircle.vue"
 import warnBox from "./components/warnBox.vue"
 import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
-  components: {CirclePie,warnBox},
+  components: { warnBox,canvasCircle},
   data() {
     return {
       stalling:true,
-      dryFire:true
+      dryFire:true,
     }
   },
   computed: {
@@ -247,8 +249,9 @@ export default {
         border: 2px solid #BFBFBF;
         border-radius: 50%;
         box-sizing: border-box;
-        width: 276px;
-        height: 276px;
+        // width: 276px;
+        // height: 276px;
+        padding: 1px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -257,6 +260,10 @@ export default {
           width: 92px;
         }
         .icon {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%,-50%);
           width: 100%;
           height: 100%;
           display: flex;
@@ -269,6 +276,8 @@ export default {
       }
       .circle-gray.active {
         border:2px solid #ff6026;
+        // width: auto;
+        // height: auto;
       }
       .cooker-name {
         font-size: 28px;
