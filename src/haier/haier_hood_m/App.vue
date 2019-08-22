@@ -2,7 +2,7 @@
   <div class="body">
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <topbar 
-        title="厨房的烟机"
+        :title="device.device_name"
         bak-color="#000" />
       <div class="main center">
         <div class="wrap-circle center">
@@ -79,9 +79,9 @@
 
         <div 
           v-show="isOpen"
-          :class="['btn-wrap']"
+          :class="[{ 'active': deviceAttrs.light == 'on' },'btn-wrap']"
           @click="setDelay()">
-          <div :class="[{ 'active': deviceAttrs.delay == 'on' },'btn', 'btn-yc' ,'center']" />
+          <div :class="[{ 'disabled': deviceAttrs.speed == 'off' },'btn', 'btn-yc' ,'center']" />
           <div class="btn-name">延迟</div>
         </div>
       </div>
@@ -198,7 +198,7 @@ export default {
         })
     },
     setDelay() {
-      if (this.isClose ) return  // 关机状态点击无效
+      if (this.isClose || this.deviceAttrs.speed == 'off' ) return  // 关机状态点击无效
       let switchStatus = ''
       if (this.deviceAttrs.delay == 'on') {
         switchStatus = 'off'
@@ -524,7 +524,7 @@ export default {
   &:before {
     content: "";
     position: fixed;
-    top: 69PX;
+    top: 72PX;
     left: 0;
     bottom: 0;
     right: 0;
