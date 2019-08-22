@@ -2,7 +2,7 @@
   <div class="body">
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <topbar 
-        title="厨房的烟机"
+        :title="device.device_name"
         bak-color="#000" />
       <div class="main center">
         <div class="wrap-circle center">
@@ -64,14 +64,14 @@
         </div>
         <div 
           class="btn-wrap"
-          @click="setSpeed('normal')">
-          <div :class="[ { 'active': deviceAttrs.speed == 'normal' }, 'btn btn-gs center']" />
+          @click="setSpeed('overnormal')">
+          <div :class="[ { 'active': deviceAttrs.speed == 'overnormal' }, 'btn btn-gs center']" />
           <div class="btn-name">高速</div>
         </div>
 
         <div 
           v-show="isOpen"
-          class="btn-wrap"
+          class="btn-wrap btn-wrap-light"
           @click="setLight()">
           <div :class="[{ 'active': deviceAttrs.light == 'on' },'btn-zm', 'btn' ,'center']" />
           <div class="btn-name">照明</div>
@@ -79,9 +79,9 @@
 
         <div 
           v-show="isOpen"
-          :class="[{'disabled':deviceAttrs.speed=='off'&& deviceAttrs.light == 'off' },'btn-wrap']"
+          :class="[{ 'active': deviceAttrs.light == 'on' },'btn-wrap']"
           @click="setDelay()">
-          <div :class="[{ 'active': deviceAttrs.delay == 'on' },'btn', 'btn-yc' ,'center']" />
+          <div :class="[{ 'disabled': deviceAttrs.speed == 'off' },'btn', 'btn-yc' ,'center']" />
           <div class="btn-name">延迟</div>
         </div>
       </div>
@@ -146,9 +146,9 @@ export default {
             break
           case "overlow":
             this.speedNum = 2
-            this.speedText = "中速"
+            this.speedText = "低速"
             break
-          case "normal":
+          case "overnormal":
             this.speedNum = 3
             this.speedText = "高速"
             break
@@ -185,7 +185,7 @@ export default {
       // this.controlDevice("delay", 'off')
     },
     setLight() {
-      if (this.isClose) return  // 关机状态点击无效
+      // if (this.isClose) return  // 关机状态点击无效
       let switchStatus = ''
       if (this.deviceAttrs.light == 'on') {
         switchStatus = 'off'
@@ -198,7 +198,7 @@ export default {
         })
     },
     setDelay() {
-      if (this.isClose || (this.deviceAttrs.speed == 'off' && this.deviceAttrs.light == 'off')) return  // 关机状态或者风速灯光都没开启点击无效
+      if (this.isClose || this.deviceAttrs.speed == 'off' ) return  // 关机状态点击无效
       let switchStatus = ''
       if (this.deviceAttrs.delay == 'on') {
         switchStatus = 'off'
@@ -207,7 +207,7 @@ export default {
       }
       this.controlDevice("delay", switchStatus)
         .then(() => {
-          this.time = 2*60+25
+          this.time = 3*60
           this.countdown()
           clearInterval(this.dateObj)
           this.dateObj = setInterval(this.countdown, 1000)
@@ -307,7 +307,7 @@ export default {
     animation: rotate 4s linear 0s infinite;
   }
   &.rotate-high{
-    animation: rotate 2s linear 0s infinite;
+    animation: rotate 5s linear 0s infinite;
   }
 }
 .greycircle {
@@ -524,7 +524,7 @@ export default {
   &:before {
     content: "";
     position: fixed;
-    top: 64PX;
+    top: 72PX;
     left: 0;
     bottom: 0;
     right: 0;
@@ -552,6 +552,15 @@ export default {
       &.active {
         background: #fff;
         border: 1px solid #818181;
+      }
+    }
+  }
+  .btn-wrap-light{
+    opacity: 1;
+    .btn {
+      &.active {
+        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        border-color: #ffbf00;
       }
     }
   }
