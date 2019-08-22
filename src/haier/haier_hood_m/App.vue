@@ -4,10 +4,13 @@
       <topbar 
         :title="device.device_name"
         bak-color="#000" />
-      <div class="main center">
+      <div 
+        v-if="toogleSpeed" 
+        class="main center" >
         <div class="wrap-circle center">
-          <div :class="[{'animation': !isClose }, {'greycircle': isClose }, rotateClass, 'bg']" />
-          <p class="wind">风速档位</p>
+          <div 
+            :class="[{'animation': !isClose }, {'greycircle': isClose }, rotateClass, 'bg']" />
+          <p class="wind">风速档位1</p>
           <p 
             v-if="!isClose&&!isOffline"
             class="speed">{{ speedNum }}</p>
@@ -79,9 +82,9 @@
 
         <div 
           v-show="isOpen"
-          :class="[{ 'active': deviceAttrs.light == 'on' },'btn-wrap']"
+          :class="['btn-wrap']"
           @click="setDelay()">
-          <div :class="[{ 'disabled': deviceAttrs.speed == 'off' },'btn', 'btn-yc' ,'center']" />
+          <div :class="[{ 'active': deviceAttrs.delay == 'on' },{ 'disabled': deviceAttrs.speed == 'off' },'btn', 'btn-yc' ,'center']" />
           <div class="btn-name">延迟</div>
         </div>
       </div>
@@ -100,7 +103,8 @@ export default {
       time:0,
       dateObj:null,
       minute: '--',
-      second: '--'
+      second: '--',
+      toogleSpeed:true
     }
   },
   computed: {
@@ -170,6 +174,8 @@ export default {
         val = 'off'
       }
       if (this.isClose) return  // 关机状态点击无效
+      this.toogleSpeed = false
+      this.toogleSpeed = true
       this.controlDevice('speed', val)
     },
     setSwitch() {
@@ -524,7 +530,7 @@ export default {
   &:before {
     content: "";
     position: fixed;
-    top: 72PX;
+    top: 80PX;
     left: 0;
     bottom: 0;
     right: 0;
