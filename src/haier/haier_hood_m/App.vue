@@ -10,7 +10,7 @@
         <div class="wrap-circle center">
           <div 
             :class="[{'animation': !isClose }, {'greycircle': isClose }, rotateClass, 'bg']" />
-          <p class="wind">风速档位1</p>
+          <p class="wind">风速档位</p>
           <p 
             v-if="!isClose&&!isOffline"
             class="speed">{{ speedNum }}</p>
@@ -61,17 +61,16 @@
         </div>
         <div 
           class="btn-wrap"
-          @click="setSpeed('overlow')">
-          <div :class="[ { 'active': deviceAttrs.speed == 'overlow' }, 'btn btn-ds center']" />
-          <div class="btn-name">低速</div>
-        </div>
-        <div 
-          class="btn-wrap"
           @click="setSpeed('overnormal')">
           <div :class="[ { 'active': deviceAttrs.speed == 'overnormal' }, 'btn btn-gs center']" />
           <div class="btn-name">高速</div>
         </div>
-
+        <div 
+          class="btn-wrap"
+          @click="setSpeed('high')">
+          <div :class="[ { 'active': deviceAttrs.speed == 'high' }, 'btn btn-bc center']" />
+          <div class="btn-name">爆炒</div>
+        </div>
         <div 
           v-show="isOpen"
           class="btn-wrap btn-wrap-light"
@@ -156,13 +155,14 @@ export default {
             this.speedNum = 1
             this.speedText = "柔速"
             break
-          case "overlow":
-            this.speedNum = 2
-            this.speedText = "低速"
-            break
+      
           case "overnormal":
-            this.speedNum = 3
+            this.speedNum = 2
             this.speedText = "高速"
+            break
+          case "high":
+            this.speedNum = 3
+            this.speedText = "爆炒"
             break
         }
       },
@@ -313,10 +313,10 @@ export default {
     animation: rotate 6s linear 0s infinite;
   }
   &.rotate-overnormal{
-    animation: rotate 4s linear 0s infinite;
+    animation: rotate 6s linear 0s infinite;
   }
   &.rotate-high{
-    animation: rotate 5s linear 0s infinite;
+    animation: rotate 4s linear 0s infinite;
   }
 }
 .greycircle {
@@ -467,13 +467,13 @@ export default {
       background-size: 100% 100%;
     }
   }
-  .btn-ds {
+  .btn-bc {
     &::before {
       content: "";
       display: block;
       width: 44px;
       height: 44px;
-      background-image: url("~@lib/@{imgPath}/yanji_btn_fan02.png");
+      background-image: url("~@lib/@{imgPath}/yanji_btn_baochao.png");
       background-size: 100% 100%;
     }
   }
@@ -531,9 +531,10 @@ export default {
 &.close,
 &.offline {
   &:before {
+
     content: "";
     position: fixed;
-    top: 80PX;
+    top: 82PX;
     left: 0;
     bottom: 0;
     right: 0;

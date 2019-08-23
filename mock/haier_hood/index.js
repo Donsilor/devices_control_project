@@ -4,7 +4,7 @@ import * as mockData from './mock'
 
 if (location.search.indexOf('env=desktop') != -1) {
 
-    window.device_name = '厨房的烟机'
+    window.device_name = '抽油烟机'
 
     on(apiList.device_getsnapshot, function(data, done){
         done(mockData.generateSnapShot())

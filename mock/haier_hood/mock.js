@@ -13,7 +13,7 @@ export function generateSnapShot() {
         method: 'dr_report_dev_status',
         code: 0,
         result: {
-            "device_name": "厨房的烟机",
+            "device_name": "抽油烟机",
             "attribute": res
         }
     })
