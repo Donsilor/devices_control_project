@@ -4,7 +4,7 @@
       <topbar 
         :title="device.device_name"
         bak-color="#000" />
-      <div 
+      <div
         v-if="toogleSpeed" 
         class="main center" >
         <div class="wrap-circle center">
@@ -137,6 +137,14 @@ export default {
     },
   },
   watch: {
+    'device.stateChange'() {
+      this.$nextTick(() => {
+        this.toogleSpeed = false
+        this.$nextTick(() => {
+          this.toogleSpeed = true
+        })
+      })
+    },
     deviceAttrs: {
       handler(newName) {
         switch (newName.speed) {
@@ -174,8 +182,6 @@ export default {
         val = 'off'
       }
       if (this.isClose) return  // 关机状态点击无效
-      this.toogleSpeed = false
-      this.toogleSpeed = true
       this.controlDevice('speed', val)
     },
     setSwitch() {
@@ -186,9 +192,6 @@ export default {
         switchStatus = 'on'
       }
       this.controlDevice("switch", switchStatus)
-      // this.controlDevice("light", 'off')
-      // this.controlDevice("speed", 'off')
-      // this.controlDevice("delay", 'off')
     },
     setLight() {
       // if (this.isClose) return  // 关机状态点击无效
