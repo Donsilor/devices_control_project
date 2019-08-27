@@ -143,6 +143,14 @@ export default {
           this.toogleSpeed = true
         })
       })
+      if(this.deviceAttrs.delay == 'on'){
+        this.time = 3*60
+        this.countdown()
+        clearInterval(this.dateObj)
+        this.dateObj = setInterval(this.countdown, 1000)
+      }else{
+         clearInterval(this.dateObj)
+      }     
     },
     deviceAttrs: {
       handler(newName) {
@@ -215,12 +223,6 @@ export default {
         switchStatus = 'on'
       }
       this.controlDevice("delay", switchStatus)
-        .then(() => {
-          this.time = 3*60
-          this.countdown()
-          clearInterval(this.dateObj)
-          this.dateObj = setInterval(this.countdown, 1000)
-        })
     },
     countdown(){
           this.second = Math.floor(this.time  % 60)
