@@ -1,44 +1,44 @@
 <!-- 首页 -->
 <template>
   <div class="page-index">
-    <div 
-      v-show="ios" 
+    <div
+      v-show="ios"
       class="space-block" />
     <!-- 顶部导航菜单 -->
-    <topbar 
+    <topbar
       v-if="isShowBar"
       :title="$store.state.device_name"
       :more="true"
       :search="false"
       :back="back" />
     <!-- 设备状态提示 -->
-    <status-tip 
+    <status-tip
       v-show="device_uuid"
       :bar-height="barHeight" />
     <!-- 栏目分类 -->
     <div class="swiper mar">
-      <div 
+      <div
         v-if="homePageInfo.length === 0"
         @click="pageInit">
         <img src="~@lib/base/tv/assets/img_default_recommend.png">
       </div>
-      <swiper 
+      <swiper
         v-if="homePageInfo.length"
         ref="swiper"
         :options="swiperOption">
-        <swiper-slide 
+        <swiper-slide
           v-for="item in homePageInfo"
           :key="item.vid">
-          <a 
+          <a
             :style="{backgroundImage:'url('+item.pictureUrl+')'}"
             href="javascript:void(0)">
             <span class="title">{{ item.title }}</span>
-            <span 
+            <span
               v-if="+item.channelId < 5"
               class="channelName">{{ item.channelId | channelName }}</span>
           </a>
         </swiper-slide>
-        <div 
+        <div
           slot="pagination"
           class="swiper-pagination" />
       </swiper>
@@ -49,7 +49,7 @@
 
     <div class="icon_grid">
       <div class="icon_grid_inner">
-        <div 
+        <div
           v-for="(item, idx) in channels"
           :class="['item' + idx, 'item']"
           @click.prevent="toPage(item)">{{ item.channel }}</div>
@@ -57,27 +57,27 @@
       </div>
     </div>
     <!-- 列表 -->
-    <div 
+    <div
       v-for="(it, idx) in allList"
       :key="idx"
       class="mar">
-      <div 
-        v-show="it && it.length > 0" 
+      <div
+        v-show="it && it.length > 0"
         class="wrap-title">
         <div class="title">{{ idx | nameType }}</div>
-        <div 
-          class="more" 
+        <div
+          class="more"
           @click="toListPage(idx)">更多&nbsp;></div>
       </div>
 
       <ul class="vlist list-m60">
-        <li 
+        <li
           v-for="item in it"
           :key="item.vid"
           :class="['item-'+ item.channelId, 'vitem']"
           @click="showDetailInfo(item)">
 
-          <img 
+          <img
             v-lazy="getThumbPic(item.pictureUrl)"
             :data-src="item.pictureUrl"
             alt="">
@@ -86,7 +86,7 @@
           <span class="update">
             {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
           </span>
-          <!-- <span 
+          <!-- <span
             v-if="item.ispay && item.ispay !== '1'"
             class="isvip">付费</span> -->
           <!-- <span class="score">{{ item.score }}</span> -->
@@ -99,20 +99,20 @@
     <div :class="[{'hide': hideMenu}, 'control']">
       <div class="block" />
       <div class="right">
-        <div 
+        <div
           class="icon-switch center"
           @click.prevent="cmd('rcPower')" />
-        <div 
+        <div
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-ykq center"
           @click.prevent="cmd('remoteControlEvent')" />
 
-        <div 
+        <div
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-screen center"
           @click.prevent="cmd('screenProjectionEvent')" />
 
-        <div 
+        <div
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-detail center"
           @click.prevent="goDetail" />
@@ -193,9 +193,11 @@
     overflow-x: auto;
     display: -webkit-box;
     -webkit-box-orient: horizontal;
-    &::-webkit-scrollbar {
-      display: none;
-    }
+    padding-bottom: 20px;
+    margin-bottom: -20px;
+    // &::-webkit-scrollbar {
+    //   display: none;
+    // }
   }
   .item {
     position: relative;
@@ -562,7 +564,12 @@ export default {
     },
     allList() {
       return [this.listDY, this.listDSJ, this.listZY, this.listDM]
-    }
+    },
+    // homePage() {
+    //   if(homePageInfo.length == 0) {
+    //     return this.pageInit()
+    //   }
+    // }
   },
   watch: {
     // detailVisible(visible) {
@@ -572,6 +579,11 @@ export default {
     //     this.$refs.swiper.swiper.autoplay.start()
     //   }
     // }
+    homePageInfo() {
+      if(this.homePageInfo.length == 0) {
+        this.pageInit()
+      }
+    }
   },
   mounted() {
     document.body.scrollTop = 0
@@ -599,7 +611,7 @@ export default {
     back() {
       HdSmart.UI.popWindow()
     },
-    touchMove(e) {
+    touchMove() {
       // e.preventDefault()
     },
     volupStart(e) {

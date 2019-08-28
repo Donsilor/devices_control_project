@@ -5,7 +5,7 @@
   <div class="page-list">
 
     <!-- 错误提示 -->
-    <div 
+    <div
       v-if="error"
       class="error-page"
       @click="reload">
@@ -15,32 +15,32 @@
       </div>
     </div>
 
-    <topbar 
-      :back="goBack" 
+    <topbar
+      :back="goBack"
       :title="title" />
 
     <status-tip v-show="device_uuid" />
     <!-- 条件 -->
-    <div 
+    <div
       :class="{active:filterVisible}"
       class="filters-placeholder" />
-    <div 
+    <div
       v-if="!error"
       :class="{active:filterVisible}"
       :style="{top: isStatusBarShow ? (status_bar_height + navigation_bar_height + 40) + 'px' : (status_bar_height + navigation_bar_height) + 'px' }"
       class="filters">
       <!-- 地区 -->
-      <dl 
+      <dl
         v-show="filterVisible"
         class="row">
         <dt>
-          <a 
+          <a
             :class="{active:current_region==''}"
             href="#"
             @click.prevent="setParam('current_region','')">全部地区</a>
         </dt>
         <dd>
-          <a 
+          <a
             v-for="item in region"
             :key="item.regionId"
             :class="{active:current_region==item.regionId}"
@@ -51,17 +51,17 @@
         </dd>
       </dl>
       <!-- 分类 -->
-      <dl 
+      <dl
         :style="{width:filterVisible?'auto':'82%'}"
         class="row">
         <dt>
-          <a 
+          <a
             :class="{active:current_category==''}"
             href="#"
             @click.prevent="setParam('current_category','')">全部分类</a>
         </dt>
         <dd>
-          <a 
+          <a
             v-for="item in category"
             :key="item.cateId"
             :class="{active:current_category==item.cateId}"
@@ -72,17 +72,17 @@
         </dd>
       </dl>
       <!-- 年份 -->
-      <dl 
+      <dl
         v-show="filterVisible"
         class="row">
         <dt>
-          <a 
+          <a
             :class="{active:current_year==''}"
             href="#"
             @click.prevent="setParam('current_year','')">全部年份</a>
         </dt>
         <dd>
-          <a 
+          <a
             v-for="item in year"
             :key="item.yearrange"
             :class="{active:current_year==item.yearrange}"
@@ -93,11 +93,11 @@
         </dd>
       </dl>
       <!-- 排序 -->
-      <dl 
+      <dl
         v-show="filterVisible"
         class="row">
         <dd>
-          <a 
+          <a
             v-for="item in orderby"
             :key="item.orderId"
             :class="{active:current_orderby==item.orderId}"
@@ -107,7 +107,7 @@
           </a>
         </dd>
       </dl>
-      <a 
+      <a
         :class="{active:filterVisible}"
         href="#"
         class="toggle"
@@ -119,13 +119,13 @@
 
     <!-- 列表 -->
     <ul class="vlist list-m60">
-      <li 
+      <li
         v-for="item in list"
         :key="item.vid"
         :class="['item-'+channelId]"
         class="vitem"
         @click="showDetailInfo(item)">
-        <img 
+        <img
           v-lazy="getThumbPic(item.pictureUrl)"
           :data-src1="item.pictureUrl"
           alt="">
@@ -133,7 +133,7 @@
         <span class="update">
           {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
         </span>
-        <span 
+        <span
           v-if="item.ispay && item.ispay !== '1'"
           class="isvip">付费</span>
         <span class="score">{{ item.score }}</span>
@@ -142,7 +142,7 @@
       </li>
     </ul>
     <!-- 没有数据 -->
-    <div 
+    <div
       v-show="loadState === 'NO_DATA'"
       class="nodata">
       <i />
