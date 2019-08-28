@@ -6,6 +6,7 @@ let res = {
     "co2": 1040, //CO2：ppm，大于5000ppm为重度污染
     "tvoc": 150,// TVOC：毫克/立方米(mg/m3)，精度0.1(mg/m3)，25mg/m3以上重度污染
     "pm2.5":300, // PM2.5：微克/立方米(μg/m3)，精度0.1(μg/m3),大于250μg/m³及以上为重试污染
+    "envlux":235 // 光照度
   }
 
 export function generateSnapShot() {
