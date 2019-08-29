@@ -27,7 +27,7 @@
           <span class="text">湿度 {{ deviceAttrs.humidity | humidityText }}</span>
         </p>
         <p>
-          <span> <i class="num">--</i> <i class="unit">lux</i></span>
+          <span> <i class="num">{{ deviceAttrs.envlux }}</i> <i class="unit">lux</i></span>
           <span class="text">光照度</span>
         </p>
       </div>
