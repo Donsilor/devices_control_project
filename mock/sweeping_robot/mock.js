@@ -7,11 +7,11 @@ let res = {
     'switch': 'on',
     'mode': 'mop',
     'battery_percentage': '100',
-    'status': 'working',
+    'status': 'charging',
     'sweep_direction': 'right',
     'fan_status': 'normall',
 
-    'command': 'stop',
+    'command': 'start',
     'frequency': '2',
 
     'water_level': 'low',

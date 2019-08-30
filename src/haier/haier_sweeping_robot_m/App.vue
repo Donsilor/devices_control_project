@@ -96,19 +96,19 @@
         <!-- 清扫和暂停 -->
         <div :class="[{'disable': model.status == 'charging' || model.mode == 'recharge'&& model.status == 'working'}, 'btn-wrap']">
           <div 
-            v-show="model.mode !== 'recharge'" 
-            :class="[model.status == 'working' ? 'btn-stop' : 'btn-clean', 'btn center']"
+            v-show="model.mode !== 'recharge' && model.status == 'working'" 
+            :class="['btn-stop', 'btn center']"
             @click="setCommand" />
           <div 
-            v-show="model.mode == 'recharge'" 
+            v-show="model.mode == 'recharge' && model.status == 'working'|| model.status !== 'working'" 
             :class="['btn-clean', 'btn center']"
             @click="setCommand" />
+          <!-- <div 
+            v-show="model.status !== 'working'" 
+            :class="['btn-clean', 'btn center']"
+            @click="setCommand" /> -->
           <div 
-            v-show="model.mode !== 'recharge'" 
-            class="btn-name">{{ model.status == 'working' ? '暂停': '清扫' }}</div>
-          <div 
-            v-show="model.mode == 'recharge'" 
-            class="btn-name">清扫</div>
+            class="btn-name">{{ model.mode !== 'recharge'&& model.mode !== 'idle' && model.status == 'working' ? '暂停': '清扫' }}</div>
         </div>
         <!-- 切换模式 -->
         <div :class="[{'disable' : model.mode == 'recharge'&& model.status == 'working'},'btn-wrap']">
@@ -179,7 +179,7 @@ export default {
       device_name: "",
       model: {
         'switch': 'on',
-        'mode': 'idle',
+        'mode': 'mop',
         'battery_percentage': '100',
         'status': 'standby',
         'sweep_direction': 'right',
@@ -306,7 +306,7 @@ export default {
     // 点击回充按钮或者暂停按钮
     handeBtnClick() {
       if(this.model.mode == 'recharge' && this.model.status !== 'charging') {
-        this.setCommand('rechargeStop')
+        this.setCommand()
       } else {
         this.setCharging()
       }
@@ -328,16 +328,20 @@ export default {
         }, () => { }, mode)
     },
     // 清扫和暂停
-    setCommand(rechargeStop) {
+    setCommand() {
       // 回充按钮点击暂停
-      if(rechargeStop !== 'rechargeStop' && this.model.mode == 'recharge' ) return
+      // if(rechargeStop !== 'rechargeStop' && this.model.mode == 'recharge' ) return
+      if (this.model.mode == 'recharge') {
+           this.controlDevice('mode', 'idle',)
+           return false
+      }
       //如果在充电中，无法点击清扫
       if (this.model.status == "charging") {
         return false
       }
       // 清扫 暂时
       let cmd = ''
-      if (this.model.status == 'working') {
+      if (this.model.mode !== 'recharge'&&this.model.mode !== 'idle') {
         cmd = 'stop'
       } else {
         cmd = 'start'

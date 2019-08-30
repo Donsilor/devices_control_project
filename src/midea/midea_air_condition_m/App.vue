@@ -97,13 +97,13 @@
           <div :class="[ { 'active': windIsActive }, 'btn btn-up center']" />
           <div class="btn-name">摆风 </div>
         </div>
-        <div 
+        <!-- <div 
           v-show="isOpen"
           class="btn-wrap"
           @click="showTime">
           <div :class="[ { 'active': deviceAttrs.order_time > 0}, 'btn btn-time center']" />
           <div class="btn-name">定时 </div>
-        </div>
+        </div> -->
       </div>
       <!-- 定时展示 -->
       <!-- <div
@@ -176,7 +176,12 @@ export default {
       return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
     },
     speedIsActive() {
-      if(this.deviceAttrs.mode == 'wind') {
+      // if(this.deviceAttrs.mode == 'wind') {
+      //   return false
+      // } else {
+      //   return true
+      // }
+      if(this.deviceAttrs.mode == 'dehumidify'||this.deviceAttrs.mode == 'wind' && this.deviceAttrs.speed == 'auto') {
         return false
       } else {
         return true
@@ -237,6 +242,13 @@ export default {
     },
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose) return
+      // 如果是除湿模式，默认风速是低速
+      if(val == 'dehumidify'){
+         this.controlDevice('speed', 'low')
+      }
+      if(this.deviceAttrs.speed == 'auto' && val == 'wind') {
+        return HdSmart.UI.toast('自动模式下无法设置送风模式')
+      }
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
@@ -288,6 +300,20 @@ export default {
         .then(() =>{
           this.hide()
         })
+      // if(attr == 'wind_up_down'){
+      //   this.controlDevice('wind_up_down', 'on')
+      //   .then(() =>{
+      //     this.controlDevice('wind_left_right','off')
+      //     this.hide()
+      //   })
+      // }else{
+      //   this.controlDevice('wind_left_right', 'on')
+      //   .then(() =>{
+      //     this.controlDevice('wind_up_down','off')
+      //     this.hide()
+      //   })
+      // }
+      
     },
     setSpeed(speed) {
       if (this.deviceAttrs.temperature == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
@@ -342,6 +368,9 @@ export default {
       this.$refs.mode.show = true
     },
     showSpeed() {
+      if(this.deviceAttrs.mode == 'dehumidify') {
+        return HdSmart.UI.toast('除湿模式下无法设定风速')
+      }
       if (this.isClose) return
       this.$refs.speed.show = true
     },
