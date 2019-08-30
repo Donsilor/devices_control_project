@@ -464,9 +464,9 @@ export default {
     transform: translate(-50%, -50%);
   }
 }
-*{
-  touch-action: none;
-}
+// *{
+//   touch-action: none;
+// }
 .body{
   min-height: 100%;
 }
