@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <topbar 
-      title="空气检查仪"
+      :title="device_name"
       bak-color="#000" />
     <div class="main center">
       <div 
@@ -11,7 +11,7 @@
           :class="[ rotateClass, 'bg', 'rotate-low']"/>
         <div :class="['bgc',rotateClass2]" />
         <div class="PM PM-close">
-          <span class="num">{{ deviceAttrs['pm2.5'] | fixVal }}</span>
+          <span class="num">{{ deviceAttrs['pm2.5']||'--' }}</span>
           <span class="unit">ug/m3</span>
         </div>
         <p class="describe">PM2.5 {{ deviceAttrs['pm2.5'] | pm25Text }}</p>
@@ -19,26 +19,32 @@
 
       <div class="information first">
         <p>
-          <span> <i class="num">{{ deviceAttrs.temperature | fixVal }}</i> <i class="unit">°C</i> </span>
-          <span class="text">温度 {{ deviceAttrs.temperature | temperatureText }}</span>
+          <!-- <span> <i class="num">{{ deviceAttrs.temperature | fixVal }}</i> <i class="unit">°C</i> </span>
+          <span class="text">温度 {{ deviceAttrs.temperature | temperatureText }}</span> -->
+          <span> <i class="num">{{ deviceAttrs.envnoise ||'--' }}</i> <i class="unit">db</i> </span>
+          <span class="text">噪音</span>
         </p>
-        <p>
+        <!-- <p>
           <span> <i class="num">{{ deviceAttrs.humidity | fixVal2 }}</i> <i class="unit">%</i></span>
           <span class="text">湿度 {{ deviceAttrs.humidity | humidityText }}</span>
-        </p>
+          <span> <i class="num">--</i> <i class="unit">%</i></span>
+          <span class="text">湿度 --</span>
+        </p> -->
         <p>
-          <span> <i class="num">{{ deviceAttrs.envlux }}</i> <i class="unit">lux</i></span>
+          <span> <i class="num">{{ deviceAttrs.envlux||'--' }}</i> <i class="unit">lux</i></span>
           <span class="text">光照度</span>
         </p>
       </div>
 
       <div class="information flex">
         <p>
-          <span> <i class="num">{{ deviceAttrs.tvoc | fixVal }}</i> <i class="unit">mg/m3</i></span>
-          <span class="text">TVOC {{ deviceAttrs.tvoc | tvocText }}</span>
+          <!-- <span> <i class="num">{{ deviceAttrs.tvoc | fixVal }}</i> <i class="unit">mg/m3</i></span>
+          <span class="text">TVOC {{ deviceAttrs.tvoc | tvocText }}</span> -->
+          <span> <i class="num">{{ deviceAttrs.formaldehyde||'--' }}</i> <i class="unit">mg/m3</i></span>
+          <span class="text">甲醛</span>
         </p>
         <p class="last">
-          <span><i class="num">{{ deviceAttrs.co2||'----' }}</i> <i class="unit">ppm</i></span>
+          <span><i class="num">{{ deviceAttrs.co2||'--' }}</i> <i class="unit">ppm</i></span>
           <span class="text">CO2a {{ deviceAttrs.co2 | co2Text }}</span>
         </p>
 
@@ -51,6 +57,7 @@ import { mapActions, mapState } from 'vuex'
 export default {
   data() {
     return {
+      device_name:""
     }
   },
   computed: {
@@ -58,15 +65,15 @@ export default {
     rotateClass() {
       let pm2 = this.deviceAttrs['pm2.5']
       if (pm2 && pm2 > 0) {
-        if (pm2 > 0 && pm2 <= 350) {
+        if (pm2 > 0 && pm2 <= 35) {
           return 'lvs2'
-        } else if (pm2 > 350 && pm2 <= 750) {
+        } else if (pm2 > 35 && pm2 <= 75) {
           return 'huangs'
-        } else if (pm2 > 750 && pm2 <= 1150) {
+        } else if (pm2 > 75 && pm2 <= 115) {
           return 'huangs'
-        } else if (pm2 > 1150 && pm2 <= 1500) {
+        } else if (pm2 > 115 && pm2 <= 150) {
           return 'hongse'
-        } else if (pm2 > 1500 && pm2 <= 2550) {
+        } else if (pm2 > 150 && pm2 <= 255) {
           return 'shenghong'
         } else {
           return 'shenheng'
@@ -78,15 +85,15 @@ export default {
     rotateClass2() {
       let pm2 = this.deviceAttrs['pm2.5']
       if (pm2 && pm2 > 0) {
-        if (pm2 > 0 && pm2 <= 350) {
+        if (pm2 > 0 && pm2 <= 35) {
           return 'lvs22'
-        } else if (pm2 > 350 && pm2 <= 750) {
+        } else if (pm2 > 35 && pm2 <= 75) {
           return 'huangs2'
-        } else if (pm2 > 750 && pm2 <= 1150) {
+        } else if (pm2 > 75 && pm2 <= 115) {
           return 'huangs2'
-        } else if (pm2 > 1150 && pm2 <= 1500) {
+        } else if (pm2 > 115 && pm2 <= 150) {
           return 'hongse2'
-        } else if (pm2 > 1500 && pm2 <= 2550) {
+        } else if (pm2 > 150 && pm2 <= 255) {
           return 'shenghong2'
         } else {
           return 'shenheng2'
@@ -97,6 +104,11 @@ export default {
     }
   },
   created() {
+      if (window.device_name) {
+        this.device_name = window.device_name
+      }else{
+        this.device_name = '空气云管家'
+      }
     HdSmart.ready(() => {
       this.getDeviceInfo()
     })
@@ -104,6 +116,7 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo']),
     pmsynopsis() {
+      console.log(this.deviceAttrs)
       this.$router.push('/pmsynopsis')
     }
   }
@@ -200,25 +213,26 @@ i {
       display: flex;
       align-items: center;
       height: 152px;
+      margin-left: 66px;
     }
     .num {
       color: #fff;
       position: relative;
-      font-size: 120px;
+      font-size: 100px;
     }
     .unit {
       opacity: 0.5;
       color: #fff;
       font-size: 20px;
       position: relative;
-      top: -40px;
-      left: 10px;
+      top: -36px;
+      left: 6px;
     }
   }
   .describe {
     color: #fff;
     position: relative;
-    font-size: 32px;
+    font-size: 20px;
   }
 }
 .information {
@@ -234,15 +248,16 @@ i {
     padding-bottom: 60px;
   }
   p {
-    padding: 0 40px;
+    padding-left:80px;
     border-left: 1px #0000004f solid;
-    //  flex: 1;
+    text-align: left;
+     flex: 1;
     &:nth-child(1) {
       border: 0;
     }
-    &.last {
-      text-align: right;
-    }
+    // &.last {
+    //   text-align: right;
+    // }
     span {
       display: block;
     }

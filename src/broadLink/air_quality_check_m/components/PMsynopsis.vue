@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <div class="top"/>
     <div class="header">
       <p class="title">PM2.5简介</p>
       <span @click="$router.go(-1)"/>
@@ -42,6 +43,10 @@
 .page{
   width: 100%;
   padding: 0 40px;
+  .top{
+    width: 100%;
+    height: 25PX;
+  }
   .header{
     width: 100%;
     height: 80px;

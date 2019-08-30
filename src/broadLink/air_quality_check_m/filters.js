@@ -3,33 +3,33 @@ export function toThousandFilter(num) {
   return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
 
-export function fixVal(val) {
-  if (val) {
-    return val / 10
-  } else {
-    return '---'
-  } 
-}
+// export function fixVal(val) {
+//   if (val||val===0) {
+//     return val / 10
+//   } else {
+//     return '---'
+//   } 
+// }
 
-export function fixVal2(val) {
-  if (val) {
-    return val / 100
-  } else {
-    return '---'
-  } 
-}
+// export function fixVal2(val) {
+//   if (val||val===0) {
+//     return val / 100
+//   } else {
+//     return '---'
+//   } 
+// }
 
 export function pm25Text(pm2) {
   if (pm2 && pm2 > 0) {
-    if (pm2 > 0 && pm2 <= 350) {
+    if (pm2 > 0 && pm2 <= 35) {
       return '优'
-    } else if (pm2 > 350 && pm2 <= 750) {
+    } else if (pm2 > 35 && pm2 <= 75) {
       return '良'
-    } else if (pm2 > 750 && pm2 <= 1150) {
+    } else if (pm2 > 75 && pm2 <= 115) {
       return '轻度污染'
-    } else if (pm2 > 1150 && pm2 <= 1500) {
+    } else if (pm2 > 115 && pm2 <= 150) {
       return '中度污染'
-    } else if (pm2 > 1500 && pm2 <= 2550) {
+    } else if (pm2 > 150 && pm2 <= 255) {
       return '重度污染'
     } else {
       return '严重污染'
@@ -40,7 +40,7 @@ export function pm25Text(pm2) {
 }
 
 export function temperatureText(tmp) {
-  if (tmp) {
+  if (tmp||tmp===0) {
     if (tmp <= -100) {
       return '极寒'
     } else if (tmp > -100 && tmp <= 100) {
@@ -64,7 +64,7 @@ export function temperatureText(tmp) {
 }
 
 export function humidityText(val) {
-  if (val) {
+  if (val||val===0) {
     if (val <= 1000) {
       return '极度干燥'
     } else if (val > 1000 && val <= 3000) {
@@ -83,25 +83,25 @@ export function humidityText(val) {
   }
 }
 
-export function tvocText(val) {
-  if (val && val > 0) {
-    if (val > 0 && val <= 4) {
-      return '优'
-    } else if (val > 4 && val <= 6) {
-      return '良'
-    } else if (val > 6 && val <= 30) {
-      return '轻度污染'
-    } else if (val > 30 && val <= 100) {
-      return '中度污染'
-    } else if (val > 100 && val <= 250) {
-      return '重度污染'
-    } else {
-      return '严重污染'
-    }
-  } else {
-    return '----'
-  }
-}
+// export function tvocText(val) {
+//   if (val && val > 0) {
+//     if (val > 0 && val <= 4) {
+//       return '优'
+//     } else if (val > 4 && val <= 6) {
+//       return '良'
+//     } else if (val > 6 && val <= 30) {
+//       return '轻度污染'
+//     } else if (val > 30 && val <= 100) {
+//       return '中度污染'
+//     } else if (val > 100 && val <= 250) {
+//       return '重度污染'
+//     } else {
+//       return '严重污染'
+//     }
+//   } else {
+//     return '----'
+//   }
+// }
 
 export function co2Text(val) {
   if (val && val > 350) {

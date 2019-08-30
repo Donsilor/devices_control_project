@@ -4,7 +4,7 @@ import * as mockData from './mock'
 
 if (location.search.indexOf('env=desktop') != -1) {
 
-    window.device_name = '空气检测仪'
+    window.device_name = '空气云管家'
 
     on(apiList.device_getsnapshot, function(data, done){
         done(mockData.generateSnapShot())

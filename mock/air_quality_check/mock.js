@@ -1,12 +1,14 @@
 import Mock from 'mockjs'
 
 let res = {
-    "humidity": 6581, //湿度，单位为0.01%, 5666就是56.66%
-    "temperature": 380, //温度，单位为0.1摄氏度, 188就是18.8摄氏度
+    "humidity": 0, //湿度，单位为0.01%, 5666就是56.66%
+    "temperature": 0, //温度，单位为0.1摄氏度, 188就是18.8摄氏度
     "co2": 1040, //CO2：ppm，大于5000ppm为重度污染
     "tvoc": 150,// TVOC：毫克/立方米(mg/m3)，精度0.1(mg/m3)，25mg/m3以上重度污染
-    "pm2.5":300, // PM2.5：微克/立方米(μg/m3)，精度0.1(μg/m3),大于250μg/m³及以上为重试污染
-    "envlux":235 // 光照度
+    "pm2.5":30, // PM2.5：微克/立方米(μg/m3)，精度0.1(μg/m3),大于250μg/m³及以上为重试污染
+    "envlux":235, // 光照度
+    'formaldehyde':200, // 甲醛：微克/立方米(μg/m3)，精度0.1(μg/m3)，800 μg/m3以上重度污染
+    'envnoise':30 // 噪音
   }
 
 export function generateSnapShot() {
@@ -14,7 +16,7 @@ export function generateSnapShot() {
         method: 'dr_report_dev_status',
         code: 0,
         result: {
-            "device_name": "空气检查仪",
+            "device_name": "空气云管家",
             "attribute": res
         }
     })

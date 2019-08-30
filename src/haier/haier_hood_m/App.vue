@@ -35,7 +35,7 @@
         v-show="deviceAttrs.delay == 'on'&&deviceAttrs.switch=='on'"
         class="tips tips2">
         <i />
-        <span>{{ minute }}分{{ second }}秒后关机</span>
+        <span>延迟关机中</span>
       </div>
 
       <!-- 按钮 -->
@@ -101,8 +101,8 @@ export default {
       speedText: '关',
       time:0,
       dateObj:null,
-      minute: '--',
-      second: '--',
+      // minute: '--',
+      // second: '--',
       toogleSpeed:true
     }
   },
@@ -143,14 +143,14 @@ export default {
           this.toogleSpeed = true
         })
       })
-      if(this.deviceAttrs.delay == 'on'){
-        this.time = 3*60
-        this.countdown()
-        clearInterval(this.dateObj)
-        this.dateObj = setInterval(this.countdown, 1000)
-      }else{
-         clearInterval(this.dateObj)
-      }     
+      // if(this.deviceAttrs.delay == 'on'){
+      //   this.time = 3*60
+      //   this.countdown()
+      //   clearInterval(this.dateObj)
+      //   this.dateObj = setInterval(this.countdown, 1000)
+      // }else{
+      //    clearInterval(this.dateObj)
+      // }     
     },
     deviceAttrs: {
       handler(newName) {
@@ -224,15 +224,15 @@ export default {
       }
       this.controlDevice("delay", switchStatus)
     },
-    countdown(){
-          this.second = Math.floor(this.time  % 60)
-          this.minute = Math.floor(this.time /  60 % 60)
-          if (this.minute <= 0 && this.second <= 0) {
-            clearInterval(this.dateObj)
-            this.setSwitch()
-          }
-          this.time--
-    },
+    // countdown(){
+    //       this.second = Math.floor(this.time  % 60)
+    //       this.minute = Math.floor(this.time /  60 % 60)
+    //       if (this.minute <= 0 && this.second <= 0) {
+    //         clearInterval(this.dateObj)
+    //         this.setSwitch()
+    //       }
+    //       this.time--
+    // },
     controlDevice(attr, value) {
       return this.doControlDevice({
         nodeid: `haier_hood.main.${attr}`,
