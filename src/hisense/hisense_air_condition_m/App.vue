@@ -7,15 +7,22 @@
       <div class="main center">
         <div class="wrap-circle">
           <div class="bg">
-            <div class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup></div>
-            <i :class="[deviceAttrs.mode, 'c-mode']"/>
+            <div 
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switch == 'off'" 
+              class="offtime">-- <sup>°C</sup></div>
+            <div 
+              v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switch == 'on'"
+              class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
+              <i 
+                :class="[deviceAttrs.mode, 'c-mode']"/>
+            </div>
           </div>
           <circle-progress
             v-if="isShow"
             id="myId"
             ref="$circle"
             key="animation-model"
-            :is-animation="true"
+            :is-animation="false"
             :is-round="true"
             :width="width"
             :radius="radius"
@@ -38,9 +45,10 @@
       </div>
       <!-- 当前状态 -->
       <div 
+        v-show="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
         class="status">
         <i class="icon-status" />
-        正在{{ deviceAttrs.mode | modeType }}
+        {{ deviceAttrs.mode | modeType }}模式
         {{ deviceAttrs.wind_up_down === 'on' ? '上下扫风':'' }}
         {{ deviceAttrs.wind_left_right === 'on' ? '左右扫风': '' }}
       </div>
@@ -83,14 +91,30 @@
           <div :class="[ { 'active': speedIsActive }, speedClass, 'btn center']" />
           <div class="btn-name">风速</div>
         </div>
-        <div 
+        <!-- <div 
           v-show="isOpen"
           class="btn-wrap"
           @click="showSwing">
           <div :class="[ { 'active': windIsActive }, 'btn btn-up center']" />
           <div class="btn-name">摆风 </div>
-        </div>
+        </div> -->
+        <!-- <div 
+          v-show="isOpen"
+          class="btn-wrap"
+          @click="showTime">
+          <div :class="[ { 'active': deviceAttrs.order_time > 0}, 'btn btn-time center']" />
+          <div class="btn-name">定时 </div>
+        </div> -->
       </div>
+      <!-- 定时展示 -->
+      <!-- <div
+        v-show="timeShow"
+        class="timeShow">
+        <img
+          class="timeShow-img"
+          src="../../../lib/base/blend/assets/time-black.png">
+        {{ deviceAttrs.order_time | time_H }}
+      </div> -->
       <!--选择摆风-->
       <model-swing 
         ref="swing"
@@ -107,6 +131,11 @@
         ref="speed"
         :speed="deviceAttrs.speed"
         @setSpeed="setSpeed" />
+        <!-- 定时 -->
+        <!-- <SelectTime 
+        ref="time" 
+        :order_time="deviceAttrs.order_time"
+        @selectedTime="setReserve" /> -->
     </div>
   </div>
 </template>
@@ -117,13 +146,15 @@ import circleProgress from './components/circle-progress'
 import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
-const [MIN_TEMP, MAX_TEMP] = [160, 300]
+// import SelectTime from './components/time/time.vue'
+const [MIN_TEMP, MAX_TEMP] = [180, 320]
 export default {
   components: {
     circleProgress,
     modelSwing,
     modelMode,
     modelSpeed,
+    // SelectTime
   },
   data() {
     return {
@@ -136,6 +167,7 @@ export default {
       delay: 0,
       barColor: '#D8D8D8',
       backgroundColor: '#ececec',
+      timeShow: false,
     }
   },
   computed: {
@@ -145,15 +177,20 @@ export default {
       return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
     },
     speedIsActive() {
-      if(this.deviceAttrs.mode == 'wind') {
+      // if(this.deviceAttrs.mode == 'wind') {
+      //   return false
+      // } else {
+      //   return true
+      // }
+      if(this.deviceAttrs.mode == 'dehumidify'||this.deviceAttrs.mode == 'wind' && this.deviceAttrs.speed == 'auto') {
         return false
       } else {
         return true
       }
     },
-    windIsActive() {
-      return this.deviceAttrs.wind_up_down == 'on' || this.deviceAttrs.wind_left_right == 'on' 
-    },
+    // windIsActive() {
+    //   return this.deviceAttrs.wind_up_down == 'on' || this.deviceAttrs.wind_left_right == 'on' 
+    // },
     modeClass() {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.mode) {
@@ -196,6 +233,7 @@ export default {
         .then(() => {
           this.reset()
         })
+      HdSmart.UI.setStatusBarColor(2)
     })
   },
   methods: {
@@ -206,6 +244,13 @@ export default {
     },
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose) return
+      // 如果是除湿模式，默认风速是低速
+      // if(val == 'dehumidify'){
+      //    this.controlDevice('speed', 'low')
+      // }
+      if(this.deviceAttrs.speed == 'auto' && val == 'wind') {
+        return HdSmart.UI.toast('自动模式下无法设置送风模式')
+      }
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
@@ -257,6 +302,20 @@ export default {
         .then(() =>{
           this.hide()
         })
+      // if(attr == 'wind_up_down'){
+      //   this.controlDevice('wind_up_down', 'on')
+      //   .then(() =>{
+      //     this.controlDevice('wind_left_right','off')
+      //     this.hide()
+      //   })
+      // }else{
+      //   this.controlDevice('wind_left_right', 'on')
+      //   .then(() =>{
+      //     this.controlDevice('wind_up_down','off')
+      //     this.hide()
+      //   })
+      // }
+      
     },
     setSpeed(speed) {
       if (this.deviceAttrs.temperature == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
@@ -270,6 +329,20 @@ export default {
           this.hide()
         })
     },
+    // setReserve(time) {
+    //   let h = parseInt(time[0].split(':')[0])
+    //   let m = parseInt(time[0].split(':')[1])
+    //    this.controlDevice(
+    //     "order_time",
+    //     ((h*60)+m)*60
+    //   )
+
+    //   if(this.deviceAttrs.order_time > 0) {
+    //     this.timeShow = true
+    //   } else {
+    //     this.timeShow = false
+    //   }
+    // },
     controlDevice(attr, value) {
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
@@ -297,8 +370,15 @@ export default {
       this.$refs.mode.show = true
     },
     showSpeed() {
+      if(this.deviceAttrs.mode == 'dehumidify') {
+        return HdSmart.UI.toast('除湿模式下无法设定风速')
+      }
       if (this.isClose) return
       this.$refs.speed.show = true
+    },
+    showTime() {
+      if (this.isClose) return
+      this.$refs.time.show = true
     },
     hide(){
       if(this.$refs.swing.show) this.$refs.swing.show = false
@@ -321,7 +401,7 @@ export default {
     },
     getProgress() {
       // 计算温度进度条
-      return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+      return 70 /(30 - 18) * (this.deviceAttrs.temperature / 10 - 18)
     }
   }
 }
@@ -332,12 +412,27 @@ export default {
 .body {
   min-height: 100%;
 }
+  // 定时展示
+  .timeShow {
+    text-align: center;
+    position: relative;
+    font-size: 24px;
+    margin-top: 24px;
+    color: #20282B;
+    .timeShow-img {
+      position: relative;
+      top: 2px;
+      width: 28px;
+      height: 28px;
+      margin-right: 12px;
+    }
+  }
 .page {
   height: 100vh;
   min-height: 550px;
   overflow-x: hidden;
   position: relative;
-  background: #f4f7fe;
+  background: #fff;
 
   &.filter {
     filter: blur(12px);
@@ -387,17 +482,36 @@ export default {
       position: relative;
       .bg{
         position: absolute;
-        top: 50%;
-        left: 50%;
+        top: 49%;
+        left: 49.5%;
         transform: translate(-50%, -50%);
 
         background: #FFFFFF;
         box-shadow: inset 0 0 16px 0 rgba(0,0,0,0.10);
         border-radius: 50%;
         width: 84%;
-        height: 84%;
+        height: 81%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .offtime {
+          font-size: 122px;
+          color: #20282B;
+          letter-spacing: 0;
+          position: relative;
+          text-align: center;
+          // margin-top: 100px;
+          sup{
+            opacity: 0.5;
+            font-size: 24px;
+            color: #20282B; 
+            position: absolute;
+            top: 10px;
+            right: -20px;
+          }
+        }
         .tm{
-          margin-top: 60PX;
+          // margin-top: 60PX;
           position: relative;
           font-size: 144px;
           color: #20282B;
@@ -405,15 +519,18 @@ export default {
           sup{
             opacity: .5;
             position: absolute;
-            top: 20px;
+            top: 15px;
             font-size: 24px;
             color: #20282B;
           }
         }
         .c-mode{
-          margin: auto;
-          display: block;
-          margin-top: 20PX;
+          // margin: auto;
+          // display: block;
+          position: absolute;
+          top: 170px;
+          left: 85px;
+          margin-left: -26px;
           width: 33px;
           height: 33px;
           &.cold{
@@ -534,7 +651,12 @@ export default {
         background-size: 100% 100%;
       }
     }
-
+     .btn-time {
+      &::before {
+        background-image: url('~@lib/@{imgPath}/time-black.png');
+        background-size: 100% 100%;
+      }
+    }
     .btn-menu {
       &::before {
         background-image: url('~@lib/@{imgPath}/more-black.png');
@@ -598,20 +720,20 @@ export default {
       }
     }
   }
-  &.close {
-    .btn-wrap {
-      &.up-index{
-        opacity: 1;
-      }
-    }
-  }
-  &.offline {
-    .btn-wrap {
-      &.up-index{
-        opacity: .2;
-      }
-    }
-  }
+  // &.close {
+  //   .btn-wrap {
+  //     &.up-index{
+  //       opacity: 1;
+  //     }
+  //   }
+  // }
+  // &.offline {
+  //   .btn-wrap {
+  //     &.up-index{
+  //       opacity: .2;
+  //     }
+  //   }
+  // }
   &.close,
   &.offline {
     &:before {
@@ -623,12 +745,18 @@ export default {
       right: 0;
       z-index: 999;
       width: 100%;
-      background: rgba(0, 0, 0, 0.1);
+      // background: rgba(0, 0, 0, 0.1);
     }
     &.page {
       background: #fff;
+      .panel-btn {
+        background: #fff;
+      }
       .control-tm{
         background: #fff;
+        .reduce,.add {
+          opacity: .4;
+        }
       }
       .cover {
         background: #fff;
@@ -644,6 +772,9 @@ export default {
     }
     .btn-wrap {
       opacity: .2;
+      &.up-index {
+        opacity: 1;
+      }
       .btn {
         &.active {
           background: #fff;

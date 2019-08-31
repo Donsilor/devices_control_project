@@ -22,7 +22,7 @@
             id="myId"
             ref="$circle"
             key="animation-model"
-            :is-animation="true"
+            :is-animation="false"
             :is-round="true"
             :width="width"
             :radius="radius"
@@ -48,7 +48,7 @@
         v-show="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
         class="status">
         <i class="icon-status" />
-        正在{{ deviceAttrs.mode | modeType }}
+        {{ deviceAttrs.mode | modeType }}模式
         {{ deviceAttrs.wind_up_down === 'on' ? '上下扫风':'' }}
         {{ deviceAttrs.wind_left_right === 'on' ? '左右扫风': '' }}
       </div>
@@ -147,7 +147,7 @@ import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
 // import SelectTime from './components/time/time.vue'
-const [MIN_TEMP, MAX_TEMP] = [160, 300]
+const [MIN_TEMP, MAX_TEMP] = [170, 300]
 export default {
   components: {
     circleProgress,
@@ -233,6 +233,7 @@ export default {
         .then(() => {
           this.reset()
         })
+      HdSmart.UI.setStatusBarColor(2)
     })
   },
   methods: {
@@ -247,9 +248,9 @@ export default {
       // if(val == 'dehumidify'){
       //    this.controlDevice('speed', 'low')
       // }
-      if(this.deviceAttrs.speed == 'auto' && val == 'wind') {
-        return HdSmart.UI.toast('自动模式下无法设置送风模式')
-      }
+      // if(this.deviceAttrs.speed == 'auto' && val == 'wind') {
+      //   return HdSmart.UI.toast('自动模式下无法设置送风模式')
+      // }
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
@@ -400,7 +401,7 @@ export default {
     },
     getProgress() {
       // 计算温度进度条
-      return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+      return 70 /(30 - 17) * (this.deviceAttrs.temperature / 10 - 17)
     }
   }
 }
@@ -528,8 +529,8 @@ export default {
           // display: block;
           position: absolute;
           top: 170px;
-          left: 70px;
-          // margin-top: 20PX;
+          left: 85px;
+          margin-left: -16px;
           width: 33px;
           height: 33px;
           &.cold{
