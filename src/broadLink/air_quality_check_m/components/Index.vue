@@ -12,7 +12,7 @@
         <div :class="['bgc',rotateClass2]" />
         <div class="PM PM-close">
           <span class="num">{{ deviceAttrs['pm2.5']||'--' }}</span>
-          <span class="unit">ug/m3</span>
+          <span class="unit">ug/m<span class="span3">3</span></span>
         </div>
         <p class="describe">PM2.5 {{ deviceAttrs['pm2.5'] | pm25Text }}</p>
       </div>
@@ -40,7 +40,7 @@
         <p>
           <!-- <span> <i class="num">{{ deviceAttrs.tvoc | fixVal }}</i> <i class="unit">mg/m3</i></span>
           <span class="text">TVOC {{ deviceAttrs.tvoc | tvocText }}</span> -->
-          <span> <i class="num">{{ deviceAttrs.formaldehyde||'--' }}</i> <i class="unit">mg/m3</i></span>
+          <span> <i class="num">{{ deviceAttrs.formaldehyde/100||'--' }}</i> <i class="unit">mg/m<i class="span3">3</i></i></span>
           <span class="text">甲醛</span>
         </p>
         <p class="last">
@@ -109,7 +109,7 @@ export default {
       }else{
         this.device_name = '空气云管家'
       }
-    HdSmart.ready(() => {
+    HdSmart.ready(() => { 
       this.getDeviceInfo()
     })
   },
@@ -244,12 +244,12 @@ i {
   &.first {
     margin-top: 60px;
     margin-bottom: 60px;
-    border-bottom: 1px #0000004f solid;
+    border-bottom: 1px rgba(0, 0, 0, 0.1) solid;
     padding-bottom: 60px;
   }
   p {
     padding-left:80px;
-    border-left: 1px #0000004f solid;
+    border-left: 1px rgba(0, 0, 0, 0.1) solid;
     text-align: left;
      flex: 1;
     &:nth-child(1) {
@@ -282,5 +282,10 @@ i {
   p {
     flex: 1;
   }
+}
+.span3{
+  position: relative;
+  top:-6px;
+  font-size: 10px;
 }
 </style>

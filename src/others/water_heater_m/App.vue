@@ -3,7 +3,8 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <topbar
         :title="device.device_name"
-        bak-color="#000" />
+        :bg-color="isClose||isOffline?'rgba(0, 0, 0, 0.1)':'#f4f7fe'" 
+        bak-color="#000"/>
       <!-- <div class="c-status">时段预约：6:00-9:00</div> -->
       <div class="main center">
         <div class="wrap-circle">
@@ -678,7 +679,7 @@ export default {
     &:before {
       content: "";
       position: fixed;
-      top: 80PX;
+      top: 69PX;
       left: 0;
       bottom: 0;
       right: 0;
