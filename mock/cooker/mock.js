@@ -37,8 +37,8 @@ let res = {
       "stove_1":'off',
     },
     "accident_out": {
-      "stove_0": 'off',
-      "stove_1": 'on',
+      "stove_0": 'on',
+      "stove_1": 'off',
     },
     "connectivity": "online"
   }

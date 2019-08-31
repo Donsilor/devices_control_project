@@ -85,6 +85,7 @@
         <p>温馨提示：国家规定不能远程控制燃气灶，</p>
         <p>请不要远离开火的燃气灶太久。</p>
       </div>
+      <!-- <div @click="a">ssss</div> -->
     </div>
   </div>
 </template>
@@ -101,6 +102,7 @@ export default {
       dryFire:true,
     }
   },
+
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
@@ -112,7 +114,7 @@ export default {
       return this.leftDryfire === 'on' || this.rightDryfire === 'on'
     },
     leftTxt() {
-      console.log(this.accidentOut)
+      console.log('AAA',this.accidentOut)
        if(!this.deviceAttrs.fire_status) return
       /* eslint-disable no-unreachable */
        switch(this.deviceAttrs.fire_status.stove_0) {
@@ -183,6 +185,12 @@ export default {
       if(this.deviceAttrs.fire_status) return this.deviceAttrs.fire_status.stove_1
     },
   },
+  watch: {
+    'device.stateChange'() {
+      this.dryFire = true
+      this.stalling = true
+    }
+  },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
@@ -212,6 +220,13 @@ export default {
     //   }else{
     //     this.controlDevice('work_status','standby')
     //   }
+    // }
+    // a(){
+    //   console.log('aaaa',this.stalling)
+    //    this.controlDevice("accident_out", {
+    //     "stove_0": 'off',
+    //     "stove_1": 'on',
+    //   })
     // }
   }
 }
