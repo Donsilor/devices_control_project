@@ -50,7 +50,7 @@
                   :style="deg_220"
                   class="circle-arrow-min pos5" />
                 <div
-                  v-show="rotate6>-230"
+                  v-show="rotate6>-232"
                   :style="deg_230"
                   class="circle-arrow-min pos6" />
                 <div
@@ -79,12 +79,12 @@
       </div>
       <!-- 按钮 -->
       <div class="panel-btn center">
-        <!-- <div
+        <div
           class="more"
           @click="handleMore">
           <div :class="[isOpen ? 'up': 'down', 'arrow']">></div>
           <div>{{ isOpen ? '收起' : '查看更多' }}</div>
-        </div> -->
+        </div>
 
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
           <div
@@ -112,11 +112,11 @@
           <div class="btn-name">时间</div>
         </div>
 
-        <!-- <div
+        <div
           v-show="isOpen"
           class="btn-wrap"
           @click="setMode('preheat')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'preheat' }, 'btn btn-preheat center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'preheat' }, {'btn-loading-blue': btnLoading.preheat }, 'btn btn-preheat center']" />
           <div class="btn-name">快速预热</div>
         </div>
         <div
@@ -136,7 +136,7 @@
           class="btn-wrap">
           <div :class="['btn center bor']" />
           <div class="btn-name"/>
-        </div> -->
+        </div>
       </div>
     </div>
     <!-- 定时弹框 -->
@@ -148,7 +148,9 @@
       v-model="seletModal"
       title="选择模式">
       <div class="items">
-        <div class="btns">
+        <div
+          :style="{'justify-content': 'space-around'}"
+          class="btns" >
           <!-- <div
             class="btn-wrap"
             @click="setMode('grains')">
@@ -156,43 +158,46 @@
             <div class="btn-name">上内</div>
           </div> -->
 
-          <div
+          <!-- <div
             class="btn-wrap"
             @click="setMode('broil', 'on')">
             <div :class="[{ 'active': deviceAttrs.mode == 'broil'&&deviceAttrs.convection == 'on'}, {'btn-loading-blue': btnLoading.broil && btnLoading.loading }, 'btn btn-mode2 center']"/>
             <div class="btn-name">上内+风</div>
-          </div>
+          </div> -->
 
           <div
             class="btn-wrap"
             @click="setMode('broil')">
             <div :class="[{ 'active': deviceAttrs.mode == 'broil'&&deviceAttrs.convection == 'off' }, {'btn-loading-blue': btnLoading.broil && !btnLoading.loading }, 'btn btn-mode3 center']"/>
-            <div class="btn-name">上内+上外</div>
+            <div class="btn-name">上烧烤+蒸汽</div>
           </div>
           <div
             class="btn-wrap"
             @click="setMode('roast')">
             <div :class="[{ 'active': deviceAttrs.mode == 'roast'&&deviceAttrs.convection == 'off' }, {'btn-loading-blue': btnLoading.roast && !btnLoading.loading }, 'btn btn-mode4 center']"/>
-            <div class="btn-name">上内+下</div>
+            <div class="btn-name">上下烧烤+蒸汽</div>
           </div>
-          <div
+          <!-- <div
             class="btn-wrap"
             @click="setMode('roast', 'on')">
             <div :class="[{ 'active': deviceAttrs.mode == 'roast'&&deviceAttrs.convection == 'on'},{'btn-loading-blue': btnLoading.roast && btnLoading.loading }, 'btn btn-mode5 center']" />
             <div class="btn-name">上下+风</div>
-          </div>
-        </div>
-      </div>
-      <div class="items">
-        <div class="btns">
-
-
+          </div> -->
           <div
             class="btn-wrap"
             @click="setMode('bake')">
             <div :class="[{ 'active': deviceAttrs.mode == 'bake' }, {'btn-loading-blue': btnLoading.bake }, 'btn btn-mode6 center']"/>
-            <div class="btn-name">下加热</div>
+            <div class="btn-name">下烧烤</div>
           </div>
+        </div>
+      </div>
+      <div class="items">
+        <div
+          :style="{'justify-content': 'space-around'}"
+          class="btns" >
+
+
+
 
           <!-- <div
             class="btn-wrap"
@@ -218,6 +223,12 @@
             @click="setMode('defrost')">
             <div :class="[{ 'active': deviceAttrs.mode == 'defrost' }, {'btn-loading-blue': btnLoading.defrost }, 'btn btn-mode10 center']"/>
             <div class="btn-name">解冻</div>
+          </div>
+
+          <div
+            class="btn-wrap">
+            <div :class="['btn center bor']" />
+            <div class="btn-name"/>
           </div>
         </div>
       </div>
@@ -251,7 +262,7 @@ export default {
       rotate4: -133,
       rotate5: -178,
       rotate6: -220,
-      rotate7: -240,
+      rotate7: -232,
       btnLoading: {
         loading: false,
         switch: false,
@@ -262,6 +273,7 @@ export default {
         roast: false,
         broil: false,
         time: false,
+        preheat: false
       }
     }
   },
@@ -296,19 +308,22 @@ export default {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.mode) {
         case 'broil':
-          return this.deviceAttrs.convection=='on'?'上内+风':'上内+上外'
+          return this.deviceAttrs.convection=='on'?'上内+风':'上烧烤+蒸汽'
           break
         case 'roast':
-          return this.deviceAttrs.convection=='on'?'上下+风':'上内+下'
+          return this.deviceAttrs.convection=='on'?'上下+风':'上下烧烤+蒸汽'
           break
         case 'bake':
-          return '下加热'
+          return '下烧烤'
           break
         case 'ferment':
           return '发酵'
           break
         case 'defrost':
           return '解冻'
+          break
+        case 'preheat':
+          return '快速预热'
           break
         default: ''
           break
@@ -335,7 +350,7 @@ export default {
       }
     },
     plus() {
-      if(this.deviceAttrs.temperature < 140) {
+      if(this.deviceAttrs.temperature < 250) {
         this.controlDevice('temperature', this.deviceAttrs.temperature+1)
         .then(() => {
           this.tempDeg()
@@ -344,38 +359,38 @@ export default {
       }
     },
     tempDeg() {
-      if(this.deviceAttrs.temperature > 119) {
-        this.rotate = (-(140 - this.deviceAttrs.temperature) * 2)
+      if(this.deviceAttrs.temperature > 212) {
+        this.rotate = (-(250 - this.deviceAttrs.temperature) * 1.12)
         return
-      } else if(this.deviceAttrs.temperature>96) {
+      } else if(this.deviceAttrs.temperature>171) {
         this.rotate = -42
-        this.rotate2 = (-(140 - this.deviceAttrs.temperature) * 2)
+        this.rotate2 = (-(250 - this.deviceAttrs.temperature) * 1.12)
         return
-      } else if(this.deviceAttrs.temperature>74) {
+      } else if(this.deviceAttrs.temperature>131) {
         this.rotate = -42
         this.rotate2 = -88
-        this.rotate3 = (-(140 - this.deviceAttrs.temperature) * 2)
+        this.rotate3 = (-(250 - this.deviceAttrs.temperature) * 1.12)
         return
-      } else if(this.deviceAttrs.temperature>51) {
+      } else if(this.deviceAttrs.temperature>91) {
         this.rotate = -42
         this.rotate2 = -88
         this.rotate3 = -133
-        this.rotate4 = (-(140 - this.deviceAttrs.temperature) * 2)
+        this.rotate4 = (-(250 - this.deviceAttrs.temperature) * 1.12)
         return
-      } else if(this.deviceAttrs.temperature>30) {
+      } else if(this.deviceAttrs.temperature>53) {
         this.rotate = -42
         this.rotate2 = -88
         this.rotate3 = -133
         this.rotate4 = -178
-        this.rotate5 = (-(140 - this.deviceAttrs.temperature) * 2)
+        this.rotate5 = (-(250 - this.deviceAttrs.temperature) * 1.12)
         return
-      } else if(this.deviceAttrs.temperature>25) {
+      } else if(this.deviceAttrs.temperature>42) {
         this.rotate = -42
         this.rotate2 = -88
         this.rotate3 = -133
         this.rotate4 = -178
         this.rotate5 = -220
-        this.rotate6 = (-(140 - this.deviceAttrs.temperature) * 2)
+        this.rotate6 = (-(250 - this.deviceAttrs.temperature) * 1.12)
         return
       } else if(this.deviceAttrs.temperature>=0) {
         this.rotate = -42
@@ -383,8 +398,8 @@ export default {
         this.rotate3 = -133
         this.rotate4 = -178
         this.rotate5 = -220
-        this.rotate6 = -230
-        this.rotate7 = this.deviceAttrs.temperature==0?-286:(-(140 - this.deviceAttrs.temperature) * 2)
+        this.rotate6 = -232
+        this.rotate7 = this.deviceAttrs.temperature==0?-286:(-(250 - this.deviceAttrs.temperature) * 1.12)
         return
       }
     },
@@ -564,7 +579,7 @@ export default {
         background-size: @100;
         border-radius: 50%;
         z-index: 8;
-        top: 1px;
+        top: 2px;
       }
       .circle-arrow-min {
         display: block;
@@ -939,7 +954,8 @@ export default {
     }
     .btn {
       box-sizing: border-box;
-      margin: 0 5px;
+      // margin: 0 5px;
+      margin: 0 auto;
       width: 110px;
       height: 110px;
       border: 1px solid rgba(32,40,43,0.5);
@@ -1068,6 +1084,10 @@ export default {
           background-image: url('~@lib/@{imgPath}/btn_dh_jiedong.png');
         }
       }
+    }
+    .bor {
+      border: none;
+      box-shadow: none;
     }
   }
 }

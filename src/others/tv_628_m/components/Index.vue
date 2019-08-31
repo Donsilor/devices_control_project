@@ -579,24 +579,28 @@ export default {
     //     this.$refs.swiper.swiper.autoplay.start()
     //   }
     // }
-    homePageInfo() {
-      if(this.homePageInfo.length == 0) {
-        this.pageInit()
-      }
-    }
+    // homePageInfo() {
+    //   if(this.homePageInfo.length == 0) {
+    //     this.pageInit()
+    //   }
+    // }
+  },
+  created() {
+    this.pageInit()
   },
   mounted() {
+    this.pageInit()
     document.body.scrollTop = 0
     this.initFixedMenu()
     service.RemoteController({ show: false })
-    this.$nextTick(() => {
-      if (!infoCache.length) {
-        this.pageInit()
-      } else {
-        this.homePageInfo = infoCache
-      }
-    })
-
+    // this.$nextTick(() => {
+    //   this.pageInit()
+    //   if (!infoCache.length) {
+    //     this.pageInit()
+    //   } else {
+    //     this.homePageInfo = infoCache
+    //   }
+    // })
     // 获取推荐电视信息
     this.allList = []
     for (var i in this.channels) {

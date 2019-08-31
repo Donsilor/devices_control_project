@@ -3,7 +3,8 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <topbar
         :title="device.device_name"
-        bak-color="#000" />
+        :bg-color="isClose||isOffline?'rgba(0, 0, 0, 0.1)':'#f4f7fe'" 
+        bak-color="#000"/>
       <!-- <div class="c-status">时段预约：6:00-9:00</div> -->
       <div class="main center">
         <div class="wrap-circle">
@@ -46,12 +47,12 @@
         <div
           v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
           class="reduce"
-          @click="setTemperature(-1)" />
+          @click="setTemperature(-1)" >-</div>
         <div class="main-control"><i class="icon" /> 预设温度 {{ deviceAttrs.set_temperature }}°C</div>
         <div
           v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
           class="add"
-          @click="setTemperature(1)" />
+          @click="setTemperature(1)" >+</div>
       </div>
 
       <!-- 按钮 -->
@@ -390,32 +391,35 @@ export default {
       border: 1px solid #f1f1f1;
       width: 72px;
       height: 72px;
-      line-height: 72px;
-
       border-radius: 50%;
-      text-align: center;
       margin: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 900
     }
-    .reduce {
-      &::before {
-        font-size: 90px;
-        content: "-";
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-    .add {
-      &::before {
-        font-size: 70px;
-        content: "+";
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
+    // .reduce {
+    //   &::before {
+    //     font-size: 90px;
+    //     content: "-";
+    //     position: absolute;
+    //     // top: 45%;
+    //     // left: 50%;
+    //     // transform: translate(-50%, -50%);
+    //   }
+    // }
+    // .add {
+    //   &::before {
+    //     font-size: 70px;
+    //     content: "+";
+    //     position: absolute;
+    //     text-align: center;
+    //     // top: 45%;
+    //     // left: 50%;
+    //     // transform: translate(-50%, -50%);
+    //   }
+    // }
 
     .main-control {
       width: 276px;
@@ -675,7 +679,7 @@ export default {
     &:before {
       content: "";
       position: fixed;
-      top: 64PX;
+      top: 69PX;
       left: 0;
       bottom: 0;
       right: 0;
