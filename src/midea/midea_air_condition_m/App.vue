@@ -11,10 +11,11 @@
               v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switch == 'off'" 
               class="offtime">-- <sup>°C</sup></div> -->
             <div 
-              class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup></div>
-            <i 
-              v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switch == 'on'" 
-              :class="[deviceAttrs.mode, 'c-mode']"/>
+              class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
+              <i 
+                v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switch == 'on'" 
+                :class="[deviceAttrs.mode, 'c-mode']"/>
+            </div>
           </div>
           <circle-progress
             v-if="isShow"
@@ -243,9 +244,9 @@ export default {
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose) return
       // 如果是除湿模式，默认风速是低速
-      if(val == 'dehumidify'){
-         this.controlDevice('speed', 'low')
-      }
+      // if(val == 'dehumidify'){
+      //    this.controlDevice('speed', 'low')
+      // }
       if(this.deviceAttrs.speed == 'auto' && val == 'wind') {
         return HdSmart.UI.toast('自动模式下无法设置送风模式')
       }
@@ -430,7 +431,7 @@ export default {
   min-height: 550px;
   overflow-x: hidden;
   position: relative;
-  background: #f4f7fe;
+  background: #fff;
 
   &.filter {
     filter: blur(12px);
@@ -480,15 +481,18 @@ export default {
       position: relative;
       .bg{
         position: absolute;
-        top: 50%;
-        left: 50%;
+        top: 49%;
+        left: 49.5%;
         transform: translate(-50%, -50%);
 
         background: #FFFFFF;
         box-shadow: inset 0 0 16px 0 rgba(0,0,0,0.10);
         border-radius: 50%;
         width: 84%;
-        height: 84%;
+        height: 81%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         // .offtime {
         //   font-size: 122px;
         //   color: #20282B;
@@ -506,7 +510,7 @@ export default {
         //   }
         // }
         .tm{
-          margin-top: 60PX;
+          // margin-top: 60PX;
           position: relative;
           font-size: 144px;
           color: #20282B;
@@ -514,15 +518,18 @@ export default {
           sup{
             opacity: .5;
             position: absolute;
-            top: 20px;
+            top: 15px;
             font-size: 24px;
             color: #20282B;
           }
         }
         .c-mode{
-          margin: auto;
-          display: block;
-          margin-top: 20PX;
+          // margin: auto;
+          // display: block;
+          position: absolute;
+          top: 170px;
+          left: 70px;
+          // margin-top: 20PX;
           width: 33px;
           height: 33px;
           &.cold{
@@ -712,20 +719,20 @@ export default {
       }
     }
   }
-  &.close {
-    .btn-wrap {
-      &.up-index{
-        opacity: 1;
-      }
-    }
-  }
-  &.offline {
-    .btn-wrap {
-      &.up-index{
-        opacity: .2;
-      }
-    }
-  }
+  // &.close {
+  //   .btn-wrap {
+  //     &.up-index{
+  //       opacity: 1;
+  //     }
+  //   }
+  // }
+  // &.offline {
+  //   .btn-wrap {
+  //     &.up-index{
+  //       opacity: .2;
+  //     }
+  //   }
+  // }
   &.close,
   &.offline {
     &:before {
@@ -737,12 +744,18 @@ export default {
       right: 0;
       z-index: 999;
       width: 100%;
-      background: rgba(0, 0, 0, 0.1);
+      // background: rgba(0, 0, 0, 0.1);
     }
     &.page {
       background: #fff;
+      .panel-btn {
+        background: #fff;
+      }
       .control-tm{
         background: #fff;
+        .reduce,.add {
+          opacity: .4;
+        }
       }
       .cover {
         background: #fff;
@@ -758,6 +771,9 @@ export default {
     }
     .btn-wrap {
       opacity: .2;
+      &.up-index {
+        opacity: 1;
+      }
       .btn {
         &.active {
           background: #fff;

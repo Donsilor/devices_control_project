@@ -92,10 +92,10 @@ export default {
           document.getElementById(this.idStr).remove()
         }
         // 重复定义判断
-        if (document.getElementById('bg')) {
-          console.warn('vue-circle-progress should not have same id style')
-          document.getElementById('bg').remove()
-        }
+        // if (document.getElementById('bg')) {
+        //   console.warn('vue-circle-progress should not have same id style')
+        //   document.getElementById('bg').remove()
+        // }
 
         // 生成动画样式文件
         let style = document.createElement('style')
