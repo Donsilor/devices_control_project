@@ -22,7 +22,7 @@
           <!-- <span> <i class="num">{{ deviceAttrs.temperature | fixVal }}</i> <i class="unit">°C</i> </span>
           <span class="text">温度 {{ deviceAttrs.temperature | temperatureText }}</span> -->
           <span> <i class="num">{{ deviceAttrs.envnoise ||'--' }}</i> <i class="unit">db</i> </span>
-          <span class="text">噪音11</span>
+          <span class="text">噪音</span>
         </p>
         <!-- <p>
           <span> <i class="num">{{ deviceAttrs.humidity | fixVal2 }}</i> <i class="unit">%</i></span>
@@ -47,8 +47,6 @@
           <span><i class="num">{{ deviceAttrs.co2||'--' }}</i> <i class="unit">ppm</i></span>
           <span class="text">CO2a {{ deviceAttrs.co2 | co2Text }}</span>
         </p>
-        <div @click="a">sdsd</div>
-
       </div>
     </div>
   </div>
@@ -118,31 +116,8 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo','doControlDevice']),
     pmsynopsis() {
-      console.log(this.deviceAttrs)
+      // console.log(this.deviceAttrs)
       this.$router.push('/pmsynopsis')
-    },
-        a() {
-      this.controlDevice("pm2.5", 20)
-
-    },
-    // countdown(){
-    //       this.second = Math.floor(this.time  % 60)
-    //       this.minute = Math.floor(this.time /  60 % 60)
-    //       if (this.minute <= 0 && this.second <= 0) {
-    //         clearInterval(this.dateObj)
-    //         this.setSwitch()
-    //       }
-    //       this.time--
-    // },
-    controlDevice(attr, value) {
-      return this.doControlDevice({
-        nodeid: `air_quality_check.main.${attr}`,
-        params: {
-          attribute: {
-            [attr]: value
-          }
-        }
-      })
     },
   }
 }
