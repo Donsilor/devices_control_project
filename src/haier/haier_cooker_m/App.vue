@@ -8,7 +8,7 @@
         <div class="wrap-circle">
           <div class="circle-left">
             <div 
-              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'" 
+              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off' || leftStatus == 'no'" 
               
               class="circle-gray">
               <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
@@ -19,9 +19,9 @@
               :style="borderwidth">
               <canvas-circle :left-status="leftStatus">   
                 <p class="icon">
-                  <img 
+                  <!-- <img 
                     v-show="leftStatus == 'no'" 
-                    src="../../../lib/base/haier_cooker/assets/no_fire.png" >
+                    src="../../../lib/base/haier_cooker/assets/no_fire.png" > -->
                   <img 
                     v-show="leftStatus == 'low' || leftStatus == 'low_60'" 
                     src="../../../lib/base/haier_cooker/assets/small_fire.png" >
@@ -41,7 +41,7 @@
           </div>
           <div class="circle-right">
             <div 
-              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'" 
+              v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off' || rightStatus == 'no'" 
               class="circle-gray">
               <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
             </div>
@@ -51,9 +51,9 @@
               :style="borderwidth">
               <canvas-circle :right-status="rightStatus">   
                 <p class="icon">
-                  <img 
+                  <!-- <img 
                     v-show="rightStatus == 'no'" 
-                    src="../../../lib/base/haier_cooker/assets/no_fire.png" >
+                    src="../../../lib/base/haier_cooker/assets/no_fire.png" > -->
                   <img 
                     v-show="rightStatus == 'low' || rightStatus == 'low_60'" 
                     src="../../../lib/base/haier_cooker/assets/small_fire.png" >
@@ -279,8 +279,8 @@ export default {
         border: 2px solid #BFBFBF;
         border-radius: 50%;
         box-sizing: border-box;
-        // width: 276px;
-        // height: 276px;
+        width: 276px;
+        height: 276px;
         padding: 1px;
         display: flex;
         justify-content: center;
@@ -306,8 +306,8 @@ export default {
       }
       .circle-gray.active {
         border:2px solid #ff6026;
-        // width: auto;
-        // height: auto;
+        width: auto;
+        height: auto;
       }
       .cooker-name {
         font-size: 28px;

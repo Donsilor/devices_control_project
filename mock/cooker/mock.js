@@ -23,7 +23,7 @@ let res = {
       "stove_1": 'no',
     },
     "fire_status": {
-      "stove_0": 'no',
+      "stove_0": 'high',
       "stove_1": 'nomal',
     },
     "stove_status": {
