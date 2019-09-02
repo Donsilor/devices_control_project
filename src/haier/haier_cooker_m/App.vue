@@ -15,7 +15,7 @@
             </div>
             <div 
               v-else 
-              :class="[{'active': leftStatus !== 'no'}, 'circle-gray']" 
+              :class="[{'active': leftStatus !== 'no'}, 'circle-gray1']" 
               :style="borderwidth">
               <canvas-circle :left-status="leftStatus">   
                 <p class="icon">
@@ -47,7 +47,7 @@
             </div>
             <div 
               v-else 
-              :class="[{'active': rightStatus&&rightStatus !== 'no'}, 'circle-gray']" 
+              :class="[{'active': rightStatus&&rightStatus !== 'no'}, 'circle-gray1']" 
               :style="borderwidth">
               <canvas-circle :right-status="rightStatus">   
                 <p class="icon">
@@ -275,12 +275,10 @@ export default {
       width: 100%;
       display:flex;
       justify-content: space-around;
-      .circle-gray {
+      .circle-gray,.circle-gray1 {
         border: 2px solid #BFBFBF;
         border-radius: 50%;
         box-sizing: border-box;
-        width: 276px;
-        height: 276px;
         padding: 1px;
         display: flex;
         justify-content: center;
@@ -304,10 +302,14 @@ export default {
           }
         }
       }
-      .circle-gray.active {
+      .circle-gray{
+        width: 266px;
+        height: 266px;
+      }
+      .circle-gray1.active {
         border:2px solid #ff6026;
-        width: auto;
-        height: auto;
+        // width: auto;
+        // height: auto;
       }
       .cooker-name {
         font-size: 28px;
