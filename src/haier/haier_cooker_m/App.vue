@@ -9,12 +9,14 @@
           <div class="circle-left">
             <div 
               v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'" 
+              
               class="circle-gray">
               <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
             </div>
             <div 
               v-else 
-              :class="[{'active': leftStatus !== 'no'}, 'circle-gray']">
+              :class="[{'active': leftStatus !== 'no'}, 'circle-gray']" 
+              :style="borderwidth">
               <canvas-circle :left-status="leftStatus">   
                 <p class="icon">
                   <img 
@@ -45,7 +47,8 @@
             </div>
             <div 
               v-else 
-              :class="[{'active': rightStatus !== 'no'}, 'circle-gray']">
+              :class="[{'active': rightStatus&&rightStatus !== 'no'}, 'circle-gray']" 
+              :style="borderwidth">
               <canvas-circle :right-status="rightStatus">   
                 <p class="icon">
                   <img 
@@ -100,6 +103,9 @@ export default {
     return {
       stalling:true,
       dryFire:true,
+      borderwidth:{
+        "border-width":0
+      }
     }
   },
 
@@ -195,6 +201,15 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
     })
+  },
+   mounted(){
+    this.$nextTick(()=>{
+        setTimeout(()=>{
+            this.borderwidth = {
+            "border-width":"2px"
+            }
+        },300)   
+    })   
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),

@@ -4,13 +4,15 @@
       <div class="donut-chart">
         <div 
           id="section1"   
+          :style="clipwidth" 
           class="clip">
           <div
             :style="rightPieStyle" 
             class="item"/>
         </div>
         <div 
-          id="section2"      
+          id="section2" 
+          :style="clipwidth"      
           class="clip">
           <div
             :style="leftPieStyle" 
@@ -19,7 +21,7 @@
         <div 
           id="section3"
           ref="section3" 
-          :style="rightPieStyle" 
+          :style="{...rightPieStyle,...clipwidth}" 
           class="clip">
           <div 
             ref="section3Item"
@@ -36,6 +38,13 @@
 <script>
 export default {
   props: ['leftStatus','rightStatus'],
+  data(){
+    return {
+      clipwidth:{
+        "width":0
+      }
+    }
+  },
   computed:{
     parcent(){
       if(this.leftStatus){
@@ -97,7 +106,16 @@ export default {
             }
        }
             
-    },
+    }
+  },
+  mounted(){
+    this.$nextTick(()=>{
+        setTimeout(()=>{
+            this.clipwidth = {
+            "width":"100%"
+            }
+        },300)   
+    })   
   }
 }
 </script>
