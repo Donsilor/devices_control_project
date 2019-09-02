@@ -23,7 +23,7 @@ let res = {
       "stove_1": 'no',
     },
     "fire_status": {
-      "stove_0": 'low',
+      "stove_0": 'no',
       "stove_1": 'nomal',
     },
     "stove_status": {
@@ -33,11 +33,11 @@ let res = {
     "lampblack_status": 'no',
     "combustible_gas":'no',
     "dry_heat": {
-      "stove_0":'on',
+      "stove_0":'off',
       "stove_1":'off',
     },
     "accident_out": {
-      "stove_0": 'on',
+      "stove_0": 'off',
       "stove_1": 'off',
     },
     "connectivity": "online"
