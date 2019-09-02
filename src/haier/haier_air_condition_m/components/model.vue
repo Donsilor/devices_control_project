@@ -25,6 +25,7 @@
   </div>
 </template>
 <style lang="less" scoped>
+@imgPath: 'base/air_condition/assets/new-air';
   .model{
     position: fixed;
     top: 0;
@@ -80,14 +81,14 @@
               display: block;
               width: 44px;
               height: 44px;
-              background-image: url(~/base/air_condition/assets/new-air/swing-white.png);
+              background-image: url('~@lib/@{imgPath}/swing-white.png');
               background-size: 100% 100%;
             }
             &.active{
               background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
               border-color: #ffbf00;
               &::before{
-                background-image: url(~/base/air_condition/assets/new-air/swing-black.png);
+                background-image: url('~@lib/@{imgPath}/swing-black.png');
               }
             }
             &.horizontal{

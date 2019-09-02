@@ -182,7 +182,7 @@ export default {
       // } else {
       //   return true
       // }
-      if(this.deviceAttrs.mode == 'dehumidify'||this.deviceAttrs.mode == 'wind' && this.deviceAttrs.speed == 'auto') {
+      if(this.deviceAttrs.mode == 'dehumidify') {
         return false
       } else {
         return true
@@ -244,13 +244,6 @@ export default {
     },
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose) return
-      // 如果是除湿模式，默认风速是低速
-      // if(val == 'dehumidify'){
-      //    this.controlDevice('speed', 'low')
-      // }
-      if(this.deviceAttrs.speed == 'auto' && val == 'wind') {
-        return HdSmart.UI.toast('自动模式下无法设置送风模式')
-      }
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
@@ -401,7 +394,7 @@ export default {
     },
     getProgress() {
       // 计算温度进度条
-      return 70 /(30 - 18) * (this.deviceAttrs.temperature / 10 - 18)
+      return 70 /(32 - 18) * (this.deviceAttrs.temperature / 10 - 18)
     }
   }
 }
