@@ -20,8 +20,8 @@ export function toThousandFilter(num) {
 // }
 
 export function pm25Text(pm2) {
-  if (pm2 && pm2 > 0) {
-    if (pm2 > 0 && pm2 <= 35) {
+  if (pm2||pm2===0) {
+    if (pm2 >= 0 && pm2 <= 35) {
       return '优'
     } else if (pm2 > 35 && pm2 <= 75) {
       return '良'

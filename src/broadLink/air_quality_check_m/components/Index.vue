@@ -11,7 +11,7 @@
           :class="[ rotateClass, 'bg', 'rotate-low']"/>
         <div :class="['bgc',rotateClass2]" />
         <div class="PM PM-close">
-          <span class="num">{{ deviceAttrs['pm2.5']||'--' }}</span>
+          <span class="num">{{ deviceAttrs['pm2.5']||deviceAttrs['pm2.5']===0?deviceAttrs['pm2.5']:"--" }}</span>
           <span class="unit">ug/m<span class="span3">3</span></span>
         </div>
         <p class="describe">PM2.5 {{ deviceAttrs['pm2.5'] | pm25Text }}</p>
@@ -63,8 +63,8 @@ export default {
     ...mapState(['device', 'deviceAttrs']),
     rotateClass() {
       let pm2 = this.deviceAttrs['pm2.5']
-      if (pm2 && pm2 > 0) {
-        if (pm2 > 0 && pm2 <= 35) {
+      if (pm2||pm2===0) {
+        if (pm2 >= 0 && pm2 <= 35) {
           return 'lvs2'
         } else if (pm2 > 35 && pm2 <= 75) {
           return 'huangs'
@@ -83,8 +83,8 @@ export default {
     },
     rotateClass2() {
       let pm2 = this.deviceAttrs['pm2.5']
-      if (pm2 && pm2 > 0) {
-        if (pm2 > 0 && pm2 <= 35) {
+      if (pm2||pm2===0) {
+        if (pm2 >= 0 && pm2 <= 35) {
           return 'lvs22'
         } else if (pm2 > 35 && pm2 <= 75) {
           return 'huangs2'
