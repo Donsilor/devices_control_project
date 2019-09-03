@@ -151,44 +151,35 @@
         <div
           :style="{'justify-content': 'space-around'}"
           class="btns" >
-          <!-- <div
-            class="btn-wrap"
-            @click="setMode('grains')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'grains'},{'btn-loading-blue': btnLoading.grains }, 'btn btn-mode1 center']" />
-            <div class="btn-name">上内</div>
-          </div> -->
-
-          <!-- <div
-            class="btn-wrap"
-            @click="setMode('broil', 'on')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'broil'&&deviceAttrs.convection == 'on'}, {'btn-loading-blue': btnLoading.broil && btnLoading.loading }, 'btn btn-mode2 center']"/>
-            <div class="btn-name">上内+风</div>
-          </div> -->
 
           <div
             class="btn-wrap"
-            @click="setMode('broil')">
-            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'broil' }, {'btn-loading-blue': btnLoading.broil && !btnLoading.loading }, 'btn btn-mode3 center']"/>
-            <div class="btn-name">上烧烤+蒸汽</div>
+            @click="setMode('tra_barbecue')">
+            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'tra_barbecue' }, {'btn-loading-blue': btnLoading.tra_barbecue }, 'btn btn-mode4 center']"/>
+            <div class="btn-name">上外+下</div>
           </div>
+
           <div
             class="btn-wrap"
-            @click="setMode('roast')">
-            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'roast' }, {'btn-loading-blue': btnLoading.roast && !btnLoading.loading }, 'btn btn-mode4 center']"/>
-            <div class="btn-name">上下烧烤+蒸汽</div>
+            @click="setMode('3D_hotwind', 'on')">
+            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == '3D_hotwind' }, {'btn-loading-blue': btnLoading.D_hotwind }, 'btn btn-mode7 center']"/>
+            <div class="btn-name">后背+风</div>
           </div>
-          <!-- <div
+
+          <div
             class="btn-wrap"
-            @click="setMode('roast', 'on')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'roast'&&deviceAttrs.convection == 'on'},{'btn-loading-blue': btnLoading.roast && btnLoading.loading }, 'btn btn-mode5 center']" />
+            @click="setMode('convection')">
+            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'convection'},{'btn-loading-blue': btnLoading.convection }, 'btn btn-mode5 center']" />
             <div class="btn-name">上下+风</div>
-          </div> -->
+          </div>
+
           <div
             class="btn-wrap"
             @click="setMode('bake')">
             <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'bake' }, {'btn-loading-blue': btnLoading.bake }, 'btn btn-mode6 center']"/>
-            <div class="btn-name">下烧烤</div>
+            <div class="btn-name">下加热</div>
           </div>
+
         </div>
       </div>
       <div class="items">
@@ -196,27 +187,39 @@
           :style="{'justify-content': 'space-around'}"
           class="btns" >
 
+          <div
+            class="btn-wrap"
+            @click="setMode('grill')">
+            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'grill'}, {'btn-loading-blue': btnLoading.grill }, 'btn btn-mode2 center']"/>
+            <div class="btn-name">上+风</div>
+          </div>
 
-
+          <div
+            class="btn-wrap"
+            @click="setMode('barbecues')">
+            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'barbecues'},{'btn-loading-blue': btnLoading.barbecues }, 'btn btn-mode1 center']" />
+            <div class="btn-name">上内</div>
+          </div>
 
           <!-- <div
             class="btn-wrap"
-            @click="setMode('gruel1')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'gruel1' }, {'btn-loading-blue': btnLoading.gruel }, 'btn btn-mode7 center']"/>
-            <div class="btn-name">后背+风</div>
+            @click="setMode('full_barbecue')">
+            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'full_barbecue' }, {'btn-loading-blue': btnLoading.full_barbecue }, 'btn btn-mode3 center']"/>
+            <div class="btn-name">上内+上外</div>
           </div> -->
+
           <!-- <div
             class="btn-wrap"
             @click="setMode('pottage1')">
             <div :class="[{ 'active': deviceAttrs.mode == 'pottage1' }, {'btn-loading-blue': btnLoading.pottage }, 'btn btn-mode8 center']"/>
             <div class="btn-name">后背+下+风</div>
           </div> -->
-          <div
+          <!-- <div
             class="btn-wrap"
             @click="setMode('ferment')">
             <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'ferment' },{'btn-loading-blue': btnLoading.ferment }, 'btn btn-mode9 center']" />
             <div class="btn-name">发酵</div>
-          </div>
+          </div> -->
 
           <div
             class="btn-wrap"
@@ -264,7 +267,7 @@ export default {
       rotate6: -220,
       rotate7: -232,
       btnLoading: {
-        loading: false,
+        // loading: false,
         switch: false,
         status: false,
         defrost: false,
@@ -273,7 +276,13 @@ export default {
         roast: false,
         broil: false,
         time: false,
-        preheat: false
+        preheat: false,
+        tra_barbecue: false,
+        D_hotwind: false,
+        convection: false,
+        grill: false,
+        barbecues: false,
+        full_barbecue: false,
       }
     }
   },
@@ -307,17 +316,26 @@ export default {
     modeName() {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.mode) {
-        case 'broil':
-          return this.deviceAttrs.convection=='on'?'上内+风':'上烧烤+蒸汽'
+        case 'tra_barbecue':
+          return '上外+下'
           break
-        case 'roast':
-          return this.deviceAttrs.convection=='on'?'上下+风':'上下烧烤+蒸汽'
+        case '3D_hotwind':
+          return '后背+风'
+          break
+        case 'convection':
+          return '上下+风'
           break
         case 'bake':
-          return '下烧烤'
+          return '下加热'
           break
-        case 'ferment':
-          return '发酵'
+        case 'grill':
+          return '上+风'
+          break
+        case 'barbecues':
+          return '上内'
+          break
+        case 'full_barbecue':
+          return '上内+上外'
           break
         case 'defrost':
           return '解冻'
@@ -482,21 +500,24 @@ export default {
     },
     setMode(val, param) {
       if (this.isClose) return
-      if(param) {
-        if(this.deviceAttrs.convection == param && this.deviceAttrs.mode == val) return
-        this.btnLoading['loading'] = true
-      } else if(this.deviceAttrs.mode == val && this.deviceAttrs.convection=='off') return
+      if(param) this.btnLoading['D_hotwind'] = true
+      // if(param) {
+      //   if(this.deviceAttrs.convection == param && this.deviceAttrs.mode == val) return
+      //   this.btnLoading['loading'] = true
+      // } else if(this.deviceAttrs.mode == val && this.deviceAttrs.convection=='off') return
       this.btnLoading[val] = true
       // this.controlDevice('mode', val, !param?{convection:'off'}:{convection: 'on'})
       this.controlDevice('mode', val)
       .then(() => {
-        this.btnLoading['loading'] = false
+        // this.btnLoading['loading'] = false
         this.btnLoading[val] = false
+        this.btnLoading['D_hotwind'] = false
         this.seletModal = false
       })
       .catch(() => {
-        this.btnLoading['loading'] = false
+        // this.btnLoading['loading'] = false
         this.btnLoading[val] = false
+        this.btnLoading['D_hotwind'] = false
         this.seletModal = false
       })
     },
