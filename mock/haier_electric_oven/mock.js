@@ -4,13 +4,13 @@
 import Mock from 'mockjs'
 
 let res = {
-    "switch": 'on', //开关机: on--- 开启 off--- 关闭
+    "switch": 'off', //开关机: on--- 开启 off--- 关闭
     "status": 'stop', //运行/停止/完成
     "control": '', //运行/停止/完成
     "reserve_bake": 1, //单位为分钟，表示从当前时间开始需要多长时间结束整个烘烤过程
     "remaining": 88, //预约剩余时间，单位为分钟
     "step": 'bake', //当前工作模式，烘烤/预约
-    "mode": 'broil', //模式
+    "mode": '', //模式
     "temperature": 240, //设置温度
     "bake_duration": 390, //时长 单位是秒
     "convection": 'off', //开启, 关闭热风对流

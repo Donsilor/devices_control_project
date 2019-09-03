@@ -116,7 +116,7 @@
           v-show="isOpen"
           class="btn-wrap"
           @click="setMode('preheat')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'preheat' }, {'btn-loading-blue': btnLoading.preheat }, 'btn btn-preheat center']" />
+          <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'preheat' }, {'btn-loading-blue': btnLoading.preheat }, 'btn btn-preheat center']" />
           <div class="btn-name">快速预热</div>
         </div>
         <div
@@ -168,13 +168,13 @@
           <div
             class="btn-wrap"
             @click="setMode('broil')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'broil'&&deviceAttrs.convection == 'off' }, {'btn-loading-blue': btnLoading.broil && !btnLoading.loading }, 'btn btn-mode3 center']"/>
+            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'broil' }, {'btn-loading-blue': btnLoading.broil && !btnLoading.loading }, 'btn btn-mode3 center']"/>
             <div class="btn-name">上烧烤+蒸汽</div>
           </div>
           <div
             class="btn-wrap"
             @click="setMode('roast')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'roast'&&deviceAttrs.convection == 'off' }, {'btn-loading-blue': btnLoading.roast && !btnLoading.loading }, 'btn btn-mode4 center']"/>
+            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'roast' }, {'btn-loading-blue': btnLoading.roast && !btnLoading.loading }, 'btn btn-mode4 center']"/>
             <div class="btn-name">上下烧烤+蒸汽</div>
           </div>
           <!-- <div
@@ -186,7 +186,7 @@
           <div
             class="btn-wrap"
             @click="setMode('bake')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'bake' }, {'btn-loading-blue': btnLoading.bake }, 'btn btn-mode6 center']"/>
+            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'bake' }, {'btn-loading-blue': btnLoading.bake }, 'btn btn-mode6 center']"/>
             <div class="btn-name">下烧烤</div>
           </div>
         </div>
@@ -214,14 +214,14 @@
           <div
             class="btn-wrap"
             @click="setMode('ferment')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'ferment' },{'btn-loading-blue': btnLoading.ferment }, 'btn btn-mode9 center']" />
+            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'ferment' },{'btn-loading-blue': btnLoading.ferment }, 'btn btn-mode9 center']" />
             <div class="btn-name">发酵</div>
           </div>
 
           <div
             class="btn-wrap"
             @click="setMode('defrost')">
-            <div :class="[{ 'active': deviceAttrs.mode == 'defrost' }, {'btn-loading-blue': btnLoading.defrost }, 'btn btn-mode10 center']"/>
+            <div :class="[{ 'active': deviceAttrs.mode && deviceAttrs.mode == 'defrost' }, {'btn-loading-blue': btnLoading.defrost }, 'btn btn-mode10 center']"/>
             <div class="btn-name">解冻</div>
           </div>
 
@@ -342,40 +342,74 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     reduce() {
       if(this.deviceAttrs.temperature > 0) {
-        this.controlDevice('temperature', this.deviceAttrs.temperature-1)
-        .then(() => {
-          this.tempDeg()
-        })
-        .catch()
+        if(this.deviceAttrs.mode == 'defrost') {
+          this.controlDevice('temperature', this.deviceAttrs.temperature-1)
+          .then(() => {
+            this.tempDeg()
+          })
+          .catch()
+        } else {
+          this.controlDevice('temperature', this.deviceAttrs.temperature-5)
+          .then(() => {
+            this.tempDeg()
+          })
+          .catch()
+        }
       }
     },
     plus() {
       if(this.deviceAttrs.temperature < 250) {
-        this.controlDevice('temperature', this.deviceAttrs.temperature+1)
-        .then(() => {
-          this.tempDeg()
-        })
-        .catch()
+        if(this.deviceAttrs.mode == 'defrost') {
+          this.controlDevice('temperature', this.deviceAttrs.temperature+1)
+          .then(() => {
+            this.tempDeg()
+          })
+          .catch()
+        } else {
+          this.controlDevice('temperature', this.deviceAttrs.temperature+5)
+          .then(() => {
+            this.tempDeg()
+          })
+          .catch()
+        }
       }
     },
     tempDeg() {
       if(this.deviceAttrs.temperature > 212) {
         this.rotate = (-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate2 = -42
+        this.rotate3 = -88
+        this.rotate4 = -133
+        this.rotate5 = -178
+        this.rotate6 = -220
+        this.rotate7 = -232
         return
       } else if(this.deviceAttrs.temperature>171) {
         this.rotate = -42
         this.rotate2 = (-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate3 = -88
+        this.rotate4 = -133
+        this.rotate5 = -178
+        this.rotate6 = -220
+        this.rotate7 = -232
         return
       } else if(this.deviceAttrs.temperature>131) {
         this.rotate = -42
         this.rotate2 = -88
         this.rotate3 = (-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate4 = -133
+        this.rotate5 = -178
+        this.rotate6 = -220
+        this.rotate7 = -232
         return
       } else if(this.deviceAttrs.temperature>91) {
         this.rotate = -42
         this.rotate2 = -88
         this.rotate3 = -133
         this.rotate4 = (-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate5 = -178
+        this.rotate6 = -220
+        this.rotate7 = -232
         return
       } else if(this.deviceAttrs.temperature>53) {
         this.rotate = -42
@@ -383,6 +417,8 @@ export default {
         this.rotate3 = -133
         this.rotate4 = -178
         this.rotate5 = (-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate6 = -220
+        this.rotate7 = -232
         return
       } else if(this.deviceAttrs.temperature>42) {
         this.rotate = -42
@@ -391,6 +427,7 @@ export default {
         this.rotate4 = -178
         this.rotate5 = -220
         this.rotate6 = (-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate7 = -232
         return
       } else if(this.deviceAttrs.temperature>=0) {
         this.rotate = -42
@@ -404,10 +441,10 @@ export default {
       }
     },
     showMode() {
-      this.seletModal = true
+      if(!this.isClose && !this.isOffline) this.seletModal = true
     },
     showTime() {
-      if(!this.isClose) this.$refs.time.show = true
+      if(!this.isClose && !this.isOffline) this.$refs.time.show = true
     },
     setReserve(time) {
       this.btnLoading['time'] = true
@@ -431,13 +468,16 @@ export default {
     },
     setStart() {
       if (this.isClose) return
+      if (this.deviceAttrs.status == 'start') return
       this.btnLoading['status'] = true
-      this.controlDevice('control', this.deviceAttrs.status == 'stop' ? 'start' : 'stop')
+      this.controlDevice('control', 'start')
       .then(() => {
         this.btnLoading['status'] = false
+        if(this.deviceAttrs.switch == 'off') return delete this.deviceAttrs.mode
       })
       .catch(() => {
         this.btnLoading['status'] = false
+        if(this.deviceAttrs.switch == 'off') return delete this.deviceAttrs.mode
       })
     },
     setMode(val, param) {
@@ -461,6 +501,7 @@ export default {
       })
     },
     setSwitch() {
+      if(this.isOffline) return
       this.btnLoading['switch'] = true
       let switchStatus = ''
       if (this.deviceAttrs.switch == 'on') {
@@ -468,12 +509,14 @@ export default {
       } else {
         switchStatus = 'on'
       }
-      this.controlDevice("switch", switchStatus, {control: 'stop'})
+      this.controlDevice("switch", switchStatus, {'control': 'stop', 'mode': ''})
         .then(() => {
           this.btnLoading['switch'] = false
+          delete this.deviceAttrs.mode
         })
         .catch(() => {
           this.btnLoading['switch'] = false
+          delete this.deviceAttrs.mode
         })
     },
     controlDevice(attr, value, param) {
