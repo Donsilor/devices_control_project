@@ -447,7 +447,8 @@ export default {
         this.btnLoading['loading'] = true
       } else if(this.deviceAttrs.mode == val && this.deviceAttrs.convection=='off') return
       this.btnLoading[val] = true
-      this.controlDevice('mode', val, !param?{convection:'off'}:{convection: 'on'})
+      // this.controlDevice('mode', val, !param?{convection:'off'}:{convection: 'on'})
+      this.controlDevice('mode', val)
       .then(() => {
         this.btnLoading['loading'] = false
         this.btnLoading[val] = false
