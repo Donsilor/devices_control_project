@@ -3,21 +3,21 @@ export function toThousandFilter(num) {
   return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
 
-// export function fixVal(val) {
-//   if (val||val===0) {
-//     return val / 10
-//   } else {
-//     return '---'
-//   } 
-// }
+export function fixVal(val) {
+  if (val||val===0) {
+    return val / 10
+  } else {
+    return '---'
+  } 
+}
 
-// export function fixVal2(val) {
-//   if (val||val===0) {
-//     return val / 100
-//   } else {
-//     return '---'
-//   } 
-// }
+export function fixVal2(val) {
+  if (val||val===0) {
+    return val / 100
+  } else {
+    return '---'
+  } 
+}
 
 export function pm25Text(pm2) {
   if (pm2||pm2===0) {

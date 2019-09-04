@@ -19,17 +19,17 @@
 
       <div class="information first">
         <p>
-          <!-- <span> <i class="num">{{ deviceAttrs.temperature | fixVal }}</i> <i class="unit">°C</i> </span>
-          <span class="text">温度 {{ deviceAttrs.temperature | temperatureText }}</span> -->
-          <span> <i class="num">{{ deviceAttrs.envnoise ||'--' }}</i> <i class="unit">db</i> </span>
-          <span class="text">噪音</span>
+          <span> <i class="num">{{ deviceAttrs.temperature | fixVal }}</i> <i class="unit">°C</i> </span>
+          <span class="text">温度 {{ deviceAttrs.temperature | temperatureText }}</span>
+          <!-- <span> <i class="num">{{ deviceAttrs.envnoise ||'--' }}</i> <i class="unit">db</i> </span>
+          <span class="text">噪音</span> -->
         </p>
-        <!-- <p>
+        <p>
           <span> <i class="num">{{ deviceAttrs.humidity | fixVal2 }}</i> <i class="unit">%</i></span>
           <span class="text">湿度 {{ deviceAttrs.humidity | humidityText }}</span>
-          <span> <i class="num">--</i> <i class="unit">%</i></span>
-          <span class="text">湿度 --</span>
-        </p> -->
+          <!-- <span> <i class="num">--</i> <i class="unit">%</i></span>
+          <span class="text">湿度 --</span> -->
+        </p> 
         <p>
           <span> <i class="num">{{ deviceAttrs.envlux||'--' }}</i> <i class="unit">lux</i></span>
           <span class="text">光照度</span>
@@ -248,7 +248,7 @@ i {
     padding-bottom: 60px;
   }
   p {
-    padding-left:80px;
+    padding-left:60px;
     border-left: 1px rgba(0, 0, 0, 0.1) solid;
     text-align: left;
      flex: 1;
