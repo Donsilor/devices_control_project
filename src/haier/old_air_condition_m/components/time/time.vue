@@ -7,14 +7,15 @@
     <div class="main">
       <p class="title">设置关机时间</p>
       <time-pick 
-        class="pickTime"
-        @selectedchange="selectedchange" />
+        :selectedchange="selectedchange" 
+        class="pickTime"/>
 
       <div class="wrap-btns">
-        <button 
+        <input 
           class="submit" 
           type="button"
-          @click="submit" >{{ orderTime > 0 ? '取消定时':'开启定时' }}</button>
+          value="开启定时"
+          @click=" show = false" >
         <div 
           class="cancel" 
           @click=" show = false">取消</div>
@@ -94,7 +95,6 @@ export default {
     'time-pick': timePick
   },
   props: {
-    orderTime:{type: Number}
   },
   
   data() {
@@ -108,13 +108,7 @@ export default {
   methods: {
     selectedchange(val) {
       this.time = val
-    },
-    submit() { 
-      let val = [this.time || '0:0', 'time']
-      this.$emit('selectedTime', val) //自定义事件，暴露值
-      this.time = '0:0'
-      this.show = false
-    },
+    }
   }
 }
 </script>

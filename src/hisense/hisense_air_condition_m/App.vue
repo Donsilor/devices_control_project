@@ -8,10 +8,10 @@
         <div class="wrap-circle">
           <div class="bg">
             <div 
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switch == 'off'" 
-              class="offtime">-- <sup>°C</sup></div>
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus == 'off'" 
+              class="tm">-- <sup>°C</sup></div>
             <div 
-              v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switch == 'on'"
+              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'"
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
               <i 
                 :class="[deviceAttrs.mode, 'c-mode']"/>
@@ -27,7 +27,7 @@
             :width="width"
             :radius="radius"
             :progress="progress"
-            :bar-color="barColor"
+            :bar-color="getBarColor"
             :duration="duration"
             :delay="delay"
             :background-color="backgroundColor"
@@ -45,7 +45,7 @@
       </div>
       <!-- 当前状态 -->
       <div 
-        v-show="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
+        v-show="deviceAttrs.switchStatus == 'on'&& deviceAttrs.connectivity == 'online'"
         class="status">
         <i class="icon-status" />
         {{ deviceAttrs.mode | modeType }}模式
@@ -165,7 +165,7 @@ export default {
       progress: 30, // 0~70
       duration: 0,
       delay: 0,
-      barColor: '#D8D8D8',
+      // barColor: '#D8D8D8',
       backgroundColor: '#ececec',
       timeShow: false,
     }
@@ -226,6 +226,20 @@ export default {
           return 'btn-low'
       }
     },
+    getBarColor() {
+      if(this.isClose || this.isOffline) return '#D8D8D8'
+      /* eslint-disable no-unreachable */
+      switch (this.deviceAttrs.mode) {
+        case 'cold':
+          return '#00D5FF'
+          break
+        case 'heat':
+          return '#FF5F00'
+          break
+        default:
+          return '#0FDC66'
+      }
+    },
   },
   created() {
     HdSmart.ready(() => {
@@ -253,7 +267,7 @@ export default {
     },
     setSwitch() {
       let switchStatus = ''
-      if (this.deviceAttrs.switch == 'on') {
+      if (this.deviceAttrs.switchStatus == 'on') {
         switchStatus = 'off'
       } else {
         switchStatus = 'on'
@@ -295,20 +309,6 @@ export default {
         .then(() =>{
           this.hide()
         })
-      // if(attr == 'wind_up_down'){
-      //   this.controlDevice('wind_up_down', 'on')
-      //   .then(() =>{
-      //     this.controlDevice('wind_left_right','off')
-      //     this.hide()
-      //   })
-      // }else{
-      //   this.controlDevice('wind_left_right', 'on')
-      //   .then(() =>{
-      //     this.controlDevice('wind_up_down','off')
-      //     this.hide()
-      //   })
-      // }
-      
     },
     setSpeed(speed) {
       if (this.deviceAttrs.temperature == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
@@ -316,6 +316,9 @@ export default {
       }
       if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
         return HdSmart.UI.toast('送风模式不能设置自动风速')
+      }
+      if(this.deviceAttrs.mode == 'auto' && speed == 'auto') {
+        return HdSmart.UI.toast('智能模式不能设置自动风速')
       }
       this.controlDevice('speed', speed)
         .then(() =>{
@@ -348,7 +351,7 @@ export default {
     },
     // 重置动画
     reset() {
-      this.barColor = this.getBarColor()
+      // this.barColor = this.getBarColor()
       this.progress = this.getProgress()
       this.$nextTick(() => {
         this.$refs.$circle.init()
@@ -377,20 +380,6 @@ export default {
       if(this.$refs.swing.show) this.$refs.swing.show = false
       if(this.$refs.mode.show) this.$refs.mode.show = false
       if(this.$refs.speed.show) this.$refs.speed.show = false
-    },
-    getBarColor() {
-      if(this.isClose || this.isOffline) return '#D8D8D8'
-      /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
-        case 'cold':
-          return '#00D5FF'
-          break
-        case 'heat':
-          return '#FF5F00'
-          break
-        default:
-          return '#0FDC66'
-      }
     },
     getProgress() {
       // 计算温度进度条
@@ -513,6 +502,7 @@ export default {
             opacity: .5;
             position: absolute;
             top: 15px;
+            right: -20px;
             font-size: 24px;
             color: #20282B;
           }

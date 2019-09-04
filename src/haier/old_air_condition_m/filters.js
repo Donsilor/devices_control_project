@@ -2,13 +2,13 @@
 export function toThousandFilter(num) {
   return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
-export function filterTm(tm) {
-  let tmp = '--'
-  if(tm || tm == 0){
-    tmp = (+tm)/10
-  }
-  return tmp
+
+export function fixTemperature(val) {
+  let tmp = val / 10
+  tmp = tmp.toFixed(0)
+  return tmp 
 }
+
 export function modeType(type) {
   switch(type) {
     case 'auto':
@@ -27,9 +27,4 @@ export function modeType(type) {
       return '送风'
       break; 
   } 
-}
-export function time_H(val) {
-  let h = Math.floor(val/3600)
-  let m = (val%3600)/60
-  return h+'小时'+m+'分后关机'
 }
