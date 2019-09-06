@@ -47,12 +47,16 @@
         <div
           v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
           class="reduce"
-          @click="setTemperature(-1)" >-</div>
+          @click="setTemperature(-1)" ><img 
+            src="~@lib/base/fridge/assets/reduce.png" 
+            alt=""></div>
         <div class="main-control"><i class="icon" /> 预设温度 {{ deviceAttrs.set_temperature }}°C</div>
         <div
           v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
           class="add"
-          @click="setTemperature(1)" >+</div>
+          @click="setTemperature(1)" ><img 
+            src="~@lib/base/fridge/assets/add.png" 
+            alt=""></div>
       </div>
 
       <!-- 按钮 -->
@@ -397,7 +401,10 @@ export default {
       align-items: center;
       justify-content: center;
       font-size: 36px;
-      font-weight: 900
+      font-weight: 900;
+      img{
+        width: 72px;
+      }
     }
     // .reduce {
     //   &::before {
