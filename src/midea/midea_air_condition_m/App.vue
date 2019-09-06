@@ -8,11 +8,18 @@
         <div class="wrap-circle">
           <div class="bg">
             <div 
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus == 'off'" 
+              v-show="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus == 'off'" 
               class="tm">-- <sup>°C</sup></div>
             <div 
-              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'"
+              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
+              <i 
+                v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'" 
+                :class="[deviceAttrs.mode, 'c-mode']"/>
+            </div>
+            <div 
+              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
+              class="tm">{{ deviceAttrs.env_temperature | filterTime }}<sup>°C</sup>
               <i 
                 v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'" 
                 :class="[deviceAttrs.mode, 'c-mode']"/>

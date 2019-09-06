@@ -3,7 +3,7 @@
  */
 import Mock from 'mockjs'
 
-window.device_name = '柜式空调'
+window.device_name = '厨房的插座'
 window.device_category_id = 1
 var res = {
     device_uuid: '0000d01ea101000000003876ca400578',
@@ -14,14 +14,13 @@ var res = {
     device_category_id: 1,
     created_at: 1516349498,
     updated_at: 1516349498,
-    device_name: '挂式空调',
-    default_device_name: '挂式空调',
+    device_name: '厨房的插座',
+    default_device_name: '厨房的插座',
     attribute: {
-        switchStatus: "on",
-        temperature: 170,
-        env_temperature: 2400,
-        mode: 'cold',
-        order_time:0,
+        switch: 'on',
+        temperature: 180,
+        env_temperature: 240,
+        mode: 'child',
         speed: 'low',
         wind_up_down: 'off',
         wind_left_right: 'off',
@@ -51,9 +50,7 @@ export function set(data) {
     } catch (error) {
       attr = data.content.params.attribute
     }
-    if (attr.switch) {
-      res.attribute.switchStatus = attr.switch
-    } else if (attr.temperature) {
+   if (attr.temperature) {
       res.attribute.temperature = attr.temperature
     } else {
       res.attribute = Object.assign({}, res.attribute, attr)
