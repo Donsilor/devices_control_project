@@ -2,23 +2,29 @@
   <div class="body">
     <div :class="[{ 'offline': isOffline }, {'close': isClose},'page']">
       <topbar 
+         v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
+         white
         :title="device.device_name"
-        bak-color= "#000" />
+        :bak-color="bakColor" />
+      <topbar 
+         v-else
+        :title="device.device_name"
+        :bak-color="bakColor" />
       <div class="main center">
-        <div class="wrap-circle">
-          <div class="bg isgray">
-            <div class="plug">
-              <img 
-                src="../../../../lib/base/blend/assets/btn-mode8.png">
-            </div>
-          </div>
-        </div>
+        <img 
+          v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
+          class="bg"
+          src="../../../../lib/base/hongyan_plug/assets/plug_on.png">
+        <img 
+          v-else
+          class="isgray"
+          src="../../../../lib/base/hongyan_plug/assets/plug_off.png">
       </div>
       <!-- 当前状态 -->
       <div 
-        v-show="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
+        v-show="!isClose&&!isOffline&&deviceAttrs.child_lock_switch == 'on'"
         class="status">
-        {{ deviceAttrs.mode | modeType }}开启中...
+        童锁开启中...
       </div>
       <div 
         class="electricity">
@@ -57,8 +63,8 @@
         </div>
         <div 
           class="btn-wrap"
-          @click="setMode('child')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'child' }, 'btn btn-cold center']" />
+          @click="childLockSwitch">
+          <div :class="[{ 'active': deviceAttrs.child_lock_switch == 'on' }, 'btn btn-lock center']" />
           <div class="btn-name">童锁</div>
         </div>
       </div>
@@ -90,20 +96,15 @@ export default {
   },
   data() {
     return {
-      isOpen: false,
-      isShow: true,
-      width: 220,
-      radius: 8,
-      progress: 30, // 0~70
-      duration: 0,
-      delay: 0,
-      backgroundColor: '#ececec',
       timeShow: false,
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    bakColor(){
+      return this.isClose ? '#000' : '#fff'
+    }
   },
   created() {
     HdSmart.ready(() => {
@@ -122,15 +123,25 @@ export default {
       }
       this.controlDevice("switch", switchStatus)
     },
-    setMode(val) {
-      if (val == this.deviceAttrs.mode || this.isClose) return
-      this.controlDevice('mode', val)
-        .then(() => {
-          this.deviceAttrs.mode = val
-          this.reset()
-          this.hide()
-        })
+    // 童锁
+    childLockSwitch() {
+      let childLockStatus = ''
+      if (this.deviceAttrs.child_lock_switch == 'on') {
+        childLockStatus = 'off'
+      } else {
+        childLockStatus = 'on'
+      }
+      this.controlDevice("child_lock_switch", childLockStatus)
     },
+    // setMode(val) {
+    //   if (val == this.deviceAttrs.mode || this.isClose) return
+    //   this.controlDevice('mode', val)
+    //     .then(() => {
+    //       this.deviceAttrs.mode = val
+    //       this.reset()
+    //       this.hide()
+    //     })
+    // },
     setTime(){
       this.$router.push({ path: '/log' })
     },
@@ -158,13 +169,6 @@ export default {
         }
       })
     },
-    // showTime() {
-    //   if (this.isClose) return
-    //   this.$refs.time.show = true
-    // },
-    // hide(){
-    //   if(this.$refs.mode.show) this.$refs.mode.show = false
-    // },
   }
 }
 </script>
@@ -173,6 +177,10 @@ export default {
 
 .body {
   min-height: 100%;
+}
+.icon-more::before{
+  // background-image: url(~@lib/base/fridge/assets/add.png);
+  background-image: url(~@lib/base/img/detail1.png)!important
 }
   // 定时展示
   .timeShow {
@@ -197,9 +205,6 @@ export default {
   background: #006cff;
   &.filter {
     filter: blur(12px);
-  }
-  .progress{
-    transform: rotate(-126deg);
   }
   .c-status {
     margin-top: 30px;
@@ -234,36 +239,26 @@ export default {
     }
   }
   .main {
-    margin-top: 5vh;
     position: relative;
     &.center {
       flex-direction: column;
     }
-      .bg{
-        width: 460px;
-        height: 460px;
-        background: transparent;
-        border: 4px solid rgba(255,255,255,0.60); 
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .plug {
-          width: 424px;
-          height: 424px;
-          background: #fff;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-      }
+    .bg{
+      width: 110%;
+      height: 110%;
+      margin-top: -100px;
+    }
+    .isgray {
+      width: 452px;
+      margin-top: 8vh;
+    }
   }
   .status{
     text-align: center;
     font-size: 24px;
     color: #fff;
     margin: 80px auto;
+    margin-top: -100px;
   }
   .panel-btn {
     height: 306px;
@@ -324,9 +319,9 @@ export default {
         background-size: 100% 100%;
       }
     }
-    .btn-cold {
+    .btn-lock {
       &::before {
-        background-image: url('~@lib/@{imgPath}/cold.png');
+        background-image: url(~@lib/base/hongyan_plug/assets/lock.png);
         background-size: 100% 100%;
       }
     }
@@ -338,20 +333,6 @@ export default {
       }
     }
   }
-  // &.close {
-  //   .btn-wrap {
-  //     &.up-index{
-  //       opacity: 1;
-  //     }
-  //   }
-  // }
-  // &.offline {
-  //   .btn-wrap {
-  //     &.up-index{
-  //       opacity: .2;
-  //     }
-  //   }
-  // }
   &.close,
   &.offline {
     &:before {
@@ -367,25 +348,6 @@ export default {
     }
     &.page {
       background: #fff;
-      .isgray {
-        width: 460px;
-        height: 460px;
-        background: transparent;
-        border: 4px solid #D8D8D8; 
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .plug {
-          width: 424px;
-          height: 424px;
-          background: #D8D8D8;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-      }
       .electricity {
         margin-top: 160px;
         .electric {

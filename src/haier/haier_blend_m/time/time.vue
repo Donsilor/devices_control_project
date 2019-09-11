@@ -114,6 +114,8 @@ export default {
   methods: {
     selectedchange(val) {
       this.time = val
+      console.log(this.time);
+      
     },
     submit() {
       this.$emit('selectedTime', this.time || '0:0') //自定义事件，暴露值

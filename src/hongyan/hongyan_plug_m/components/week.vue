@@ -1,19 +1,35 @@
 <template>
   <div
-    v-show="show" 
-    class="cover">
+    class="cover"
+    @click.self="$emit('flagClose', false)">
     <div 
       class="weekbox">
       <h3>重复</h3>
       <ul>
-        <li>周日</li>
-        <li>周一</li>
-        <li>周二</li>
-        <li>周三</li>
-        <li>周四</li>
-        <li>周五</li>
-        <li>周六</li>
+        <li 
+          v-for="(item) in liList">
+          <span>{{ item.week }}</span>
+          <div 
+            v-show="item.show"
+            class="box" 
+            @click="selectDay(item)"/>
+          <img 
+            v-show="!item.show"
+            src="../../../../lib/base/hongyan_plug/assets/选中.jpg"
+            alt="" 
+            @click="selectDay(item)">
+        </li>
       </ul>
+      <div class="wrap-btns">
+        <input 
+          class="submit" 
+          type="button"
+          value="确定"
+          @click="submit" >
+        <div 
+          class="cancel" 
+          @click="cancel">取消</div>
+      </div>
     </div>
   </div>
 </template>
@@ -22,9 +38,58 @@
 export default {
   data(){
     return{
-      show:false
+      weekItem:{},
+      weekArr:[],
+      weekArr2: [],
+      liList2: [],
+     liList: [
+        {week: '周日', show: true, order: 1},
+        {week: '周一', show: true, order: 2},
+        {week: '周二', show: true, order: 3},
+        {week: '周三', show: true, order: 4},
+        {week: '周四', show: true, order: 5},
+        {week: '周五', show: true, order: 6},
+        {week: '周六', show: true, order: 7}
+      ]
     }
-  }
+  },
+  created() {
+    this.weekArr2 = JSON.parse(JSON.stringify(this.weekArr))
+    this.liList2 = JSON.parse(JSON.stringify(this.liList))
+  },
+  methods: {
+    selectDay(item) {
+      item.show = !item.show
+      this.weekItem = item
+      this.weekArr.forEach((element, index) => {
+        if (element.week == item.week) {
+          this.weekArr.splice(index, 1)
+        }
+      })
+      this.weekArr.push(this.weekItem)
+      // this.$emit('selectDay', this.weekArr)
+    },
+    cancelDay(item) {
+      item.show = true
+      var newArr = this.weekArr.filter(item => {
+        if (String(item.show) == 'true') {
+          return true
+        }
+      })
+    },
+    submit(){
+       this.weekArr2 = JSON.parse(JSON.stringify(this.weekArr))
+      this.liList2 = JSON.parse(JSON.stringify(this.liList))
+      this.$emit('selectDay', this.weekArr2)
+      this.$emit('flagClose', false)
+    },
+    cancel(){
+      this.weekArr = JSON.parse(JSON.stringify(this.weekArr2))
+      this.liList = JSON.parse(JSON.stringify(this.liList2))
+      this.$emit('selectDay', this.weekArr2)
+      this.$emit('flagClose', false)
+    }
+  },
 }
 </script>
 
@@ -53,12 +118,57 @@ export default {
     }
 }
   .weekbox {
-    width: 100%;
+    width: 726px;
     height: 1168px;
     background-color: #fff;
-    border-radius: 24px 24px 0 0;
+    border-radius: 24px;
     z-index: 9999999;
     position: absolute;
-    bottom: 0;
+    bottom: 12px;
+    h3 {
+      text-align: center;
+      line-height: 116px;
+      font-size: 40px;
+      color: #20282B;
+    }
+    li{
+      height: 102px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 32px;
+      color: #20282B;
+      border-bottom: 1px solid #F3F3F3;
+      margin: 0 68px;
+      .box {
+        border: 1px solid #D8D8D8;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+      }
+    }
+    .wrap-btns{
+        text-align: center;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+      .submit{
+        width: 646px;
+        height: 100px;
+        margin: 40px auto 32px auto;
+        outline: none;
+        background-image: linear-gradient(90deg, #FFD500 2%, #FFBE00 100%);
+        border-radius: 71px;
+        font-size: 32px;
+        color: #000000;
+        text-align: center;
+        border: none;
+      }
+      .cancel{
+        color: #FFC700;
+        font-size: 32px;
+        line-height: 44px;
+      }
   }
 </style>

@@ -13,7 +13,7 @@ import FastClick from 'fastclick'
 import Topbar from '@lib/components/Topbar.vue'
 import Index from './components/Index.vue'
 import Log from './components/Log.vue'
-import Time from './components/Time.vue'
+// import Time from './components/Time.vue'
 Vue.use(Router)
 // Vue.use(Vuex)
 Vue.component('topbar', Topbar)
@@ -32,11 +32,11 @@ const router = new Router({
       name: 'log',
       component: Log
     },
-    {
-      path: '/time',
-      name: 'time',
-      component: Time
-    }
+    // {
+    //   path: '/time',
+    //   name: 'time',
+    //   component: Time
+    // }
   ]
 })
 // register global utility filters.

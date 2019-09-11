@@ -1,82 +1,148 @@
 <template>
-  <div class="page-log">
-    <div class="topbar topbar-fixed">
-      <div 
-        class="statusbar" 
-        style="25px"/>
-      <div 
-        class="navbar" 
-        style="height:44px; line-height: 44px">
-        <div class="left">
-          <router-link
-            to="/"
-            class="icon-return"
+  <div>
+    <div class="page-log" v-show="show">
+      <div class="topbar topbar-fixed">
+        <div 
+          class="statusbar" 
+          style="25px"/>
+        <div 
+          class="navbar" 
+          style="height:44px; line-height: 44px">
+          <div class="left">
+            <router-link
+              to="/"
+              class="icon-return"
+            />
+          </div>
+          <div class="title">
+            定时
+          </div>
+          <div class="right">
+            <img 
+              src="../../../../lib/base/hongyan_plug/assets/add.png" 
+              @click.prevent="setNewTime">
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        
+        <!-- <div class="clock" >
+          <div class="time" @click="toEditClock">
+            <div class="order">09:00</div>
+            <div class="plan">通电定时，每天</div>
+          </div>
+          <switch-button 
+            :value="clockSwitch"
+            :sync="true" 
+            :width="90"
+            :height="55"
+            :color="'#FFC700'"
+          />
+        </div> -->
+        <div class="clock" v-for="(item, index) in clockList" :key="index">
+          <div class="time" @click="toEditClock">
+            <div class="order">{{item.time | tiemFiter}}</div>
+            <div class="plan">{{item.type | typeFiter}}，{{item.week}}</div>
+          </div>
+          <switch-button 
+            :value="item.clockSwitch"
+            :sync="true" 
+            :width="90"
+            :height="55"
+            :color="'#FFC700'"
+            @change="changeClock"
           />
         </div>
-        <div class="title">
-          定时
-        </div>
-        <div class="right">
-          <a
-            href=""
-            class="icon-more"
-            @click.prevent="setNewTime"
-          />
-        </div>
       </div>
-    </div>
-    <div class="main">
-      <div class="clock">
-        <div class="time">
-          <div class="order">09:00</div>
-          <div class="plan">通电定时，每天</div>
-        </div>
-        <div class="switch-wrap">
-          <input 
-            id= "switch" 
-            type="checkbox">
-          <label 
-            for="switch"/>
-        </div>
-      </div>
-      <div class="clock">
-        <div class="time">
-          <div class="order">09:00</div>
-          <div class="plan">断电定时，周一 周二 周三</div>
-        </div>
-        <div class="switch-wrap">
-          <input 
-            id= "switch1"
-            type="checkbox">
-          <label 
-            for="switch1"/>
-        </div>
-      </div>
-    </div>
+  </div>
+  <!-- 新建定时/编辑定时 -->
+  <Time v-show="!show" @weekFlag="weekFlag" @saveClock="saveClock"></Time>
   </div>
 </template>
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
+import SwitchButton from '@lib/components/SwitchButton.vue'
+import Time from './Time.vue'
 export default {
+  components: {
+    SwitchButton,
+    Time
+  },
   data(){
     return{
+      show:true,
+      clockList:[
+        // {time:"",type:"",week:""}
+      ]
+    }
+  },
+  filters: {
+    tiemFiter (data) {
+      let h = data.split(':')[0]
+      h = h < 10 ? ("0" + h) : h
+      let m = data.split(':')[1]
+      m = m < 10 ? ("0" + m) : m
+      return h + ":" + m
+    },
+    typeFiter (data) {
+      if (data ==1 ) {
+        return '通电定时'
+      } else {
+        return '断电定时'
+      }
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    // 定时是否开启
+    // clockSwitch(){
+    //   return this.deviceAttrs.order_mode == 'on' ? true : false
+    // }
   },
-  created() {
-    HdSmart.ready(() => {
-      this.getDeviceInfo()
-      // HdSmart.UI.setStatusBarColor(2)
-    })
-  },
+  // created() {
+  //   HdSmart.ready(() => {
+  //     this.getDeviceInfo()
+  //     // HdSmart.UI.setStatusBarColor(2)
+  //   })
+  // },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setNewTime(){
-      this.$router.push({path:'/time'})
-    }
+      // this.$router.push({path:'/time'})
+      this.show = false
+    },
+    // 设置定时开启和关闭
+    changeClock(){
+      let clockStatus
+      if (this.deviceAttrs.order_mode == 'on') {
+        clockStatus = 'off'
+      }else{
+        clockStatus = 'on'
+      }
+      this.controlDevice("order_mode", clockStatus)
+    },
+    toEditClock(){
+      let oldTime = this.deviceAttrs.order_time
+      // this.$router.push({path:'/time',query:{oldTime}})
+    },
+    weekFlag(){
+      this.show = true
+    },
+    saveClock(val){
+      console.log(val);
+      this.clockList.push(val)
+    },
+    controlDevice(attr, value) {
+      return this.doControlDevice({
+        nodeid: `hongyan_plug.main.${attr}`,
+        params: {
+          attribute: {
+            [attr]: value
+          }
+        }
+      })
+    },
   }
 }
 </script>
@@ -88,6 +154,12 @@ export default {
     overflow-x: hidden;
     position: relative;
     background: #f7f8fa;
+    .right {
+      >img{
+        width: 40px;
+        height: 40px;
+      }
+    }
     .main {
       margin-top: 178px;
     }
@@ -120,50 +192,8 @@ export default {
           color: #20282B;
         }
       }
-      .switch-wrap{
-        height: 124px;
-        line-height: 0;
-        input[type=checkbox]{
-          height: 0px;
-          width: 0px;
-          visibility: hidden;
-          margin:0;
-          padding:0;
-        }
-        label{
-          display: inline-block;
-          width: 100px;
-          height: 60px;
-          border: 2px solid #F0F2F4;
-          outline: none;
-          border-radius: 16px;
-          box-sizing: border-box;
-          background: #FFFFFF;
-          cursor: pointer;
-          transition: border-color .3s,background-color .3s;
-          vertical-align: middle;
-          position: relative;
-          &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            transition: transform 0.3s;
-            width: 50px;
-            height: 49.5px;
-            border-radius: 50%;
-            background-color: #fff;
-            border: 1px solid #D4D8DE;
-            box-shadow: 0 4px 8px 0 rgba(145,145,145,0.39);
-          }
-        }
-      }
-      .switch-wrap input:checked + label {
-        background-image: linear-gradient(90deg, #FFDA00 0%, #FFC700 100%);
-      }
-      .switch-wrap input:checked + label:before {
-        transform: translateX(40px);
-        border: none;
+      .vue-js-switch{
+        overflow:initial;
       }
     }
   }

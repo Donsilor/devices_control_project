@@ -18,13 +18,10 @@ var res = {
     default_device_name: '厨房的插座',
     attribute: {
         switch: 'on',
-        temperature: 180,
-        env_temperature: 240,
-        mode: 'child',
-        speed: 'low',
-        wind_up_down: 'off',
-        wind_left_right: 'off',
-        sleep_mode: 'on',
+        order_mode:'on',//定时
+        type:2, //通电
+        order_time: 3600,
+        child_lock_switch: 'on',
         deviceModel: 'KFRd-26GW/FE22BpA',
         manufactureId: 'tcl',
         deviceCategory: 'airconditioner.new',
@@ -44,12 +41,13 @@ export function generateSnapShot() {
 
 export function set(data) {
     console.log('---------set-------')
-    console.log(data)
     try {
       var attr = data.params.attribute
     } catch (error) {
       attr = data.content.params.attribute
     }
+     if(attr.switch){
+      attr.switch = attr.switch}
    if (attr.temperature) {
       res.attribute.temperature = attr.temperature
     } else {

@@ -8,18 +8,20 @@
         class="navbar" 
         style="height:44px; line-height: 44px">
         <div class="left">
-          <router-link
-            to="/"
+          <a class="icon-return" @click.prevent="$emit('weekFlag', true)"></a>
+          <!-- <router-link
+            to="/log"
             class="icon-return"
-          />
+          /> -->
         </div>
         <div class="title">
-          新建定时
+          {{titleType}}
         </div>
         <div class="right">
-          <router-link 
+          <div class="storage" @click="saveTime">存储</div>
+          <!-- <router-link 
             to="/log" 
-            class="storage">存储</router-link>
+            class="storage">存储</router-link> -->
         </div>
       </div>
     </div>
@@ -31,22 +33,33 @@
         <div class="main">
           <div class="type">
             <span class="title">定时类型</span>
-            <span class="electrify active">通电</span>
-            <span class="electrify">断电</span>
+            <span :class="[{'active': this.deviceAttrs.type == 1 },'electrify' ]">通电</span>
+            <span :class="[{'active': this.deviceAttrs.type == 2 },'electrify' ]">断电</span>
           </div>
           <time-pick 
-            :selectedchange="selectedchange" 
+            @selectedchange="selectedchange" 
             class="pickTime"/>
           <div class="repeat">
             <span class="title">重复</span>
             <span 
               class="order" 
-              @click="showWeek">永不 ></span>
+              @click="showWeek">{{ dayClone }} ></span>
           </div>
         </div>
       </div>
+      <div class="delbtn" v-show="$route.query.oldTime">
+        <input 
+          @click="delclock"
+          class="delclock"
+          type="button" 
+          value="删除定时">
+      </div>
     </div>
-    <week ref="week"/>
+    <week 
+      v-show="weekFlag"
+      ref="week"
+      @flagClose="flagClose"
+      @selectDay="selectDay"/>
   </div>
 </template>
 <script>
@@ -59,25 +72,111 @@ export default {
   },
   data(){
     return{
+      weekFlag: false,
+      day:'永不',
+      time: "0:0",
+      clockObj:{
+        time:"",
+        type:"",
+        week:""
+      }
     }
   },
   computed: {
+    dayClone() {
+      if (Object.prototype.toString.call(this.day) !== '[object Array]') {
+        return this.day
+      }
+      function compare(property, desc) {
+        return function(a, b) {
+          var value1 = a[property]
+          var value2 = b[property]
+          if (desc === true) {
+            return value1 - value2
+          } else {
+            return value2 - value1
+          }
+        }
+      }
+      let day = this.day
+      day = day.sort(compare('order', true))
+      let show = ''
+      day.forEach((ele) => {
+        if (!ele.show) {
+          show += ele.week 
+        }
+      })
+      console.log(show)
+      if (show == '') {
+        return '永不'
+      }
+      if (show.length == 14) {
+        return '每天'
+      }
+      
+      return show
+    },
+    titleType(){
+      return this.$route.query.oldTime ? '编辑定时' : '新建定时'
+    },
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
   },
-  created() {
-    HdSmart.ready(() => {
-      this.getDeviceInfo()
-      // HdSmart.UI.setStatusBarColor(2)
-    })
-  },
+  // created() {
+  //   HdSmart.ready(() => {
+  //     this.getDeviceInfo()
+  //     // HdSmart.UI.setStatusBarColor(2)
+  //   })
+  // },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     selectedchange(val) {
       this.time = val
+      console.log(val);
+    },
+    flagClose() {
+      this.weekFlag = false
     },
     showWeek(){
-      if(!this.isClose) this.$refs.week.show = true
+      // if(!this.isClose) this.$refs.week.show = true
+      this.weekFlag = true
+    },
+    selectDay(data){
+      this.day = data
+    },
+    // 删除定时
+    delclock(){
+       HdSmart.UI.alert(
+        {
+          title: '删除定时',
+          message: '确认要删除定时？',
+          okText: '删除',
+          cancelText: '取消',
+          dialogStyle: 2
+        },
+        val => {
+          if (val != undefined && val != false) {
+            service.onClickEvent('clearSearchHistory')
+            this.historyData = []
+          }
+        }
+      )
+    },
+    // 存储
+    saveTime(){
+      this.clockObj.week = this.dayClone
+      this.clockObj.time = this.time
+      this.clockObj.type = this.deviceAttrs.type
+      this.clockObj.clockSwitch = true
+      // if (this.clockObj.type == 1) {
+      //   return "通电定时"
+      // }else{
+      //   "断电定时"
+      // }
+      console.log(this.clockObj);
+      
+      this.$emit('weekFlag', true)
+      this.$emit('saveClock', JSON.parse(JSON.stringify(this.clockObj)))
     }
   }
 }
@@ -94,6 +193,7 @@ export default {
       margin-right: 20px;
       .storage {
         color: #FFC800;
+        font-size:32px;
       }
     }
     .timebox {
@@ -137,10 +237,13 @@ export default {
             .repeat{
               border-top: 1px solid #F3F3F3;
               height: 126px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
               .order{
-              font-size: 24px;
-              color: #C4C4C4;
-              margin-left: 220px;
+                font-size: 24px;
+                color: #C4C4C4;
+                margin-right: 40px;
               }
             }
             
@@ -175,6 +278,28 @@ export default {
             }
           }
       }
+      .delbtn{
+        width: 100%;
+        height: 204px;
+        background-color: #fff;
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .delclock {
+          width: 654px;
+          height: 100px;
+          border: 1px solid rgba(241, 48, 27, .5);
+          border-radius: 71.36px;
+          background-color: #fff;
+          font-size: 32px;
+          color: #F1301B;
+          text-align: center;
+          line-height: 44px;
+        }
+      }
+      
     }
   }
 </style>
