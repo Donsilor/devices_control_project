@@ -1,0 +1,313 @@
+<template>
+  <div class="body">
+    <div :class="[{'offline': isOffline }, {'close': isClose}, 'page']">
+      <!-- 顶部 -->
+      <topbar
+        :title="device.device_name"
+        white
+        bg-color="#346EE6"
+        bak-color="#fff" />
+      <!-- 灯 -->
+      <div class="main center">
+        <div class="bg center">
+          <div class="left center">
+            <div :class="[{'img':deviceAttrs.switch_chan0=='on' && !isOffline}, 'sty']" />
+            <div :class="['title', {'bright':deviceAttrs.switch_chan0=='on' && !isOffline}]">{{ deviceAttrs.chan0_name }}</div>
+          </div>
+          <div
+            v-show="deviceAttrs.chan_num != 1"
+            class="middle center">
+            <div :class="[{'img':deviceAttrs.switch_chan1=='on' && !isOffline}, 'sty']" />
+            <div :class="['title', {'bright':deviceAttrs.switch_chan1=='on' && !isOffline}]">{{ deviceAttrs.chan1_name }}</div>
+          </div>
+          <div
+            v-show="deviceAttrs.chan_num == 3"
+            class="right center">
+            <div :class="[{'img':deviceAttrs.switch_chan2=='on' && !isOffline}, 'sty']" />
+            <div :class="['title', {'bright':deviceAttrs.switch_chan2=='on' && !isOffline}]">{{ deviceAttrs.chan2_name }}</div>
+          </div>
+        </div>
+      </div>
+      <!-- 提示信息 -->
+      <div
+        v-show="!isOffline"
+        class="message center">
+        <div
+          v-show="deviceAttrs.switch_chan0=='on'"
+          class="title">{{ deviceAttrs.chan0_name }}已开启</div>
+        <div
+          v-show="deviceAttrs.switch_chan1=='on'"
+          class="title">{{ deviceAttrs.chan1_name }}已开启</div>
+        <div
+          v-show="deviceAttrs.switch_chan2=='on'"
+          class="title">{{ deviceAttrs.chan2_name }}已开启</div>
+      </div>
+      <!-- 按钮 -->
+      <div class="panel-btn center">
+        <div
+          class="btn-wrap"
+          @click="setSwitch1">
+          <div :class="[{ 'active': deviceAttrs.switch_chan0 == 'on' }, 'btn btn-start center']" />
+          <div class="btn-name">开关</div>
+        </div>
+        <div
+          v-show="deviceAttrs.chan_num != 1"
+          class="btn-wrap"
+          @click="setSwitch2">
+          <div :class="[{ 'active': deviceAttrs.switch_chan1 == 'on' }, 'btn btn-start center']" />
+          <div class="btn-name">开关</div>
+        </div>
+        <div
+          v-show="deviceAttrs.chan_num == 3"
+          class="btn-wrap"
+          @click="setSwitch3">
+          <div :class="[{ 'active': deviceAttrs.switch_chan2 == 'on' }, 'btn btn-start center']" />
+          <div class="btn-name">开关</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapGetters, mapState, mapActions } from 'vuex'
+
+export default {
+  data() {
+    return {
+
+    }
+  },
+  computed: {
+    ...mapGetters(['isClose', 'isOffline']),
+    ...mapState(['device', 'deviceAttrs']),
+  },
+  created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+    })
+  },
+  methods: {
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    setSwitch1() {
+      if(this.isOffline) return
+      let switchStatus = ''
+      if (this.deviceAttrs.switch_chan0 == 'on') {
+        switchStatus = 'off'
+      } else {
+        switchStatus = 'on'
+      }
+      this.controlDevice("switch_chan0", switchStatus)
+    },
+    setSwitch2() {
+      if(this.isOffline) return
+      let switchStatus = ''
+      if (this.deviceAttrs.switch_chan1 == 'on') {
+        switchStatus = 'off'
+      } else {
+        switchStatus = 'on'
+      }
+      this.controlDevice("switch_chan1", switchStatus)
+    },
+    setSwitch3() {
+      if(this.isOffline) return
+      let switchStatus = ''
+      if (this.deviceAttrs.switch_chan2 == 'on') {
+        switchStatus = 'off'
+      } else {
+        switchStatus = 'on'
+      }
+      this.controlDevice("switch_chan2", switchStatus)
+    },
+    controlDevice(attr, value, param) {
+      return this.doControlDevice({
+        nodeid: `water_heater.main.${attr}`,
+        params: {
+          attribute: {
+            [attr]: value,
+            ...param
+          }
+        }
+      })
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+@imgPath: 'base/honghan_switch/assets';
+@100: 100% 100%;
+.body {
+  min-height: 100%;
+  height: 100vh;
+  touch-action: manipulation;
+  background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
+}
+.page {
+  overflow-x: hidden;
+  position: relative;
+  background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
+
+  &.filter {
+    filter: blur(12px);
+  }
+  .title {
+    font-size: 24px;
+    text-align: center;
+    margin-top: 26px;
+    color: #fff;
+    opacity: 0.2;
+  }
+  .main {
+    margin-top: 200px;
+    position: relative;
+    .bg {
+      height: 550px;
+      .left {
+        height: 550px;
+        padding: 0 60px;
+        flex-direction: column;
+      }
+      .middle {
+        height: 550px;
+        border-left: 1px solid rgba(255,255,255,0.14);
+        padding: 0 60px;
+        flex-direction: column;
+      }
+      .right {
+        height: 550px;
+        border-left: 1px solid rgba(255,255,255,0.14);
+        padding: 0 60px;
+        flex-direction: column;
+      }
+      .sty {
+        display: block;
+        width: 108px;
+        height: 152px;
+        background-image: url('~@lib/@{imgPath}/btn_ac_hpeiduiqueren.png');
+        background-size: @100;
+        text-align: center;
+      }
+      .img {
+        background-image: url('~@lib/@{imgPath}/btn_ac_jpeiduiqueren.png');
+      }
+      .bright {
+        opacity: 1;
+      }
+    }
+  }
+  .message {
+    margin-top: 36px;
+    flex-direction: column;
+    .title {
+      margin-top: 0;
+      margin-bottom: 10px;
+      opacity: 1;
+    }
+  }
+  .panel-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 38px 0;
+    z-index: 9999;
+
+    background: #ffffff;
+    box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
+    border-radius: 42px 42px 0px 0px;
+
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .btn {
+      margin-top: 24px;
+      width: 100%;
+      border-radius: 40px 40px 0 0;
+      background: #ffffff;
+      box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
+      display: flex;
+      // justify-content: space-evenly;
+      align-items: center;
+    }
+  }
+  .btn-wrap {
+    margin: 0 60px 24px;
+    &.up-index {
+      position: relative;
+      z-index: 9999;
+    }
+    .btn {
+      box-sizing: border-box;
+      margin: 0 auto;
+      width: 120px;
+      height: 120px;
+      border: 1px solid rgba(32,40,43,0.5);
+      border-radius: 50%;
+
+      display: flex;
+      flex-direction: column;
+      &.active {
+        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        border-color: #ffbf00;
+      }
+    }
+    .bor {
+      border: none;
+      box-shadow: none;
+    }
+    .btn-name {
+      text-align: center;
+      color: #000;
+      margin-top: 16px;
+      font-size: 24px;
+    }
+
+    .btn-start {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url('~@lib/@{imgPath}/btn_ac_on_cd@3x.png');
+        background-size: @100;
+      }
+    }
+  }
+  &.offline {
+    &:before {
+      content: "";
+      position: fixed;
+      top: 64px;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 999;
+      width: 100%;
+      // background: rgba(255, 255, 255,0.1);
+    }
+    &.page {
+      // background: #fff;
+      background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
+    }
+    .panel-btn {
+      background: #fff;
+    }
+    .btn-wrap {
+      opacity: 0.2;
+      .btn {
+        &.active {
+          background: #fff;
+          border: 1px solid rgba(32,40,43,0.5);
+        }
+      }
+    }
+    .up-index {
+      opacity: 1;
+      .btn-name {
+        opacity: 0.5;
+      }
+    }
+  }
+}
+</style>

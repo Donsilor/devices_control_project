@@ -16,7 +16,8 @@ let res = {
     time_left: '80',
     reserve_wash: 8,
     temperature: 0,
-    drying: ''
+    drying: '',
+    connectivity: "online"
 }
 
 export function generateSnapShot() {
