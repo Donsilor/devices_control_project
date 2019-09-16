@@ -94,13 +94,6 @@
         <!-- <div 
           v-show="isOpen"
           class="btn-wrap"
-          @click="showSwing">
-          <div :class="[ { 'active': windIsActive }, 'btn btn-up center']" />
-          <div class="btn-name">摆风 </div>
-        </div> -->
-        <!-- <div 
-          v-show="isOpen"
-          class="btn-wrap"
           @click="showTime">
           <div :class="[ { 'active': deviceAttrs.order_time > 0}, 'btn btn-time center']" />
           <div class="btn-name">定时 </div>
@@ -115,12 +108,6 @@
           src="../../../lib/base/blend/assets/time-black.png">
         {{ deviceAttrs.order_time | time_H }}
       </div> -->
-      <!--选择摆风-->
-      <model-swing 
-        ref="swing"
-        :wind_up_down="deviceAttrs.wind_up_down"
-        :wind_left_right="deviceAttrs.wind_left_right"
-        @setWind="setWind" />
       <!--选择模式-->
       <model-mode 
         ref="mode"
@@ -143,7 +130,6 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
 import circleProgress from './components/circle-progress'
-import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
 // import SelectTime from './components/time/time.vue'
@@ -151,7 +137,6 @@ const [MIN_TEMP, MAX_TEMP] = [180, 320]
 export default {
   components: {
     circleProgress,
-    modelSwing,
     modelMode,
     modelSpeed,
     // SelectTime
@@ -300,14 +285,6 @@ export default {
         .then(() => {
           this.deviceAttrs.temperature = temp
           this.reset()
-        })
-    },
-    setWind(attr) {
-      if (this.isClose) return
-      var val = this.deviceAttrs[attr] === 'on' ? 'off' : 'on'
-      this.controlDevice(attr, val)
-        .then(() =>{
-          this.hide()
         })
     },
     setSpeed(speed) {

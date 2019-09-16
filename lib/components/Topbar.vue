@@ -37,7 +37,7 @@
             <a 
               :style="{ 'color': bakColor }"
               href="javascript:void(0);"
-              class="icon-more center"
+              :class="[{'icon-more':black},{'icon-more1':white},'center']"
               @click.prevent="goDetail" />
           </template>
         </div>
@@ -73,6 +73,14 @@ export default {
       }
     },
     transparent: {
+      type: Boolean,
+      default: false
+    },
+    black: {
+      type: Boolean,
+      default: true
+    },
+     white: {
       type: Boolean,
       default: false
     },
