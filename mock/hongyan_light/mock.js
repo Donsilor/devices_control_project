@@ -1,14 +1,9 @@
 import Mock from 'mockjs'
 
 let res = {
-    "humidity": 100, //湿度，单位为0.01%, 5666就是56.66%
-    "temperature": 100, //温度，单位为0.1摄氏度, 188就是18.8摄氏度
-    "co2": 1040, //CO2：ppm，大于5000ppm为重度污染
-    "tvoc": 150,// TVOC：毫克/立方米(mg/m3)，精度0.1(mg/m3)，25mg/m3以上重度污染
-    "pm2.5":0, // PM2.5：微克/立方米(μg/m3)，精度0.1(μg/m3),大于250μg/m³及以上为重试污染
-    "envlux":0, // 光照度
-    'formaldehyde':200, // 甲醛：微克/立方米(μg/m3)，精度0.1(μg/m3)，800 μg/m3以上重度污染
-    'envnoise':30 // 噪音
+    "connectivity": "online", //l
+    "switch": 'off', //开关
+    "temperature":3000 , //暖光3000K  自然光5000K  白光6000K
   }
 
 export function generateSnapShot() {
@@ -16,7 +11,7 @@ export function generateSnapShot() {
         method: 'dr_report_dev_status',
         code: 0,
         result: {
-            "device_name": "空气云管家",
+            "device_name": "智能筒灯",
             "attribute": res
         }
     })
@@ -41,5 +36,4 @@ export function set(data){
     return Mock.mock({
         code: 0
     })
-
-  }
+}

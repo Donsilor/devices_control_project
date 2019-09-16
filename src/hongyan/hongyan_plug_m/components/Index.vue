@@ -68,28 +68,12 @@
           <div class="btn-name">童锁</div>
         </div>
       </div>
-      <!-- 定时展示 -->
-      <!-- <div
-        v-show="timeShow"
-        class="timeShow">
-        <img
-          class="timeShow-img"
-          src="../../../lib/base/blend/assets/time-black.png">
-        {{ deviceAttrs.order_time | time_H }}
-      </div> -->
-      <!--选择摆风-->
-      <!-- 定时 -->
-      <!-- <SelectTime 
-        ref="time" 
-        :order_time="deviceAttrs.order_time"
-        @selectedTime="setReserve" /> -->
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
-// import SelectTime from './components/time/time.vue'
 export default {
   components: {
     // SelectTime
@@ -115,6 +99,10 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setSwitch() {
+      if (this.isOffline) return
+      if (this.deviceAttrs.child_lock_switch == 'on') {
+         return HdSmart.UI.toast('请先关闭童锁')
+      }
       let switchStatus = ''
       if (this.deviceAttrs.switch == 'on') {
         switchStatus = 'off'
@@ -125,6 +113,7 @@ export default {
     },
     // 童锁
     childLockSwitch() {
+      if (this.isClose) return
       let childLockStatus = ''
       if (this.deviceAttrs.child_lock_switch == 'on') {
         childLockStatus = 'off'
@@ -133,32 +122,14 @@ export default {
       }
       this.controlDevice("child_lock_switch", childLockStatus)
     },
-    // setMode(val) {
-    //   if (val == this.deviceAttrs.mode || this.isClose) return
-    //   this.controlDevice('mode', val)
-    //     .then(() => {
-    //       this.deviceAttrs.mode = val
-    //       this.reset()
-    //       this.hide()
-    //     })
-    // },
     setTime(){
+      if (this.isClose) return
+      if (this.deviceAttrs.child_lock_switch == 'on') {
+         HdSmart.UI.toast('请先关闭童锁')
+         return
+      }
       this.$router.push({ path: '/log' })
     },
-    // setReserve(time) {
-    //   let h = parseInt(time[0].split(':')[0])
-    //   let m = parseInt(time[0].split(':')[1])
-    //    this.controlDevice(
-    //     "order_time",
-    //     ((h*60)+m)*60
-    //   )
-
-    //   if(this.deviceAttrs.order_time > 0) {
-    //     this.timeShow = true
-    //   } else {
-    //     this.timeShow = false
-    //   }
-    // },
     controlDevice(attr, value) {
       return this.doControlDevice({
         nodeid: `hongyan_plug.main.${attr}`,
@@ -203,41 +174,6 @@ export default {
   overflow-x: hidden;
   position: relative;
   background: #006cff;
-  &.filter {
-    filter: blur(12px);
-  }
-  .c-status {
-    margin-top: 30px;
-    font-size: 24px;
-    color: #35353d;
-    text-align: center;
-  }
-  .control-tm{
-    position: relative;
-    top: -40px;
-    z-index: 9;
-
-    width: 190PX;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .control{
-      outline: none;
-      border: none;
-      width: 72px;
-      height: 72px;
-      background:#efefef;
-      border-radius: 50%;
-      &.add{
-        background-image: url(~@lib/base/fridge/assets/add.png);
-        background-size: 100% 100%;
-      }
-      &.reduce{
-        background-image: url(~@lib/base/fridge/assets/reduce.png);
-        background-size: 100% 100%;
-      }
-    }
-  }
   .main {
     position: relative;
     &.center {
@@ -266,6 +202,7 @@ export default {
     position: fixed;
     bottom: 0;
     background: #ffffff;
+    z-index: 99999;
     box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
     border-radius: 42px 42px 0px 0px;
     .btn {
@@ -379,6 +316,9 @@ export default {
       opacity: .2;
       &.up-index {
         opacity: 1;
+        .btn-swich{
+          z-index:999999;
+        }
       }
       .btn {
         &.active {
@@ -415,58 +355,58 @@ export default {
       }
     }
   }
-.btns-panel {
-  &:before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 99999;
-    width: 100%;
+// .panel-btn {
+//   &:before {
+//     content: "";
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     bottom: 0;
+//     right: 0;
+//     z-index: 99999;
+//     width: 100%;
 
-    background: rgba(0, 0, 0, 0.8);
-  }
-  .btns {
-    justify-content: flex-start;
-    transition: all 0.3s ease-in-out;
-    margin-top: 57px;
-    .btn {
-      margin-right: 40px;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #fff;
-      border-radius: 50%;
+//     background: rgba(0, 0, 0, 0.8);
+//   }
+//   .btns {
+//     justify-content: flex-start;
+//     transition: all 0.3s ease-in-out;
+//     margin-top: 57px;
+//     .btn {
+//       margin-right: 40px;
+//       width: 120px;
+//       height: 120px;
+//       border: 1px solid #fff;
+//       border-radius: 50%;
 
-      display: flex;
-      flex-direction: column;
+//       display: flex;
+//       flex-direction: column;
 
-      .name {
-        margin-top: 16px;
-        font-size: 24px;
-        color: #20282B;
-      }
-      &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border-color: #ffbf00;
-      }
-    }
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-black.png);
-        }
-      }
-    }
-  }
-}
+//       .name {
+//         margin-top: 16px;
+//         font-size: 24px;
+//         color: #20282B;
+//       }
+//       &.active {
+//         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+//         border-color: #ffbf00;
+//       }
+//     }
+//     .btn-swich {
+//       &::before {
+//         content: "";
+//         display: block;
+//         width: 44px;
+//         height: 44px;
+//         background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-white.png);
+//         background-size: 100% 100%;
+//       }
+//       &.active {
+//         &::before {
+//           background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-black.png);
+//         }
+//       }
+//     }
+//   }
+// }
 </style>

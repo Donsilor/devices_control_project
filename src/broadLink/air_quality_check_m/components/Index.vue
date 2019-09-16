@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <topbar 
-      :title="device_name"
+      :title="device.device_name"
       bak-color="#000" />
     <div class="main center">
       <div 
@@ -31,7 +31,7 @@
           <span class="text">湿度 --</span> -->
         </p> 
         <p>
-          <span> <i class="num">{{ deviceAttrs.envlux||'--' }}</i> <i class="unit">lux</i></span>
+          <span> <i class="num">{{ deviceAttrs.envlux||deviceAttrs.envlux===0?deviceAttrs.envlux:"--" }}</i> <i class="unit">lux</i></span>
           <span class="text">光照度</span>
         </p>
       </div>
@@ -56,7 +56,7 @@ import { mapActions, mapState } from 'vuex'
 export default {
   data() {
     return {
-      device_name:""
+      // device_name:""
     }
   },
   computed: {
@@ -103,11 +103,9 @@ export default {
     }
   },
   created() {
-      if (window.device_name) {
-        this.device_name = window.device_name
-      }else{
-        this.device_name = '空气云管家'
-      }
+      // if (window.device_name) {
+      //   this.device_name = window.device_name
+      // }
     HdSmart.ready(() => { 
       console.log('sdsd')
       this.getDeviceInfo()
