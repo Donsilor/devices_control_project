@@ -22,7 +22,9 @@
             href="javascript:void(0);"
             class="icon-return" />
         </div>
-        <div class="right">
+        <div 
+          v-if="showRight" 
+          class="right">
           <template v-if="buttons">
             <a 
               v-for="(item, index) in buttons"
@@ -59,6 +61,10 @@ export default {
     onBack: {
       type: Function,
       default: null
+    },
+    showRight:{
+      type: Boolean,
+      default: true
     },
     buttons: {
       type: Array,
