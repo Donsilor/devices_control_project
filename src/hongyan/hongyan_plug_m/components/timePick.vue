@@ -126,7 +126,7 @@
           this.hTop = - (this.hIndex * this.liheight) / this.fontSize + 0.2
         }
         this.selectedValue = this.hIndex + ':' + this.mIndex
-        // console.log(this.selectedValue);
+        console.log(this.selectedValue)
         
       },
     }

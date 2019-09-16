@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="page-log" v-show="show">
+    <div 
+      v-show="show" 
+      class="page-log">
       <div class="topbar topbar-fixed">
         <div 
           class="statusbar" 
@@ -25,24 +27,15 @@
         </div>
       </div>
       <div class="main">
-        
-        <!-- <div class="clock" >
-          <div class="time" @click="toEditClock">
-            <div class="order">09:00</div>
-            <div class="plan">通电定时，每天</div>
-          </div>
-          <switch-button 
-            :value="clockSwitch"
-            :sync="true" 
-            :width="90"
-            :height="55"
-            :color="'#FFC700'"
-          />
-        </div> -->
-        <div class="clock" v-for="(item, index) in clockList" :key="index">
-          <div class="time" @click="toEditClock">
-            <div class="order">{{item.time | tiemFiter}}</div>
-            <div class="plan">{{item.type | typeFiter}}，{{item.week}}</div>
+        <div 
+          v-for="(item, index) in clockList" 
+          :key="index" 
+          class="clock">
+          <div 
+            class="time" 
+            @click="toEditClock(index)">
+            <div class="order">{{ item.time | tiemFiter }}</div>
+            <div class="plan">{{ item.type | typeFiter }}，{{ item.week }}</div>
           </div>
           <switch-button 
             :value="item.clockSwitch"
@@ -54,9 +47,14 @@
           />
         </div>
       </div>
-  </div>
-  <!-- 新建定时/编辑定时 -->
-  <Time v-show="!show" @weekFlag="weekFlag" @saveClock="saveClock"></Time>
+    </div>
+    <!-- 新建定时/编辑定时 -->
+    <Time 
+      v-show="!show" 
+      :oldTime="oldTime" 
+      @delClock="delClock"
+      @weekFlag="weekFlag" 
+      @saveClock="saveClock"/>
   </div>
 </template>
 <script>
@@ -68,23 +66,15 @@ export default {
     SwitchButton,
     Time
   },
-  data(){
-    return{
-      show:true,
-      clockList:[
-        // {time:"",type:"",week:""}
-      ]
-    }
-  },
   filters: {
-    tiemFiter (data) {
+    tiemFiter(data) {
       let h = data.split(':')[0]
       h = h < 10 ? ("0" + h) : h
       let m = data.split(':')[1]
       m = m < 10 ? ("0" + m) : m
       return h + ":" + m
     },
-    typeFiter (data) {
+    typeFiter(data) {
       if (data ==1 ) {
         return '通电定时'
       } else {
@@ -92,24 +82,31 @@ export default {
       }
     }
   },
+  data(){
+    return{
+      show:true,
+      oldTime:'',
+      num:'',
+      clockList:[
+        // {time:"",type:"",week:""}
+      ]
+    }
+  },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
     // 定时是否开启
-    // clockSwitch(){
-    //   return this.deviceAttrs.order_mode == 'on' ? true : false
-    // }
+
   },
-  // created() {
-  //   HdSmart.ready(() => {
-  //     this.getDeviceInfo()
-  //     // HdSmart.UI.setStatusBarColor(2)
-  //   })
-  // },
+  created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+      // HdSmart.UI.setStatusBarColor(2)
+    })
+  },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setNewTime(){
-      // this.$router.push({path:'/time'})
       this.show = false
     },
     // 设置定时开启和关闭
@@ -122,16 +119,27 @@ export default {
       }
       this.controlDevice("order_mode", clockStatus)
     },
-    toEditClock(){
-      let oldTime = this.deviceAttrs.order_time
-      // this.$router.push({path:'/time',query:{oldTime}})
+    // 编辑闹钟
+    toEditClock(index){
+      console.log(index)
+      this.num = index
+      this.oldTime = this.clockList[index].time
+      this.show = false
+      this.controlDevice('order_time', this.clockList[index].time)
     },
     weekFlag(){
       this.show = true
     },
+    // 保存闹钟
     saveClock(val){
-      console.log(val);
+      console.log(val)
       this.clockList.push(val)
+      this.controlDevice('order_time', val.time)
+    },
+    // 删除闹钟
+    delClock(){
+      this.show = true
+      this.clockList.splice(this.num,1)
     },
     controlDevice(attr, value) {
       return this.doControlDevice({

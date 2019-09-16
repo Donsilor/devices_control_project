@@ -8,18 +8,22 @@
         class="navbar" 
         style="height:44px; line-height: 44px">
         <div class="left">
-          <a class="icon-return" @click.prevent="$emit('weekFlag', true)"></a>
-          <!-- <router-link
+          <a 
+            class="icon-return" 
+            @click.prevent="$emit('weekFlag', true)"/>
+            <!-- <router-link
             to="/log"
             class="icon-return"
           /> -->
         </div>
         <div class="title">
-          {{titleType}}
+          {{ titleType }}
         </div>
         <div class="right">
-          <div class="storage" @click="saveTime">存储</div>
-          <!-- <router-link 
+          <div 
+            class="storage" 
+            @click="saveTime">存储</div>
+            <!-- <router-link 
             to="/log" 
             class="storage">存储</router-link> -->
         </div>
@@ -33,12 +37,16 @@
         <div class="main">
           <div class="type">
             <span class="title">定时类型</span>
-            <span :class="[{'active': this.deviceAttrs.type == 1 },'electrify' ]">通电</span>
-            <span :class="[{'active': this.deviceAttrs.type == 2 },'electrify' ]">断电</span>
+            <span 
+              :class="[{'active': deviceAttrs.type == 1 },'electrify' ]" 
+              @click="setType('1')">通电</span>
+            <span 
+              :class="[{'active': deviceAttrs.type == 2 },'electrify' ]" 
+              @click="setType('2')">断电</span>
           </div>
           <time-pick 
-            @selectedchange="selectedchange" 
-            class="pickTime"/>
+            class="pickTime" 
+            @selectedchange="selectedchange"/>
           <div class="repeat">
             <span class="title">重复</span>
             <span 
@@ -47,12 +55,14 @@
           </div>
         </div>
       </div>
-      <div class="delbtn" v-show="$route.query.oldTime">
+      <div 
+        v-show="oldTime" 
+        class="delbtn">
         <input 
-          @click="delclock"
           class="delclock"
-          type="button" 
-          value="删除定时">
+          type="button"
+          value="删除定时" 
+          @click="delclock">
       </div>
     </div>
     <week 
@@ -69,6 +79,9 @@ import week from './week.vue'
 export default {
   components: {
     'time-pick': timePick,week
+  },
+  props: {
+     oldTime:'',
   },
   data(){
     return{
@@ -113,32 +126,30 @@ export default {
       if (show.length == 14) {
         return '每天'
       }
-      
       return show
     },
     titleType(){
-      return this.$route.query.oldTime ? '编辑定时' : '新建定时'
+      return this.oldTime !='' ? '编辑定时' : '新建定时'
     },
+    // editTime(){
+    //   return this.oldTime ? this.time == this.oldTime : this.time
+    // },
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
   },
-  // created() {
-  //   HdSmart.ready(() => {
-  //     this.getDeviceInfo()
-  //     // HdSmart.UI.setStatusBarColor(2)
-  //   })
-  // },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    setType(val){
+      this.controlDevice('type', val)
+    },
     selectedchange(val) {
       this.time = val
-      console.log(val);
+      console.log(val)
     },
     flagClose() {
       this.weekFlag = false
     },
     showWeek(){
-      // if(!this.isClose) this.$refs.week.show = true
       this.weekFlag = true
     },
     selectDay(data){
@@ -146,21 +157,7 @@ export default {
     },
     // 删除定时
     delclock(){
-       HdSmart.UI.alert(
-        {
-          title: '删除定时',
-          message: '确认要删除定时？',
-          okText: '删除',
-          cancelText: '取消',
-          dialogStyle: 2
-        },
-        val => {
-          if (val != undefined && val != false) {
-            service.onClickEvent('clearSearchHistory')
-            this.historyData = []
-          }
-        }
-      )
+      this.$emit('delClock')
     },
     // 存储
     saveTime(){
@@ -168,16 +165,21 @@ export default {
       this.clockObj.time = this.time
       this.clockObj.type = this.deviceAttrs.type
       this.clockObj.clockSwitch = true
-      // if (this.clockObj.type == 1) {
-      //   return "通电定时"
-      // }else{
-      //   "断电定时"
-      // }
-      console.log(this.clockObj);
+      console.log(this.clockObj)
       
       this.$emit('weekFlag', true)
       this.$emit('saveClock', JSON.parse(JSON.stringify(this.clockObj)))
-    }
+    },
+    controlDevice(attr, value) {
+      return this.doControlDevice({
+        nodeid: `hongyan_plug.main.${attr}`,
+        params: {
+          attribute: {
+            [attr]: value
+          }
+        }
+      })
+    },
   }
 }
 </script>
