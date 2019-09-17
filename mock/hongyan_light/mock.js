@@ -4,8 +4,8 @@ let res = {
     "connectivity": "online", //l
     "switch": 'off', //开关
     "temperature":3000 , //暖光3000K  自然光5000K  白光6000K
-  }
-
+    "level":20
+}
 export function generateSnapShot() {
     return Mock.mock({
         method: 'dr_report_dev_status',

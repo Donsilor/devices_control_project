@@ -10,6 +10,7 @@
         v-if="toogleSpeed" 
         class="main center" >
         <div class="wrap-circle center">
+          <div class="lianggang"/>
           <div 
             :class="[{'animation': !isClose }, {'greycircle': isClose }, rotateClass, 'bg']" />
             <!-- <p class="wind">风速档位</p>
@@ -28,10 +29,9 @@
         </div>
       </div>
       <div 
-        v-show="deviceAttrs.light == 'on'"
+        v-show="!isClose&&!isOffline"
         class="tips">
-        <i />
-        <span>照明已开启</span>
+        <span>亮度 {{ deviceAttrs.level }}%</span>
       </div>
       <!-- <div 
         v-show="deviceAttrs.delay == 'on'&&deviceAttrs.switch=='on'"
@@ -258,20 +258,37 @@ export default {
       }
     }
   }
+ 
   .switch {
     margin-top: 20px;
     font-size: 32px;
   }
 }
+ .tips{
+    margin-top: 40px;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+  }
 .animation {
   background: url("~@lib/@{imgPath}/btn_ac_mode_e@2x.png") no-repeat;
+  // background: #fff;
   background-size: 100% 100%;
 }
 .greycircle {
   background: url("~@lib/@{imgPath}/btn_ac_mode_h@2x.png") no-repeat;
   background-size: 100% 100%;
 }
-
+.lianggang{
+  width: 74px;
+  height: 16px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+    transform: translateX(-50%);
+   background: url("~@lib/@{imgPath}/btn_ac_on_lianggang@2x.png") no-repeat;
+  background-size: 100% 100%;
+}
 .panel-btn {
   position: fixed;
   bottom: 0;
@@ -439,10 +456,10 @@ export default {
 &.close,
 &.offline {
   &:before {
-
     content: "";
     position: fixed;
     top: 82PX;
+
     left: 0;
     bottom: 0;
     right: 0;
@@ -453,6 +470,7 @@ export default {
   &.page {
     background-image: url("~@lib/@{imgPath}/beij@3x.png");
     background-size: 100% 100%;
+
     .cover {
       background: #fff;
       .point {
