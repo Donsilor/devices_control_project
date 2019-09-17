@@ -1,30 +1,32 @@
 <template>
-  <div 
+  <div
     :class="[{'topbar-nobg':transparent}, {'topbar-black': bgBlack}]"
     class="topbar">
-    <div 
+    <div
       :style="{height:(status_bar_height + navigation_bar_height) +'px'}"
       class="topbar-block" />
-    <div 
+    <div
       :style="{ background: bgColor }"
       class="topbar-fixed">
-      <div 
+      <div
         :style="{height:status_bar_height+'px'}"
         class="statusbar" />
-      <div 
+      <div
         :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
         class="navbar">
-        <div 
+        <div
           class="left"
           @click.prevent="goBack">
-          <a 
+          <a
             :style="{ 'border-color': bakColor }"
             href="javascript:void(0);"
             class="icon-return" />
         </div>
-        <div class="right">
+        <div 
+          v-if="showRight" 
+          class="right">
           <template v-if="buttons">
-            <a 
+            <a
               v-for="(item, index) in buttons"
               :key="index"
               :class="[item.className]"
@@ -32,14 +34,14 @@
               @click.prevent="item.callback" />
           </template>
           <template v-else>
-            <a 
+            <a
               :style="{ 'color': bakColor }"
-              href="javascript:void(0);"
               :class="[{'icon-more':black},{'icon-more1':white},'center']"
+              href="javascript:void(0);"
               @click.prevent="goDetail" />
           </template>
         </div>
-        <div 
+        <div
           v-if="title"
           :style="{ 'color': bakColor }"
           class="title">{{ title }}</div>
@@ -60,6 +62,10 @@ export default {
       type: Function,
       default: null
     },
+    showRight:{
+      type: Boolean,
+      default: true
+    },
     buttons: {
       type: Array,
       default: function() {
@@ -74,7 +80,7 @@ export default {
       type: Boolean,
       default: true
     },
-     white: {
+    white: {
       type: Boolean,
       default: false
     },
