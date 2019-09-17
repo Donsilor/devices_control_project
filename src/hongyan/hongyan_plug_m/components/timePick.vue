@@ -127,7 +127,6 @@
         }
         this.selectedValue = this.hIndex + ':' + this.mIndex
         console.log(this.selectedValue)
-        
       },
     }
   }

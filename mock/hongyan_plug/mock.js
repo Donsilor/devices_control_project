@@ -17,11 +17,14 @@ var res = {
     device_name: '厨房的插座',
     default_device_name: '厨房的插座',
     attribute: {
-        switch: 'off',
+        switch: 'on',
+        usb:'on',
+        voltage:5.0,
+        current:2.1,
         order_mode:'on',//定时开关
         type:2, //通电
         order_time: 0,//定时
-        child_lock_switch: 'off',//童锁
+        child: 'off',//童锁
         deviceModel: 'KFRd-26GW/FE22BpA',
         manufactureId: 'tcl',
         deviceCategory: 'airconditioner.new',

@@ -137,6 +137,7 @@ export default {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
   },
+
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setType(val){
@@ -145,6 +146,8 @@ export default {
     selectedchange(val) {
       this.time = val
       console.log(val)
+      console.log(this.oldTime)
+      
     },
     flagClose() {
       this.weekFlag = false
@@ -166,13 +169,12 @@ export default {
       this.clockObj.type = this.deviceAttrs.type
       this.clockObj.clockSwitch = true
       console.log(this.clockObj)
-      
       this.$emit('weekFlag', true)
       this.$emit('saveClock', JSON.parse(JSON.stringify(this.clockObj)))
     },
     controlDevice(attr, value) {
       return this.doControlDevice({
-        nodeid: `hongyan_plug.main.${attr}`,
+        nodeid: `plug.main.${attr}`,
         params: {
           attribute: {
             [attr]: value

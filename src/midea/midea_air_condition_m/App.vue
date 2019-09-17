@@ -13,17 +13,14 @@
             <div 
               v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
-              <i 
-                v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'" 
-                :class="[deviceAttrs.mode, 'c-mode']"/>
             </div>
             <div 
               v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
               class="tm">{{ deviceAttrs.env_temperature | filterTime }}<sup>°C</sup>
-              <i 
-                v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'" 
-                :class="[deviceAttrs.mode, 'c-mode']"/>
             </div>
+            <i 
+              v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'" 
+              :class="[deviceAttrs.mode, 'c-mode']"/>
           </div>
           <circle-progress
             v-if="isShow"
@@ -530,12 +527,10 @@ export default {
           }
         }
         .c-mode{
-          // margin: auto;
-          // display: block;
           position: absolute;
-          top: 170px;
-          left: 85px;
-          margin-left: -16px;
+          transform: translate(-50%,-50%);
+          top: 80%;
+          left: 50%;
           width: 33px;
           height: 33px;
           &.cold{

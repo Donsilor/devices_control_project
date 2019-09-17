@@ -93,10 +93,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isClose', 'isOffline']),
+    ...mapGetters(['isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-    // 定时是否开启
-
+  isClose: state => (state.deviceAttrs.plug === 'on' ? false : true),
   },
   created() {
     HdSmart.ready(() => {
@@ -108,6 +107,7 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setNewTime(){
       this.show = false
+      this.oldTime = ''
     },
     // 设置定时开启和关闭
     changeClock(){
@@ -123,7 +123,7 @@ export default {
     toEditClock(index){
       console.log(index)
       this.num = index
-      this.oldTime = this.clockList[index].time
+      this.oldTime = this.clockList[index]
       this.show = false
       this.controlDevice('order_time', this.clockList[index].time)
     },
@@ -132,6 +132,11 @@ export default {
     },
     // 保存闹钟
     saveClock(val){
+      //保存编辑，把新的数据替换老的数据
+      if (this.oldTime!='') {
+        this.clockList.splice(this.num,1,val)
+        return
+      }
       console.log(val)
       this.clockList.push(val)
       this.controlDevice('order_time', val.time)
@@ -143,7 +148,7 @@ export default {
     },
     controlDevice(attr, value) {
       return this.doControlDevice({
-        nodeid: `hongyan_plug.main.${attr}`,
+        nodeid: `plug.main.${attr}`,
         params: {
           attribute: {
             [attr]: value

@@ -2,14 +2,14 @@
   <div class="body">
     <div :class="[{ 'offline': isOffline }, {'close': isClose},'page']">
       <topbar 
-         v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
-         white
+        v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
         :title="device.device_name"
-        :bak-color="bakColor" />
+        :bak-color="bakColor"
+        white />
       <topbar 
-         v-else
+        v-else
         :title="device.device_name"
-        :bak-color="bakColor" />
+        bak-color="#000" />
       <div class="main center">
         <img 
           v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
@@ -22,16 +22,16 @@
       </div>
       <!-- 当前状态 -->
       <div 
-        v-show="!isClose&&!isOffline&&deviceAttrs.child_lock_switch == 'on'"
+        
         class="status">
-        童锁开启中...
+        <div v-show="!isClose&&!isOffline&&deviceAttrs.child == 'on'">童锁开启中...</div>
       </div>
       <div 
         class="electricity">
         <div class="electric">
           <div 
             v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
-            class="current">2.1 <span>A</span></div>
+            class="current">{{ deviceAttrs.current.toFixed(1) }} <span>A</span></div>
           <div 
             v-else 
             class="current1">_ _<span>A</span></div>
@@ -40,7 +40,7 @@
         <div class="electric">
           <div 
             v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
-            class="current">5.0 <span>V</span></div>
+            class="current">{{ deviceAttrs.voltage.toFixed(1) }} <span>V</span></div>
           <div 
             v-else 
             class="current1">_ _<span>V</span></div>
@@ -64,7 +64,7 @@
         <div 
           class="btn-wrap"
           @click="childLockSwitch">
-          <div :class="[{ 'active': deviceAttrs.child_lock_switch == 'on' }, 'btn btn-lock center']" />
+          <div :class="[{ 'active': deviceAttrs.child == 'on' }, 'btn btn-lock center']" />
           <div class="btn-name">童锁</div>
         </div>
       </div>
@@ -84,8 +84,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isClose', 'isOffline']),
+    ...mapGetters(['isClose','isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    // isClose(){
+    //   return this.deviceAttrs.switch === 'on' ? false : true
+    // },
     bakColor(){
       return this.isClose ? '#000' : '#fff'
     }
@@ -100,7 +103,7 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setSwitch() {
       if (this.isOffline) return
-      if (this.deviceAttrs.child_lock_switch == 'on') {
+      if (this.deviceAttrs.child == 'on') {
          return HdSmart.UI.toast('请先关闭童锁')
       }
       let switchStatus = ''
@@ -115,16 +118,16 @@ export default {
     childLockSwitch() {
       if (this.isClose) return
       let childLockStatus = ''
-      if (this.deviceAttrs.child_lock_switch == 'on') {
+      if (this.deviceAttrs.child == 'on') {
         childLockStatus = 'off'
       } else {
         childLockStatus = 'on'
       }
-      this.controlDevice("child_lock_switch", childLockStatus)
+      this.controlDevice("child", childLockStatus)
     },
     setTime(){
       if (this.isClose) return
-      if (this.deviceAttrs.child_lock_switch == 'on') {
+      if (this.deviceAttrs.child == 'on') {
          HdSmart.UI.toast('请先关闭童锁')
          return
       }
@@ -132,7 +135,7 @@ export default {
     },
     controlDevice(attr, value) {
       return this.doControlDevice({
-        nodeid: `hongyan_plug.main.${attr}`,
+        nodeid: `plug.main.${attr}`,
         params: {
           attribute: {
             [attr]: value
@@ -193,8 +196,9 @@ export default {
     text-align: center;
     font-size: 24px;
     color: #fff;
-    margin: 80px auto;
-    margin-top: -100px;
+    margin: -80px auto 30px auto;
+    width: 100%;
+    height: 14px;
   }
   .panel-btn {
     height: 306px;
@@ -342,6 +346,7 @@ export default {
         height: 90px;
         font-size: 80px;
         position: relative;
+        margin-top: 30px;
         >span {
           font-size: 24px;
           position: absolute;
