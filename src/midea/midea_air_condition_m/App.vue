@@ -187,7 +187,7 @@ export default {
       // } else {
       //   return true
       // }
-      if(this.deviceAttrs.mode == 'dehumidify') {
+      if(this.deviceAttrs.mode == 'dehumidify'||this.deviceAttrs.mode == 'auto') {
         return false
       } else {
         return true
@@ -266,6 +266,9 @@ export default {
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
+          if (val=='auto') {
+            this.controlDevice('speed','auto')
+          }
           this.reset()
           this.hide()
         })
@@ -336,9 +339,6 @@ export default {
       if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
         return HdSmart.UI.toast('送风模式不能设置自动风速')
       }
-      if(this.deviceAttrs.mode == 'auto' && speed == 'auto') {
-        return HdSmart.UI.toast('智能模式不能设置自动风速')
-      }
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
@@ -387,6 +387,9 @@ export default {
     showSpeed() {
       if(this.deviceAttrs.mode == 'dehumidify') {
         return HdSmart.UI.toast('除湿模式下无法设定风速')
+      }
+       if(this.deviceAttrs.mode == 'auto') {
+        return HdSmart.UI.toast('智能模式下无法设定风速')
       }
       if (this.isClose) return
       this.$refs.speed.show = true
