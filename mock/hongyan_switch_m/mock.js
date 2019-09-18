@@ -11,6 +11,26 @@ let res = {
     "chan0_name": "卧室筒灯",
     "chan1_name": "客厅筒灯",
     "chan2_name": "厨房筒灯",
+    "list": [
+      {
+        "chan_index": 0,
+        "chan_status": "off",
+        "chan_name": "卧室筒灯",
+        "chan_avatar": "123dfafga "
+      },
+      {
+        "chan_index": 1,
+        "chan_status": "off",
+        "chan_name": "客厅筒灯",
+        "chan_avatar": "123dfafga "
+      },
+      {
+        "chan_index": 2,
+        "chan_status": "off",
+        "chan_name": "厨房筒灯",
+        "chan_avatar": "123dfafga "
+      }
+    ],
     "connectivity": "online"
 }
 
@@ -28,13 +48,27 @@ export function generateSnapShot() {
 
 export function set(data){
     var attr = data.params.attribute
-    // if(attr.control){
-    //     if(attr.control == 'start'){
-    //         attr.status = 'start'
-    //     } else if(attr.control == 'stop') {
-    //       attr.status = 'stop'
-    //     }
-    // }
+    if(attr.switch_chan0){
+      if(attr.switch_chan0 == 'on'){
+        res.list[0].chan_status = 'on'
+      } else {
+        res.list[0].chan_status = 'off'
+      }
+    }
+    if(attr.switch_chan1){
+      if(attr.switch_chan1 == 'on'){
+        res.list[1].chan_status = 'on'
+      } else {
+        res.list[1].chan_status = 'off'
+      }
+    }
+    if(attr.switch_chan2){
+      if(attr.switch_chan2 == 'on'){
+        res.list[2].chan_status = 'on'
+      } else {
+        res.list[2].chan_status = 'off'
+      }
+    }
     res = Object.assign({}, res, attr)
     return Mock.mock({
         code: 0
