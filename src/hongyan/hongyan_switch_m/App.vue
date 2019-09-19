@@ -16,7 +16,7 @@
             <div
               :class="[{'img':deviceAttrs.list[0].chan_status=='on' && !isOffline}, 'sty']"
               @click="setSwitch1"/>
-            <div :class="['title', {'bright':deviceAttrs.list[0].chan_status=='on' && !isOffline}]">{{ deviceAttrs.list[0].chan_name }}</div>
+            <div :class="['title', {'bright':deviceAttrs.list[0].chan_status=='on' && !isOffline}]">{{ deviceAttrs.list[0].chan_name?deviceAttrs.list[0].chan_name:'一路开关' }}</div>
           </div>
           <div
             v-if="deviceAttrs.chan_num != 1 && deviceAttrs.list && deviceAttrs.list[1]"
@@ -24,7 +24,7 @@
             <div
               :class="[{'img':deviceAttrs.list[1].chan_status=='on' && !isOffline}, 'sty']"
               @click="setSwitch2"/>
-            <div :class="['title', {'bright':deviceAttrs.list[1].chan_status=='on' && !isOffline}]">{{ deviceAttrs.list[1].chan_name }}</div>
+            <div :class="['title', {'bright':deviceAttrs.list[1].chan_status=='on' && !isOffline}]">{{ deviceAttrs.list[1].chan_name?deviceAttrs.list[1].chan_name:'二路开关' }}</div>
           </div>
           <div
             v-if="deviceAttrs.chan_num == 3 && deviceAttrs.list && deviceAttrs.list[2]"
@@ -32,7 +32,7 @@
             <div
               :class="[{'img':deviceAttrs.list[2].chan_status=='on' && !isOffline}, 'sty']"
               @click="setSwitch3"/>
-            <div :class="['title', {'bright':deviceAttrs.list[2].chan_status=='on' && !isOffline}]">{{ deviceAttrs.list[2].chan_name }}</div>
+            <div :class="['title', {'bright':deviceAttrs.list[2].chan_status=='on' && !isOffline}]">{{ deviceAttrs.list[2].chan_name?deviceAttrs.list[2].chan_name:'三路开关' }}</div>
           </div>
         </div>
       </div>
@@ -43,17 +43,17 @@
         <div v-if="deviceAttrs.list">
           <div
             v-show="deviceAttrs.list[0].chan_status=='on'"
-            class="title">{{ deviceAttrs.list[0].chan_name }}已开启</div>
+            class="title">{{ deviceAttrs.list[0].chan_name?deviceAttrs.list[0].chan_name:'一路开关' }}已开启</div>
         </div>
         <div v-if="deviceAttrs.list && deviceAttrs.list[1]">
           <div
             v-show="deviceAttrs.list[1].chan_status=='on'"
-            class="title">{{ deviceAttrs.list[1].chan_name }}已开启</div>
+            class="title">{{ deviceAttrs.list[1].chan_name?deviceAttrs.list[1].chan_name:'二路开关' }}已开启</div>
         </div>
         <div v-if="deviceAttrs.list && deviceAttrs.list[2]">
           <div
             v-show="deviceAttrs.list[2].chan_status=='on'"
-            class="title">{{ deviceAttrs.list[2].chan_name }}已开启</div>
+            class="title">{{ deviceAttrs.list[2].chan_name?deviceAttrs.list[2].chan_name:'三路开关' }}已开启</div>
         </div>
       </div>
       <!-- 按钮 -->

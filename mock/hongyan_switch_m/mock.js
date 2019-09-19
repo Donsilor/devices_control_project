@@ -8,9 +8,6 @@ let res = {
     "switch_chan1": "on",
     "switch_chan2": "off",
     "chan_num": 3,
-    "chan0_name": "卧室筒灯",
-    "chan1_name": "客厅筒灯",
-    "chan2_name": "厨房筒灯",
     "list": [
       {
         "chan_index": 0,
@@ -21,13 +18,13 @@ let res = {
       {
         "chan_index": 1,
         "chan_status": "off",
-        "chan_name": "客厅筒灯",
+        "chan_name": "",
         "chan_avatar": "123dfafga "
       },
       {
         "chan_index": 2,
         "chan_status": "off",
-        "chan_name": "厨房筒灯",
+        "chan_name": "",
         "chan_avatar": "123dfafga "
       }
     ],
