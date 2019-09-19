@@ -185,6 +185,7 @@
 
 .icon_grid {
   overflow: hidden;
+  -webkit-overflow-scrolling: touch;
   .icon_grid_inner {
     display: flex;
     flex-wrap: nowrap;
@@ -195,9 +196,9 @@
     -webkit-box-orient: horizontal;
     padding-bottom: 20px;
     margin-bottom: -20px;
-    // &::-webkit-scrollbar {
-    //   display: none;
-    // }
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
   .item {
     position: relative;

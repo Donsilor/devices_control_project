@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     id="app"
     :class="{isIOS:isIOS}">
     <router-view />
@@ -31,7 +31,7 @@ html {
   padding-bottom: 2px;
 }
 body {
-  overflow-x: hidden;
+  // overflow-x: hidden;
   background: #fafafa;
   height: 100%;
   font-size: 28px;

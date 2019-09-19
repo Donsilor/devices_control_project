@@ -22,7 +22,7 @@
               <div
                 v-else
                 class="back center">
-                <div class="temperature">{{ deviceAttrs.temperature }}<sup>°C</sup></div>
+                <div class="temperature">{{ temperature }}<sup>°C</sup></div>
                 <div class="cmode"/>
               </div>
 
@@ -256,6 +256,7 @@ export default {
   },
   data() {
     return {
+      temperature: 0,
       isOpen: false,
       isMin: false,
       seletModal: false,
@@ -308,7 +309,7 @@ export default {
       return {'transform': `rotate(${this.rotate6}deg)`}
     },
     deg_286() {
-      if(this.deviceAttrs.temperature || this.deviceAttrs.temperature==0) {
+      if(this.temperature || this.temperature==0) {
         this.tempDeg()
       }
       return {'transform': `rotate(${this.rotate7}deg)`}
@@ -348,9 +349,17 @@ export default {
       }
     }
   },
+  watch: {
+    "deviceAttrs.temperature"() {
+      this.temperature = this.deviceAttrs.temperature
+    }
+  },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
+      .then(() => {
+        this.temperature = this.deviceAttrs.temperature
+      })
     })
     if(document.body.clientHeight/document.body.clientWidth < 2) {
       this.isMin = true
@@ -359,42 +368,38 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     reduce() {
-      if(this.deviceAttrs.temperature > 0) {
+      if(this.temperature > 0) {
         if(this.deviceAttrs.mode == 'defrost') {
-          this.controlDevice('temperature', this.deviceAttrs.temperature-1)
-          .then(() => {
-            this.tempDeg()
-          })
-          .catch()
+          if(this.temperature > 50) {
+            this.temperature = this.temperature-1
+            this.controlDevice('temperature', this.temperature)
+          } else {
+            HdSmart.UI.toast('当前模式最小温度为50', 1000)
+          }
         } else {
-          this.controlDevice('temperature', this.deviceAttrs.temperature-5)
-          .then(() => {
-            this.tempDeg()
-          })
-          .catch()
+          this.temperature = this.temperature-5
+          this.controlDevice('temperature', this.temperature)
         }
       }
     },
     plus() {
-      if(this.deviceAttrs.temperature < 250) {
+      if(this.temperature < 250) {
         if(this.deviceAttrs.mode == 'defrost') {
-          this.controlDevice('temperature', this.deviceAttrs.temperature+1)
-          .then(() => {
-            this.tempDeg()
-          })
-          .catch()
+          if(this.temperature < 70) {
+            this.temperature = this.temperature+1
+            this.controlDevice('temperature', this.temperature)
+          } else {
+            HdSmart.UI.toast('当前模式最大温度为70', 1000)
+          }
         } else {
-          this.controlDevice('temperature', this.deviceAttrs.temperature+5)
-          .then(() => {
-            this.tempDeg()
-          })
-          .catch()
+          this.temperature = this.temperature+5
+          this.controlDevice('temperature', this.temperature)
         }
       }
     },
     tempDeg() {
-      if(this.deviceAttrs.temperature > 212) {
-        this.rotate = (-(250 - this.deviceAttrs.temperature) * 1.12)
+      if(this.temperature > 212) {
+        this.rotate = (-(250 - this.temperature) * 1.12)
         this.rotate2 = -42
         this.rotate3 = -88
         this.rotate4 = -133
@@ -402,59 +407,59 @@ export default {
         this.rotate6 = -220
         this.rotate7 = -232
         return
-      } else if(this.deviceAttrs.temperature>171) {
+      } else if(this.temperature>171) {
         this.rotate = -42
-        this.rotate2 = (-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate2 = (-(250 - this.temperature) * 1.12)
         this.rotate3 = -88
         this.rotate4 = -133
         this.rotate5 = -178
         this.rotate6 = -220
         this.rotate7 = -232
         return
-      } else if(this.deviceAttrs.temperature>131) {
+      } else if(this.temperature>131) {
         this.rotate = -42
         this.rotate2 = -88
-        this.rotate3 = (-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate3 = (-(250 - this.temperature) * 1.12)
         this.rotate4 = -133
         this.rotate5 = -178
         this.rotate6 = -220
         this.rotate7 = -232
         return
-      } else if(this.deviceAttrs.temperature>91) {
+      } else if(this.temperature>91) {
         this.rotate = -42
         this.rotate2 = -88
         this.rotate3 = -133
-        this.rotate4 = (-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate4 = (-(250 - this.temperature) * 1.12)
         this.rotate5 = -178
         this.rotate6 = -220
         this.rotate7 = -232
         return
-      } else if(this.deviceAttrs.temperature>53) {
+      } else if(this.temperature>53) {
         this.rotate = -42
         this.rotate2 = -88
         this.rotate3 = -133
         this.rotate4 = -178
-        this.rotate5 = (-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate5 = (-(250 - this.temperature) * 1.12)
         this.rotate6 = -220
         this.rotate7 = -232
         return
-      } else if(this.deviceAttrs.temperature>42) {
+      } else if(this.temperature>42) {
         this.rotate = -42
         this.rotate2 = -88
         this.rotate3 = -133
         this.rotate4 = -178
         this.rotate5 = -220
-        this.rotate6 = (-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate6 = (-(250 - this.temperature) * 1.12)
         this.rotate7 = -232
         return
-      } else if(this.deviceAttrs.temperature>=0) {
+      } else if(this.temperature>=0) {
         this.rotate = -42
         this.rotate2 = -88
         this.rotate3 = -133
         this.rotate4 = -178
         this.rotate5 = -220
         this.rotate6 = -232
-        this.rotate7 = this.deviceAttrs.temperature==0?-286:(-(250 - this.deviceAttrs.temperature) * 1.12)
+        this.rotate7 = this.temperature==0?-286:(-(250 - this.temperature) * 1.12)
         return
       }
     },

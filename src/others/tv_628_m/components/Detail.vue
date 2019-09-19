@@ -3,12 +3,12 @@
 -->
 <template>
   <div class="page-detail">
-    <topbar 
+    <topbar
       :back="goBack"
       :search="false">
       <div class="title">
         {{ title }}
-        <span 
+        <span
           v-show="!loading && ispay && ispay !== '1'"
           class="isvip">付费</span>
       </div>
@@ -17,12 +17,12 @@
     <status-tip v-show="device_uuid" />
 
     <div class="detail-bd">
-      <div 
+      <div
         v-show="cur.title"
         class="detail-info clearfix">
         <div class="info-inner">
           <div class="pic">
-            <img 
+            <img
               v-lazy="cur.pictureUrl"
               :class="['pic-'+channelId]"
               :key="cur.pictureUrl">
@@ -35,12 +35,12 @@
               <p v-show="isNotNull(cur.year)">年代：{{ cur.year }}</p>
               <p v-show="isNotNull(cur.cate)">类型：{{ cur.cate }}</p>
               <p v-show="isNotNull(cur.director)">导演：{{ cur.director }}</p>
-              <p 
+              <p
                 v-show="isNotNull(cur.starring)"
                 class="text_s">主演：{{ cur.starring }}</p>
             </div>
             <div class="playstate playstate_unplay">
-              <a 
+              <a
                 href="#"
                 class="btn"
                 @click.prevent="play(cur.playlist2.list[0])">
@@ -49,20 +49,20 @@
           </div>
         </div>
         <!-- 描述 -->
-        <div 
+        <div
           v-show="cur.desc"
           class="desc">
-          <div 
+          <div
             :class="{
               'text-cut': isDescOverflow,
               'text-show': isDescShow
             }"
             class="desc-cont">
-            <div 
+            <div
               class="desc-cont-p"
               v-html="toHTML(cur.desc)" />
           </div>
-          <a 
+          <a
             v-show="isDescOverflow"
             :class="{'open':isDescShow}"
             href="#"
@@ -73,15 +73,15 @@
         </div>
       </div>
 
-      <div 
+      <div
         :class="[isShowAll?'detail-playlist-all':'']"
         class="detail-playlist">
-        <div 
+        <div
           v-if="cur.playlist2.list.length"
           class="hd">
           {{ channelId==='001' ? '正片' : getUpdateSet() }}
 
-          <a 
+          <a
             v-show="!isShowAll && (channelId==='002' || channelId==='003')"
             href="#"
             class="showAll"
@@ -89,7 +89,7 @@
             <i class="icon-arrow" />
           </a>
 
-          <a 
+          <a
             v-show="isShowAll"
             href="#"
             class="showAll"
@@ -97,36 +97,36 @@
             <span class="icon-close" />
           </a>
         </div>
-        <ul 
+        <ul
           v-if="channelId==='001' || channelId==='004'"
           class="bd">
-          <li 
+          <li
             v-for="item in cur.playlist2.list"
             :key="item.index"
             class="item-haspic"
             @click="play(item)">
-            <img 
+            <img
               v-lazy="item.pictureUrl"
               :key="item.pictureUrl">
             <p>{{ item.name }}</p>
             <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
-            <span 
+            <span
               v-show="item.drm && item.drm!='0'"
               class="tag_pay">付费</span>
           </li>
         </ul>
 
-        <ul 
+        <ul
           v-else
           :class="[isShowAll?'bd-num-all':'bd-num']"
           class="bd">
-          <li 
+          <li
             v-for="(item, num) in cur.playlist2.list"
             :key="item.index"
             class="item-num"
             @click="play(item)">{{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}
             <!--<span class="tag_new" v-show="item.states">新</span> -->
-            <span 
+            <span
               v-show="item.drm && item.drm!='0'"
               class="tag_pay">付费</span>
           </li>
@@ -134,22 +134,22 @@
       </div>
 
       <div class="detail-playlist">
-        <div 
+        <div
           v-if="cur.playlist2.list2.length"
           class="hd related"
           style="clear:both">相关视频</div>
         <ul class="bd">
-          <li 
+          <li
             v-for="item in cur.playlist2.list2"
             :key="item.index"
             class="item-haspic"
             @click="play(item)">
-            <img 
+            <img
               v-lazy="item.pictureUrl"
               :key="item.pictureUrl">
             <p>{{ item.name }}</p>
             <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
-            <span 
+            <span
               v-show="item.drm && item.drm!='0'"
               class="tag_pay">付费</span>
           </li>
@@ -219,14 +219,14 @@
   // height: 100%;
   padding-top: 32px;
   // overflow-y: auto;
-  // -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch;
 }
 .detail-info {
   margin: 0 32px;
   border-bottom: 1px solid #dbdbdb;
   .info-inner {
     position: relative;
-    overflow: hidden;
+    // overflow: hidden;
     margin-bottom: 32px;
   }
   .pic {

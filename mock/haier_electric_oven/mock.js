@@ -11,7 +11,7 @@ let res = {
     "remaining": 88, //预约剩余时间，单位为分钟
     "step": 'bake', //当前工作模式，烘烤/预约
     "mode": '', //模式
-    "temperature": 240, //设置温度
+    "temperature": 50, //设置温度
     "bake_duration": 390, //时长 单位是秒
     "convection": 'off', //开启, 关闭热风对流
     "rotisserie": 'off', //开启, 关闭转叉
