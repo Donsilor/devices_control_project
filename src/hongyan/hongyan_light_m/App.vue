@@ -29,6 +29,7 @@
           <!-- <div class="lianggang"/> -->
           <div 
             :class="[{'animation': !isClose }, {'greycircle': isClose }, rotateClass, 'bg']" />
+          <parcent-Light :brightness="deviceAttrs.temperature"/>
         </div>
       </div>
       <div 
@@ -79,7 +80,9 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
+import parcentLight from './parcentLight'
 export default {
+  components: {parcentLight},
   data() {
     return {
       isOpen: false,
@@ -400,9 +403,15 @@ export default {
 
   }
 .animation {
-  background: url("~@lib/@{imgPath}/btn_ac_mode_e@2x.png") no-repeat;
+  background: url("~@lib/@{imgPath}/btn_ac_mode_h@2x.png") no-repeat;
   // background: #fff;
   background-size: 100% 100%;
+}
+.coverlight{
+  position:absolute;
+  width: 320px;
+  height: 450px;
+  clip:rect(80px 320px 450px 0px); 
 }
 .greycircle {
   background: url("~@lib/@{imgPath}/btn_ac_mode_h@2x.png") no-repeat;
