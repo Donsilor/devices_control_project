@@ -10,7 +10,7 @@
         v-if="toogleSpeed" 
         class="main center" 
       >
-        <div 
+        <!-- <div 
           v-show="!isClose&&!isOffline" 
           class="ratiobg111"
           @click="ratiobg2click($event)">
@@ -22,30 +22,23 @@
             @touchstart="touchStart($event)"
             @touchmove="touchMove($event)"
             @touchend="touchEnd($event)"/>
-            <!-- <div class="an">暗</div>
-          <div class="liang">亮</div> -->
-        </div>
-        <div class="wrap-circle center">
-          <!-- <div class="lianggang"/> -->
+        </div> -->
+        <div 
+          v-show="!isClose&&!isOffline" 
+          class="wrap-circle center">
           <div 
             :class="[{'animation': !isClose }, {'greycircle': isClose }, rotateClass, 'bg']" />
-          <parcent-Light :brightness="deviceAttrs.temperature"/>
+          <!-- touch组件 -->
+          <parcent-Light 
+            :brightness="deviceAttrs.temperature"
+            @moveLight="moveLight"
+            @endLight="endLight"/>
         </div>
       </div>
       <div 
         v-show="!isClose&&!isOffline"
         class="tips">
         <span>亮度 {{ ratio }}%</span>
-        <!-- <div class="ratiobg">
-          <div class="ratiobg2"/>
-          <div 
-            class="circle" 
-            @touchstart="touchStart($event)"
-            @touchmove="touchMove($event)"
-            @touchend="touchEnd($event)"/>
-          <div class="an">暗</div>
-          <div class="liang">亮</div>
-        </div> -->
       </div>
       <!-- 按钮 -->
       <div class="panel-btn center">
@@ -86,17 +79,16 @@ export default {
   data() {
     return {
       isOpen: false,
-      speedNum: 0,
-      speedText: '关',
-      time:0,
-      dateObj:null,
       toogleSpeed:true,
-      ratio:0
+      ratio:100
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    // isClose(){
+    //   return this.deviceAttrs.switch_status === 'on' ? false : true
+    // },
     rotateClass() {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.temperature) {
@@ -126,62 +118,29 @@ export default {
       return this.deviceAttrs.switch_status=="on"?false:true
     }
   },
-  watch: {
-    // 'device.stateChange'() {
-    //   this.$nextTick(() => {
-    //     this.toogleSpeed = false
-    //     this.$nextTick(() => {
-    //       this.toogleSpeed = true
-    //     })
-    //   })   
-    // },
-    deviceAttrs: {
-      handler(newName) {
-        switch (newName.temperature) {
-          case "off":
-            this.speedNum = 0
-            this.speedText = "关"
-            break
-          case "low":
-            this.speedNum = 1
-            this.speedText = "柔速"
-            break
-      
-          case "overnormal":
-            this.speedNum = 2
-            this.speedText = "高速"
-            break
-          case "high":
-            this.speedNum = 3
-            this.speedText = "爆炒"
-            break
-        }
-      },
-      deep: true,
-      immediate: true
-    }
-  },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
         this.ratio = parseInt(this.deviceAttrs.level/254*100) 
-        let circle = document.querySelectorAll(".circle")[0]  
-        let ratiobg2 = document.querySelectorAll(".ratiobg2")[0]  
-        circle.style.top =  this.ratio/100*250 +"px"
-        ratiobg2.style.height =  this.ratio/100*250 +"px"
+        let touch = document.querySelectorAll(".touch")[0]  
+        let coverlight = document.querySelectorAll(".coverlight")[0]   
+        touch.style.top = ((100-this.ratio)/100*185) +"px"
+        coverlight.style.clip = `rect(${((100-this.ratio)/100*185) +"px"} 320px 450px 0)`
       })
     })
   },
-  mounted(){
-    
-  },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    // 亮度
+    moveLight(val){
+      this.ratio = 100-val
+    },
+    // 
+    endLight(val){
+      this.controlDevice('level',val)
+    },
     setSpeed(val) {
-      if (val == this.deviceAttrs.temperature) {
-        val = 'off'
-      }
       if (this.isClose) return  // 关机状态点击无效
       this.controlDevice('temperature', val)
     },
@@ -194,81 +153,6 @@ export default {
       }
       this.controlDevice("switch", switchStatus)
     }, 
-    // touchStart(e){
-    //   e.stopPropagation()
-    //   e.preventDefault()
-    //   console.log(e)
-    // },
-    // touchMove(e){
-    //   e.stopPropagation()
-    //   e.preventDefault()
-    //   let ratiobg = document.querySelectorAll(".ratiobg")[0]
-    //   let circle = document.querySelectorAll(".circle")[0]  
-    //   let ratiobg2 = document.querySelectorAll(".ratiobg2")[0]  
-    //   let w = e.targetTouches[0].pageX - ratiobg.offsetLeft
-    //   w=w<=0?0:w
-    //   w=w>=300?300:w
-    //   circle.style.left =  w +"px"
-    //   ratiobg2.style.width = w +"px"
-    //   this.ratio = parseInt((w/300)*100)
-    //   // console.log(ratio)
-    // },
-    // touchEnd(e){
-    //   e.stopPropagation()
-    //   e.preventDefault()
-    //   let level = parseInt(this.ratio/100*254) 
-    //   this.controlDevice('level', level)
-    // },
-    touchStart(e){
-      console.log(e)
-    },
-    touchMove(e){
-      e.stopPropagation()
-      e.preventDefault()
-      let ratiobg = document.querySelectorAll(".ratiobg111")[0]
-      let circle = document.querySelectorAll(".ratiobg111>.circle")[0]  
-      let ratiobg2 = document.querySelectorAll(".ratiobg111>.ratiobg2")[0]  
-      // let main = document.querySelectorAll(".main")[0]
-      // console.log(main.offsetTop)
-      // console.log( ratiobg.offsetTop)
-    
-      let h = e.targetTouches[0].pageY - ratiobg.offsetTop
-      h=h<=0?0:h
-      h=h>=250?250:h
-      circle.style.top = h + ratiobg2.offsetTop +"px"
-      ratiobg2.style.height = h +"px"
-     
-      // circle.style.left =  w +"px"
-      // ratiobg2.style.width = w +"px"
-      this.ratio = parseInt((h/250)*100)
-    },
-    touchEnd(e){
-      e.stopPropagation()
-      e.preventDefault()
-      let level = parseInt(this.ratio/100*254) 
-      this.controlDevice('level', level)
-    },
-    ratiobg2click(e){
-      e.stopPropagation()
-      e.preventDefault()
-      let circle = document.querySelectorAll(".ratiobg111>.circle")[0]  
-      let ratiobg2 = document.querySelectorAll(".ratiobg111>.ratiobg2")[0] 
-      circle.style.top = e.offsetY +"px"
-      ratiobg2.style.height = e.offsetY +"px"
-      this.ratio = parseInt(( e.offsetY /250)*100)
-      let level = parseInt(this.ratio/100*254) 
-      this.controlDevice('level', level)
-    }
-    , 
-    // countdown(){
-    //       this.second = Math.floor(this.time  % 60)
-    //       this.minute = Math.floor(this.time /  60 % 60)
-    //       if (this.minute <= 0 && this.second <= 0) {
-    //         clearInterval(this.dateObj)
-    //         this.setSwitch()
-    //       }
-    //       this.time--
-    // },
     controlDevice(attr, value) {
       if(attr=='switch'){
          return this.doControlDevice({
@@ -314,8 +198,11 @@ export default {
     }
 }
 .page{
-  height:1280px;
+  height:100vh;
   background-image: radial-gradient(51% -19%, #F5BD36 52%, #F3CF77 52%, #E1AD2E 100%);
+}
+.main{
+  margin-top: 5vh;
 }
 .wrap-circle {
   position: relative;
@@ -434,7 +321,8 @@ export default {
   right: 0;
   padding: 40px 30px 30px;
   z-index: 9999;
-
+  width: 100%;
+  height: 306px;
   background: #ffffff;
   box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
   border-radius: 42px 42px 0px 0px;

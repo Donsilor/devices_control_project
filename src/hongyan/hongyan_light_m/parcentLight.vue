@@ -2,17 +2,14 @@
   <div id="parcent-light">
     <img 
       v-if="brightness==370"
-      :style="lightType" 
       src="../../../lib/base/hongyan_light/assets/btn_ac_mode_e@2x.png" 
       class="coverlight">
     <img 
-      v-if="brightness==240"
-      :style="lightType" 
+      v-if="brightness==240" 
       src="../../../lib/base/hongyan_light/assets/btn_ac_mode_a@2x.png" 
       class="coverlight">
     <img 
-      v-if="brightness==167"
-      :style="lightType" 
+      v-if="brightness==167" 
       src="../../../lib/base/hongyan_light/assets/btn_ac_mode_t@2x.png" 
       class="coverlight">
     <div 
@@ -24,92 +21,65 @@
 </template>
 <script>
 export default {
-  props: {
+  props:{
     brightness:{
       type:Number
-    }
+    },
   },
   data(){
     return {
+      scale:""
     }
-  },
-  computed:{
-    parcent(){
-      if(this.leftStatus){
-            if (this.leftStatus == 'no') {
-              return 0
-            }
-            if (this.leftStatus == 'low' || this.leftStatus == 'low_60') {
-              return 34
-            }
-            if (this.leftStatus == 'nomal') {
-              return 67
-            }
-            if (this.leftStatus == 'high'|| this.leftStatus == 'high_30') {
-              return 100
-            }
-          }
-         if(this.rightStatus) {
-            if (this.rightStatus == 'no') {
-              return 0
-            }
-            if (this.rightStatus == 'low' || this.rightStatus == 'low_60') {
-              return 34
-            }
-            if (this.rightStatus == 'nomal') {
-              return 67
-            }
-            if (this.rightStatus == 'high'|| this.rightStatus == 'high_30') {
-              return 100
-            }
-          }
-          
-    },
-    lightType(){
-     return console.log('0')
-    }
-  },
-  mounted(){
-    this.$nextTick(()=>{
-        setTimeout(()=>{
-            this.clipwidth = {
-            "width":"100%"
-            }
-        },300)   
-    })   
   },
   methods: {
-     touchStart(e) {
-        e.stopPropagation()
-        e.preventDefault()
-      },
-      touchMove(e) {
-        e.stopPropagation()
-        e.preventDefault()
-        
-      },
-      touchEnd(e) {
-        e.stopPropagation() //阻止冒泡
-        e.preventDefault() //阻止默认行为
-    
-      },
+    touchStart(e){
+      console.log(e)
+    },
+    touchMove(e){
+      e.stopPropagation()
+      e.preventDefault()
+      let parcentlight = document.querySelectorAll("#parcent-light")[0]
+      let touch = document.querySelectorAll(".touch")[0]  
+      let coverlight = document.querySelectorAll(".coverlight")[0]  
+      let h = e.targetTouches[0].pageY - parcentlight.offsetTop
+      h=h<=0?0:h
+      h=h>=185?185:h
+      touch.style.top = (h + coverlight.offsetTop)/37.7 +"rem"
+      coverlight.style.clip = `rect(${h /37.7 +'rem'} ${320/37.7 +'rem'} ${450/37.7 +'rem'} 0)`
+      this.scale = parseInt((h/185)*100)
+      this.$emit('moveLight',this.scale)
+      console.log(this.scale)
+    },
+    touchEnd(e){
+      e.stopPropagation()
+      e.preventDefault()
+      // let level = parseInt(this.scale/100*254) 
+      let level = parseInt((100-this.scale)/100*254) 
+      console.log(level)
+      
+      this.$emit('endLight',level)
+    },
   },
 }
 </script>
 <style lang="less">
+.parcent-light{
+  width: auto;
+  height: auto;
+}
   .coverlight{
     position:absolute;
     left: 0;
     top: 0px;
     width: 320px;
     height: 450px;
-    clip:rect(80px 320px 450px 0px); 
+    clip:rect(0px 320px 450px 0px); 
  }
  .touch{
-       width: 74px;
-       height: 16px;
+       width: 66px;
+       height: 32px;
        position: absolute;
-       top: 90px;
+       top: 10px;
        left: 50%;
        transform: translateX(-50%);
        background-size: 100% 100%;

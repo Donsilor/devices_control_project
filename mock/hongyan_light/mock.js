@@ -3,8 +3,8 @@ import Mock from 'mockjs'
 let res = {
     "connectivity": "online", //l
     "switch_status": 'on', //开关
-    "temperature":3000 , //暖光3000K  自然光5000K  白光6000K
-    "level":113
+    "temperature":167 , //暖光3000K  自然光5000K  白光6000K
+    "level":200
 }
 export function generateSnapShot() {
     return Mock.mock({
@@ -19,13 +19,6 @@ export function generateSnapShot() {
 
 export function set(data){
     var attr = data.params.attribute
-    // if(attr.order_mode){
-    //     attr.machine_status = attr.order_mode
-    //     attr.machine_mode = attr.order_mode
-    // }
-  //   if(attr.machine_mode){
-  //     attr.order_mode = attr.machine_mode
-  // }
     if(attr.negative_ion_switch){
         attr.negative_ion_switch_status = attr.negative_ion_switch
     }
