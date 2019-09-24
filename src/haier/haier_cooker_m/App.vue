@@ -15,7 +15,7 @@
             </div>
             <div 
               v-else 
-              :class="[{'active': leftStatus !== 'no'}, 'circle-gray1']" 
+              :class="[{'active': leftStatus&&leftStatus !== 'no'}, 'circle-gray1']" 
               :style="borderwidth">
               <canvas-circle :left-status="leftStatus">   
                 <p class="icon">
@@ -200,6 +200,18 @@ export default {
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
+      // .then(() => {
+      //   if(!this.deviceAttrs.switch) {
+      //     this.deviceAttrs.fire_status = {
+      //       "stove_0": 'nomal',
+      //       "stove_1": 'no',
+      //     }
+      //   }
+      //   console.log(this.deviceAttrs.fire_status)
+      // })
+      // .catch(() => {
+      //   console.log('12333')
+      // })
     })
   },
    mounted(){
