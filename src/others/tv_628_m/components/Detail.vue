@@ -226,7 +226,7 @@
   border-bottom: 1px solid #dbdbdb;
   .info-inner {
     position: relative;
-    // overflow: hidden;
+    overflow: hidden;
     margin-bottom: 32px;
   }
   .pic {
@@ -460,9 +460,11 @@
     }
   }
   .bd-num {
-    overflow-x: auto;
+    width: 100%;
+    overflow-x: scroll;
     display: -webkit-box;
     margin-bottom: 30px;
+    -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
       display: none;
     }

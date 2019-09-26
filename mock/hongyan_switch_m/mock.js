@@ -7,7 +7,8 @@ let res = {
     "switch_chan0": "off",
     "switch_chan1": "on",
     "switch_chan2": "off",
-    "chan_num": 3,
+    "switch_chan3": "off",
+    "chan_num": 4,
     "list": [
       {
         "chan_index": 0,
@@ -23,6 +24,12 @@ let res = {
       },
       {
         "chan_index": 2,
+        "chan_status": "off",
+        "chan_name": "",
+        "chan_avatar": "123dfafga "
+      },
+      {
+        "chan_index": 3,
         "chan_status": "off",
         "chan_name": "",
         "chan_avatar": "123dfafga "
@@ -64,6 +71,13 @@ export function set(data){
         res.list[2].chan_status = 'on'
       } else {
         res.list[2].chan_status = 'off'
+      }
+    }
+    if(attr.switch_chan3){
+      if(attr.switch_chan3 == 'on'){
+        res.list[3].chan_status = 'on'
+      } else {
+        res.list[3].chan_status = 'off'
       }
     }
     res = Object.assign({}, res, attr)
