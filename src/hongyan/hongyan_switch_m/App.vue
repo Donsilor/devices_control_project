@@ -12,7 +12,7 @@
         <div class="bg center">
           <div
             v-if="deviceAttrs.list"
-            class="left center">
+            :class="['left','center',{'four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]">
             <div
               :class="[{'img':deviceAttrs.list[0].chan_status=='on' && !isOffline}, 'sty']"
               @click="setSwitch1"/>
@@ -20,19 +20,27 @@
           </div>
           <div
             v-if="deviceAttrs.chan_num != 1 && deviceAttrs.list && deviceAttrs.list[1]"
-            class="middle center">
+            :class="['middle','center',{'four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]">
             <div
               :class="[{'img':deviceAttrs.list[1].chan_status=='on' && !isOffline}, 'sty']"
               @click="setSwitch2"/>
             <div :class="['title', {'bright':deviceAttrs.list[1].chan_status=='on' && !isOffline}]">{{ deviceAttrs.list[1].chan_name?deviceAttrs.list[1].chan_name:'二路开关' }}</div>
           </div>
           <div
-            v-if="deviceAttrs.chan_num == 3 && deviceAttrs.list && deviceAttrs.list[2]"
-            class="right center">
+            v-if="deviceAttrs.chan_num != 1 && deviceAttrs.chan_num != 2 && deviceAttrs.list && deviceAttrs.list[2]"
+            :class="['right','center',{'four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]">
             <div
               :class="[{'img':deviceAttrs.list[2].chan_status=='on' && !isOffline}, 'sty']"
               @click="setSwitch3"/>
             <div :class="['title', {'bright':deviceAttrs.list[2].chan_status=='on' && !isOffline}]">{{ deviceAttrs.list[2].chan_name?deviceAttrs.list[2].chan_name:'三路开关' }}</div>
+          </div>
+          <div
+            v-if="deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]"
+            :class="['right','center',{'four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]">
+            <div
+              :class="[{'img':deviceAttrs.list[3].chan_status=='on' && !isOffline}, 'sty']"
+              @click="setSwitch4"/>
+            <div :class="['title', {'bright':deviceAttrs.list[3].chan_status=='on' && !isOffline}]">{{ deviceAttrs.list[3].chan_name?deviceAttrs.list[3].chan_name:'四路开关' }}</div>
           </div>
         </div>
       </div>
@@ -55,28 +63,40 @@
             v-show="deviceAttrs.list[2].chan_status=='on'"
             class="title">{{ deviceAttrs.list[2].chan_name?deviceAttrs.list[2].chan_name:'三路开关' }}已开启</div>
         </div>
+        <div v-if="deviceAttrs.list && deviceAttrs.list[3]">
+          <div
+            v-show="deviceAttrs.list[3].chan_status=='on'"
+            class="title">{{ deviceAttrs.list[3].chan_name?deviceAttrs.list[3].chan_name:'四路开关' }}已开启</div>
+        </div>
       </div>
       <!-- 按钮 -->
       <div class="panel-btn center">
         <div
           v-if="deviceAttrs.list"
-          class="btn-wrap"
+          :class="['btn-wrap', {'btn-wrap-four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]"
           @click="setSwitch1">
           <div :class="[{ 'active': deviceAttrs.list[0].chan_status == 'on' }, 'btn btn-start center']" />
           <div class="btn-name">开关</div>
         </div>
         <div
           v-if="deviceAttrs.chan_num != 1 && deviceAttrs.list && deviceAttrs.list[1]"
-          class="btn-wrap"
+          :class="['btn-wrap', {'btn-wrap-four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]"
           @click="setSwitch2">
           <div :class="[{ 'active': deviceAttrs.list[1].chan_status == 'on' }, 'btn btn-start center']" />
           <div class="btn-name">开关</div>
         </div>
         <div
-          v-if="deviceAttrs.chan_num == 3 && deviceAttrs.list && deviceAttrs.list[2]"
-          class="btn-wrap"
+          v-if="deviceAttrs.chan_num != 1 && deviceAttrs.chan_num != 2 && deviceAttrs.list && deviceAttrs.list[2]"
+          :class="['btn-wrap', {'btn-wrap-four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]"
           @click="setSwitch3">
           <div :class="[{ 'active': deviceAttrs.list[2].chan_status == 'on' }, 'btn btn-start center']" />
+          <div class="btn-name">开关</div>
+        </div>
+        <div
+          v-if="deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]"
+          :class="['btn-wrap', {'btn-wrap-four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]"
+          @click="setSwitch4">
+          <div :class="[{ 'active': deviceAttrs.list[3].chan_status == 'on' }, 'btn btn-start center']" />
           <div class="btn-name">开关</div>
         </div>
       </div>
@@ -134,6 +154,16 @@ export default {
       }
       this.controlDevice("switch_chan2", switchStatus)
     },
+    setSwitch4() {
+      if(this.isOffline) return
+      let switchStatus = ''
+      if (this.deviceAttrs.list[3].chan_status == 'on') {
+        switchStatus = 'off'
+      } else {
+        switchStatus = 'on'
+      }
+      this.controlDevice("switch_chan3", switchStatus)
+    },
     controlDevice(attr, value, param) {
       return this.doControlDevice({
         nodeid: `switch.main.switch`,
@@ -167,6 +197,8 @@ export default {
     filter: blur(12px);
   }
   .title {
+    // min-width: 112.5px;
+    min-width: 48PX;
     font-size: 24px;
     text-align: center;
     margin-top: 26px;
@@ -174,7 +206,7 @@ export default {
     opacity: 0.2;
   }
   .main {
-    margin-top: 200px;
+    margin-top: 20%;
     position: relative;
     .bg {
       height: 550px;
@@ -194,6 +226,9 @@ export default {
         border-left: 1px solid rgba(255,255,255,0.14);
         padding: 0 60px;
         flex-direction: column;
+      }
+      .four {
+        padding: 0 40px;
       }
       .sty {
         display: block;
@@ -248,6 +283,9 @@ export default {
   }
   .btn-wrap {
     margin: 0 60px 24px;
+    &.btn-wrap-four {
+      margin: 0 30px 24px;
+    }
     &.up-index {
       position: relative;
       z-index: 9999;
