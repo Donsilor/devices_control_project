@@ -3,9 +3,9 @@
     
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <topbar 
-        :show-right="false"
         :title="device.device_name"
-        bak-color="#fff" />
+        bak-color="#fff" 
+        white/>
       <div
         v-if="toogleSpeed" 
         class="main center" 

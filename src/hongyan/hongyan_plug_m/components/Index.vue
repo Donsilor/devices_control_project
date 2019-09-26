@@ -55,12 +55,12 @@
             @click="setSwitch" />
           <div class="btn-name">开关</div>
         </div>
-        <div 
+        <!-- <div 
           class="btn-wrap"
           @click="setTime">
           <div :class="[ { 'active': deviceAttrs.order_time > 0}, 'btn btn-time center']" />
           <div class="btn-name">定时 </div>
-        </div>
+        </div> -->
         <div 
           class="btn-wrap"
           @click="childLockSwitch">
@@ -125,14 +125,14 @@ export default {
       }
       this.controlDevice("child", childLockStatus)
     },
-    setTime(){
-      if (this.isClose) return
-      if (this.deviceAttrs.child == 'on') {
-         HdSmart.UI.toast('请先关闭童锁')
-         return
-      }
-      this.$router.push({ path: '/log' })
-    },
+    // setTime(){
+    //   if (this.isClose) return
+    //   if (this.deviceAttrs.child == 'on') {
+    //      HdSmart.UI.toast('请先关闭童锁')
+    //      return
+    //   }
+    //   this.$router.push({ path: '/log' })
+    // },
     controlDevice(attr, value) {
       return this.doControlDevice({
         nodeid: `plug.main.${attr}`,
@@ -216,6 +216,11 @@ export default {
       border-radius: 40px 40px 0 0;
       background: #ffffff;
       box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+    }
+    &.center{
       display: flex;
       justify-content: space-evenly;
       align-items: center;
@@ -341,6 +346,8 @@ export default {
     color: #FFFFFF;
     text-align: center;
     padding: 0 100px;
+    // margin-top: -100px;
+    // z-index: 999;
     .electric {
       > div {
         height: 90px;

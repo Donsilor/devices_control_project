@@ -231,6 +231,9 @@ export default {
     },
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose) return
+       if (this.deviceAttrs.temperature == 300 && this.deviceAttrs.speed == 'low' && val == 'cold') {
+        return HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
+      }
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
@@ -261,6 +264,9 @@ export default {
           temp = MIN_TEMP
         }
       }
+      if (temp == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
+        return HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
+      }
       // 最大温度
       if (temp > MAX_TEMP) {
         if (this.deviceAttrs.temperature == MAX_TEMP) {
@@ -287,6 +293,10 @@ export default {
       if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
         return HdSmart.UI.toast('送风模式不能设置自动风速')
       }
+      if (this.deviceAttrs.temperature == 300 && speed == 'low' && this.deviceAttrs.mode == 'cold') {
+        return HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
+      }
+
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()

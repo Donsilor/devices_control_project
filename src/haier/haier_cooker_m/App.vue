@@ -7,8 +7,14 @@
       <div class="main center">
         <div class="wrap-circle">
           <div class="circle-left">
-            <div 
+            <!-- <div 
               v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off' || leftStatus == 'no'" 
+              
+              class="circle-gray">
+              <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
+            </div> -->
+            <div 
+              v-if="deviceAttrs.connectivity == 'offline' || !deviceAttrs.switch || deviceAttrs.switch == 'off' || leftStatus == 'no'" 
               
               class="circle-gray">
               <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
@@ -36,12 +42,18 @@
             </div>
             <div class="left-cooker">
               <div class="cooker-name">左灶</div>
-              <div class="fire">{{ deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'? '无火': leftTxt }}</div>
+              <!-- <div class="fire">{{ deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off'? '无火': leftTxt }}</div> -->
+              <div class="fire">{{ deviceAttrs.connectivity == 'offline' || !deviceAttrs.switch ? '无火' : deviceAttrs.switch == 'off' ? '无火': leftTxt }}</div>
             </div>
           </div>
           <div class="circle-right">
-            <div 
+            <!-- <div 
               v-if="deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off' || rightStatus == 'no'" 
+              class="circle-gray">
+              <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
+            </div> -->
+            <div 
+              v-if="deviceAttrs.connectivity == 'offline' || !deviceAttrs.switch || deviceAttrs.switch == 'off' || rightStatus == 'no'" 
               class="circle-gray">
               <img src="../../../lib/base/haier_cooker/assets/no_fire.png" >
             </div>
@@ -68,7 +80,8 @@
             </div>
             <div class="right-cooker">
               <div class="cooker-name">右灶</div>
-              <div class="fire">{{ deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off' ? '无火': rightTxt }}</div>
+              <!-- <div class="fire">{{ deviceAttrs.connectivity == 'offline' || deviceAttrs.switch == 'off' ? '无火': rightTxt }}</div> -->
+              <div class="fire">{{ deviceAttrs.connectivity == 'offline' || !deviceAttrs.switch ? '无火' : deviceAttrs.switch == 'off' ? '无火': rightTxt }}</div>
             </div>
           </div>
         </div>
@@ -200,18 +213,12 @@ export default {
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
-      // .then(() => {
-      //   if(!this.deviceAttrs.switch) {
-      //     this.deviceAttrs.fire_status = {
-      //       "stove_0": 'nomal',
-      //       "stove_1": 'no',
-      //     }
-      //   }
-      //   console.log(this.deviceAttrs.fire_status)
-      // })
-      // .catch(() => {
-      //   console.log('12333')
-      // })
+      .then(() => {
+        if(!this.deviceAttrs.switch) {
+          this.deviceAttrs.switch = 'off'
+          console.log('13')
+        }
+      })
     })
   },
    mounted(){
