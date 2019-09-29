@@ -1,5 +1,6 @@
 <template>
-  <div id="parcent-light">
+  <div 
+    id="parcent-light">
     <img 
       v-if="brightness==370"
       src="../../../lib/base/hongyan_light/assets/btn_ac_mode_e@2x.png" 
@@ -13,10 +14,13 @@
       src="../../../lib/base/hongyan_light/assets/btn_ac_mode_t@2x.png" 
       class="coverlight">
     <div 
-      class="touch"
+      class="touchbox" 
       @touchstart="touchStart($event)"
       @touchmove="touchMove($event)"
-      @touchend="touchEnd($event)"/>
+      @touchend="touchEnd($event)">
+      <div 
+        class="touch"/>
+    </div>
   </div>
 </template>
 <script>
@@ -39,12 +43,12 @@ export default {
       e.stopPropagation()
       e.preventDefault()
       let parcentlight = document.querySelectorAll("#parcent-light")[0]
-      let touch = document.querySelectorAll(".touch")[0]  
+      let touchbox = document.querySelectorAll(".touchbox")[0]  
       let coverlight = document.querySelectorAll(".coverlight")[0]  
       let h = e.targetTouches[0].pageY - parcentlight.offsetTop
       h=h<=0?0:h
       h=h>=185?185:h
-      touch.style.top = (h + coverlight.offsetTop)/37.7 +"rem"
+      touchbox.style.top = (h + coverlight.offsetTop)/37.7 +"rem"
       coverlight.style.clip = `rect(${h /37.7 +'rem'} ${320/37.7 +'rem'} ${450/37.7 +'rem'} 0)`
       this.scale = parseInt((h/185)*100)
       this.$emit('moveLight',this.scale)
@@ -59,6 +63,12 @@ export default {
       
       this.$emit('endLight',level)
     },
+    // lightRatio(e){
+    //   e.stopPropagation()
+    //   e.preventDefault()
+    //   let touch = document.querySelectorAll(".touch")[0] 
+    //   touch.style.top = e.offsetY/37.7 +"rem"
+    // }
   },
 }
 </script>
@@ -75,14 +85,23 @@ export default {
     height: 450px;
     clip:rect(0px 320px 450px 0px); 
  }
- .touch{
-       width: 66px;
-       height: 32px;
-       position: absolute;
-       top: 10px;
-       left: 50%;
-       transform: translateX(-50%);
-       background-size: 100% 100%;
-       background: url('../../../lib/base/hongyan_light/assets/btn_ac_on_lianggang@2x.png')
-    }
+ .touchbox{
+   width: 320px;
+   height: 100px;
+   position: absolute;
+   top: 0px;
+   left: 50%;
+   transform: translateX(-50%);
+   .touch{
+      width: 66px;
+      height: 24px;
+      // height: 32px;
+      position: absolute;
+      top: 0px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-size: 100% 100%;
+      background: url('../../../lib/base/hongyan_light/assets/btn_ac_on_lianggang@2x.png')
+   }
+ }
 </style>

@@ -17,7 +17,7 @@ var res = {
     device_name: '厨房的插座',
     default_device_name: '厨房的插座',
     attribute: {
-        switch: 'on',
+        switch: 'off',
         usb:'on',
         voltage:5.0,
         current:2.1,

@@ -11,12 +11,16 @@
               v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'" 
               class="tm">-- <sup>°C</sup></div>
             <div 
-              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'"
+              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
-              <i 
-                v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'" 
-                :class="[deviceAttrs.mode, 'c-mode']"/>
             </div>
+            <div 
+              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
+              class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
+            </div>
+            <i 
+              v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'" 
+              :class="[deviceAttrs.mode, 'c-mode']"/>
           </div>
           <circle-progress
             v-if="isShow"
@@ -237,6 +241,12 @@ export default {
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
+          if (this.deviceAttrs.mode=='wind') {
+            this.progress = 70 /(30 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)  
+            this.$refs.$circle.init()
+            this.hide()
+            return
+          }
           this.reset()
           this.hide()
         })
@@ -458,12 +468,10 @@ export default {
           }
         }
         .c-mode{
-          // margin: auto;
-          // display: block;
           position: absolute;
-          top: 170px;
-          left: 85px;
-          margin-left: -16px;
+          transform: translate(-50%,-50%);
+          top: 80%;
+          left: 50%;
           width: 33px;
           height: 33px;
           &.cold{

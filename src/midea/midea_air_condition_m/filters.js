@@ -12,7 +12,7 @@ export function filterTm(tm) {
 export function filterTime(tm) {
   let tmp = '--'
   if(tm || tm == 0){
-    tmp = (+tm)/100
+    tmp = (+tm)/10
   }
   return tmp
 }

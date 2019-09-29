@@ -11,11 +11,16 @@
               v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus == 'off'" 
               class="tm">-- <sup>°C</sup></div>
             <div 
-              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'"
+              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
-              <i 
-                :class="[deviceAttrs.mode, 'c-mode']"/>
             </div>
+            <div 
+              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
+              class="tm">-- <sup>°C</sup>
+            </div>
+            <i 
+              v-show="!isClose&&!isOffline" 
+              :class="[deviceAttrs.mode, 'c-mode']"/>
           </div>
           <circle-progress
             v-if="isShow"
@@ -29,7 +34,7 @@
             :progress="progress"
             :bar-color="getBarColor"
             :duration="duration"
-            :delay="delay"
+
             :background-color="backgroundColor"
             class="progress"
           />
@@ -91,23 +96,7 @@
           <div :class="[ { 'active': speedIsActive }, speedClass, 'btn center']" />
           <div class="btn-name">风速</div>
         </div>
-        <!-- <div 
-          v-show="isOpen"
-          class="btn-wrap"
-          @click="showTime">
-          <div :class="[ { 'active': deviceAttrs.order_time > 0}, 'btn btn-time center']" />
-          <div class="btn-name">定时 </div>
-        </div> -->
       </div>
-      <!-- 定时展示 -->
-      <!-- <div
-        v-show="timeShow"
-        class="timeShow">
-        <img
-          class="timeShow-img"
-          src="../../../lib/base/blend/assets/time-black.png">
-        {{ deviceAttrs.order_time | time_H }}
-      </div> -->
       <!--选择模式-->
       <model-mode 
         ref="mode"
@@ -118,11 +107,6 @@
         ref="speed"
         :speed="deviceAttrs.speed"
         @setSpeed="setSpeed" />
-        <!-- 定时 -->
-        <!-- <SelectTime 
-        ref="time" 
-        :order_time="deviceAttrs.order_time"
-        @selectedTime="setReserve" /> -->
     </div>
   </div>
 </template>
@@ -173,9 +157,6 @@ export default {
         return true
       }
     },
-    // windIsActive() {
-    //   return this.deviceAttrs.wind_up_down == 'on' || this.deviceAttrs.wind_left_right == 'on' 
-    // },
     modeClass() {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.mode) {
@@ -243,12 +224,34 @@ export default {
     },
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose) return
-      this.controlDevice('mode', val)
+      if (val=='cold') {
+        this.controlDevice('mode', val)
         .then(() => {
-          this.deviceAttrs.mode = val
-          this.reset()
-          this.hide()
-        })
+        this.progress = 70 /(32 - 18) * (this.deviceAttrs.temperature / 10 - 18)  
+        this.$refs.$circle.init()
+        this.hide()
+      })
+        this.deviceAttrs.temperature = '260'
+        return
+      }
+      if (val=='heat') {
+        this.controlDevice('mode', val)
+        .then(() => {
+        this.progress = 70 /(32 - 18) * (this.deviceAttrs.temperature / 10 - 18)  
+        this.$refs.$circle.init()
+        this.hide()
+      })
+        this.deviceAttrs.temperature = '230'
+        return
+      }
+      this.controlDevice('mode', val)
+      .then(() => {
+        // this.deviceAttrs.mode = val
+         this.progress = 70 /(32 - 18) * (this.deviceAttrs.temperature / 10 - 18)  
+       this.$refs.$circle.init()
+        // this.reset()
+        this.hide()
+      })
     },
     setSwitch() {
       let switchStatus = ''
@@ -294,9 +297,9 @@ export default {
       if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
         return HdSmart.UI.toast('送风模式不能设置自动风速')
       }
-      if(this.deviceAttrs.mode == 'auto' && speed == 'auto') {
-        return HdSmart.UI.toast('智能模式不能设置自动风速')
-      }
+      // if(this.deviceAttrs.mode == 'auto' && speed == 'auto') {
+      //   return HdSmart.UI.toast('智能模式不能设置自动风速')
+      // }
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
@@ -316,12 +319,13 @@ export default {
     //     this.timeShow = false
     //   }
     // },
-    controlDevice(attr, value) {
+    controlDevice(attr, value, params) {
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {
           attribute: {
-            [attr]: value
+            [attr]: value,
+            ...params
           }
         }
       })
@@ -354,12 +358,14 @@ export default {
       this.$refs.time.show = true
     },
     hide(){
-      if(this.$refs.swing.show) this.$refs.swing.show = false
+      // if(this.$refs.swing.show) this.$refs.swing.show = false
       if(this.$refs.mode.show) this.$refs.mode.show = false
       if(this.$refs.speed.show) this.$refs.speed.show = false
     },
     getProgress() {
       // 计算温度进度条
+      console.log('111')
+      
       return 70 /(32 - 18) * (this.deviceAttrs.temperature / 10 - 18)
     }
   }
@@ -485,12 +491,10 @@ export default {
           }
         }
         .c-mode{
-          // margin: auto;
-          // display: block;
           position: absolute;
-          top: 170px;
-          left: 85px;
-          margin-left: -26px;
+          transform: translate(-50%,-50%);
+          top: 80%;
+          left: 50%;
           width: 33px;
           height: 33px;
           &.cold{

@@ -22,9 +22,10 @@
       </div>
       <!-- 当前状态 -->
       <div 
-        
         class="status">
-        <div v-show="!isClose&&!isOffline&&deviceAttrs.child == 'on'">童锁开启中...</div>
+        <div 
+          v-show="!isOffline&&deviceAttrs.child == 'on'" 
+        >童锁开启中...</div>
       </div>
       <div 
         class="electricity">
@@ -51,7 +52,7 @@
       <div class="panel-btn center">
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
           <div 
-            :class="[{ 'active': !isClose }, 'btn-swich btn center']"
+            :class="[{ 'active': !isClose&&!isOffline }, 'btn-swich btn center']"
             @click="setSwitch" />
           <div class="btn-name">开关</div>
         </div>
@@ -62,9 +63,9 @@
           <div class="btn-name">定时 </div>
         </div> -->
         <div 
-          class="btn-wrap"
+          :class="[{'up-index': !isOffline }, 'btn-wrap']"
           @click="childLockSwitch">
-          <div :class="[{ 'active': deviceAttrs.child == 'on' }, 'btn btn-lock center']" />
+          <div :class="[{ 'active': deviceAttrs.child == 'on'&&!isOffline }, 'btn btn-lock center']" />
           <div class="btn-name">童锁</div>
         </div>
       </div>
@@ -116,7 +117,6 @@ export default {
     },
     // 童锁
     childLockSwitch() {
-      if (this.isClose) return
       let childLockStatus = ''
       if (this.deviceAttrs.child == 'on') {
         childLockStatus = 'off'
@@ -317,6 +317,13 @@ export default {
       .panel-btn {
         background: #fff;
       }
+      .status {
+        z-index: 99999;
+        position: relative;
+        top: 140px;
+        color: #20282B;
+        opacity: .8;
+      }
     }
     .panel-btn {
       background: #efefef;
@@ -331,8 +338,12 @@ export default {
       }
       .btn {
         &.active {
-          background: #fff;
-          border: 1px solid #818181;
+           &.active {
+        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        border-color: #ffbf00;
+      }
+          // background: #fff;
+          // border: 1px solid #818181;
         }
       }
     }
@@ -346,8 +357,6 @@ export default {
     color: #FFFFFF;
     text-align: center;
     padding: 0 100px;
-    // margin-top: -100px;
-    // z-index: 999;
     .electric {
       > div {
         height: 90px;
@@ -367,58 +376,4 @@ export default {
       }
     }
   }
-// .panel-btn {
-//   &:before {
-//     content: "";
-//     position: fixed;
-//     top: 0;
-//     left: 0;
-//     bottom: 0;
-//     right: 0;
-//     z-index: 99999;
-//     width: 100%;
-
-//     background: rgba(0, 0, 0, 0.8);
-//   }
-//   .btns {
-//     justify-content: flex-start;
-//     transition: all 0.3s ease-in-out;
-//     margin-top: 57px;
-//     .btn {
-//       margin-right: 40px;
-//       width: 120px;
-//       height: 120px;
-//       border: 1px solid #fff;
-//       border-radius: 50%;
-
-//       display: flex;
-//       flex-direction: column;
-
-//       .name {
-//         margin-top: 16px;
-//         font-size: 24px;
-//         color: #20282B;
-//       }
-//       &.active {
-//         background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-//         border-color: #ffbf00;
-//       }
-//     }
-//     .btn-swich {
-//       &::before {
-//         content: "";
-//         display: block;
-//         width: 44px;
-//         height: 44px;
-//         background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-white.png);
-//         background-size: 100% 100%;
-//       }
-//       &.active {
-//         &::before {
-//           background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-black.png);
-//         }
-//       }
-//     }
-//   }
-// }
 </style>

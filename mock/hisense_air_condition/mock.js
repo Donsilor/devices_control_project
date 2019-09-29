@@ -18,7 +18,7 @@ var res = {
     default_device_name: '挂式空调',
     attribute: {
         switchStatus: 'on',
-        temperature: 180,
+        temperature: 260,
         env_temperature: 240,
         mode: 'cold',
         speed: 'low',
@@ -56,6 +56,12 @@ export function set(data) {
       res.attribute.temperature = attr.temperature
     } else {
       res.attribute = Object.assign({}, res.attribute, attr)
+    }
+    if(attr.mode == 'cold') {
+      res.attribute.temperature = 260
+    }
+    if(attr.mode == 'heat') {
+      res.attribute.temperature = 230
     }
     return Mock.mock({
         code: 0

@@ -123,9 +123,9 @@ export default {
       this.getDeviceInfo()
       .then(()=>{
         this.ratio = parseInt(this.deviceAttrs.level/254*100) 
-        let touch = document.querySelectorAll(".touch")[0]  
+        let touchbox = document.querySelectorAll(".touchbox")[0]  
         let coverlight = document.querySelectorAll(".coverlight")[0]   
-        touch.style.top = ((100-this.ratio)/100*185) +"px"
+        touchbox.style.top = ((100-this.ratio)/100*185) +"px"
         coverlight.style.clip = `rect(${((100-this.ratio)/100*185) +"px"} 320px 450px 0)`
       })
     })

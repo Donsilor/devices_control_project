@@ -9,6 +9,13 @@ export function filterTm(tm) {
   }
   return tmp
 }
+export function filterTime(tm) {
+  let tmp = '--'
+  if(tm || tm == 0){
+    tmp = (+tm)/10
+  }
+  return tmp
+}
 export function modeType(type) {
   switch(type) {
     case 'auto':
