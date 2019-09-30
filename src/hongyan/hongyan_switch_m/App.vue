@@ -7,6 +7,10 @@
         white
         bg-color="#346EE6"
         bak-color="#fff" />
+      <!-- 注意 -->
+      <div class="zhuyi">
+        <span>注意：零火线开关暂时不支持配对</span>
+      </div>
       <!-- 灯 -->
       <div class="main center">
         <div class="bg center">
@@ -205,8 +209,14 @@ export default {
     color: #fff;
     opacity: 0.2;
   }
+  .zhuyi {
+    margin-top: 5px;
+    font-size: 24px;
+    color: #fff;
+    line-height: 24px;
+  }
   .main {
-    margin-top: 20%;
+    margin-top: 10%;
     position: relative;
     .bg {
       height: 550px;
