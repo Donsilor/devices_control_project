@@ -421,6 +421,9 @@ export default {
       if(data.attribute.machine_mode !== 'off'){
         this.currentMode = data.attribute.machine_mode
       }
+      if(data.attribute.order_mode !== 'off'&&data.attribute.order_time > 0){
+        this.currentMode = data.attribute.order_mode
+      }
       if(data.attribute.operation == 'abnormal'){
         this.model = {    
           "progress": 0,
