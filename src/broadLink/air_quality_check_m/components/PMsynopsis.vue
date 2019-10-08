@@ -3,7 +3,12 @@
     <div class="top"/>
     <div class="header">
       <p class="title">PM2.5简介</p>
-      <span @click="$router.go(-1)"/>
+      <div 
+        class="goback" 
+        @click="$router.go(-1)">
+        <span/>
+      </div>
+  
     </div>
     <div class="text">
       PM2.5指环境空气动力学当量直径小于等于2.5微米的颗粒物。它能较长时间悬浮于空气中，其在空气中含量浓度越高，就代表空气污染越严重。
@@ -144,5 +149,13 @@
         }
       } 
     }
+}
+.goback{
+  height: 100%;
+  width: 100px;
+  position: relative;
+  z-index: 100;
+  left: -40px;
+  padding-left: 40px;
 }
 </style>
