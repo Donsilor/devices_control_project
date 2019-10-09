@@ -118,38 +118,19 @@ export default {
     isClose(){
       return this.deviceAttrs.switch_status=="on"?false:true
     },
-    isRatio(){
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-       this.ratio = parseInt(this.deviceAttrs.level/254*100) 
-       console.log(this.ratio)
-       return this.ratio
-    },
-    isTop(){
-      let touchbox = document.querySelectorAll(".touchbox")[0]  
-      touchbox.style.top = ((100-this.ratio)/100*185) +"px"
-      console.log(touchbox.style.top)
-      return touchbox.style.top
-      
-    },
-    isClip(){
-      let coverlight = document.querySelectorAll(".coverlight")[0]   
-      coverlight.style.clip = `rect(${((100-this.ratio)/100*185) +"px"} 320px 450px 0)`
-      console.log(coverlight.style.clip)
-      return coverlight.style.clip
+  },
+  watch: {
+    'device.stateChange'() {
+      this.$nextTick(() => {
+         this.newLevel()
+      })  
     }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
-        console.log(this.isRatio)
-        console.log(this.isTop)
-        console.log(this.isClip)
-        // this.ratio = parseInt(this.deviceAttrs.level/254*100) 
-        // let touchbox = document.querySelectorAll(".touchbox")[0] 
-        // let coverlight = document.querySelectorAll(".coverlight")[0]    
-        // touchbox.style.top = ((100-this.ratio)/100*185) +"px"
-        // coverlight.style.clip = `rect(${((100-this.ratio)/100*185) +"px"} 320px 450px 0)`
+        this.newLevel()
       })
     })
   },
@@ -162,6 +143,13 @@ export default {
     // 
     endLight(val){
       this.controlDevice('level',val)
+    },
+    newLevel(){
+      this.ratio = parseInt(this.deviceAttrs.level/254*100) 
+      let touchbox = document.querySelectorAll(".touchbox")[0] 
+      let coverlight = document.querySelectorAll(".coverlight")[0]    
+      touchbox.style.top = ((100-this.ratio)/100*185) +"px"
+      coverlight.style.clip = `rect(${((100-this.ratio)/100*185) +"px"} 320px 450px 0)`
     },
     setSpeed(val) {
       if (this.isClose) return  // 关机状态点击无效
