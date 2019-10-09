@@ -1,7 +1,8 @@
 <template class="a">
   <div class="body">
     
-    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
+    <div 
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']" >
       <topbar 
         :title="device.device_name"
         bak-color="#fff" 
@@ -80,15 +81,15 @@ export default {
     return {
       isOpen: false,
       toogleSpeed:true,
-      ratio:100
+      ratio:100,
+      // isRatio:'',
+      // isTop:'',
+      // isClip:''
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-    // isClose(){
-    //   return this.deviceAttrs.switch_status === 'on' ? false : true
-    // },
     rotateClass() {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.temperature) {
@@ -116,17 +117,39 @@ export default {
     },
     isClose(){
       return this.deviceAttrs.switch_status=="on"?false:true
+    },
+    isRatio(){
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+       this.ratio = parseInt(this.deviceAttrs.level/254*100) 
+       console.log(this.ratio)
+       return this.ratio
+    },
+    isTop(){
+      let touchbox = document.querySelectorAll(".touchbox")[0]  
+      touchbox.style.top = ((100-this.ratio)/100*185) +"px"
+      console.log(touchbox.style.top)
+      return touchbox.style.top
+      
+    },
+    isClip(){
+      let coverlight = document.querySelectorAll(".coverlight")[0]   
+      coverlight.style.clip = `rect(${((100-this.ratio)/100*185) +"px"} 320px 450px 0)`
+      console.log(coverlight.style.clip)
+      return coverlight.style.clip
     }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
-        this.ratio = parseInt(this.deviceAttrs.level/254*100) 
-        let touchbox = document.querySelectorAll(".touchbox")[0]  
-        let coverlight = document.querySelectorAll(".coverlight")[0]   
-        touchbox.style.top = ((100-this.ratio)/100*185) +"px"
-        coverlight.style.clip = `rect(${((100-this.ratio)/100*185) +"px"} 320px 450px 0)`
+        console.log(this.isRatio)
+        console.log(this.isTop)
+        console.log(this.isClip)
+        // this.ratio = parseInt(this.deviceAttrs.level/254*100) 
+        // let touchbox = document.querySelectorAll(".touchbox")[0] 
+        // let coverlight = document.querySelectorAll(".coverlight")[0]    
+        // touchbox.style.top = ((100-this.ratio)/100*185) +"px"
+        // coverlight.style.clip = `rect(${((100-this.ratio)/100*185) +"px"} 320px 450px 0)`
       })
     })
   },
@@ -199,7 +222,8 @@ export default {
 }
 .page{
   height:100vh;
-  background-image: radial-gradient(51% -19%, #F5BD36 52%, #F3CF77 52%, #E1AD2E 100%);
+  // background-image: radial-gradient(51% -19%, #F5BD36 52%, #F3CF77 52%, #E1AD2E 100%);
+  background-image: radial-gradient(#F3CF77,#E1AD2E);
 }
 .main{
   margin-top: 5vh;

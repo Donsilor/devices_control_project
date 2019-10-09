@@ -449,7 +449,7 @@ export default {
     &:before {
       content: "";
       position: fixed;
-      top: 64PX;
+      top: 69PX;
       left: 0;
       bottom: 0;
       right: 0;
