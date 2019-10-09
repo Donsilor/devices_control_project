@@ -109,7 +109,9 @@ export default {
     HdSmart.ready(() => { 
       console.log('sdsd')
       this.getDeviceInfo()
+      HdSmart.UI.setStatusBarColor(2)
     })
+  
   },
   methods: {
     ...mapActions(['getDeviceInfo','doControlDevice']),
