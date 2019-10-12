@@ -1,8 +1,7 @@
 <!-- 搜索页面 -->
 <template>
   <div class="page-search">
-
-    <topbar :search="false">
+    <div :search="false">
       <form
         class="search_bar"
         @submit.prevent="submit">
@@ -26,7 +25,7 @@
           value="搜索"
           class="search_submit">
       </form>
-    </topbar>
+    </div>
 
     <status-tip />
     <!-- 搜索建议 -->
@@ -153,8 +152,8 @@
   width: 100%;
   .icon-search{
     position: absolute;
-    top: 10px;
-    left: 0;
+    top: 2px;
+    left: 20px;
     color: #dbdbdb;;
 
     font-size: 35px;
@@ -183,8 +182,8 @@
   }
   .icon-del1 {
     position: absolute;
-    right: 0;
-    top: 10px;
+    right: 10px;
+    top: 2px;
     color: #d8d8d8;
     font-size: 35px;
     line-height: 35px;
