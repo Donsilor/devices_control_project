@@ -184,7 +184,8 @@ export default {
     }
     .bg{
       width: 110%;
-      height: 110%;
+      // height: 110%;
+      // width: 452px;
       margin-top: -100px;
     }
     .isgray {
@@ -196,7 +197,7 @@ export default {
     text-align: center;
     font-size: 24px;
     color: #fff;
-    margin: -80px auto 30px auto;
+    margin: -100px auto 30px auto;
     width: 100%;
     height: 14px;
   }
@@ -295,7 +296,8 @@ export default {
     &.page {
       background: #fff;
       .electricity {
-        margin-top: 160px;
+        // margin-top: 160px;
+        margin-top: 140px;
         .electric {
           color:#20282B;
           .current1 {
@@ -357,12 +359,13 @@ export default {
     color: #FFFFFF;
     text-align: center;
     padding: 0 100px;
+    margin-top: -40px;
     .electric {
       > div {
         height: 90px;
         font-size: 80px;
         position: relative;
-        margin-top: 30px;
+        margin-top: 40px;
         >span {
           font-size: 24px;
           position: absolute;

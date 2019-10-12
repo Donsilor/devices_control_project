@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     touchStart(e){
-      // console.log(e)
+      console.log(e)
     },
     touchMove(e){
       e.stopPropagation()
@@ -50,7 +50,7 @@ export default {
       h=h>=185?185:h
       touchbox.style.top = (h + coverlight.offsetTop)/37.5 +"rem"
       coverlight.style.clip = `rect(${h /37.5 +'rem'} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
-      this.scale = parseInt((h/185)*100)
+      this.scale = Math.round((h/185)*100)
       this.$emit('moveLight',this.scale)
     },
     touchEnd(e){

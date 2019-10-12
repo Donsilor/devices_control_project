@@ -1,6 +1,5 @@
 <template class="a">
   <div class="body">
-    
     <div 
       :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']" >
       <topbar 
@@ -11,19 +10,6 @@
         v-if="toogleSpeed" 
         class="main center" 
       >
-        <!-- <div 
-          v-show="!isClose&&!isOffline" 
-          class="ratiobg111"
-          @click="ratiobg2click($event)">
-          <div 
-            class="ratiobg2" 
-          />
-          <div 
-            class="circle" 
-            @touchstart="touchStart($event)"
-            @touchmove="touchMove($event)"
-            @touchend="touchEnd($event)"/>
-        </div> -->
         <div 
           v-show="!isClose&&!isOffline" 
           class="wrap-circle center">
@@ -47,7 +33,7 @@
           <div 
             :class="[{ 'active': !isClose }, 'btn-swich btn center']"
             @click="setSwitch" />
-          <div class="btn-name">关机</div>
+          <div class="btn-name">{{ isClose||isOffline?'开灯':'关灯' }}</div>
         </div>
         <div 
           class="btn-wrap"
@@ -82,9 +68,6 @@ export default {
       isOpen: false,
       toogleSpeed:true,
       ratio:100,
-      // isRatio:'',
-      // isTop:'',
-      // isClip:''
     }
   },
   computed: {
@@ -132,6 +115,7 @@ export default {
       .then(()=>{
         this.newLevel()
       })
+      HdSmart.UI.setStatusBarColor(1)
     })
   },
   methods: {
@@ -145,17 +129,18 @@ export default {
       this.controlDevice('level',val)
     },
     newLevel(){
-      this.ratio = parseInt(this.deviceAttrs.level/254*100) 
+      this.ratio = Math.round(this.deviceAttrs.level/254*100) 
       let touchbox = document.querySelectorAll(".touchbox")[0] 
       let coverlight = document.querySelectorAll(".coverlight")[0]    
-      touchbox.style.top = ((100-this.ratio)/100*185) +"px"
-      coverlight.style.clip = `rect(${((100-this.ratio)/100*185) +"px"} 320px 450px 0)`
+      touchbox.style.top = ((100-this.ratio)/100*185)/37.5 +"rem"
+      coverlight.style.clip = `rect(${((100-this.ratio)/100*185)/37.5 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
     },
     setSpeed(val) {
-      if (this.isClose) return  // 关机状态点击无效
+      if (this.isClose||this.isOffline) return 
       this.controlDevice('temperature', val)
     },
     setSwitch() {
+      if (this.isOffline) return false
       let switchStatus = ''
       if (this.deviceAttrs.switch_status == 'on') {
         switchStatus = 'off'
@@ -210,7 +195,6 @@ export default {
 }
 .page{
   height:100vh;
-  // background-image: radial-gradient(51% -19%, #F5BD36 52%, #F3CF77 52%, #E1AD2E 100%);
   background-image: radial-gradient(#F3CF77,#E1AD2E);
 }
 .main{
@@ -493,6 +477,8 @@ export default {
 }
 &.close,
 &.offline {
+  background-image: url("~@lib/@{imgPath}/beij@3x.png");
+    background-size: 100% 100%;
   &:before {
     content: "";
     position: fixed;
@@ -506,8 +492,8 @@ export default {
     background: rgba(0, 0, 0, 0.1);
   }
   &.page {
-    background-image: url("~@lib/@{imgPath}/beij@3x.png");
-    background-size: 100% 100%;
+    // background-image: url("~@lib/@{imgPath}/beij@3x.png");
+    // background-size: 100% 100%;
 
     .cover {
       background: #fff;
