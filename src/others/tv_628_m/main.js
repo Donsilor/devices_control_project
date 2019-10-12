@@ -16,7 +16,9 @@ import Index from './components/Index.vue'
 import List from './components/List.vue'
 import Search from './components/Search.vue'
 import Detail from './components/Detail.vue'
-import Topbar from './components/Topbar.vue'
+// import Topbar from './components/Topbar.vue'
+import Topbar from '@lib/components/NewTopBar.vue'
+
 import ErrorView from './components/Error.vue'
 import OfflineMask from './components/OfflineMask.vue'
 // import Statusbar from './components/Statusbar.vue'
@@ -180,7 +182,6 @@ HdSmart.onDeviceListen(function(data) {
     store.dispatch('setOnline', data.result.attribute.connectivity)
   }
 })
-
 HdSmart.ready(() => {
 
   if (!is_ready) {

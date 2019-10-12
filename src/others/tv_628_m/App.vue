@@ -1,8 +1,8 @@
 <template>
   <div
     id="app"
-    style="height: 100%;"
-    :class="{isIOS:isIOS}">
+    :class="{isIOS:isIOS}"
+    style="height: 100%;">
     <router-view />
     <!-- <detail/> -->
   </div>

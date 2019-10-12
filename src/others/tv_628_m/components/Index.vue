@@ -6,30 +6,43 @@
       class="space-block" />
     <!-- 顶部导航菜单 -->
     <topbar
-      v-if="isShowBar"
-      :title="$store.state.device_name"
-      :more="true"
-      :search="false"
-      :back="back" />
+      title="客厅的电视"
+      bak-color="#000"
+    />
+    <div class="search-screen-bg">
+      <div class="search-screen">
+        <router-link
+          class="search2" 
+          to="/search">搜索</router-link>
+        <div 
+          v-show="activeIndex!=0" 
+          class="screen">筛选</div>
+      </div>
+    </div>
+   
     <!-- 设备状态提示 -->
     <status-tip
       v-show="device_uuid"
       :bar-height="barHeight" />
-<!--    <div class="wrap-title">-->
-<!--      <div class="title mar">栏目分类</div>-->
-<!--    </div>-->
+    <!--    <div class="wrap-title">-->
+    <!--      <div class="title mar">栏目分类</div>-->
+    <!--    </div>-->
 
     <div class="icon_grid">
       <div class="icon_grid_inner">
         <div
           v-for="(item, idx) in channels"
-          :class="['item' + idx, 'item', {'active': idx === 0}]"
-          @click.prevent="toPage(item)">{{ item.channel }}</div>
+          :class="['item' + idx, 'item', {'active': idx == activeIndex}]"
+          @click.prevent="toPage(item,idx)">{{ item.channel }}</div>
         <div class="block" />
       </div>
     </div>
+
+
     <!-- 栏目分类 -->
-    <div class="swiper mar">
+    <div 
+      v-show="activeIndex==0" 
+      class="swiper mar" >
       <div
         v-if="noVal==true"
         @click="pageInit">
@@ -63,7 +76,7 @@
         :key="idx"
         class="mar">
         <div
-          v-show="it && it.length > 0"
+          v-show="it && it.length > 0 && activeIndex==0"
           class="wrap-title">
           <div class="title">{{ idx | nameType }}</div>
           <div
@@ -85,8 +98,8 @@
 
             <div class="name">{{ item.title }}</div>
             <span class="update">
-            {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
-          </span>
+              {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
+            </span>
             <!-- <span
               v-if="item.ispay && item.ispay !== '1'"
               class="isvip">付费</span> -->
@@ -188,11 +201,40 @@
     color: rgba(0, 0, 0, 0.2);
   }
 }
+.search-screen-bg{
+    background: #fff;
+  .search-screen{
+    overflow: hidden;
+    margin: 0 48px;
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    .search2{
+      width: 100%;
+      height: 60px;
+      background:rgba(0, 0, 0, 0.04);
+      border-radius: 2px;
+      height: 60px;
+      text-align: center;
+      line-height: 60px;
+      margin-right: 20px;
+    }
+    .screen{
+      background:rgba(0, 0, 0, 0.04);
+      border-radius: 2px;
+      width: 144px;
+      height: 60px;
+      text-align: center;
+      line-height: 60px;
+    }
+  }
+} 
 
 .icon_grid {
   overflow: hidden;
   margin: 0 48px;
   padding: 20px 0;
+
   -webkit-overflow-scrolling: touch;
   .icon_grid_inner {
     display: flex;
@@ -534,7 +576,7 @@ export default {
       ios: /iPad|iPhone|iPod/.test(navigator.userAgent),
       device_uuid: window.device_uuid || '',
       isShowBar: this.$route.query.showBar == 1,
-
+      activeIndex:0,
       channelId: '',
       vid: '',
       swiperOption: {
@@ -729,12 +771,12 @@ export default {
       // )
       console.log('----getChannelData--------')
       service.getChannelData(channelId, (err, data) => {
+        console.log('data',data)
         if (err) {
           this.error = true
           return
         }
         let cid = data.channelId
-        console.log(cid)
         if(cid === '001'){
           this.listDY = data.data.list.slice(0, 6)
         } else if(cid === '002') {
@@ -764,7 +806,10 @@ export default {
       }
     },
 
-    toPage(item) {
+    toPage(item,idx) {
+      // console.log(item,idx)
+      console.log(this.allList)
+      this.activeIndex = idx
       let name = encodeURIComponent(item.channel)
       if (this.isShowBar) {
         window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
