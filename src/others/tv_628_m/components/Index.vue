@@ -31,7 +31,7 @@
     <!-- 栏目分类 -->
     <div class="swiper mar">
       <div
-        v-if="homePageInfo.length === 0"
+        v-if="noVal==true"
         @click="pageInit">
         <img src="~@lib/base/tv/assets/img_default_recommend.png">
       </div>
@@ -577,7 +577,8 @@ export default {
       current_year: "",
       current_orderby: "year",
 
-      hideMenu: false
+      hideMenu: false,
+      noVal: false
     }
   },
   computed: {
@@ -693,6 +694,9 @@ export default {
       service.getHomePageInfo(data => {
         infoCache = data
         this.homePageInfo = infoCache
+        if(!data || this.homePageInfo.length == 0) {
+          this.noVal = true
+        }
       })
     },
     filterData(channelId) {

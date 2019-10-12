@@ -69,7 +69,7 @@ export default {
         } else if (pm2 > 35 && pm2 <= 75) {
           return 'huangs'
         } else if (pm2 > 75 && pm2 <= 115) {
-          return 'huangs'
+          return 'huangse'
         } else if (pm2 > 115 && pm2 <= 150) {
           return 'hongse'
         } else if (pm2 > 150 && pm2 <= 255) {
@@ -89,7 +89,7 @@ export default {
         } else if (pm2 > 35 && pm2 <= 75) {
           return 'huangs2'
         } else if (pm2 > 75 && pm2 <= 115) {
-          return 'huangs2'
+          return 'huangse2'
         } else if (pm2 > 115 && pm2 <= 150) {
           return 'hongse2'
         } else if (pm2 > 150 && pm2 <= 255) {
@@ -109,7 +109,9 @@ export default {
     HdSmart.ready(() => { 
       console.log('sdsd')
       this.getDeviceInfo()
+      HdSmart.UI.setStatusBarColor(2)
     })
+  
   },
   methods: {
     ...mapActions(['getDeviceInfo','doControlDevice']),
@@ -149,8 +151,8 @@ i {
       background-size: 100% 100%;
     }
 
-    .huangs {
-      background: url("~@lib/@{imgPath}/huangs.png") no-repeat;
+    .huangse {
+      background: url("~@lib/@{imgPath}/huangse.png") no-repeat;
       background-size: 100% 100%;
     }
 
@@ -175,7 +177,7 @@ i {
       background: #f5d100;
     }
 
-    .huangs2 {
+    .huangse2 {
       background: #f99f03;
     }
 
@@ -201,6 +203,9 @@ i {
   }
   .bgc {
     position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
     width: 420px;
     height: 420px;
     border-radius: 50%;
