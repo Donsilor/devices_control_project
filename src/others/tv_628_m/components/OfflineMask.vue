@@ -1,8 +1,8 @@
 <template>
-  <div 
-    v-show="!$store.state.online" 
-    :style="maskStyle" 
-    class="mask" 
+  <div
+    v-show="!$store.state.online"
+    :style="maskStyle"
+    class="mask"
     @touchmove.prevent="onTouchMove">
     <div/>
   </div>

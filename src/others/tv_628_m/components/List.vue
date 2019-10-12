@@ -118,29 +118,31 @@
     </div>
 
     <!-- 列表 -->
-    <ul class="vlist list-m60">
-      <li
-        v-for="item in list"
-        :key="item.vid"
-        :class="['item-'+channelId]"
-        class="vitem"
-        @click="showDetailInfo(item)">
-        <img
-          v-lazy="getThumbPic(item.pictureUrl)"
-          :data-src1="item.pictureUrl"
-          alt="">
-        <div class="name">{{ item.title }}</div>
-        <span class="update">
+    <div class="video-list">
+      <ul class="vlist list-m60">
+        <li
+          v-for="item in list"
+          :key="item.vid"
+          :class="['item-'+channelId]"
+          class="vitem"
+          @click="showDetailInfo(item)">
+          <img
+            v-lazy="getThumbPic(item.pictureUrl)"
+            :data-src1="item.pictureUrl"
+            alt="">
+          <div class="name">{{ item.title }}</div>
+          <span class="update">
           {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
         </span>
-        <span
-          v-if="item.ispay && item.ispay !== '1'"
-          class="isvip">付费</span>
-        <span class="score">{{ item.score }}</span>
-        <!--<div class="label">-->
-        <!--</div>-->
-      </li>
-    </ul>
+          <span
+            v-if="item.ispay && item.ispay !== '1'"
+            class="isvip">付费</span>
+          <span class="score">{{ item.score }}</span>
+          <!--<div class="label">-->
+          <!--</div>-->
+        </li>
+      </ul>
+    </div>
     <!-- 没有数据 -->
     <div
       v-show="loadState === 'NO_DATA'"
@@ -167,7 +169,7 @@
 .filters {
   padding: 28px 28px 12px;
   background: rgba(255, 255, 255, 0.98);
-  box-shadow: inset 0 -1px 0 0 #dbdbdb;
+  /**box-shadow: inset 0 -1px 0 0 #dbdbdb;**/
   position: fixed;
   left: 0;
   top: 65px;
@@ -235,7 +237,7 @@
     white-space: nowrap;
     padding: 0 10px;
     &.active {
-      color: #ffc700;
+      color: #000000;
       background: #f6f6f6;
       border-radius: 2px;
     }
@@ -249,6 +251,10 @@
   display: flex;
   flex-wrap: wrap;
   // align-content: space-between;
+}
+.video-list{
+  background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+  background-size: 100% 100%;
 }
 .vitem {
   width: 320px;

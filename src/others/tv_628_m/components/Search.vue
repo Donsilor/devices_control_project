@@ -3,25 +3,25 @@
   <div class="page-search">
 
     <topbar :search="false">
-      <form 
+      <form
         class="search_bar"
         @submit.prevent="submit">
         <div class="search_input">
-          <a 
-            href="javascript:void(0);" 
+          <a
+            href="javascript:void(0);"
             class="icon-search" />
-          <input 
+          <input
             v-model="word"
             type="text"
             placeholder="输入片名、导演、演员搜索"
             @input="fuzzySearch">
-          <a 
+          <a
             v-show="word != ''"
             href="javascript:void(0);"
             class="icon-del1"
             @click.prevent="clearWord" />
         </div>
-        <input 
+        <input
           type="submit"
           value="搜索"
           class="search_submit">
@@ -30,11 +30,11 @@
 
     <status-tip />
     <!-- 搜索建议 -->
-    <div 
+    <div
       v-show="curpage===2"
       class="search_suggest">
       <ul>
-        <li 
+        <li
           v-for="item in suggestData"
           :key="`${item.index}`"
           @click="doSearch(item.text)"
@@ -42,18 +42,18 @@
       </ul>
     </div>
     <!-- 搜搜历史 -->
-    <div 
+    <div
       v-show="curpage===1"
       class="search_history">
       <div class="hd">
-        <a 
+        <a
           href="#"
           class="del icon-del"
           @click.prevent="clearHistory" />
         搜索记录
       </div>
       <ul class="bd clearfix">
-        <li 
+        <li
           v-for="item in historyData"
           :key="`${item.index}`"
           @click="doSearch(item)">
@@ -62,20 +62,20 @@
       </ul>
     </div>
     <!-- 搜索结果 -->
-    <div 
+    <div
       v-show="curpage===3"
       class="search_result">
-      <div 
+      <div
         v-show="resultData.length && loadState !== 'NO_DATA' || current_channel!=''"
         class="hd clearfix">
         <div class="tab">
-          <a 
+          <a
             :class="{active:current_channel==''}"
             href="#"
             @click.prevent="setParam('current_channel','')">
             全部
           </a>
-          <a 
+          <a
             v-for="item in channels"
             :class="{active:current_channel==item.channelId}"
             href="#"
@@ -84,7 +84,7 @@
           </a>
         </div>
         <div class="sorts">
-          <a 
+          <a
             v-for="item in orderby"
             :class="{active:current_orderby==item.orderId}"
             href="#"
@@ -94,31 +94,31 @@
         </div>
       </div>
       <ul class="vlist list-m60">
-        <li 
+        <li
           v-for="item in resultData"
           :key="item.vid"
           :class="['item-'+item.channelId]"
           class="vitem"
           @click="showDetailInfo(item)">
-          <img 
+          <img
             v-lazy="getThumbPic(item.pictureUrl)"
             :data-src1="item.pictureUrl"
             alt="">
           <div class="name">{{ item.title }}</div>
-          <span 
+          <span
             v-show="item.channelId!='001'"
             class="update">
             {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
           </span>
           <div class="label">
-            <span 
+            <span
               v-if="item.ispay && item.ispay !== '1'"
               class="isvip">付费</span>
           </div>
         </li>
       </ul>
       <!-- 没有数据 -->
-      <div 
+      <div
         v-show="loadState === 'NO_DATA'"
         class="nodata">
         <i />
@@ -135,6 +135,11 @@
 </template>
 
 <style lang="less" scoped>
+.page-search{
+  background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+  background-size: 100% 100%;
+  height: 100%;
+}
 .search_bar {
   flex: 1;
   padding-top: 8PX;

@@ -1,34 +1,34 @@
 <!-- 导航条 -->
 <template>
   <div class="topbar">
-    <div 
+    <div
       :style="{height:(status_bar_height + navigation_bar_height) +'px'}"
       class="topbar-block" />
     <div class="topbar-fixed">
-      <div 
+      <div
         :style="{height:status_bar_height+'px'}"
         class="statusbar" />
-      <div 
+      <div
         :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
         class="navbar">
         <div class="left">
-          <a 
+          <a
             href="#/"
             class="icon-return"
             @click.prevent="goBack" />
         </div>
         <div class="right">
-          <router-link 
+          <router-link
             v-if="search"
             to="/search"
             class="icon-search" />
-          <a 
+          <a
             v-if="more"
             href=""
             class="icon-more"
             @click.prevent="goDetail" />
         </div>
-        <div 
+        <div
           v-if="title"
           class="title">{{ title }}</div>
         <slot />
@@ -72,8 +72,14 @@ export default {
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 /* topbar */
+.topbar-block, .topbar-fixed{
+  background-color: transparent;
+}
+.topbar-fixed{
+  border-bottom: 0;
+}
 .topbar .navbar {
   display: flex;
   align-items: center;

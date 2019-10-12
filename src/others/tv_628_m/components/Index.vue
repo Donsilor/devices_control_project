@@ -15,6 +15,19 @@
     <status-tip
       v-show="device_uuid"
       :bar-height="barHeight" />
+<!--    <div class="wrap-title">-->
+<!--      <div class="title mar">栏目分类</div>-->
+<!--    </div>-->
+
+    <div class="icon_grid">
+      <div class="icon_grid_inner">
+        <div
+          v-for="(item, idx) in channels"
+          :class="['item' + idx, 'item', {'active': idx === 0}]"
+          @click.prevent="toPage(item)">{{ item.channel }}</div>
+        <div class="block" />
+      </div>
+    </div>
     <!-- 栏目分类 -->
     <div class="swiper mar">
       <div
@@ -43,57 +56,46 @@
           class="swiper-pagination" />
       </swiper>
     </div>
-    <div class="wrap-title">
-      <div class="title mar">栏目分类</div>
-    </div>
-
-    <div class="icon_grid">
-      <div class="icon_grid_inner">
-        <div
-          v-for="(item, idx) in channels"
-          :class="['item' + idx, 'item']"
-          @click.prevent="toPage(item)">{{ item.channel }}</div>
-        <div class="block" />
-      </div>
-    </div>
     <!-- 列表 -->
-    <div
-      v-for="(it, idx) in allList"
-      :key="idx"
-      class="mar">
+    <div class="index-list">
       <div
-        v-show="it && it.length > 0"
-        class="wrap-title">
-        <div class="title">{{ idx | nameType }}</div>
+        v-for="(it, idx) in allList"
+        :key="idx"
+        class="mar">
         <div
-          class="more"
-          @click="toListPage(idx)">更多&nbsp;></div>
-      </div>
+          v-show="it && it.length > 0"
+          class="wrap-title">
+          <div class="title">{{ idx | nameType }}</div>
+          <div
+            class="more"
+            @click="toListPage(idx)">更多&nbsp;></div>
+        </div>
 
-      <ul class="vlist list-m60">
-        <li
-          v-for="item in it"
-          :key="item.vid"
-          :class="['item-'+ item.channelId, 'vitem']"
-          @click="showDetailInfo(item)">
+        <ul class="vlist list-m60">
+          <li
+            v-for="item in it"
+            :key="item.vid"
+            :class="['item-'+ item.channelId, 'vitem']"
+            @click="showDetailInfo(item)">
 
-          <img
-            v-lazy="getThumbPic(item.pictureUrl)"
-            :data-src="item.pictureUrl"
-            alt="">
+            <img
+              v-lazy="getThumbPic(item.pictureUrl)"
+              :data-src="item.pictureUrl"
+              alt="">
 
-          <div class="name">{{ item.title }}</div>
-          <span class="update">
+            <div class="name">{{ item.title }}</div>
+            <span class="update">
             {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
           </span>
-          <!-- <span
-            v-if="item.ispay && item.ispay !== '1'"
-            class="isvip">付费</span> -->
-          <!-- <span class="score">{{ item.score }}</span> -->
-          <!--<div class="label">-->
-          <!--</div>-->
-        </li>
-      </ul>
+            <!-- <span
+              v-if="item.ispay && item.ispay !== '1'"
+              class="isvip">付费</span> -->
+            <!-- <span class="score">{{ item.score }}</span> -->
+            <!--<div class="label">-->
+            <!--</div>-->
+          </li>
+        </ul>
+      </div>
     </div>
     <!-- 控制菜单 -->
     <div :class="[{'hide': hideMenu}, 'control']">
@@ -154,6 +156,10 @@
   .mar {
     margin: 0 48px;
   }
+  .index-list{
+    background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    background-size: 100% 100%;
+  }
 }
 
 .search-box {
@@ -185,11 +191,12 @@
 
 .icon_grid {
   overflow: hidden;
+  margin: 0 48px;
+  padding: 20px 0;
   -webkit-overflow-scrolling: touch;
   .icon_grid_inner {
     display: flex;
     flex-wrap: nowrap;
-
     width: 100%;
     overflow-x: auto;
     display: -webkit-box;
@@ -200,39 +207,57 @@
       display: none;
     }
   }
+  .active{
+    color: #000000;
+    opacity: 1 !important;
+    font-size: 40px !important;
+    position:relative;
+    &::before{
+      content: '';
+      width: 0.5rem;
+      height: 0.07rem;
+      background-color: #FFC800;
+      position: absolute;
+      left:50%;
+      transform:translateX(-50%);
+      bottom: -3px;
+    }
+  }
   .item {
+    font-family: PingFangSC-Medium;
     position: relative;
-    color: #fff;
+    color: #000000;
+    opacity: 0.5;
     font-size: 32px;
     text-align: center;
     border-radius: 12px;
-    width: 280px;
-    height: 152px;
-
+    /*width: 60px;*/
+    /*height: 152px;*/
+    padding: 14px 0;
     display: flex;
     justify-content: center;
     align-items: center;
 
     margin-right: 24px;
-    &.item0 {
-      background: #f05645;
-      margin-left: 48px;
-    }
-    &.item1 {
-      background: #fedd52;
-    }
-    &.item2 {
-      background: #f891f7;
-    }
-    &.item3 {
-      background: #00BCD4;
-    }
-    &.item4 {
-      background: #009688;
-    }
-    &.item5 {
-      background: #8bc34a;
-    }
+    /*&.item0 {*/
+    /*  background: #f05645;*/
+    /*  margin-left: 48px;*/
+    /*}*/
+    /*&.item1 {*/
+    /*  background: #fedd52;*/
+    /*}*/
+    /*&.item2 {*/
+    /*  background: #f891f7;*/
+    /*}*/
+    /*&.item3 {*/
+    /*  background: #00BCD4;*/
+    /*}*/
+    /*&.item4 {*/
+    /*  background: #009688;*/
+    /*}*/
+    /*&.item5 {*/
+    /*  background: #8bc34a;*/
+    /*}*/
   }
   .block {
     width: 24px;
@@ -593,6 +618,7 @@ export default {
     this.pageInit()
     document.body.scrollTop = 0
     this.initFixedMenu()
+    console.log('uu', this.channels)
     service.RemoteController({ show: false })
     // this.$nextTick(() => {
     //   this.pageInit()

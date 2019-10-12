@@ -22,8 +22,8 @@
             href="javascript:void(0);"
             class="icon-return" />
         </div>
-        <div 
-          v-if="showRight" 
+        <div
+          v-if="showRight"
           class="right">
           <template v-if="buttons">
             <a

@@ -39,6 +39,10 @@ export function getInitData(){
     return {
         "channels": [
             {
+              channelId: '005',
+              channel: '精选'
+            },
+            {
                 "channelId": "001",
                 "channel": "电影"
             },

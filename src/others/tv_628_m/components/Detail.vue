@@ -44,7 +44,7 @@
                 href="#"
                 class="btn"
                 @click.prevent="play(cur.playlist2.list[0])">
-              <i class="icon-play" />在电视上播放</a>
+              <i class="icon-play" /><span>在电视上播放</span></a>
             </div>
           </div>
         </div>
@@ -163,7 +163,9 @@
 <style lang="less">
 .page-detail {
   color: #75787a;
-  background: #fafafa;
+  /*background: #fafafa;*/
+  background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+  background-size: 100% 100%;
 }
 .detail-hd {
   position: fixed;
@@ -331,8 +333,9 @@
   width: 100%;
   height: 84px;
   .btn {
-    background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);
-    border-radius: 45px;
+    /*background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);*/
+    /*border-radius: 45px;*/
+    background-color: #000000;
     height: 84px;
     line-height: 84px;
     display: block;
@@ -346,6 +349,10 @@
       margin-right: 12px;
       margin-top: -2px;
       vertical-align: middle;
+      font-size: 30px;
+    }
+    span{
+      font-size: 28px;
     }
     .icon-play,
     .icon-playing {
@@ -490,6 +497,7 @@
     border-radius: 8px;
     font-size: 30px;
     color: #222a37;
+    opacity: 0.4;
     &:active {
       background: #ebebeb;
     }

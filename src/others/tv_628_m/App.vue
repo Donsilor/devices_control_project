@@ -1,6 +1,7 @@
 <template>
   <div
     id="app"
+    style="height: 100%;"
     :class="{isIOS:isIOS}">
     <router-view />
     <!-- <detail/> -->
