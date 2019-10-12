@@ -11,7 +11,7 @@
           class="isgray" >
           <div 
             ref="cover" 
-            :class="[{'openCurtains':deviceAttrs.open_pencentage == 100},'cover']">
+            :class="['cover']">
             <div 
               ref="touchbox" 
               class="touchbox"
@@ -63,7 +63,7 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   data() {
     return {
-       target_percentage: 50,
+      //  target_percentage: 50,
       // 点击中部到指定幅度按钮显示的信息
       coverWidth:""
     }
@@ -94,10 +94,36 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setPause() {
-      this.controlDevice("switch", 'pause')
-      this.controlDevice("open_pencentage", this.target_percentage)
+      // if (this.$refs.cover.className.indexOf('closeCurtains') == -1) return
+      // if (this.$refs.cover.className.indexOf('openCurtains') == -1) return
+      // if (this.$refs.cover.className.indexOf('closeCurtains') == -1) return
+      console.log(this.$refs.cover.className)
+      
+      this.$refs.cover.classList.add('pause')
+      let maxW = this.$refs.isgray.offsetWidth-14
+      let cover = this.$refs.cover
+      let s = cover.offsetWidth-14
+      console.log(s,'cover')
+      console.log(maxW,'cover1')
+      
+      let pauseRange = s/maxW*100
+      this.controlDevice('open_pencentage', pauseRange,{'switch':'pause'})
+      .then(()=>{
+        this.controlDevice('switch', 'on')
+        // this.$refs.cover.classList.remove('pause')
+      })
+  
     },
     setMode(val) {
+      this.$refs.cover.classList.remove('pause')
+      if (val=='100') {
+        this.$refs.cover.classList.add('openCurtains')
+        this.$refs.cover.classList.remove('closeCurtains')
+      }
+      if (val=='0') {
+        this.$refs.cover.classList.add('closeCurtains')
+        this.$refs.cover.classList.remove('openCurtains')
+      }
       this.controlDevice('open_pencentage', val)
       this.controlDevice('switch', 'on')
     },
@@ -112,7 +138,6 @@ export default {
       let maxW = this.$refs.isgray.offsetWidth
       w=w<=14?14:w
       w=w>=maxW?maxW :w
-      // cover.style.width = w/37.5+"rem"
       cover.style.width = w+"px"
       this.coverWidth=w-14
     },
@@ -120,30 +145,26 @@ export default {
       e.stopPropagation()
       e.preventDefault()
       let maxW = this.$refs.isgray.offsetWidth-14
-      let range =Math.round(this.coverWidth/maxW*100)
+      let range =this.coverWidth/maxW*100
       console.log(this.coverWidth)
       console.log(maxW)
       
-      console.log(Math.round(range))      
-      this.controlDevice('open_pencentage', range)
+      console.log(range)    
+      this.controlDevice('open_pencentage', range)  
     },
     newRatio(){
-       let maxW = this.$refs.isgray.offsetWidth
-      this.ratio = this.deviceAttrs.open_pencentage/100*maxW
-      console.log(this.ratio,'aaaa')
+       let maxW = this.$refs.isgray.offsetWidth-14
+      this.coverWidth = this.deviceAttrs.open_pencentage/100*maxW
       let cover = this.$refs.cover
-       cover.style.width = this.ratio+"px"
-      // let touchbox = document.querySelectorAll(".touchbox")[0] 
-      // let coverlight = document.querySelectorAll(".coverlight")[0]    
-      // touchbox.style.top = ((100-this.ratio)/100*185)/37.5 +"rem"
-      // coverlight.style.clip = `rect(${((100-this.ratio)/100*185)/37.5 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
+       cover.style.width = this.coverWidth+14+"px"
     },
-    controlDevice(attr, value) {
+    controlDevice(attr, value,params) {
       return this.doControlDevice({
         nodeid: `curtain.main.${attr}`,
         params: {
           attribute: {
-            [attr]: value
+            [attr]: value,
+            ...params
           }
         }
       })
@@ -198,12 +219,26 @@ export default {
       &.openCurtains{
         animation: open 5s linear;
       }
+      &.closeCurtains{
+        animation: close 5s linear;
+      }
+      &.pause{
+        animation-play-state: paused;
+      }
       @keyframes open {
         0% {
           width: 0px;
         }
         100% {
           width: 572px;
+        }
+      }
+      @keyframes close {
+          0% {
+          width: 572px;
+        }
+        100% {
+          width: 28px;
         }
       }
       

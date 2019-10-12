@@ -3,7 +3,7 @@ import Mock from 'mockjs'
 let res = {
     "connectivity": "online", //l
     "switch": 'on', //开关
-    "open_pencentage":90 , //暖光3000K  自然光5000K  白光6000K
+    "open_pencentage":0 , //暖光3000K  自然光5000K  白光6000K
 }
 export function generateSnapShot() {
     return Mock.mock({
