@@ -6,6 +6,7 @@
       class="space-block" />
     <!-- 顶部导航菜单 -->
     <topbar
+      :shutdown="true"
       title="客厅的电视"
       bak-color="#000"
     />
@@ -808,7 +809,7 @@ export default {
 
     toPage(item,idx) {
       // console.log(item,idx)
-      console.log(this.allList)
+      // console.log(this.allList)
       this.activeIndex = idx
       let name = encodeURIComponent(item.channel)
       if (this.isShowBar) {

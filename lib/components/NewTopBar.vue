@@ -48,8 +48,10 @@
           v-if="title"
           :style="{ 'color': bakColor }"
           class="title">{{ title }}</div>
-        <div class="header-bottom-right"/>
-        <!-- <slot /> -->
+        <div 
+          v-if="Shutdown" 
+          class="header-bottom-right"/>
+          <!-- <slot /> -->
       </div>
      
     </div>
@@ -64,6 +66,10 @@ let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelR
 
 export default {
   props: {
+    Shutdown:{
+      type: Boolean,
+      default: false
+    },
     onBack: {
       type: Function,
       default: null
