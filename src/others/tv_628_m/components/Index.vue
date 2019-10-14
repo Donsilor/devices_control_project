@@ -5,7 +5,7 @@
       v-show="ios"
       class="space-block" />
     <!-- 顶部导航菜单 -->
-    <topbar
+    <new-topbar
       :shutdown="true"
       title="客厅的电视"
       bak-color="#000"
@@ -17,7 +17,8 @@
           to="/search">搜索</router-link>
         <div 
           v-show="activeIndex!=0" 
-          class="screen">筛选</div>
+          class="screen"
+          @click="toPage(itemData)">筛选</div>
       </div>
     </div>
    
@@ -34,7 +35,7 @@
         <div
           v-for="(item, idx) in channels"
           :class="['item' + idx, 'item', {'active': idx == activeIndex}]"
-          @click.prevent="toPage(item,idx)">{{ item.channel }}</div>
+          @click.prevent="toActive(item,idx)">{{ item.channel }}</div>
         <div class="block" />
       </div>
     </div>
@@ -580,6 +581,7 @@ export default {
       activeIndex:0,
       channelId: '',
       vid: '',
+      itemData:{},
       swiperOption: {
         loop: true,
         autoplay: {
@@ -657,6 +659,7 @@ export default {
   },
   created() {
     this.pageInit()
+    console.log('title',device.device_name)
   },
   mounted() {
     this.pageInit()
@@ -806,12 +809,13 @@ export default {
         return "更新至" + last + "集"
       }
     },
-
-    toPage(item,idx) {
-      // console.log(item,idx)
-      // console.log(this.allList)
-      this.activeIndex = idx
+    toActive(item,idx){
+       this.activeIndex = idx
+       this.itemData = item
+    },
+    toPage(item) {
       let name = encodeURIComponent(item.channel)
+       window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
       if (this.isShowBar) {
         window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
       } else {
