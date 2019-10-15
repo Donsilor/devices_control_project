@@ -1,11 +1,12 @@
 /* eslint-disable vue/no-unused-vars */
 <template>
   <div class="body">
-    <div class="page">
+    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar 
         :title="device.device_name"
         :shutdown="true"
-        bak-color="#000" />
+        bak-color="#000"
+        @click="shutdowncallback(off)" />
       <div 
         v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime=='0'" 
         class="main center"
@@ -78,7 +79,9 @@
         <div class="status">{{ deviceAttrs.control=='stop'?'已暂停':'洗涤中' }}</div>
       </div>
       <!-- 底部按钮 -->
-      <div class="panel-btn center">
+      <div 
+        v-if="deviceAttrs.switch=='on'" 
+        class="panel-btn center">
         <div 
           v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime=='0'" 
           class="btn-wrap">
@@ -108,6 +111,26 @@
           <div class="btn-name">{{ deviceAttrs.control=='start'?'暂停':'继续' }}</div>
         </div>
       </div>
+      <!-- 关机状态 -->
+      <div 
+        v-else
+        class="panel-btn center">
+        <div class="btn-wrap">
+          <div 
+            class="btn-swich btn"
+            @click="setSwitch(on)" />
+          <div class="btn-name">开机</div>
+        </div>
+      </div>
+
+      <!-- <div 
+        v-else
+        class="btn-wrap">
+        <div 
+          class="btn-swich"
+          @click="setStart" />
+        <div class="btn-name">开机</div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -274,6 +297,10 @@ export default {
       },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    // 开关机
+    shutdowncallback(val){
+      this.controlDevice('switch',val)
+    },
     // tab切换
     tabMode(t){
       this.temp = t
@@ -511,6 +538,18 @@ export default {
           background:#000;
         }
       }
+    &.btn-swich {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(136, 138, 137,.4);
+      &::before {
+        background-image: url('~@lib/@{imgPath1}/yiguanbi.png');
+        background-size: 100% 100%;
+        width: 80px;
+        height: 80px;
+      }
+    }
       &::before {
         content: "";
         display: block;
@@ -573,16 +612,22 @@ export default {
       // background: rgba(0, 0, 0, 0.1);
     }
     &.page {
-      background: #fff;
+      ul{
+        li{
+          opacity: 0;
+        }
+      }
+      .swiper-container{
+        opacity: .2;
+      }
       .panel-btn {
-        background: #fff;
+        // background: #fff;
       }
     }
     .panel-btn {
-      background: #efefef;
+      // background: #efefef;
     }
     .btn-wrap {
-      opacity: .2;
       &.up-index {
         opacity: 1;
         .btn-open{
@@ -596,6 +641,7 @@ export default {
         border-color: #ffbf00;
       }
         }
+        
       }
     }
   }
