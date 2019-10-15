@@ -1,11 +1,13 @@
 /* eslint-disable vue/no-unused-vars */
 <template>
   <div class="body">
-    <div class="page">
+    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
         :shutdown="true"
-        bak-color="#000" />
+        bak-color="#000"
+        @shutdownCallback="shutdowncallback('off')" />
+      <!-- tab切换栏 -->
       <div
         v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime=='0'"
         class="main center"
@@ -68,6 +70,7 @@
           </div>
         </div>
       </div>
+      <!-- 洗涤中 -->
       <div
         v-show="deviceAttrs.remain_washtime>'0'"
         class="working">
@@ -78,7 +81,9 @@
         <div class="status">{{ deviceAttrs.control=='stop'?'已暂停':'洗涤中' }}</div>
       </div>
       <!-- 底部按钮 -->
-      <div class="panel-btn center">
+      <div
+        v-if="deviceAttrs.switch=='on'"
+        class="panel-btn center">
         <div
           v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime=='0'"
           class="btn-wrap">
@@ -111,6 +116,17 @@
           <div class="btn-name">{{ deviceAttrs.control=='start'?'暂停':'继续' }}</div>
         </div>
       </div>
+      <!-- 关机状态 -->
+      <div
+        v-else
+        class="panel-btn center">
+        <div class="btn-wrap">
+          <div
+            class="btn-swich btn"
+            @click="shutdowncallback('on')" />
+          <div class="btn-name">开机</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -123,122 +139,149 @@ export default {
     return {
       temp:true,
       timeOutEvent:'',
+      a:"",
+      currentMode:'normal',
       tableware:[
         {
           name:'除味',
-          time:120,
+          time:37,
+          english:'taste_removal'
         },
         {
           name:'密胺',
-          time:120,
+          time:106,
+          english:'melamine'
         },
         {
           name:'玻璃',
-          time:120,
+          time:81,
+          english:'glass'
         },
         {
           name:'冲洗',
-          time:120,
+          time:20,
+          english:'flush'
         },
         {
           name:'智能',
-          time:120,
+          time:74,
+          english:'smart'
         }
         ,
         {
           name:'标准',
-          time:120,
+          time:126,
+          english:'normal'
         }
         ,
         {
           name:'强力',
-          time:120,
+          time:91,
+          english:'strong'
         }
         ,
         {
           name:'即时',
-          time:120,
+          time:47,
+          english:'timely'
         }
         ,
         {
           name:'节能',
-          time:120,
+          time:136,
+          english:'energy_saving'
         }
         ,
         {
           name:'蒸汽',
-          time:120,
+          time:100,
+          english:'vapor'
         }
       ],
       foodList:[
         {
           name:'水果',
-          time:120,
+          time:28,
+          english:'fruit'
         },
         {
           name:'浆果',
-          time:120,
+          time:29,
+          english:'berries'
         },
         {
           name:'核果',
-          time:120,
+          time:30,
+          english:'stone_fruit'
         },
         {
           name:'仁果',
-          time:120,
+          time:30,
+          english:'pome_fruit'
         },
         {
           name:'瓜果',
-          time:120,
+          time:32,
+          english:'melons'
         }
         ,
         {
-          name:'蔬果',
-          time:120,
+          name:'蔬菜',
+          time:34,
+          english:'vegetables'
         }
         ,
         {
           name:'叶菜',
-          time:120,
+          time:36,
+          english:'leaf_vegetable'
         }
         ,
         {
           name:'根菜',
-          time:120,
+          time:39,
+          english:'root_vegetable'
         }
         ,
         {
           name:'茎菜',
-          time:120,
+          time:36,
+          english:'stem_vegetable'
         }
         ,
         {
           name:'果实',
-          time:120,
+          time:33,
+          english:'fruit_vegetable'
         },
         {
           name:'食用菌',
-          time:120,
+          time:37,
+          english:'ediblefungi'
         }
         ,
         {
           name:'海鲜',
-          time:120,
+          time:35,
+          english:'seafood'
         }
         ,
         {
           name:'甲壳',
-          time:120,
+          time:35,
+          english:'crustaceans'
         }
         ,
         {
           name:'贝类',
-          time:120,
+          time:38,
+          english:'testaceans'
         }
         ,
         {
           name:'螺类',
-          time:120,
+          time:40,
+          english:'snails'
         }
       ]
     }
@@ -248,14 +291,15 @@ export default {
     ...mapState(['device', 'deviceAttrs']),
     bakColor(){
       return this.isClose ? '#000' : '#fff'
-    }
+    },
+
   },
   watch: {
     'device.stateChange'(){
       this.$nextTick(()=>{
         //  this.newRatio()
       })
-    }
+    },
   },
   created() {
     HdSmart.ready(() => {
@@ -277,22 +321,33 @@ export default {
       },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    // 开关机
+    shutdowncallback(val){
+      this.controlDevice('switch',val)
+    },
     // tab切换
     tabMode(t){
       this.temp = t
     },
     // 启动
     setStart() {
-      if (this.deviceAttrs.remain_washtime>0) {
-
-      }
       let controlStatus = ''
       if (this.deviceAttrs.control == 'start') {
         controlStatus = 'stop'
       } else {
         controlStatus = 'start'
+        this.currentMode = document.querySelectorAll('.swiper-slide-active>div>span')[1].innerHTML
+        let value
+        let arr = this.tableware.concat(this.foodList)
+        for(let i=0;i<arr.length;i++){
+          if(this.currentMode ==arr[i].name ){
+            value = arr[i].english
+          }
+        }
+        this.controlDevice("control",controlStatus,{'mode':value})
+        return
       }
-      this.controlDevice("control", controlStatus)
+      this.controlDevice("control",controlStatus )
     },
     // 长按事件
     touchStart(e){
@@ -555,6 +610,18 @@ export default {
           background:#000;
         }
       }
+    &.btn-swich {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(136, 138, 137,.4);
+      &::before {
+        background-image: url('~@lib/@{imgPath1}/yiguanbi.png');
+        background-size: 100% 100%;
+        width: 80px;
+        height: 80px;
+      }
+    }
       &::before {
         content: "";
         display: block;
@@ -617,16 +684,22 @@ export default {
       // background: rgba(0, 0, 0, 0.1);
     }
     &.page {
-      background: #fff;
+      ul{
+        li{
+          opacity: 0;
+        }
+      }
+      .swiper-container{
+        opacity: .2;
+      }
       .panel-btn {
-        background: #fff;
+        // background: #fff;
       }
     }
     .panel-btn {
-      background: #efefef;
+      // background: #efefef;
     }
     .btn-wrap {
-      opacity: .2;
       &.up-index {
         opacity: 1;
         .btn-open{
@@ -640,6 +713,7 @@ export default {
         border-color: #ffbf00;
       }
         }
+
       }
     }
   }

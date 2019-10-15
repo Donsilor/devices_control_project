@@ -2,54 +2,59 @@
 <template>
   <div class="body">
     <div class="page">
-      <topbar 
+      <topbar
         :title="device.device_name"
         bak-color="#000" />
       <div class="main center">
-        <div 
-          ref="isgray" 
+        <div
+          ref="isgray"
           class="isgray" >
-          <div 
-            ref="cover" 
+          <div
+            ref="cover"
             :class="['cover']">
-            <div 
-              ref="touchbox" 
+            <div
+              ref="touchbox"
               class="touchbox"
               @touchstart="touchStart($event)"
               @touchmove="touchMove($event)"
               @touchend="touchEnd($event)">
-              <div 
+              <div
                 class="touch"/>
             </div>
           </div>
         </div>
         <div class="ruler">
           <ul>
-            <li 
-              v-for="i in 11"/>     
+            <li
+              v-for="i in 11"/>
           </ul>
         </div>
-        <div class="status">正在打开窗帘</div>
+        <div class="status" v-if="curtainStatus === 'opening'">正在打开窗帘</div>
+        <div class="status" v-if="curtainStatus === 'closing'">正在关闭窗帘</div>
+        <div class="status" v-if="curtainStatus === 'opened'">窗帘已打开</div>
+        <div v-if="curtainStatus === 'closed'"
+             class="status" >窗帘已关闭</div>
       </div>
       <!-- 底部按钮 -->
       <div class="panel-btn center">
         <div class="btn-wrap">
-          <div 
-            :class="[{'active':deviceAttrs.open_pencentage == 100},'btn-open btn center']"
+          <div
+            :class="[{'active': curtainStatus === 'closing' },'btn-open btn center']"
             @click="setMode(100)" />
           <div class="btn-name">全开</div>
         </div>
         <div class="btn-wrap">
-          <div 
-            :class="[{'active':deviceAttrs.switch == 'pause'},'btn-pause btn center']"
+          <div
+            ref="btn-pause"
+            :class="['btn-pause btn center']"
             @click="setPause" />
           <div class="btn-name">暂停</div>
         </div>
-        <div 
+        <div
           class="btn-wrap"
         >
-          <div 
-            :class="[{ 'active': deviceAttrs.open_pencentage == 0 }, 'btn btn-close center']" 
+          <div
+            :class="[{ 'active': curtainStatus === 'opening' }, 'btn btn-close center']"
             @click="setMode(0)" />
           <div class="btn-name">全关</div>
         </div>
@@ -65,7 +70,9 @@ export default {
     return {
       //  target_percentage: 50,
       // 点击中部到指定幅度按钮显示的信息
-      coverWidth:""
+      coverWidth:"",
+      timeId: '',
+      curtainStatus: 'opened'
     }
   },
   computed: {
@@ -94,38 +101,38 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setPause() {
-      // if (this.$refs.cover.className.indexOf('closeCurtains') == -1) return
-      // if (this.$refs.cover.className.indexOf('openCurtains') == -1) return
-      // if (this.$refs.cover.className.indexOf('closeCurtains') == -1) return
-      console.log(this.$refs.cover.className)
-      
-      this.$refs.cover.classList.add('pause')
-      let maxW = this.$refs.isgray.offsetWidth-14
+      this.curtainStatus = 'opened'
+      this.$refs['btn-pause'].classList.add('active')
+      setTimeout(() => {
+        this.$refs['btn-pause'].classList.remove('active')
+      }, 500)
+      clearInterval(this.timeId)
+      let maxW = this.$refs.isgray.offsetWidth - 14
       let cover = this.$refs.cover
       let s = cover.offsetWidth-14
-      console.log(s,'cover')
-      console.log(maxW,'cover1')
-      
       let pauseRange = s/maxW*100
+      console.log('窗帘的最大宽度', maxW)
+      console.log('cover宽度', s)
+      console.log('暂停的百分比计算（cover宽度 / 窗帘的最大宽度 * 100）', pauseRange)
       this.controlDevice('open_pencentage', pauseRange,{'switch':'pause'})
-      .then(()=>{
-        this.controlDevice('switch', 'on')
-        // this.$refs.cover.classList.remove('pause')
-      })
-  
+      // .then(()=>{
+      //   this.controlDevice('switch', 'on')
+      // })
     },
+    // 全关
     setMode(val) {
-      this.$refs.cover.classList.remove('pause')
       if (val=='100') {
-        this.$refs.cover.classList.add('openCurtains')
-        this.$refs.cover.classList.remove('closeCurtains')
+        this.animate(this.$refs.cover, 572, 1, 15).then(() => {
+          this.controlDevice('open_pencentage', val)
+          this.controlDevice('switch', 'on')
+        })
       }
       if (val=='0') {
-        this.$refs.cover.classList.add('closeCurtains')
-        this.$refs.cover.classList.remove('openCurtains')
+        this.animate(this.$refs.cover, 14, -1, 15).then(() => {
+          this.controlDevice('open_pencentage', val)
+          this.controlDevice('switch', 'on')
+        })
       }
-      this.controlDevice('open_pencentage', val)
-      this.controlDevice('switch', 'on')
     },
     touchStart(e){
       console.log(e)
@@ -148,15 +155,17 @@ export default {
       let range =this.coverWidth/maxW*100
       console.log(this.coverWidth)
       console.log(maxW)
-      
-      console.log(range)    
-      this.controlDevice('open_pencentage', range)  
+      console.log(range)
+      this.controlDevice('open_pencentage', range)
     },
     newRatio(){
-       let maxW = this.$refs.isgray.offsetWidth-14
+       // let maxW = this.$refs.isgray.offsetWidth-14
+       let maxW = document.querySelector('.isgray').clientWidth-14
+      console.log('窗帘的最大宽度api', maxW)
       this.coverWidth = this.deviceAttrs.open_pencentage/100*maxW
       let cover = this.$refs.cover
-       cover.style.width = this.coverWidth+14+"px"
+       cover.style.width = this.coverWidth +14+"px"
+      console.log('窗帘的赋值宽度为', this.coverWidth+"px")
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
@@ -169,6 +178,58 @@ export default {
         }
       })
     },
+    animate(el, target, step, dtime) {
+      return new Promise ((resolve, reject) => {
+        /**
+         * 参数说明：
+         * - el       表示操作的元素对象
+         * - target   表示移动的目标距离 单位 px
+         * - step     表示步长，即每次移动的距离 单位 px
+         * - dtime    表示移动的间隔时间 单位 ms
+         */
+
+        // 步长和间隔时间设置了默认值
+        step = step || 10
+        dtime = dtime || 30
+
+        // 判断是否开启定时器，如果有就清除
+        if (this.timeId) {
+          clearInterval(this.timeId)
+          this.timeId = null
+        }
+
+        // 开启一个定时器，并将定时器挂载道当前元素上
+        this.timeId = setInterval(() => {
+          let moveWidth = +(document.querySelector('.cover').style.width.replace('px', ''))
+          let fixedWidth = document.querySelector('.isgray').clientWidth
+          let str = el.style.width.replace('px', '')
+          if (step > 0) {
+            this.curtainStatus = 'closing'
+          } else {
+            this.curtainStatus = 'opening'
+          }
+          if (step > 0 && moveWidth / fixedWidth > 1) {
+            clearInterval(this.timeId)
+            this.timeId = ''
+            this.curtainStatus = 'closed'
+            resolve()
+            return
+          }
+          if (step < 0 && moveWidth / fixedWidth < 0.04) {
+            clearInterval(this.timeId)
+            this.timeId = ''
+            resolve()
+            this.curtainStatus = 'opened'
+            return
+          }
+          var current = parseInt(str)
+          current = current ? current : 0
+
+          // 定时器每执行一次，就让元素移动一个 步长
+          el.style.width = current + step + 'px'
+        }, dtime)
+      })
+    }
   }
 }
 </script>
@@ -198,7 +259,7 @@ export default {
       background-image: linear-gradient(-90deg, #E5B864 3%, #F1CB85 52%);
       border-radius: 1px;
       position: absolute;
-      clip:rect(0px 572px 204px 0px); 
+      clip:rect(0px 572px 204px 0px);
       .touchbox{
         width: 28px;
         height: 204px;
@@ -216,6 +277,9 @@ export default {
           border-right: 2px solid #BF954C;
         }
       }
+      &.move{
+        transition: 5s linear;
+      }
       &.openCurtains{
         animation: open 5s linear;
       }
@@ -225,7 +289,7 @@ export default {
       &.pause{
         animation-play-state: paused;
       }
-      @keyframes open {
+      @-webkit-keyframes open {
         0% {
           width: 0px;
         }
@@ -233,7 +297,7 @@ export default {
           width: 572px;
         }
       }
-      @keyframes close {
+      @-webkit-keyframes close {
           0% {
           width: 572px;
         }
@@ -241,10 +305,10 @@ export default {
           width: 28px;
         }
       }
-      
+
     }
     .isgray {
-      width: 572px;
+      width: 75%;
       height: 204px;
       background: rgb(234, 235, 238);
       border-radius: 1px;
@@ -274,7 +338,7 @@ export default {
             font-size: 24px;
             color: #000;
           }
-          &:first-child::before{          
+          &:first-child::before{
             content: "0";
           }
           &:nth-child(3)::before{
@@ -293,7 +357,7 @@ export default {
             content: "100";
           }
         }
-        
+
       }
     }
     .status{
@@ -347,7 +411,7 @@ export default {
         &.btn-open::before{
           background-image: url('~@lib/@{imgPath}/dakai2@2x.png');
           background-size: 100% 100%;
-        } 
+        }
         &.btn-pause::before{
           background-image: url('~@lib/@{imgPath}/zanting2@2x.png');
           background-size: 100% 100%;

@@ -3,6 +3,9 @@
 -->
 <template>
   <div class="page-detail">
+    <!-- 遥控器 --> 
+    <remoteControl/>
+
     <topbar
       :back="goBack"
       :search="false">
@@ -13,7 +16,6 @@
           class="isvip">付费</span>
       </div>
     </topbar>
-
     <status-tip v-show="device_uuid" />
 
     <div class="detail-bd">

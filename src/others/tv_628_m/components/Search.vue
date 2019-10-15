@@ -1,6 +1,8 @@
 <!-- 搜索页面 -->
 <template>
   <div class="page-search">
+    <!-- 遥控器 --> 
+    <remoteControl/>
     <div :search="false">
       <form
         class="search_bar"
@@ -147,8 +149,9 @@
 .search_bar {
   flex: 1;
   padding-top: 8PX;
-  padding-left: 100px;
+  // padding-left: 100px;
   display: flex;
+  margin: 0 32px;
 }
 .search_input {
   line-height: 1;
@@ -165,9 +168,11 @@
     line-height: 35px;
   }
   input {
-    border: 1px solid #dbdbdb;
+    border: 0;
+
+    background: rgba(0, 0, 0, 0.03);
     height: 30PX;
-    border-radius: 32px;
+    border-radius: 3px;
     width: 100%;
     box-sizing: border-box;
     // background: #fff
@@ -205,16 +210,21 @@
   border: none;
   background: none;
   outline: none;
-  color: #2f3133;
+  color: #737373;
+  text-align: right;
 }
 .search_history {
   margin: 0 32px;
   .hd {
     color: #75787a;
     padding: 32px 0 24px;
-    border-bottom: 1px solid rgba(216, 216, 216, 0.7);
+    // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
     margin-bottom: 24px;
     color: #a4a9af;
+    font-family: PingFangSC-Medium;
+    font-size: 48px;
+    color: #000000;
+    line-height: 48px;
     .icon-del {
       float: right;
       margin-right: 10px;
@@ -223,6 +233,7 @@
       line-height: 18px;
       font-size: 36px;
       color: #76787a;
+     
       /*background-repeat: no-repeat;
             background-size: 100% 100%;
             background-image: url(../../../lib/base/tv/assets/btn_clear_normal.png);*/
@@ -235,16 +246,22 @@
   .bd {
     li {
       color: #222a37;
-      width: 50%;
+      // width: 50%;
       box-sizing: border-box;
-      height: 56px;
-      line-height: 56px;
+      // height: 56px;
+      // line-height: 56px;
+      margin-right: 16px;
       margin-bottom: 16px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      // white-space: nowrap;
+      // overflow: hidden;
+      // text-overflow: ellipsis;
       float: left;
-      padding-right: 26px;
+      padding:16px 36px;
+      background: rgba(0, 0, 0, 0.06);
+      border-radius: 34px;
+      font-family: PingFangSC-Regular;
+      // font-size: 24px;
+      color: #5F5F60;
     }
   }
 }
@@ -255,7 +272,7 @@
   li {
     height: 120px;
     line-height: 120px;
-    // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
+    border-bottom: 1px solid rgba(216, 216, 216, 0.7);
     font-size: 32px;
     white-space: nowrap;
     overflow: hidden;

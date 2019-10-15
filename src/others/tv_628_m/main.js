@@ -17,6 +17,7 @@ import List from './components/List.vue'
 import Search from './components/Search.vue'
 import Detail from './components/Detail.vue'
 import Topbar from './components/Topbar.vue'
+import remoteControl from './components/remoteControl.vue'
 import NewTopbar from '@lib/components/NewTopBar.vue'
 
 import ErrorView from './components/Error.vue'
@@ -55,6 +56,7 @@ Vue.component('topbar', Topbar)
 Vue.component('new-topbar', NewTopbar)
 Vue.component('offline-mask', OfflineMask)
 Vue.component('StatusTip', StatusTip)
+Vue.component('remoteControl', remoteControl)
 // Vue.component('statusbar', Statusbar)
 
 // 强制关闭3d(详情页改成不透明了)

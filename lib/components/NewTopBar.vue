@@ -49,8 +49,9 @@
           :style="{ 'color': bakColor }"
           class="title">{{ title }}</div>
         <div 
-          v-if="Shutdown" 
-          class="header-bottom-right"/>
+          v-if="shutdown" 
+          class="header-bottom-right" 
+          @click="shutdownCallback"/>
           <!-- <slot /> -->
       </div>
      
@@ -66,7 +67,7 @@ let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelR
 
 export default {
   props: {
-    Shutdown:{
+    shutdown:{
       type: Boolean,
       default: false
     },
@@ -150,6 +151,9 @@ export default {
     },
     goDetail() {
       HdSmart.UI.goDeviceDetail()
+    },
+    shutdownCallback(){
+      this.$emit("shutdownCallback")
     }
   }
 }
@@ -270,8 +274,6 @@ export default {
   .left a.icon-return {
     position: absolute;
     top: 50%;
-    left: 0;
-    margin-top: -18px;
     display: inline-block;
     width: 24PX;
     height: 24PX;
