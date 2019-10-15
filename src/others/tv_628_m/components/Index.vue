@@ -1,15 +1,18 @@
 <!-- 首页 -->
 <template>
   <div class="page-index">
+    <!-- 遥控器 --> 
+    <remoteControl/>
     <div
       v-show="ios"
       class="space-block" />
     <!-- 顶部导航菜单 -->
     <new-topbar
       :shutdown="true"
+      bg-color="#fff"
       title="客厅的电视"
       bak-color="#000"
-      @shutdownCallback="shutdownCallback"
+      @shutdownCallback="cmd('rcPower')"
     />
     <div class="search-screen-bg">
       <div class="search-screen">
@@ -42,6 +45,7 @@
     </div>
 
 
+
     <!-- 栏目分类 -->
     <div 
       v-show="activeIndex==0" 
@@ -56,8 +60,8 @@
         ref="swiper"
         :options="swiperOption">
         <swiper-slide
-          v-for="item in homePageInfo"
-          :key="item.vid">
+          v-for="(item,index) in homePageInfo"
+          :key="index">
           <a
             :style="{backgroundImage:'url('+item.pictureUrl+')'}"
             href="javascript:void(0)">
@@ -73,6 +77,7 @@
       </swiper>
     </div>
     <!-- 列表 -->
+    
     <div class="index-list">
       <div
         v-for="(it, idx) in allList"
@@ -422,6 +427,7 @@
 }
 
 .control {
+  
   transition: all .3s ease-out;
 
   position: fixed;
@@ -435,6 +441,7 @@
 
   overflow-x: auto;
   -webkit-box-orient: horizontal;
+  display: none;
   &.hide{
     bottom: -200px;
   }
@@ -662,6 +669,7 @@ export default {
   },
   created() {
     this.pageInit()
+    HdSmart.UI.toggleNav()
   },
   mounted() {
     this.pageInit()
@@ -817,7 +825,7 @@ export default {
     },
     toPage(item) {
       let name = encodeURIComponent(item.channel)
-       window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
+      //  window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
       if (this.isShowBar) {
         window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
       } else {

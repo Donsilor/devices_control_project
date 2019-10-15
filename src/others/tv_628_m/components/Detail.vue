@@ -3,6 +3,9 @@
 -->
 <template>
   <div class="page-detail">
+    <!-- 遥控器 --> 
+    <remoteControl/>
+
     <topbar
       :back="goBack"
       :search="false">
