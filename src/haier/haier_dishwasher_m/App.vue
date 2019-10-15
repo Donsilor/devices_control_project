@@ -2,49 +2,49 @@
 <template>
   <div class="body">
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
-      <NewTopBar 
+      <NewTopBar
         :title="device.device_name"
         :shutdown="true"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <!-- tab切换栏 -->
-      <div 
-        v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime=='0'" 
+      <div
+        v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime=='0'"
         class="main center"
         style="margin-top:52px">
         <div class="tab">
           <ul>
-            <li 
-              :class="[{'active':temp},'tablist']" 
+            <li
+              :class="[{'active':temp},'tablist']"
               @click="tabMode(true)">
-              <img 
-                v-show="temp" 
+              <img
+                v-show="temp"
                 src="../../../lib/base/dishwasher/assets/canju@2x.png">
-              <img 
-                v-show="!temp" 
+              <img
+                v-show="!temp"
                 src="../../../lib/base/dishwasher/assets/canju2@2x.png">
               <span >餐具</span>
             </li>
             <li
-              :class="[{'active':!temp},'tablist']" 
+              :class="[{'active':!temp},'tablist']"
               @click="tabMode(false)">
-              <img 
-                v-show="temp" 
+              <img
+                v-show="temp"
                 src="../../../lib/base/dishwasher/assets/shiwu@2x.png">
-              <img 
-                v-show="!temp" 
+              <img
+                v-show="!temp"
                 src="../../../lib/base/dishwasher/assets/shiwu2@2x.png">
               <span >食材</span>
             </li>
           </ul>
           <!-- 左右滑动选择 -->
           <!-- 餐具 -->
-          <div 
-            v-if="temp" 
+          <div
+            v-if="temp"
             class="swiper-container">
             <div class="swiper-wrapper">
-              <div 
-                v-for="item in tableware" 
+              <div
+                v-for="item in tableware"
                 class="swiper-slide">
                 <div>
                   <span>{{ item.time }}</span>
@@ -54,12 +54,12 @@
             </div>
           </div>
           <!-- 食材 -->
-          <div 
-            v-if="!temp" 
+          <div
+            v-if="!temp"
             class="swiper-container1">
             <div class="swiper-wrapper">
-              <div 
-                v-for="item in foodList" 
+              <div
+                v-for="item in foodList"
                 class="swiper-slide">
                 <div>
                   <span>{{ item.time }}</span>
@@ -71,54 +71,57 @@
         </div>
       </div>
       <!-- 洗涤中 -->
-      <div 
-        v-show="deviceAttrs.remain_washtime>'0'" 
+      <div
+        v-show="deviceAttrs.remain_washtime>'0'"
         class="working">
         <div class="time">{{ deviceAttrs.remain_washtime | work_time }}</div>
-        <div 
-          v-show="deviceAttrs.control=='stop'" 
+        <div
+          v-show="deviceAttrs.control=='stop'"
           class="progress">洗涤 —— 漂洗 —— 烘干</div>
         <div class="status">{{ deviceAttrs.control=='stop'?'已暂停':'洗涤中' }}</div>
       </div>
       <!-- 底部按钮 -->
-      <div 
-        v-if="deviceAttrs.switch=='on'" 
+      <div
+        v-if="deviceAttrs.switch=='on'"
         class="panel-btn center">
-        <div 
-          v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime=='0'" 
+        <div
+          v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime=='0'"
           class="btn-wrap">
-          <div 
+          <div
             :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
             @click="setStart" />
           <div class="btn-name">启动</div>
         </div>
         <!-- 洗涤页面按钮 -->
-        <div 
-          v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime>'0'" 
+        <div
+          v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime>'0'"
           class="btn-wrap">
-          <div 
+          <div :class="[{'press':timeOutEvent != 0}]"/>
+          <div :class="[{'progressBar':timeOutEvent != 0}]"/>
+          <!-- <div class="mask" /> -->
+          <div
             ref="black"
-            :class="[{'active':timeOutEvent > '0'},'btn-over btn center']"
+            :class="[{'active':timeOutEvent != 0},'btn-over btn center']"
             @touchstart="touchStart($event)"
             @touchmove="touchMove($event)"
             @touchend="touchEnd($event)"/>
           <div class="btn-name">长按结束</div>
         </div>
-        <div 
-          v-show="deviceAttrs.remain_washtime>'0'" 
+        <div
+          v-show="deviceAttrs.remain_washtime>'0'"
           class="btn-wrap">
-          <div 
+          <div
             :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
             @click="setStart" />
           <div class="btn-name">{{ deviceAttrs.control=='start'?'暂停':'继续' }}</div>
         </div>
       </div>
       <!-- 关机状态 -->
-      <div 
+      <div
         v-else
         class="panel-btn center">
         <div class="btn-wrap">
-          <div 
+          <div
             class="btn-swich btn"
             @click="shutdowncallback('on')" />
           <div class="btn-name">开机</div>
@@ -289,7 +292,7 @@ export default {
     bakColor(){
       return this.isClose ? '#000' : '#fff'
     },
-   
+
   },
   watch: {
     'device.stateChange'(){
@@ -302,7 +305,7 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
-        
+
       })
       // HdSmart.UI.setStatusBarColor(2)
     })
@@ -335,7 +338,7 @@ export default {
       } else {
         controlStatus = 'start'
         this.currentMode = document.querySelectorAll('.swiper-slide-active>div>span')[1].innerHTML
-        let value 
+        let value
         let arr = this.tableware.concat(this.foodList)
         for(let i=0;i<arr.length;i++){
           if(this.currentMode ==arr[i].name ){
@@ -354,18 +357,19 @@ export default {
         this.longPress()
       }, 1000)
     },
-    //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按  
+    //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
     touchMove(e){
       clearTimeout(this.timeOutEvent)
       this.timeOutEvent=0
     },
     touchEnd(e){
-      clearTimeout(this.timeOutEvent)//清除定时器   
-      if(this.timeOutEvent!=0){   
-          // alert("你这是点击，不是长按")   
+      clearTimeout(this.timeOutEvent)//清除定时器
+      this.timeOutEvent=0
+      if(this.timeOutEvent!=0){
+          // alert("你这是点击，不是长按")
         // this.$refs.black.className.add('active')
-      }   
-      return false   
+      }
+      return false
     },
     longPress(){
       this.timeOutEvent = 0
@@ -392,7 +396,16 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
 @imgPath1: 'base/dishwasher/assets';
-
+@keyframes progress-bar{
+  0% {
+      transform: rotate(260deg);
+      border: 3px solid transparent;
+  }
+  100% {
+      transform: rotate(358deg);
+      border: 3px solid rgba(0, 0, 0, 1);
+  }
+}
 .body {
   min-height: 100%;
 }
@@ -484,7 +497,7 @@ export default {
                   text-align: center;
                 }
           }
-        } 
+        }
        }
   }
   .working{
@@ -538,7 +551,38 @@ export default {
   .btn-wrap {
     margin: 0 34px 40px;
     position: relative;
-      &.press{
+    .progressBar {
+      &::before{
+        content: "";
+        display: block;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        position: absolute;
+        top: -30px;
+        left: -23%;
+        // transform: translateX(-50%) rotate(260deg);
+        border: 3px solid rgba(0, 0, 0, 1);
+        clip: rect(0px 200px 40px 0px);
+        animation: progress-bar 1s linear infinite;
+      }
+    }
+    .mask {
+      &::before{
+        content: "";
+        display: block;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        position: absolute;
+        top: -30px;
+        left: -23%;
+        border: 3px solid transparent;
+        z-index: 10;
+        clip: rect(40px 80px 200px 0px);
+      }
+    }
+      .press{
         &::before{
           content: "";
           display: block;
@@ -670,7 +714,7 @@ export default {
         border-color: #ffbf00;
       }
         }
-        
+
       }
     }
   }

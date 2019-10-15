@@ -5,12 +5,11 @@
       <topbar
         :title="device.device_name"
         white
-        bg-color="#346EE6"
         bak-color="#fff" />
       <!-- 注意 -->
-      <div class="zhuyi">
+      <!-- <div class="zhuyi">
         <span>注意：零火线开关暂时不支持配对</span>
-      </div>
+      </div> -->
       <!-- 灯 -->
       <div class="main center">
         <div class="bg center">
@@ -49,7 +48,7 @@
         </div>
       </div>
       <!-- 提示信息 -->
-      <div
+      <!-- <div
         v-show="!isOffline"
         class="message center">
         <div v-if="deviceAttrs.list">
@@ -72,7 +71,7 @@
             v-show="deviceAttrs.list[3].chan_status=='on'"
             class="title">{{ deviceAttrs.list[3].chan_name?deviceAttrs.list[3].chan_name:'四路开关' }}已开启</div>
         </div>
-      </div>
+      </div> -->
       <!-- 按钮 -->
       <div class="panel-btn center">
         <div
@@ -80,28 +79,28 @@
           :class="['btn-wrap', {'btn-wrap-four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]"
           @click="setSwitch1">
           <div :class="[{ 'active': deviceAttrs.list[0].chan_status == 'on' }, 'btn btn-start center']" />
-          <div class="btn-name">开关</div>
+          <div class="btn-name">{{ deviceAttrs.list[0].chan_status == 'on'?'关灯':'开灯' }}</div>
         </div>
         <div
           v-if="deviceAttrs.chan_num != 1 && deviceAttrs.list && deviceAttrs.list[1]"
           :class="['btn-wrap', {'btn-wrap-four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]"
           @click="setSwitch2">
           <div :class="[{ 'active': deviceAttrs.list[1].chan_status == 'on' }, 'btn btn-start center']" />
-          <div class="btn-name">开关</div>
+          <div class="btn-name">{{ deviceAttrs.list[1].chan_status == 'on'?'关灯':'开灯' }}</div>
         </div>
         <div
           v-if="deviceAttrs.chan_num != 1 && deviceAttrs.chan_num != 2 && deviceAttrs.list && deviceAttrs.list[2]"
           :class="['btn-wrap', {'btn-wrap-four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]"
           @click="setSwitch3">
           <div :class="[{ 'active': deviceAttrs.list[2].chan_status == 'on' }, 'btn btn-start center']" />
-          <div class="btn-name">开关</div>
+          <div class="btn-name">{{ deviceAttrs.list[2].chan_status == 'on'?'关灯':'开灯' }}</div>
         </div>
         <div
           v-if="deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]"
           :class="['btn-wrap', {'btn-wrap-four': deviceAttrs.chan_num == 4 && deviceAttrs.list && deviceAttrs.list[3]}]"
           @click="setSwitch4">
           <div :class="[{ 'active': deviceAttrs.list[3].chan_status == 'on' }, 'btn btn-start center']" />
-          <div class="btn-name">开关</div>
+          <div class="btn-name">{{ deviceAttrs.list[3].chan_status == 'on'?'关灯':'开灯' }}</div>
         </div>
       </div>
     </div>
@@ -190,12 +189,14 @@ export default {
   min-height: 100%;
   height: 100vh;
   touch-action: manipulation;
-  background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
+  // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
+  background: url('~@lib/@{imgPath}/img_bg_01@2x.png');
+  background-size: 100% 100%;
 }
 .page {
   overflow-x: hidden;
   position: relative;
-  background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
+  // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
 
   &.filter {
     filter: blur(12px);
@@ -209,12 +210,12 @@ export default {
     color: #fff;
     opacity: 0.2;
   }
-  .zhuyi {
-    margin-top: 5px;
-    font-size: 24px;
-    color: #fff;
-    line-height: 24px;
-  }
+  // .zhuyi {
+  //   margin-top: 5px;
+  //   font-size: 24px;
+  //   color: #fff;
+  //   line-height: 24px;
+  // }
   .main {
     margin-top: 10%;
     position: relative;
@@ -244,12 +245,12 @@ export default {
         display: block;
         width: 108px;
         height: 152px;
-        background-image: url('~@lib/@{imgPath}/btn_ac_hpeiduiqueren.png');
+        background-image: url('~@lib/@{imgPath}/kg2.png');
         background-size: @100;
         text-align: center;
       }
       .img {
-        background-image: url('~@lib/@{imgPath}/btn_ac_jpeiduiqueren.png');
+        background-image: url('~@lib/@{imgPath}/kg1.png');
       }
       .bright {
         opacity: 1;
@@ -266,16 +267,16 @@ export default {
     }
   }
   .panel-btn {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    // position: fixed;
+    // bottom: 0;
+    // left: 0;
+    // right: 0;
     padding: 38px 0;
     z-index: 9999;
 
-    background: #ffffff;
-    box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
-    border-radius: 42px 42px 0px 0px;
+    background: transparent;
+    // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
+    // border-radius: 42px 42px 0px 0px;
 
     flex-wrap: wrap;
     justify-content: center;
@@ -284,7 +285,8 @@ export default {
       margin-top: 24px;
       width: 100%;
       border-radius: 40px 40px 0 0;
-      background: #ffffff;
+      // background: #ffffff;
+      background: rgba(0,0,0,0.15);
       box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
       display: flex;
       // justify-content: space-evenly;
@@ -305,14 +307,19 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid rgba(32,40,43,0.5);
+      border: 1px solid rgba(0,0,0,0);
       border-radius: 50%;
 
       display: flex;
       flex-direction: column;
       &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border-color: #ffbf00;
+        // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        // border-color: #ffbf00;
+        border-color: #000000;
+        background: #000000;
+        &::before {
+          background-image: url('~@lib/@{imgPath}/dakai4@3x.png')
+        }
       }
     }
     .bor {
@@ -351,10 +358,10 @@ export default {
     }
     &.page {
       // background: #fff;
-      background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
+      // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
     }
     .panel-btn {
-      background: #fff;
+      background: transparent;
     }
     .btn-wrap {
       opacity: 0.2;

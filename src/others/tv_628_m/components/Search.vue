@@ -1,6 +1,8 @@
 <!-- 搜索页面 -->
 <template>
   <div class="page-search">
+    <!-- 遥控器 --> 
+    <remoteControl/>
     <div :search="false">
       <form
         class="search_bar"

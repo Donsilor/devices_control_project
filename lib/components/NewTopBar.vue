@@ -274,8 +274,6 @@ export default {
   .left a.icon-return {
     position: absolute;
     top: 50%;
-    left: 0;
-    margin-top: -18px;
     display: inline-block;
     width: 24PX;
     height: 24PX;
