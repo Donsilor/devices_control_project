@@ -13,7 +13,6 @@
           class="isvip">付费</span>
       </div>
     </topbar>
-
     <status-tip v-show="device_uuid" />
 
     <div class="detail-bd">
