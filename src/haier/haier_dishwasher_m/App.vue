@@ -313,6 +313,7 @@ export default {
           width:384,
           autoplay:false,
           centeredSlides: true,
+          loop:true,
           slidesPerView: 4,
         })
       },
@@ -431,35 +432,35 @@ export default {
           }
         }
         .swiper-container {
-          width: auto;
-          margin-left: 960px;
+          margin-left: 38%;
           height: 300px;
         }
         .swiper-container1 {
-          width: auto;
-          margin-left: 2000px;
+          margin-left: 39%;
           height: 300px;
         }
         .swiper-wrapper{
-          margin-left: 160px;
           .swiper-slide{
-            width: 192px !important;
             position:relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 0 40px;
+            width: 9%;
             &.swiper-slide-active{
-              width: 275px !important;
               margin-right: 40px;
               margin-left: 40px;
+              width: 19%;
               padding: 0;
               >div{
                 opacity: 1;
-                width: 275px;
                 position:absolute;
                 bottom: 0;
                 >span{
                   &:first-of-type{
                     font-size: 160px;
                     position: relative;
+                    margin-bottom: 18px;
                     &::before{
                       display: block;
                       content: '分钟';
