@@ -9,16 +9,17 @@
       :shutdown="true"
       title="客厅的电视"
       bak-color="#000"
+      @shutdownCallback="shutdownCallback"
     />
     <div class="search-screen-bg">
       <div class="search-screen">
         <router-link
           class="search2" 
-          to="/search">搜索</router-link>
+          to="/search"><span class="icon-search"/> 搜索</router-link>
         <div 
           v-show="activeIndex!=0" 
           class="screen"
-          @click="toPage(itemData)">筛选</div>
+          @click="toPage(itemData)"> 筛选</div>
       </div>
     </div>
    
@@ -218,8 +219,9 @@
       border-radius: 2px;
       height: 60px;
       text-align: center;
-      line-height: 60px;
+      line-height: 46px;
       margin-right: 20px;
+      color: #AAAAAA;
     }
     .screen{
       background:rgba(0, 0, 0, 0.04);
@@ -228,6 +230,7 @@
       height: 60px;
       text-align: center;
       line-height: 60px;
+      color: #AAA;
     }
   }
 } 
@@ -659,7 +662,6 @@ export default {
   },
   created() {
     this.pageInit()
-    console.log('title',device.device_name)
   },
   mounted() {
     this.pageInit()
@@ -853,6 +855,9 @@ export default {
         }
         last_position = current_position
       })
+    },
+    shutdownCallback(){
+      console.log('11111111')
     }
   }
 }
