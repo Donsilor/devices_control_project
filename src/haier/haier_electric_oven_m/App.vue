@@ -316,42 +316,49 @@ export default {
     },
     modeName() {
       /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
-        case 'tra_barbecue':
-          return '上外+下'
-          break
-        case '3D_hotwind':
-          return '后背+风'
-          break
-        case 'convection':
-          return '上下+风'
-          break
-        case 'bake':
-          return '下加热'
-          break
-        case 'grill':
-          return '上+风'
-          break
-        case 'barbecues':
-          return '上内'
-          break
-        case 'full_barbecue':
-          return '上内+上外'
-          break
-        case 'defrost':
-          return '解冻'
-          break
-        case 'preheat':
-          return '快速预热'
-          break
-        default: ''
-          break
+      if(this.deviceAttrs.mode) {
+        switch (this.deviceAttrs.mode) {
+          case 'tra_barbecue':
+            return '上外+下'
+            break
+          case '3D_hotwind':
+            return '后背+风'
+            break
+          case 'convection':
+            return '上下+风'
+            break
+          case 'bake':
+            return '下加热'
+            break
+          case 'grill':
+            return '上+风'
+            break
+          case 'barbecues':
+            return '上内'
+            break
+          case 'full_barbecue':
+            return '上内+上外'
+            break
+          case 'defrost':
+            return '解冻'
+            break
+          case 'preheat':
+            return '快速预热'
+            break
+          default: ''
+            break
+        }
+      } else {
+        return ''
       }
     }
   },
   watch: {
     "deviceAttrs.temperature"() {
       this.temperature = this.deviceAttrs.temperature
+    },
+    "deviceAttrs.switch"() {
+      this.deviceAttrs.mode = ''
     }
   },
   created() {
@@ -360,6 +367,7 @@ export default {
       .then(() => {
         this.temperature = this.deviceAttrs.temperature
       })
+      HdSmart.UI.setStatusBarColor(2)
     })
     if(document.body.clientHeight/document.body.clientWidth < 2) {
       this.isMin = true
@@ -491,7 +499,8 @@ export default {
     },
     setStart() {
       if (this.isClose) return
-      if (this.deviceAttrs.status == 'start') return
+      if (this.deviceAttrs.status == 'start') return HdSmart.UI.toast('不支持暂停', 1000)
+      if (!this.deviceAttrs.mode) return HdSmart.UI.toast('请选择模式', 1000)
       this.btnLoading['status'] = true
       this.controlDevice('control', 'start')
       .then(() => {
