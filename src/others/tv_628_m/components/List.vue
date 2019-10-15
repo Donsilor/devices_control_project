@@ -132,8 +132,8 @@
             alt="">
           <div class="name">{{ item.title }}</div>
           <span class="update">
-          {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
-        </span>
+            {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
+          </span>
           <span
             v-if="item.ispay && item.ispay !== '1'"
             class="isvip">付费</span>

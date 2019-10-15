@@ -5,15 +5,15 @@
     <div
       class="topbar-block" />
     <div
-
+      :style="{ background: bgColor }"
       class="topbar-fixed">
-      <!-- :style="{ background: bgColor }" -->
+     
       <div
         :style="{height:status_bar_height+'px'}"
         class="statusbar" />
       <div
         :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
-        class="navbar">
+        class="newNavbar">
         <div
           class="left"
           @click.prevent="goBack">
@@ -48,8 +48,10 @@
           v-if="title"
           :style="{ 'color': bakColor }"
           class="title">{{ title }}</div>
-        <div class="header-bottom-right"/>
-        <!-- <slot /> -->
+        <div 
+          v-if="Shutdown" 
+          class="header-bottom-right"/>
+          <!-- <slot /> -->
       </div>
      
     </div>
@@ -64,6 +66,10 @@ let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelR
 
 export default {
   props: {
+    Shutdown:{
+      type: Boolean,
+      default: false
+    },
     onBack: {
       type: Function,
       default: null
@@ -224,25 +230,29 @@ export default {
   }
 }
 
-.navbar {
-  text-align: center;
+.newNavbar {
+  display: flex;
+  padding: 0 48px;
+  justify-content: space-between;
   height: @navigation_bar_height;
   position: relative;
   color: #222a37;
   .left,
   .right {
-    position: absolute;
-    top: 50%;
-    right: 0;
     width: 44PX;
     height: @navigation_bar_height;
-    transform: translateY(-50%);
+
   }
-  .left {
-    left: 0;
-    right: auto;
+  .left{
+    position: relative;
+    top: -4px;
   }
- 
+  .right{
+    position: relative;
+    left: 6px;
+  }
+
+
   .left a,
   .right a {
     width: @navigation_bar_height;

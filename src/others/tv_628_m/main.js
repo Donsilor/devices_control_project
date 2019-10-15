@@ -16,8 +16,8 @@ import Index from './components/Index.vue'
 import List from './components/List.vue'
 import Search from './components/Search.vue'
 import Detail from './components/Detail.vue'
-// import Topbar from './components/Topbar.vue'
-import Topbar from '@lib/components/NewTopBar.vue'
+import Topbar from './components/Topbar.vue'
+import NewTopbar from '@lib/components/NewTopBar.vue'
 
 import ErrorView from './components/Error.vue'
 import OfflineMask from './components/OfflineMask.vue'
@@ -52,6 +52,7 @@ Vue.use(VueLazyload, {
 
 Vue.component('detail', Detail)
 Vue.component('topbar', Topbar)
+Vue.component('new-topbar', NewTopbar)
 Vue.component('offline-mask', OfflineMask)
 Vue.component('StatusTip', StatusTip)
 // Vue.component('statusbar', Statusbar)
