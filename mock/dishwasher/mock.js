@@ -2,8 +2,9 @@ import Mock from 'mockjs'
 
 let res = {
     "connectivity": "online", //l
-    "switch": 'off', //开关
+    "switch": 'on', //开关
     'control':'stop',
+    'mode':'nomal',
     'remain_washtime':'0',
     "open_pencentage":0 , //暖光3000K  自然光5000K  白光6000K
 }
