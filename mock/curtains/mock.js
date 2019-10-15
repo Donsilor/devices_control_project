@@ -1,4 +1,4 @@
-import Mock from 'mockjs';
+import Mock from 'mockjs'
 
 export function generateSnapShot() {
     return Mock.mock({
