@@ -272,7 +272,7 @@
   li {
     height: 120px;
     line-height: 120px;
-    border-bottom: 1px solid rgba(216, 216, 216, 0.7);
+    // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
     font-size: 32px;
     white-space: nowrap;
     overflow: hidden;
@@ -569,12 +569,13 @@ export default {
       this.filterData(1)
     },
     goBack(){
-      if(this.isShowBar){
         window.history.go(-1)
-      } else {
-        service.RemoteController({ show: false })
-        HdSmart.UI.popWindow()
-      }
+      // if(this.isShowBar){
+      //   window.history.go(-1)
+      // } else {
+      //   service.RemoteController({ show: false })
+      //   HdSmart.UI.popWindow()
+      // }
     },
     filterData(page) {
       if (page === 1) this.isFirstLoad = true

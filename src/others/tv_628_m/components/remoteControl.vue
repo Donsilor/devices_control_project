@@ -5,7 +5,18 @@
 </template>
 
 <script>
+import * as service from '../service'
 export default {
+  data(){
+    return {
+
+    }
+  },
+  methods:{
+    cmd(name){
+      service.onClickEvent(name)
+    }
+  }
 
 }
 </script>

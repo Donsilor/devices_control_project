@@ -19,7 +19,7 @@ var res = {
     attribute: {
         switch: 'off',
         usb:'on',
-        voltage:5.0,
+        voltage:0,
         current:2.1,
         order_mode:'on',//定时开关
         type:2, //通电

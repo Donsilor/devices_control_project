@@ -41,7 +41,7 @@
         <div class="electric">
           <div 
             v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
-            class="current">{{ deviceAttrs.voltage.toFixed(1) }} <span>V</span></div>
+            class="current">{{ deviceAttrs.voltage?deviceAttrs.voltage.toFixed(1):220 }} <span>V</span></div>
           <div 
             v-else 
             class="current1">_ _<span>V</span></div>
