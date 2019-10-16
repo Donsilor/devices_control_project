@@ -272,7 +272,7 @@
   li {
     height: 120px;
     line-height: 120px;
-    border-bottom: 1px solid rgba(216, 216, 216, 0.7);
+    // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
     font-size: 32px;
     white-space: nowrap;
     overflow: hidden;
