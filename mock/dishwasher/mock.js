@@ -5,8 +5,9 @@ let res = {
     "switch": 'on', //开关
     'control':'stop',
     'mode':'nomal',
-    'remain_washtime':'0',
-    "open_pencentage":0 , //暖光3000K  自然光5000K  白光6000K
+    'operation_mode':'end',//洗涤状态
+    'remain_washtime':'121',
+    'return_standby':'off'
 }
 export function generateSnapShot() {
     return Mock.mock({
@@ -30,8 +31,15 @@ export function set(data){
     if(attr.control){
       if(attr.control=='start'){
         attr.remain_washtime = 121
+        attr.operation_mode= 'wash_inflow'
+      }else{
+        attr.operation_mode= 'standby'
       }
-        
+    }
+    if(attr.operation_mode){
+      if(attr.operation_mode=='start'){
+        attr.remain_washtime = 121
+      }
     }
     res = Object.assign({}, res, attr)
     return Mock.mock({

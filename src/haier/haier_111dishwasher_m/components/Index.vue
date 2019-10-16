@@ -9,7 +9,6 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!-- tab切换栏 -->
       <div
-        v-show="deviceAttrs.remain_washtime=='0'&&deviceAttrs.operation_mode=='standby'"
         class="main center"
         style="margin-top:52px">
         <div class="tab">
@@ -19,10 +18,10 @@
               @click="tabMode(true)">
               <img
                 v-show="temp"
-                src="../../../lib/base/dishwasher/assets/canju@2x.png">
+                src="../../../../lib/base/dishwasher/assets/canju@2x.png">
               <img
                 v-show="!temp"
-                src="../../../lib/base/dishwasher/assets/canju2@2x.png">
+                src="../../../../lib/base/dishwasher/assets/canju2@2x.png">
               <span >餐具</span>
             </li>
             <li
@@ -30,10 +29,10 @@
               @click="tabMode(false)">
               <img
                 v-show="temp"
-                src="../../../lib/base/dishwasher/assets/shiwu@2x.png">
+                src="../../../../lib/base/dishwasher/assets/shiwu@2x.png">
               <img
                 v-show="!temp"
-                src="../../../lib/base/dishwasher/assets/shiwu2@2x.png">
+                src="../../../../lib/base/dishwasher/assets/shiwu2@2x.png">
               <span >食材</span>
             </li>
           </ul>
@@ -70,64 +69,15 @@
           </div>
         </div>
       </div>
-      <!-- 洗涤中 -->
-      <div
-        v-show="deviceAttrs.remain_washtime>'0'"
-        class="working">
-        <div class="time">{{ deviceAttrs.remain_washtime | work_time }}</div>
-        <div
-          v-show="deviceAttrs.control=='stop'"
-          class="progress">
-          <span>洗涤</span>
-          <span :class="[{'ongoing':deviceAttrs.operation_mode=='rinse_inflow'||deviceAttrs.operation_mode=='rinse_cold'||deviceAttrs.operation_mode=='rinse_drainage'||deviceAttrs.operation_mode=='rinse_warm'||deviceAttrs.operation_mode=='drying'},'isgray']"> —— 漂洗</span>
-          <span :class="[{'black':deviceAttrs.operation_mode=='drying'},'isgray']"> —— 烘干</span>
-        </div>
-        <div class="status">{{ deviceAttrs.control=='stop'?'已暂停':'洗涤中' }}</div>
-      </div>
-      <!-- 洗涤完成 -->
-      <div 
-        v-show="deviceAttrs.operation_mode=='end'" 
-        class="end">
-        <div class="circle"/>
-        <span>已完成洗涤</span>
-        <div 
-          class="button" 
-          @click="finish">确定</div>
-      </div>
-      <!-- 底部按钮 -->
       <div
         v-if="!isClose&&!isOffline"
         class="panel-btn center">
         <div
-          v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime=='0'&&deviceAttrs.operation_mode!=='end'"
           class="btn-wrap">
           <div
             :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
             @click="setStart" />
           <div class="btn-name">启动</div>
-        </div>
-        <!-- 洗涤页面按钮 -->
-        <div
-          v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime>'0'"
-          class="btn-wrap">
-          <div :class="[{'press':timeOutEvent != 0}]"/>
-          <div :class="[{'progressBar':timeOutEvent != 0}]"/>
-          <!-- <div class="mask" /> -->
-          <div
-            ref="black"
-            :class="[{'active':timeOutEvent != 0},'btn-over btn center']"
-            @touchstart="touchStart($event)"
-            @touchmove="touchMove($event)"
-            @touchend="touchEnd($event)"/>
-          <div class="btn-name">长按结束</div>
-        </div>
-        <div
-          v-show="deviceAttrs.remain_washtime>'0'"
-          class="btn-wrap">
-          <div
-            :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
-            @click="setStart" />
-          <div class="btn-name">{{ deviceAttrs.control=='start'?'暂停':'继续' }}</div>
         </div>
       </div>
       <!-- 关机状态 -->
@@ -354,6 +304,7 @@ export default {
           }
         }
         this.controlDevice("control",controlStatus,{'mode':value})
+          this.$router.push({ path: '/Washing' })
         return
       }
       this.controlDevice("control",controlStatus )

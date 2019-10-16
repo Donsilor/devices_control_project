@@ -1,78 +1,15 @@
 /* eslint-disable vue/no-unused-vars */
 <template>
   <div class="body">
-    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
+    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page washing']">
       <NewTopBar
         :title="device.device_name"
         :shutdown="true"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
-      <!-- tab切换栏 -->
-      <div
-        v-show="deviceAttrs.remain_washtime=='0'&&deviceAttrs.operation_mode=='standby'"
-        class="main center"
-        style="margin-top:52px">
-        <div class="tab">
-          <ul>
-            <li
-              :class="[{'active':temp},'tablist']"
-              @click="tabMode(true)">
-              <img
-                v-show="temp"
-                src="../../../lib/base/dishwasher/assets/canju@2x.png">
-              <img
-                v-show="!temp"
-                src="../../../lib/base/dishwasher/assets/canju2@2x.png">
-              <span >餐具</span>
-            </li>
-            <li
-              :class="[{'active':!temp},'tablist']"
-              @click="tabMode(false)">
-              <img
-                v-show="temp"
-                src="../../../lib/base/dishwasher/assets/shiwu@2x.png">
-              <img
-                v-show="!temp"
-                src="../../../lib/base/dishwasher/assets/shiwu2@2x.png">
-              <span >食材</span>
-            </li>
-          </ul>
-          <!-- 左右滑动选择 -->
-          <!-- 餐具 -->
-          <div
-            v-if="temp"
-            class="swiper-container">
-            <div class="swiper-wrapper">
-              <div
-                v-for="item in tableware"
-                class="swiper-slide">
-                <div>
-                  <span>{{ item.time }}</span>
-                  <span>{{ item.name }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- 食材 -->
-          <div
-            v-if="!temp"
-            class="swiper-container1">
-            <div class="swiper-wrapper">
-              <div
-                v-for="item in foodList"
-                class="swiper-slide">
-                <div>
-                  <span>{{ item.time }}</span>
-                  <span>{{ item.name }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- 洗涤中 -->
       <div
-        v-show="deviceAttrs.remain_washtime>'0'"
+        v-show="deviceAttrs.operation_mode!=='end'" 
         class="working">
         <div class="time">{{ deviceAttrs.remain_washtime | work_time }}</div>
         <div
@@ -96,19 +33,11 @@
       </div>
       <!-- 底部按钮 -->
       <div
-        v-if="!isClose&&!isOffline"
+        v-if="deviceAttrs.operation_mode!=='end'"
         class="panel-btn center">
-        <div
-          v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime=='0'&&deviceAttrs.operation_mode!=='end'"
-          class="btn-wrap">
-          <div
-            :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
-            @click="setStart" />
-          <div class="btn-name">启动</div>
-        </div>
         <!-- 洗涤页面按钮 -->
         <div
-          v-show="deviceAttrs.control=='stop'&&deviceAttrs.remain_washtime>'0'"
+          v-if="deviceAttrs.control=='stop'"
           class="btn-wrap">
           <div :class="[{'press':timeOutEvent != 0}]"/>
           <div :class="[{'progressBar':timeOutEvent != 0}]"/>
@@ -122,7 +51,6 @@
           <div class="btn-name">长按结束</div>
         </div>
         <div
-          v-show="deviceAttrs.remain_washtime>'0'"
           class="btn-wrap">
           <div
             :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
@@ -130,10 +58,6 @@
           <div class="btn-name">{{ deviceAttrs.control=='start'?'暂停':'继续' }}</div>
         </div>
       </div>
-      <!-- 关机状态 -->
-      <div
-        v-else
-        class="closed">请在设备端打开电源</div>
     </div>
   </div>
 </template>
@@ -146,151 +70,6 @@ export default {
     return {
       temp:true,
       timeOutEvent:'',
-      a:"",
-      currentMode:'normal',
-      tableware:[
-        {
-          name:'除味',
-          time:37,
-          english:'taste_removal'
-        },
-        {
-          name:'密胺',
-          time:106,
-          english:'melamine'
-        },
-        {
-          name:'玻璃',
-          time:81,
-          english:'glass'
-        },
-        {
-          name:'冲洗',
-          time:20,
-          english:'flush'
-        },
-        {
-          name:'智能',
-          time:74,
-          english:'smart'
-        }
-        ,
-        {
-          name:'标准',
-          time:126,
-          english:'normal'
-        }
-        ,
-        {
-          name:'强力',
-          time:91,
-          english:'strong'
-        }
-        ,
-        {
-          name:'即时',
-          time:47,
-          english:'timely'
-        }
-        ,
-        {
-          name:'节能',
-          time:136,
-          english:'energy_saving'
-        }
-        ,
-        {
-          name:'蒸汽',
-          time:100,
-          english:'vapor'
-        }
-      ],
-      foodList:[
-        {
-          name:'水果',
-          time:28,
-          english:'fruit'
-        },
-        {
-          name:'浆果',
-          time:29,
-          english:'berries'
-        },
-        {
-          name:'核果',
-          time:30,
-          english:'stone_fruit'
-        },
-        {
-          name:'仁果',
-          time:30,
-          english:'pome_fruit'
-        },
-        {
-          name:'瓜果',
-          time:32,
-          english:'melons'
-        }
-        ,
-        {
-          name:'蔬菜',
-          time:34,
-          english:'vegetables'
-        }
-        ,
-        {
-          name:'叶菜',
-          time:36,
-          english:'leaf_vegetable'
-        }
-        ,
-        {
-          name:'根菜',
-          time:39,
-          english:'root_vegetable'
-        }
-        ,
-        {
-          name:'茎菜',
-          time:36,
-          english:'stem_vegetable'
-        }
-        ,
-        {
-          name:'果实',
-          time:33,
-          english:'fruit_vegetable'
-        },
-        {
-          name:'食用菌',
-          time:37,
-          english:'ediblefungi'
-        }
-        ,
-        {
-          name:'海鲜',
-          time:35,
-          english:'seafood'
-        }
-        ,
-        {
-          name:'甲壳',
-          time:35,
-          english:'crustaceans'
-        }
-        ,
-        {
-          name:'贝类',
-          time:38,
-          english:'testaceans'
-        }
-        ,
-        {
-          name:'螺类',
-          time:40,
-          english:'snails'
-        }
-      ]
     }
   },
   computed: {
@@ -317,26 +96,13 @@ export default {
       // HdSmart.UI.setStatusBarColor(2)
     })
   },
-  // 初始化swiper
-   mounted(){
-        var mySwiper = new Swiper('.swiper-container', {
-          width:384,
-          autoplay:false,
-          centeredSlides: true,
-          loop:true,
-          slidesPerView: 4,
-        })
-      },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return 
       this.controlDevice('switch',val)
-    },
-    // tab切换
-    tabMode(t){
-      this.temp = t
+      this.$router.push({ path: '/' })
     },
     // 启动
     setStart() {
@@ -345,16 +111,6 @@ export default {
         controlStatus = 'stop'
       } else {
         controlStatus = 'start'
-        this.currentMode = document.querySelectorAll('.swiper-slide-active>div>span')[1].innerHTML
-        let value
-        let arr = this.tableware.concat(this.foodList)
-        for(let i=0;i<arr.length;i++){
-          if(this.currentMode ==arr[i].name ){
-            value = arr[i].english
-          }
-        }
-        this.controlDevice("control",controlStatus,{'mode':value})
-        return
       }
       this.controlDevice("control",controlStatus )
     },
@@ -384,12 +140,14 @@ export default {
       console.log(this.timeOutEvent)
       // alert('长按了')
       this.$nextTick(()=>{
-        this.controlDevice('remain_washtime',0)
+        this.controlDevice('return_standby','on')
+          this.$router.push({ path: '/' })
       })
     },
     // 洗涤完成
     finish(){
       this.controlDevice('operation_mode','standby')
+      this.$router.push({ path: '/' })
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
