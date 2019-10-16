@@ -569,12 +569,13 @@ export default {
       this.filterData(1)
     },
     goBack(){
-      if(this.isShowBar){
         window.history.go(-1)
-      } else {
-        service.RemoteController({ show: false })
-        HdSmart.UI.popWindow()
-      }
+      // if(this.isShowBar){
+      //   window.history.go(-1)
+      // } else {
+      //   service.RemoteController({ show: false })
+      //   HdSmart.UI.popWindow()
+      // }
     },
     filterData(page) {
       if (page === 1) this.isFirstLoad = true

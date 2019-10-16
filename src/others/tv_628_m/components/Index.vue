@@ -211,6 +211,7 @@
 }
 .search-screen-bg{
     background: #fff;
+    padding-top: 20px;
   .search-screen{
     overflow: hidden;
     margin: 0 48px;
@@ -645,7 +646,19 @@ export default {
       return this.status_bar_height + this.navigation_bar_height
     },
     allList() {
-      return [this.listDY, this.listDSJ, this.listZY, this.listDM]
+      switch(this.activeIndex){
+        case 0:
+        return [this.listDY.slice(0, 6), this.listDSJ.slice(0, 6), this.listZY.slice(0, 6), this.listDM.slice(0, 6)]
+        case 1:
+        return [this.listDY]
+        case 2:
+        return [ this.listDSJ]
+        case 3:
+        return [this.listZY]
+        case 4:
+        return [this.listDM]
+      }
+      
     },
     // homePage() {
     //   if(homePageInfo.length == 0) {
@@ -735,14 +748,14 @@ export default {
     },
     showDetailInfo(item) {
       this.$store.dispatch('showDetail', item)
-
-      if (this.isShowBar) {
-        window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
-      } else {
-        HdSmart.UI.pushWindow({
-          url: `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
-        })
-      }
+      window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
+      // if (this.isShowBar) {
+      //   window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
+      // } else {
+      //   HdSmart.UI.pushWindow({
+      //     url: `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
+      //   })
+      // }
       // this.$router.push({ name: 'detail', query: { channelId: item.channelId, channel: item.channel } })
       // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
     },
@@ -792,13 +805,13 @@ export default {
         }
         let cid = data.channelId
         if(cid === '001'){
-          this.listDY = data.data.list.slice(0, 6)
+          this.listDY = data.data.list
         } else if(cid === '002') {
-          this.listDSJ = data.data.list.slice(0, 6)
+          this.listDSJ = data.data.list
         } else if(cid === '003') {
-          this.listZY = data.data.list.slice(0, 6)
+          this.listZY = data.data.list
         } else if(cid === '004') {
-          this.listDM = data.data.list.slice(0, 6)
+          this.listDM = data.data.list
         }
       })
     },
@@ -825,14 +838,14 @@ export default {
     },
     toPage(item) {
       let name = encodeURIComponent(item.channel)
-      //  window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
-      if (this.isShowBar) {
-        window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
-      } else {
-        HdSmart.UI.pushWindow({
-          url: `index.html#/list?channelId=${item.channelId}&channel=${name}`
-        })
-      }
+       window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
+      // if (this.isShowBar) {
+      //   window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
+      // } else {
+      //   HdSmart.UI.pushWindow({
+      //     url: `index.html#/list?channelId=${item.channelId}&channel=${name}`
+      //   })
+      // }
       // window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${item.channel}`
       // this.$router.push({ name: 'list', query: { channelId: item.channelId, channel: item.channel } })
     },
