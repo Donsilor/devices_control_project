@@ -11,8 +11,10 @@ import '@lib/base/common.less'
 import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
 import Topbar from '@lib/components/Topbar.vue'
+import NewTopbar from '@lib/components/NewTopbar.vue'
 
 Vue.component('topbar', Topbar)
+Vue.component('newtopbar', NewTopbar)
 FastClick.attach(document.body)
 import * as filters from './filters' // global filters
 

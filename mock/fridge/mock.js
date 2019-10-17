@@ -12,10 +12,16 @@ window.device_name = '冰箱'
 window.device_category_id = 1
 
 let res = {
-  tempContainer: 60,
-  tempFreezer: -200,
+  temperature_container: 60,
+  temperature_freezer: -200,
   tempVarTempChamber: 20,
+  level_freezer: -200,
+  level_container: 60,
   mode: 'cool',
+  holiday: false,
+  intelligent: false,
+  fast_frozen: false,
+  fast_cool: false,
   queryMode: 'low',
   connectivity: 'online'
 }
@@ -36,6 +42,27 @@ export function generateSnapShot() {
 export function set(data) {
     try {
       var attr = data.params.attribute
+      if(attr.level_container) {
+        attr.temperature_container = attr.level_container
+      }
+      if(attr.level_freezer) {
+        attr.temperature_freezer = attr.level_freezer
+      }
+      if(attr.intelligent == true) {
+        attr.holiday = false
+      }
+      if(attr.holiday == true) {
+        attr.level_container = 170
+        attr.intelligent = false
+      }
+      if(attr.fast_frozen == true) {
+        attr.holiday = false
+        attr.intelligent = false
+      }
+      if(attr.fast_cool == true) {
+        attr.holiday = false
+        attr.intelligent = false
+      }
     } catch (error) {
       attr = data.content.params.attribute
     }

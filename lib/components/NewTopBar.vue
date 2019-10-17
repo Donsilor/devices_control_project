@@ -7,7 +7,7 @@
     <div
       :style="{ background: bgColor }"
       class="topbar-fixed">
-     
+
       <div
         :style="{height:status_bar_height+'px'}"
         class="statusbar" />
@@ -41,22 +41,22 @@
               @click.prevent="goDetail" />
           </template>
         </div>
-        
+
       </div>
       <div class="header-bottom">
         <div
           v-if="title"
           :style="{ 'color': bakColor }"
           class="title">{{ title }}</div>
-        <div 
-          v-if="shutdown" 
-          class="header-bottom-right" 
+        <div
+          v-if="shutdown"
+          class="header-bottom-right"
           @click="shutdownCallback"/>
           <!-- <slot /> -->
       </div>
-     
+
     </div>
-     
+
   </div>
 </template>
 
@@ -272,20 +272,20 @@ export default {
     }
   }
   .left a.icon-return {
-    position: absolute;
-    top: 50%;
+    // position: absolute;
+    // top: 50%;
     display: inline-block;
     width: 24PX;
     height: 24PX;
     border: 0;
     background: url('~@lib/base/assets/cha.png');
     background-size: 100% 100%;
-    
+
     // border: solid #000;
     // border-width: 2PX 2PX 0 0;
     // transform: translate(0, -50%) rotate(225deg);
   }
-  
+
 }
 .header-bottom-right{
 
