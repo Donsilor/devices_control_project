@@ -9,11 +9,11 @@
       <div class="items btns">
         <div 
           class="btn" 
-          @click="setWind('auto')">自动
+          @click="setWind('auto', 'auto')">自动
         </div>
         <div 
           class="btn"
-          @click="setWind(speed)">手动
+          @click="setWind(speed, 'hand')">手动
         </div>
       </div>
       <div 
@@ -96,8 +96,8 @@ export default {
   mounted() {
   },
   methods: {
-    setWind(attr){
-      this.$emit('setSpeed', attr)
+    setWind(attr, val){
+      this.$emit('setSpeed', attr, val)
     }
   }
 }

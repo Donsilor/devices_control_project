@@ -50,7 +50,7 @@
       bottom: 0;
       z-index: 999999999999;
       width: 100%;
-      height: 800px;
+      height: 896px;
       color: #fff;
       background: #fff;
       // background: #373E41;
