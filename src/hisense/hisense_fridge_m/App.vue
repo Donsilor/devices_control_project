@@ -13,26 +13,26 @@
             <div>
               <span class="txt">速冷</span>
               <input
-                :checked="coldValue"
+                :checked="checkedColdValue"
                 class="right switch switch-anim"
                 type="checkbox"
                 @click="e => cold(e, coldValue)">
             </div>
           </div>
           <div
-            v-show="coldValue == true"
+            v-show="coldValue == 'on'"
             class="titleTips">
             <!-- 速冷中 32小时29分后自动解除 -->&nbsp;
           </div>
           <div
-            v-show="coldValue == false"
+            v-show="coldValue == 'off'"
             class="titleTips">
             &nbsp;
           </div>
           <div class="control-tm marginTop">
             <button
-              :class="['control', 'reduce', {'disabed': coldValue == true || deviceAttrs.intelligent == true}]"
-              :disabled="coldValue == true || deviceAttrs.intelligent == true"
+              :class="['control', 'reduce', {'disabed': coldValue == 'on' || deviceAttrs.intelligent == 'on'}]"
+              :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on'"
               @click="setTemperature('level_container', -10, [20, 80])"/>
             <!-- <div class="tm-progress">
               <div
@@ -42,8 +42,8 @@
             </div> -->
             <div class="temperature">{{ deviceAttrs.level_container | filterTm }}<sup>°C</sup></div>
             <button
-              :class="['control', 'add', {'disabed': coldValue == true || deviceAttrs.intelligent == true}]"
-              :disabled="coldValue == true || deviceAttrs.intelligent == true"
+              :class="['control', 'add', {'disabed': coldValue == 'on' || deviceAttrs.intelligent == 'on'}]"
+              :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on'"
               @click="setTemperature('level_container', 10, [20, 80])"/>
           </div>
         </div>
@@ -72,26 +72,26 @@
             <div>
               <span class="txt">速冻</span>
               <input
-                :checked="frozenValue"
+                :checked="checkedFrozenValue"
                 class="right switch switch-anim"
                 type="checkbox"
                 @click="e => frozen(e, frozenValue)">
             </div>
           </div>
           <div
-            v-show="frozenValue == true"
+            v-show="frozenValue == 'on'"
             class="titleTips">
             <!-- 速冻中 32小时29分后自动解除 -->&nbsp;
           </div>
           <div
-            v-show="frozenValue == false"
+            v-show="frozenValue == 'off'"
             class="titleTips">
             &nbsp;
           </div>
           <div class="control-tm marginTop">
             <button
-              :class="['control', 'reduce', {'disabed': frozenValue == true || deviceAttrs.intelligent == true}]"
-              :disabled="frozenValue == true || deviceAttrs.intelligent == true"
+              :class="['control', 'reduce', {'disabed': frozenValue == 'on' || deviceAttrs.intelligent == 'on'}]"
+              :disabled="frozenValue == 'on' || deviceAttrs.intelligent == 'on'"
               @click="setTemperature('level_freezer', -10, [-250, -150])"/>
             <!-- <div class="tm-progress">
               <div
@@ -101,8 +101,8 @@
             </div> -->
             <div class="temperature">{{ deviceAttrs.level_freezer | filterTm }}<sup>°C</sup></div>
             <button
-              :class="['control', 'add', {'disabed': frozenValue == true || deviceAttrs.intelligent == true}]"
-              :disabled="frozenValue == true || deviceAttrs.intelligent == true"
+              :class="['control', 'add', {'disabed': frozenValue == 'on' || deviceAttrs.intelligent == 'on'}]"
+              :disabled="frozenValue == 'on' || deviceAttrs.intelligent == 'on'"
               @click="setTemperature('level_freezer', 10, [-250, -150])"/>
           </div>
         </div>
@@ -140,13 +140,13 @@
         <div
           class="btn-wrap"
           @click="setMode('intelligent', deviceAttrs.intelligent)">
-          <div :class="[ { 'active': deviceAttrs.intelligent == true }, 'btn btn-auto center']" />
+          <div :class="[ { 'active': deviceAttrs.intelligent == 'on' }, 'btn btn-auto center']" />
           <div class="btn-name">智能</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('holiday', deviceAttrs.holiday)">
-          <div :class="[ { 'active': deviceAttrs.holiday == true }, 'btn btn-holiday center']" />
+          <div :class="[ { 'active': deviceAttrs.holiday == 'on' }, 'btn btn-holiday center']" />
           <div class="btn-name">假日 </div>
         </div>
 
@@ -175,9 +175,9 @@
         更多选项
       </div> -->
       <div
-        v-show="isOpen"
+        v-show="isOpen=='on'"
         class="more-Choice"
-        @click.self="isOpen = false">
+        @click.self="isOpen = 'off'">
         <div class="model-main">
           <div
             class="line-list">更多选项</div>
@@ -195,39 +195,39 @@
             <div class="txt">亮度</div>
             <div class="range">
               <input
-                :class="[{'range-zero': rangeColor || doorValue==false}]"
-                :disabled="doorValue==false"
+                :class="[{'range-zero': rangeColor || doorValue=='off'}]"
+                :disabled="doorValue=='off'"
                 type="range"
                 min="0"
                 max="6"
                 step="1"
                 value="0"
                 @input="changeSpeed">
-              <p :class="['rang_width', {'rang_bak': doorValue==false}]"/>
+              <p :class="['rang_width', {'rang_bak': doorValue=='off'}]"/>
             </div>
-            <div :class="['tips', {'tips-bak': doorValue==false}]">{{ brightness }}</div>
+            <div :class="['tips', {'tips-bak': doorValue=='off'}]">{{ brightness }}</div>
           </div>
           <div
             class="line-list two-line">
             <div class="txt">时长</div>
             <ul class="duration">
               <li
-                :class="['item', {'active': timeValue == 1}, {'disable': doorValue==false}]"
+                :class="['item', {'active': timeValue == 1}, {'disable': doorValue=='off'}]"
                 @click="durationTime(1)">20秒</li>
               <li
-                :class="['item', {'active': timeValue == 2}, {'disable': doorValue==false}]"
+                :class="['item', {'active': timeValue == 2}, {'disable': doorValue=='off'}]"
                 @click="durationTime(2)">1分钟</li>
               <li
-                :class="['item', {'active': timeValue == 3}, {'disable': doorValue==false}]"
+                :class="['item', {'active': timeValue == 3}, {'disable': doorValue=='off'}]"
                 @click="durationTime(3)">5分钟</li>
               <li
-                :class="['item', {'active': timeValue == 4}, {'disable': doorValue==false}]"
+                :class="['item', {'active': timeValue == 4}, {'disable': doorValue=='off'}]"
                 @click="durationTime(4)">20分钟</li>
               <li
-                :class="['item', {'active': timeValue == 5}, {'disable': doorValue==false}]"
+                :class="['item', {'active': timeValue == 5}, {'disable': doorValue=='off'}]"
                 @click="durationTime(5)">60分钟</li>
               <li
-                :class="['item', {'active': timeValue == 6}, {'disable': doorValue==false}]"
+                :class="['item', {'active': timeValue == 6}, {'disable': doorValue=='off'}]"
                 @click="durationTime(6)">不限时</li>
             </ul>
           </div>
@@ -252,13 +252,15 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   data() {
     return {
-      isOpen: false,
-      rangeColor: true,
+      isOpen: 'off',
+      rangeColor: 'on',
       timeValue: 0,
-      doorValue: false,
-      coldValue: false,
-      frozenValue: false,
+      doorValue: 'off',
+      coldValue: 'off',
+      frozenValue: 'off',
       brightness: 0,
+      checkedColdValue: false,
+      checkedFrozenValue: false,
     }
   },
   computed: {
@@ -300,15 +302,19 @@ export default {
   },
   watch: {
     "deviceAttrs.holiday"() {
-      if(this.deviceAttrs.holiday == true) {
-        this.coldValue = false
-        this.frozenValue = false
+      if(this.deviceAttrs.holiday == 'on') {
+        this.coldValue = 'off'
+        this.frozenValue = 'off'
+        this.checkedColdValue = false
+        this.checkedFrozenValue = false
       }
     },
     "deviceAttrs.intelligent"() {
-      if(this.deviceAttrs.intelligent == true) {
-        this.coldValue = false
-        this.frozenValue = false
+      if(this.deviceAttrs.intelligent == 'on') {
+        this.coldValue = 'off'
+        this.frozenValue = 'off'
+        this.checkedColdValue = false
+        this.checkedFrozenValue = false
       }
     }
   },
@@ -320,19 +326,25 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo','doControlDevice']),
     handleMore() {
-      this.isOpen = !this.isOpen
+      this.isOpen = 'on'
     },
     setMode(val, boolean) {
       if (this.isClose) return
-      this.controlDevice(val, !boolean)
+      var value
+      if(boolean == 'on') {
+        value = 'off'
+      } else {
+        value = 'on'
+      }
+      this.controlDevice(val, value)
       // .then(() => {
-      //   if(this.deviceAttrs.holiday == true) {
-      //     this.coldValue = false
-      //     this.frozenValue = false
+      //   if(this.deviceAttrs.holiday == 'on') {
+      //     this.coldValue = 'off'
+      //     this.frozenValue = 'off'
       //   }
-      //   if(this.deviceAttrs.intelligent == true) {
-      //     this.coldValue = false
-      //     this.frozenValue = false
+      //   if(this.deviceAttrs.intelligent == 'on') {
+      //     this.coldValue = 'off'
+      //     this.frozenValue = 'off'
       //   }
       // })
     },
@@ -362,9 +374,9 @@ export default {
       var width = (91.3 / max * e.target.value) +"%"
       document.querySelector('.rang_width').style.width = width
       if(e.target.value == 0) {
-        this.rangeColor = true
+        this.rangeColor = 'on'
       } else {
-        this.rangeColor = false
+        this.rangeColor = 'off'
       }
       this.brightness = e.target.value
       console.log(e.target.value)
@@ -386,16 +398,40 @@ export default {
     },
     cold(e, val) {
       // console.log(e.target.checked, val)
-      this.controlDevice('fast_cool', !val)
+      var value
+      if(val == 'on') {
+        value = 'off'
+      } else {
+        value = 'on'
+      }
+      this.controlDevice('fast_cool', value)
       .then(() => {
-        this.coldValue = e.target.checked
+        if(e.target.checked == true) {
+          this.coldValue = 'on'
+          this.checkedColdValue = true
+        } else {
+          this.coldValue = 'off'
+          this.checkedColdValue = false
+        }
       })
     },
     frozen(e, val) {
+      var value
+      if(val == 'on') {
+        value = 'off'
+      } else {
+        value = 'on'
+      }
       // console.log(e.target.checked, val)
-      this.controlDevice('fast_frozen', !val)
+      this.controlDevice('fast_frozen', value)
       .then(() => {
-        this.frozenValue = e.target.checked
+        if(e.target.checked == true) {
+          this.frozenValue = 'on'
+          this.checkedFrozenValue = true
+        } else {
+          this.frozenValue = 'off'
+          this.checkedFrozenValue = false
+        }
       })
     },
     controlDevice(attr, value) {

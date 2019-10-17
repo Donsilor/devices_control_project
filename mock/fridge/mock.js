@@ -18,10 +18,10 @@ let res = {
   level_freezer: -200,
   level_container: 60,
   mode: 'cool',
-  holiday: false,
-  intelligent: false,
-  fast_frozen: false,
-  fast_cool: false,
+  holiday: 'off',
+  intelligent: 'off',
+  fast_frozen: 'off',
+  fast_cool: 'off',
   queryMode: 'low',
   connectivity: 'online'
 }
@@ -48,20 +48,20 @@ export function set(data) {
       if(attr.level_freezer) {
         attr.temperature_freezer = attr.level_freezer
       }
-      if(attr.intelligent == true) {
-        attr.holiday = false
+      if(attr.intelligent == 'on') {
+        attr.holiday = 'off'
       }
-      if(attr.holiday == true) {
+      if(attr.holiday == 'on') {
         attr.level_container = 170
-        attr.intelligent = false
+        attr.intelligent = 'off'
       }
-      if(attr.fast_frozen == true) {
-        attr.holiday = false
-        attr.intelligent = false
+      if(attr.fast_frozen == 'on') {
+        attr.holiday = 'off'
+        attr.intelligent = 'off'
       }
-      if(attr.fast_cool == true) {
-        attr.holiday = false
-        attr.intelligent = false
+      if(attr.fast_cool == 'on') {
+        attr.holiday = 'off'
+        attr.intelligent = 'off'
       }
     } catch (error) {
       attr = data.content.params.attribute
