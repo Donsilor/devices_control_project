@@ -20,9 +20,9 @@
               v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
               class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
             </div>
-            <i 
+            <div 
               v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'" 
-              :class="[deviceAttrs.mode, 'c-mode']"/>
+              :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
           </div>
           <circle-progress
             v-if="isShow"
@@ -61,18 +61,12 @@
       </div>
       <!-- 底部按钮 -->
       <div class="panel-btn center">
-        <div 
-          class="more" 
-          @click="handleMore">
-          <span :class="[isOpen ? 'up': 'down', 'arrow']">></span>
-          <div>{{ isOpen ? '收起' : '查看更多' }}</div>
-        </div>
-        <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
+        <!-- <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
           <div 
             :class="[{ 'active': !isClose }, 'btn-swich btn center']"
             @click="setSwitch" />
           <div class="btn-name">开关</div>
-        </div>
+        </div> -->
         <div 
           class="btn-wrap"
           @click="setMode('cold')">
@@ -85,27 +79,35 @@
           <div :class="[ { 'active': deviceAttrs.mode == 'heat' }, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
-        <div 
-          class="btn-wrap"
-          @click="showMode">
-          <div :class="[ { 'active': modeIsActive }, modeClass, 'btn center']" />
-          <div class="btn-name">模式 </div>
-        </div>
-        <div 
-          v-show="isOpen" 
+        <!-- <div 
           class="btn-wrap"
           @click="showSpeed">
           <div :class="[ speedClass, 'btn center active']" />
           <div class="btn-name">风速</div>
+        </div> -->
+        <div 
+          class="btn-wrap" 
+          @click="setMode('auto')">
+          <div :class="[ { 'active': deviceAttrs.mode == 'auto' }, 'btn btn-auto center']" />
+          <div 
+            class="btn-name" >智能</div>
         </div>
         <div 
-          v-show="isOpen"
           class="btn-wrap"
-          @click="showSwing">
-          <div :class="[ { 'active': windIsActive }, 'btn btn-up center']" />
-          <div class="btn-name">摆风 </div>
+          @click="setMode('wind')">
+          <div :class="[{ 'active': deviceAttrs.mode == 'wind' }, 'btn btn-wind center']" />
+          <div class="btn-name">送风</div>
         </div>
-        <!-- <div 
+        <div 
+          class="btn-wrap"
+          @click="setMode('dehumidify')">
+          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
+          <div class="btn-name">除湿</div>
+        </div>
+        <div 
+          style="visibility:hidden"
+          class="btn-wrap"/>
+          <!-- <div 
           v-show="isOpen"
           class="btn-wrap"
           @click="showTime">
@@ -113,6 +115,43 @@
           <div class="btn-name">定时 </div>
         </div> -->
       </div>
+      <!-- 规格选择 -->
+      <!-- 风速 -->
+      <div class="optionbox">
+        <div class="option1">
+          <div>
+            <span>风速</span>
+            <span @click="showSpeed">{{ deviceAttrs.speed=='auto'?'自动':'手动＞' }}</span>
+          </div>
+          <div 
+            v-if="deviceAttrs.speed!=='auto'" 
+            class="range">
+            <input
+              type="range"
+              min="0"
+              max="4"
+              step="1"
+              value="0"
+              @input="changeSpeed">
+            <p :class="['rang_width']"/>
+          </div>
+        </div>
+        <!-- 摆风 -->
+        <div class="option">
+          <div>
+            <span>摆风</span>
+            <span @click="showSwing">{{ deviceAttrs.wind_up_down=='on'?'上下风＞':'' }}{{ deviceAttrs.wind_left_right=='on'?'左右风＞':'' }}{{ deviceAttrs.wind_up_down=='off'&&deviceAttrs.wind_left_right=='off'?'设置＞':'' }}</span>
+          </div>
+        </div>
+        <!-- 定时 -->
+        <div class="option">
+          <div>
+            <span>定时</span>
+            <span @click="showTime">设置关机时间＞</span>
+          </div>
+        </div>
+      </div>
+
       <!--选择摆风-->
       <model-swing 
         ref="swing"
@@ -129,6 +168,10 @@
         ref="speed"
         :speed="deviceAttrs.speed"
         @setSpeed="setSpeed" />
+      <!-- 时间选择 -->
+      <SelectTime 
+        ref="time" 
+        @selectedTime="setReserve" />
     </div>
   </div>
 </template>
@@ -139,19 +182,21 @@ import circleProgress from './components/circle-progress'
 import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
-const [MIN_TEMP, MAX_TEMP] = [160, 300]
+import SelectTime from './components/time.vue'
+const [MIN_TEMP, MAX_TEMP] = [160, 320]
 export default {
   components: {
     circleProgress,
     modelSwing,
     modelMode,
     modelSpeed,
+    SelectTime
   },
   data() {
     return {
       isOpen: false,
       isShow: true,
-      width: 220,
+      width: 230,
       radius: 8,
       progress: 30, // 0~70
       duration: 0,
@@ -161,6 +206,7 @@ export default {
       timeShow: false,
     }
   },
+  
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
@@ -207,17 +253,7 @@ export default {
     },
     getBarColor() {
       if(this.isClose || this.isOffline) return '#D8D8D8'
-      /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
-        case 'cold':
-          return '#00D5FF'
-          break
-        case 'heat':
-          return '#FF5F00'
-          break
-        default:
-          return '#0FDC66'
-      }
+      return '#000'
     },
   },
   created() {
@@ -231,20 +267,57 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    handleMore() {
-      if (this.isClose) return
-      this.isOpen = !this.isOpen
+    setReserve(time) {
+      // let h = parseInt(time.split(':')[0])
+      // let m = parseInt(time.split(':')[1]) > 0 ? 0.5 : 0
+      //   if(this.model.order_time == 0 && this.model.order_mode == 'off'){
+      //     this.controlDevice('pre_order',{
+      //       order_time:(h + m)*60,
+      //       order_mode:this.currentMode
+      //     })
+      //   }
+      // if (this.model.order_time > 0 && this.model.order_mode !== 'off') {
+      //   this.controlDevice('machine_mode','off')
+      // }
     },
+    // 开关机
+    shutdowncallback(val){
+      if (this.isOffline) return 
+      this.controlDevice('switch',val)
+    },
+    // range调风速
+    changeSpeed(e) {
+      var max = e.target.getAttribute("max")
+      var width = (93 / max * e.target.value) +"%"
+      document.querySelector('.rang_width').style.width = width
+      if(e.target.value == 0) {
+        this.rangeColor = true
+      } else {
+        this.rangeColor = false
+      }
+      this.brightness = e.target.value
+      console.log(e.target.value)
+      if (this.brightness=='1') {
+        this.controlDevice('speed','low')
+      }
+      if (this.brightness=='2') {
+        this.controlDevice('speed','normal')
+      }
+      if (this.brightness=='3') {
+        this.controlDevice('speed','high')
+      }
+      if (this.brightness=='4') {
+        this.controlDevice('speed','auto')
+      }
+    },
+    // 设置模式
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose) return
-       if (this.deviceAttrs.temperature == 300 && this.deviceAttrs.speed == 'low' && val == 'cold') {
-        return HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
-      }
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
           if (this.deviceAttrs.mode=='wind') {
-            this.progress = 70 /(30 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)  
+            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)  
             this.$refs.$circle.init()
             this.hide()
             return
@@ -252,15 +325,6 @@ export default {
           this.reset()
           this.hide()
         })
-    },
-    setSwitch() {
-      let switchStatus = ''
-      if (this.deviceAttrs.switchStatus == 'on') {
-        switchStatus = 'off'
-      } else {
-        switchStatus = 'on'
-      }
-      this.controlDevice("switch", switchStatus)
     },
     setTemperature(step) {
       // 送风模式不能设置温度
@@ -276,9 +340,6 @@ export default {
           temp = MIN_TEMP
         }
       }
-      if (temp == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
-        return HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
-      }
       // 最大温度
       if (temp > MAX_TEMP) {
         if (this.deviceAttrs.temperature == MAX_TEMP) {
@@ -293,22 +354,26 @@ export default {
           this.reset()
         })
     },
+    // 设置摆风
     setWind(attr) {
       if (this.isClose) return
       var val = this.deviceAttrs[attr] === 'on' ? 'off' : 'on'
+      // if (this.deviceAttrs.wind_up_down=='on') {
+      //   this.controlDevice('wind_left_right','off')
+      // }
+      // if (this.deviceAttrs.wind_left_right=='on') {
+      //    this.controlDevice('wind_up_down','off')
+      // }
       this.controlDevice(attr, val)
         .then(() =>{
           this.hide()
         })
     },
+    // 设置风速
     setSpeed(speed) {
       if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
         return HdSmart.UI.toast('送风模式不能设置自动风速')
       }
-      if (this.deviceAttrs.temperature == 300 && speed == 'low' && this.deviceAttrs.mode == 'cold') {
-        return HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
-      }
-
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
@@ -361,7 +426,7 @@ export default {
     
     getProgress() {
       // 计算温度进度条
-      return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+      return 70 /(32 - 16) * (this.deviceAttrs.temperature / 10 - 16)
     }
   }
 }
@@ -420,7 +485,7 @@ export default {
       border: none;
       width: 72px;
       height: 72px;
-      background:#efefef;
+      background: rgba(0,0,0,0.04);
       border-radius: 50%;
       &.add{
         background-image: url(~@lib/base/fridge/assets/add.png);
@@ -445,10 +510,6 @@ export default {
         top: 49%;
         left: 49.5%;
         transform: translate(-50%, -50%);
-
-        background: #FFFFFF;
-        box-shadow: inset 0 0 16px 0 rgba(0,0,0,0.10);
-        border-radius: 50%;
         width: 84%;
         height: 81%;
         display: flex;
@@ -474,28 +535,15 @@ export default {
           transform: translate(-50%,-50%);
           top: 80%;
           left: 50%;
-          width: 33px;
-          height: 33px;
-          &.cold{
-            background-image: url('~@lib/@{imgPath}/icon-cold.png');
-            background-size: 100% 100%;
-          }
-          &.wind{
-            background-image: url('~@lib/@{imgPath}/icon-wind.png');
-            background-size: 100% 100%;
-          }
-          &.dehumidify{
-            background-image: url('~@lib/@{imgPath}/icon-dehumidify.png');
-            background-size: 100% 100%;
-          }
-          &.heat{
-            background-image: url('~@lib/@{imgPath}/icon-heat.png');
-            background-size: 100% 100%;
-          }
-          &.auto{
-            background-image: url('~@lib/@{imgPath}/icon-auto.png');
-            background-size: 100% 100%;
-          }
+          width: 216px;
+          height: 48px;
+          font-size: 24px;
+          background: rgba(0,0,0,0.04);
+          border: 1px solid rgba(0,0,0,0.05);
+          border-radius: 24px;
+          border-radius: 24px;
+          text-align: center;
+          line-height: 48px;
         }
       }
     }
@@ -506,34 +554,24 @@ export default {
     color: #20282B;
   }
   .panel-btn {
-    // padding: 20px 38px 0;
+    overflow-x: auto;
+    display: -webkit-box;
     z-index: 9999;
-    width: 120%;
-    // flex-wrap: wrap;
-    // justify-content: flex-start;
-    .more {
-      width: 750px;
-      color: #9e9e9e;
-      font-size: 24px;
-      text-align: center;
-      position: absolute;
-      left: 0;
-      top: -75px;
-      .arrow {
-        display: inline-block;
-        font-size: 32px;
-        &.up {
-          transform: rotate(90deg);
-        }
-        &.down {
-          transform: rotate(-90deg);
-        }
-      }
-    }
+    margin-top: 144px;
+    /*适应苹果*/
+		-webkit-overflow-scrolling: touch;
   }
+  /*隐藏掉滚动条*/
+	.slide-box::-webkit-scrollbar {
+		display: none;
+	}
   /*********** 按钮 ***********/
   .btn-wrap {
     margin: 0 24px 24px;
+    &:last-of-type{
+      width: 30px;
+      height: 120px;
+    }
     .btn {
       box-sizing: border-box;
       margin: 0 auto;
@@ -551,8 +589,7 @@ export default {
         height: 44px;
       }
       &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border-color: #ffbf00;
+        background: #000;
       }
     }
     .btn-name {
@@ -570,13 +607,21 @@ export default {
     }
     .btn-cold {
       &::before {
-        background-image: url('~@lib/@{imgPath}/cold.png');
+        background-image: url('~@lib/@{imgPath1}/cold.png');
+        background-size: 100% 100%;
+      }
+      &.active::before {
+        background-image: url('~@lib/@{imgPath1}/cold1.png');
         background-size: 100% 100%;
       }
     }
     .btn-heat {
       &::before {
-        background-image: url('~@lib/@{imgPath}/heat.png');
+        background-image: url('~@lib/@{imgPath1}/heat.png');
+        background-size: 100% 100%;
+      }
+       &.active::before {
+        background-image: url('~@lib/@{imgPath1}/heat1.png');
         background-size: 100% 100%;
       }
     }
@@ -601,14 +646,22 @@ export default {
 
     .btn-wind {
       &::before {
-        background-image: url('~@lib/@{imgPath}/wind.png');
+        background-image: url('~@lib/@{imgPath1}/wind.png');
+        background-size: 100% 100%;
+      }
+      &.active::before {
+        background-image: url('~@lib/@{imgPath1}/wind1.png');
         background-size: 100% 100%;
       }
     }
 
     .btn-dehumidify {
       &::before {
-        background-image: url('~@lib/@{imgPath}/dehumidify-black.png');
+        background-image: url('~@lib/@{imgPath1}/dehumidify.png');
+        background-size: 100% 100%;
+      }
+      &.active::before {
+        background-image: url('~@lib/@{imgPath1}/dehumidify1.png');
         background-size: 100% 100%;
       }
     }
@@ -641,6 +694,10 @@ export default {
         background-image: url('~@lib/@{imgPath}/auto.png');
         background-size: 100% 100%;
       }
+       &.active::before {
+        background-image: url('~@lib/@{imgPath1}/auto1.png');
+        background-size: 100% 100%;
+      }
     }
     .btn-left{
       &::before {
@@ -655,6 +712,102 @@ export default {
       }
     }
   }
+  .optionbox{
+    width: 100%;
+    margin-top: 10px;
+    margin: 10px 0 30px 0;
+    .option{
+      width: 100%;
+      height: 120px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 0 40px;
+      >div{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 32px;
+        color: #000;
+        >span{
+          display: inline-block;
+          line-height: 120px;
+          height: 120px;
+          &:last-of-type{
+            color: rgba(0, 0, 0, 0.5);
+          }
+        }
+      }
+    }
+    .option1{
+      padding: 0 40px;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      >div{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 32px;
+        color: #000;
+        >span{
+          display: inline-block;
+          line-height: 120px;
+          height: 120px;
+          &:last-of-type{
+            color: rgba(0, 0, 0, 0.5);
+          }
+        }
+        
+      }
+      input[type="range"] {
+        display: block;
+        -webkit-appearance: none;
+        // background-color: #bdc3c7;
+        background: rgba(101,101,101,0.3);
+        width: 100%;
+        height: 10px;border-radius: 5px;
+        margin: 0 auto;outline: 0;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        background-color: #000;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        // border: 2px solid white;
+        cursor: pointer;
+        // transition: 0.3s ease-in-out;
+      }
+      .range {
+        position: relative;
+        width: 100%;
+        margin-bottom: 50px;
+        .range-zero::-webkit-slider-thumb {
+          background: #EDEDED;
+        }
+        .range-zero {
+          background: #EDEDED;
+        }
+      }
+      .tips {
+        font-size: 32px;
+        color: #000000;
+        float: right;
+      }
+      .tips-bak {
+        color: #EDEDED;
+      }
+      .rang_width {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #000;
+        height: 10px;
+        border-radius: 5px 0 0 5px;
+        }
+        .rang_bak {
+          background: #EDEDED;
+        }
+    }
+  }
+
   // &.close {
   //   .btn-wrap {
   //     &.up-index{
@@ -684,9 +837,6 @@ export default {
     }
     &.page {
       background: #fff;
-      .panel-btn {
-        background: #fff;
-      }
       .control-tm{
         background: #fff;
         .reduce,.add {
@@ -721,174 +871,4 @@ export default {
 
 }
 
-.btns-panel {
-  &:before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 99999;
-    width: 100%;
-
-    background: rgba(0, 0, 0, 0.8);
-  }
-  .items {
-    position: fixed;
-    left: 510px;
-    top: 950px;
-    z-index: 999999;
-
-    width: 750px;
-    min-height: 160px;
-    .btn {
-      transition: all 0.3s ease-in-out;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    .item1 {
-      top: -122px;
-      left: 88px;
-    }
-    .item2 {
-      top: -122px;
-      left: -76px;
-    }
-    .item3 {
-      top: 20px;
-      left: -150px;
-    }
-    .item4 {
-      top: 155px;
-      left: -94px;
-    }
-    .item5 {
-      top: 150px;
-      left: 50px;
-    }
-  }
-  &.more {
-    .items {
-      left: 384px;
-    }
-  }
-  .btns {
-    justify-content: flex-start;
-    transition: all 0.3s ease-in-out;
-    margin-top: 57px;
-    .btn {
-      margin-right: 40px;
-      width: 120px;
-      height: 120px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-
-      display: flex;
-      flex-direction: column;
-
-      .name {
-        margin-top: 16px;
-        font-size: 24px;
-        color: #20282B;
-      }
-      &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border-color: #ffbf00;
-      }
-    }
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(~@lib/base/air_cleaner/assets/new-air/swich-black.png);
-        }
-      }
-    }
-
-    .btn-low {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed1-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed1.png);
-        }
-      }
-    }
-    .btn-middle {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed2-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed2.png);
-        }
-      }
-    }
-    .btn-high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed3-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed3.png);
-        }
-      }
-    }
-    .btn-very_high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed4-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed4.png);
-        }
-      }
-    }
-    .btn-super_high {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url(~@lib/base/air_cleaner/assets/new-air/speed5-white.png);
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url(~@lib/base/air_cleaner/assets/new-air/speed5.png);
-        }
-      }
-    }
-  }
-}
 </style>

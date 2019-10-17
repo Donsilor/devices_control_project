@@ -175,7 +175,7 @@
       transform: translateZ(0px) rotateX(0deg);
     }
     li.current-pre{
-      background-image: linear-gradient(-180deg, rgba(55,62,65,0.00) 0%, #373E41 100%);
+      // background-image: linear-gradient(-180deg, rgba(55,62,65,0.00) 0%, #373E41 100%);
       border-radius: 0px;
 
       height: 70px;

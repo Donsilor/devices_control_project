@@ -40,7 +40,7 @@
           <!-- 餐具 -->
           <div
             v-if="temp"
-            class="swiper-container">
+            class="swiper-container container">
             <div class="swiper-wrapper">
               <div
                 v-for="item in tableware"
@@ -55,7 +55,7 @@
           <!-- 食材 -->
           <div
             v-if="!temp"
-            class="swiper-container1">
+            class="swiper-container container1">
             <div class="swiper-wrapper">
               <div
                 v-for="item in foodList"
@@ -275,6 +275,9 @@ export default {
           centeredSlides: true,
           loop:true,
           slidesPerView: 4,
+          paginationClickable: true,
+          observer:true,//修改swiper自己或子元素时，自动初始化swiper
+          observeParents:true,//修改swiper的父元素时，自动初始化swiper
         })
       },
   methods: {
@@ -407,12 +410,12 @@ export default {
             }
           }
         }
-        .swiper-container {
+        .container {
           margin-left: 38%;
           height: 300px;
         }
-        .swiper-container1 {
-          margin-left: 39%;
+        .container1 {
+          margin-left: 40.6%;
           height: 300px;
         }
         .swiper-wrapper{

@@ -5,7 +5,7 @@
     @click.self="show = false"
     @touchmove.prevent>
     <div class="main">
-      <p class="title">设置关机时间</p>
+      <div class="overtime"><span class="title">设置关机时间</span><span class="canceltime">取消定时</span></div>
       <time-pick 
         class="pickTime"
         @selectedchange="selectedchange" />
@@ -14,7 +14,7 @@
         <button 
           class="submit" 
           type="button"
-          @click="submit" >{{ orderTime > 0 ? '取消定时':'开启定时' }}</button>
+          @click="submit" >确定</button>
         <div 
           class="cancel" 
           @click=" show = false">取消</div>
@@ -46,28 +46,41 @@
       background: rgba(0,0,0,0.8);
     }
     .main{
-      position: relative;
+      position: absolute;
+      bottom: 0;
       z-index: 999999999999;
-      width: 638px;
-      height: 726px;
-
+      width: 100%;
+      height: 800px;
       color: #fff;
-      background: #373E41;
-      box-shadow: 0 10px 78px -8px rgba(0,0,0,0.64);
-      border-radius: 24px;
-      .title{
-        margin: 88px 48px 0;
-        font-size: 40px;
-        color: #fff;
+      background: #fff;
+      // background: #373E41;
+      // box-shadow: 0 10px 78px -8px rgba(0,0,0,0.64);
+      // border-radius: 24px;
+      .overtime{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 40px;
+        align-items: center;
+        height: 122px;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        .title{
+          font-size: 40px;
+          color: #000;
+        }
+        .canceltime{
+          font-size: 32px;
+          color: #E1B96E;
+        }
       }
+
       .wrap-btns{
         text-align: center;
       }
       .submit{
         margin-top: 50px;
         outline: none;
-        background-image: linear-gradient(-90deg, #FFD500 0%, #FFBF00 100%);
-        border-color: #FFBF00;
+        background: #000;
         border-radius: 71px;
 
         font-size: 32px;
@@ -94,7 +107,7 @@ export default {
     'time-pick': timePick
   },
   props: {
-    orderTime:{type: Number}
+    // orderTime:{type: Number}
   },
   
   data() {
