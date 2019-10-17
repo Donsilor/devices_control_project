@@ -5,20 +5,15 @@
     @click.self="show = false"
     @touchmove.prevent>
     <div class="main">
-      <p class="title">选择摆风</p>
+      <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
         <div 
           class="btn" 
-          @click="setWind('wind_up_down')">
-          <div :class="[wind_up_down === 'on' ? 'active' : '', {'btn-loading': btn_wind_up_down }, 'btn-swing center']" />
-          <div 
-            class="name" >上下风</div>
+          @click="setWind('wind_up_down')">上下风
         </div>
         <div 
           class="btn"
-          @click="setWind('wind_left_right')">
-          <div :class="[wind_left_right === 'on' ? 'active' : '', {'btn-loading': btn_wind_left_right }, 'btn-swing horizontal center']" />
-          <div class="name">左右风</div>
+          @click="setWind('wind_left_right')">左右风
         </div>
       </div>
       <div 
@@ -52,65 +47,40 @@
       background: rgba(0,0,0,0.8);
     }
     .main{
-      position: relative;
+      position: absolute;
+      bottom: 0;
       z-index: 999999999999;
-      width: 638px;
-      height: 542px;
-
+      width: 100%;
+      height: 381px;
       color: #20282B;
-      background: #FFFFFF;
+      background: #eee;
       border: 1px solid #DDDDDD;
-      border-radius: 24px;
-      border-radius: 24px;
-      .title{
-        margin: 88px 48px 48px;
-        font-weight: bold;
-        font-size: 40px;
-        color: #20282B;
-      }
       .btns{
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-top: 68px;
+        flex-direction: column;
+        background: #fff;
         .btn{
-          margin: 0 54px;
+          width:100%;
+          height:120px;
+          line-height: 120px;
           text-align: center;
-          .btn-swing{
-            width: 120px;
-            height: 120px;
-            border: 1px solid #818181;
-            border-radius: 50%;
-            &::before{
-              content: '';
-              display: block;
-              width: 44px;
-              height: 44px;
-              background-image: url('~@lib/@{imgPath}/up.png');
-              background-size: 100% 100%;
-            }
-            &.active{
-              background-image: linear-gradient(90deg, #FFD500 0%, #FFBF00 100%);
-              border: none;
-            }
-            &.horizontal{
-              transform: rotate(90deg)
-            }
-          }
-          .name{
-            margin-top: 16px;
-            font-size: 24px;
-            color: #20282B;
+          font-size:32px;
+          &:first-of-type{
+            border-bottom:1px solid #F0F2F4;
           }
         }
       }
       .hide{
-        margin-top:61px;
+        width: 100%;
+        height: 120px;
+        margin-top:21px;
         font-size: 32px;
-        color: #FFC800;
         letter-spacing: 0;
         text-align: center;
-        line-height: 44px;
+        line-height: 120px;
+        background: #fff;
       }
     }
   }

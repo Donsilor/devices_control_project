@@ -83,18 +83,11 @@ export default {
   watch: {
     'device.stateChange'(){
       this.$nextTick(()=>{
-        //  this.newRatio()
+        if (this.deviceAttrs.switch=='off') {
+          this.$router.push({path:'/'})
+        }
       })
     },
-  },
-  created() {
-    HdSmart.ready(() => {
-      this.getDeviceInfo()
-      .then(()=>{
-
-      })
-      // HdSmart.UI.setStatusBarColor(2)
-    })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
