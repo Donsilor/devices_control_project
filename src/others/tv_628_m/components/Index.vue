@@ -22,7 +22,7 @@
         <div 
           v-show="activeIndex!=0" 
           class="screen"
-          @click="toPage(itemData)"> 筛选</div>
+          @click="toPage(itemData)"> <span/> 筛选</div>
       </div>
     </div>
    
@@ -153,7 +153,8 @@
 }
 .page-index {
   padding-bottom: 48px;
-  background: #f8f8f8;
+  background: url(/static/images/icn_blurry_bg@2x.4d4de97.png);
+    background-size: 100% 100%;
 
   .space-block{
     height: 26px;
@@ -225,18 +226,28 @@
       border-radius: 2px;
       height: 60px;
       text-align: center;
-      line-height: 46px;
+      line-height:  60px;
       margin-right: 20px;
       color: #AAAAAA;
     }
     .screen{
       background:rgba(0, 0, 0, 0.04);
       border-radius: 2px;
-      width: 144px;
+      width: 180px;
       height: 60px;
       text-align: center;
       line-height: 60px;
       color: #AAA;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span{
+        display: block;
+        width:  40px;;
+        height:  40px;;
+        background: url('~@lib/base/tv/assets/new/tv_btn_shaixuan.png');
+        background-size:100% 100%; 
+      }
     }
   }
 } 
@@ -329,7 +340,7 @@
   position: relative;
 
   img {
-    border-radius: 10px;
+    // border-radius: 10px;
     width: 200px;
     height: 310px;
     display: block;

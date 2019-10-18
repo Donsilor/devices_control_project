@@ -114,7 +114,7 @@ export default {
       default: ''
     },
     className: {
-      type: Array,
+      type: String,
       default: ''
     }
   },

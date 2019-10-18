@@ -8,6 +8,8 @@ let res = {
     'operation_mode':'end',//洗涤状态
     'remain_washtime':'121',
     'return_standby':'off',
+    'timer_value':123, //关机时间
+    'ovp':'open',//充电保护 open/close
     'mode_status':'off'//程序是否运行
 }
 export function generateSnapShot() {
@@ -21,29 +23,35 @@ export function generateSnapShot() {
     })
 }
 
-export function set(data){
+export function set(data) {
+  console.log('---------set-------')
+  console.log(data)
+  try {
     var attr = data.params.attribute
-    if(attr.negative_ion_switch){
-        attr.negative_ion_switch_status = attr.negative_ion_switch
+  } catch (error) {
+    attr = data.content.params.attribute
+  }
+  if (attr.time) {
+    if (attr.time.timer_value>0) {
+      console.log('aaaaaaaaaaaaaa',attr.time.timer_value)
+      res.timer_value=attr.time.timer_value
+    }else{
+      res.timer_value=0
     }
-    if(attr.switch){
-        attr.switch_status = attr.switch
+    if (attr.time.timer_switch=='on') {
+      res.timer_switch=attr.time.timer_switch
+    }else{
+      res.timer_switch='off'
     }
-    if(attr.control){
-      if(attr.control=='start'){
-        attr.remain_washtime = 121
-        attr.operation_mode= 'wash_inflow'
-      }else{
-        attr.operation_mode= 'standby'
-      }
-    }
-    if(attr.operation_mode){
-      if(attr.operation_mode=='start'){
-        attr.remain_washtime = 121
-      }
-    }
+  }
+  if (attr.switch) {
+    res.switchStatus = attr.switch
+  } else if (attr.temperature) {
+    res.temperature = attr.temperature
+  } else {
     res = Object.assign({}, res, attr)
-    return Mock.mock({
-        code: 0
-    })
+  }
+  return Mock.mock({
+      code: 0
+  })
 }

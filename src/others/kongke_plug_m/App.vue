@@ -14,8 +14,13 @@
         <div class="bg"><div class="circle"><div class="status">{{ deviceAttrs.switch=='on'?'通电中':'断电中' }}</div></div></div>
       </div>
       <div class="status1">05:23:17后断电</div>
+<<<<<<< HEAD
       <div 
         v-show="!isOffline" 
+=======
+      <!-- <div 
+        v-show="!isOffline&&!isClose" 
+>>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
         class="panel-btn center">
         <div 
           class="btn-wrap"
@@ -33,6 +38,41 @@
           style="visibility:hidden"
           class="btn-wrap"/>
       </div>
+<<<<<<< HEAD
+=======
+      <div
+        v-if="!isClose&&!isOffline"
+        class="panel-btn center">
+        <div
+          class="btn-wrap">
+          <div
+            :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
+            @click="setStart" />
+          <div class="btn-name">启动</div>
+        </div>
+      </div> -->
+      <div class="bottom">
+        <div class="timing"> 
+          <div>定时</div>
+          <div 
+            class="timing-right" 
+            @click="showTime">{{ deviceAttrs.timer_value | closeTime }} > </div>
+        </div>
+        <div class="Charging-protection">
+          <div>充电保护</div>
+          <div><input
+            :checked="deviceAttrs.ovp=='open'"
+            class="switch switch-anim"
+            type="checkbox" 
+            @click="lock"></div>
+        </div>
+      </div>
+      <!-- 时间选择 -->
+      <SelectTime
+        ref="time"
+        @selectedTime="setReserve"
+        @canceltime="canceltime" />
+>>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
     </div>
   </div>
 </template>
@@ -40,7 +80,11 @@
 <script>
 import Swiper from 'swiper'
 import { mapGetters, mapState, mapActions } from 'vuex'
+import SelectTime from './components/time.vue'
 export default {
+ components: {
+    SelectTime
+  },
   data() {
     return {
       temp:true,
@@ -146,7 +190,7 @@ export default {
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
-        nodeid: `curtain.main.${attr}`,
+        nodeid: `kongke_plug.main.${attr}`,
         params: {
           attribute: {
             [attr]: value,
@@ -154,6 +198,38 @@ export default {
           }
         }
       })
+    },
+    lock(e) {
+       if (this.isClose) return
+      let ovp = ''
+      if(e.target.checked){
+          ovp = 'open'
+      }else{
+          ovp = 'close'
+      }
+       this.controlDevice('ovp',ovp)
+      // console.log(e.target.checked)
+    },
+    showTime() {
+      if (this.isClose) return
+      this.$refs.time.show = true
+    },
+    // 设置关机时间
+    setReserve(time) {
+      let h = parseInt(time[0].split(':')[0])
+      let m = parseInt(time[0].split(':')[1])
+      console.log(h,m,'hm')
+        this.controlDevice('time',{
+            timer_value:h*60+m,
+            timer_switch:'on'
+        })
+    },
+    // 取消定时
+    canceltime(){
+       this.controlDevice('time',{
+            timer_value:0,
+            timer_switch:'off'
+        })
     },
   }
 }
@@ -182,6 +258,72 @@ export default {
   position: relative;
   background-image: url('~@lib/@{imgPath}/bg_01@2x.png');
   background-size: 100% 100%;
+  .switch {
+    width: 74px;
+    height: 28px;
+    position: relative;
+    border: 1px solid transparent;
+    // background-color: #fdfdfd;
+    box-shadow: #dfdfdf 0 0 0 0 inset;
+    border-radius: 20px;
+    background-clip: content-box;
+    display: inline-block;
+    -webkit-appearance: none;
+    user-select: none;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  .switch:before {
+      content: '';
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      top: -8px;
+      left: 0;
+      border-radius: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      background: #7F7F7F;
+  }
+  .switch:checked {
+      // border-color: #64bd63;
+      // box-shadow: #64bd63 0 0 0 16px inset;
+      // background-color: #64bd63;
+  }
+  .switch:checked:before {
+      left: 30px;
+      background: #000000;
+  }
+  .switch.switch-anim {
+      transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+  }
+  .switch.switch-anim:before {
+      transition: left 0.3s;
+  }
+  .switch.switch-anim:checked {
+      // box-shadow: #64bd63 0 0 0 16px inset;
+      // background-color: #64bd63;
+      transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
+  }
+  .switch.switch-anim:checked:before {
+      transition: left 0.3s;
+  };
+  .bottom{
+    width: 100%;
+   
+    margin-top: 40px;
+    .timing,.Charging-protection{
+       padding: 0 40px;
+      display: flex;
+      justify-content: space-between;
+      font-family: PingFangSC-Regular;
+      font-size: 32px;
+      color: #000000;
+      height: 120px;
+      line-height: 120px;
+      border-top: 1px rgba(0, 0, 0, .1) solid;
+    }
+   
+  }
   .main {
     .bg{
       width: 580px;

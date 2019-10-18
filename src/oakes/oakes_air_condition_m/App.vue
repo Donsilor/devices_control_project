@@ -4,12 +4,17 @@
       <NewTopBar
         :title="device.device_name"
         :shutdown="true"
+<<<<<<< HEAD
         :class-name="[opcityStyle]"
+=======
+        :class-name="opcityStyle"
+>>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <div class="main center">
         <div class="wrap-circle">
           <div class="bg">
+<<<<<<< HEAD
             <div 
               v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'" 
               class="tm">-- <sup>°C</sup></div>
@@ -23,9 +28,24 @@
             </div>
             <div 
               v-show="!isOffline&& deviceAttrs.switchStatus == 'on'" 
+=======
+            <div
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'"
+              class="tm">-- <sup>°C</sup></div>
+            <div
+              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
+              class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
+            </div>
+            <div
+              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
+              class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
+            </div>
+            <div
+              v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'"
+>>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
               :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
-            <div 
-              v-show="isOffline||deviceAttrs.switchStatus == 'off'" 
+            <div
+              v-show="isOffline||deviceAttrs.switchStatus == 'off'"
               :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
           </div>
           <circle-progress
@@ -45,11 +65,17 @@
             class="progress"
           />
         </div>
+<<<<<<< HEAD
         <div 
           v-show="!isOffline&&!isClose" 
           class="control-tm center">
           <button 
             class="control reduce" 
+=======
+        <div class="control-tm center">
+          <button
+            class="control reduce"
+>>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
             @click="setTemperature(-10)"/>
           <button
             class="control add"
@@ -64,16 +90,16 @@
       </div>
       <!-- 底部按钮 -->
       <!-- 开关 -->
-      <div 
+      <div
         v-show="isOffline||isClose"
         class="starting">
-        <div 
-          class="btn btn-start" 
+        <div
+          class="btn btn-start"
           @click="shutdowncallback('on')" />
         <div class="btn-name">开机</div>
       </div>
-      <div 
-        v-show="!isOffline&&!isClose" 
+      <div
+        v-show="!isOffline&&!isClose"
         class="panel-btn center">
         <!-- <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
           <div
@@ -118,16 +144,21 @@
       </div>
       <!-- 规格选择 -->
       <!-- 风速 -->
-      <div 
-        v-show="!isClose&&!isOffline" 
+      <div
+        v-show="!isClose&&!isOffline"
         class="optionbox">
         <div class="option1">
           <div>
             <span>风速</span>
             <span @click="showSpeed">{{ typeVal=='auto'?'自动':'手动＞' }}</span>
           </div>
+<<<<<<< HEAD
           <div 
             v-show="typeVal!=='auto'" 
+=======
+          <div
+            v-show="typeVal!=='auto'"
+>>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
             class="range">
             <input
               :value="brightnessValue"
@@ -386,8 +417,13 @@ export default {
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
+<<<<<<< HEAD
           if (this.deviceAttrs.mode=='auto') {
             this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)  
+=======
+          if (this.deviceAttrs.mode=='wind') {
+            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
+>>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
             this.$refs.$circle.init()
             this.hide()
             return

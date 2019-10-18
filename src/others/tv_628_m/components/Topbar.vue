@@ -75,7 +75,8 @@ export default {
 <style lang="less" scoped>
 /* topbar */
 .topbar-block, .topbar-fixed{
-  background-color: transparent;
+  background-color: #fff;
+  // background-color: transparent;
 }
 .topbar-fixed{
   border-bottom: 0;
