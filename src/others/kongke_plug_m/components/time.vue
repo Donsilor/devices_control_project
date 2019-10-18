@@ -6,7 +6,7 @@
     @touchmove.prevent>
     <div class="main">
       <div class="overtime">
-        <span class="title">设置关机时间</span>
+        <span class="title">{{title}}</span>
         <span 
           class="canceltime" 
           @click="canceltime">取消定时</span>
@@ -112,6 +112,9 @@ export default {
     'time-pick': timePick
   },
   props: {
+    title:{
+      type: String
+    }
     // orderTime:{type: Number}
   },
   

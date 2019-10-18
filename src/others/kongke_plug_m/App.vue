@@ -13,14 +13,9 @@
         style="margin-top:52px">
         <div class="bg"><div class="circle"><div class="status">{{ deviceAttrs.switch=='on'?'通电中':'断电中' }}</div></div></div>
       </div>
-      <div class="status1">05:23:17后断电</div>
-<<<<<<< HEAD
+      <div class="status1">{{ deviceAttrs.countdownOpen | closeTime }}后断电</div>
       <div 
         v-show="!isOffline" 
-=======
-      <!-- <div 
-        v-show="!isOffline&&!isClose" 
->>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
         class="panel-btn center">
         <div 
           class="btn-wrap"
@@ -30,33 +25,31 @@
         </div>
         <div 
           class="btn-wrap"
-          @click="setMode('dehumidify')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-delay center']" />
-          <div class="btn-name">延时通电</div>
+          v-if="deviceAttrs.countdownOpen=='0'"
+          @click="showTime('设置延时断电')">
+          <div :class="['btn btn-delay center']" />
+          <div class="btn-name">延时断电</div>
+        </div>
+         <div 
+         v-else
+          class="btn-wrap">
+          <div  
+            @touchstart="touchStart($event)"
+            @touchmove="touchMove($event)"
+            @touchend="touchEnd($event)" :class="['btn btn-delay center']" />
+          <div class="btn-name">取消延迟</div>
         </div>
         <div 
           style="visibility:hidden"
           class="btn-wrap"/>
       </div>
-<<<<<<< HEAD
-=======
-      <div
-        v-if="!isClose&&!isOffline"
-        class="panel-btn center">
-        <div
-          class="btn-wrap">
-          <div
-            :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
-            @click="setStart" />
-          <div class="btn-name">启动</div>
-        </div>
-      </div> -->
+
       <div class="bottom">
         <div class="timing"> 
           <div>定时</div>
           <div 
             class="timing-right" 
-            @click="showTime">{{ deviceAttrs.timer_value | closeTime }} > </div>
+            @click="showTime('设置关机时间')">{{ deviceAttrs.closeTime | closeTime }} > </div>
         </div>
         <div class="Charging-protection">
           <div>充电保护</div>
@@ -70,9 +63,9 @@
       <!-- 时间选择 -->
       <SelectTime
         ref="time"
+        :title="title"
         @selectedTime="setReserve"
         @canceltime="canceltime" />
->>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
     </div>
   </div>
 </template>
@@ -91,6 +84,7 @@ export default {
       timeOutEvent:'',
       a:"",
       currentMode:'normal',
+      title:""
     }
   },
   computed: {
@@ -121,7 +115,9 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     // 开关机
     setSwitch(){
+      console.log(1)
       if (this.isOffline) return 
+      console.log(2)
       let switchStatus = ''
       if (this.deviceAttrs.switch=='on') {
         switchStatus = 'off'
@@ -133,27 +129,6 @@ export default {
     // tab切换
     tabMode(t){
       this.temp = t
-    },
-    // 启动
-    setStart() {
-      let controlStatus = ''
-      if (this.deviceAttrs.control == 'start') {
-        controlStatus = 'halt'
-      } else {
-        controlStatus = 'start'
-        this.currentMode = document.querySelectorAll('.swiper-slide-active>div>span')[1].innerHTML
-        let value
-        let arr = this.tableware.concat(this.foodList)
-        for(let i=0;i<arr.length;i++){
-          if(this.currentMode ==arr[i].name ){
-            value = arr[i].english
-          }
-        }
-        this.controlDevice("control",controlStatus,{'mode':value})
-          this.$router.push({ path: '/Washing' })
-        return
-      }
-      this.controlDevice("control",controlStatus )
     },
     // 长按事件
     touchStart(e){
@@ -181,7 +156,8 @@ export default {
       console.log(this.timeOutEvent)
       // alert('长按了')
       this.$nextTick(()=>{
-        this.controlDevice('remain_washtime',0)
+        // 删除延时
+        this.controlDevice('remove_time',true)
       })
     },
     // 洗涤完成
@@ -210,19 +186,23 @@ export default {
        this.controlDevice('ovp',ovp)
       // console.log(e.target.checked)
     },
-    showTime() {
+    showTime(v) {
+      this.title = v
       if (this.isClose) return
       this.$refs.time.show = true
     },
     // 设置关机时间
     setReserve(time) {
+      console.log(this.title)
       let h = parseInt(time[0].split(':')[0])
       let m = parseInt(time[0].split(':')[1])
+      if(this.title=='设置延时断电'){
+          this.controlDevice('countdownOpen',h*60+m)
+      }else{
+        this.controlDevice('closeTime',h*60+m)
+      }
       console.log(h,m,'hm')
-        this.controlDevice('time',{
-            timer_value:h*60+m,
-            timer_switch:'on'
-        })
+        
     },
     // 取消定时
     canceltime(){
@@ -444,6 +424,7 @@ export default {
     height: auto;
     width: 100%;
     margin-top: 120px;
+    position:relative;
     z-index: 99999;
   .btn-wrap {
     margin: 0 24px 24px;

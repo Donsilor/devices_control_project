@@ -7,8 +7,10 @@ let res = {
     'mode':'nomal',
     'operation_mode':'end',//洗涤状态
     'remain_washtime':'121',
+    'countdownOpen':'60',//延时时间
+    'remove_time':'false',//删除延时 (找不到这个,自己假设的)
     'return_standby':'off',
-    'timer_value':123, //关机时间
+    'closeTime':123, //关机时间
     'ovp':'open',//充电保护 open/close
     'mode_status':'off'//程序是否运行
 }
@@ -31,19 +33,20 @@ export function set(data) {
   } catch (error) {
     attr = data.content.params.attribute
   }
-  if (attr.time) {
-    if (attr.time.timer_value>0) {
-      console.log('aaaaaaaaaaaaaa',attr.time.timer_value)
-      res.timer_value=attr.time.timer_value
-    }else{
-      res.timer_value=0
-    }
-    if (attr.time.timer_switch=='on') {
-      res.timer_switch=attr.time.timer_switch
-    }else{
-      res.timer_switch='off'
-    }
-  }
+  // if (attr.countdownOpen) {
+  //   if (attr.countdownOpen>0) {
+  //     res.countdownOpen=attr.time.countdownOpen
+  //   }else{
+  //     res.countdownOpen=0
+  //   }
+  // }
+  // if (attr.closeTime) {
+  //   if (attr.closeTime>0) {
+  //     res.closeTime=attr.closeTime
+  //   }else{
+  //     res.closeTime=0
+  //   }
+  // }
   if (attr.switch) {
     res.switchStatus = attr.switch
   } else if (attr.temperature) {
