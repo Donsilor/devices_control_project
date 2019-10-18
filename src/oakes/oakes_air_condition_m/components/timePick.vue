@@ -4,9 +4,12 @@
       选中值为：<span>{{ selectedValue }}</span>
     </div> -->
     <div class="wrap-box">
+      <div 
+        :style="{ top: mTop+0.85 +'rem' }" 
+        class="noplay"/>
       <div class="box">
         <ul 
-          :style="{ top: hTop +'rem' }" 
+          :style="{ top: hTop+0.85 +'rem' }" 
           class="list" 
           @touchstart="touchStart($event,'hours')" 
           @touchmove="touchMove($event,'hours')" 
@@ -19,10 +22,10 @@
                      'current':hIndex===idx}">{{ +idx > 9 ? idx : '0' + idx }}</li>
         </ul>
       </div>
-      <div class="unit">小时</div>
+      <!-- <div class="unit">小时</div> -->
       <div class="box">
         <ul 
-          :style="{ top: mTop +'rem' }" 
+          :style="{ top: mTop+0.85 +'rem' }" 
           class="list" 
           @touchstart="touchStart($event,'minute')" 
           @touchmove="touchMove($event,'minute')" 
@@ -35,7 +38,7 @@
                      'current':mIndex===idx}">{{ +idx > 9 ? idx : '0' + idx }}</li>
         </ul>
       </div>
-      <div class="unit">分钟</div>
+      <!-- <div class="unit">分钟</div> -->
     </div>
   </div>
 </template>
@@ -139,17 +142,21 @@
     padding: 0;
   }
   .wrap-box{
-    height: 260px;
+    height: 350px;
     margin: 48px 0;
     padding: 0 48px;
-
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
   }
+  // .noplay{
+  //   position: absolute;
+  // }
   .box {
     flex: 1;
-    height: 260px;
+    // height: 260px;
+    height: 380px;
     overflow: hidden;
     position: relative;
     .list {
@@ -173,6 +180,8 @@
       height: 114px;
       line-height: 114px;
       transform: translateZ(0px) rotateX(0deg);
+      border-top: 1px solid rgba(.0, .0, .0, .1);
+      border-bottom: 1px solid rgba(.0, .0, .0, .1)
     }
     li.current-pre{
       // background-image: linear-gradient(-180deg, rgba(55,62,65,0.00) 0%, #373E41 100%);
@@ -190,14 +199,14 @@
       background-image: linear-gradient(180deg, rgba(55,62,65,0.00) 0%, #373E41 100%);
     }
   }
-  .unit{
-    flex: 1;
-    height: 114px;
-    line-height: 114px;
-    font-size: 40px;
-    color: #FFC600;
-    text-align: center;
-  }
+  // .unit{
+  //   flex: 1;
+  //   height: 114px;
+  //   line-height: 114px;
+  //   font-size: 40px;
+  //   color: #FFC600;
+  //   text-align: center;
+  // }
 
 </style>
 

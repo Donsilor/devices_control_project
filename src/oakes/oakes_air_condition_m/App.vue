@@ -121,10 +121,10 @@
         <div class="option1">
           <div>
             <span>风速</span>
-            <span @click="showSpeed">{{ deviceAttrs.speed=='auto'?'自动':'手动＞' }}</span>
+            <span @click="showSpeed">{{ typeVal=='auto'?'自动':'手动＞' }}</span>
           </div>
           <div 
-            v-if="deviceAttrs.speed!=='auto'" 
+            v-if="typeVal!=='auto'" 
             class="range">
             <input
               type="range"
@@ -204,6 +204,7 @@ export default {
       // barColor: '#D8D8D8',
       backgroundColor: '#ececec',
       timeShow: false,
+      typeVal: 'hand'
     }
   },
   
@@ -370,7 +371,8 @@ export default {
         })
     },
     // 设置风速
-    setSpeed(speed) {
+    setSpeed(speed, val) {
+      this.typeVal = val
       if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
         return HdSmart.UI.toast('送风模式不能设置自动风速')
       }
@@ -557,7 +559,7 @@ export default {
     overflow-x: auto;
     display: -webkit-box;
     z-index: 9999;
-    margin-top: 144px;
+    margin-top: 130px;
     /*适应苹果*/
 		-webkit-overflow-scrolling: touch;
   }
