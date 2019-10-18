@@ -6,7 +6,7 @@ export function toThousandFilter(num) {
 export function filterTm(tm) {
   let tmp = '--'
   if(tm || tm == 0){
-    tmp = (+tm)/10
+    tmp = (+tm)
   }
   return tmp
 }
@@ -30,5 +30,5 @@ export function modeType(type) {
       break;
     default:
       return '其他'
-  } 
+  }
 }
