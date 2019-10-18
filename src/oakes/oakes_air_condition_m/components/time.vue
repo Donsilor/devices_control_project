@@ -5,7 +5,12 @@
     @click.self="show = false"
     @touchmove.prevent>
     <div class="main">
-      <div class="overtime"><span class="title">设置关机时间</span><span class="canceltime">取消定时</span></div>
+      <div class="overtime">
+        <span class="title">设置关机时间</span>
+        <span 
+          class="canceltime" 
+          @click="canceltime">取消定时</span>
+      </div>
       <time-pick 
         class="pickTime"
         @selectedchange="selectedchange" />
@@ -76,17 +81,16 @@
 
       .wrap-btns{
         text-align: center;
+        margin-top: 100px;
       }
       .submit{
         margin-top: 50px;
         outline: none;
         background: #000;
-        border-radius: 71px;
-
         font-size: 32px;
-        color: #000000;
+        color: #fff;
         text-align: center;
-        width: 542px;
+        width: 650px;
         height: 100px;
         margin: auto;
       }
@@ -95,6 +99,7 @@
         color: #FFC700;
         font-size: 32px;
         line-height: 44px;
+        color: #000;
       }
     }
   }
@@ -128,6 +133,10 @@ export default {
       this.time = '0:0'
       this.show = false
     },
+    canceltime(){
+      this.$emit('canceltime') //自定义事件，暴露值
+      this.show = false
+    }
   }
 }
 </script>

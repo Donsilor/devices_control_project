@@ -4,6 +4,7 @@
       <NewTopBar
         :title="device.device_name"
         :shutdown="true"
+
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <div class="main center">
@@ -52,12 +53,9 @@
       </div>
       <!-- 当前状态 -->
       <div 
-        v-show="deviceAttrs.switchStatus == 'on'&& deviceAttrs.connectivity == 'online'"
+        v-show="deviceAttrs.timer_switch == 'on'&& deviceAttrs.timer_value >0"
         class="status">
-        <i class="icon-status" />
-        {{ deviceAttrs.mode | modeType }}模式
-        {{ deviceAttrs.wind_up_down === 'on' ? '上下扫风':'' }}
-        {{ deviceAttrs.wind_left_right === 'on' ? '左右扫风': '' }}
+        {{ deviceAttrs.timer_value | closeTime }}
       </div>
       <!-- 底部按钮 -->
       <div class="panel-btn center">
@@ -79,12 +77,6 @@
           <div :class="[ { 'active': deviceAttrs.mode == 'heat' }, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
-        <!-- <div 
-          class="btn-wrap"
-          @click="showSpeed">
-          <div :class="[ speedClass, 'btn center active']" />
-          <div class="btn-name">风速</div>
-        </div> -->
         <div 
           class="btn-wrap" 
           @click="setMode('auto')">
@@ -107,13 +99,6 @@
         <div 
           style="visibility:hidden"
           class="btn-wrap"/>
-          <!-- <div 
-          v-show="isOpen"
-          class="btn-wrap"
-          @click="showTime">
-          <div :class="[ { 'active': deviceAttrs.order_time > 0}, 'btn btn-time center']" />
-          <div class="btn-name">定时 </div>
-        </div> -->
       </div>
       <!-- 规格选择 -->
       <!-- 风速 -->
@@ -147,7 +132,12 @@
         <div class="option">
           <div>
             <span>定时</span>
-            <span @click="showTime">设置关机时间＞</span>
+            <span 
+              v-if="deviceAttrs.timer_switch=='on'&&deviceAttrs.timer_value>0" 
+              @click="showTime">{{ deviceAttrs.timer_value | closeTime }}＞</span>
+            <span 
+              v-else 
+              @click="showTime">设置关机时间＞</span>
           </div>
         </div>
       </div>
@@ -171,7 +161,8 @@
       <!-- 时间选择 -->
       <SelectTime 
         ref="time" 
-        @selectedTime="setReserve" />
+        @selectedTime="setReserve"
+        @canceltime="canceltime" />
     </div>
   </div>
 </template>
@@ -254,7 +245,17 @@ export default {
     },
     getBarColor() {
       if(this.isClose || this.isOffline) return '#D8D8D8'
-      return '#000'
+            /* eslint-disable no-unreachable */
+      switch (this.deviceAttrs.mode) {
+        case 'cold':
+          return '#00D5FF'
+          break
+        case 'heat':
+          return '#FF5F00'
+          break
+        default:
+          return '#000'
+      }
     },
   },
   created() {
@@ -269,17 +270,20 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setReserve(time) {
-      // let h = parseInt(time.split(':')[0])
-      // let m = parseInt(time.split(':')[1]) > 0 ? 0.5 : 0
-      //   if(this.model.order_time == 0 && this.model.order_mode == 'off'){
-      //     this.controlDevice('pre_order',{
-      //       order_time:(h + m)*60,
-      //       order_mode:this.currentMode
-      //     })
-      //   }
-      // if (this.model.order_time > 0 && this.model.order_mode !== 'off') {
-      //   this.controlDevice('machine_mode','off')
-      // }
+      let h = parseInt(time[0].split(':')[0])
+      let m = parseInt(time[0].split(':')[1])
+      console.log(h,m,'hm')
+        this.controlDevice('time',{
+            timer_value:h*60+m,
+            timer_switch:'on'
+        })
+    },
+    // 取消定时
+    canceltime(){
+       this.controlDevice('time',{
+            timer_value:0,
+            timer_switch:'off'
+        })
     },
     // 开关机
     shutdowncallback(val){
@@ -500,7 +504,7 @@ export default {
     }
   }
   .main {
-    margin-top: 5vh;
+    margin-top: 2vh;
     position: relative;
     &.center {
       flex-direction: column;
@@ -764,7 +768,8 @@ export default {
         // background-color: #bdc3c7;
         background: rgba(101,101,101,0.3);
         width: 100%;
-        height: 10px;border-radius: 5px;
+        height: 2px;
+        border-radius: 5px;
         margin: 0 auto;outline: 0;
       }
       input[type="range"]::-webkit-slider-thumb {
@@ -801,7 +806,7 @@ export default {
         top: 0;
         left: 0;
         background: #000;
-        height: 10px;
+        height: 2px;
         border-radius: 5px 0 0 5px;
         }
         .rang_bak {

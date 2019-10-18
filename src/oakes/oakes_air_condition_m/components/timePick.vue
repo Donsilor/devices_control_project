@@ -4,9 +4,9 @@
       选中值为：<span>{{ selectedValue }}</span>
     </div> -->
     <div class="wrap-box">
-      <div 
-        :style="{ top: mTop+0.85 +'rem' }" 
-        class="noplay"/>
+      <!-- <div 
+        :style="{ top: 1.5 +'rem' }" 
+        class="noplay"/> -->
       <div class="box">
         <ul 
           :style="{ top: hTop+0.85 +'rem' }" 
@@ -22,7 +22,7 @@
                      'current':hIndex===idx}">{{ +idx > 9 ? idx : '0' + idx }}</li>
         </ul>
       </div>
-      <!-- <div class="unit">小时</div> -->
+      <div class="unit">小时</div>
       <div class="box">
         <ul 
           :style="{ top: mTop+0.85 +'rem' }" 
@@ -38,7 +38,7 @@
                      'current':mIndex===idx}">{{ +idx > 9 ? idx : '0' + idx }}</li>
         </ul>
       </div>
-      <!-- <div class="unit">分钟</div> -->
+      <div class="unit">分钟</div>
     </div>
   </div>
 </template>
@@ -127,8 +127,12 @@
             this.hIndex = max - 1
           }
           this.hTop = - (this.hIndex * this.liheight) / this.fontSize
+          console.log(this.hTop)
+          
         }
         this.selectedValue = this.hIndex + ':' + this.mIndex
+        console.log(this.selectedValue)
+        
       },
     }
   }
@@ -143,7 +147,7 @@
   }
   .wrap-box{
     height: 350px;
-    margin: 48px 0;
+    margin: 64px 0;
     padding: 0 48px;
     position: relative;
     display: flex;
@@ -152,6 +156,11 @@
   }
   // .noplay{
   //   position: absolute;
+  //   border: 1px solid rgba(.0, .0, .0, .1);
+  //   border-right: none;
+  //   border-left: none;
+  //   width: 80%;
+  //   height: 114px;
   // }
   .box {
     flex: 1;
@@ -180,8 +189,8 @@
       height: 114px;
       line-height: 114px;
       transform: translateZ(0px) rotateX(0deg);
-      border-top: 1px solid rgba(.0, .0, .0, .1);
-      border-bottom: 1px solid rgba(.0, .0, .0, .1)
+      // border-top: 1px solid rgba(.0, .0, .0, .1);
+      // border-bottom: 1px solid rgba(.0, .0, .0, .1)
     }
     li.current-pre{
       // background-image: linear-gradient(-180deg, rgba(55,62,65,0.00) 0%, #373E41 100%);
@@ -199,14 +208,14 @@
       background-image: linear-gradient(180deg, rgba(55,62,65,0.00) 0%, #373E41 100%);
     }
   }
-  // .unit{
-  //   flex: 1;
-  //   height: 114px;
-  //   line-height: 114px;
-  //   font-size: 40px;
-  //   color: #FFC600;
-  //   text-align: center;
-  // }
+  .unit{
+    // flex: 1;
+    height: 114px;
+    line-height: 114px;
+    font-size: 34px;
+    color: #FFC600;
+    text-align: center;
+  }
 
 </style>
 

@@ -295,7 +295,7 @@ export default {
     setStart() {
       let controlStatus = ''
       if (this.deviceAttrs.control == 'start') {
-        controlStatus = 'stop'
+        controlStatus = 'halt'
       } else {
         controlStatus = 'start'
         this.currentMode = document.querySelectorAll('.swiper-slide-active>div>span')[1].innerHTML
