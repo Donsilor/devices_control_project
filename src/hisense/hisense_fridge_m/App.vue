@@ -33,7 +33,7 @@
             <button
               :class="['control', 'reduce', {'disabed': coldValue == 'on' || deviceAttrs.intelligent == 'on'}]"
               :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on'"
-              @click="setTemperature('level_container', -10, [20, 80])"/>
+              @click="setTemperature('level_container', -1, [2, 8])"/>
             <!-- <div class="tm-progress">
               <div
                 :style="{ width: progress1 +'%' }"
@@ -44,7 +44,7 @@
             <button
               :class="['control', 'add', {'disabed': coldValue == 'on' || deviceAttrs.intelligent == 'on'}]"
               :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on'"
-              @click="setTemperature('level_container', 10, [20, 80])"/>
+              @click="setTemperature('level_container', 1, [2, 8])"/>
           </div>
         </div>
 
@@ -92,7 +92,7 @@
             <button
               :class="['control', 'reduce', {'disabed': frozenValue == 'on' || deviceAttrs.intelligent == 'on'}]"
               :disabled="frozenValue == 'on' || deviceAttrs.intelligent == 'on'"
-              @click="setTemperature('level_freezer', -10, [-250, -150])"/>
+              @click="setTemperature('level_freezer', -1, [-25, -15])"/>
             <!-- <div class="tm-progress">
               <div
                 :style="{ width: progress3 +'%' }"
@@ -103,7 +103,7 @@
             <button
               :class="['control', 'add', {'disabed': frozenValue == 'on' || deviceAttrs.intelligent == 'on'}]"
               :disabled="frozenValue == 'on' || deviceAttrs.intelligent == 'on'"
-              @click="setTemperature('level_freezer', 10, [-250, -150])"/>
+              @click="setTemperature('level_freezer', 1, [-25, -15])"/>
           </div>
         </div>
         <div class="line"/>
@@ -354,7 +354,7 @@ export default {
       // 最小温度
       if (temp < min) {
         if (this.deviceAttrs[attr] == min) {
-          return HdSmart.UI.toast(`温度最低为${min/10}℃`)
+          return HdSmart.UI.toast(`温度最低为${min}℃`)
         } else {
           temp = min
         }
@@ -362,7 +362,7 @@ export default {
       // 最大温度
       if (temp > max) {
         if (this.deviceAttrs[attr] == max) {
-          return HdSmart.UI.toast(`温度最高为${max/10}℃`)
+          return HdSmart.UI.toast(`温度最高为${max}℃`)
         } else {
           temp = max
         }

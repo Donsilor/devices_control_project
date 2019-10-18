@@ -12,11 +12,11 @@ window.device_name = '冰箱'
 window.device_category_id = 1
 
 let res = {
-  temperature_container: 60,
-  temperature_freezer: -200,
-  tempVarTempChamber: 20,
-  level_freezer: -200,
-  level_container: 60,
+  temperature_container: 6,
+  temperature_freezer: -20,
+  tempVarTempChamber: 2,
+  level_freezer: -20,
+  level_container: 6,
   mode: 'cool',
   holiday: 'off',
   intelligent: 'off',
