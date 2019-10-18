@@ -11,19 +11,22 @@
         <div class="wrap-circle">
           <div class="bg">
             <div 
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'" 
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'" 
               class="tm">-- <sup>°C</sup></div>
             <div 
-              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
+              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='auto'&&deviceAttrs.mode!=='wind'"
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
             </div>
             <div 
-              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
+              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='auto'"
               class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
             </div>
             <div 
-              v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'" 
+              v-show="!isOffline&& deviceAttrs.switchStatus == 'on'" 
               :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
+            <div 
+              v-show="isOffline||deviceAttrs.switchStatus == 'off'" 
+              :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
           </div>
           <circle-progress
             v-if="isShow"
@@ -42,7 +45,9 @@
             class="progress"
           />
         </div>
-        <div class="control-tm center">
+        <div 
+          v-show="!isOffline&&!isClose" 
+          class="control-tm center">
           <button 
             class="control reduce" 
             @click="setTemperature(-10)"/>
@@ -58,7 +63,18 @@
         {{ deviceAttrs.timer_value | closeTime }}
       </div>
       <!-- 底部按钮 -->
-      <div class="panel-btn center">
+      <!-- 开关 -->
+      <div 
+        v-show="isOffline||isClose"
+        class="starting">
+        <div 
+          class="btn btn-start" 
+          @click="shutdowncallback('on')" />
+        <div class="btn-name">开机</div>
+      </div>
+      <div 
+        v-show="!isOffline&&!isClose" 
+        class="panel-btn center">
         <!-- <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
           <div 
             :class="[{ 'active': !isClose }, 'btn-swich btn center']"
@@ -102,21 +118,23 @@
       </div>
       <!-- 规格选择 -->
       <!-- 风速 -->
-      <div class="optionbox">
+      <div 
+        v-show="!isClose&&!isOffline" 
+        class="optionbox">
         <div class="option1">
           <div>
             <span>风速</span>
             <span @click="showSpeed">{{ typeVal=='auto'?'自动':'手动＞' }}</span>
           </div>
           <div 
-            v-if="typeVal!=='auto'" 
+            v-show="typeVal!=='auto'" 
             class="range">
             <input
+              :value="brightnessValue"
               type="range"
               min="0"
               max="4"
               step="1"
-              value="0"
               @input="changeSpeed">
             <p :class="['rang_width']"/>
           </div>
@@ -195,7 +213,9 @@ export default {
       // barColor: '#D8D8D8',
       backgroundColor: '#ececec',
       timeShow: false,
-      typeVal: 'hand'
+      typeVal: 'hand',
+      brightnessValue: 0,
+      rangStyle: ''
     }
   },
   
@@ -258,6 +278,26 @@ export default {
       }
     },
   },
+  watch: {
+    "deviceAttrs.speed"() {
+      if(this.deviceAttrs.speed == 'low') {
+        this.brightnessValue = 1
+        this.setRangWidth(23.25)
+      }
+      if(this.deviceAttrs.speed == 'normal') {
+        this.brightnessValue = 2
+        this.setRangWidth(46.5)
+      }
+      if(this.deviceAttrs.speed == 'high') {
+        this.brightnessValue = 3
+        this.setRangWidth(69.75)
+      }
+      if(this.deviceAttrs.speed == 'auto') {
+        this.brightnessValue = 4
+        this.setRangWidth(93)
+      }
+    }
+  },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
@@ -269,6 +309,10 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    setRangWidth(val) {
+      document.querySelector('.rang_width').style.width = val+"%"
+    },
+    // 设置关机时间
     setReserve(time) {
       let h = parseInt(time[0].split(':')[0])
       let m = parseInt(time[0].split(':')[1])
@@ -301,7 +345,8 @@ export default {
         this.rangeColor = false
       }
       this.brightness = e.target.value
-      console.log(e.target.value)
+      console.log(e.target.value,'我在这里')
+
       if (this.brightness=='1') {
         this.controlDevice('speed','low')
       }
@@ -312,6 +357,7 @@ export default {
         this.controlDevice('speed','high')
       }
       if (this.brightness=='4') {
+        if (this.deviceAttrs.mode=='wind') return HdSmart.UI.toast('送风模式不能设置自动风速')
         this.controlDevice('speed','auto')
       }
     },
@@ -321,7 +367,7 @@ export default {
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
-          if (this.deviceAttrs.mode=='wind') {
+          if (this.deviceAttrs.mode=='auto') {
             this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)  
             this.$refs.$circle.init()
             this.hide()
@@ -332,9 +378,12 @@ export default {
         })
     },
     setTemperature(step) {
+      if(this.deviceAttrs.mode == 'auto') {
+        return HdSmart.UI.toast('智能模式不支持温度调节')
+      }
       // 送风模式不能设置温度
       if (this.deviceAttrs.mode === 'wind') {
-        return HdSmart.UI.toast('送风模式下不能设置温度')
+        return HdSmart.UI.toast('送风模式不支持温度调节')
       }
       let temp = +this.deviceAttrs.temperature + step
       // 最小温度
@@ -377,12 +426,16 @@ export default {
     // 设置风速
     setSpeed(speed, val) {
       this.typeVal = val
+      if (this.deviceAttrs.mode=='wind'&&val=='auto') {
+        this.typeVal = 'hand'
+      }
       if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
         return HdSmart.UI.toast('送风模式不能设置自动风速')
       }
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
+          this.setRangWidth(93)
         })
     },
     controlDevice(attr, value) {
@@ -558,6 +611,37 @@ export default {
     text-align: center;
     font-size: 24px;
     color: #20282B;
+  }
+  .starting{
+    margin-top: 15vh;
+     .btn-start{
+        z-index: 999999;
+        box-sizing: border-box;
+        margin: 0 auto;
+        width: 120px;
+        height: 120px;
+        border: 1px solid #818181;
+        border-radius: 50%;
+        position: relative;
+        &::before{
+          content: "";
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          margin-left: -22px;
+          margin-top: -22px;
+          background-image: url('~@lib/@{imgPath1}/dakai3@2x.png');
+          background-size: 100% 100%;
+          width: 44px;
+          height: 44px;
+        }
+     }
+      .btn-name{
+        text-align: center;
+        color: #000;
+        margin-top: 16px;
+        font-size: 24px;
+      }
   }
   .panel-btn {
     overflow-x: auto;
@@ -843,9 +927,9 @@ export default {
       // background: rgba(0, 0, 0, 0.1);
     }
     &.page {
-      background: #fff;
+      // background: #fff;
       .control-tm{
-        background: #fff;
+        // background: #fff;
         .reduce,.add {
           opacity: .4;
         }
