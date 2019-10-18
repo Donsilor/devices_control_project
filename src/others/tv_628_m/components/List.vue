@@ -53,7 +53,7 @@
       </dl>
       <!-- 分类 -->
       <dl
-        :style="{width:filterVisible?'auto':'82%'}"
+        v-show="filterVisible"
         class="row">
         <dt>
           <a
@@ -113,7 +113,7 @@
         href="#"
         class="toggle"
         @click.prevent="toggleFilter()">
-        <!--{{filterVisible?'收起':'展开'}}-->
+        <!--{{filterVisible?'收起':'展开'}}-->{{ filterVisible?'收起':'筛选' }}
         <i class="icon-arrow" />
       </a>
     </div>
@@ -161,6 +161,10 @@
 </template>
 
 <style lang="less" scoped>
+.page-list{
+  background: url(/static/images/icn_blurry_bg@2x.4d4de97.png);
+    background-size: 100% 100%;
+}
 .filters-placeholder {
   height: 120px;
   &.active {
@@ -169,7 +173,8 @@
 }
 .filters {
   padding: 28px 28px 12px;
-  background: rgba(255, 255, 255, 0.98);
+  // background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255, 1);
   /**box-shadow: inset 0 -1px 0 0 #dbdbdb;**/
   position: fixed;
   left: 0;
@@ -183,12 +188,14 @@
     }
   }
   .toggle {
-    position: absolute;
-    right: 0px;
-    bottom: 15px;
+    display: block;
+    // position: absolute;
+    // right: 0px;
+    // bottom: 15px;
     line-height: 42px;
     color: #75787a;
     padding: 20px;
+    text-align: center;
     i {
       /*background: url(../../../lib/base/tv/assets/icn_arrow_up.png)*/
       /*no-repeat center right;*/
@@ -201,6 +208,7 @@
       margin-left: 2px;
       transform: rotate(180deg);
       color: #222a37;
+      transform-origin: 50% 80%;
     }
     &.active i {
       transform: rotate(0deg);
@@ -253,10 +261,10 @@
   flex-wrap: wrap;
   // align-content: space-between;
 }
-.video-list{
-  background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
-  background-size: 100% 100%;
-}
+// .video-list{
+//   background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+//   background-size: 100% 100%;
+// }
 .vitem {
   width: 320px;
   margin: 0 15px;
@@ -291,16 +299,16 @@
     }*/
   .isvip {
     position: absolute;
-    right: 15px;
-    top: 40px;
-    background: #f26161;
-    width: 60px;
-    line-height: 30px;
-    border-radius: 4px;
+    right: 0;
+    top:0;
+    background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
+    // width: 48px;
+    line-height: 32px;
+    // border-radius: 4px;
     font-size: 24px;
     text-align: center;
-    color: #fff;
-    opacity: 0.9;
+    color: #000;
+    // opacity: 0.9;
     display: block;
     margin-bottom: 5px;
   }
@@ -493,7 +501,7 @@ export default {
       loadState: "",
       error: false,
       isFirstLoad: true,
-      filterVisible: false
+      filterVisible: true
       //filterToggleClicked: false
     }
   },

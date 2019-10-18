@@ -1,6 +1,7 @@
 <template>
   <div class="remote_control anima">
     <span @click="cmd('remoteControlEvent')"/>
+    <div>遥控器</div>
   </div>
 </template>
 
@@ -46,7 +47,7 @@ export default {
     }
 }
 .remote_control{
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.4);
   border-radius: 200px 0px 0px 200px;
   position: fixed;
   right: -140px;
@@ -58,13 +59,14 @@ export default {
   justify-content: flex-start;
   align-items: center;
   line-height: 114px;
-  padding-left: 20px;
+  // padding: 20px;
   span{
     display: block;
     width: 60px;
     height: 60px;
     background: url("~@lib/base/tv/assets/new/tv_icn_yaokong.png");
     background-size: 100% 100%;
+    margin: 0 30px;
   }
 }
 .anima{

@@ -229,7 +229,7 @@ export default {
     //       this.minute = Math.floor(this.time /  60 % 60)
     //       if (this.minute <= 0 && this.second <= 0) {
     //         clearInterval(this.dateObj)
-    //         this.setSwitch()
+    //         this.setSwitch() 
     //       }
     //       this.time--
     // },
