@@ -1,61 +1,47 @@
 /* eslint-disable vue/no-unused-vars */
 <template>
   <div class="body">
-    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page washing']">
+    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
         :shutdown="true"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
-      <!-- 洗涤中 -->
+      <!-- tab切换栏 -->
       <div
-        v-show="deviceAttrs.operation_mode!=='end'" 
-        class="working">
-        <div class="time">{{ deviceAttrs.remain_washtime | work_time }}</div>
-        <div
-          v-show="deviceAttrs.control=='halt'"
-          class="progress">
-          <span>洗涤</span>
-          <span :class="[{'ongoing':deviceAttrs.operation_mode=='rinse_inflow'||deviceAttrs.operation_mode=='rinse_cold'||deviceAttrs.operation_mode=='rinse_drainage'||deviceAttrs.operation_mode=='rinse_warm'||deviceAttrs.operation_mode=='drying'},'isgray']"> —— 漂洗</span>
-          <span :class="[{'black':deviceAttrs.operation_mode=='drying'},'isgray']"> —— 烘干</span>
-        </div>
-        <div class="status">{{ deviceAttrs.control=='halt'?'已暂停':'洗涤中' }}</div>
+        class="main center"
+        style="margin-top:52px">
+        <div class="bg"><div class="circle"><div class="status">断电中</div></div></div>
       </div>
-      <!-- 洗涤完成 -->
+      <div class="status1">05:23:17后断电</div>
       <div 
-        v-show="deviceAttrs.operation_mode=='end'" 
-        class="end">
-        <div class="circle"/>
-        <span>已完成洗涤</span>
-        <div 
-          class="button" 
-          @click="finish">确定</div>
-      </div>
-      <!-- 底部按钮 -->
-      <div
-        v-if="deviceAttrs.operation_mode!=='end'"
+        v-show="!isOffline&&!isClose" 
         class="panel-btn center">
-        <!-- 洗涤页面按钮 -->
-        <div
-          v-if="deviceAttrs.control=='halt'"
-          class="btn-wrap">
-          <div :class="[{'press':timeOutEvent != 0}]"/>
-          <div :class="[{'progressBar':timeOutEvent != 0}]"/>
-          <!-- <div class="mask" /> -->
-          <div
-            ref="black"
-            :class="[{'active':timeOutEvent != 0},'btn-over btn center']"
-            @touchstart="touchStart($event)"
-            @touchmove="touchMove($event)"
-            @touchend="touchEnd($event)"/>
-          <div class="btn-name">长按结束</div>
+        <div 
+          class="btn-wrap"
+          @click="setMode('wind')">
+          <div :class="[{ 'active': deviceAttrs.mode == 'wind' }, 'btn btn-wind center']" />
+          <div class="btn-name">断电</div>
         </div>
+        <div 
+          class="btn-wrap"
+          @click="setMode('dehumidify')">
+          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
+          <div class="btn-name">延时通电</div>
+        </div>
+        <div 
+          style="visibility:hidden"
+          class="btn-wrap"/>
+      </div>
+      <div
+        v-if="!isClose&&!isOffline"
+        class="panel-btn center">
         <div
           class="btn-wrap">
           <div
             :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
             @click="setStart" />
-          <div class="btn-name">{{ deviceAttrs.control=='start'?'暂停':'继续' }}</div>
+          <div class="btn-name">启动</div>
         </div>
       </div>
     </div>
@@ -70,6 +56,8 @@ export default {
     return {
       temp:true,
       timeOutEvent:'',
+      a:"",
+      currentMode:'normal',
     }
   },
   computed: {
@@ -83,22 +71,42 @@ export default {
   watch: {
     'device.stateChange'(){
       this.$nextTick(()=>{
-        if (this.deviceAttrs.switch=='off') {
-          this.$router.push({path:'/'})
-        }
-        if (this.deviceAttrs.mode_status=='off') {
-          this.$router.push({path:'/'})
-        }
+        //  this.newRatio()
       })
     },
   },
+  created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+      .then(()=>{
+
+      })
+      // HdSmart.UI.setStatusBarColor(2)
+    })
+  },
+  // 初始化swiper
+   mounted(){
+        var mySwiper = new Swiper('.swiper-container', {
+          width:384,
+          autoplay:false,
+          centeredSlides: true,
+          loop:true,
+          slidesPerView: 4,
+          paginationClickable: true,
+          observer:true,//修改swiper自己或子元素时，自动初始化swiper
+          observeParents:true,//修改swiper的父元素时，自动初始化swiper
+        })
+      },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return 
       this.controlDevice('switch',val)
-      this.$router.push({ path: '/' })
+    },
+    // tab切换
+    tabMode(t){
+      this.temp = t
     },
     // 启动
     setStart() {
@@ -107,6 +115,17 @@ export default {
         controlStatus = 'halt'
       } else {
         controlStatus = 'start'
+        this.currentMode = document.querySelectorAll('.swiper-slide-active>div>span')[1].innerHTML
+        let value
+        let arr = this.tableware.concat(this.foodList)
+        for(let i=0;i<arr.length;i++){
+          if(this.currentMode ==arr[i].name ){
+            value = arr[i].english
+          }
+        }
+        this.controlDevice("control",controlStatus,{'mode':value})
+          this.$router.push({ path: '/Washing' })
+        return
       }
       this.controlDevice("control",controlStatus )
     },
@@ -136,14 +155,12 @@ export default {
       console.log(this.timeOutEvent)
       // alert('长按了')
       this.$nextTick(()=>{
-        this.controlDevice('return_standby','on')
-          this.$router.push({ path: '/' })
+        this.controlDevice('remain_washtime',0)
       })
     },
     // 洗涤完成
     finish(){
       this.controlDevice('operation_mode','standby')
-      this.$router.push({ path: '/' })
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
@@ -183,88 +200,44 @@ export default {
   background-image: url('~@lib/@{imgPath}/bg_01@2x.png');
   background-size: 100% 100%;
   .main {
-       .tab{
-         ul {
-          width: auto;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          li{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 4px solid rgba(0,0,0,0.08);;
-            width: 324px;
-            height: 132px;
-            font-size: 32px;
-            color: rgba(0,0,0,0.4);
-            img{
-              height: 45px;
-              width: 45px;
-            }
-            &.active{
-              border-bottom: 4px solid #000;
-              span{
-                color: #000;
-              }
-            }
-          }
-        }
-        .swiper-container {
-          margin-left: 38%;
-          height: 300px;
-        }
-        .swiper-container1 {
-          margin-left: 39%;
-          height: 300px;
-        }
-        .swiper-wrapper{
-          .swiper-slide{
-            position:relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 40px;
-            width: 9%;
-            &.swiper-slide-active{
-              margin-right: 40px;
-              margin-left: 40px;
-              width: 19%;
-              padding: 0;
-              >div{
-                opacity: 1;
-                position:absolute;
-                bottom: 0;
-                >span{
-                  &:first-of-type{
-                    font-size: 160px;
-                    position: relative;
-                    margin-bottom: 18px;
-                    &::before{
-                      display: block;
-                      content: '分钟';
-                      position: absolute;
-                      top: -14px;
-                      right: -30px;
-                      font-size: 12px;
-                    }
-                  }
-                }
-              }
-            }
-            >div{
-              position:absolute;
-              bottom: 0;
-                  font-size: 48px;
-                  color: #000;
-                  opacity: .6;
-                  display: flex;
-                  flex-direction: column;
-                  text-align: center;
-                }
-          }
-        }
-       }
+    .bg{
+      width: 580px;
+      height: 580px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      position: relative;
+      .circle{
+        width: 520px;
+        height: 520px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -260px ; 
+        margin-top: -260px ; 
+      }
+      .status{
+        width: 460px;
+        height: 460px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -230px ; 
+        margin-top: -230px ; 
+        font-size: 80px;
+        text-align: center;
+        line-height: 460px;
+      }
+    }
+  }
+  .status1{
+    font-size: 28px;
+    text-align: center;
+    line-height: 28px;
+    margin-top: 52px;
   }
   .working{
     margin-top: 20vh;

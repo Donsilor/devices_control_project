@@ -22,7 +22,7 @@ var res = {
         env_temperature: 240,
         mode: 'cold',
         order_time:0,
-        speed: 'low',
+        speed: 'normal',
         wind_up_down: 'off',
         wind_left_right: 'off',
         sleep_mode: 'on',
