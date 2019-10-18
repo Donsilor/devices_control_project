@@ -4,25 +4,25 @@
       <NewTopBar
         :title="device.device_name"
         :shutdown="true"
-
+        :className="[opcityStyle]"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <div class="main center">
         <div class="wrap-circle">
           <div class="bg">
-            <div 
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'" 
+            <div
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'"
               class="tm">-- <sup>°C</sup></div>
-            <div 
+            <div
               v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
             </div>
-            <div 
+            <div
               v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
               class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
             </div>
-            <div 
-              v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'" 
+            <div
+              v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'"
               :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
           </div>
           <circle-progress
@@ -43,16 +43,16 @@
           />
         </div>
         <div class="control-tm center">
-          <button 
-            class="control reduce" 
+          <button
+            class="control reduce"
             @click="setTemperature(-10)"/>
-          <button 
-            class="control add" 
+          <button
+            class="control add"
             @click="setTemperature(10)"/>
         </div>
       </div>
       <!-- 当前状态 -->
-      <div 
+      <div
         v-show="deviceAttrs.timer_switch == 'on'&& deviceAttrs.timer_value >0"
         class="status">
         {{ deviceAttrs.timer_value | closeTime }}
@@ -60,43 +60,43 @@
       <!-- 底部按钮 -->
       <div class="panel-btn center">
         <!-- <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
-          <div 
+          <div
             :class="[{ 'active': !isClose }, 'btn-swich btn center']"
             @click="setSwitch" />
           <div class="btn-name">开关</div>
         </div> -->
-        <div 
+        <div
           class="btn-wrap"
           @click="setMode('cold')">
           <div :class="[{ 'active': deviceAttrs.mode == 'cold' }, 'btn btn-cold center']" />
           <div class="btn-name">制冷</div>
         </div>
-        <div 
+        <div
           class="btn-wrap"
           @click="setMode('heat')">
           <div :class="[ { 'active': deviceAttrs.mode == 'heat' }, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
-        <div 
-          class="btn-wrap" 
+        <div
+          class="btn-wrap"
           @click="setMode('auto')">
           <div :class="[ { 'active': deviceAttrs.mode == 'auto' }, 'btn btn-auto center']" />
-          <div 
+          <div
             class="btn-name" >智能</div>
         </div>
-        <div 
+        <div
           class="btn-wrap"
           @click="setMode('wind')">
           <div :class="[{ 'active': deviceAttrs.mode == 'wind' }, 'btn btn-wind center']" />
           <div class="btn-name">送风</div>
         </div>
-        <div 
+        <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
           <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
           <div class="btn-name">除湿</div>
         </div>
-        <div 
+        <div
           style="visibility:hidden"
           class="btn-wrap"/>
       </div>
@@ -108,8 +108,8 @@
             <span>风速</span>
             <span @click="showSpeed">{{ typeVal=='auto'?'自动':'手动＞' }}</span>
           </div>
-          <div 
-            v-if="typeVal!=='auto'" 
+          <div
+            v-if="typeVal!=='auto'"
             class="range">
             <input
               type="range"
@@ -132,35 +132,35 @@
         <div class="option">
           <div>
             <span>定时</span>
-            <span 
-              v-if="deviceAttrs.timer_switch=='on'&&deviceAttrs.timer_value>0" 
+            <span
+              v-if="deviceAttrs.timer_switch=='on'&&deviceAttrs.timer_value>0"
               @click="showTime">{{ deviceAttrs.timer_value | closeTime }}＞</span>
-            <span 
-              v-else 
+            <span
+              v-else
               @click="showTime">设置关机时间＞</span>
           </div>
         </div>
       </div>
 
       <!--选择摆风-->
-      <model-swing 
+      <model-swing
         ref="swing"
         :wind_up_down="deviceAttrs.wind_up_down"
         :wind_left_right="deviceAttrs.wind_left_right"
         @setWind="setWind" />
       <!--选择模式-->
-      <model-mode 
+      <model-mode
         ref="mode"
         :mode="deviceAttrs.mode"
         @setMode="setMode" />
       <!--选择风速-->
-      <model-speed 
+      <model-speed
         ref="speed"
         :speed="deviceAttrs.speed"
         @setSpeed="setSpeed" />
       <!-- 时间选择 -->
-      <SelectTime 
-        ref="time" 
+      <SelectTime
+        ref="time"
         @selectedTime="setReserve"
         @canceltime="canceltime" />
     </div>
@@ -195,10 +195,11 @@ export default {
       // barColor: '#D8D8D8',
       backgroundColor: '#ececec',
       timeShow: false,
-      typeVal: 'hand'
+      typeVal: 'hand',
+      opcityStyle: 'opcity-0'
     }
   },
-  
+
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
@@ -206,7 +207,7 @@ export default {
       return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
     },
     windIsActive() {
-      return this.deviceAttrs.wind_up_down == 'on' || this.deviceAttrs.wind_left_right == 'on' 
+      return this.deviceAttrs.wind_up_down == 'on' || this.deviceAttrs.wind_left_right == 'on'
     },
     modeClass() {
       /* eslint-disable no-unreachable */
@@ -267,6 +268,24 @@ export default {
       HdSmart.UI.setStatusBarColor(2)
     })
   },
+  mounted() {
+    let pageNode = document.querySelector('.page')
+    pageNode.addEventListener('scroll', (e) => {
+      console.log(e.target.scrollTop)
+      let scrollHeight = e.target.scrollTop
+      if (scrollHeight === 0) {
+        this.opcityStyle = 'opcity-0'
+      } else if (scrollHeight < 20) {
+        this.opcityStyle = 'opcity-20'
+      }else if (scrollHeight < 40 ) {
+        this.opcityStyle = 'opcity-40'
+      }else if (scrollHeight < 60) {
+        this.opcityStyle = 'opcity-60'
+      }else if (scrollHeight < 80) {
+        this.opcityStyle = 'opcity-80'
+      }
+    })
+  },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setReserve(time) {
@@ -287,7 +306,7 @@ export default {
     },
     // 开关机
     shutdowncallback(val){
-      if (this.isOffline) return 
+      if (this.isOffline) return
       this.controlDevice('switch',val)
     },
     // range调风速
@@ -322,7 +341,7 @@ export default {
         .then(() => {
           this.deviceAttrs.mode = val
           if (this.deviceAttrs.mode=='wind') {
-            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)  
+            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
             this.$refs.$circle.init()
             this.hide()
             return
@@ -429,7 +448,7 @@ export default {
       if(this.$refs.mode.show) this.$refs.mode.show = false
       if(this.$refs.speed.show) this.$refs.speed.show = false
     },
-    
+
     getProgress() {
       // 计算温度进度条
       return 70 /(32 - 16) * (this.deviceAttrs.temperature / 10 - 16)
@@ -760,7 +779,7 @@ export default {
             color: rgba(0, 0, 0, 0.5);
           }
         }
-        
+
       }
       input[type="range"] {
         display: block;
@@ -875,7 +894,6 @@ export default {
       }
     }
   }
-
 }
 
 </style>

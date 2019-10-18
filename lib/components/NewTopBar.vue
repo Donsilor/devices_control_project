@@ -6,7 +6,7 @@
       class="topbar-block" />
     <div
       :style="{ background: bgColor }"
-      class="topbar-fixed">
+      :class="['topbar-fixed', className]">
 
       <div
         :style="{height:status_bar_height+'px'}"
@@ -111,6 +111,10 @@ export default {
     },
     title: {
       type: String,
+      default: ''
+    },
+    className: {
+      type: Array,
       default: ''
     }
   },
@@ -295,4 +299,19 @@ export default {
     background: url('~@lib/base/assets/yikai.png');
     background-size: 100% 100%;
   }
+.opcity-0 {
+  background-color: rgba(255, 255, 255, 0) !important;
+}
+.opcity-20 {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+.opcity-40 {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+}
+.opcity-60 {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+}
+.opcity-80 {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
 </style>
