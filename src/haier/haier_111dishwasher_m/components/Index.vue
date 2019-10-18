@@ -306,7 +306,9 @@ export default {
             value = arr[i].english
           }
         }
-        this.controlDevice("control",controlStatus,{'mode':value})
+        this.controlDevice("mode",value).then(()=>{
+          this.controlDevice("control",controlStatus)
+        })  
           this.$router.push({ path: '/Washing' })
         return
       }

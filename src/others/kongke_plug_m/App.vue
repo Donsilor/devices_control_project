@@ -11,38 +11,27 @@
       <div
         class="main center"
         style="margin-top:52px">
-        <div class="bg"><div class="circle"><div class="status">断电中</div></div></div>
+        <div class="bg"><div class="circle"><div class="status">{{ deviceAttrs.switch=='on'?'通电中':'断电中' }}</div></div></div>
       </div>
       <div class="status1">05:23:17后断电</div>
       <div 
-        v-show="!isOffline&&!isClose" 
+        v-show="!isOffline" 
         class="panel-btn center">
         <div 
           class="btn-wrap"
-          @click="setMode('wind')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'wind' }, 'btn btn-wind center']" />
-          <div class="btn-name">断电</div>
+          @click="setSwitch">
+          <div :class="[{ 'btn-source': deviceAttrs.switch == 'off' },{ 'btn-over': deviceAttrs.switch == 'on' } ,'btn btn-source center']" />
+          <div class="btn-name">{{ deviceAttrs.switch=='on'?'断电':'通电' }}</div>
         </div>
         <div 
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-delay center']" />
           <div class="btn-name">延时通电</div>
         </div>
         <div 
           style="visibility:hidden"
           class="btn-wrap"/>
-      </div>
-      <div
-        v-if="!isClose&&!isOffline"
-        class="panel-btn center">
-        <div
-          class="btn-wrap">
-          <div
-            :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
-            @click="setStart" />
-          <div class="btn-name">启动</div>
-        </div>
       </div>
     </div>
   </div>
@@ -84,25 +73,18 @@ export default {
       // HdSmart.UI.setStatusBarColor(2)
     })
   },
-  // 初始化swiper
-   mounted(){
-        var mySwiper = new Swiper('.swiper-container', {
-          width:384,
-          autoplay:false,
-          centeredSlides: true,
-          loop:true,
-          slidesPerView: 4,
-          paginationClickable: true,
-          observer:true,//修改swiper自己或子元素时，自动初始化swiper
-          observeParents:true,//修改swiper的父元素时，自动初始化swiper
-        })
-      },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     // 开关机
-    shutdowncallback(val){
+    setSwitch(){
       if (this.isOffline) return 
-      this.controlDevice('switch',val)
+      let switchStatus = ''
+      if (this.deviceAttrs.switch=='on') {
+        switchStatus = 'off'
+      }else{
+        switchStatus = 'on'
+      }
+      this.controlDevice('switch',switchStatus)
     },
     // tab切换
     tabMode(t){
@@ -179,6 +161,7 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
 @imgPath1: 'base/dishwasher/assets';
+@imgPath2: 'base/kongke_plug/assets';
 @keyframes progress-bar{
   0% {
       transform: rotate(260deg);
@@ -318,20 +301,84 @@ export default {
   .panel-btn {
     height: auto;
     width: 100%;
-    position: fixed;
-    bottom: 130px;
+    margin-top: 120px;
     z-index: 99999;
-    .btn {
-      margin-top: 24px;
-      width: 100%;
-      height: 306px;
-      border-radius: 40px 40px 0 0;
-      background: rgba(136, 138, 137,.4);
-      overflow: hidden;
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
+  .btn-wrap {
+    margin: 0 24px 24px;
+    &:last-of-type{
+      width: 30px;
+      height: 120px;
     }
+    .btn {
+      box-sizing: border-box;
+      margin: 0 auto;
+      width: 120px;
+      height: 120px;
+      border: 1px solid #818181;
+      border-radius: 50%;
+      display: flex;
+      justify-content: space-around;
+      flex-direction: column;
+      position: relative;
+      &.btn-source{
+        &::before{
+          content: "";
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          margin-left: -22px;
+          margin-top: -22px;
+          background-image: url('~@lib/@{imgPath2}/tongdian.png');
+          background-size: 100% 100%;
+          width: 44px;
+          height: 44px;
+        }   
+      }
+      &.btn-over{
+        &::before{
+          content: "";
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          margin-left: -22px;
+          margin-top: -22px;
+          background-image: url('~@lib/@{imgPath2}/duandian.png');
+          background-size: 100% 100%;
+          width: 44px;
+          height: 44px;
+        }   
+      }
+       &.btn-delay{
+        &::before{
+          content: "";
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          margin-left: -22px;
+          margin-top: -22px;
+          background-image: url('~@lib/@{imgPath2}/yanshi.png');
+          background-size: 100% 100%;
+          width: 44px;
+          height: 44px;
+        }   
+      }
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+      }
+      &.active {
+        background: #000;
+      }
+    }
+    .btn-name {
+      text-align: center;
+      color: #000;
+      margin-top: 16px;
+      font-size: 24px;
+    }
+  }
     &.center{
       display: flex;
       align-items: center;
