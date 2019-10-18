@@ -9,6 +9,14 @@ export function filterTm(tm) {
   }
   return tmp
 }
+export function closeTime(val) {
+  let h = Math.floor(val/60)
+  let m = val%60
+  console.log(h+'小时'+m+'分后关机');
+  return h+'小时'+m+'分钟后关机'
+
+  
+}
 export function modeType(type) {
   switch(type) {
     case 'auto':
@@ -32,4 +40,5 @@ export function time_H(val) {
   let h = Math.floor(val/3600)
   let m = (val%3600)/60
   return h+'小时'+m+'分后关机'
+  
 }

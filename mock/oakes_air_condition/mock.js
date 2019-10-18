@@ -30,7 +30,9 @@ var res = {
         manufactureId: 'tcl',
         deviceCategory: 'airconditioner.new',
         deviceSubCategory: 0,
-        connectivity: 'online'
+        connectivity: 'online',
+        timer_switch:'off',
+        timer_value:0,
     }
 }
 
@@ -50,6 +52,18 @@ export function set(data) {
       var attr = data.params.attribute
     } catch (error) {
       attr = data.content.params.attribute
+    }
+    if (attr.time) {
+      if (attr.time.timer_value>0) {
+        res.attribute.timer_value=attr.time.timer_value
+      }else{
+        res.attribute.timer_value=0
+      }
+      if (attr.time.timer_switch=='on') {
+        res.attribute.timer_switch=attr.time.timer_switch
+      }else{
+        res.attribute.timer_switch='off'
+      }
     }
     if (attr.switch) {
       res.attribute.switchStatus = attr.switch

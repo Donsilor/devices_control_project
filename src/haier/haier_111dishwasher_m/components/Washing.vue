@@ -13,13 +13,13 @@
         class="working">
         <div class="time">{{ deviceAttrs.remain_washtime | work_time }}</div>
         <div
-          v-show="deviceAttrs.control=='stop'"
+          v-show="deviceAttrs.control=='halt'"
           class="progress">
           <span>洗涤</span>
           <span :class="[{'ongoing':deviceAttrs.operation_mode=='rinse_inflow'||deviceAttrs.operation_mode=='rinse_cold'||deviceAttrs.operation_mode=='rinse_drainage'||deviceAttrs.operation_mode=='rinse_warm'||deviceAttrs.operation_mode=='drying'},'isgray']"> —— 漂洗</span>
           <span :class="[{'black':deviceAttrs.operation_mode=='drying'},'isgray']"> —— 烘干</span>
         </div>
-        <div class="status">{{ deviceAttrs.control=='stop'?'已暂停':'洗涤中' }}</div>
+        <div class="status">{{ deviceAttrs.control=='halt'?'已暂停':'洗涤中' }}</div>
       </div>
       <!-- 洗涤完成 -->
       <div 
@@ -37,7 +37,7 @@
         class="panel-btn center">
         <!-- 洗涤页面按钮 -->
         <div
-          v-if="deviceAttrs.control=='stop'"
+          v-if="deviceAttrs.control=='halt'"
           class="btn-wrap">
           <div :class="[{'press':timeOutEvent != 0}]"/>
           <div :class="[{'progressBar':timeOutEvent != 0}]"/>
@@ -101,7 +101,7 @@ export default {
     setStart() {
       let controlStatus = ''
       if (this.deviceAttrs.control == 'start') {
-        controlStatus = 'stop'
+        controlStatus = 'halt'
       } else {
         controlStatus = 'start'
       }
