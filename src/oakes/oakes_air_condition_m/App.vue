@@ -4,7 +4,7 @@
       <NewTopBar
         :title="device.device_name"
         :shutdown="true"
-        :className="[opcityStyle]"
+        :class-name="opcityStyle"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <div class="main center">
