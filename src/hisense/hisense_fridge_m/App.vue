@@ -31,9 +31,9 @@
           </div>
           <div class="control-tm marginTop">
             <button
-              :class="['control', 'reduce', {'disabed': coldValue == 'on' || deviceAttrs.intelligent == 'on'}]"
-              :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on'"
-              @click="setTemperature('level_container', -1, [2, 8])"/>
+              :class="['control', 'reduce', {'disabed': coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on'}]"
+              :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on'"
+              @click="setTemperature('level_container', -1, [1, 9])"/>
             <!-- <div class="tm-progress">
               <div
                 :style="{ width: progress1 +'%' }"
@@ -42,9 +42,9 @@
             </div> -->
             <div class="temperature">{{ deviceAttrs.level_container | filterTm }}<sup>°C</sup></div>
             <button
-              :class="['control', 'add', {'disabed': coldValue == 'on' || deviceAttrs.intelligent == 'on'}]"
-              :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on'"
-              @click="setTemperature('level_container', 1, [2, 8])"/>
+              :class="['control', 'add', {'disabed': coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on'}]"
+              :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on'"
+              @click="setTemperature('level_container', 1, [1, 9])"/>
           </div>
         </div>
 
@@ -92,7 +92,7 @@
             <button
               :class="['control', 'reduce', {'disabed': frozenValue == 'on' || deviceAttrs.intelligent == 'on'}]"
               :disabled="frozenValue == 'on' || deviceAttrs.intelligent == 'on'"
-              @click="setTemperature('level_freezer', -1, [-25, -15])"/>
+              @click="setTemperature('level_freezer', -1, [-24, -14])"/>
             <!-- <div class="tm-progress">
               <div
                 :style="{ width: progress3 +'%' }"
@@ -103,7 +103,7 @@
             <button
               :class="['control', 'add', {'disabed': frozenValue == 'on' || deviceAttrs.intelligent == 'on'}]"
               :disabled="frozenValue == 'on' || deviceAttrs.intelligent == 'on'"
-              @click="setTemperature('level_freezer', 1, [-25, -15])"/>
+              @click="setTemperature('level_freezer', 1, [-24, -14])"/>
           </div>
         </div>
         <div class="line"/>
@@ -330,6 +330,9 @@ export default {
     },
     setMode(val, boolean) {
       if (this.isClose) return
+      if (this.checkedColdValue == true && this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冷和速冻模式', 1000)
+      if (this.checkedColdValue == true) return HdSmart.UI.toast('请先退出速冷模式', 1000)
+      if (this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冻模式', 1000)
       var value
       if(boolean == 'on') {
         value = 'off'
@@ -349,7 +352,6 @@ export default {
       // })
     },
     setTemperature(attr, step, [min, max ]) {
-      console.log(min)
       var temp = this.deviceAttrs[attr] + step
       // 最小温度
       if (temp < min) {

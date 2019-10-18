@@ -52,7 +52,7 @@ export function set(data) {
         attr.holiday = 'off'
       }
       if(attr.holiday == 'on') {
-        attr.level_container = 170
+        attr.level_container = 17
         attr.intelligent = 'off'
       }
       if(attr.fast_frozen == 'on') {
