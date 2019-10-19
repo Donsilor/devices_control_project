@@ -2,10 +2,11 @@ import Mock from 'mockjs'
 
 let res = {
     "connectivity": "online", //l
-    "switch": 'on', //开关
+    "switch": 'open', //开关
     'control':'stop',
     'mode':'nomal',
     'operation_mode':'end',//洗涤状态
+    'openTime': 130,
     'remain_washtime':'121',
     'countdownOpen':'60',//延时时间
     'remove_time':'false',//删除延时 (找不到这个,自己假设的)
@@ -19,7 +20,7 @@ export function generateSnapShot() {
         method: 'dr_report_dev_status',
         code: 0,
         result: {
-            "device_name": "厨房的洗碗机",
+            "device_name": "控客插座",
             "attribute": res
         }
     })

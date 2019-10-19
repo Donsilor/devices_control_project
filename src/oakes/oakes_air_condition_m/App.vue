@@ -15,19 +15,19 @@
         <div class="wrap-circle">
           <div class="bg">
 <<<<<<< HEAD
-            <div 
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'" 
+            <div
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'"
               class="tm">-- <sup>°C</sup></div>
-            <div 
+            <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='auto'&&deviceAttrs.mode!=='wind'"
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
             </div>
-            <div 
+            <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='auto'"
               class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
             </div>
-            <div 
-              v-show="!isOffline&& deviceAttrs.switchStatus == 'on'" 
+            <div
+              v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
 =======
             <div
               v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'"
@@ -66,11 +66,11 @@
           />
         </div>
 <<<<<<< HEAD
-        <div 
-          v-show="!isOffline&&!isClose" 
+        <div
+          v-show="!isOffline&&!isClose"
           class="control-tm center">
-          <button 
-            class="control reduce" 
+          <button
+            class="control reduce"
 =======
         <div class="control-tm center">
           <button
@@ -153,8 +153,8 @@
             <span @click="showSpeed">{{ typeVal=='auto'?'自动':'手动＞' }}</span>
           </div>
 <<<<<<< HEAD
-          <div 
-            v-show="typeVal!=='auto'" 
+          <div
+            v-show="typeVal!=='auto'"
 =======
           <div
             v-show="typeVal!=='auto'"
@@ -417,13 +417,10 @@ export default {
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
-<<<<<<< HEAD
           if (this.deviceAttrs.mode=='auto') {
-            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)  
-=======
+            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
           if (this.deviceAttrs.mode=='wind') {
             this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
->>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
             this.$refs.$circle.init()
             this.hide()
             return

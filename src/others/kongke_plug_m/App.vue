@@ -6,57 +6,62 @@
         :title="device.device_name"
         :shutdown="true"
         bak-color="#000"
-        @shutdownCallback="shutdowncallback('off')" />
+        @shutdownCallback="shutdowncallback('close')" />
       <!-- tab切换栏 -->
       <div
         class="main center"
         style="margin-top:52px">
-        <div class="bg"><div class="circle"><div class="status">{{ deviceAttrs.switch=='on'?'通电中':'断电中' }}</div></div></div>
+        <div class="bg"><div class="circle"><div class="status">{{ deviceAttrs.switch=='open'?'通电中':'断电中' }}</div></div></div>
       </div>
       <div class="status1">{{ deviceAttrs.countdownOpen | closeTime }}后断电</div>
-      <div 
-        v-show="!isOffline" 
+      <div
+        v-show="!isOffline"
         class="panel-btn center">
-        <div 
+        <div
           class="btn-wrap"
           @click="setSwitch">
-          <div :class="[{ 'btn-source': deviceAttrs.switch == 'off' },{ 'btn-over': deviceAttrs.switch == 'on' } ,'btn btn-source center']" />
-          <div class="btn-name">{{ deviceAttrs.switch=='on'?'断电':'通电' }}</div>
+          <div :class="[{ 'btn-source': deviceAttrs.switch == 'close' },{ 'btn-over': deviceAttrs.switch == 'open' } ,'btn btn-source center']" />
+          <div class="btn-name">{{ deviceAttrs.switch=='open'?'断电':'通电' }}</div>
         </div>
-        <div 
+        <div
           class="btn-wrap"
           v-if="deviceAttrs.countdownOpen=='0'"
           @click="showTime('设置延时断电')">
           <div :class="['btn btn-delay center']" />
           <div class="btn-name">延时断电</div>
         </div>
-         <div 
+         <div
          v-else
           class="btn-wrap">
-          <div  
+          <div
             @touchstart="touchStart($event)"
             @touchmove="touchMove($event)"
             @touchend="touchEnd($event)" :class="['btn btn-delay center']" />
           <div class="btn-name">取消延迟</div>
         </div>
-        <div 
+        <div
           style="visibility:hidden"
           class="btn-wrap"/>
       </div>
 
       <div class="bottom">
-        <div class="timing"> 
+        <div class="timing">
           <div>定时</div>
-          <div 
-            class="timing-right" 
+          <div
+            v-if="deviceAttrs.switch=='open'"
+            class="timing-right"
             @click="showTime('设置关机时间')">{{ deviceAttrs.closeTime | closeTime }} > </div>
+          <div
+            v-else
+            class="timing-right"
+            @click="showTime('设置开机时间')">{{ deviceAttrs.closeTime | openTime }} > </div>
         </div>
         <div class="Charging-protection">
           <div>充电保护</div>
           <div><input
             :checked="deviceAttrs.ovp=='open'"
             class="switch switch-anim"
-            type="checkbox" 
+            type="checkbox"
             @click="lock"></div>
         </div>
       </div>
@@ -116,13 +121,13 @@ export default {
     // 开关机
     setSwitch(){
       console.log(1)
-      if (this.isOffline) return 
+      if (this.isOffline) return
       console.log(2)
       let switchStatus = ''
-      if (this.deviceAttrs.switch=='on') {
-        switchStatus = 'off'
+      if (this.deviceAttrs.switch=='close') {
+        switchStatus = 'open'
       }else{
-        switchStatus = 'on'
+        switchStatus = 'close'
       }
       this.controlDevice('switch',switchStatus)
     },
@@ -157,7 +162,12 @@ export default {
       // alert('长按了')
       this.$nextTick(()=>{
         // 删除延时
-        this.controlDevice('remove_time',true)
+        let obj = {
+          remove_delay_task: {
+            encrptionFlag: '1001'
+          }
+        }
+        this.controlDevice('remove_time',true, obj)
       })
     },
     // 洗涤完成
@@ -187,8 +197,9 @@ export default {
       // console.log(e.target.checked)
     },
     showTime(v) {
+      console.log('我进来了')
       this.title = v
-      if (this.isClose) return
+      // if (this.isClose) return
       this.$refs.time.show = true
     },
     // 设置关机时间
@@ -197,20 +208,89 @@ export default {
       let h = parseInt(time[0].split(':')[0])
       let m = parseInt(time[0].split(':')[1])
       if(this.title=='设置延时断电'){
-          this.controlDevice('countdownOpen',h*60+m)
+          let obj = {
+            set_delay_task: {
+              openEnable: true,
+              countdownOpen: h*60+m,
+              closeEnable: false,
+              countdownClose: 0,
+              repeat: '1',
+              encrptionFlag: '1001'
+            }
+          }
+          this.controlDevice('countdownOpen',h*60+m, obj)
       }else{
-        this.controlDevice('closeTime',h*60+m)
+        h = h < 10 ? '0' + h : h
+        m = m < 10 ? '0' + m : m
+        let time = this.getDateTime(new Date()) + ' ' + h + ':' + m + ':' + '00'
+        // 定时开
+        let obj1 = {
+          set_time_task: {
+            openEnable: true,
+            openTime: time,
+            repeat: "1",
+            timerId: "1 ",
+            encrptionFlag: '1001',
+            timerEnable: false
+          }
+        }
+        // 定时关
+        let obj2 = {
+          set_time_task: {
+            closeEnable: true,
+            closeTime: time,
+            repeat: "1",
+            timerId: "1 ",
+            encrptionFlag: '1001',
+            timerEnable: false
+          }
+        }
+        let obj3 = this.deviceAttrs.switch === 'on' ? obj1 : obj2
+        this.controlDevice('closeTime',h*60+m, obj3)
       }
       console.log(h,m,'hm')
-        
     },
     // 取消定时
     canceltime(){
        this.controlDevice('time',{
             timer_value:0,
             timer_switch:'off'
-        })
+        }, {
+         remove_time_task: {
+           timerId: '1',
+		       encrptionFlag: '1001'
+         }
+    })
     },
+    getDateTime(date, type) {
+      // 时间格式获取
+      if (!date) return
+      let d = new Date(+date)
+      let year = d.getFullYear()
+      let month =
+        d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1
+      let day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate()
+      let hours = d.getHours() < 10 ? '0' + d.getHours() : d.getHours()
+      let minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()
+      let seconds = d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds()
+      if (type === 'fulltime') {
+        return (
+          year +
+          '-' +
+          month +
+          '-' +
+          day +
+          ' ' +
+          hours +
+          ':' +
+          minutes +
+          ':' +
+          seconds
+        )
+      } else {
+        return year + '-' + month + '-' + day
+      }
+    }
   }
 }
 </script>
@@ -218,6 +298,7 @@ export default {
 @imgPath: 'base/new_curtains/assets';
 @imgPath1: 'base/dishwasher/assets';
 @imgPath2: 'base/kongke_plug/assets';
+* { touch-action: pan-y; }
 @keyframes progress-bar{
   0% {
       transform: rotate(260deg);
@@ -289,7 +370,7 @@ export default {
   };
   .bottom{
     width: 100%;
-   
+
     margin-top: 40px;
     .timing,.Charging-protection{
        padding: 0 40px;
@@ -302,7 +383,7 @@ export default {
       line-height: 120px;
       border-top: 1px rgba(0, 0, 0, .1) solid;
     }
-   
+
   }
   .main {
     .bg{
@@ -319,8 +400,8 @@ export default {
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-left: -260px ; 
-        margin-top: -260px ; 
+        margin-left: -260px ;
+        margin-top: -260px ;
       }
       .status{
         width: 460px;
@@ -330,8 +411,8 @@ export default {
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-left: -230px ; 
-        margin-top: -230px ; 
+        margin-left: -230px ;
+        margin-top: -230px ;
         font-size: 80px;
         text-align: center;
         line-height: 460px;
@@ -369,8 +450,8 @@ export default {
           color: #000;
         }
       }
-      
-      
+
+
     }
     .status{
       width: 100%;
@@ -455,7 +536,7 @@ export default {
           background-size: 100% 100%;
           width: 44px;
           height: 44px;
-        }   
+        }
       }
       &.btn-over{
         &::before{
@@ -469,7 +550,7 @@ export default {
           background-size: 100% 100%;
           width: 44px;
           height: 44px;
-        }   
+        }
       }
        &.btn-delay{
         &::before{
@@ -483,7 +564,7 @@ export default {
           background-size: 100% 100%;
           width: 44px;
           height: 44px;
-        }   
+        }
       }
       &::before {
         content: "";
@@ -673,6 +754,10 @@ export default {
         }
 
       }
+    }
+    .timing-right{
+      position: relative;
+      z-index: 999;
     }
   }
 </style>

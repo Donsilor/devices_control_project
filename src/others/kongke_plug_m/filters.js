@@ -9,6 +9,16 @@ export function closeTime(val) {
   }else{
     return '--小时--分钟后关机'
   }
- 
-  
+
+
+}
+
+export function openTime(val) {
+  let h = Math.floor(val/60)
+  let m = val%60
+  if (val) {
+    return h+'小时'+m+'分钟后开机'
+  } else {
+    return  ''
+  }
 }
