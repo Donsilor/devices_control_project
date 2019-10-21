@@ -137,7 +137,7 @@
 
         <!-- 当前型号暂不支持以下功能，注释处理 -->
 
-        <div
+        <!-- <div
           class="btn-wrap"
           @click="setMode('intelligent', deviceAttrs.intelligent)">
           <div :class="[ { 'active': deviceAttrs.intelligent == 'on' }, 'btn btn-auto center']" />
@@ -148,7 +148,7 @@
           @click="setMode('holiday', deviceAttrs.holiday)">
           <div :class="[ { 'active': deviceAttrs.holiday == 'on' }, 'btn btn-holiday center']" />
           <div class="btn-name">假日 </div>
-        </div>
+        </div> -->
 
         <!-- <div
           class="btn-wrap"
