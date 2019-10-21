@@ -24,24 +24,25 @@
           <div class="btn-name">{{ deviceAttrs.switch=='on'?'断电':'通电' }}</div>
         </div>
         <div 
-          class="btn-wrap"
           v-if="deviceAttrs.countdownOpen=='0'"
+          class="btn-wrap"
           @click="showTime('设置延时断电')">
           <div :class="['btn btn-delay center']" />
           <div class="btn-name">延时断电</div>
         </div>
-         <div 
-         v-else
+        <div 
+          v-else
           class="btn-wrap">
           <div  
+            :class="['btn btn-delay center']"
             @touchstart="touchStart($event)"
-            @touchmove="touchMove($event)"
-            @touchend="touchEnd($event)" :class="['btn btn-delay center']" />
+            @touchmove="touchMove($event)" 
+            @touchend="touchEnd($event)" />
           <div class="btn-name">取消延迟</div>
         </div>
-        <div 
+        <!-- <div 
           style="visibility:hidden"
-          class="btn-wrap"/>
+          class="btn-wrap"/> -->
       </div>
 
       <div class="bottom">
@@ -428,10 +429,6 @@ export default {
     z-index: 99999;
   .btn-wrap {
     margin: 0 24px 24px;
-    &:last-of-type{
-      width: 30px;
-      height: 120px;
-    }
     .btn {
       box-sizing: border-box;
       margin: 0 auto;

@@ -4,17 +4,12 @@
       <NewTopBar
         :title="device.device_name"
         :shutdown="true"
-<<<<<<< HEAD
-        :class-name="[opcityStyle]"
-=======
         :class-name="opcityStyle"
->>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <div class="main center">
         <div class="wrap-circle">
           <div class="bg">
-<<<<<<< HEAD
             <div 
               v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'" 
               class="tm">-- <sup>°C</sup></div>
@@ -28,21 +23,6 @@
             </div>
             <div 
               v-show="!isOffline&& deviceAttrs.switchStatus == 'on'" 
-=======
-            <div
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'"
-              class="tm">-- <sup>°C</sup></div>
-            <div
-              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
-              class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
-            </div>
-            <div
-              v-if="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
-              class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
-            </div>
-            <div
-              v-show="deviceAttrs.connectivity == 'online'&& deviceAttrs.switchStatus == 'on'"
->>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
               :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
             <div
               v-show="isOffline||deviceAttrs.switchStatus == 'off'"
@@ -65,17 +45,11 @@
             class="progress"
           />
         </div>
-<<<<<<< HEAD
         <div 
           v-show="!isOffline&&!isClose" 
           class="control-tm center">
           <button 
             class="control reduce" 
-=======
-        <div class="control-tm center">
-          <button
-            class="control reduce"
->>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
             @click="setTemperature(-10)"/>
           <button
             class="control add"
@@ -152,13 +126,8 @@
             <span>风速</span>
             <span @click="showSpeed">{{ typeVal=='auto'?'自动':'手动＞' }}</span>
           </div>
-<<<<<<< HEAD
           <div 
             v-show="typeVal!=='auto'" 
-=======
-          <div
-            v-show="typeVal!=='auto'"
->>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
             class="range">
             <input
               :value="brightnessValue"
@@ -342,7 +311,7 @@ export default {
   mounted() {
     let pageNode = document.querySelector('.page')
     pageNode.addEventListener('scroll', (e) => {
-      console.log(e.target.scrollTop)
+      // console.log(e.target.scrollTop)
       let scrollHeight = e.target.scrollTop
       if (scrollHeight === 0) {
         this.opcityStyle = 'opcity-0'
@@ -417,13 +386,8 @@ export default {
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
-<<<<<<< HEAD
           if (this.deviceAttrs.mode=='auto') {
             this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)  
-=======
-          if (this.deviceAttrs.mode=='wind') {
-            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
->>>>>>> a6a4e585193c2653d228d04349a9a26a1250ac2b
             this.$refs.$circle.init()
             this.hide()
             return
@@ -573,6 +537,9 @@ export default {
   position: relative;
   background-image: url('~@lib/@{imgPath1}/bg_01.png');
   background-size: 100% 100%;
+  &::-webkit-scrollbar {
+		display: none;
+	}
   &.filter {
     filter: blur(12px);
   }
@@ -704,10 +671,12 @@ export default {
     z-index: 9999;
     margin-top: 130px;
     /*适应苹果*/
-		-webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;
+    
   }
+  
   /*隐藏掉滚动条*/
-	.slide-box::-webkit-scrollbar {
+	.panel-btn::-webkit-scrollbar {
 		display: none;
 	}
   /*********** 按钮 ***********/
