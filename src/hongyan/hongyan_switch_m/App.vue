@@ -4,8 +4,7 @@
       <!-- 顶部 -->
       <topbar
         :title="device.device_name"
-        white
-        bak-color="#fff" />
+        bak-color="#000" />
       <!-- 注意 -->
       <!-- <div class="zhuyi">
         <span>注意：零火线开关暂时不支持配对</span>
@@ -207,7 +206,7 @@ export default {
     font-size: 24px;
     text-align: center;
     margin-top: 26px;
-    color: #fff;
+    color: #000;
     opacity: 0.2;
   }
   // .zhuyi {
