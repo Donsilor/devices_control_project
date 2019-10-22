@@ -3,7 +3,7 @@ import Mock from 'mockjs'
 let res = {
     "connectivity": "online", //l
     "switch": 'on', //开关
-    "open_pencentage":0 , 
+    "open_pencentage":100 , 
 }
 export function generateSnapShot() {
     return Mock.mock({

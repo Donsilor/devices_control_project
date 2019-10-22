@@ -79,7 +79,7 @@ export default {
       // 点击中部到指定幅度按钮显示的信息
       coverWidth:"",
       timeId: '',
-      curtainStatus: 'opened'
+      curtainStatus: ''
     }
   },
   computed: {
@@ -93,6 +93,12 @@ export default {
     'device.stateChange'(){
       this.$nextTick(()=>{
          this.newRatio()
+         if (this.deviceAttrs.open_pencentage=='100') {
+           this.curtainStatus='窗帘已关闭'
+         }
+         if (this.deviceAttrs.open_pencentage=='0') {
+           this.curtainStatus='窗帘已打开'
+         }
       })
     }
   },
@@ -121,7 +127,8 @@ export default {
       console.log('窗帘的最大宽度', maxW)
       console.log('cover宽度', s)
       console.log('暂停的百分比计算（cover宽度 / 窗帘的最大宽度 * 100）', pauseRange)
-      this.controlDevice('open_pencentage', pauseRange,{'switch':'pause'})
+      // this.controlDevice('open_pencentage', pauseRange,{'switch':'pause'})
+      this.controlDevice('switch', 'pause')
       // .then(()=>{
       //   this.controlDevice('switch', 'on')
       // })
