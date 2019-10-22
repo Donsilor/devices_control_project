@@ -4,16 +4,16 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="true"
-        bak-color="#000"
-        @shutdownCallback="shutdowncallback('close')" />
+        bak-color="#000" />
       <!-- tab切换栏 -->
       <div
         class="main center"
         style="margin-top:52px">
         <div class="bg"><div class="circle"><div class="status">{{ deviceAttrs.switch=='open'?'通电中':'断电中' }}</div></div></div>
       </div>
-      <div class="status1">{{ deviceAttrs.countdownOpen | closeTime }}后断电</div>
+      <div 
+        v-show="deviceAttrs.countdownClose>0" 
+        class="status1">{{ deviceAttrs.countdownClose | delayTime }}后断电</div>
       <div
         v-show="!isOffline"
         class="panel-btn center">
@@ -23,42 +23,30 @@
           <div :class="[{ 'btn-source': deviceAttrs.switch == 'close' },{ 'btn-over': deviceAttrs.switch == 'open' } ,'btn btn-source center']" />
           <div class="btn-name">{{ deviceAttrs.switch=='open'?'断电':'通电' }}</div>
         </div>
-<<<<<<< HEAD
-        <div 
-=======
         <div
-          class="btn-wrap"
->>>>>>> 88ecc6fbfe7ca3a339541b80865272aee107b87c
-          v-if="deviceAttrs.countdownOpen=='0'"
+          v-if="deviceAttrs.countdownClose=='0'"
           class="btn-wrap"
           @click="showTime('设置延时断电')">
           <div :class="['btn btn-delay center']" />
           <div class="btn-name">延时断电</div>
         </div>
-<<<<<<< HEAD
-        <div 
+        <div
           v-else
           class="btn-wrap">
-          <div  
-            :class="['btn btn-delay center']"
-=======
-         <div
-         v-else
-          class="btn-wrap">
           <div
->>>>>>> 88ecc6fbfe7ca3a339541b80865272aee107b87c
+            :class="[{'progress':timeOutEvent != 0},'btn btn-delay center circleProgress_wrapper']"
             @touchstart="touchStart($event)"
             @touchmove="touchMove($event)" 
-            @touchend="touchEnd($event)" />
+            @touchend="touchEnd($event)" >
+            <div class="wrapper right">
+              <div class="circleProgress rightcircle" />
+            </div>
+            <div class="wrapper left">
+              <div class="circleProgress leftcircle" />
+            </div>
+          </div>
           <div class="btn-name">取消延迟</div>
         </div>
-<<<<<<< HEAD
-        <!-- <div 
-=======
-        <div
->>>>>>> 88ecc6fbfe7ca3a339541b80865272aee107b87c
-          style="visibility:hidden"
-          class="btn-wrap"/> -->
       </div>
 
       <div class="bottom">
@@ -67,11 +55,11 @@
           <div
             v-if="deviceAttrs.switch=='open'"
             class="timing-right"
-            @click="showTime('设置关机时间')">{{ deviceAttrs.closeTime | closeTime }} > </div>
+            @click="showTime('设置关机时间')">{{ deviceAttrs.closeTime | closeTime }}＞ </div>
           <div
             v-else
             class="timing-right"
-            @click="showTime('设置开机时间')">{{ deviceAttrs.closeTime | openTime }} > </div>
+            @click="showTime('设置开机时间')">{{ deviceAttrs.openTime | openTime }}＞ </div>
         </div>
         <div class="Charging-protection">
           <div>充电保护</div>
@@ -86,6 +74,7 @@
       <SelectTime
         ref="time"
         :title="title"
+        :switch-status="deviceAttrs.switch"
         @selectedTime="setReserve"
         @canceltime="canceltime" />
     </div>
@@ -93,7 +82,7 @@
 </template>
 
 <script>
-import Swiper from 'swiper'
+// import Swiper from 'swiper'
 import { mapGetters, mapState, mapActions } from 'vuex'
 import SelectTime from './components/time.vue'
 export default {
@@ -110,8 +99,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isClose','isOffline']),
+    ...mapGetters(['isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    isClose(){
+      return this.deviceAttrs.switch=='close'?true:false
+    },
     bakColor(){
       return this.isClose ? '#000' : '#fff'
     },
@@ -137,9 +129,7 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     // 开关机
     setSwitch(){
-      console.log(1)
       if (this.isOffline) return
-      console.log(2)
       let switchStatus = ''
       if (this.deviceAttrs.switch=='close') {
         switchStatus = 'open'
@@ -154,7 +144,7 @@ export default {
     },
     // 长按事件
     touchStart(e){
-      console.log(e)
+      // console.log(e)
       this.timeOutEvent=setTimeout(() => {
         this.longPress()
       }, 1000)
@@ -179,17 +169,14 @@ export default {
       // alert('长按了')
       this.$nextTick(()=>{
         // 删除延时
-        let obj = {
-          remove_delay_task: {
-            encrptionFlag: '1001'
-          }
-        }
-        this.controlDevice('remove_time',true, obj)
+        // let obj = {
+        //   remove_delay_task: {
+        //     encrptionFlag: '1001'
+        //   }
+        // }
+        // this.controlDevice('remove_time',true, obj)
+        this.controlDevice('countdownClose',0)
       })
-    },
-    // 洗涤完成
-    finish(){
-      this.controlDevice('operation_mode','standby')
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
@@ -203,6 +190,7 @@ export default {
       })
     },
     lock(e) {
+      console.log(this.isClose)
        if (this.isClose) return
       let ovp = ''
       if(e.target.checked){
@@ -225,59 +213,61 @@ export default {
       let h = parseInt(time[0].split(':')[0])
       let m = parseInt(time[0].split(':')[1])
       if(this.title=='设置延时断电'){
+        if(this.deviceAttrs.switch === 'open'){
           let obj = {
             set_delay_task: {
-              openEnable: true,
-              countdownOpen: h*60+m,
-              closeEnable: false,
-              countdownClose: 0,
+              openEnable: false,
+              countdownClose: h*60+m,
+              closeEnable: true,
+              countdownOpen: 0,
               repeat: '1',
               encrptionFlag: '1001'
             }
           }
-          this.controlDevice('countdownOpen',h*60+m, obj)
+          this.controlDevice('countdownClose',h*60+m, obj)
+        }
+          
       }else{
-        h = h < 10 ? '0' + h : h
-        m = m < 10 ? '0' + m : m
-        let time = this.getDateTime(new Date()) + ' ' + h + ':' + m + ':' + '00'
-        // 定时开
-        let obj1 = {
-          set_time_task: {
-            openEnable: true,
-            openTime: time,
-            repeat: "1",
-            timerId: "1 ",
-            encrptionFlag: '1001',
-            timerEnable: false
+        let hours = h < 10 ? '0' + h : h
+        let min = m < 10 ? '0' + m : m
+        let time = this.getDateTime(new Date()) + ' ' + hours + ':' + min + ':' + '00'
+        if(this.deviceAttrs.switch === 'close'){
+           // 定时开
+          let obj1 = {
+            set_time_task: {
+              openEnable: true,
+              openTime: time,
+              repeat: "1",
+              timerId: "1 ",
+              encrptionFlag: '1001',
+              timerEnable: false
+            }
           }
-        }
-        // 定时关
-        let obj2 = {
-          set_time_task: {
-            closeEnable: true,
-            closeTime: time,
-            repeat: "1",
-            timerId: "1 ",
-            encrptionFlag: '1001',
-            timerEnable: false
+          this.controlDevice('openTime',h*60+m, obj1)
+        }else{
+          // 定时关
+          let obj2 = {
+            set_time_task: {
+              closeEnable: true,
+              closeTime: time,
+              repeat: "1",
+              timerId: "1 ",
+              encrptionFlag: '1001',
+              timerEnable: false
+            }
           }
+           this.controlDevice('closeTime',h*60+m, obj2)
         }
-        let obj3 = this.deviceAttrs.switch === 'on' ? obj1 : obj2
-        this.controlDevice('closeTime',h*60+m, obj3)
       }
-      console.log(h,m,'hm')
     },
     // 取消定时
     canceltime(){
-       this.controlDevice('time',{
-            timer_value:0,
-            timer_switch:'off'
-        }, {
-         remove_time_task: {
+       this.controlDevice('remove_time_task',
+         {
            timerId: '1',
 		       encrptionFlag: '1001'
          }
-    })
+    )
     },
     getDateTime(date, type) {
       // 时间格式获取
@@ -363,9 +353,9 @@ export default {
       background: #7F7F7F;
   }
   .switch:checked {
-      // border-color: #64bd63;
-      // box-shadow: #64bd63 0 0 0 16px inset;
-      // background-color: #64bd63;
+      border-color: #E1B96E;
+      box-shadow: #E1B96E 0 0 0 16px inset;
+      background-color: #E1B96E;
   }
   .switch:checked:before {
       left: 30px;
@@ -410,29 +400,29 @@ export default {
       border: 1px solid rgba(0, 0, 0, 0.1);
       position: relative;
       .circle{
-        width: 520px;
-        height: 520px;
+        width: 500px;
+        height: 500px;
         border-radius: 50%;
         border: 1px solid rgba(0, 0, 0, 0.1);
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-left: -260px ;
-        margin-top: -260px ;
+        margin-left: -250px ;
+        margin-top: -250px ;
       }
       .status{
-        width: 460px;
-        height: 460px;
+        width: 420px;
+        height: 420px;
         border-radius: 50%;
         border: 1px solid rgba(0, 0, 0, 0.1);
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-left: -230px ;
-        margin-top: -230px ;
+        margin-left: -210px ;
+        margin-top: -210px ;
         font-size: 80px;
         text-align: center;
-        line-height: 460px;
+        line-height: 420px;
       }
     }
   }
@@ -442,81 +432,83 @@ export default {
     line-height: 28px;
     margin-top: 52px;
   }
-  .working{
-    margin-top: 20vh;
-    .time{
-      width: 100%;
-      font-size: 146px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 18px;
-    }
-    .progress{
-      font-size:28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin:24px 0 70px 0;
-      .isgray{
-        color:#b0b0b0;
-        &.ongoing{
-          color: #000;
-        }
-         &.black{
-          color: #000;
-        }
-      }
-
-
-    }
-    .status{
-      width: 100%;
-      font-size: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-  .end{
-    width: 100%;
-    height: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    margin-top: 20vh;
-    .circle{
-      width: 140px;
-      height: 140px;
-      border: 2px solid rgba(0, 0, 0, 0.7);
-      border-radius: 50%;
-      margin-bottom: 60px;
-      &::before{
-        display: block;
-        content: '√';
-        text-align: center;
-        line-height: 140px;
-      }
-    }
-    >span{
-      font-size: 48px;
-    }
-    .button{
-      width: 90%;
-      height: 100px;
-      background: #000;
-      color: #fff;
-      font-size: 32px;
-      text-align: center;
-      line-height: 100px;
-      margin-top: 30vh;
-    }
-  }
   .closed{
     font-size: 48px;
     text-align: center;
     margin-top: 240px;
+  }
+  .circleProgress_wrapper {
+    width: 120px;
+    height: 120px;
+    margin: 50px auto;
+    position: relative;
+    // &.recharge {
+    //   &::before{
+    //     background-image: url('~@lib/@{imgPath}chongdianzhong.png');
+    //   }
+    // }
+    .wrapper {
+      width: 60px;
+      height: 120px;
+      position: absolute;
+      top: 0;
+      overflow: hidden;
+    }
+    .right {
+      right: -1px;
+    }
+
+    .left {
+      left: -1px;
+    }
+
+    .circleProgress {
+      box-sizing: border-box;
+      width: 120px;
+      height: 120px;
+      border: 1px solid transparent;
+      border-radius: 50%;
+      position: absolute;
+      top: -1px;
+    }
+    &.progress {
+      .rightcircle {
+        border-top: 1px solid #000;
+        border-right: 1px solid #000;
+        right: 0;
+        animation: circleRight 1s linear infinite;
+      }
+      .leftcircle {
+        border-bottom: 1px solid #000;
+        border-left: 1px solid #000;
+        left: 0;
+        animation: circleLeft 1s linear infinite;
+      }
+      // &::before {
+      //   background-image: url('~@lib/@{imgPath}chongdianzhong.png');
+      // }
+    }
+    @keyframes circleRight {
+      0% {
+        -webkit-transform: rotate(225deg);
+      }
+
+      50%,
+      100% {
+        -webkit-transform: rotate(405deg);
+      }
+    }
+
+    @keyframes circleLeft {
+      0%,
+      50% {
+        -webkit-transform: rotate(225deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(405deg);
+      }
+    }
   }
   .panel-btn {
     height: auto;
@@ -621,36 +613,6 @@ export default {
         animation: progress-bar 1s linear infinite;
       }
     }
-    .mask {
-      &::before{
-        content: "";
-        display: block;
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        position: absolute;
-        top: -30px;
-        left: -23%;
-        border: 3px solid transparent;
-        z-index: 10;
-        clip: rect(40px 80px 200px 0px);
-      }
-    }
-      .press{
-        &::before{
-          content: "";
-          display: block;
-          width: 200px;
-          height: 200px;
-          border-radius: 50%;
-          position: absolute;
-          top: -30px;
-          left: 50%;
-          transform: translateX(-50%);
-          border: 3px solid rgba(136, 138, 137, 0.8);
-          clip: rect(0px 200px 40px 0px);
-        }
-      }
     .btn {
       box-sizing: border-box;
       margin: 0px auto;
@@ -665,18 +627,6 @@ export default {
           background:#000;
         }
       }
-    &.btn-swich {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: rgba(136, 138, 137,.4);
-      &::before {
-        background-image: url('~@lib/@{imgPath1}/yiguanbi.png');
-        background-size: 100% 100%;
-        width: 80px;
-        height: 80px;
-      }
-    }
       &::before {
         content: "";
         display: block;

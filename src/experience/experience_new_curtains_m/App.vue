@@ -29,18 +29,25 @@
               v-for="i in 11"/>
           </ul>
         </div>
-        <div class="status" v-if="curtainStatus === 'opening'">正在打开窗帘</div>
-        <div class="status" v-if="curtainStatus === 'closing'">正在关闭窗帘</div>
-        <div class="status" v-if="curtainStatus === 'opened'">窗帘已打开</div>
-        <div v-if="curtainStatus === 'closed'"
-             class="status" >窗帘已关闭</div>
+        <div 
+          v-if="curtainStatus === 'opening'" 
+          class="status">正在打开窗帘</div>
+        <div 
+          v-if="curtainStatus === 'closing'" 
+          class="status">正在关闭窗帘</div>
+        <div 
+          v-if="curtainStatus === 'opened'" 
+          class="status">窗帘已打开</div>
+        <div 
+          v-if="curtainStatus === 'closed'"
+          class="status" >窗帘已关闭</div>
       </div>
       <!-- 底部按钮 -->
       <div class="panel-btn center">
         <div class="btn-wrap">
           <div
-            :class="[{'active': curtainStatus === 'closing' },'btn-open btn center']"
-            @click="setMode(100)" />
+            :class="[{'active': curtainStatus === 'opening' },'btn-open btn center']"
+            @click="setMode(0)" />
           <div class="btn-name">全开</div>
         </div>
         <div class="btn-wrap">
@@ -54,8 +61,8 @@
           class="btn-wrap"
         >
           <div
-            :class="[{ 'active': curtainStatus === 'opening' }, 'btn btn-close center']"
-            @click="setMode(0)" />
+            :class="[{ 'active': curtainStatus === 'closing' }, 'btn btn-close center']"
+            @click="setMode(100)" />
           <div class="btn-name">全关</div>
         </div>
       </div>

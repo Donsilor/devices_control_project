@@ -6,8 +6,9 @@
     @touchmove.prevent>
     <div class="main">
       <div class="overtime">
-        <span class="title">{{title}}</span>
+        <span class="title">{{ title }}</span>
         <span 
+          v-show="title!=='设置延时断电'"
           class="canceltime" 
           @click="canceltime">取消定时</span>
       </div>
@@ -114,8 +115,8 @@ export default {
   props: {
     title:{
       type: String
-    }
-    // orderTime:{type: Number}
+    },
+    // switchStatus:{type: String}
   },
   
   data() {

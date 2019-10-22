@@ -4,13 +4,10 @@ export function closeTime(val) {
   if(val){
     let h = Math.floor(val/60)
     let m = val%60
-    console.log(h+'小时'+m+'分后关机');
-    return h+'小时'+m+'分钟后关机'
+    return h+'小时'+m+'分钟后关机 '
   }else{
-    return '--小时--分钟后关机'
+    return  ''
   }
-
-
 }
 
 export function openTime(val) {
@@ -21,4 +18,12 @@ export function openTime(val) {
   } else {
     return  ''
   }
+}
+
+export function delayTime(val) {
+  let h = Math.floor(val/60)
+  let m = val % 60
+  h = h < 10 ? ("0" + h) : h
+  m = m < 10 ? ("0" + m) : m
+  return h + ":" + m + ':00'
 }
