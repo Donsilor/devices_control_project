@@ -315,4 +315,24 @@ export default {
 .opcity-80 {
   background-color: rgba(255, 255, 255, 0.8) !important;
 }
+//  .topbar-fixed {
+//       z-index: 1;
+//       position: absolute;
+//       top: 0;
+//       left:0;
+//       overflow: hidden;
+//     &::before{
+//       background-color: rgba(255, 255, 255,0.8);
+//       content: '';
+//       position: absolute;
+//       top: 0;
+//       bottom: 0;
+//       left: 0;
+//       right: 0;
+//       z-index: -1;
+//       background: url('../base/oakes_air_condition/assets/bg_01.png') 0 / cover fixed;
+//       filter: blur(60px);
+//       margin: -30px;
+//     }
+//  }
 </style>

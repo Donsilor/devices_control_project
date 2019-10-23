@@ -33,6 +33,8 @@ var res = {
         connectivity: 'online',
         timer_switch:'off',
         timer_value:0,
+        wind_up:'off',
+        wind_down:'off',
     }
 }
 
