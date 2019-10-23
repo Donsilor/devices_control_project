@@ -9,8 +9,8 @@
     <!-- 顶部导航菜单 -->
     <new-topbar
       :shutdown="true"
+      :title="device_name"
       bg-color="#fff"
-      title="客厅的电视"
       bak-color="#000"
       @shutdownCallback="cmd('rcPower')"
     />
@@ -27,9 +27,11 @@
     </div>
    
     <!-- 设备状态提示 -->
+    <!-- :bar-height="barHeight"  -->
     <status-tip
       v-show="device_uuid"
-      :bar-height="barHeight" />
+     
+    />
     <!--    <div class="wrap-title">-->
     <!--      <div class="title mar">栏目分类</div>-->
     <!--    </div>-->
@@ -153,8 +155,21 @@
 }
 .page-index {
   padding-bottom: 48px;
-  background: url(/static/images/icn_blurry_bg@2x.4d4de97.png);
-    background-size: 100% 100%;
+  background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+  background-size: 100% 100%;
+  background-attachment: fixed;
+  // // background-position:center center; 
+  // &::before{
+  //   //  content: ' ';
+  //   // position: fixed;
+  //   // z-index: -1;
+  //   // top: 0;
+  //   // right: 0;
+  //   // bottom: 0;
+  //   // left: 0;
+  //   // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+  //   // background-size: 100% 100%;
+  // }
 
   .space-block{
     height: 26px;
@@ -178,10 +193,10 @@
   .mar {
     margin: 0 48px;
   }
-  .index-list{
-    background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
-    background-size: 100% 100%;
-  }
+  // .index-list{
+  //   background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+  //   background-size: 100% 100%;
+  // }
 }
 
 .search-box {
@@ -331,7 +346,14 @@
 .vlist {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
+  li{
+    margin-right: 20px;
+    &:nth-child(3n){
+      margin-right:0; 
+    }
+  }
+  
   // align-content: space-between;
 }
 .vitem {
@@ -597,8 +619,10 @@ export default {
   data() {
     const self = this
     return {
+      
       ios: /iPad|iPhone|iPod/.test(navigator.userAgent),
       device_uuid: window.device_uuid || '',
+      device_name:window.device_name||'',
       isShowBar: this.$route.query.showBar == 1,
       activeIndex:0,
       channelId: '',
@@ -694,6 +718,7 @@ export default {
   created() {
     this.pageInit()
     HdSmart.UI.toggleNav()
+    console.log('1111',window.device_name)
   },
   mounted() {
     this.pageInit()

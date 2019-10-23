@@ -3,7 +3,12 @@
   <div class="page-search">
     <!-- 遥控器 --> 
     <remoteControl/>
-    <div :search="false">
+    <div
+      :style="{height:status_bar_height+'px'}"
+      class="statusbar" />
+    <div 
+      :search="false" 
+      :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}">
       <form
         class="search_bar"
         @submit.prevent="submit">
@@ -141,16 +146,23 @@
 </template>
 
 <style lang="less" scoped>
+@status_bar_height: 25PX;
+@navigation_bar_height: 44PX;
+.statusbar {
+  height: @status_bar_height;
+}
 .page-search{
   background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
   background-size: 100% 100%;
   height: 100%;
 }
 .search_bar {
-  flex: 1;
+   display: flex;
+  height: 100%;
+  // flex: 1;
   padding-top: 8PX;
   // padding-left: 100px;
-  display: flex;
+ align-items: center;
   margin: 0 32px;
 }
 .search_input {
@@ -432,6 +444,9 @@ function splitWord(kw, input) {
 export default {
   data() {
     return {
+      status_bar_height: 25,
+      navigation_bar_height: 44,
+      ios: /iPad|iPhone|iPod/.test(navigator.userAgent),
       word: '',
       // 当前视图：1默认,2联想词,3搜索结果
       curpage: 1,
@@ -489,6 +504,16 @@ export default {
         }
       }
     }
+  },
+  created() {
+    HdSmart.ready(() => {
+      if (window.status_bar_height) {
+        this.status_bar_height = window.status_bar_height / dpr
+      }
+      if (window.navigation_bar_height) {
+        this.navigation_bar_height = window.navigation_bar_height / dpr
+      }
+    })
   },
   mounted() {
     this.getHistory()

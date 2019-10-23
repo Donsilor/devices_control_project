@@ -13,7 +13,7 @@
         @shutdownCallback="setSwitch()"
       />
       <div
-        v-if="toogleSpeed" 
+        v-show="toogleSpeed" 
         class="main center" 
       >
         <div 
@@ -24,6 +24,7 @@
           <!-- touch组件 -->
           <parcent-Light 
             :brightness="deviceAttrs.temperature"
+            :switch_status="deviceAttrs.switch_status"
             @moveLight="moveLight"
             @endLight="endLight"/>
         </div>
@@ -34,15 +35,16 @@
           v-if="isClose" 
           :class="[{'up-index': !isOffline }, 'btn-wrap']">
           <div 
-            :class="[{ 'active': !isClose }, 'btn-swich btn center']"
+         
+            :class="[{ 'active': !isClose }, 'btn-swich btn center']" 
             @click="setSwitch" />
           <div class="btn-name">{{ isClose||isOffline?'开灯':'关灯' }}</div>
         </div>
-        <span v-else>亮度 {{ ratio }}%</span>
+        <span v-if="!isClose&&(deviceAttrs.category_sub=='02'||deviceAttrs.category_sub=='04')">亮度 {{ ratio }}%</span>
       </div>
       <!-- 按钮 -->
       <div 
-        v-if="!isClose" 
+        v-if="!isClose&&(deviceAttrs.category_sub=='02'||deviceAttrs.category_sub=='04')" 
         class="panel-btn center" >
        
         <div 
@@ -141,9 +143,18 @@ export default {
     newLevel(){
       this.ratio = Math.round(this.deviceAttrs.level/254*100) 
       let touchbox = document.querySelectorAll(".touchbox")[0] 
-      let coverlight = document.querySelectorAll(".coverlight")[0]    
-      touchbox.style.top = ((100-this.ratio)/100*185)/37.5 +"rem"
-      coverlight.style.clip = `rect(${((100-this.ratio)/100*185)/37.5 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
+      let coverlight = document.querySelectorAll(".coverlight")[0] 
+      touchbox.style.display = 'block'
+      coverlight.style.display = 'block'
+      if(this.deviceAttrs.switch_status == 'on'&&(this.deviceAttrs.category_sub=='02'||this.deviceAttrs.category_sub=='04')){
+          touchbox.style.top = ((100-this.ratio)/100*185)/37.5 +"rem"
+        coverlight.style.clip = `rect(${((100-this.ratio)/100*185)/37.5 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
+      }else{
+         touchbox.style.display = 'none'
+         coverlight.style.display = 'none'
+        // coverlight.style.clip = `rect(${0 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
+      }
+    
     },
     setSpeed(val) {
       if (this.isClose||this.isOffline) return 
@@ -256,7 +267,7 @@ export default {
     margin-top: 100px;
     text-align: center;
     font-size: 36px;
-    color: #fff;
+    color: #000;
     display: flex;
     justify-content: center;
     .ratiobg{
@@ -360,8 +371,8 @@ export default {
     margin-top: 24px;
     width: 100%;
     border-radius: 40px 40px 0 0;
-    background: #ffffff;
-    box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
+    background: rgba(225,225,225,.4);
+    // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -381,14 +392,15 @@ export default {
     margin: 0 auto;
     width: 120px;
     height: 120px;
-    border: 1px solid #818181;
+    // border: 1px solid #818181;
     border-radius: 50%;
 
     display: flex;
     flex-direction: column;
     &.active {
-      background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-      border-color: #ffbf00;
+      // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+      // border-color: #ffbf00;
+      background: #000;
     }
   }
   .btn-name {
@@ -432,6 +444,14 @@ export default {
       background-image: url("~@lib/@{imgPath}/nuanguan@2x.png");
       background-size: 100% 100%;
     }
+    &.active::before{
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url("~@lib/base/yiyun_light/assets/nuanguang2@2x.png");
+      background-size: 100% 100%;
+
+    }
   }
 
   .btn-gs {
@@ -443,6 +463,14 @@ export default {
       background-image: url("~@lib/@{imgPath}/ziranguang@2x.png");
       background-size: 100% 100%;
     }
+     &.active::before{
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url("~@lib/base/yiyun_light/assets/ziranguang2@2x.png");
+      background-size: 100% 100%;
+
+    }
   }
   .btn-bc {
     &::before {
@@ -452,6 +480,14 @@ export default {
       height: 44px;
       background-image: url("~@lib/@{imgPath}/baiguang@2x.png");
       background-size: 100% 100%;
+    }
+     &.active::before{
+      display: block;
+      width: 44px;
+      height: 44px;
+      background-image: url("~@lib/base/yiyun_light/assets/baiguanfg2@2x.png");
+      background-size: 100% 100%;
+
     }
   }
 

@@ -43,9 +43,10 @@
         </div>
 
       </div>
-      <div class="header-bottom">
+      <div 
+        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
+        class="header-bottom" >
         <div
-          v-if="title"
           :style="{ 'color': bakColor }"
           class="title">{{ title }}</div>
         <div
@@ -225,8 +226,6 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 0 48px;
-  height: 80px;
-  line-height: 80px;
  .title {
     text-align: center;
     font-size: 17PX;
@@ -253,11 +252,13 @@ export default {
   }
   .left{
     position: relative;
-    top: -4px;
+    // top: -4px;
+    display: flex;
+    align-items: center;
   }
   .right{
     position: relative;
-    left: 6px;
+    left: 10px;
   }
 
 

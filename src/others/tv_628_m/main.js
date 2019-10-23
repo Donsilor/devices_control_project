@@ -27,6 +27,8 @@ import StatusTip from './components/StatusTip.vue'
 
 import * as service from './service'
 
+import '@lib/base/common.less'
+import '@lib/base/reset.less'
 import '@lib/base/tv/index_m.less'
 
 

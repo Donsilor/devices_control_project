@@ -165,9 +165,20 @@
 <style lang="less">
 .page-detail {
   color: #75787a;
-  /*background: #fafafa;*/
-  background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
-  background-size: 100% 100%;
+  // /*background: #fafafa;*/
+  // background-size: 100% 100%;
+  // background-attachment: fixed;
+  &::before{
+    content: ' ';
+    position: fixed;
+    z-index: -1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    background-size: 100% 100%;
+  }
 }
 .detail-hd {
   position: fixed;
@@ -235,7 +246,7 @@
 }
 .detail-info {
   margin: 0 32px;
-  border-bottom: 1px solid #dbdbdb;
+  border-bottom: 1px solid rgba(0,0,0,.1);
   .info-inner {
     position: relative;
     overflow: hidden;
@@ -279,7 +290,7 @@
   .desc {
     clear: both;
     padding-top: 24px;
-    border-top: 1px solid #dbdbdb;
+    // border-top: 1px solid #dbdbdb;
     color: #a4a9af;
     position: relative;
     .desc-cont-p{
@@ -765,7 +776,6 @@ export default {
             .offsetHeight
           let textHeight = this.$el.querySelector(".desc-cont-p")
             .offsetHeight
-
           if (textHeight > wrapHeight) {
             this.isDescOverflow = true
           } else {
