@@ -28,6 +28,7 @@
    
     <!-- 设备状态提示 -->
     <!-- :bar-height="barHeight"  -->
+
     <status-tip
       v-show="device_uuid"
      
