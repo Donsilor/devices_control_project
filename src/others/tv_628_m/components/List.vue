@@ -162,8 +162,9 @@
 
 <style lang="less" scoped>
 .page-list{
-  background: url(/static/images/icn_blurry_bg@2x.4d4de97.png);
+ background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
     background-size: 100% 100%;
+    background-attachment: fixed;
 }
 .filters-placeholder {
   height: 120px;

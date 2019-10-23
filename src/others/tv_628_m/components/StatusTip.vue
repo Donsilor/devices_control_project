@@ -52,7 +52,7 @@
 .status_bar_fixed{
     position:fixed;
     left: 0;
-    top: 64PX;
+    top: 69PX;
     width: 100%;
     z-index: 999;
     /* border-bottom:1px solid rgba(45,45,45,0.20); */
@@ -75,6 +75,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.status_bar{
+    position: relative;
+    z-index: 10000
 }
 .status_bar .link {
     color: #FFC800;

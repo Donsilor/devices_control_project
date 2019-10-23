@@ -2,16 +2,21 @@
   <div 
     id="parcent-light">
     <img 
-      v-if="brightness==370"
-      src="../../../lib/base/hongyan_light/assets/btn_ac_mode_e@2x.png" 
+      v-if="switch_status == 'on' &&brightness==370"
+      src="../../../lib/base/yiyun_light/assets/tongdengruanguang@2x.png" 
       class="coverlight">
     <img 
-      v-if="brightness==240" 
-      src="../../../lib/base/hongyan_light/assets/btn_ac_mode_a@2x.png" 
+      v-if="switch_status == 'on'&&brightness==240" 
+      src="../../../lib/base/yiyun_light/assets/tongdengziranguang@2x.png" 
       class="coverlight">
     <img 
-      v-if="brightness==167" 
-      src="../../../lib/base/hongyan_light/assets/btn_ac_mode_t@2x.png" 
+      v-if="switch_status == 'on'&&brightness==167" 
+      src="../../../lib/base/yiyun_light/assets/tongdengbaiguang@2x.png" 
+      class="coverlight">
+    <img 
+      v-if="switch_status == 'off'" 
+      style="'clip: rect(0, 8.53333rem, 12rem, 0px)'" 
+      src="../../../lib/base/yiyun_light/assets/tongdengguan@2x.png" 
       class="coverlight">
     <div 
       class="touchbox" 
@@ -29,12 +34,24 @@ export default {
     brightness:{
       type:Number
     },
+    switch_status:{
+      type:String,
+      default:"on"
+    }
   },
   data(){
     return {
       scale:""
     }
   },
+  // watch:{
+  //   switch_status(){
+  //     if(switch_status=='of'){
+  //       let coverlight = document.querySelectorAll(".coverlight")[0]  
+  //       coverlight.style.clip = `rect(${0/37.5 +'rem'} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
+  //     }
+  //   }
+  // },
   methods: {
     touchStart(e){
       console.log(e)

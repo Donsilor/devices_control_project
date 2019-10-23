@@ -39,7 +39,7 @@
 
 <script>
 
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 
 export default {
   props: {
@@ -55,9 +55,22 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      status_bar_height: 25,
+      navigation_bar_height: 44
+    }
   },
-  computed: mapState(['status_bar_height', 'navigation_bar_height']),
+  // computed: mapState(['status_bar_height', 'navigation_bar_height']),
+  created() {
+    HdSmart.ready(() => {
+      if (window.status_bar_height) {
+        this.status_bar_height = window.status_bar_height / dpr
+      }
+      if (window.navigation_bar_height) {
+        this.navigation_bar_height = window.navigation_bar_height / dpr
+      }
+    })
+  },
   methods: {
     goDetail() {
       HdSmart.UI.goDeviceDetail()
@@ -74,17 +87,24 @@ export default {
 </script>
 <style lang="less" scoped>
 /* topbar */
+@status_bar_height: 25PX;
+@navigation_bar_height: 44PX;
 .topbar-block, .topbar-fixed{
   background-color: #fff;
   // background-color: transparent;
 }
 .topbar-fixed{
   border-bottom: 0;
+  .statusbar {
+     height: @status_bar_height;
+  }
+  
 }
 .topbar .navbar {
   display: flex;
   align-items: center;
   justify-content: center;
+   height: @navigation_bar_height;
   .left a.icon-return {
     position: absolute;
     left: 40px;
@@ -101,5 +121,6 @@ export default {
     display: inline-block;
   }
 }
+
 </style>
 
