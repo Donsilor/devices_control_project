@@ -139,11 +139,11 @@ export default {
     },
     // 全开
     setOpen(){
-      this.controlDevice('switch', 'on')
+      this.controlDevice('switch', 'off')
     },
     //全关
     setClose(){
-      this.controlDevice('switch', 'off')
+      this.controlDevice('switch', 'on')
     },
     // setMode(val) {
     //   if (val=='0') {
