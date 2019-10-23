@@ -47,7 +47,7 @@
         <div class="btn-wrap">
           <div
             :class="[{'active': curtainStatus === 'opening' },'btn-open btn center']"
-            @click="setMode(0)" />
+            @click="setOpen" />
           <div class="btn-name">全开</div>
         </div>
         <div class="btn-wrap">
@@ -62,7 +62,7 @@
         >
           <div
             :class="[{ 'active': curtainStatus === 'closing' }, 'btn btn-close center']"
-            @click="setMode(100)" />
+            @click="setClose" />
           <div class="btn-name">全关</div>
         </div>
       </div>
@@ -92,7 +92,11 @@ export default {
   watch: {
     'device.stateChange'(){
       this.$nextTick(()=>{
-         this.newRatio()
+        //  this.newRatio()
+                  //如果窗帘幅度发生改变
+         if (this.deviceAttrs.open_pencentage) {
+           this.newRatio()
+         }
          if (this.deviceAttrs.open_pencentage=='100') {
            this.curtainStatus='窗帘已关闭'
          }
@@ -124,8 +128,8 @@ export default {
       let cover = this.$refs.cover
       let s = cover.offsetWidth-14
       let pauseRange = s/maxW*100
-      console.log('窗帘的最大宽度', maxW)
-      console.log('cover宽度', s)
+      // console.log('窗帘的最大宽度', maxW)
+      // console.log('cover宽度', s)
       console.log('暂停的百分比计算（cover宽度 / 窗帘的最大宽度 * 100）', pauseRange)
       // this.controlDevice('open_pencentage', pauseRange,{'switch':'pause'})
       this.controlDevice('switch', 'pause')
@@ -133,21 +137,28 @@ export default {
       //   this.controlDevice('switch', 'on')
       // })
     },
-    // 全关
-    setMode(val) {
-      if (val=='100') {
-        this.animate(this.$refs.cover, 572, 1, 15).then(() => {
-          this.controlDevice('open_pencentage', val)
-          this.controlDevice('switch', 'on')
-        })
-      }
-      if (val=='0') {
-        this.animate(this.$refs.cover, 14, -1, 15).then(() => {
-          this.controlDevice('open_pencentage', val)
-          this.controlDevice('switch', 'on')
-        })
-      }
+    // 全开
+    setOpen(){
+      this.controlDevice('switch', 'on')
     },
+    //全关
+    setClose(){
+      this.controlDevice('switch', 'off')
+    },
+    // setMode(val) {
+    //   if (val=='0') {
+    //     this.animate(this.$refs.cover, 14, -1, 15).then(() => {
+    //       // this.controlDevice('open_pencentage', val)
+    //       this.controlDevice('switch', 'on')
+    //     })
+    //   }
+    //   if (val=='100') {
+    //     this.animate(this.$refs.cover, 572, 1, 15).then(() => {
+    //       // this.controlDevice('open_pencentage', val)
+    //       this.controlDevice('switch', 'off')
+    //     })
+    //   }
+    // },
     touchStart(e){
       console.log(e)
     },
@@ -175,7 +186,7 @@ export default {
     newRatio(){
        // let maxW = this.$refs.isgray.offsetWidth-14
        let maxW = document.querySelector('.isgray').clientWidth-14
-      console.log('窗帘的最大宽度api', maxW)
+      // console.log('窗帘的最大宽度api', maxW)
       this.coverWidth = this.deviceAttrs.open_pencentage/100*maxW
       let cover = this.$refs.cover
        cover.style.width = this.coverWidth +14+"px"

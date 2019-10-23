@@ -2,8 +2,8 @@ import Mock from 'mockjs'
 
 let res = {
     "connectivity": "online", //l
-    "switch": 'on', //开关
-    "open_pencentage":100 , 
+    "switch": 'off', //开关
+    "open_pencentage":0 , 
 }
 export function generateSnapShot() {
     return Mock.mock({
@@ -22,7 +22,12 @@ export function set(data){
         attr.negative_ion_switch_status = attr.negative_ion_switch
     }
     if(attr.switch){
-        attr.switch_status = attr.switch
+        if (attr.switch=='on') {
+          attr.open_pencentage=40
+        }
+        if (attr.switch=='off') {
+          attr.open_pencentage= 20
+        }
     }
     res = Object.assign({}, res, attr)
     return Mock.mock({
