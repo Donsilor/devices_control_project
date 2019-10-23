@@ -14,6 +14,7 @@
               <span class="txt">速冷</span>
               <input
                 :checked="checkedColdValue"
+                :disabled="coldDisabled"
                 class="right switch switch-anim"
                 type="checkbox"
                 @click="e => cold(e, coldValue)">
@@ -40,7 +41,7 @@
                 class="low" ><span>2℃</span></div>
               <div class="high"><span>8℃</span></div>
             </div> -->
-            <div class="temperature">{{ deviceAttrs.level_container | filterTm }}<sup>°C</sup></div>
+            <div class="temperature">{{ deviceAttrs.holiday=="on"?'17':deviceAttrs.level_container | filterTm }}<sup>°C</sup></div>
             <button
               :class="['control', 'add', {'disabed': coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on'}]"
               :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on'"
@@ -73,6 +74,7 @@
               <span class="txt">速冻</span>
               <input
                 :checked="checkedFrozenValue"
+                :disabled="frozenDisabled"
                 class="right switch switch-anim"
                 type="checkbox"
                 @click="e => frozen(e, frozenValue)">
@@ -261,6 +263,8 @@ export default {
       brightness: 0,
       checkedColdValue: false,
       checkedFrozenValue: false,
+      coldDisabled: false,
+      frozenDisabled: false,
     }
   },
   computed: {
@@ -304,9 +308,9 @@ export default {
     "deviceAttrs.holiday"() {
       if(this.deviceAttrs.holiday == 'on') {
         this.coldValue = 'off'
-        this.frozenValue = 'off'
+        // this.frozenValue = 'off'
         this.checkedColdValue = false
-        this.checkedFrozenValue = false
+        // this.checkedFrozenValue = false
       }
     },
     "deviceAttrs.intelligent"() {
@@ -316,11 +320,34 @@ export default {
         this.checkedColdValue = false
         this.checkedFrozenValue = false
       }
+    },
+    "deviceAttrs.fast_cool"() {
+      this.coldDisabled = false
+      if(this.deviceAttrs.fast_cool == 'on') {
+        this.coldValue = 'on'
+        this.checkedColdValue = true
+      }
+      if(this.deviceAttrs.fast_cool == 'off') {
+        this.coldValue = 'off'
+        this.checkedColdValue = false
+      }
+    },
+    "deviceAttrs.fast_frozen"() {
+      this.frozenDisabled = false
+      if(this.deviceAttrs.fast_frozen == 'on') {
+        this.frozenValue = 'on'
+        this.checkedFrozenValue = true
+      }
+      if(this.deviceAttrs.fast_frozen == 'off') {
+        this.frozenValue = 'off'
+        this.checkedFrozenValue = false
+      }
     }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
+      HdSmart.UI.setStatusBarColor(2)
     })
   },
   methods: {
@@ -330,9 +357,9 @@ export default {
     },
     setMode(val, boolean) {
       if (this.isClose) return
-      if (this.checkedColdValue == true && this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冷和速冻模式', 1000)
+      // if (this.checkedColdValue == true && this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冷和速冻模式', 1000)
       if (this.checkedColdValue == true) return HdSmart.UI.toast('请先退出速冷模式', 1000)
-      if (this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冻模式', 1000)
+      // if (this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冻模式', 1000)
       var value
       if(boolean == 'on') {
         value = 'off'
@@ -399,7 +426,7 @@ export default {
       this.timeValue = val
     },
     cold(e, val) {
-      // console.log(e.target.checked, val)
+      this.coldDisabled = true
       var value
       if(val == 'on') {
         value = 'off'
@@ -407,34 +434,16 @@ export default {
         value = 'on'
       }
       this.controlDevice('fast_cool', value)
-      .then(() => {
-        if(e.target.checked == true) {
-          this.coldValue = 'on'
-          this.checkedColdValue = true
-        } else {
-          this.coldValue = 'off'
-          this.checkedColdValue = false
-        }
-      })
     },
     frozen(e, val) {
+      this.frozenDisabled = true
       var value
       if(val == 'on') {
         value = 'off'
       } else {
         value = 'on'
       }
-      // console.log(e.target.checked, val)
       this.controlDevice('fast_frozen', value)
-      .then(() => {
-        if(e.target.checked == true) {
-          this.frozenValue = 'on'
-          this.checkedFrozenValue = true
-        } else {
-          this.frozenValue = 'off'
-          this.checkedFrozenValue = false
-        }
-      })
     },
     controlDevice(attr, value) {
       return this.doControlDevice({
@@ -452,6 +461,7 @@ export default {
 <style lang="less" scoped>
 .body {
   min-height: 100%;
+  touch-action: none;
 }
 .page {
   height: 100vh;
