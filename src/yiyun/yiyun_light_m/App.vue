@@ -308,7 +308,7 @@ export default {
 
   }
 .animation {
-  background: url("~@lib/@{imgPath}/btn_ac_mode_h@2x.png") no-repeat;
+  background: url("~@lib/base/yiyun_light/assets/tongdengbaiguangbaise@2x.png") no-repeat;
   // background: #fff;
   background-size: 100% 100%;
 }

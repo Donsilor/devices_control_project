@@ -306,6 +306,8 @@ export default {
   },
   watch: {
     "deviceAttrs.holiday"() {
+      this.coldDisabled = false
+      this.frozenDisabled = false
       if(this.deviceAttrs.holiday == 'on') {
         this.coldValue = 'off'
         // this.frozenValue = 'off'
@@ -314,6 +316,8 @@ export default {
       }
     },
     "deviceAttrs.intelligent"() {
+      this.coldDisabled = false
+      this.frozenDisabled = false
       if(this.deviceAttrs.intelligent == 'on') {
         this.coldValue = 'off'
         this.frozenValue = 'off'
@@ -358,7 +362,7 @@ export default {
     setMode(val, boolean) {
       if (this.isClose) return
       // if (this.checkedColdValue == true && this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冷和速冻模式', 1000)
-      if (this.checkedColdValue == true) return HdSmart.UI.toast('请先退出速冷模式', 1000)
+      // if (this.checkedColdValue == true) return HdSmart.UI.toast('请先退出速冷模式', 1000)
       // if (this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冻模式', 1000)
       var value
       if(boolean == 'on') {

@@ -45,7 +45,9 @@
   </div>
 </template>
 
-<style>
+<style lang="less">
+@status_bar_height: 25PX;
+@navigation_bar_height: 44PX;
 .status_bar_block{
     height: 0;
 }
@@ -126,9 +128,12 @@ export default {
     props: ["barHeight"],
     data() {
         return {
-            ios: /iPad|iPhone|iPod/.test(navigator.userAgent)
+          status_bar_height: 25,
+          navigation_bar_height: 44,
+          ios: /iPad|iPhone|iPod/.test(navigator.userAgent)
         }
     },
+   
     computed: {
         tvStatus() {
             return this.$store.state.tvStatus
@@ -149,6 +154,16 @@ export default {
             return this.tvStatus.tvOnlineStatus != 1 || this.spVisible
         },
         ...mapState(['status_bar_height', 'navigation_bar_height', 'isStatusBarShow'])
+    },
+    created() {
+      HdSmart.ready(() => {
+        if (window.status_bar_height) {
+          this.status_bar_height = window.status_bar_height / dpr
+        }
+        if (window.navigation_bar_height) {
+          this.navigation_bar_height = window.navigation_bar_height / dpr
+        }
+      })
     },
     mounted() {
     },

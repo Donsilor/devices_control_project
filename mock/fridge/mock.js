@@ -50,13 +50,14 @@ export function set(data) {
       }
       if(attr.intelligent == 'on') {
         attr.holiday = 'off'
+        attr.fast_frozen = 'off'
+        attr.fast_cool = 'off'
       }
       if(attr.holiday == 'on') {
-        // attr.level_container = 17
         attr.intelligent = 'off'
+        attr.fast_cool = 'off'
       }
       if(attr.fast_frozen == 'on') {
-        // attr.holiday = 'off'
         attr.intelligent = 'off'
       }
       if(attr.fast_cool == 'on') {
