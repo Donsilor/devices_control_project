@@ -21,14 +21,20 @@ export function set(data){
     if(attr.negative_ion_switch){
         attr.negative_ion_switch_status = attr.negative_ion_switch
     }
-    // if(attr.switch){
-    //     if (attr.switch=='on') {
-    //       attr.open_percentage=40
-    //     }
-    //     if (attr.switch=='off') {
-    //       attr.open_percentage= 20
-    //     }
-    // }
+    if(attr.switch){
+        if (attr.switch=='on') {
+          var a = setInterval(() => {
+            attr.open_percentage +=20
+            if (attr.open_percentage === 100) {
+              clearInterval(a)
+            }
+          }, 100)
+          
+        }
+        if (attr.switch=='off') {
+          attr.open_percentage= 20
+        }
+    }
     res = Object.assign({}, res, attr)
     return Mock.mock({
         code: 0

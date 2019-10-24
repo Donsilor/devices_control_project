@@ -2,9 +2,9 @@
 <template>
   <div class="body">
     <div class="page">
-      <topbar
+      <NewTopBar
         :title="device.device_name"
-        bak-color="#000" />
+        bak-color="#000"/>
       <div class="main center">
         <div
           ref="isgray"
@@ -79,7 +79,8 @@ export default {
       // 点击中部到指定幅度按钮显示的信息
       coverWidth:"",
       timeId: '',
-      curtainStatus: ''
+      curtainStatus: '',
+      btnActive: ''
     }
   },
   computed: {
@@ -92,16 +93,23 @@ export default {
   watch: {
     'device.stateChange'(){
       this.$nextTick(()=>{
-         this.newRatio()
+        if (this.btnActive === 'kai'||this.btnActive === 'guan'||this.btnActive === 'stop') {
+          this.newRatio()
+        }
                   //如果窗帘幅度发生改变
         //  if (this.deviceAttrs.open_percentage) {
         //    this.newRatio()
         //  }
+        if (this.btnActive === 'kai') {
+            this.curtainStatus='opening'
+        } else if (this.btnActive === 'guan') {
+            this.curtainStatus='closing' 
+        }
          if (this.deviceAttrs.open_percentage=='100') {
-           this.curtainStatus='窗帘已关闭'
+           this.curtainStatus='opened'
          }
          if (this.deviceAttrs.open_percentage=='0') {
-           this.curtainStatus='窗帘已打开'
+           this.curtainStatus='closed'
          }
       })
     }
@@ -118,7 +126,8 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setPause() {
-      // this.curtainStatus = 'opened'
+      this.btnActive = 'stop'
+      this.curtainStatus = ''
       this.$refs['btn-pause'].classList.add('active')
       setTimeout(() => {
         this.$refs['btn-pause'].classList.remove('active')
@@ -131,34 +140,20 @@ export default {
       // console.log('窗帘的最大宽度', maxW)
       // console.log('cover宽度', s)
       console.log('暂停的百分比计算（cover宽度 / 窗帘的最大宽度 * 100）', pauseRange)
-      // this.controlDevice('open_percentage', pauseRange,{'switch':'pause'})
       this.controlDevice('switch', 'pause')
-      // .then(()=>{
-      //   this.controlDevice('switch', 'on')
-      // })
     },
     // 全开
     setOpen(){
-      this.controlDevice('switch', 'off')
+      this.btnActive = 'kai'
+      this.controlDevice('switch', 'on')
+      .then(()=>{
+      })
     },
     //全关
     setClose(){
-      this.controlDevice('switch', 'on')
+      this.btnActive = 'guan'
+      this.controlDevice('switch', 'off')
     },
-    // setMode(val) {
-    //   if (val=='0') {
-    //     this.animate(this.$refs.cover, 14, -1, 15).then(() => {
-    //       // this.controlDevice('open_percentage', val)
-    //       this.controlDevice('switch', 'on')
-    //     })
-    //   }
-    //   if (val=='100') {
-    //     this.animate(this.$refs.cover, 572, 1, 15).then(() => {
-    //       // this.controlDevice('open_percentage', val)
-    //       this.controlDevice('switch', 'off')
-    //     })
-    //   }
-    // },
     touchStart(e){
       console.log(e)
     },
@@ -187,7 +182,7 @@ export default {
        // let maxW = this.$refs.isgray.offsetWidth-14
        let maxW = document.querySelector('.isgray').clientWidth-14
       console.log('窗帘的最大宽度api', maxW)
-      this.coverWidth = this.deviceAttrs.open_percentage/100*maxW
+      this.coverWidth = (100-this.deviceAttrs.open_percentage)/100*maxW
       console.log(this.deviceAttrs.open_percentage,1111111111)
       
       let cover = this.$refs.cover
@@ -337,7 +332,8 @@ export default {
     .isgray {
       width: 75%;
       height: 204px;
-      background: rgb(234, 235, 238);
+      // background: rgb(234, 235, 238);
+      background: rgba(0, 0, 0,0.1);
       border-radius: 1px;
       margin-top: 25vh;
       position: relative;
@@ -404,7 +400,8 @@ export default {
       width: 100%;
       height: 306px;
       border-radius: 40px 40px 0 0;
-      background: rgba(136, 138, 137,.4);
+      // background: rgba(136, 138, 137,.4);
+      background: rgba(0, 0, 0, 0.1);
       overflow: hidden;
       display: flex;
       justify-content: space-evenly;
@@ -506,14 +503,6 @@ export default {
         opacity: 1;
         .btn-open{
           z-index:999999;
-        }
-      }
-      .btn {
-        &.active {
-           &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        border-color: #ffbf00;
-      }
         }
       }
     }

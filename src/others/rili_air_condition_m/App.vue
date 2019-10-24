@@ -259,7 +259,7 @@ export default {
             /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.mode) {
         case 'cold':
-          return '#00D5FF'
+          return '#00A3FF'
           break
         case 'heat':
           return '#FF5F00'
@@ -714,6 +714,24 @@ export default {
       }
     }
     .btn-cold {
+    //    z-index: 1;
+    //   position: absolute;
+    //   top: 0px;
+    //   left:40%;
+    //   overflow: hidden;
+    //   &::after{
+    //   background-color: rgba(0, 0, 0,1);
+    //   content: '';
+    //   position: absolute;
+    //   top: 0;
+    //   bottom: 0;
+    //   left: 0;
+    //   right: 0;
+    //   z-index: -1;
+    //   background: url('~@lib/@{imgPath1}/bg_01.png') 0 / cover fixed;
+    //   filter: blur(20px);
+    //   margin: -30px;
+    // }
       &::before {
         background-image: url('~@lib/@{imgPath1}/cold.png');
         background-size: 100% 100%;
