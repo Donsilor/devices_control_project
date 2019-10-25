@@ -3,16 +3,18 @@
     :class="[{'topbar-nobg':transparent}, {'topbar-black': bgBlack}]"
     class="topbar">
     <div
+      :style="{ 'background': bgColor }" 
       class="topbar-block" />
     <div
       :style="{ background: bgColor }"
       :class="['topbar-fixed', className]">
 
       <div
-        :style="{height:status_bar_height+'px'}"
+        :style="{height:status_bar_height+'px','background':'#fff'}"
         class="statusbar" />
       <div
-        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
+        ref="newNavbar"
+        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}" 
         class="newNavbar">
         <div
           class="left"
@@ -23,7 +25,7 @@
             class="icon-return" />
         </div>
         <div
-          v-if="showRight"
+          v-if="showRight&&!rightSearch"
           class="right">
           <template v-if="buttons">
             <a
@@ -41,18 +43,29 @@
               @click.prevent="goDetail" />
           </template>
         </div>
+        <div 
+          v-show="rightSearch" 
+          class="right">
+          <router-link
+            to="/search"
+            class="icon-search" />
+        </div>
 
       </div>
       <div 
-        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
-        class="header-bottom" >
+        ref="header-bottom"
+        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}" 
+        class="header-bottom">
         <div
-          :style="{ 'color': bakColor }"
+          ref="title"
+          :style="{ 'color': bakColor }" 
           class="title">{{ title }}</div>
         <div
           v-if="shutdown"
+          ref="shutdown"
           class="header-bottom-right"
           @click="shutdownCallback"/>
+          
           <!-- <slot /> -->
       </div>
 
@@ -117,12 +130,18 @@ export default {
     className: {
       type: String,
       default: ''
+    },
+    scroll:{
+       type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       status_bar_height: 25,
-      navigation_bar_height: 44
+      navigation_bar_height: 44,
+      scrollTop:0,
+      rightSearch:false
     }
   },
   created() {
@@ -134,6 +153,15 @@ export default {
         this.navigation_bar_height = window.navigation_bar_height / dpr
       }
     })
+  },
+  mounted(){
+    if(this.scroll){
+       addEventListener('scroll',this.scrollfn)
+    }
+   
+  },
+  destroyed(){
+    removeEventListener('scroll',this.scrollfn)
   },
   methods: {
     goBack() {
@@ -159,6 +187,45 @@ export default {
     },
     shutdownCallback(){
       this.$emit("shutdownCallback")
+    },
+  
+    scrollfn(){
+      this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      let status = document.querySelectorAll('.status')[0]  
+      let statusbar = document.querySelectorAll('.statusbar')[0]   
+      let newNavbar = document.querySelectorAll('.newNavbar')[0]   
+      let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]   
+      let statusTop = status.offsetTop-  this.scrollTop
+      // let w = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2    如果标题要居中
+      if(status&& status_bar_fixed){
+        if(statusTop<=100){
+            status_bar_fixed.style.position = 'fixed'
+            status_bar_fixed.style.top = statusbar.offsetHeight+newNavbar.offsetHeight +"px"
+        }else{
+            status_bar_fixed.style.position = 'absolute'
+            status_bar_fixed.style.top = "0"
+        }
+      } 
+      let h = this.$refs['header-bottom'].offsetHeight
+      let b = (h/100)*this.scrollTop
+      let l = (44/100)*this.scrollTop
+      let f = (-6/100)*this.scrollTop+24
+      b = b>=h?h:b
+      l = l>=44?44:l
+      f = f<=18?18:f
+      this.$refs.title.style.bottom = b + 'px'
+      this.$refs.title.style.left = l + 'px'
+       this.$refs.title.style.fontSize = f + 'px'
+      if( this.scrollTop>=90){
+        this.$refs.shutdown.style.display='none'  
+        this.$refs.newNavbar.style.background='#fff'  
+        this.rightSearch = true
+      }else{
+        this.$refs.shutdown.style.display='block'  
+        this.$refs.newNavbar.style.background=''  
+         this.rightSearch = false
+      }
+
     }
   }
 }
@@ -172,8 +239,15 @@ export default {
 .topbar{
   position: relative;
   z-index: 9999;
+  .icon-search{
+    &::before{
+      font-size: 20PX;
+      position: relative;
+      bottom: 14px;
+    }
+}
   .topbar-block {
-    height: 100PX;
+    height: @status_bar_height+@navigation_bar_height*2;
   }
   .topbar-fixed {
     position: fixed;
@@ -186,6 +260,7 @@ export default {
     // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
   }
 }
+
 
 
 
@@ -225,8 +300,10 @@ export default {
 .header-bottom{
   display: flex;
   justify-content: space-between;
-  padding: 0 48px;
+  margin: 0 48px;
+  align-items: center;
  .title {
+   position: relative;
     text-align: center;
     font-size: 17PX;
     font-family: PingFangSC-Medium;

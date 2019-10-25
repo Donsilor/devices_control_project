@@ -17,6 +17,7 @@
     </div>
 
     <topbar
+      ref="topbar"
       :back="goBack"
       :title="title" />
 
@@ -27,9 +28,10 @@
       class="filters-placeholder" />
     <div
       v-if="!error"
-      :class="{active:filterVisible}"
-      :style="{top: isStatusBarShow ? (status_bar_height + navigation_bar_height + 40) + 'px' : (status_bar_height + navigation_bar_height) + 'px' }"
+      ref="filters"
+      :class="{active:filterVisible}" 
       class="filters">
+      <!-- :style="{top: isStatusBarShow ? (status_bar_height + navigation_bar_height + 40) + 'px' : (status_bar_height + navigation_bar_height) + 'px' }" -->
       <!-- 地区 -->
       <dl
         v-show="filterVisible"
@@ -523,6 +525,10 @@ export default {
     }
   },
   mounted() {
+    let topbar = document.querySelectorAll('.topbar')[0]
+    console.log(topbar.offsetHeight,'sss')
+    console.log( this.$refs.filters,'222')
+    this.$refs.filters.style.top = topbar.offsetHeight +"px"
     service.RemoteController({ 'show': true })
     this.onPageInit()
     this.$Lazyload.$on("error", function({ el, src, loading }) {
@@ -533,6 +539,8 @@ export default {
       }
     })
     window.addEventListener("scroll", this.loadMore)
+    // filters
+    
   },
   destroyed() {
     window.removeEventListener("scroll", this.loadMore)
@@ -597,10 +605,16 @@ export default {
       )
     },
     loadMore: _.debounce(function() {
+
       var scrollTop =
         document.documentElement.scrollTop ||
         window.pageYOffset ||
         document.body.scrollTop
+      if(scrollTop>=200){
+        this.filterVisible = false
+      }else{
+        this.filterVisible = true
+      }
       if ( scrollTop > 0 && scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 15) {
         // if (this.$store.state.detailVisible) {
         //   return

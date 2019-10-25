@@ -108,11 +108,13 @@ export default {
    left: 50%;
    transform: translateX(-50%);
    .touch{
-      width: 66px;
-      height: 24px;
+      width: 60px;
+      height: 14px;
       // height: 32px;
       position: absolute;
-      top: 0px;
+      border-top: 2px #BF954C solid;
+      border-bottom: 2px #BF954C solid;
+      top: 6px;
       left: 50%;
       transform: translateX(-50%);
       background-size: 100% 100%;

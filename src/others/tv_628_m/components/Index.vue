@@ -9,8 +9,8 @@
     <!-- 顶部导航菜单 -->
     <new-topbar
       :shutdown="true"
+      :scroll="true"
       :title="device_name"
-      bg-color="#fff"
       bak-color="#000"
       @shutdownCallback="cmd('rcPower')"
     />
@@ -29,10 +29,7 @@
     <!-- 设备状态提示 -->
     <!-- :bar-height="barHeight"  -->
 
-    <status-tip
-      v-show="device_uuid"
-     
-    />
+    
     <!--    <div class="wrap-title">-->
     <!--      <div class="title mar">栏目分类</div>-->
     <!--    </div>-->
@@ -51,34 +48,46 @@
 
     <!-- 栏目分类 -->
     <div 
-      v-show="activeIndex==0" 
-      class="swiper mar" >
-      <div
-        v-if="noVal==true"
-        @click="pageInit">
-        <img src="~@lib/base/tv/assets/img_default_recommend.png">
-      </div>
-      <swiper
-        v-if="homePageInfo.length"
-        ref="swiper"
-        :options="swiperOption">
-        <swiper-slide
-          v-for="(item,index) in homePageInfo"
-          :key="index">
-          <a
-            :style="{backgroundImage:'url('+item.pictureUrl+')'}"
-            href="javascript:void(0)">
-            <span class="title">{{ item.title }}</span>
-            <span
-              v-if="+item.channelId < 5"
-              class="channelName">{{ item.channelId | channelName }}</span>
-          </a>
-        </swiper-slide>
+      style="position:relative" 
+      class="status">
+
+      <status-tip
+        v-show="device_uuid"
+        type="首页"   
+
+      />
+      <div 
+        v-show="activeIndex==0" 
+        class="swiper mar" >
+
         <div
-          slot="pagination"
-          class="swiper-pagination" />
-      </swiper>
+          v-if="noVal==true"
+          @click="pageInit">
+          <img src="~@lib/base/tv/assets/img_default_recommend.png">
+        </div>
+        <swiper
+          v-if="homePageInfo.length"
+          ref="swiper"
+          :options="swiperOption">
+          <swiper-slide
+            v-for="(item,index) in homePageInfo"
+            :key="index">
+            <a
+              :style="{backgroundImage:'url('+item.pictureUrl+')'}"
+              href="javascript:void(0)">
+              <span class="title">{{ item.title }}</span>
+              <span
+                v-if="+item.channelId < 5"
+                class="channelName">{{ item.channelId | channelName }}</span>
+            </a>
+          </swiper-slide>
+          <div
+            slot="pagination"
+            class="swiper-pagination" />
+        </swiper>
+      </div>
     </div>
+   
     <!-- 列表 -->
     
     <div class="index-list">
@@ -227,7 +236,6 @@
   }
 }
 .search-screen-bg{
-    background: #fff;
     padding-top: 20px;
   .search-screen{
     overflow: hidden;
@@ -736,7 +744,7 @@ export default {
     //   }
     // })
     // 获取推荐电视信息
-    this.allList = []
+    // this.allList = []
     for (var i in this.channels) {
       this.filterData(this.channels[i].channelId)
     }
@@ -837,6 +845,7 @@ export default {
       service.getChannelData(channelId, (err, data) => {
         console.log('data',data)
         if (err) {
+          console.log(err)
           this.error = true
           return
         }
