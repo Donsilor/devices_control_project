@@ -24,7 +24,7 @@
     </div>
     <div class="main">
       <div 
-        v-show="timeList!=''" 
+        v-show="timeList.result.list&&timeList.result.list.length!==0" 
         class="timeBox">
         <div class="title">
           <span>起始时间</span>
@@ -32,15 +32,15 @@
         </div>
         <ul>
           <li 
-            v-for="item in timeList" 
+            v-for="item in timeList.result.list" 
             class="list">
-            <span>{{ item.day }}</span>
-            <span class="isgray">{{ item.time }}</span>
+            <span>{{ getDateTime(item.updated_at,'fulltime') }}</span>
+            <span class="isgray">{{ item.updated_at }}</span>
           </li>
         </ul>
       </div>
       <div 
-        v-show="timeList==''" 
+        v-show="timeList.result.list&&timeList.result.list.length==0" 
         class="picBox" >
         <img src="../../../../lib/base/somatosensor/assets/kong.png">
         <p>空空如也，暂无历史记录</p>
@@ -49,18 +49,100 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
    data() {
     return {
-      timeList:[
-        {day:'2019/09/27 12:33',time:'10小时32分钟'},
-        {day:'2019/09/26 16:57',time:'32小时56分钟'},
-        {day:'2019/09/25 23:24',time:'1小时7分钟'}
-      ]
+      currentdate:'',
+      currentdate1:'',
+      timeList:{},
+      // timeList:[
+      //   // {day:'2019/09/27 12:33',time:'10小时32分钟'},
+      //   // {day:'2019/09/26 16:57',time:'32小时56分钟'},
+      //   // {day:'2019/09/25 23:24',time:'1小时7分钟'}
+      // ]
     }
   },
+  computed: {
+    ...mapGetters(['isOffline']),
+    ...mapState(['device', 'deviceAttrs']),
+  },
+  created() {
+        HdSmart.ready(() => {
+      this.getDeviceInfo()
+      .then(()=>{
+
+      })
+      // HdSmart.UI.setStatusBarColor(2)
+    })
+    // 当前时间和一个月前时间
+    var date = new Date()
+    function fillz(num) {
+        num = num + ''
+        return num.length == 1 ? '0' + num : num
+    }
+    this.currentdate=date.getFullYear() + fillz(date.getMonth() + 1) + fillz(date.getDate())
+    this.currentdate1=date.getFullYear() + fillz(date.getMonth() ) + fillz(date.getDate())
+    HdSmart.Device.control({
+      'date_start':this.currentdate1,
+      'date_end':this.currentdate,
+      'page':{
+        'size':50,
+        'begin':0
+      }
+    },(data)=>{
+      console.log(data)
+      this.timeList = data
+      console.log(this.timeList.result)
+      this.timeList.result = JSON.parse(this.timeList.result)
+    },()=>{
+
+    },'da_get_dev_alert_list')
+  },
   methods: {
-    
+        ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    getDateTime(date, type) {
+      // 时间格式获取
+      if (!date) return
+      let d = new Date(+date)
+      let year = d.getFullYear()
+      let month =
+        d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1
+      let day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate()
+      let hours = d.getHours() < 10 ? '0' + d.getHours() : d.getHours()
+      let minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()
+      let seconds = d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds()
+      if (type === 'fulltime') {
+        return (
+          year +
+          '/' +
+          month +
+          '/' +
+          day +
+          ' ' +
+          hours +
+          ':' +
+          minutes +
+          ':' +
+          seconds
+        )
+      } else if (type === 'hms') {
+        return hours + ':' + minutes + ':' + seconds
+      } {
+        return year + '-' + month + '-' + day
+      }
+    },
+    controlDevice(attr, value,params) {
+      return this.doControlDevice({
+        nodeid: `curtain.main.${attr}`,
+        params: {
+          attribute: {
+            [attr]: value,
+            ...params
+          }
+        }
+      })
+    },
   }
 }
 </script>
