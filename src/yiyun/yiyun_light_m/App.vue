@@ -40,11 +40,11 @@
             @click="setSwitch" />
           <div class="btn-name">{{ isClose||isOffline?'开灯':'关灯' }}</div>
         </div>
-        <span v-if="!isClose&&(deviceAttrs.category_sub=='02'||deviceAttrs.category_sub=='04')">亮度 {{ ratio }}%</span>
+        <span v-if="!isClose&&(device.category_sub==2||device.category_sub==4)">亮度 {{ ratio }}%</span>
       </div>
       <!-- 按钮 -->
       <div 
-        v-if="!isClose&&(deviceAttrs.category_sub=='02'||deviceAttrs.category_sub=='04')" 
+        v-if="!isClose&&(device.category_sub==2||device.category_sub==4)" 
         class="panel-btn center" >
        
         <div 
@@ -126,6 +126,21 @@ export default {
       this.getDeviceInfo()
       .then(()=>{
         this.newLevel()
+        // console.log(document.documentElement.clientHeight)
+        let h = document.documentElement.clientHeight
+        let a =  document.querySelectorAll('.panel-btn')[0]
+        if(!this.isClose&&(this.device.category_sub==2||this.device.category_sub==4)){
+          if(  h>=812){
+            a.style.bottom = '50px'
+          }else if(h>=667){
+            a.style.bottom = '20px'
+          }else if(h>=568){
+            a.style.bottom = '10px'
+          }else{
+            a.style.bottom = '0'
+          }
+        }
+        
       })
       HdSmart.UI.setStatusBarColor(1)
     })
@@ -146,13 +161,14 @@ export default {
       let coverlight = document.querySelectorAll(".coverlight")[0] 
       touchbox.style.display = 'block'
       coverlight.style.display = 'block'
-      if(this.deviceAttrs.switch_status == 'on'&&(this.deviceAttrs.category_sub=='02'||this.deviceAttrs.category_sub=='04')){
+      console.log('111',this.deviceAttrs.switch_status)
+      if(this.deviceAttrs.switch_status == 'on'&&(this.device.category_sub==2||this.device.category_sub==4)){
           touchbox.style.top = ((100-this.ratio)/100*185)/37.5 +"rem"
         coverlight.style.clip = `rect(${((100-this.ratio)/100*185)/37.5 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
       }else{
          touchbox.style.display = 'none'
-         coverlight.style.display = 'none'
-        // coverlight.style.clip = `rect(${0 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
+        //  coverlight.style.display = 'none'
+        coverlight.style.clip = `rect(${0 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
       }
     
     },
@@ -266,7 +282,7 @@ export default {
    position: relative;
     margin-top: 100px;
     text-align: center;
-    font-size: 36px;
+    font-size: 28px;
     color: #000;
     display: flex;
     justify-content: center;
@@ -308,7 +324,7 @@ export default {
 
   }
 .animation {
-  background: url("~@lib/base/yiyun_light/assets/tongdengbaiguangbaise@2x.png") no-repeat;
+  background: url("~@lib/base/yiyun_light/assets/tongdengguan@2x.png") no-repeat;
   // background: #fff;
   background-size: 100% 100%;
 }
@@ -319,7 +335,7 @@ export default {
   clip:rect(80px 320px 450px 0px); 
 }
 .greycircle {
-  background: url("~@lib/@{imgPath}/btn_ac_mode_h@2x.png") no-repeat;
+  background: url("~@lib/base/yiyun_light/assets/tongdengguan@2x.png") no-repeat;
   background-size: 100% 100%;
 }
 .lianggang{
@@ -371,7 +387,7 @@ export default {
     margin-top: 24px;
     width: 100%;
     border-radius: 40px 40px 0 0;
-    background: rgba(225,225,225,.4);
+    background: rgba(0,0,0,0.1);
     // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
     display: flex;
     justify-content: space-evenly;
@@ -437,6 +453,7 @@ export default {
   }
   .btn-rs {
     &::before {
+      position: absolute;
       content: "";
       display: block;
       width: 44px;

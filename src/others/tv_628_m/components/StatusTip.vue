@@ -1,9 +1,11 @@
 <template>
   <div
     v-if="visible"
+   
     class="status_bar">
     <div class="status_bar_block"/>
     <div
+      ref="status_bar_fixed"
       :style="{top:(status_bar_height + navigation_bar_height - barHeight )+'px'}"
       class="status_bar_fixed">
       <div
@@ -29,8 +31,10 @@
           <span class="link">查看帮助</span>
           <i class="icon-arrow"/>
         </div>
+
         <div
           v-if="tvStatus.tvOnlineStatus==-3"
+
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <i class="icon-error"/>设备已离线 &nbsp;
@@ -78,9 +82,13 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.status_bar{
-    position: relative;
-    z-index: 10000
+.status_bar {
+    position: absolute;
+    width: 100%;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    height: 40px;
 }
 .status_bar .link {
     color: #FFC800;
@@ -125,7 +133,7 @@ import * as service from "../service"
 import {mapState} from 'vuex'
 
 export default {
-    props: ["barHeight"],
+    props: ["barHeight","type"],
     data() {
         return {
           status_bar_height: 25,
@@ -153,7 +161,7 @@ export default {
         visible() {
             return this.tvStatus.tvOnlineStatus != 1 || this.spVisible
         },
-        ...mapState(['status_bar_height', 'navigation_bar_height', 'isStatusBarShow'])
+        ...mapState([ 'isStatusBarShow'])
     },
     created() {
       HdSmart.ready(() => {
@@ -166,6 +174,12 @@ export default {
       })
     },
     mounted() {
+      console.log(this.type)
+      if(this.type==='首页'&& this.$refs.status_bar_fixed){
+        this.$refs.status_bar_fixed.style.position="absolute"
+        this.$refs.status_bar_fixed.style.top="0"
+        
+      }
     },
     methods: {
         goToScreenProjectionPage() {

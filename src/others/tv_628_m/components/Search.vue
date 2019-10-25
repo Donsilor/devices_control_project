@@ -2,7 +2,7 @@
 <template>
   <div class="page-search">
     <!-- 遥控器 --> 
-    <remoteControl/>
+    <!-- <remoteControl/> -->
     <div
       :style="{height:status_bar_height+'px'}"
       class="statusbar" />
@@ -54,7 +54,7 @@
     </div>
     <!-- 搜搜历史 -->
     <div
-      v-show="curpage===1"
+      v-show="curpage===1&&loadState !== 'NO_DATA' "
       class="search_history">
       <div class="hd">
         <a
@@ -76,7 +76,7 @@
     <div
       v-show="curpage===3"
       class="search_result">
-      <div
+      <!-- <div
         v-show="resultData.length && loadState !== 'NO_DATA' || current_channel!=''"
         class="hd clearfix">
         <div class="tab">
@@ -103,7 +103,9 @@
             {{ item.text }}
           </a>
         </div>
-      </div>
+      </div> -->
+
+      
       <ul class="vlist list-m60">
         <li
           v-for="item in resultData"
@@ -111,30 +113,38 @@
           :class="['item-'+item.channelId]"
           class="vitem"
           @click="showDetailInfo(item)">
-          <img
-            v-lazy="getThumbPic(item.pictureUrl)"
-            :data-src1="item.pictureUrl"
-            alt="">
-          <div class="name">{{ item.title }}</div>
-          <span
-            v-show="item.channelId!='001'"
-            class="update">
-            {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
-          </span>
-          <div class="label">
-            <span
-              v-if="item.ispay && item.ispay !== '1'"
-              class="isvip">付费</span>
+          <div class="vitem-left">
+            <img
+              v-lazy="getThumbPic(item.pictureUrl)"
+              :data-src1="item.pictureUrl"
+              alt="">
+            <div 
+              v-if="item.ispay && item.ispay !== '1'" 
+              class="label">付费
+            </div>
           </div>
+          <div class="vitem-right">
+            <div class="title">{{ item.title }}</div>
+            <div class="name">{{ item.cate }}·{{ item.year }}·{{ item.region }}</div>
+            <div class="name">导演：{{ item.director }}</div>
+            <div class="starring">主演：{{ item.starring }}</div>
+            <div class="playstate playstate_unplay">
+              <a
+                href="#"
+                class="btn"
+                @click.prevent="play(cur.playlist2.list[0])">
+              <i class="icon-play" /><span>在电视上播放</span></a>
+            </div>
+            <span
+              class="update">
+              {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
+            </span>
+            
+          </div>
+          
         </li>
       </ul>
-      <!-- 没有数据 -->
-      <div
-        v-show="loadState === 'NO_DATA'"
-        class="nodata">
-        <i />
-        <p>暂无结果</p>
-      </div>
+     
       <!-- 加载更多 -->
       <div class="loadmore">
         <p v-show="!isFirstLoad && loadState === 'LOADING'">正在加载中...</p>
@@ -142,12 +152,42 @@
         <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
       </div>
     </div>
+    <!-- 没有数据 -->
+    <div
+      v-show="loadState === 'NO_DATA'"
+      class="nodata">
+      <i />
+      <p>很抱歉,没有找到相关结果</p>
+    </div>
   </div>
 </template>
 
 <style lang="less" scoped>
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
+.nodata{
+  margin-top: 400px;
+  // display: flex;
+  text-align: center;
+  position: relative;
+  i{
+    display: block;
+    width: 120px;
+    height: 120px;
+    background: url("../../../../lib/base/tv/assets/new/tv_icn_search_wujieguo.png");
+     background-size: 100% 100%;
+     position: absolute;
+     left: 50%;  
+     transform: translateX(-50%)
+  }
+  p{
+    opacity: 0.39;
+    font-family: PingFangSC-Regular;
+    font-size: 24px;
+    color: #000000;
+    padding-top: 196px;
+  }
+}
 .statusbar {
   height: @status_bar_height;
 }
@@ -340,10 +380,35 @@
 }
 
 .vlist {
-  padding: 36px 0 0 38px;
+  padding: 40px 0 0 38px;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+  li{
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 48px;
+    .vitem-left{
+      margin-right: 40px;
+      position: relative;
+       .label {
+        background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 48px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        font-family: PingFangSC-Regular;
+        font-size: 16px;
+        color: #000000;
+        letter-spacing: 0;
+        text-align: center;
+      }
+    }
+  }
   // align-content: space-between;
 }
 .vitem {
@@ -352,9 +417,8 @@
   position: relative;
   margin-right: 36px;
   img {
-    border-radius: 10px;
-    width: 200px;
-    height: 310px;
+    width: 264px;
+    height: 400px;
     display: block;
     object-fit: cover;
     background-color: #ebebeb;
@@ -374,26 +438,14 @@
     border-radius: 0 3px 3px 0;
     display: none;
   }
+
+ 
   /*.label {
         position: absolute;
         right: 0;
         top: 27px;
     }*/
-  .isvip {
-    position: absolute;
-    right: 15px;
-    top: 40px;
-    background: #f26161;
-    width: 60px;
-    line-height: 30px;
-    border-radius: 4px;
-    font-size: 24px;
-    text-align: center;
-    color: #fff;
-    opacity: 0.9;
-    display: block;
-    margin-bottom: 5px;
-  }
+  
   .score {
     position: absolute;
     right: 15px;
@@ -408,14 +460,110 @@
     opacity: 0.9;
     display: none;
   }
-  .name {
-    text-align: center;
+  .title{
+    font-family: PingFangSC-Medium;
+    font-size: 32px;
+    color: #000000;
+    font-weight: 900;
+    line-height: 80px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 2;
-    height: 76px;
+    width: 366px;
+    
   }
+  .name {
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 80px;
+    width: 366px;
+  }
+  .starring{
+    text-align: left;
+    width: 366px;
+  }
+  .playstate {
+  position: absolute;
+  bottom: 0;
+  width: 294px;
+  height: 84px;
+  .btn {
+    /*background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);*/
+    /*border-radius: 45px;*/
+    background-color: #000000;
+    height: 72px;
+    line-height: 72px;
+    display: block;
+    color: #fff;
+    font-size: 36px;
+    text-align: center;
+    width: 294px;
+    height: 72px;
+    i {
+      display: inline-block;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      margin-right: 12px;
+      margin-top: -2px;
+      vertical-align: middle;
+      font-size: 30px;
+    }
+    span{
+      font-size: 28px;
+    }
+    .icon-play,
+    .icon-playing {
+      font-size: 40px;
+
+      &:before {
+        line-height: 20px;
+      }
+    }
+    .icon-time {
+      width: 34px;
+      height: 34px;
+      background-image: url('~@lib/base/tv/assets/icn_history_white_s.png');
+    }
+    /*.icon-playing {*/
+    /*width: 36px;*/
+    /*height: 36px;*/
+    /*display: inline-block;*/
+    /*vertical-align: middle;*/
+    /*margin-right: 12px;*/
+    /*background: url(../../../lib/base/tv/assets/icn_playing_blue_s.png)*/
+    /*no-repeat;*/
+    /*background-size: 100% 100%;*/
+    /*}*/
+  }
+  .btn-outline {
+    color: #13d5dc;
+    background: none;
+    padding-left: 0;
+  }
+  .tip {
+    height: 54px;
+    border-radius: 6px;
+    position: absolute;
+    margin-left: 50px;
+    margin-top: 15px;
+    padding: 0 27px;
+    line-height: 54px;
+    background: rgba(255, 255, 255, 0.1);
+    .arrow {
+      position: absolute;
+      left: -15px;
+      top: 18px;
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-right: 15px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 10px solid transparent;
+    }
+  }
+}
+
 }
 .loadmore {
   text-align: center;
@@ -444,6 +592,17 @@ function splitWord(kw, input) {
 export default {
   data() {
     return {
+      cur: {
+        playlist: [
+          {
+            list: []
+          }
+        ],
+        playlist2: {
+          list: [],
+          list2: []
+        }
+      },
       status_bar_height: 25,
       navigation_bar_height: 44,
       ios: /iPad|iPhone|iPod/.test(navigator.userAgent),
@@ -487,6 +646,14 @@ export default {
       isFirstLoad: true
     }
   },
+   computed: {
+    title() {
+      if (this.cur.title && this.cur.title.length > 10) {
+        return this.cur.title.substr(0, 10) + '...'
+      }
+      return this.cur.title
+    }
+  },
   watch: {
     word(val) {
       if (val == '') {
@@ -514,6 +681,7 @@ export default {
         this.navigation_bar_height = window.navigation_bar_height / dpr
       }
     })
+    this.getData()
   },
   mounted() {
     this.getHistory()
@@ -676,6 +844,7 @@ export default {
       }
     }, 300),
     showDetailInfo(item) {
+      console.log(item)
       this.$store.dispatch('showDetail', item)
       window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
     },
@@ -696,7 +865,53 @@ export default {
         if (err) return
         this.historyData = data.data
       })
-    }
+    },
+    getData() {
+      this.loading = true
+      // this.setHistory()
+      service.getDetaileData(
+        {
+          channelId: this.channelId,
+          vid: this.vid
+        },
+        (err, data) => {
+          this.loading = false
+          if (err) {
+            this.close()
+            return
+          }
+
+          var temp = data.data
+          var playlist = temp.playlist[0]
+          temp.playlist2 = {}
+          temp.playlist2.total = playlist.total
+          temp.playlist2.list = playlist.list.filter(
+            item => item.states == "1"
+          )
+          temp.playlist2.list2 = playlist.list.filter(
+            item => item.states != "1"
+          )
+          this.cur = Object.freeze(temp)
+        }
+      )
+    },
+     //点播：播放状态如playstate
+    play(clickItem,e) {
+      if ( e && e.stopPropagation ) {
+    //因此它支持W3C的stopPropagation()方法 
+       e.stopPropagation() 
+      }else {
+          //否则，我们需要使用IE的方式来取消事件冒泡 
+          window.event.cancelBubble = true 
+      }
+      if (!clickItem) {
+        clickItem =
+          this.cur.playlist2.list[0] || this.cur.playlist2.list2[0]
+      }
+      if (clickItem) {
+        service.playVideo(clickItem.link, clickItem.name)
+      }
+    },
   }
 }
 </script>

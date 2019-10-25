@@ -127,7 +127,9 @@
             :key="item.index"
             class="item-num"
             @click="play(item)">{{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}
-            <!--<span class="tag_new" v-show="item.states">新</span> -->
+            <!-- <span 
+              v-show="item.states" 
+              class="tag_new">新</span> -->
             <span
               v-show="item.drm && item.drm!='0'"
               class="tag_pay">付费</span>
@@ -511,27 +513,32 @@
     }
   }
   li.item-num {
-    width: 112px;
-    height: 112px;
-    line-height: 112px;
+    width: 118px;
+    height: 118px;
+    line-height: 118px;
     text-align: center;
     position: relative;
-    background-color: #f0f0f0;
+    // background-color: #f0f0f0;
+    background: rgba(0,0,0,.04);
     /*border: 1px solid #dbdbdb;*/
     border-radius: 8px;
-    font-size: 30px;
-    color: #222a37;
-    opacity: 0.4;
-    &:active {
-      background: #ebebeb;
-    }
+    font-family: PingFangSC-Regular;
+    font-size: 28px;
+    color: #000000;
+    letter-spacing: 0;
+    // &:active {
+    //   background: #ebebeb;
+    // }
     &.active {
       /*background: #19c9cf
                 url(../../../lib/base/tv/assets/icn_playing_white_s.png)
                 no-repeat center center;
             background-size: 36px 36px;
             text-indent: -9999px;*/
-      color: #ffc700;
+      font-family: PingFangSC-Regular;
+      font-size: 28px;
+      color: #E1B96E;
+      letter-spacing: 0;
     }
   }
   li.item-haspic {
@@ -583,17 +590,26 @@
     position: absolute;
     right: 0;
     top: 0;
-    width: 60px;
+    width: 48px;
     height: 32px;
-    font-size: 24px;
     line-height: 32px;
+    background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
+    font-family: PingFangSC-Regular;
+    font-size: 16px;
+    color: #000000;
+    // letter-spacing: 0;
     text-align: center;
-    color: #fff;
-    border-radius: 4px;
   }
 
   .tag_new {
-    background-image: linear-gradient(-90deg, #ffda00 0%, #ffc700 100%);
+    background:#000;
+    width: 32px;
+    height: 32px;
+    color: #fff;
+    font-family: PingFangSC-Regular;
+    font-size: 20px;
+    letter-spacing: 0;
+    text-align: center;
     /*background-image: url(../../../lib/base/tv/assets/tag_new.png);*/
   }
   .tag_pay {
@@ -758,6 +774,7 @@ export default {
     },
     //点播：播放状态如playstate
     play(clickItem) {
+      console.log(clickItem,'clickItem')
       if (!clickItem) {
         clickItem =
           this.cur.playlist2.list[0] || this.cur.playlist2.list2[0]
