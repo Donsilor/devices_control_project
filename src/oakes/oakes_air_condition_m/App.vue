@@ -535,7 +535,7 @@ export default {
   min-height: 550px;
   overflow-x: hidden;
   position: relative;
-  background-image: url('~@lib/@{imgPath1}/bg_01.png');
+  background-image: url('~@lib/@{imgPath1}/img_bg_01@2x.png');
   background-size: 100% 100%;
   &::-webkit-scrollbar {
 		display: none;
