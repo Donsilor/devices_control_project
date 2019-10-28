@@ -10,6 +10,7 @@
     <new-topbar
       :shutdown="true"
       :scroll="true"
+      :search="true"
       :title="device_name"
       bak-color="#000"
       @shutdownCallback="cmd('rcPower')"

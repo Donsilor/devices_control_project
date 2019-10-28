@@ -47,7 +47,7 @@
           </template> -->
         </div>
         <div 
-          v-show="rightSearch" 
+          v-show="rightSearch&&search" 
           class="right-search" 
           @click="$router.push('/search')">
           <p/>
@@ -135,6 +135,10 @@ export default {
     },
     scroll:{
        type: Boolean,
+      default: false
+    },
+    search:{
+      type: Boolean,
       default: false
     }
   },
@@ -237,13 +241,13 @@ export default {
       if( this.scrollTop>=90 ){
         this.$refs.shutdown&&(this.$refs.shutdown.style.display='none')
         this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='#fff')  
-        this.rightSearch = true
+        this.search&&(this.rightSearch = true)
         search_screen&&(search_screen.style.visibility='hidden')    
       }else{
         this.$refs.shutdown&&(this.$refs.shutdown.style.display='block')  
         this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='')  
-        this.rightSearch = false
-         search_screen&&(search_screen.style.visibility='')
+        this.search&&(this.rightSearch = false)
+        search_screen&&(search_screen.style.visibility='')
       }
 
     }
