@@ -93,7 +93,7 @@ export default {
   watch: {
     'device.stateChange'(){
       this.$nextTick(()=>{
-        if (this.btnActive === 'kai'||this.btnActive === 'guan'||this.btnActive === 'stop') {
+        if ((this.btnActive === 'kai'||this.btnActive === 'guan'||this.btnActive === 'stop')&&!this.move) {
           this.newRatio()
         }
                   //如果窗帘幅度发生改变
@@ -156,6 +156,9 @@ export default {
     },
     touchStart(e){
       console.log(e)
+      console.log(e.targetTouches[0].pageX,'touchStart')
+      this.start = e.targetTouches[0].pageX
+      
     },
     touchMove(e){
       e.stopPropagation()
@@ -169,6 +172,13 @@ export default {
       this.coverWidth=w-14
     },
     touchEnd(e){
+        console.log(e.changedTouches[0].pageX,'touchEnd')
+        this.end = e.changedTouches[0].pageX
+        if(this.start !=  this.end ){
+          console.log('滑动了')
+          this.move = true
+        }
+
       e.stopPropagation()
       e.preventDefault()
       let maxW = this.$refs.isgray.offsetWidth-14
@@ -177,6 +187,7 @@ export default {
       console.log(maxW)
       console.log(range)
       this.controlDevice('open_percentage', range)
+    
     },
     newRatio(){
        // let maxW = this.$refs.isgray.offsetWidth-14

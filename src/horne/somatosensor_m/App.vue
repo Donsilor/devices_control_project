@@ -188,12 +188,12 @@ export default {
         'status':this.setLock,
         },(data)=>{
           console.log(data)
+          if (data.code=='0') {
+            this.lockStatus=this.setLock
+          }
         },()=>{
 
         },'da_set_alert_status')
-        .then(()=>{
-          this.getDeviceInfo()
-        })
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
