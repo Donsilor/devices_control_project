@@ -234,16 +234,16 @@ export default {
       this.$refs.title.style.bottom = b + 'px'
       this.$refs.title.style.left = l + 'px'
        this.$refs.title.style.fontSize = f + 'px'
-      if( this.scrollTop>=90){
-        this.$refs.shutdown.style.display='none'  
-        this.$refs.newNavbar.style.background='#fff'  
+      if( this.scrollTop>=90 ){
+        this.$refs.shutdown&&(this.$refs.shutdown.style.display='none')
+        this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='#fff')  
         this.rightSearch = true
-        search_screen.style.visibility='hidden'    
+        search_screen&&(search_screen.style.visibility='hidden')    
       }else{
-        this.$refs.shutdown.style.display='block'  
-        this.$refs.newNavbar.style.background=''  
+        this.$refs.shutdown&&(this.$refs.shutdown.style.display='block')  
+        this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='')  
         this.rightSearch = false
-        search_screen.style.visibility=''
+         search_screen&&(search_screen.style.visibility='')
       }
 
     }
