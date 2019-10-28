@@ -172,7 +172,7 @@ export default {
       e.stopPropagation()
       e.preventDefault()
       let maxW = this.$refs.isgray.offsetWidth-14
-      let range =Math.round(this.coverWidth/maxW*100)
+      let range = 100-Math.round(this.coverWidth/maxW*100)
       console.log(this.coverWidth)
       console.log(maxW)
       console.log(range)
@@ -200,58 +200,58 @@ export default {
         }
       })
     },
-    animate(el, target, step, dtime) {
-      return new Promise ((resolve, reject) => {
-        /**
-         * 参数说明：
-         * - el       表示操作的元素对象
-         * - target   表示移动的目标距离 单位 px
-         * - step     表示步长，即每次移动的距离 单位 px
-         * - dtime    表示移动的间隔时间 单位 ms
-         */
+    // animate(el, target, step, dtime) {
+    //   return new Promise ((resolve, reject) => {
+    //     /**
+    //      * 参数说明：
+    //      * - el       表示操作的元素对象
+    //      * - target   表示移动的目标距离 单位 px
+    //      * - step     表示步长，即每次移动的距离 单位 px
+    //      * - dtime    表示移动的间隔时间 单位 ms
+    //      */
 
-        // 步长和间隔时间设置了默认值
-        step = step || 10
-        dtime = dtime || 30
+    //     // 步长和间隔时间设置了默认值
+    //     step = step || 10
+    //     dtime = dtime || 30
 
-        // 判断是否开启定时器，如果有就清除
-        if (this.timeId) {
-          clearInterval(this.timeId)
-          this.timeId = null
-        }
+    //     // 判断是否开启定时器，如果有就清除
+    //     if (this.timeId) {
+    //       clearInterval(this.timeId)
+    //       this.timeId = null
+    //     }
 
-        // 开启一个定时器，并将定时器挂载道当前元素上
-        this.timeId = setInterval(() => {
-          let moveWidth = +(document.querySelector('.cover').style.width.replace('px', ''))
-          let fixedWidth = document.querySelector('.isgray').clientWidth
-          let str = el.style.width.replace('px', '')
-          if (step > 0) {
-            this.curtainStatus = 'closing'
-          } else {
-            this.curtainStatus = 'opening'
-          }
-          if (step > 0 && moveWidth / fixedWidth > 1) {
-            clearInterval(this.timeId)
-            this.timeId = ''
-            this.curtainStatus = 'closed'
-            resolve()
-            return
-          }
-          if (step < 0 && moveWidth / fixedWidth < 0.04) {
-            clearInterval(this.timeId)
-            this.timeId = ''
-            resolve()
-            this.curtainStatus = 'opened'
-            return
-          }
-          var current = parseInt(str)
-          current = current ? current : 0
+    //     // 开启一个定时器，并将定时器挂载道当前元素上
+    //     this.timeId = setInterval(() => {
+    //       let moveWidth = +(document.querySelector('.cover').style.width.replace('px', ''))
+    //       let fixedWidth = document.querySelector('.isgray').clientWidth
+    //       let str = el.style.width.replace('px', '')
+    //       if (step > 0) {
+    //         this.curtainStatus = 'closing'
+    //       } else {
+    //         this.curtainStatus = 'opening'
+    //       }
+    //       if (step > 0 && moveWidth / fixedWidth > 1) {
+    //         clearInterval(this.timeId)
+    //         this.timeId = ''
+    //         this.curtainStatus = 'closed'
+    //         resolve()
+    //         return
+    //       }
+    //       if (step < 0 && moveWidth / fixedWidth < 0.04) {
+    //         clearInterval(this.timeId)
+    //         this.timeId = ''
+    //         resolve()
+    //         this.curtainStatus = 'opened'
+    //         return
+    //       }
+    //       var current = parseInt(str)
+    //       current = current ? current : 0
 
-          // 定时器每执行一次，就让元素移动一个 步长
-          el.style.width = current + step + 'px'
-        }, dtime)
-      })
-    }
+    //       // 定时器每执行一次，就让元素移动一个 步长
+    //       el.style.width = current + step + 'px'
+    //     }, dtime)
+    //   })
+    // }
   }
 }
 </script>
@@ -335,11 +335,12 @@ export default {
       // background: rgb(234, 235, 238);
       background: rgba(0, 0, 0,0.1);
       border-radius: 1px;
-      margin-top: 25vh;
+      margin-top: 15vh;
       position: relative;
     }
     .ruler{
-      width: 572px;
+      // width: 572px;
+      width: 562px;
       height: 60px;
       margin-top: 34px;
       ul{

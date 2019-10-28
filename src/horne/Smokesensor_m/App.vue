@@ -150,32 +150,32 @@ export default {
         return year + '-' + month + '-' + day
       }
     },
-    lock(){
-      this.lockStatus = this.timeList.result.list[0].status
-      if (this.lockStatus=='1') {
-        HdSmart.Device.control({
-            'status':0,
-          },(data)=>{
-            console.log(data)
-            // this.timeList = data
-            // console.log(this.timeList.result)
-            // this.timeList.result = JSON.parse(this.timeList.result)
-          },()=>{
+    // lock(){
+    //   this.lockStatus = this.timeList.result.list[0].status
+    //   if (this.lockStatus=='1') {
+    //     HdSmart.Device.control({
+    //         'status':0,
+    //       },(data)=>{
+    //         console.log(data)
+    //         // this.timeList = data
+    //         // console.log(this.timeList.result)
+    //         // this.timeList.result = JSON.parse(this.timeList.result)
+    //       },()=>{
 
-          },'da_set_alert_status')
-      }else{
-         HdSmart.Device.control({
-            'status':1,
-          },(data)=>{
-            console.log(data)
-            // this.timeList = data
-            // console.log(this.timeList.result)
-            // this.timeList.result = JSON.parse(this.timeList.result)
-          },()=>{
+    //       },'da_set_alert_status')
+    //   }else{
+    //      HdSmart.Device.control({
+    //         'status':1,
+    //       },(data)=>{
+    //         console.log(data)
+    //         // this.timeList = data
+    //         // console.log(this.timeList.result)
+    //         // this.timeList.result = JSON.parse(this.timeList.result)
+    //       },()=>{
 
-          },'da_set_alert_status')
-      }
-    },
+    //       },'da_set_alert_status')
+    //   }
+    // },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
         nodeid: `curtain.main.${attr}`,

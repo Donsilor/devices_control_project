@@ -4,6 +4,7 @@
     <div :class="[{ 'offline': isOffline }, 'page']">
       <NewTopBar
         :title="device.device_name"
+        :scroll="true"
         bak-color="#000"/>
       <div class="top">
         <div class="node">
@@ -63,7 +64,9 @@ export default {
           list: []
         }
       },
+      lockData:'',
       lockStatus:'',
+      setLock:''
     }
   },
   computed: {
@@ -81,6 +84,21 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
+        // 获取设备布防/撤防状态
+        HdSmart.Device.control({
+          'list':[{
+            'device_id':this.device.device_id,
+            'device_category_id':this.device.device_category_id
+          }]
+        },(data)=>{
+          // console.log(data)
+          this.lockData = data
+          this.lockData.result = JSON.parse(this.lockData.result)
+          this.lockStatus = this.lockData.result.list[0].status
+          console.log(this.lockStatus)
+          console.log(data.result.list[0].status)
+        },()=>{
+        },'da_get_alert_status')
          // 当前时间和一个月前时间
           var date = new Date()
           function fillz(num) {
@@ -99,11 +117,8 @@ export default {
               'begin':0
             }
           },(data)=>{
-            console.log(data)
             this.todayNum = data
-            console.log(this.todayNum.result)
             this.todayNum.result = JSON.parse(this.todayNum.result)
-            console.log(this.todayNum.result)
           },()=>{
           },'da_get_dev_alert_list')
 
@@ -125,6 +140,7 @@ export default {
           },'da_get_dev_alert_list')
         })
     })
+
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
@@ -159,31 +175,25 @@ export default {
         return year + '-' + month + '-' + day
       }
     },
+    // 设置布防/撤防
     lock(){
-      this.lockStatus = this.timeList.result.list[0].status
-      if (this.lockStatus=='1') {
-        HdSmart.Device.control({
-            'status':0,
-          },(data)=>{
-            console.log(data)
-            // this.timeList = data
-            // console.log(this.timeList.result)
-            // this.timeList.result = JSON.parse(this.timeList.result)
-          },()=>{
+     if (this.lockStatus=='1') {
+       this.setLock = 0
+     } else{
+       this.setLock = 1
+     }
+      HdSmart.Device.control({
+        'family_id':this.device.family_id,
+        'device_id':this.device.device_id,
+        'status':this.setLock,
+        },(data)=>{
+          console.log(data)
+        },()=>{
 
-          },'da_set_alert_status')
-      }else{
-         HdSmart.Device.control({
-            'status':1,
-          },(data)=>{
-            console.log(data)
-            // this.timeList = data
-            // console.log(this.timeList.result)
-            // this.timeList.result = JSON.parse(this.timeList.result)
-          },()=>{
-
-          },'da_set_alert_status')
-      }
+        },'da_set_alert_status')
+        .then(()=>{
+          this.getDeviceInfo()
+        })
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({

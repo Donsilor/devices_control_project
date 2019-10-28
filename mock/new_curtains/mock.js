@@ -23,16 +23,10 @@ export function set(data){
     }
     if(attr.switch){
         if (attr.switch=='on') {
-          var a = setInterval(() => {
-            attr.open_percentage +=20
-            if (attr.open_percentage === 100) {
-              clearInterval(a)
-            }
-          }, 100)
-          
+          attr.open_percentage = 0     
         }
         if (attr.switch=='off') {
-          attr.open_percentage= 20
+          attr.open_percentage= 100
         }
     }
     res = Object.assign({}, res, attr)
