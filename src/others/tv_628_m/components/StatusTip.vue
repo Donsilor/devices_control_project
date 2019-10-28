@@ -1,7 +1,7 @@
 <template>
+
   <div
     v-if="visible"
-   
     class="status_bar">
     <div class="status_bar_block"/>
     <div
@@ -34,7 +34,6 @@
 
         <div
           v-if="tvStatus.tvOnlineStatus==-3"
-
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <i class="icon-error"/>设备已离线 &nbsp;
@@ -173,14 +172,14 @@ export default {
         }
       })
     },
-    mounted() {
-      console.log(this.type)
-      if(this.type==='首页'&& this.$refs.status_bar_fixed){
-        this.$refs.status_bar_fixed.style.position="absolute"
-        this.$refs.status_bar_fixed.style.top="0"
+    // mounted() {
+    //   console.log(this.type)
+    //   if(this.type==='首页'&& this.$refs.status_bar_fixed){
+    //     this.$refs.status_bar_fixed.style.position="absolute"
+    //     this.$refs.status_bar_fixed.style.top="0"
         
-      }
-    },
+    //   }
+    // },
     methods: {
         goToScreenProjectionPage() {
             service.onClickEvent("screenProjectionStatusClick")

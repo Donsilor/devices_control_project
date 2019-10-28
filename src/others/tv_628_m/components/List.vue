@@ -21,7 +21,7 @@
       :back="goBack"
       :title="title" />
 
-    <status-tip v-show="device_uuid" />
+    <!-- <status-tip v-show="device_uuid" /> -->
     <!-- 条件 -->
     <div
       :class="{active:filterVisible}"
@@ -110,18 +110,21 @@
           </a>
         </dd>
       </dl>
-      <a
+      <div
+        v-show="!filterVisible"
         :class="{active:filterVisible}"
         href="#"
-        class="toggle"
+        class="toggle" 
         @click.prevent="toggleFilter()">
-        <!--{{filterVisible?'收起':'展开'}}-->{{ filterVisible?'收起':'筛选' }}
-        <i class="icon-arrow" />
-      </a>
+        <p class="text">筛选</p>
+        <p class="arrow"/>
+      </div>
+
     </div>
 
     <!-- 列表 -->
     <div class="video-list">
+  
       <ul class="vlist list-m60">
         <li
           v-for="item in list"
@@ -191,27 +194,34 @@
     }
   }
   .toggle {
-    display: block;
+    display: flex;
     // position: absolute;
     // right: 0px;
     // bottom: 15px;
+    justify-content: center;
     line-height: 42px;
     color: #75787a;
     padding: 20px;
     text-align: center;
-    i {
-      /*background: url(../../../lib/base/tv/assets/icn_arrow_up.png)*/
-      /*no-repeat center right;*/
-      /*background-size: 24px 12px;*/
-      display: inline-block;
-      width: 24px;
-      height: 24px;
-      font-size: 16px;
-      line-height: 24px;
-      margin-left: 2px;
-      transform: rotate(180deg);
-      color: #222a37;
-      transform-origin: 50% 80%;
+    
+    // i {
+    //   font-size: 16px;
+    //   line-height: 24px;
+    //   margin-left: 2px;
+    //   color: #222a37;
+    //   transform-origin: 50% 80%;
+    // }
+    .text{
+      display: block;
+      width: 56px;
+      height: 40px;
+    }
+    .arrow{
+      display: block;
+      width: 40px;
+      height: 40px;
+      background: url('~@lib/base/img/tv_btn_xiala.png');
+      background-size: 100% 100%;
     }
     &.active i {
       transform: rotate(0deg);
@@ -539,6 +549,21 @@ export default {
       }
     })
     window.addEventListener("scroll", this.loadMore)
+    addEventListener("scroll", ()=>{
+      var scrollTop =
+        document.documentElement.scrollTop ||
+        window.pageYOffset ||
+        document.body.scrollTop
+      if(this.a - scrollTop<130&&this.a - scrollTop>-130) return
+
+      this.a = scrollTop
+    
+      if(scrollTop>=200){
+        this.filterVisible = false
+      }else{
+        this.filterVisible = true
+      }
+    })
     // filters
     
   },
@@ -548,6 +573,9 @@ export default {
   methods: {
     toggleFilter() {
       this.filterVisible = !this.filterVisible
+      window.removeEventListener("scroll", this.loadMore)
+      window.addEventListener("scroll", this.loadMore)
+
       // var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
       // scrollTop += this.filterVisible ? 132 : -132
       // window.scrollTo(0, scrollTop)
@@ -605,16 +633,11 @@ export default {
       )
     },
     loadMore: _.debounce(function() {
-
       var scrollTop =
         document.documentElement.scrollTop ||
         window.pageYOffset ||
         document.body.scrollTop
-      if(scrollTop>=200){
-        this.filterVisible = false
-      }else{
-        this.filterVisible = true
-      }
+  
       if ( scrollTop > 0 && scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 15) {
         // if (this.$store.state.detailVisible) {
         //   return

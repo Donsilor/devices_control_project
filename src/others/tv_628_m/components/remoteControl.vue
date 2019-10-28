@@ -1,7 +1,9 @@
 <template>
   <div class="remote_control anima">
-    <span @click="cmd('remoteControlEvent')"/>
-    <div>遥控器</div>
+    <div class="control">
+      <span @click="cmd('remoteControlEvent')"/>
+    </div>
+    <div class="remote">遥控器</div>
   </div>
 </template>
 
@@ -35,41 +37,83 @@ export default {
     }
     20% {
       right:0;
+     
     }
     25% {
       right:-20px;
+       background: rgba(255,255,255,0.9);
     }
     90% {
       right:-20px;
+       background: rgba(255,255,255,0.9);
     }
     100% {
        right:-140px;
+       .remote{
+        opacity: 0;
+       }
+    }
+}
+@keyframes remote {
+    0% {
+      opacity: 0;
+    }
+  
+    25% {
+      opacity:1;
+     
+    }
+    90% {
+      opacity:1;
+       
+    }
+    100% {
+      opacity: 0;
+  
     }
 }
 .remote_control{
-  background: rgba(255,255,255,0.4);
+  background: rgba(0,0,0,0.14);
   border-radius: 200px 0px 0px 200px;
   position: fixed;
   right: -140px;
   bottom: 100px;
   width: 258px;
-  height: 114px;
+  height: 104px;
   z-index: 100;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  line-height: 114px;
+  line-height: 104px;
+
   // padding: 20px;
+  .control{
+    margin: 0 12px 0  30px;
+
+    width: 64px;
+    height: 64px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  div{
+  font-size: 32px;
+  }
   span{
     display: block;
-    width: 60px;
-    height: 60px;
+    width: 48px;
+    height: 48px;
     background: url("~@lib/base/tv/assets/new/tv_icn_yaokong.png");
     background-size: 100% 100%;
-    margin: 0 30px;
   }
 }
 .anima{
   animation: right 3.6s linear 0s;
+}
+.remote{
+   animation: remote 3.6s linear 0s;
+   opacity: 0;
 }
 </style>

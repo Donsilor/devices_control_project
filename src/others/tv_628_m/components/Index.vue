@@ -14,6 +14,10 @@
       bak-color="#000"
       @shutdownCallback="cmd('rcPower')"
     />
+    <status-tip
+      v-show="device_uuid"
+
+      type="首页"/>
     <div class="search-screen-bg">
       <div class="search-screen">
         <router-link
@@ -28,8 +32,6 @@
    
     <!-- 设备状态提示 -->
     <!-- :bar-height="barHeight"  -->
-
-    
     <!--    <div class="wrap-title">-->
     <!--      <div class="title mar">栏目分类</div>-->
     <!--    </div>-->
@@ -51,11 +53,7 @@
       style="position:relative" 
       class="status">
 
-      <status-tip
-        v-show="device_uuid"
-        type="首页"   
 
-      />
       <div 
         v-show="activeIndex==0" 
         class="swiper mar" >
@@ -201,7 +199,7 @@
   }
 
   .mar {
-    margin: 0 48px;
+    margin: 0 40px;
   }
   // .index-list{
   //   background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
@@ -236,11 +234,12 @@
   }
 }
 .search-screen-bg{
-    padding-top: 20px;
+    // padding-top: 20px;
+    height: 44PX;
   .search-screen{
     overflow: hidden;
-    margin: 0 48px;
-    padding: 20px 0;
+    margin: 0 40px;
+    // padding: 20px 0;
     display: flex;
     justify-content: space-between;
     .search2{
@@ -278,7 +277,7 @@
 
 .icon_grid {
   overflow: hidden;
-  margin: 0 48px;
+  margin: 0 40px;
   padding: 20px 0;
 
   -webkit-overflow-scrolling: touch;
@@ -326,7 +325,7 @@
     justify-content: center;
     align-items: center;
 
-    margin-right: 24px;
+    margin-right: 48px;
     /*&.item0 {*/
     /*  background: #f05645;*/
     /*  margin-left: 48px;*/
@@ -427,7 +426,7 @@
     display: none;
   }
   .name {
-    text-align: center;
+    text-align: left;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -724,7 +723,7 @@ export default {
     //   }
     // }
   },
-  created() {
+  created() {    
     this.pageInit()
     HdSmart.UI.toggleNav()
     console.log('1111',window.device_name)
@@ -752,6 +751,7 @@ export default {
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault()
     })
+    HdSmart.UI.hideLoading()
   },
   methods: {
     back() {
