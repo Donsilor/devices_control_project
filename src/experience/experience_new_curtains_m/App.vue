@@ -3,6 +3,7 @@
   <div class="body">
     <div class="page">
       <NewTopBar
+        :scroll="true"
         :title="device.device_name"
         bak-color="#000"/>
       <div class="main center">
@@ -93,7 +94,7 @@ export default {
   watch: {
     'device.stateChange'(){
       this.$nextTick(()=>{
-        if ((this.btnActive === 'kai'||this.btnActive === 'guan'||this.btnActive === 'stop')&&!this.move) {
+        if (this.btnActive === 'kai'||this.btnActive === 'guan'||this.btnActive === 'stop') {
           this.newRatio()
         }
                   //如果窗帘幅度发生改变
@@ -126,6 +127,7 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setPause() {
+      this.move = false
       this.btnActive = 'stop'
       this.curtainStatus = ''
       this.$refs['btn-pause'].classList.add('active')
@@ -144,6 +146,7 @@ export default {
     },
     // 全开
     setOpen(){
+       this.move = false
       this.btnActive = 'kai'
       this.controlDevice('switch', 'on')
       .then(()=>{
@@ -151,6 +154,7 @@ export default {
     },
     //全关
     setClose(){
+       this.move = false
       this.btnActive = 'guan'
       this.controlDevice('switch', 'off')
     },
@@ -191,6 +195,8 @@ export default {
     },
     newRatio(){
        // let maxW = this.$refs.isgray.offsetWidth-14
+       if(this.move)return
+       console.log('执行了')
        let maxW = document.querySelector('.isgray').clientWidth-14
       console.log('窗帘的最大宽度api', maxW)
       this.coverWidth = (100-this.deviceAttrs.open_percentage)/100*maxW

@@ -18,7 +18,7 @@
             <div
               :class="[{'active':lockStatus=='1'},'btn-open btn center']"
               @click="lock" />
-            <div class="btn-name">{{ lockStatus=='1'?'布防':'撤防' }}</div>
+            <div class="btn-name">{{ lockStatus=='1'?'撤防':'布防' }}</div>
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@
             <li 
               v-for="item in timeList.result.list" 
               class="list">
-              <span>{{ getDateTime(item.updated_at,'fulltime') }}</span>
+              <span>{{ getDateTime(item.updated_at*1000,'fulltime') }}</span>
               <span class="isgray">{{ item.title }}</span>
             </li>
           </ul>
