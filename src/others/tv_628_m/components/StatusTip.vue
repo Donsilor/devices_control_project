@@ -1,12 +1,12 @@
 <template>
+  <!-- v-if="visible" -->
 
   <div
-    v-if="visible"
     class="status_bar">
     <div class="status_bar_block"/>
     <div
       ref="status_bar_fixed"
-      :style="{top:(status_bar_height + navigation_bar_height - barHeight )+'px'}"
+      :style="{top:(status_bar_height + navigation_bar_height*2 - barHeight )+'px'}"
       class="status_bar_fixed">
       <div
         v-if="spVisible"
@@ -31,9 +31,9 @@
           <span class="link">查看帮助</span>
           <i class="icon-arrow"/>
         </div>
+        <!-- v-if="tvStatus.tvOnlineStatus==-3" -->
 
         <div
-          v-if="tvStatus.tvOnlineStatus==-3"
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <i class="icon-error"/>设备已离线 &nbsp;

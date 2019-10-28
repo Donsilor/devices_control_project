@@ -14,11 +14,13 @@
       bak-color="#000"
       @shutdownCallback="cmd('rcPower')"
     />
+    <!-- v-show="device_uuid" -->
+    <!--  -->
     <status-tip
-      v-show="device_uuid"
-
       type="首页"/>
-    <div class="search-screen-bg">
+    <div 
+      :class="{'search-screen-bg-mt':device_uuid}"
+      class="search-screen-bg">
       <div class="search-screen">
         <router-link
           class="search2" 
@@ -156,6 +158,7 @@
 </template>
 
 <style lang="less" scoped>
+@navigation_bar_height: 44PX;
 .center {
   display: flex;
   justify-content: center;
@@ -274,6 +277,9 @@
     }
   }
 } 
+.search-screen-bg-mt{
+  margin-top: @navigation_bar_height;
+}
 
 .icon_grid {
   overflow: hidden;
@@ -681,7 +687,25 @@ export default {
     }
   },
   computed: {
-    ...mapState(['status_bar_height', 'navigation_bar_height']),
+    ...mapState(['status_bar_height', 'navigation_bar_height','isStatusBarShow']),
+      tvStatus() {
+            return this.$store.state.tvStatus
+        },
+        spStatusText() {
+            return ["", "图片", "视频", "音乐"][
+                this.tvStatus.screenProjectType
+            ]
+        },
+        spVisible() {
+            return (
+                this.tvStatus.tvOnlineStatus == 1 &&
+                this.tvStatus.screenProjectType != 0 &&
+                this.$route.name != "search"
+            )
+        },
+        visible() {
+            return this.tvStatus.tvOnlineStatus != 1 || this.spVisible
+        },
     detailVisible() {
       return this.$store.state.detailVisible
     },
