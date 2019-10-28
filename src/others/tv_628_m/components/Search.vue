@@ -13,19 +13,21 @@
         class="search_bar"
         @submit.prevent="submit">
         <div class="search_input">
-          <a
-            href="javascript:void(0);"
-            class="icon-search" />
+          <div class="search">
+            <p />
+          </div>
           <input
             v-model="word"
             type="text"
             placeholder="输入片名、导演、演员搜索"
             @input="fuzzySearch">
-          <a
-            v-show="word != ''"
-            href="javascript:void(0);"
-            class="icon-del1"
-            @click.prevent="clearWord" />
+          <div 
+            v-show="word != ''" 
+            class="del1" 
+            @click.prevent="clearWord">
+            <p/>
+          </div>
+         
         </div>
         <!-- <input
           type="submit"
@@ -39,7 +41,7 @@
       </form>
     </div>
 
-    <status-tip />
+    <!-- <status-tip /> -->
     <!-- 搜索建议 -->
     <div
       v-show="curpage===2"
@@ -128,7 +130,9 @@
             <div class="name">{{ item.cate }}·{{ item.year }}·{{ item.region }}</div>
             <div class="name">导演：{{ item.director }}</div>
             <div class="starring">主演：{{ item.starring }}</div>
-            <div class="playstate playstate_unplay">
+            <div 
+              :class="{'gray':tvStatus.tvOnlineStatus==-3}" 
+              class="playstate playstate_unplay" >
               <a
                 href="#"
                 class="btn"
@@ -165,6 +169,9 @@
 <style lang="less" scoped>
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
+.gray{
+  opacity: 0.2;
+}
 .nodata{
   margin-top: 400px;
   // display: flex;
@@ -194,7 +201,8 @@
 .page-search{
   background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
   background-size: 100% 100%;
-  height: 100%;
+  background-attachment: fixed;
+  min-height: 100%;
 }
 .search_bar {
    display: flex;
@@ -210,18 +218,28 @@
   position: relative;
   height: 30PX;
   width: 100%;
-  .icon-search{
+  .search{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+    width: 60px;
+    height: 60px;
     position: absolute;
-    top: 2px;
-    left: 20px;
-    color: #dbdbdb;;
+    // top: 2px;
+    // left: 20px;
+    // color: #dbdbdb;;
 
-    font-size: 35px;
-    line-height: 35px;
+    // font-size: 35px;
+    // line-height: 35px;
+    P{
+      width: 40px;
+        height: 40px;
+         background: url('~@lib/base/img/tv_icn_search.png');
+        background-size:100% 100%; 
+    }
   }
   input {
     border: 0;
-
     background: rgba(0, 0, 0, 0.03);
     height: 30PX;
     border-radius: 3px;
@@ -242,16 +260,27 @@
       outline: none;
     }
   }
-  .icon-del1 {
+  .del1 {
+    display: flex;
+   justify-content: center;
+   align-items: center;
     position: absolute;
-    right: 10px;
-    top: 2px;
-    color: #d8d8d8;
-    font-size: 35px;
-    line-height: 35px;
-    &:active {
-      color: #999;
+    right: 0;
+    top: 0;
+    width: 60px;
+    height: 60px;
+    // color: #d8d8d8;
+    // font-size: 35px;
+    // line-height: 35px;
+    p{
+        width: 40px;
+        height: 40px;
+        background: url('~@lib/base/img/btn_text_delete@2x.png');
+        background-size:100% 100%; 
     }
+    // &:active {
+    //   color: #999;
+    // }
   }
 }
 
@@ -340,10 +369,10 @@
   }
 }
 .search_result {
-  background-color: #f7f8fa;
+  // background-color: #f7f8fa;
   .hd {
     padding: 20px 32px 26px;
-    background-color: #fff;
+    // background-color: #fff;
   }
   .tab {
     /*border-bottom: 1px solid #dbdbdb;*/
@@ -465,11 +494,12 @@
     font-size: 32px;
     color: #000000;
     font-weight: 900;
-    line-height: 80px;
+    // line-height: 80px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     width: 366px;
+    padding-bottom: 20px
     
   }
   .name {
@@ -477,12 +507,13 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 80px;
+    line-height: 50px;
     width: 366px;
   }
   .starring{
     text-align: left;
     width: 366px;
+    line-height: 40px;
   }
   .playstate {
   position: absolute;
@@ -647,6 +678,9 @@ export default {
     }
   },
    computed: {
+    tvStatus() {
+            return this.$store.state.tvStatus
+    },
     title() {
       if (this.cur.title && this.cur.title.length > 10) {
         return this.cur.title.substr(0, 10) + '...'

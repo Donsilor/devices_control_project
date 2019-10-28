@@ -114,18 +114,18 @@ export default {
       return this.deviceAttrs.switch_status=="on"?false:true
     },
   },
-  watch: {
-    'device.stateChange'() {
-      this.$nextTick(() => {
-         this.newLevel()
-      })  
-    }
-  },
+  // watch: {
+  //   'device.stateChange'() {
+  //     this.$nextTick(() => {
+  //        this.newLevel()
+  //     })  
+  //   }
+  // },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
-        this.newLevel()
+        // this.newLevel()
         // console.log(document.documentElement.clientHeight)
         let h = document.documentElement.clientHeight
         let a =  document.querySelectorAll('.panel-btn')[0]
@@ -155,23 +155,23 @@ export default {
     endLight(val){
       this.controlDevice('level',val)
     },
-    newLevel(){
-      this.ratio = Math.round(this.deviceAttrs.level/254*100) 
-      let touchbox = document.querySelectorAll(".touchbox")[0] 
-      let coverlight = document.querySelectorAll(".coverlight")[0] 
-      touchbox.style.display = 'block'
-      coverlight.style.display = 'block'
-      console.log('111',this.deviceAttrs.switch_status)
-      if(this.deviceAttrs.switch_status == 'on'&&(this.device.category_sub==2||this.device.category_sub==4)){
-          touchbox.style.top = ((100-this.ratio)/100*185)/37.5 +"rem"
-        coverlight.style.clip = `rect(${((100-this.ratio)/100*185)/37.5 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
-      }else{
-         touchbox.style.display = 'none'
-        //  coverlight.style.display = 'none'
-        coverlight.style.clip = `rect(${0 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
-      }
+    // newLevel(){
+    //   this.ratio = Math.round(this.deviceAttrs.level/254*100) 
+    //   let touchbox = document.querySelectorAll(".touchbox")[0] 
+    //   let coverlight = document.querySelectorAll(".coverlight")[0] 
+    //   touchbox.style.display = 'block'
+    //   coverlight.style.display = 'block'
+    //   console.log('111',this.deviceAttrs.switch_status)
+    //   if(this.deviceAttrs.switch_status == 'on'&&(this.device.category_sub==2||this.device.category_sub==4)){
+    //       touchbox.style.top = ((100-this.ratio)/100*185)/37.5 +"rem"
+    //     coverlight.style.clip = `rect(${((100-this.ratio)/100*185)/37.5 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
+    //   }else{
+    //      touchbox.style.display = 'none'
+    //     //  coverlight.style.display = 'none'
+    //     coverlight.style.clip = `rect(${0 +"rem"} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
+    //   }
     
-    },
+    // },
     setSpeed(val) {
       if (this.isClose||this.isOffline) return 
       this.controlDevice('temperature', val)

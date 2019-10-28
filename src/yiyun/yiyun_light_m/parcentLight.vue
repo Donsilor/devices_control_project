@@ -18,14 +18,14 @@
       style="'clip: rect(0, 8.53333rem, 12rem, 0px)'" 
       src="../../../lib/base/yiyun_light/assets/tongdengguan@2x.png" 
       class="coverlight">
-    <div 
+      <!-- <div 
       class="touchbox" 
       @touchstart="touchStart($event)"
       @touchmove="touchMove($event)"
       @touchend="touchEnd($event)">
       <div 
-        class="touch"/>
-    </div>
+        class="touch"/> -->
+  </div>
   </div>
 </template>
 <script>

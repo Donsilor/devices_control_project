@@ -3,26 +3,26 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="true"
+        :shutdown="isClose == false || isOffline == true"
         :class-name="opcityStyle"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <div class="main center">
         <div class="wrap-circle">
           <div class="bg">
-            <div 
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'" 
+            <div
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'"
               class="tm">-- <sup>°C</sup></div>
-            <div 
+            <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='auto'&&deviceAttrs.mode!=='wind'"
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
             </div>
-            <div 
+            <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='auto'"
               class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
             </div>
-            <div 
-              v-show="!isOffline&& deviceAttrs.switchStatus == 'on'" 
+            <div
+              v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
               :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
             <div
               v-show="isOffline||deviceAttrs.switchStatus == 'off'"
@@ -45,11 +45,11 @@
             class="progress"
           />
         </div>
-        <div 
-          v-show="!isOffline&&!isClose" 
+        <div
+          v-show="!isOffline&&!isClose"
           class="control-tm center">
-          <button 
-            class="control reduce" 
+          <button
+            class="control reduce"
             @click="setTemperature(-10)"/>
           <button
             class="control add"
@@ -126,8 +126,8 @@
             <span>风速</span>
             <span @click="showSpeed">{{ typeVal=='auto'?'自动':'手动＞' }}</span>
           </div>
-          <div 
-            v-show="typeVal!=='auto'" 
+          <div
+            v-show="typeVal!=='auto'"
             class="range">
             <input
               :value="brightnessValue"
@@ -387,7 +387,7 @@ export default {
         .then(() => {
           this.deviceAttrs.mode = val
           if (this.deviceAttrs.mode=='auto') {
-            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)  
+            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
             this.$refs.$circle.init()
             this.hide()
             return
@@ -535,7 +535,7 @@ export default {
   min-height: 550px;
   overflow-x: hidden;
   position: relative;
-  background-image: url('~@lib/@{imgPath1}/bg_01.png');
+  background-image: url('~@lib/@{imgPath1}/img_bg_01@2x.png');
   background-size: 100% 100%;
   &::-webkit-scrollbar {
 		display: none;
@@ -672,9 +672,9 @@ export default {
     margin-top: 130px;
     /*适应苹果*/
     -webkit-overflow-scrolling: touch;
-    
+
   }
-  
+
   /*隐藏掉滚动条*/
 	.panel-btn::-webkit-scrollbar {
 		display: none;

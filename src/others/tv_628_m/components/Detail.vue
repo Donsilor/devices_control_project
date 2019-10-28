@@ -16,7 +16,7 @@
           class="isvip">付费</span>
       </div>
     </topbar>
-    <status-tip v-show="device_uuid" />
+    <!-- <status-tip v-show="device_uuid" /> -->
 
     <div class="detail-bd">
       <div
@@ -41,7 +41,9 @@
                 v-show="isNotNull(cur.starring)"
                 class="text_s">主演：{{ cur.starring }}</p>
             </div>
-            <div class="playstate playstate_unplay">
+            <div 
+              :class="{'gray':tvStatus.tvOnlineStatus==-3}" 
+              class="playstate playstate_unplay">
               <a
                 href="#"
                 class="btn"
@@ -51,15 +53,16 @@
           </div>
         </div>
         <!-- 描述 -->
+       
         <div
           v-show="cur.desc"
           class="desc">
           <div
             :class="{
-              'text-cut': isDescOverflow,
-              'text-show': isDescShow
+              'words-cut': !isDescOverflow,
+              'words-show': isDescShow
             }"
-            class="desc-cont">
+            class="desc-cont words">
             <div
               class="desc-cont-p"
               v-html="toHTML(cur.desc)" />
@@ -70,7 +73,7 @@
             href="#"
             class="desc-toggle"
             @click.prevent="isDescShow=!isDescShow">
-            <i class="icon-arrow" />
+            <i class="arrow-desc" />
           </a>
         </div>
       </div>
@@ -80,7 +83,8 @@
         class="detail-playlist">
         <div
           v-if="cur.playlist2.list.length"
-          class="hd">
+          :class="{'gray':tvStatus.tvOnlineStatus==-3}" 
+          class="hd" >
           {{ channelId==='001' ? '正片' : getUpdateSet() }}
 
           <a
@@ -100,7 +104,8 @@
           </a>
         </div>
         <ul
-          v-if="channelId==='001' || channelId==='004'"
+          v-if="channelId==='0011' || channelId==='0041'"
+        
           class="bd">
           <li
             v-for="item in cur.playlist2.list"
@@ -117,11 +122,11 @@
               class="tag_pay">付费</span>
           </li>
         </ul>
+        <!-- v-else -->
 
         <ul
-          v-else
           :class="[isShowAll?'bd-num-all':'bd-num']"
-          class="bd">
+          class="bd" >
           <li
             v-for="(item, num) in cur.playlist2.list"
             :key="item.index"
@@ -142,7 +147,7 @@
           v-if="cur.playlist2.list2.length"
           class="hd related"
           style="clear:both">相关视频</div>
-        <ul class="bd">
+        <ul class="bd" >
           <li
             v-for="item in cur.playlist2.list2"
             :key="item.index"
@@ -165,6 +170,9 @@
 </template>
 
 <style lang="less">
+.gray{
+  opacity: 0.2;
+}
 .page-detail {
   color: #75787a;
   // /*background: #fafafa;*/
@@ -246,6 +254,7 @@
   // overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
+
 .detail-info {
   margin: 0 32px;
   border-bottom: 1px solid rgba(0,0,0,.1);
@@ -311,6 +320,42 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
+  .words{
+  opacity: 0.5;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #000000;
+  letter-spacing: 0;
+  text-align: justify;
+  // font-size: 14px;
+  // color: #4A4A4A;
+  overflow: hidden;
+  line-height: 32px;
+  position: relative;
+  height: 3.3em;
+}
+.words:after {
+  content: '...';
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 4%;
+  height: 1.2em;
+  // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png")
+  background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
+}
+.words-show{
+  height: 100%;
+  &::after{
+    display: none
+  }
+}
+.words-cut{
+  &::after{
+    display: none
+  }
+}
   .text-show {
     display: block;
   }
@@ -327,13 +372,20 @@
       height: 50px;
       text-align: center;
       line-height: 50px;
-      transform: rotate(180deg);
+      transform: rotate(0deg);
       /*transition: transform .6s;*/
     }
     &.open {
       i {
-        transform: rotate(0deg);
+        transform: rotate(180deg);
       }
+    }
+    .arrow-desc{
+      display: block;
+      width: 40px;
+      height: 40px;
+      background: url('~@lib/base/img/tv_btn_xiala.png');
+      background-size: 100% 100%;
     }
   }
 }
@@ -403,6 +455,9 @@
     /*no-repeat;*/
     /*background-size: 100% 100%;*/
     /*}*/
+  }
+  .gray{
+    background: #fff
   }
   .btn-outline {
     color: #13d5dc;
@@ -684,6 +739,9 @@ export default {
     }
   },
   computed: {
+    tvStatus() {
+            return this.$store.state.tvStatus
+    },
     ...mapState({
       visible: state => state.detailVisible,
       // channelId: state => state.activeDetail.channelId,

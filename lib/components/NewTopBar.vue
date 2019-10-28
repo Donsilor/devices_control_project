@@ -19,15 +19,18 @@
         <div
           class="left"
           @click.prevent="goBack">
-          <a
+          <p/>
+          <!-- <a
             :style="{ 'border-color': bakColor }"
             href="javascript:void(0);"
-            class="icon-return" />
+            class="icon-return" /> -->
         </div>
         <div
           v-if="showRight&&!rightSearch"
-          class="right">
-          <template v-if="buttons">
+          class="right" 
+          @click.prevent="goDetail">
+          <p/>
+          <!-- <template v-if="buttons">
             <a
               v-for="(item, index) in buttons"
               :key="index"
@@ -41,14 +44,13 @@
               :class="[{'icon-more':black},{'icon-more1':white},'center']"
               href="javascript:void(0);"
               @click.prevent="goDetail" />
-          </template>
+          </template> -->
         </div>
         <div 
           v-show="rightSearch" 
-          class="right">
-          <router-link
-            to="/search"
-            class="icon-search" />
+          class="right-search" 
+          @click="$router.push('/search')">
+          <p/>
         </div>
 
       </div>
@@ -155,9 +157,21 @@ export default {
     })
   },
   mounted(){
+      this.$nextTick(()=>{
+          let topbar_fixed = document.querySelectorAll('.topbar-fixed')[0]
+          let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]  
+          let search_screen_bg = document.querySelectorAll('.search-screen-bg')[0]
+          if(status_bar_fixed&&topbar_fixed&&search_screen_bg){
+            status_bar_fixed.style.top = topbar_fixed.offsetHeight + 'px'
+            search_screen_bg.style.marginTop = status_bar_fixed.offsetHeight + 'px'
+          }
+      })
+     
+     
     if(this.scroll){
        addEventListener('scroll',this.scrollfn)
     }
+    
    
   },
   destroyed(){
@@ -195,15 +209,19 @@ export default {
       let statusbar = document.querySelectorAll('.statusbar')[0]   
       let newNavbar = document.querySelectorAll('.newNavbar')[0]   
       let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]   
-      let statusTop = status.offsetTop-  this.scrollTop
+      let search_screen = document.querySelectorAll('.search-screen')[0]   
+      // let statusTop = status.offsetTop-  this.scrollTop
+      let topbar_fixed = document.querySelectorAll('.topbar-fixed')[0]   
       // let w = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2    如果标题要居中
+      // console.log(statusTop,'statusTop')
+      //  console.log(status.offsetTop,'status.offsetTop')
+      //   console.log( this.scrollTop,' this.scrollTop')
       if(status&& status_bar_fixed){
-        if(statusTop<=100){
-            status_bar_fixed.style.position = 'fixed'
+        if(this.scrollTop>=100){
             status_bar_fixed.style.top = statusbar.offsetHeight+newNavbar.offsetHeight +"px"
+
         }else{
-            status_bar_fixed.style.position = 'absolute'
-            status_bar_fixed.style.top = "0"
+            status_bar_fixed.style.top = topbar_fixed.offsetHeight + 'px'
         }
       } 
       let h = this.$refs['header-bottom'].offsetHeight
@@ -220,10 +238,12 @@ export default {
         this.$refs.shutdown.style.display='none'  
         this.$refs.newNavbar.style.background='#fff'  
         this.rightSearch = true
+        search_screen.style.visibility='hidden'    
       }else{
         this.$refs.shutdown.style.display='block'  
         this.$refs.newNavbar.style.background=''  
-         this.rightSearch = false
+        this.rightSearch = false
+        search_screen.style.visibility=''
       }
 
     }
@@ -300,7 +320,7 @@ export default {
 .header-bottom{
   display: flex;
   justify-content: space-between;
-  margin: 0 48px;
+  margin: 0 40px;
   align-items: center;
  .title {
    position: relative;
@@ -316,26 +336,55 @@ export default {
 
 .newNavbar {
   display: flex;
-  padding: 0 48px;
+  padding: 0 40px;
   justify-content: space-between;
   height: @navigation_bar_height;
   position: relative;
   color: #222a37;
+  align-items: center;
   .left,
-  .right {
-    width: 44PX;
-    height: @navigation_bar_height;
+  .right,.right-search {
+    // width: 44PX;
+    // height: @navigation_bar_height;
+   width: 72px;
+    height: 72px;
+    p{
+        width: 50px;
+        height: 50px;
+
+    }
 
   }
   .left{
-    position: relative;
-    // top: -4px;
     display: flex;
+    justify-content: flex-start;
     align-items: center;
+    p{
+        background: url('../base/img/tv_btn_close.png');
+        background-size: 100% 100%;
+
+    }
   }
   .right{
-    position: relative;
-    left: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    p{
+      background: url('../base/img/tv_btn_setting.png');
+        background-size: 100% 100%;
+
+    }
+   
+  }
+  .right-search{
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    p{
+     
+       background: url('../base/img/tv_btn_search.png');
+        background-size: 100% 100%;
+    }
   }
 
 
