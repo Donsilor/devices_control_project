@@ -142,7 +142,7 @@ export default {
       // console.log('窗帘的最大宽度', maxW)
       // console.log('cover宽度', s)
       console.log('暂停的百分比计算（cover宽度 / 窗帘的最大宽度 * 100）', pauseRange)
-      this.controlDevice('switch', 'pause')
+      // this.controlDevice('switch', 'pause')
     },
     // 全开
     setOpen(){
@@ -191,7 +191,7 @@ export default {
       console.log(this.coverWidth)
       console.log(maxW)
       console.log(range)
-      this.controlDevice('open_percentage', range)
+      // this.controlDevice('open_percentage', range)
 
     },
     newRatio(){
