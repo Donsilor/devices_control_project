@@ -11,8 +11,8 @@
         style="margin-top:52px">
         <div class="bg"><div class="circle"><div class="status">{{ deviceAttrs.switch=='open'?'通电中':'断电中' }}</div></div></div>
       </div>
-      <div 
-        v-show="deviceAttrs.countdownClose>0" 
+      <div
+        v-show="deviceAttrs.countdownClose>0"
         class="status1">{{ deviceAttrs.countdownClose | delayTime }}后断电</div>
       <div
         v-show="!isOffline"
@@ -36,7 +36,7 @@
           <div
             :class="[{'progress':timeOutEvent != 0},'btn btn-delay center circleProgress_wrapper']"
             @touchstart="touchStart($event)"
-            @touchmove="touchMove($event)" 
+            @touchmove="touchMove($event)"
             @touchend="touchEnd($event)" >
             <div class="wrapper right">
               <div class="circleProgress rightcircle" />
@@ -226,7 +226,7 @@ export default {
           }
           this.controlDevice('countdownClose',h*60+m, obj)
         }
-          
+
       }else{
         let hours = h < 10 ? '0' + h : h
         let min = m < 10 ? '0' + m : m
@@ -294,7 +294,9 @@ export default {
           ':' +
           seconds
         )
-      } else {
+      } else if (type === 'hms') {
+        return hours + ':' + minutes + ':' + seconds
+      } {
         return year + '-' + month + '-' + day
       }
     }
