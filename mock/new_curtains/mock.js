@@ -23,10 +23,10 @@ export function set(data){
     }
     if(attr.switch){
         if (attr.switch=='on') {
-          attr.open_percentage = 0     
+          attr.open_percentage = 100     
         }
         if (attr.switch=='off') {
-          attr.open_percentage= 100
+          attr.open_percentage= 0
         }
     }
     res = Object.assign({}, res, attr)

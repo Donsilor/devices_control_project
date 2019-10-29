@@ -4,7 +4,7 @@
       <NewTopBar
         :title="device.device_name"
         :shutdown="isClose == false || isOffline == true"
-        :class-name="opcityStyle"
+        :scroll="true"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <div class="main center">
@@ -124,7 +124,13 @@
         <div class="option1">
           <div>
             <span>风速</span>
-            <span @click="showSpeed">{{ typeVal=='auto'?'自动':'手动＞' }}</span>
+            <span 
+              class="check" 
+              @click="showSpeed">{{ typeVal=='auto'?'自动':'手动' }}
+              <img 
+                v-show="typeVal!=='auto'" 
+                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
+            </span>
           </div>
           <div
             v-show="typeVal!=='auto'"
@@ -143,7 +149,12 @@
         <div class="option">
           <div>
             <span>摆风</span>
-            <span @click="showSwing">{{ deviceAttrs.wind_up_down=='on'?'上下风＞':'' }}{{ deviceAttrs.wind_left_right=='on'?'左右风＞':'' }}{{ deviceAttrs.wind_up_down=='off'&&deviceAttrs.wind_left_right=='off'?'设置＞':'' }}</span>
+            <span 
+              class="check" 
+              @click="showSwing">{{ deviceAttrs.wind_up_down=='on'?'上下风 ':'' }}{{ deviceAttrs.wind_left_right=='on'?'左右风':'' }}{{ deviceAttrs.wind_up_down=='off'&&deviceAttrs.wind_left_right=='off'?'设置':'' }}
+              <img 
+                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
+            </span>
           </div>
         </div>
         <!-- 定时 -->
@@ -152,10 +163,18 @@
             <span>定时</span>
             <span
               v-if="deviceAttrs.timer_switch=='on'&&deviceAttrs.timer_value>0"
-              @click="showTime">{{ deviceAttrs.timer_value | closeTime }}＞</span>
+              class="check"
+              @click="showTime">{{ deviceAttrs.timer_value | closeTime }}
+              <img 
+                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
+            </span>
             <span
               v-else
-              @click="showTime">设置关机时间＞</span>
+              class="check"
+              @click="showTime">设置关机时间 
+              <img 
+                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
+            </span>
           </div>
         </div>
       </div>
@@ -269,10 +288,10 @@ export default {
             /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.mode) {
         case 'cold':
-          return '#00D5FF'
+          return '#00A3FF '
           break
         case 'heat':
-          return '#FF5F00'
+          return '#FF6600'
           break
         default:
           return '#000'
@@ -642,7 +661,8 @@ export default {
         margin: 0 auto;
         width: 120px;
         height: 120px;
-        border: 1px solid #818181;
+        // border: 1px solid #818181;
+        background: rgba(0, 0, 0, 0.1);
         border-radius: 50%;
         position: relative;
         &::before{
@@ -691,7 +711,8 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid #818181;
+      // border: 1px solid #818181;
+      background: rgba(0,0,0,0.1);
       border-radius: 50%;
 
       display: flex;
@@ -848,6 +869,13 @@ export default {
           &:last-of-type{
             color: rgba(0, 0, 0, 0.5);
           }
+          &.check{
+            display: flex;
+            align-items: center;
+            >img{
+              width: 32px;
+            }
+          }
         }
       }
     }
@@ -866,6 +894,13 @@ export default {
           height: 120px;
           &:last-of-type{
             color: rgba(0, 0, 0, 0.5);
+          }
+          &.check{
+            display: flex;
+            align-items: center;
+            >img{
+              width: 32px;
+            }
           }
         }
 

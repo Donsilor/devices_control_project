@@ -24,7 +24,7 @@
             <li 
               v-for="item in timeList.result.list" 
               class="list">
-              <span>{{ getDateTime(item.updated_at,'fulltime') }}</span>
+              <span>{{ getDateTime(item.updated_at*1000,'fulltime') }}</span>
               <span class="isgray">{{ item.title }}</span>
             </li>
           </ul>
@@ -41,7 +41,6 @@ export default {
     return {
       currentdate:'',
       currentdate1:'',
-      today:'',
       // 今日记录次数
       todayNum:{
         result: {
@@ -80,11 +79,10 @@ export default {
           }
           this.currentdate=date.getFullYear() + fillz(date.getMonth() + 1) + fillz(date.getDate())
           this.currentdate1=date.getFullYear() + fillz(date.getMonth() ) + fillz(date.getDate())
-          this.today=fillz(date.getDate())
           // 获取今日记录次数
            HdSmart.Device.control({
-            'date_start':this.today,
-            'date_end':this.today,
+            'date_start':this.currentdate,
+            'date_end':this.currentdate,
             'page':{
               'size':50,
               'begin':0
@@ -115,6 +113,7 @@ export default {
           },()=>{
           },'da_get_dev_alert_list')
         })
+         HdSmart.UI.setStatusBarColor(2)
     })
   },
   methods: {

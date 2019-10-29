@@ -51,7 +51,6 @@ export default {
     return {
       currentdate:'',
       currentdate1:'',
-      today:'',
       // 今日记录次数
       todayNum:{
         result: {
@@ -95,8 +94,7 @@ export default {
           this.lockData = data
           this.lockData.result = JSON.parse(this.lockData.result)
           this.lockStatus = this.lockData.result.list[0].status
-          console.log(this.lockStatus)
-          console.log(data.result.list[0].status)
+          console.log('===============status',this.lockStatus)
         },()=>{
         },'da_get_alert_status')
          // 当前时间和一个月前时间
@@ -107,11 +105,10 @@ export default {
           }
           this.currentdate=date.getFullYear() + fillz(date.getMonth() + 1) + fillz(date.getDate())
           this.currentdate1=date.getFullYear() + fillz(date.getMonth() ) + fillz(date.getDate())
-          this.today=fillz(date.getDate())
           // 获取今日记录次数
            HdSmart.Device.control({
-            'date_start':this.today,
-            'date_end':this.today,
+            'date_start':this.currentdate,
+            'date_end':this.currentdate,
             'page':{
               'size':50,
               'begin':0
@@ -120,25 +117,25 @@ export default {
             this.todayNum = data
             this.todayNum.result = JSON.parse(this.todayNum.result)
           },()=>{
-          },'da_get_dev_alert_list')
-
-          // 获取列表list
-          HdSmart.Device.control({
-            'date_start':this.currentdate1,
-            'date_end':this.currentdate,
-            'page':{
-              'size':50,
-              'begin':0
-            }
-          },(data)=>{
-            console.log(data)
-            this.timeList = data
-            console.log(this.timeList.result)
-            this.timeList.result = JSON.parse(this.timeList.result)
-            console.log(this.timeList.result)
-          },()=>{
-          },'da_get_dev_alert_list')
+          },'da_get_dev_alert_list').then(()=>{
+                    // 获取列表list
+              HdSmart.Device.control({
+                'date_start':this.currentdate1,
+                'date_end':this.currentdate,
+                'page':{
+                  'size':50,
+                  'begin':0
+                }
+              },(data)=>{
+                console.log('=====================getList',data)
+                this.timeList = data
+                this.timeList.result = JSON.parse(this.timeList.result)
+                // console.log(this.timeList.result)
+              },()=>{
+              },'da_get_dev_alert_list')
+          })
         })
+        HdSmart.UI.setStatusBarColor(2)
     })
 
   },
@@ -187,7 +184,7 @@ export default {
         'device_id':this.device.device_id,
         'status':this.setLock,
         },(data)=>{
-          console.log(data)
+          console.log('=====================setLock',data)
           if (data.code=='0') {
             this.lockStatus=this.setLock
           }

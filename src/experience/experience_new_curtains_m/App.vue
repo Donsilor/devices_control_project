@@ -31,16 +31,16 @@
           </ul>
         </div>
         <div 
-          v-if="curtainStatus === 'opening'" 
+          v-if="txtShow === 'opening'" 
           class="status">正在打开窗帘</div>
         <div 
-          v-if="curtainStatus === 'closing'" 
+          v-if="txtShow === 'closing'" 
           class="status">正在关闭窗帘</div>
         <div 
-          v-if="curtainStatus === 'opened'" 
+          v-if="txtShow === 'opened'" 
           class="status">窗帘已打开</div>
         <div 
-          v-if="curtainStatus === 'closed'"
+          v-if="txtShow === 'closed'"
           class="status" >窗帘已关闭</div>
       </div>
       <!-- 底部按钮 -->
@@ -81,7 +81,9 @@ export default {
       coverWidth:"",
       timeId: '',
       curtainStatus: '',
-      btnActive: ''
+      btnActive: '',
+      range: 0,
+      txtShow: ''
     }
   },
   computed: {
@@ -94,7 +96,7 @@ export default {
   watch: {
     'device.stateChange'(){
       this.$nextTick(()=>{
-        if (this.btnActive === 'kai'||this.btnActive === 'guan'||this.btnActive === 'stop') {
+        if (this.btnActive === 'kai'||this.btnActive === 'guan'||this.btnActive ==='pause') {
           this.newRatio()
         }
                   //如果窗帘幅度发生改变
@@ -103,16 +105,35 @@ export default {
         //  }
         if (this.btnActive === 'kai') {
             this.curtainStatus='opening'
+            this.txtShow = 'opening'
         } else if (this.btnActive === 'guan') {
             this.curtainStatus='closing' 
+            this.txtShow = 'closing'
         }
          if (this.deviceAttrs.open_percentage=='100') {
            this.curtainStatus='opened'
+           this.txtShow = 'opened'
          }
          if (this.deviceAttrs.open_percentage=='0') {
            this.curtainStatus='closed'
+           this.txtShow = 'closed'
          }
       })
+    },
+    'deviceAttrs.open_percentage'(newValue, oldValue) {
+      if(this.btnActive != 'pause') {
+        if(newValue > oldValue) {
+          this.txtShow = 'opening'
+          console.log('======',this.txtShow, this.btnActive)
+        }
+        if(newValue < oldValue) {
+          this.txtShow = 'closing'
+          console.log('======',this.txtShow, this.btnActive)
+        }
+      }
+      if(this.deviceAttrs.open_percentage == this.range) {
+        this.txtShow = ''
+      }
     }
   },
   created() {
@@ -121,44 +142,50 @@ export default {
       .then(()=>{
           this.newRatio()
       })
-      // HdSmart.UI.setStatusBarColor(2)
+      HdSmart.UI.setStatusBarColor(2)
     })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setPause() {
+      this.txtShow = ''
       this.move = false
-      this.btnActive = 'stop'
+      this.btnActive = 'pause'
       this.curtainStatus = ''
       this.$refs['btn-pause'].classList.add('active')
       setTimeout(() => {
         this.$refs['btn-pause'].classList.remove('active')
       }, 500)
       clearInterval(this.timeId)
-      let maxW = this.$refs.isgray.offsetWidth - 14
+      let maxW = this.$refs.isgray.offsetWidth - 20
       let cover = this.$refs.cover
-      let s = cover.offsetWidth-14
+      let s = cover.offsetWidth-20
       let pauseRange = s/maxW*100
       // console.log('窗帘的最大宽度', maxW)
       // console.log('cover宽度', s)
       console.log('暂停的百分比计算（cover宽度 / 窗帘的最大宽度 * 100）', pauseRange)
       this.controlDevice('switch', 'pause')
+      .then(() => {
+        this.txtShow = ''
+      })
+      .catch(() => {
+        this.txtShow = ''
+      })
     },
     // 全开
     setOpen(){
-       this.move = false
+      this.move = false
       this.btnActive = 'kai'
       this.controlDevice('switch', 'on')
-      .then(()=>{
-      })
     },
     //全关
     setClose(){
-       this.move = false
+      this.move = false
       this.btnActive = 'guan'
       this.controlDevice('switch', 'off')
     },
     touchStart(e){
+      this.btnActive = ''
       console.log(e)
       console.log(e.targetTouches[0].pageX,'touchStart')
       this.start = e.targetTouches[0].pageX
@@ -170,10 +197,10 @@ export default {
       let cover = this.$refs.cover
       let w = e.targetTouches[0].pageX - cover.offsetLeft
       let maxW = this.$refs.isgray.offsetWidth
-      w=w<=14?14:w
+      w=w<=20?20:w
       w=w>=maxW?maxW :w
       cover.style.width = w+"px"
-      this.coverWidth=w-14
+      this.coverWidth=w-20
     },
     touchEnd(e){
         console.log(e.changedTouches[0].pageX,'touchEnd')
@@ -185,25 +212,25 @@ export default {
 
       e.stopPropagation()
       e.preventDefault()
-      let maxW = this.$refs.isgray.offsetWidth-14
-      let range = 100-Math.round(this.coverWidth/maxW*100)
+      let maxW = this.$refs.isgray.offsetWidth-20
+      this.range = 100-Math.round(this.coverWidth/maxW*100)
       console.log(this.coverWidth)
       console.log(maxW)
-      console.log(range)
-      this.controlDevice('open_percentage', range)
+      console.log(this.range)
+      this.controlDevice('open_percentage', this.range)
     
     },
     newRatio(){
        // let maxW = this.$refs.isgray.offsetWidth-14
        if(this.move)return
        console.log('执行了')
-       let maxW = document.querySelector('.isgray').clientWidth-14
+       let maxW = document.querySelector('.isgray').clientWidth-20
       console.log('窗帘的最大宽度api', maxW)
       this.coverWidth = (100-this.deviceAttrs.open_percentage)/100*maxW
       console.log(this.deviceAttrs.open_percentage,1111111111)
       
       let cover = this.$refs.cover
-       cover.style.width = this.coverWidth +14+"px"
+       cover.style.width = this.coverWidth +20+"px"
       console.log('窗帘的赋值宽度为', this.coverWidth+"px")
     },
     controlDevice(attr, value,params) {
@@ -217,58 +244,6 @@ export default {
         }
       })
     },
-    // animate(el, target, step, dtime) {
-    //   return new Promise ((resolve, reject) => {
-    //     /**
-    //      * 参数说明：
-    //      * - el       表示操作的元素对象
-    //      * - target   表示移动的目标距离 单位 px
-    //      * - step     表示步长，即每次移动的距离 单位 px
-    //      * - dtime    表示移动的间隔时间 单位 ms
-    //      */
-
-    //     // 步长和间隔时间设置了默认值
-    //     step = step || 10
-    //     dtime = dtime || 30
-
-    //     // 判断是否开启定时器，如果有就清除
-    //     if (this.timeId) {
-    //       clearInterval(this.timeId)
-    //       this.timeId = null
-    //     }
-
-    //     // 开启一个定时器，并将定时器挂载道当前元素上
-    //     this.timeId = setInterval(() => {
-    //       let moveWidth = +(document.querySelector('.cover').style.width.replace('px', ''))
-    //       let fixedWidth = document.querySelector('.isgray').clientWidth
-    //       let str = el.style.width.replace('px', '')
-    //       if (step > 0) {
-    //         this.curtainStatus = 'closing'
-    //       } else {
-    //         this.curtainStatus = 'opening'
-    //       }
-    //       if (step > 0 && moveWidth / fixedWidth > 1) {
-    //         clearInterval(this.timeId)
-    //         this.timeId = ''
-    //         this.curtainStatus = 'closed'
-    //         resolve()
-    //         return
-    //       }
-    //       if (step < 0 && moveWidth / fixedWidth < 0.04) {
-    //         clearInterval(this.timeId)
-    //         this.timeId = ''
-    //         resolve()
-    //         this.curtainStatus = 'opened'
-    //         return
-    //       }
-    //       var current = parseInt(str)
-    //       current = current ? current : 0
-
-    //       // 定时器每执行一次，就让元素移动一个 步长
-    //       el.style.width = current + step + 'px'
-    //     }, dtime)
-    //   })
-    // }
   }
 }
 </script>
@@ -300,7 +275,8 @@ export default {
       position: absolute;
       clip:rect(0px 572px 204px 0px);
       .touchbox{
-        width: 28px;
+        // width: 28px;
+        width: 40px;
         height: 204px;
         position: absolute;
         top: 50%;
@@ -347,7 +323,7 @@ export default {
 
     }
     .isgray {
-      width: 75%;
+      width: 76%;
       height: 204px;
       // background: rgb(234, 235, 238);
       background: rgba(0, 0, 0,0.1);
@@ -362,8 +338,8 @@ export default {
       margin-top: 34px;
       ul{
         width: 100%;
-        // padding: 0 28px;
-        padding-left: 28px;
+        padding: 0 28px;
+        // padding-left: 28px;
         display: flex;
         justify-content: space-between;
         li{

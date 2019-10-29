@@ -23,7 +23,7 @@
             <li 
               v-for="item in timeList.result.list" 
               class="list">
-              <span>{{ getDateTime(item.updated_at,'fulltime') }}</span>
+              <span>{{ getDateTime(item.updated_at*1000,'fulltime') }}</span>
               <span class="isgray">{{ item.title }}</span>
             </li>
           </ul>
@@ -82,8 +82,8 @@ export default {
           this.today=fillz(date.getDate())
           // 获取今日记录次数
            HdSmart.Device.control({
-            'date_start':this.today,
-            'date_end':this.today,
+            'date_start':this.currentdate,
+            'date_end':this.currentdate,
             'page':{
               'size':50,
               'begin':0
