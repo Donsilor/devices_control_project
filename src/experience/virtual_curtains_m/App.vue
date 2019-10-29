@@ -116,13 +116,13 @@ export default {
     }
   },
   created() {
-    HdSmart.ready(() => {
-      this.getDeviceInfo()
-      .then(()=>{
-          this.newRatio()
-      })
-      // HdSmart.UI.setStatusBarColor(2)
-    })
+    // HdSmart.ready(() => {
+    //   this.getDeviceInfo()
+    //   .then(()=>{
+    //       this.newRatio()
+    //   })
+    //   // HdSmart.UI.setStatusBarColor(2)
+    // })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
