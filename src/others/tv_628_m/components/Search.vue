@@ -4,42 +4,51 @@
     <!-- 遥控器 --> 
     <!-- <remoteControl/> -->
     <div
-      :style="{height:status_bar_height+'px'}"
-      class="statusbar" />
-    <div 
-      :search="false" 
-      :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}">
-      <form
-        class="search_bar"
-        @submit.prevent="submit">
-        <div class="search_input">
-          <div class="search">
-            <p />
-          </div>
-          <input
-            v-model="word"
-            type="text"
-            placeholder="输入片名、导演、演员搜索"
-            @input="fuzzySearch">
-          <div 
-            v-show="word != ''" 
-            class="del1" 
-            @click.prevent="clearWord">
-            <p/>
-          </div>
+      :style="{height:status_bar_height+navigation_bar_height+'PX'}"
+      class="statusbar" >
+      <div 
+        ref="statusbar_fexid" 
+        class="statusbar_fexid"/>
+      <div 
+        ref="search_fexid" 
+        :search="false"
+        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}" 
+        class="search_fexid">
+        <form
+          class="search_bar"
+          @submit.prevent="submit" 
+        > 
+          <div class="search_input">
+            <div class="search">
+              <p />
+            </div>
+            <input
+              v-model="word"
+              type="text"
+              placeholder="输入片名、导演、演员搜索"
+              @blur="blurfn"
+              @input="fuzzySearch">
+            <div 
+              v-show="word != ''" 
+              class="del1" 
+              @click.prevent="clearWord">
+              <p/>
+            </div>
          
-        </div>
-        <!-- <input
+          </div>
+          <!-- <input
           type="submit"
           value="搜索"
           class="search_submit"> -->
-        <input
-          type="button"
-          value="取消"
-          class="search_submit" 
-          @click="goBack">
-      </form>
+          <input
+            type="button"
+            value="取消"
+            class="search_submit" 
+            @click="goBack">
+        </form>
+      </div>
     </div>
+   
 
     <!-- <status-tip /> -->
     <!-- 搜索建议 -->
@@ -127,9 +136,9 @@
           </div>
           <div class="vitem-right">
             <div class="title">{{ item.title }}</div>
-            <div class="name">{{ item.cate }}·{{ item.year }}·{{ item.region }}</div>
-            <div class="name">导演：{{ item.director }}</div>
-            <div class="starring">主演：{{ item.starring }}</div>
+            <div class="name">{{ item.cate }}·{{ item.year }}{{ item.region&&'·'+item.region }}</div>
+            <div class="name">{{ item.director&&'导演：'+item.director }}</div>
+            <div class="starring">{{ item.director&&'主演：'+item.starring }}</div>
             <div 
               :class="{'gray':tvStatus.tvOnlineStatus==-3}" 
               class="playstate playstate_unplay" >
@@ -137,7 +146,7 @@
                 href="#"
                 class="btn"
                 @click.prevent="play(cur.playlist2.list[0])">
-              <i class="icon-play" /><span>在电视上播放</span></a>
+              <i class="play" /><span>在电视上播放</span></a>
             </div>
             <span
               class="update">
@@ -196,7 +205,29 @@
   }
 }
 .statusbar {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: @status_bar_height;
+  .statusbar_fexid{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: @status_bar_height;
+    background: transparent;
+    z-index: 999
+  }
+  .search_fexid{
+    position: fixed;
+    top: 25PX;
+    left: 0;
+    width: 100%;
+    height: 44px;
+    background: transparent;
+    z-index: 999
+  }
 }
 .page-search{
   background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
@@ -208,7 +239,7 @@
    display: flex;
   height: 100%;
   // flex: 1;
-  padding-top: 8PX;
+  // padding-top: 8PX;
   // padding-left: 100px;
  align-items: center;
   margin: 0 32px;
@@ -228,19 +259,20 @@
     // top: 2px;
     // left: 20px;
     // color: #dbdbdb;;
-
     // font-size: 35px;
     // line-height: 35px;
+    margin-right:3px; 
     P{
-      width: 40px;
-        height: 40px;
+      width: 32px;
+        height: 32px;
          background: url('~@lib/base/img/tv_icn_search.png');
         background-size:100% 100%; 
     }
   }
   input {
     border: 0;
-    background: rgba(0, 0, 0, 0.03);
+    background: rgba(0, 0, 0, 0.04);
+    color: rgba(0, 0, 0, 0.5);
     height: 30PX;
     border-radius: 3px;
     width: 100%;
@@ -251,7 +283,7 @@
     // background-size: 36px 36px;
     padding-left: 68px;
     padding-right: 64px;
-    font-size: 28px;
+    font-size: 24px;
     &::-webkit-input-placeholder {
       color: #c8cacc;
     }
@@ -409,7 +441,7 @@
 }
 
 .vlist {
-  padding: 40px 0 0 38px;
+  padding: 20PX 0 0 38px;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -611,6 +643,7 @@
 <script>
 import * as service from '../service'
 import _ from '../util'
+let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
 
 // 关键字加粗
 function splitWord(kw, input) {
@@ -715,7 +748,7 @@ export default {
         this.navigation_bar_height = window.navigation_bar_height / dpr
       }
     })
-    this.getData()
+    // this.getData()
   },
   mounted() {
     this.getHistory()
@@ -732,11 +765,31 @@ export default {
         el.onerror = null
       }
     })
+    addEventListener('scroll',this.scroll2)
   },
   destroyed() {
     window.removeEventListener('scroll', this.loadMore)
+    removeEventListener('scroll', this.scroll2)
   },
   methods: {
+    blurfn(){
+      setTimeout(()=>{
+        window.scrollTo(0,0)
+      },300)
+    },
+    scroll2(){
+         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        // console.log(this.scrollTop,'this.scrollTop')
+        //  HdSmart.UI.toggleNav()
+        // HdSmart.UI.hideKeyboard()
+        if(this.scrollTop>=20){
+          this.$refs.search_fexid.style.background = "#fff"
+          this.$refs.statusbar_fexid.style.background = "#fff"
+        }else{
+          this.$refs.search_fexid.style.background = "transparent"
+          this.$refs.statusbar_fexid.style.background = "transparent"
+        }
+    },
     // 删除搜索词
     clearWord() {
       this.word = ''
@@ -900,35 +953,38 @@ export default {
         this.historyData = data.data
       })
     },
-    getData() {
-      this.loading = true
-      // this.setHistory()
-      service.getDetaileData(
-        {
-          channelId: this.channelId,
-          vid: this.vid
-        },
-        (err, data) => {
-          this.loading = false
-          if (err) {
-            this.close()
-            return
-          }
-
-          var temp = data.data
-          var playlist = temp.playlist[0]
-          temp.playlist2 = {}
-          temp.playlist2.total = playlist.total
-          temp.playlist2.list = playlist.list.filter(
-            item => item.states == "1"
-          )
-          temp.playlist2.list2 = playlist.list.filter(
-            item => item.states != "1"
-          )
-          this.cur = Object.freeze(temp)
-        }
-      )
-    },
+    // getData() {
+    //   this.loading = true
+    //   // this.setHistory()
+    //   console.log(this.channelId,'this.channelId')
+    //   console.log(this.vid,'this.vid')
+      
+    //   service.getDetaileData(
+    //     {
+    //       channelId: this.channelId,
+    //       vid: this.vid
+    //     },
+    //     (err, data) => {
+    //       this.loading = false
+    //       if (err) {
+    //         // this.close()
+    //         return
+    //       }
+    //       console.log(data,'data1111')
+    //       var temp = data.data
+    //       var playlist = temp.playlist[0]
+    //       temp.playlist2 = {}
+    //       temp.playlist2.total = playlist.total
+    //       temp.playlist2.list = playlist.list.filter(
+    //         item => item.states == "1"
+    //       )
+    //       temp.playlist2.list2 = playlist.list.filter(
+    //         item => item.states != "1"
+    //       )
+    //       this.cur = Object.freeze(temp)
+    //     }
+    //   )
+    // },
      //点播：播放状态如playstate
     play(clickItem,e) {
       if ( e && e.stopPropagation ) {

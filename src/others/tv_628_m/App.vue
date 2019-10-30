@@ -28,9 +28,9 @@ ul {
   clear: both;
   visibility: hidden;
 }
-html {
-  padding-bottom: 2px;
-}
+// html {
+//   padding-bottom: 2px;
+// }
 body {
   // overflow-x: hidden;
   background: #fafafa;

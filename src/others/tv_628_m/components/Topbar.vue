@@ -21,7 +21,7 @@
           <router-link
             v-if="search"
             to="/search"
-            class="icon-search" />
+            class="search" />
           <a
             v-if="more"
             href=""
@@ -40,7 +40,7 @@
 <script>
 
 // import { mapState } from 'vuex'
-
+let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
 export default {
   props: {
     title: String,
@@ -120,6 +120,18 @@ export default {
   .right a.icon-more {
     display: inline-block;
   }
+}
+.right{
+  width: 44PX;
+  display: flex;
+  align-items: center;
+}
+.search{
+  background: url('~@lib/base/img/tv_btn_search.png');
+  background-size: 100% 100%;
+  width: 48px;
+  height: 48px;
+  
 }
 
 </style>

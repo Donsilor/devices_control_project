@@ -48,7 +48,8 @@
                 href="#"
                 class="btn"
                 @click.prevent="play(cur.playlist2.list[0])">
-              <i class="icon-play" /><span>在电视上播放</span></a>
+                <i class="play" /><span>在电视上播放</span> 
+              </a>
             </div>
           </div>
         </div>
@@ -83,7 +84,6 @@
         class="detail-playlist">
         <div
           v-if="cur.playlist2.list.length"
-          :class="{'gray':tvStatus.tvOnlineStatus==-3}" 
           class="hd" >
           {{ channelId==='001' ? '正片' : getUpdateSet() }}
 
@@ -130,8 +130,13 @@
           <li
             v-for="(item, num) in cur.playlist2.list"
             :key="item.index"
-            class="item-num"
-            @click="play(item)">{{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}
+            :class="{'gray':tvStatus.tvOnlineStatu==-3}"
+            class="item-num" 
+            @click="play(item)">
+            <span>
+              {{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}
+            </span>
+           
             <!-- <span 
               v-show="item.states" 
               class="tag_new">新</span> -->
@@ -173,6 +178,7 @@
 .gray{
   opacity: 0.2;
 }
+
 .page-detail {
   color: #75787a;
   // /*background: #fafafa;*/
@@ -306,6 +312,7 @@
     position: relative;
     .desc-cont-p{
       color: #000;
+      line-height: 40px;
     }
   }
   .desc-cont {
@@ -332,19 +339,19 @@
   overflow: hidden;
   line-height: 32px;
   position: relative;
-  height: 3.3em;
+  height: 4em;
 }
-.words:after {
-  content: '...';
-  text-align: right;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 4%;
-  height: 1.2em;
-  // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png")
-  background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
-}
+// .words:after {
+//   content: '...';
+//   text-align: right;
+//   position: absolute;
+//   bottom: 0;
+//   right: 0;
+//   width: 4%;
+//   height: 1.2em;
+//   // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png")
+//   background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
+// }
 .words-show{
   height: 100%;
   &::after{
@@ -403,6 +410,7 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    height: 6em
   }
 }
 .playstate {
@@ -420,14 +428,16 @@
     color: #fff;
     font-size: 36px;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     i {
-      display: inline-block;
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      margin-right: 12px;
-      margin-top: -2px;
+      margin-right: 14px;
       vertical-align: middle;
-      font-size: 30px;
+      width: 32px;
+      height: 32px;
+      background: url('~@lib/base/tv/assets/new/tv_icn_play.png');
+        background-size: 100% 100%;
     }
     span{
       font-size: 28px;
@@ -574,16 +584,25 @@
     text-align: center;
     position: relative;
     // background-color: #f0f0f0;
-    background: rgba(0,0,0,.04);
+    // background: rgba(0,0,0,0.2);
+    // background: #000;
+    // opacity: 0.04;
     /*border: 1px solid #dbdbdb;*/
     border-radius: 8px;
     font-family: PingFangSC-Regular;
     font-size: 28px;
-    color: #000000;
     letter-spacing: 0;
+    background: rgba(0,0,0,.04);
+    color: #000;
     // &:active {
     //   background: #ebebeb;
     // }
+    span{
+      opacity: 1;
+    }
+    &.gray{
+       color: #c4c4c4;
+    }
     &.active {
       /*background: #19c9cf
                 url(../../../lib/base/tv/assets/icn_playing_white_s.png)
@@ -608,7 +627,7 @@
       width: 320px;
       height: 180px;
       display: block;
-      margin-bottom: 12px;
+      margin-bottom: 18px;
     }
     p {
       text-overflow: ellipsis;
@@ -616,6 +635,8 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      line-height: 40px;
+      height: 3em;
     }
     .play {
       position: absolute;
@@ -799,6 +820,11 @@ export default {
 
     this.getData()
   },
+  mounted(){
+    setTimeout(()=>{
+        window.scrollTo(0,1)
+    },300)
+  },
   methods: {
     ...mapActions(["hideDetail", "showDetail"]),
     getData() {
@@ -812,7 +838,7 @@ export default {
         (err, data) => {
           this.loading = false
           if (err) {
-            this.close()
+            // this.close()
             return
           }
 

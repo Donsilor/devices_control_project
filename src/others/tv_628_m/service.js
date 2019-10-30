@@ -11,13 +11,16 @@ function sendApp(method, params, callback){
         deviceType,
         params,
     }, function(error, data){
+        console.log(method,'method')
+        console.log(error,'error')
+        console.log(data,'data')
         if(data.errorcode && data.errorcode != '0'){
             error = {
                 errormsg: data.errormsg
             }
         }
         if(error && method !== 'fuzzySearch'){
-            HdSmart.UI.toast(error.errormsg)
+            // HdSmart.UI.toast(error.errormsg)
         }
         callback && callback(error, data)
     })

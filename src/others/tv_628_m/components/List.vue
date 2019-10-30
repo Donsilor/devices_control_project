@@ -170,6 +170,7 @@
  background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
     background-size: 100% 100%;
     background-attachment: fixed;
+    min-height: 100%;
 }
 .filters-placeholder {
   height: 120px;
@@ -535,6 +536,9 @@ export default {
     }
   },
   mounted() {
+    setTimeout(()=>{
+        window.scrollTo(0,1)
+    },300)
     let topbar = document.querySelectorAll('.topbar')[0]
     console.log(topbar.offsetHeight,'sss')
     console.log( this.$refs.filters,'222')
