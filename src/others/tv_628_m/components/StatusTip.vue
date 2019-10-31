@@ -1,6 +1,6 @@
 <template>
-  <!-- v-if="visible" -->
   <div
+    v-if="visible"
     class="status_bar">
     <!-- <div class="status_bar_block"/> -->
     <div
@@ -14,9 +14,9 @@
         <span class="text">{{ tvStatus.screenProjectTitle }}</span>
         <i class="icon-arrow"/>
       </div>
-      <!-- v-if="tvStatus.tvOnlineStatus==-1"       -->
       <div>
         <div
+          v-if="tvStatus.tvOnlineStatus==-1" 
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">

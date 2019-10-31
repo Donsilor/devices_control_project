@@ -227,13 +227,13 @@ export default {
       }
       .middle {
         height: 550px;
-        border-left: 1px solid rgba(255,255,255,0.14);
+        border-left: 1px solid rgba(00,00,00,0.14);
         padding: 0 60px;
         flex-direction: column;
       }
       .right {
         height: 550px;
-        border-left: 1px solid rgba(255,255,255,0.14);
+        border-left: 1px solid rgba(00,00,00,0.14);
         padding: 0 60px;
         flex-direction: column;
       }
@@ -355,10 +355,10 @@ export default {
       width: 100%;
       // background: rgba(255, 255, 255,0.1);
     }
-    &.page {
-      // background: #fff;
-      // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
-    }
+    // &.page {
+    //   // background: #fff;
+    //   // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
+    // }
     .panel-btn {
       background: transparent;
     }
