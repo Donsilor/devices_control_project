@@ -130,13 +130,10 @@
           <li
             v-for="(item, num) in cur.playlist2.list"
             :key="item.index"
-            :class="{'gray':tvStatus.tvOnlineStatu==-3}"
+            :class="{'gray':tvStatus.tvOnlineStatus==-3}"
             class="item-num" 
             @click="play(item)">
-            <span>
-              {{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}
-            </span>
-           
+            {{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}         
             <!-- <span 
               v-show="item.states" 
               class="tag_new">新</span> -->
@@ -175,9 +172,9 @@
 </template>
 
 <style lang="less">
-.gray{
-  opacity: 0.2;
-}
+// .gray{
+//   opacity: 0.2;
+// }
 
 .page-detail {
   color: #75787a;
@@ -418,6 +415,9 @@
   bottom: 0;
   width: 100%;
   height: 84px;
+  &.gray{
+   opacity: 0.2;
+  }
   .btn {
     /*background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);*/
     /*border-radius: 45px;*/
@@ -466,9 +466,7 @@
     /*background-size: 100% 100%;*/
     /*}*/
   }
-  .gray{
-    background: #fff
-  }
+
   .btn-outline {
     color: #13d5dc;
     background: none;
@@ -597,11 +595,8 @@
     // &:active {
     //   background: #ebebeb;
     // }
-    span{
-      opacity: 1;
-    }
     &.gray{
-       color: #c4c4c4;
+       color: #c4c4c4!important;
     }
     &.active {
       /*background: #19c9cf

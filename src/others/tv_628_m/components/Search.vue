@@ -145,7 +145,7 @@
               <a
                 href="#"
                 class="btn"
-                @click.prevent="play(cur.playlist2.list[0])">
+                @click.prevent="play(item)">
               <i class="play" /><span>在电视上播放</span></a>
             </div>
             <span
@@ -751,6 +751,9 @@ export default {
     // this.getData()
   },
   mounted() {
+    setTimeout(()=>{
+        window.scrollTo(0,1)
+    },300)
     this.getHistory()
     service.RemoteController({ 'show': true })
     setTimeout(() => {
@@ -884,6 +887,8 @@ export default {
                 data.list
               )
             )
+
+            console.log(this.resultData,'this.resultData')
             this.total = data.total
             this.pageNo = page
             if (this.isFirstLoad) {
@@ -986,7 +991,7 @@ export default {
     //   )
     // },
      //点播：播放状态如playstate
-    play(clickItem,e) {
+    play(item,e) {
       if ( e && e.stopPropagation ) {
     //因此它支持W3C的stopPropagation()方法 
        e.stopPropagation() 
@@ -994,13 +999,42 @@ export default {
           //否则，我们需要使用IE的方式来取消事件冒泡 
           window.event.cancelBubble = true 
       }
-      if (!clickItem) {
-        clickItem =
-          this.cur.playlist2.list[0] || this.cur.playlist2.list2[0]
-      }
-      if (clickItem) {
-        service.playVideo(clickItem.link, clickItem.name)
-      }
+      service.getDetaileData(
+        {
+          channelId: item.channelId,
+          vid: item.vid
+        },
+        (err, data) => {
+          // this.loading = false
+          if (err) {
+            // this.close()
+            return
+          }
+          var temp = data.data
+          var playlist = temp.playlist[0]
+          temp.playlist2 = {}
+          temp.playlist2.total = playlist.total
+          temp.playlist2.list = playlist.list.filter(
+            item => item.states == "1"
+          )
+          temp.playlist2.list2 = playlist.list.filter(
+            item => item.states != "1"
+          )
+          let cur = Object.freeze(temp)
+          let clickItem = cur.playlist2.list[0]
+          console.log(clickItem,'clickItem')
+          console.log( cur ,'cur')
+          if (!clickItem) {
+            clickItem = this.cur.playlist2.list[0] || this.cur.playlist2.list2[0]
+          }
+          console.log(clickItem,'clickItem')
+          if (clickItem) {
+            service.playVideo(clickItem.link, clickItem.name)
+          }      
+        }
+      )
+   
+      
     },
   }
 }
