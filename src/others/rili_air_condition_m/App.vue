@@ -128,7 +128,8 @@
               min="0"
               max="3"
               step="1"
-              @input="changeSpeed">
+              @touchmove="changeSpeedStyle"
+              @touchend="changeSpeed">
             <p :class="['rang_width']"/>
           </div>
         </div>
@@ -330,11 +331,14 @@ export default {
       if (this.isOffline) return
       this.controlDevice('switch',val)
     },
-    // range调风速
-    changeSpeed(e) {
+    // range调风速样式
+    changeSpeedStyle(e) {
       var max = e.target.getAttribute("max")
       var width = (93 / max * e.target.value) +"%"
       document.querySelector('.rang_width').style.width = width
+    },
+    // range调风速
+    changeSpeed(e) {
       if(e.target.value == 0) {
         this.rangeColor = true
       } else {
