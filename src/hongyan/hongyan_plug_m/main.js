@@ -12,7 +12,7 @@ import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
 import Topbar from '@lib/components/Topbar.vue'
 import Index from './components/Index.vue'
-import Log from './components/Log.vue'
+// import Log from './components/Log.vue'
 // import Time from './components/Time.vue'
 Vue.use(Router)
 // Vue.use(Vuex)
@@ -27,11 +27,11 @@ const router = new Router({
       name: 'index',
       component: Index
     },
-    {
-      path: '/log',
-      name: 'log',
-      component: Log
-    },
+    // {
+    //   path: '/log',
+    //   name: 'log',
+    //   component: Log
+    // },
     // {
     //   path: '/time',
     //   name: 'time',

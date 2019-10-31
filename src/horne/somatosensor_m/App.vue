@@ -114,26 +114,28 @@ export default {
               'begin':0
             }
           },(data)=>{
+            console.log('==================today',data)
             this.todayNum = data
             this.todayNum.result = JSON.parse(this.todayNum.result)
           },()=>{
-          },'da_get_dev_alert_list').then(()=>{
-                    // 获取列表list
-              HdSmart.Device.control({
-                'date_start':this.currentdate1,
-                'date_end':this.currentdate,
-                'page':{
-                  'size':50,
-                  'begin':0
-                }
-              },(data)=>{
-                console.log('=====================getList',data)
-                this.timeList = data
-                this.timeList.result = JSON.parse(this.timeList.result)
-                // console.log(this.timeList.result)
-              },()=>{
-              },'da_get_dev_alert_list')
-          })
+          },'da_get_dev_alert_list')
+
+          // 获取列表list
+          HdSmart.Device.control({
+            'date_start':this.currentdate1,
+            'date_end':this.currentdate,
+            'page':{
+              'size':50,
+              'begin':0
+            }
+          },(data)=>{
+            console.log('=====================getList',data)
+            this.timeList = data
+            this.timeList.result = JSON.parse(this.timeList.result)
+            // this.timeList.result = data.result
+            console.log('=====================this.timeList.result',this.timeList.result)
+          },()=>{
+          },'da_get_dev_alert_list')
         })
         HdSmart.UI.setStatusBarColor(2)
     })
@@ -209,14 +211,12 @@ export default {
 <style lang="less" scoped>
 // @imgPath: 'base/new_curtains/assets';
 @imgPath: 'base/somatosensor/assets';
-
-.body {
-  min-height: 100%;
-}
+// .body {
+//   min-height: 100%;
+// }
   .panel-btn {
     height: auto;
     width: 100%;
-    // position: fixed;
     // bottom: 130px;
     z-index: 99999;
     .btn {
@@ -273,12 +273,19 @@ export default {
     }
   }
 .page {
-  height: 100vh;
-  min-height: 550px;
-  overflow-x: hidden;
-  position: relative;
-  background-image: url('~@lib/@{imgPath}/img_bg_01.png');
-  background-size: 100% 100%;
+  // padding-bottom: 324px;
+  &::before{
+    content: "";
+    background-image: url('~@lib/@{imgPath}/img_bg_01.png');
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    top:0;
+    left: 0; 
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
   .top{
     .node{
       width: 100%;
@@ -332,29 +339,6 @@ export default {
           .isgray{
             color: rgba(0, 0, 0, 0.5);
           }
-        }
-      }
-      .picBox{
-        width: 264px;
-        height: 250px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-left: -132px;
-        margin-top: -125px;
-        img{
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          margin-left: -46px;
-          margin-top: -210px;
-          width: 92px;
-          height: 116px;
-        }
-        p{
-          font-size: 24px;
-          margin-top: 80px;
-          color: rgba(0, 0, 0, 0.39);
         }
       }
     }

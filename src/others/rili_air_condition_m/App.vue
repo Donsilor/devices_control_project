@@ -3,8 +3,8 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="true"
-        :class-name="opcityStyle"
+        :shutdown="isClose == false || isOffline == true"
+        :scroll="true"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <div class="main center">
@@ -114,7 +114,10 @@
         <div class="option1">
           <div>
             <span>风速</span>
-            <span @click="showSpeed">{{ typeVal=='auto'?'自动':'手动＞' }}</span>
+            <span 
+              class="check" 
+            >手动
+            </span>
           </div>
           <div 
             v-show="typeVal!=='auto'" 
@@ -123,7 +126,7 @@
               :value="brightnessValue"
               type="range"
               min="0"
-              max="4"
+              max="3"
               step="1"
               @input="changeSpeed">
             <p :class="['rang_width']"/>
@@ -133,7 +136,12 @@
         <div class="option">
           <div>
             <span>摆风</span>
-            <span @click="showSwing">{{ deviceAttrs.wind_up=='on'?'上摆风＞':'' }}{{ deviceAttrs.wind_down=='on'?'下摆风＞':'' }}{{ deviceAttrs.wind_up=='off'&&deviceAttrs.wind_down=='off'?'设置＞':'' }}</span>
+            <span 
+              class="check" 
+              @click="showSwing">{{ deviceAttrs.wind_up=='on'?'上摆风 ':'' }}{{ deviceAttrs.wind_down=='on'?'下摆风':'' }}{{ deviceAttrs.wind_up=='off'&&deviceAttrs.wind_down=='off'?'设置':'' }}
+              <img 
+                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
+            </span>
           </div>
         </div>
         <!-- 定时 -->
@@ -161,11 +169,11 @@
         ref="mode"
         :mode="deviceAttrs.mode"
         @setMode="setMode" />
-      <!--选择风速-->
-      <model-speed
+        <!--选择风速-->
+        <!-- <model-speed
         ref="speed"
         :speed="deviceAttrs.speed"
-        @setSpeed="setSpeed" />
+        @setSpeed="setSpeed" /> -->
         <!-- 时间选择 -->
         <!-- <SelectTime
         ref="time"
@@ -273,18 +281,14 @@ export default {
     "deviceAttrs.speed"() {
       if(this.deviceAttrs.speed == 'low') {
         this.brightnessValue = 1
-        this.setRangWidth(23.25)
+        this.setRangWidth(31)
       }
       if(this.deviceAttrs.speed == 'normal') {
         this.brightnessValue = 2
-        this.setRangWidth(46.5)
+        this.setRangWidth(62)
       }
       if(this.deviceAttrs.speed == 'high') {
         this.brightnessValue = 3
-        this.setRangWidth(69.75)
-      }
-      if(this.deviceAttrs.speed == 'auto') {
-        this.brightnessValue = 4
         this.setRangWidth(93)
       }
     }
@@ -321,23 +325,6 @@ export default {
     setRangWidth(val) {
       document.querySelector('.rang_width').style.width = val+"%"
     },
-    // 设置关机时间
-    // setReserve(time) {
-    //   let h = parseInt(time[0].split(':')[0])
-    //   let m = parseInt(time[0].split(':')[1])
-    //   console.log(h,m,'hm')
-    //     this.controlDevice('time',{
-    //         timer_value:h*60+m,
-    //         timer_switch:'on'
-    //     })
-    // },
-    // // 取消定时
-    // canceltime(){
-    //    this.controlDevice('time',{
-    //         timer_value:0,
-    //         timer_switch:'off'
-    //     })
-    // },
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return
@@ -365,10 +352,6 @@ export default {
       if (this.brightness=='3') {
         this.controlDevice('speed','high')
       }
-      if (this.brightness=='4') {
-        if (this.deviceAttrs.mode=='wind') return HdSmart.UI.toast('送风模式不能设置自动风速')
-        this.controlDevice('speed','auto')
-      }
     },
     // 设置模式
     setMode(val) {
@@ -376,6 +359,15 @@ export default {
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
+          if (this.deviceAttrs.speed=='low') {
+            this.setRangWidth(31)
+          }
+          if (this.deviceAttrs.speed=='normal') {
+            this.setRangWidth(62)
+          }
+          if (this.deviceAttrs.speed=='high') {
+            this.setRangWidth(93)
+          }
           this.reset()
           this.hide()
         })
@@ -441,14 +433,7 @@ export default {
       }
     },
     // 设置风速
-    setSpeed(speed, val) {
-      this.typeVal = val
-      if (this.deviceAttrs.mode=='wind'&&val=='auto') {
-        this.typeVal = 'hand'
-      }
-      if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
-        return HdSmart.UI.toast('送风模式不能设置自动风速')
-      }
+    setSpeed(speed) {
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
@@ -456,10 +441,6 @@ export default {
         })
     },
     controlDevice(attr, value,param) {
-      // let param = {}
-      // if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
-      //   param = { 'speed': 'low'}
-      // }
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {
@@ -486,10 +467,10 @@ export default {
       if (this.isClose) return
       this.$refs.mode.show = true
     },
-    showSpeed() {
-      if (this.isClose) return
-      this.$refs.speed.show = true
-    },
+    // showSpeed() {
+    //   if (this.isClose) return
+    //   this.$refs.speed.show = true
+    // },
     showTime() {
       if (this.isClose) return
       this.$refs.time.show = true
@@ -497,7 +478,7 @@ export default {
     hide(){
       if(this.$refs.swing.show) this.$refs.swing.show = false
       if(this.$refs.mode.show) this.$refs.mode.show = false
-      if(this.$refs.speed.show) this.$refs.speed.show = false
+      // if(this.$refs.speed.show) this.$refs.speed.show = false
     },
 
     getProgress() {
@@ -510,9 +491,6 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/air_condition/assets/new-air';
 @imgPath1: 'base/oakes_air_condition/assets';
-.body {
-  min-height: 100%;
-}
   // 定时展示
   .timeShow {
     text-align: center;
@@ -529,12 +507,18 @@ export default {
     }
   }
 .page {
-  height: 100vh;
-  min-height: 550px;
-  overflow-x: hidden;
-  position: relative;
-  // background-image: url('~@lib/@{imgPath1}/bg_01.png');
-  background: url('~@lib/@{imgPath1}/bg_01.png') 0 / cover fixed;
+    &::before{
+    content: "";
+    background-image: url('~@lib/@{imgPath1}/img_bg_01@2x.png');
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    top:0;
+    left: 0; 
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
   &::-webkit-scrollbar {
 		display: none;
 	}
@@ -618,7 +602,7 @@ export default {
           height: 48px;
           font-size: 24px;
           background: rgba(0,0,0,0.04);
-          border: 1px solid rgba(0,0,0,0.05);
+          // border: 1px solid rgba(0,0,0,0.05);
           border-radius: 24px;
           border-radius: 24px;
           text-align: center;
@@ -640,7 +624,8 @@ export default {
         margin: 0 auto;
         width: 120px;
         height: 120px;
-        border: 1px solid #818181;
+        // border: 1px solid #818181;
+         background: rgba(0,0,0,0.1);
         border-radius: 50%;
         position: relative;
         &::before{
@@ -685,7 +670,8 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid #818181;
+      // border: 1px solid #818181;
+       background: rgba(0,0,0,0.1);
       border-radius: 50%;
 
       display: flex;
@@ -860,6 +846,13 @@ export default {
           &:last-of-type{
             color: rgba(0, 0, 0, 0.5);
           }
+           &.check{
+            display: flex;
+            align-items: center;
+            >img{
+              width: 32px;
+            }
+          }
         }
       }
     }
@@ -878,6 +871,13 @@ export default {
           height: 120px;
           &:last-of-type{
             color: rgba(0, 0, 0, 0.5);
+          }
+           &.check{
+            display: flex;
+            align-items: center;
+            >img{
+              width: 32px;
+            }
           }
         }
 
@@ -958,7 +958,7 @@ export default {
       left: 0;
       bottom: 0;
       right: 0;
-      z-index: 999;
+      // z-index: 999;
       width: 100%;
       // background: rgba(0, 0, 0, 0.1);
     }

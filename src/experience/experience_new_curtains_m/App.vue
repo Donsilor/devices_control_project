@@ -83,7 +83,8 @@ export default {
       curtainStatus: '',
       btnActive: '',
       range: 0,
-      txtShow: ''
+      txtShow: '',
+      myMove:false
     }
   },
   computed: {
@@ -96,7 +97,10 @@ export default {
   watch: {
     'device.stateChange'(){
       this.$nextTick(()=>{
-        if (this.btnActive === 'kai'||this.btnActive === 'guan'||this.btnActive ==='pause') {
+        // if (this.btnActive === 'kai'||this.btnActive === 'guan'||this.btnActive ==='pause') {
+        //   this.newRatio()
+        // }
+        if (this.myMove==false) {
           this.newRatio()
         }
                   //如果窗帘幅度发生改变
@@ -141,6 +145,7 @@ export default {
       this.getDeviceInfo()
       .then(()=>{
           this.newRatio()
+          console.log(this.myMove)
       })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -148,6 +153,9 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setPause() {
+      
+      console.log(this.myMove)
+      
       this.txtShow = ''
       this.move = false
       this.btnActive = 'pause'
@@ -177,21 +185,25 @@ export default {
       this.move = false
       this.btnActive = 'kai'
       this.controlDevice('switch', 'on')
+      console.log(this.myMove)
     },
     //全关
     setClose(){
       this.move = false
       this.btnActive = 'guan'
       this.controlDevice('switch', 'off')
+      console.log(this.myMove)
     },
     touchStart(e){
+      this.myMove = true
       this.btnActive = ''
       console.log(e)
       console.log(e.targetTouches[0].pageX,'touchStart')
       this.start = e.targetTouches[0].pageX
-      
+      console.log(this.myMove)
     },
     touchMove(e){
+      this.myMove = true
       e.stopPropagation()
       e.preventDefault()
       let cover = this.$refs.cover
@@ -201,15 +213,14 @@ export default {
       w=w>=maxW?maxW :w
       cover.style.width = w+"px"
       this.coverWidth=w-20
+      console.log(this.myMove)
     },
     touchEnd(e){
-        console.log(e.changedTouches[0].pageX,'touchEnd')
         this.end = e.changedTouches[0].pageX
         if(this.start !=  this.end ){
           console.log('滑动了')
           this.move = true
         }
-
       e.stopPropagation()
       e.preventDefault()
       let maxW = this.$refs.isgray.offsetWidth-20
@@ -218,7 +229,9 @@ export default {
       console.log(maxW)
       console.log(this.range)
       this.controlDevice('open_percentage', this.range)
-    
+      this.myMove = false
+      console.log(this.myMove)
+      
     },
     newRatio(){
        // let maxW = this.$refs.isgray.offsetWidth-14

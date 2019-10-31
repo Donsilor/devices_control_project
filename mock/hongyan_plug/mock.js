@@ -18,7 +18,7 @@ var res = {
     default_device_name: '厨房的插座',
     attribute: {
         switch: 'off',
-        usb:'on',
+        usb:'off',
         voltage:0,
         current:2.1,
         order_mode:'on',//定时开关

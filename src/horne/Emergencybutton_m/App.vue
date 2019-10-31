@@ -4,6 +4,7 @@
     <div :class="[{ 'offline': isOffline }, 'page']">
       <NewTopBar
         :title="device.device_name"
+        :scroll="true"
         bak-color="#000"/>
       <div class="top">
         <div class="node">
@@ -149,32 +150,6 @@ export default {
         return year + '-' + month + '-' + day
       }
     },
-    // lock(){
-    //   this.lockStatus = this.timeList.result.list[0].status
-    //   if (this.lockStatus=='1') {
-    //     HdSmart.Device.control({
-    //         'status':0,
-    //       },(data)=>{
-    //         console.log(data)
-    //         // this.timeList = data
-    //         // console.log(this.timeList.result)
-    //         // this.timeList.result = JSON.parse(this.timeList.result)
-    //       },()=>{
-
-    //       },'da_set_alert_status')
-    //   }else{
-    //      HdSmart.Device.control({
-    //         'status':1,
-    //       },(data)=>{
-    //         console.log(data)
-    //         // this.timeList = data
-    //         // console.log(this.timeList.result)
-    //         // this.timeList.result = JSON.parse(this.timeList.result)
-    //       },()=>{
-
-    //       },'da_set_alert_status')
-    //   }
-    // },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
         nodeid: `curtain.main.${attr}`,
@@ -193,9 +168,6 @@ export default {
 // @imgPath: 'base/new_curtains/assets';
 @imgPath: 'base/somatosensor/assets';
 
-.body {
-  min-height: 100%;
-}
   .panel-btn {
     height: auto;
     width: 100%;
@@ -256,12 +228,18 @@ export default {
     }
   }
 .page {
-  height: 100vh;
-  min-height: 550px;
-  overflow-x: hidden;
-  position: relative;
-  background-image: url('~@lib/@{imgPath}/img_bg_01.png');
-  background-size: 100% 100%;
+   &::before{
+    content: "";
+    background-image: url('~@lib/@{imgPath}/img_bg_01.png');
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    top:0;
+    left: 0; 
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
   .top{
     .node{
       width: 100%;

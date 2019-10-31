@@ -13,14 +13,14 @@
         <div class="wrap-circle">
           <div class="bg">
             <div
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'"
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'"
               class="tm">-- <sup>°C</sup></div>
             <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='auto'&&deviceAttrs.mode!=='wind'"
+              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
             </div>
             <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='auto'"
+              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
               class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
             </div>
             <div
@@ -159,26 +159,6 @@
             </span>
           </div>
         </div>
-        <!-- 定时 -->
-        <div class="option">
-          <div>
-            <span>定时</span>
-            <span
-              v-if="deviceAttrs.timer_switch=='on'&&deviceAttrs.timer_value>0"
-              class="check"
-              @click="showTime">{{ deviceAttrs.timer_value | closeTime }}
-              <img 
-                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
-            </span>
-            <span
-              v-else
-              class="check"
-              @click="showTime">设置关机时间 
-              <img 
-                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
-            </span>
-          </div>
-        </div>
       </div>
 
       <!--选择摆风-->
@@ -197,11 +177,6 @@
         ref="speed"
         :speed="deviceAttrs.speed"
         @setSpeed="setSpeed" />
-      <!-- 时间选择 -->
-      <SelectTime
-        ref="time"
-        @selectedTime="setReserve"
-        @canceltime="canceltime" />
     </div>
   </div>
 </template>
@@ -213,7 +188,7 @@ import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
 import SelectTime from './components/time.vue'
-const [MIN_TEMP, MAX_TEMP] = [160, 320]
+const [MIN_TEMP, MAX_TEMP] = [160, 300]
 export default {
   components: {
     circleProgress,
@@ -352,23 +327,6 @@ export default {
     setRangWidth(val) {
       document.querySelector('.rang_width').style.width = val+"%"
     },
-    // 设置关机时间
-    setReserve(time) {
-      let h = parseInt(time[0].split(':')[0])
-      let m = parseInt(time[0].split(':')[1])
-      console.log(h,m,'hm')
-        this.controlDevice('time',{
-            timer_value:h*60+m,
-            timer_switch:'on'
-        })
-    },
-    // 取消定时
-    canceltime(){
-       this.controlDevice('time',{
-            timer_value:0,
-            timer_switch:'off'
-        })
-    },
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return
@@ -407,8 +365,8 @@ export default {
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
-          if (this.deviceAttrs.mode=='auto') {
-            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
+          if (this.deviceAttrs.mode=='wind') {
+            this.progress = 70 /(30 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
             this.$refs.$circle.init()
             this.hide()
             return
@@ -418,9 +376,6 @@ export default {
         })
     },
     setTemperature(step) {
-      if(this.deviceAttrs.mode == 'auto') {
-        return HdSmart.UI.toast('智能模式不支持温度调节')
-      }
       // 送风模式不能设置温度
       if (this.deviceAttrs.mode === 'wind') {
         return HdSmart.UI.toast('送风模式不支持温度调节')
@@ -525,7 +480,7 @@ export default {
 
     getProgress() {
       // 计算温度进度条
-      return 70 /(32 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+      return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
     }
   }
 }

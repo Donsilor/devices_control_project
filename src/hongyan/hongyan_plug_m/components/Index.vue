@@ -2,7 +2,7 @@
   <div class="body">
     <div :class="[{ 'offline': isOffline }, {'close': isClose},'page']">
       <topbar 
-        v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
+        v-if="!isClose&& deviceAttrs.connectivity == 'online'"
         :title="device.device_name"
         :bak-color="bakColor"
         white />
@@ -12,7 +12,7 @@
         bak-color="#000" />
       <div class="main center">
         <img 
-          v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
+          v-if="!isClose&& deviceAttrs.connectivity == 'online'"
           class="bg"
           src="../../../../lib/base/hongyan_plug/assets/plug_on.png">
         <img 
@@ -31,7 +31,7 @@
         class="electricity">
         <div class="electric">
           <div 
-            v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
+            v-if="!isClose&& deviceAttrs.connectivity == 'online'"
             class="current">{{ deviceAttrs.current.toFixed(1) }} <span>A</span></div>
           <div 
             v-else 
@@ -40,7 +40,7 @@
         </div>
         <div class="electric">
           <div 
-            v-if="deviceAttrs.switch == 'on'&& deviceAttrs.connectivity == 'online'"
+            v-if="!isClose&& deviceAttrs.connectivity == 'online'"
             class="current">{{ deviceAttrs.voltage?deviceAttrs.voltage.toFixed(1):220 }} <span>V</span></div>
           <div 
             v-else 
@@ -52,7 +52,7 @@
       <div class="panel-btn center">
         <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
           <div 
-            :class="[{ 'active': !isClose&&!isOffline }, 'btn-swich btn center']"
+            :class="[{ 'active': deviceAttrs.switch=='on'&&!isOffline }, 'btn-swich btn center']"
             @click="setSwitch" />
           <div class="btn-name">开关</div>
         </div>
@@ -68,6 +68,12 @@
           <div :class="[{ 'active': deviceAttrs.child == 'on'&&!isOffline }, 'btn btn-lock center']" />
           <div class="btn-name">童锁</div>
         </div>
+        <!-- <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
+          <div 
+            :class="[{ 'active': deviceAttrs.usb == 'on'&&!isOffline }, 'btn-usb btn center']"
+            @click="usbSwitch" />
+          <div class="btn-name">usb{{ deviceAttrs.usb == 'on'?'关':'' }}</div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -85,11 +91,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isClose','isOffline']),
+    ...mapGetters(['isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-    // isClose(){
-    //   return this.deviceAttrs.switch === 'on' ? false : true
-    // },
+    isClose(){
+      return this.deviceAttrs.switch === 'on' || this.deviceAttrs.usb === 'on'? false : true
+    },
     bakColor(){
       return this.isClose ? '#000' : '#fff'
     }
@@ -115,6 +121,19 @@ export default {
       }
       this.controlDevice("switch", switchStatus)
     },
+    // usbSwitch(){
+    //   if (this.isOffline) return
+    //   if (this.deviceAttrs.child == 'on') {
+    //      return HdSmart.UI.toast('请先关闭童锁')
+    //   }
+    //   let usbStatus = ''
+    //   if (this.deviceAttrs.usb == 'on') {
+    //     usbStatus = 'off'
+    //   } else {
+    //     usbStatus = 'on'
+    //   }
+    //   this.controlDevice("usb", usbStatus)
+    // },
     // 童锁
     childLockSwitch() {
       let childLockStatus = ''
@@ -269,6 +288,12 @@ export default {
     .btn-lock {
       &::before {
         background-image: url(~@lib/base/hongyan_plug/assets/lock.png);
+        background-size: 100% 100%;
+      }
+    }
+    .btn-usb{
+       &::before {
+        background-image: url(~@lib/base/hongyan_plug/assets/btn_usb.png);
         background-size: 100% 100%;
       }
     }

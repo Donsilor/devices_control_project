@@ -45,22 +45,6 @@
           <p>空空如也，暂无历史记录</p>
         </div>
       </div>
-      <!-- <div class="bottom">
-        <div class="Charging-protection">
-          <div class="flex"><span>布防</span><span class="small">开启后侦查到人体时会提醒你</span></div>
-          <div><input
-            :checked="deviceAttrs.status=='on'"
-            class="switch switch-anim"
-            type="checkbox"
-            @click="lock"></div>
-        </div>
-        <div class="timing">
-          <div>人体侦测记录</div>
-          <div
-            class="timing-right"
-            @click="goRecord"><img src="../../../../lib/base/somatosensor/assets/arrow_in.png"></div>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>

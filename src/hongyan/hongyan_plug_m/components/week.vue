@@ -1,5 +1,5 @@
 <template>
-  <div
+  <!-- <div
     class="cover"
     @click.self="$emit('flagClose', false)">
     <div 
@@ -31,7 +31,7 @@
           @click="cancel">取消</div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -71,7 +71,7 @@ export default {
     },
     cancelDay(item) {
       item.show = true
-      var newArr = this.weekArr.filter(item => {
+       newArr = this.weekArr.filter(item => {
         if (String(item.show) == 'true') {
           return true
         }
