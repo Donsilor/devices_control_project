@@ -13,13 +13,14 @@
             <div 
               v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'" 
               class="tm">-- <sup>°C</sup></div>
+            <!-- 如果模式是从制热模式最低17度切换模式,温度应该展示为19 -->
             <div 
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
+              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='heat'" 
+              class="tm">{{ (deviceAttrs.temperature < 190 ? 190: deviceAttrs.temperature) | filterTm }}<sup>°C</sup></div>
+
+            <div 
+              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='heat'"
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
-            </div>
-            <div 
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
-              class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
             </div>
             <div 
               v-show="!isOffline&& deviceAttrs.switchStatus == 'on'" 
@@ -133,53 +134,12 @@
             <p :class="['rang_width']"/>
           </div>
         </div>
-        <!-- 摆风 -->
-        <div class="option">
-          <div>
-            <span>摆风</span>
-            <span 
-              class="check" 
-              @click="showSwing">{{ deviceAttrs.wind_up=='on'?'上摆风 ':'' }}{{ deviceAttrs.wind_down=='on'?'下摆风':'' }}{{ deviceAttrs.wind_up=='off'&&deviceAttrs.wind_down=='off'?'设置':'' }}
-              <img 
-                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
-            </span>
-          </div>
-        </div>
-        <!-- 定时 -->
-        <!-- <div class="option">
-          <div>
-            <span>定时</span>
-            <span
-              v-if="deviceAttrs.timer_switch=='on'&&deviceAttrs.timer_value>0"
-              @click="showTime">{{ deviceAttrs.timer_value | closeTime }}＞</span>
-            <span
-              v-else
-              @click="showTime">设置关机时间＞</span>
-          </div>
-        </div> -->
       </div>
-
-      <!--选择摆风-->
-      <model-swing
-        ref="swing"
-        :wind_up="deviceAttrs.wind_up"
-        :wind_down="deviceAttrs.wind_down"
-        @setWind="setWind" />
       <!--选择模式-->
       <model-mode
         ref="mode"
         :mode="deviceAttrs.mode"
         @setMode="setMode" />
-        <!--选择风速-->
-        <!-- <model-speed
-        ref="speed"
-        :speed="deviceAttrs.speed"
-        @setSpeed="setSpeed" /> -->
-        <!-- 时间选择 -->
-        <!-- <SelectTime
-        ref="time"
-        @selectedTime="setReserve"
-        @canceltime="canceltime" /> -->
     </div>
   </div>
 </template>
@@ -191,7 +151,7 @@ import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
 import SelectTime from './components/time.vue'
-const [MIN_TEMP, MAX_TEMP] = [160, 300]
+const [MIN_TEMP, MAX_TEMP] = [170, 300]
 export default {
   components: {
     circleProgress,
@@ -215,7 +175,7 @@ export default {
       typeVal: 'hand',
       brightnessValue: 0,
       rangStyle: '',
-      opcityStyle: 'opcity-0'
+      opcityStyle: 'opcity-0',
     }
   },
 
@@ -377,11 +337,29 @@ export default {
         })
     },
     setTemperature(step) {
-      // 送风模式不能设置温度
-      if (this.deviceAttrs.mode === 'wind') {
-        return HdSmart.UI.toast('送风模式不支持温度调节')
-      }
+      // // 送风模式不能设置温度
+      // if (this.deviceAttrs.mode === 'wind') {
+      //   return HdSmart.UI.toast('送风模式不支持温度调节')
+      // }
       let temp = +this.deviceAttrs.temperature + step
+      if (step== 10) {
+        if (this.deviceAttrs.mode!=='heat'&&this.deviceAttrs.temperature == 170) {
+         temp = +this.deviceAttrs.temperature + step + 20
+        }
+        if (this.deviceAttrs.mode!=='heat'&&this.deviceAttrs.temperature == 180) {
+          temp = +this.deviceAttrs.temperature + step + 10
+        }
+      }else{
+        if (this.deviceAttrs.mode!=='heat'&&this.deviceAttrs.temperature == 200) {
+           temp = +this.deviceAttrs.temperature + step - 20
+        }
+        if (this.deviceAttrs.mode!=='heat'&&this.deviceAttrs.temperature == 190) {
+           temp = +this.deviceAttrs.temperature + step - 30
+        }
+        if (this.deviceAttrs.mode!=='heat'&&this.deviceAttrs.temperature == 180) {
+           temp = +this.deviceAttrs.temperature + step - 40
+        }
+      }
       // 最小温度
       if (temp < MIN_TEMP) {
         if (this.deviceAttrs.temperature == MIN_TEMP) {
@@ -480,14 +458,22 @@ export default {
       this.$refs.time.show = true
     },
     hide(){
-      if(this.$refs.swing.show) this.$refs.swing.show = false
-      if(this.$refs.mode.show) this.$refs.mode.show = false
+      // if(this.$refs.swing.show) this.$refs.swing.show = false
+      // if(this.$refs.mode.show) this.$refs.mode.show = false
       // if(this.$refs.speed.show) this.$refs.speed.show = false
     },
 
     getProgress() {
       // 计算温度进度条
-      return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+      if (this.deviceAttrs.mode=='heat') {
+        return 70 /(30 - 17) * (this.deviceAttrs.temperature / 10 - 17)
+      }else{
+        let wendu = this.deviceAttrs.temperature
+        if (wendu < 190) {
+          wendu = 190
+        }
+         return 70 /(30 - 19) * (wendu / 10 - 19)
+      }  
     }
   }
 }

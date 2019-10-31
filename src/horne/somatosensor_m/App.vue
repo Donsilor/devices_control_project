@@ -90,7 +90,7 @@ export default {
             'device_category_id':this.device.device_category_id
           }]
         },(data)=>{
-          // console.log(data)
+          console.log('===================status  data',data)
           this.lockData = data
           this.lockData.result = JSON.parse(this.lockData.result)
           this.lockStatus = this.lockData.result.list[0].status
@@ -117,6 +117,8 @@ export default {
             console.log('==================today',data)
             this.todayNum = data
             this.todayNum.result = JSON.parse(this.todayNum.result)
+            console.log('==================this.todayNum.result',this.todayNum.result)
+            
           },()=>{
           },'da_get_dev_alert_list')
 
