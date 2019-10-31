@@ -1,12 +1,10 @@
 <template>
   <!-- v-if="visible" -->
-
   <div
     class="status_bar">
-    <div class="status_bar_block"/>
+    <!-- <div class="status_bar_block"/> -->
     <div
       ref="status_bar_fixed"
-      :style="{top:(status_bar_height + navigation_bar_height*2 - barHeight )+'px'}"
       class="status_bar_fixed">
       <div
         v-if="spVisible"
@@ -16,29 +14,45 @@
         <span class="text">{{ tvStatus.screenProjectTitle }}</span>
         <i class="icon-arrow"/>
       </div>
-      <div v-show="ios">
+      <!-- v-if="tvStatus.tvOnlineStatus==-1"       -->
+      <div>
         <div
-          v-if="tvStatus.tvOnlineStatus==-1"
           class="offline_bar"
           @click="goToOfflineHelpPage">
-          <i class="icon-wifi"/>无法连接网络，请检查网络设置
+          <div class="offline_bar_div">
+            <p class="offline_bar_p">
+              <i class="error"/>
+            </p>
+            <span class="link">无法连接网络，请检查网络设置</span> 
+
+          </div>
+         
+         
         </div>
         <div
           v-if="tvStatus.tvOnlineStatus==-2"
           class="offline_bar"
           @click="goToOfflineHelpPage">
-          <i class="icon-error"/>路由器已离线 &nbsp;
-          <span class="link">查看帮助</span>
-          <i class="icon-arrow"/>
+          <div class="offline_bar_div">
+            <p class="offline_bar_p">
+              <i class="error"/>
+            </p>
+            <span class="link">路由器已离线,查看帮助</span>
+          </div>
+          <i class="arrow"/>
         </div>
-        <!-- v-if="tvStatus.tvOnlineStatus==-3" -->
-
         <div
+          v-if="tvStatus.tvOnlineStatus==-3"      
           class="offline_bar"
           @click="goToOfflineHelpPage">
-          <i class="icon-error"/>设备已离线 &nbsp;
-          <span class="link">查看帮助</span>
-          <i class="icon-arrow"/>
+          <div class="offline_bar_div">
+            <p class="offline_bar_p">
+              <i class="error"/>
+            </p>
+           
+            <span class="link">设备已离线,查看帮助</span>
+          </div>
+          <i class="arrow"/>
         </div>
       </div>
     </div>
@@ -46,16 +60,16 @@
       v-if="tvStatus.tvOnlineStatus < 0 && !ios"
       class="offline_bar_blank"/> -->
   </div>
-</template>
+</div></template>
 
 <style lang="less">
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
-.status_bar_block{
-    height: 0;
-}
+// .status_bar_block{
+//     height: 0;
+// }
 .status_bar_fixed{
-    position:fixed;
+    // position:fixed;
     left: 0;
     top: 69PX;
     width: 100%;
@@ -65,8 +79,8 @@
 .sp_status_bar {
     /* background: #f7f8fa; */
     text-align: center;
-    height: 40PX;
-    line-height: 40PX;
+    height: 44PX;
+    line-height: 44PX;
     font-size: 28px;
     color: #FFC800;
     overflow: hidden;
@@ -82,12 +96,13 @@
     white-space: nowrap;
 }
 .status_bar {
-    position: absolute;
+    // position: absolute;
+
     width: 100%;
     z-index: 10000;
     top: 0;
     left: 0;
-    height: 40px;
+    height: 44PX;
 }
 .status_bar .link {
     color: #FFC800;
@@ -109,13 +124,46 @@
 }
 
 .offline_bar {
-    background: rgba(40, 40, 40, .8);
+    background: rgba(0, 0, 0, .3);
     width: 100%;
-    height: 40PX;
-    line-height: 40PX;
+    height: 44PX;
+    line-height: 44PX;
     text-align: center;
     color: #fff;
     font-size: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20PX;
+    .offline_bar_div{
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+       .link{
+        color: #fff;
+        font-size: 32px;
+      }
+    }
+    .offline_bar_p{
+      width: 26PX;
+      height: 44PX;
+      display: flex;
+      justify-content:flex-start;
+      align-items: center;
+     
+    }
+    .error{
+      width: 20PX;
+      height: 20PX;
+      background: url('~@lib/base/tv/assets/new/tv_icn_lixian.png');
+      background-size: 100% 100%;
+    }
+    .arrow{
+      width: 20PX;
+      height: 20PX;
+      background: url('~@lib/base/tv/assets/new/tv_arrow_lixian.png');
+      background-size: 100% 100%;
+    }
 }
 
 .offline_bar i {
@@ -130,6 +178,7 @@
 <script>
 import * as service from "../service"
 import {mapState} from 'vuex'
+let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
 
 export default {
     props: ["barHeight","type"],

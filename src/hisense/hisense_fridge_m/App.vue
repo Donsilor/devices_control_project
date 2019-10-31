@@ -361,6 +361,7 @@ export default {
     },
     setMode(val, boolean) {
       if (this.isClose) return
+      if(this.isOffline) return HdSmart.UI.toast('设备已离线')
       // if (this.checkedColdValue == true && this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冷和速冻模式', 1000)
       // if (this.checkedColdValue == true) return HdSmart.UI.toast('请先退出速冷模式', 1000)
       // if (this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冻模式', 1000)
@@ -383,6 +384,7 @@ export default {
       // })
     },
     setTemperature(attr, step, [min, max ]) {
+      if(this.isOffline) return HdSmart.UI.toast('设备已离线')
       var temp = this.deviceAttrs[attr] + step
       // 最小温度
       if (temp < min) {
@@ -430,6 +432,7 @@ export default {
       this.timeValue = val
     },
     cold(e, val) {
+      if(this.isOffline) return HdSmart.UI.toast('设备已离线')
       this.coldDisabled = true
       var value
       if(val == 'on') {
@@ -440,6 +443,7 @@ export default {
       this.controlDevice('fast_cool', value)
     },
     frozen(e, val) {
+      if(this.isOffline) return HdSmart.UI.toast('设备已离线')
       this.frozenDisabled = true
       var value
       if(val == 'on') {

@@ -4,7 +4,6 @@
     <!-- 遥控器 --> 
     <remoteControl/>
     <div
-      v-show="ios"
       class="space-block" />
     <!-- 顶部导航菜单 -->
     <new-topbar
@@ -15,12 +14,12 @@
       bak-color="#000"
       @shutdownCallback="cmd('rcPower')"
     />
-    <!-- v-show="device_uuid" -->
-    <!--  -->
+    <!--    -->
+    <!-- v-show="device_uuid"   -->
     <status-tip
       type="首页"/>
     <div 
-      :class="{'search-screen-bg-mt':device_uuid}"
+      :class="{'search-screen-bg_mt':device_uuid}" 
       class="search-screen-bg">
       <div class="search-screen">
         <router-link
@@ -184,7 +183,7 @@
   // }
 
   .space-block{
-    height: 26px;
+    height: 25PX;
   }
   .wrap-title{
     display: flex;
@@ -239,6 +238,7 @@
 }
 .search-screen-bg{
     // padding-top: 20px;
+    margin-top: 28PX;
     height: 44PX;
   .search-screen{
     overflow: hidden;
@@ -279,7 +279,7 @@
   }
 } 
 .search-screen-bg-mt{
-  margin-top: @navigation_bar_height;
+  margin-top: 40px;
 }
 
 .icon_grid {
@@ -305,12 +305,16 @@
     color: #000000;
     opacity: 1 !important;
     font-size: 40px !important;
+    font-weight: 500;
     position:relative;
     &::before{
       content: '';
       width: 0.5rem;
       height: 0.07rem;
-      background-color: #FFC800;
+      // background-color: #FFC800;
+      background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
+      // border-radius: 6px;
+      border-radius: 4px;
       position: absolute;
       left:50%;
       transform:translateX(-50%);
@@ -754,7 +758,9 @@ export default {
     console.log('1111',window.device_name)
   },
   mounted() {
-    this.pageInit()
+    setTimeout(()=>{
+      window.scrollTo(0,1)
+    },300)
     document.body.scrollTop = 0
     this.initFixedMenu()
     console.log('uu', this.channels)
@@ -904,6 +910,7 @@ export default {
       }
     },
     toActive(item,idx){
+        console.log(this.$store.state.tvStatus)
        this.activeIndex = idx
        this.itemData = item
     },

@@ -66,9 +66,10 @@
           v-if="shutdown"
           ref="shutdown"
           class="header-bottom-right"
-          @click="shutdownCallback"/>
-          
-          <!-- <slot /> -->
+          @click="shutdownCallback">
+          <p class="header-bottom-right-p"/>
+        </div>
+        <!-- <slot /> -->
       </div>
 
     </div>
@@ -161,15 +162,15 @@ export default {
     })
   },
   mounted(){
-      this.$nextTick(()=>{
-          let topbar_fixed = document.querySelectorAll('.topbar-fixed')[0]
-          let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]  
-          let search_screen_bg = document.querySelectorAll('.search-screen-bg')[0]
-          if(status_bar_fixed&&topbar_fixed&&search_screen_bg){
-            status_bar_fixed.style.top = topbar_fixed.offsetHeight + 'px'
-            search_screen_bg.style.marginTop = status_bar_fixed.offsetHeight + 'px'
-          }
-      })
+      // this.$nextTick(()=>{
+      //     let topbar_fixed = document.querySelectorAll('.topbar-fixed')[0]
+      //     let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]  
+      //     let search_screen_bg = document.querySelectorAll('.search-screen-bg')[0]
+      //     if(status_bar_fixed&&topbar_fixed&&search_screen_bg){
+      //       status_bar_fixed.style.top = topbar_fixed.offsetHeight + 'px'
+      //       search_screen_bg.style.marginTop = status_bar_fixed.offsetHeight + 'px'
+      //     }
+      // })
      
      
     if(this.scroll){
@@ -212,39 +213,43 @@ export default {
       let status = document.querySelectorAll('.status')[0]  
       let statusbar = document.querySelectorAll('.statusbar')[0]   
       let newNavbar = document.querySelectorAll('.newNavbar')[0]   
-      let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]   
-      let search_screen = document.querySelectorAll('.search-screen')[0]   
+      // let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]   
+      let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
+      let search_screen = document.querySelectorAll('.search-screen')[0] 
+      let s = statusbar.offsetHeight+newNavbar.offsetHeight  
       // let statusTop = status.offsetTop-  this.scrollTop
-      let topbar_fixed = document.querySelectorAll('.topbar-fixed')[0]   
+      // let topbar_fixed = document.querySelectorAll('.topbar-fixed')[0]   
       // let w = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2    如果标题要居中
       // console.log(statusTop,'statusTop')
       //  console.log(status.offsetTop,'status.offsetTop')
-      //   console.log( this.scrollTop,' this.scrollTop')
+        console.log( this.scrollTop,' this.scrollTop')
       if(status&& status_bar_fixed){
-        if(this.scrollTop>=100){
-            status_bar_fixed.style.top = statusbar.offsetHeight+newNavbar.offsetHeight +"px"
+        if(this.scrollTop>=s){
+            status_bar_fixed.style.position = 'fixed'
+            status_bar_fixed.style.top  = s +"px"
 
         }else{
-            status_bar_fixed.style.top = topbar_fixed.offsetHeight + 'px'
+            status_bar_fixed.style.position = ''
+
         }
       } 
       let h = this.$refs['header-bottom'].offsetHeight
-      let b = (h/100)*this.scrollTop
-      let l = (44/100)*this.scrollTop
-      let f = (-6/100)*this.scrollTop+24
+      let b = (h/s)*this.scrollTop
+      let l = (44/s)*this.scrollTop
+      let f = (-6/s)*this.scrollTop+24
       b = b>=h?h:b
       l = l>=44?44:l
       f = f<=18?18:f
-      this.$refs.title.style.bottom = b + 'px'
-      this.$refs.title.style.left = l + 'px'
-       this.$refs.title.style.fontSize = f + 'px'
+      this.$refs.title.style.bottom = b/37.5 + 'rem'
+      this.$refs.title.style.left = l/37.5 + 'rem'
+      this.$refs.title.style.fontSize = f/37.5 + 'rem'
       if( this.scrollTop>=90 ){
         this.$refs.shutdown&&(this.$refs.shutdown.style.display='none')
         this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='#fff')  
         this.search&&(this.rightSearch = true)
         search_screen&&(search_screen.style.visibility='hidden')    
       }else{
-        this.$refs.shutdown&&(this.$refs.shutdown.style.display='block')  
+        this.$refs.shutdown&&(this.$refs.shutdown.style.display='flex')  
         this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='')  
         this.search&&(this.rightSearch = false)
         search_screen&&(search_screen.style.visibility='')
@@ -333,7 +338,7 @@ export default {
     font-family: PingFangSC-Medium;
     font-size: 48px;
     color: #000000;
-    font-weight: 600
+    font-weight: 600;
     // line-height: 48px;
   }
 }
@@ -353,8 +358,8 @@ export default {
    width: 72px;
     height: 72px;
     p{
-        width: 50px;
-        height: 50px;
+        width: 48px;
+        height: 48px;
 
     }
 
@@ -424,11 +429,18 @@ export default {
 }
 .header-bottom-right{
 
-    display: inline-block;
+    display: flex;
     width: 36PX;
     height: 36PX;
-    background: url('~@lib/base/assets/yikai.png');
-    background-size: 100% 100%;
+   justify-content: center;
+   align-items: center;
+   
+    .header-bottom-right-p{
+       background: url('~@lib/base/tv/assets/new/tv_btn_open.png');
+        background-size: 100% 100%;
+        width: 24PX;
+        height: 24PX;
+    }
   }
 .opcity-0 {
   background-color: rgba(255, 255, 255, 0) !important;

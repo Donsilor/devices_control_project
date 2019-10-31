@@ -9,7 +9,7 @@
         <div class="line"/>
         <div class="item">
           <div class="title">
-            <div class="left"><!-- <i class="icon icon-cold" /> -->冷藏室<span class="tm">{{ deviceAttrs.level_container | filterTm }}℃</span></div>
+            <div class="left"><!-- <i class="icon icon-cold" /> -->冷藏室<span class="tm"><!-- {{ deviceAttrs.level_container | filterTm }} -->{{ level_containerValue }}℃</span></div>
             <div>
               <span class="txt">速冷</span>
               <input
@@ -33,7 +33,7 @@
           <div class="control-tm marginTop">
             <button
               :class="['control', 'reduce', {'disabed': coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on'}]"
-              :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on'"
+              :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on' || buttonDisabled"
               @click="setTemperature('level_container', -1, [2, 8])"/>
             <!-- <div class="tm-progress">
               <div
@@ -41,10 +41,10 @@
                 class="low" ><span>2℃</span></div>
               <div class="high"><span>8℃</span></div>
             </div> -->
-            <div class="temperature">{{ deviceAttrs.holiday=="on"?'17':deviceAttrs.level_container | filterTm }}<sup>°C</sup></div>
+            <div class="temperature"><!-- {{ deviceAttrs.level_container | filterTm }} -->{{ level_containerValue }}<sup>°C</sup></div>
             <button
               :class="['control', 'add', {'disabed': coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on'}]"
-              :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on'"
+              :disabled="coldValue == 'on' || deviceAttrs.intelligent == 'on' || deviceAttrs.holiday == 'on' || buttonDisabled"
               @click="setTemperature('level_container', 1, [2, 8])"/>
           </div>
         </div>
@@ -69,7 +69,7 @@
         <div class="line"/>
         <div class="item">
           <div class="title">
-            <div class="left"><!-- <i class="icon icon-freeze" /> -->冷冻室<span class="tm">{{ deviceAttrs.level_freezer | filterTm }}℃</span></div>
+            <div class="left"><!-- <i class="icon icon-freeze" /> -->冷冻室<span class="tm"><!-- {{ deviceAttrs.level_freezer | filterTm }} -->{{ level_freezerValue }}℃</span></div>
             <div>
               <span class="txt">速冻</span>
               <input
@@ -93,7 +93,7 @@
           <div class="control-tm marginTop">
             <button
               :class="['control', 'reduce', {'disabed': frozenValue == 'on' || deviceAttrs.intelligent == 'on'}]"
-              :disabled="frozenValue == 'on' || deviceAttrs.intelligent == 'on'"
+              :disabled="frozenValue == 'on' || deviceAttrs.intelligent == 'on' || buttonDisabled"
               @click="setTemperature('level_freezer', -1, [-24, -16])"/>
             <!-- <div class="tm-progress">
               <div
@@ -101,10 +101,10 @@
                 class="low" ><span>-25℃</span></div>
               <div class="high"><span>-15℃</span></div>
             </div> -->
-            <div class="temperature">{{ deviceAttrs.level_freezer | filterTm }}<sup>°C</sup></div>
+            <div class="temperature"><!-- {{ deviceAttrs.level_freezer | filterTm }} -->{{ level_freezerValue }}<sup>°C</sup></div>
             <button
               :class="['control', 'add', {'disabed': frozenValue == 'on' || deviceAttrs.intelligent == 'on'}]"
-              :disabled="frozenValue == 'on' || deviceAttrs.intelligent == 'on'"
+              :disabled="frozenValue == 'on' || deviceAttrs.intelligent == 'on' || buttonDisabled"
               @click="setTemperature('level_freezer', 1, [-24, -16])"/>
           </div>
         </div>
@@ -265,6 +265,9 @@ export default {
       checkedFrozenValue: false,
       coldDisabled: false,
       frozenDisabled: false,
+      buttonDisabled: false,
+      level_containerValue: '--',
+      level_freezerValue: '--',
     }
   },
   computed: {
@@ -305,26 +308,26 @@ export default {
     },
   },
   watch: {
-    "deviceAttrs.holiday"() {
-      this.coldDisabled = false
-      this.frozenDisabled = false
-      if(this.deviceAttrs.holiday == 'on') {
-        this.coldValue = 'off'
-        // this.frozenValue = 'off'
-        this.checkedColdValue = false
-        // this.checkedFrozenValue = false
-      }
-    },
-    "deviceAttrs.intelligent"() {
-      this.coldDisabled = false
-      this.frozenDisabled = false
-      if(this.deviceAttrs.intelligent == 'on') {
-        this.coldValue = 'off'
-        this.frozenValue = 'off'
-        this.checkedColdValue = false
-        this.checkedFrozenValue = false
-      }
-    },
+    // "deviceAttrs.holiday"() {
+    //   this.coldDisabled = false
+    //   this.frozenDisabled = false
+    //   if(this.deviceAttrs.holiday == 'on') {
+    //     this.coldValue = 'off'
+    //     // this.frozenValue = 'off'
+    //     this.checkedColdValue = false
+    //     // this.checkedFrozenValue = false
+    //   }
+    // },
+    // "deviceAttrs.intelligent"() {
+    //   this.coldDisabled = false
+    //   this.frozenDisabled = false
+    //   if(this.deviceAttrs.intelligent == 'on') {
+    //     this.coldValue = 'off'
+    //     this.frozenValue = 'off'
+    //     this.checkedColdValue = false
+    //     this.checkedFrozenValue = false
+    //   }
+    // },
     "deviceAttrs.fast_cool"() {
       this.coldDisabled = false
       if(this.deviceAttrs.fast_cool == 'on') {
@@ -346,7 +349,13 @@ export default {
         this.frozenValue = 'off'
         this.checkedFrozenValue = false
       }
-    }
+    },
+    "deviceAttrs.level_container"() {
+      this.level_containerValue = (+this.deviceAttrs.level_container)
+    },
+    "deviceAttrs.level_freezer"() {
+      this.level_freezerValue = (+this.deviceAttrs.level_freezer)
+    },
   },
   created() {
     HdSmart.ready(() => {
@@ -360,6 +369,7 @@ export default {
       this.isOpen = 'on'
     },
     setMode(val, boolean) {
+      if(this.isOffline) return HdSmart.UI.toast('设备已离线')
       if (this.isClose) return
       // if (this.checkedColdValue == true && this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冷和速冻模式', 1000)
       // if (this.checkedColdValue == true) return HdSmart.UI.toast('请先退出速冷模式', 1000)
@@ -372,10 +382,10 @@ export default {
       }
       this.controlDevice(val, value)
       .then(() => {
-        this.getDeviceInfo()
+        // this.getDeviceInfo()
       })
       .catch(() => {
-        this.getDeviceInfo()
+        // this.getDeviceInfo()
       })
       // .then(() => {
       //   if(this.deviceAttrs.holiday == 'on') {
@@ -389,29 +399,76 @@ export default {
       // })
     },
     setTemperature(attr, step, [min, max ]) {
-      var temp = this.deviceAttrs[attr] + step
+      if(this.isOffline) return HdSmart.UI.toast('设备已离线')
+      this.buttonDisabled = true
+      // var temp = this.deviceAttrs[attr] + step
+      var containerTemp = this.level_containerValue + step
+      var freezerTemp = this.level_freezerValue + step
       // 最小温度
-      if (temp < min) {
-        if (this.deviceAttrs[attr] == min) {
+      // if (temp < min) {
+      //   if (this.deviceAttrs[attr] == min) {
+      //     return HdSmart.UI.toast(`温度最低为${min}℃`)
+      //   } else {
+      //     temp = min
+      //   }
+      // }
+      if(containerTemp < min) {
+        if(this.level_containerValue == min) {
+          this.buttonDisabled = false
           return HdSmart.UI.toast(`温度最低为${min}℃`)
         } else {
-          temp = min
+          containerTemp = min
+        }
+      }
+      if(freezerTemp < min) {
+        if(this.level_freezerValue == min) {
+          this.buttonDisabled = false
+          return HdSmart.UI.toast(`温度最低为${min}℃`)
+        } else {
+          freezerTemp = min
         }
       }
       // 最大温度
-      if (temp > max) {
-        if (this.deviceAttrs[attr] == max) {
+      // if (temp > max) {
+      //   if (this.deviceAttrs[attr] == max) {
+      //     return HdSmart.UI.toast(`温度最高为${max}℃`)
+      //   } else {
+      //     temp = max
+      //   }
+      // }
+      if(containerTemp > max) {
+        if(this.level_containerValue == max) {
+          this.buttonDisabled = false
           return HdSmart.UI.toast(`温度最高为${max}℃`)
         } else {
-          temp = max
+          containerTemp = max
         }
       }
-      this.controlDevice(attr, temp)
-      .then(() => {
-        this.getDeviceInfo()
+      if(freezerTemp > max) {
+        if(this.level_freezerValue == max) {
+          this.buttonDisabled = false
+          return HdSmart.UI.toast(`温度最高为${max}℃`)
+        } else {
+          freezerTemp = max
+        }
+      }
+      this.controlDevice(attr, attr=='level_container'?containerTemp:freezerTemp)
+      .then((res) => {
+        if(res.code == 0) {
+          if(attr == 'level_container') {
+            this.level_containerValue = containerTemp
+          }
+          if(attr == 'level_freezer') {
+            this.level_freezerValue = freezerTemp
+          }
+        } else {
+          HdSmart.UI.toast('操作失败')
+        }
+        this.buttonDisabled = false
       })
       .catch(() => {
-        this.getDeviceInfo()
+        this.buttonDisabled = false
+        HdSmart.UI.toast('操作失败')
       })
     },
     changeSpeed(e) {
@@ -442,6 +499,7 @@ export default {
       this.timeValue = val
     },
     cold(e, val) {
+      if(this.isOffline) return HdSmart.UI.toast('设备已离线')
       this.coldDisabled = true
       var value
       if(val == 'on') {
@@ -450,14 +508,29 @@ export default {
         value = 'on'
       }
       this.controlDevice('fast_cool', value)
-      .then(() => {
-        this.getDeviceInfo()
+      .then((res) => {
+        if(res.code == 0) {
+          if(value == 'off') {
+            this.coldValue = 'off'
+            this.checkedColdValue = false
+          }
+          if(value == 'on') {
+            this.coldValue = 'on'
+            this.checkedColdValue = true
+          }
+        } else {
+          HdSmart.UI.toast('操作失败')
+        }
+        this.coldDisabled = false
+
       })
       .catch(() => {
-        this.getDeviceInfo()
+        this.coldDisabled = false
+        HdSmart.UI.toast('操作失败')
       })
     },
     frozen(e, val) {
+      if(this.isOffline) return HdSmart.UI.toast('设备已离线')
       this.frozenDisabled = true
       var value
       if(val == 'on') {
@@ -466,11 +539,25 @@ export default {
         value = 'on'
       }
       this.controlDevice('fast_frozen', value)
-      .then(() => {
-        this.getDeviceInfo()
+      .then((res) => {
+        if(res.code == 0) {
+          if(value == 'off') {
+            this.frozenValue = 'off'
+            this.checkedFrozenValue = false
+          }
+          if(value == 'on') {
+            this.frozenValue = 'on'
+            this.checkedFrozenValue = true
+          }
+        } else {
+          HdSmart.UI.toast('操作失败')
+        }
+        this.frozenDisabled = false
+
       })
       .catch(() => {
-        this.getDeviceInfo()
+        this.frozenDisabled = false
+        HdSmart.UI.toast('操作失败')
       })
     },
     controlDevice(attr, value) {
