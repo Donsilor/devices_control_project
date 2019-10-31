@@ -3,7 +3,7 @@
     :class="[{'topbar-nobg':transparent}, {'topbar-black': bgBlack}]"
     class="topbar">
     <div
-      :style="{ 'background': bgColor }" 
+      :style="{ 'background': bgColor }"
       class="topbar-block" />
     <div
       :style="{ background: bgColor }"
@@ -14,7 +14,7 @@
         class="statusbar" />
       <div
         ref="newNavbar"
-        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}" 
+        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
         class="newNavbar">
         <div
           class="left"
@@ -27,7 +27,7 @@
         </div>
         <div
           v-if="showRight&&!rightSearch"
-          class="right" 
+          class="right"
           @click.prevent="goDetail">
           <p/>
           <!-- <template v-if="buttons">
@@ -46,21 +46,21 @@
               @click.prevent="goDetail" />
           </template> -->
         </div>
-        <div 
-          v-show="rightSearch&&search" 
-          class="right-search" 
+        <div
+          v-show="rightSearch&&search"
+          class="right-search"
           @click="$router.push('/search')">
           <p/>
         </div>
 
       </div>
-      <div 
+      <div
         ref="header-bottom"
-        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}" 
+        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
         class="header-bottom">
         <div
           ref="title"
-          :style="{ 'color': bakColor }" 
+          :style="{ 'color': bakColor }"
           class="title">{{ title }}</div>
         <div
           v-if="shutdown"
@@ -164,20 +164,20 @@ export default {
   mounted(){
       // this.$nextTick(()=>{
       //     let topbar_fixed = document.querySelectorAll('.topbar-fixed')[0]
-      //     let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]  
+      //     let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
       //     let search_screen_bg = document.querySelectorAll('.search-screen-bg')[0]
       //     if(status_bar_fixed&&topbar_fixed&&search_screen_bg){
       //       status_bar_fixed.style.top = topbar_fixed.offsetHeight + 'px'
       //       search_screen_bg.style.marginTop = status_bar_fixed.offsetHeight + 'px'
       //     }
       // })
-     
-     
+
+
     if(this.scroll){
        addEventListener('scroll',this.scrollfn)
     }
-    
-   
+
+
   },
   destroyed(){
     removeEventListener('scroll',this.scrollfn)
@@ -207,18 +207,18 @@ export default {
     shutdownCallback(){
       this.$emit("shutdownCallback")
     },
-  
+
     scrollfn(){
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-      let status = document.querySelectorAll('.status')[0]  
-      let statusbar = document.querySelectorAll('.statusbar')[0]   
-      let newNavbar = document.querySelectorAll('.newNavbar')[0]   
-      // let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]   
+      let status = document.querySelectorAll('.status')[0]
+      let statusbar = document.querySelectorAll('.statusbar')[0]
+      let newNavbar = document.querySelectorAll('.newNavbar')[0]
+      // let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
       let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
-      let search_screen = document.querySelectorAll('.search-screen')[0] 
-      let s = statusbar.offsetHeight+newNavbar.offsetHeight  
+      let search_screen = document.querySelectorAll('.search-screen')[0]
+      let s = statusbar.offsetHeight+newNavbar.offsetHeight
       // let statusTop = status.offsetTop-  this.scrollTop
-      // let topbar_fixed = document.querySelectorAll('.topbar-fixed')[0]   
+      // let topbar_fixed = document.querySelectorAll('.topbar-fixed')[0]
       // let w = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2    如果标题要居中
       // console.log(statusTop,'statusTop')
       //  console.log(status.offsetTop,'status.offsetTop')
@@ -232,7 +232,7 @@ export default {
             status_bar_fixed.style.position = ''
 
         }
-      } 
+      }
       let h = this.$refs['header-bottom'].offsetHeight
       let b = (h/s)*this.scrollTop
       let l = (44/s)*this.scrollTop
@@ -245,12 +245,12 @@ export default {
       this.$refs.title.style.fontSize = f/37.5 + 'rem'
       if( this.scrollTop>=90 ){
         this.$refs.shutdown&&(this.$refs.shutdown.style.display='none')
-        this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='#fff')  
+        this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='#fff')
         this.search&&(this.rightSearch = true)
-        search_screen&&(search_screen.style.visibility='hidden')    
+        search_screen&&(search_screen.style.visibility='hidden')
       }else{
-        this.$refs.shutdown&&(this.$refs.shutdown.style.display='flex')  
-        this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='')  
+        this.$refs.shutdown&&(this.$refs.shutdown.style.display='flex')
+        this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='')
         this.search&&(this.rightSearch = false)
         search_screen&&(search_screen.style.visibility='')
       }
@@ -335,10 +335,10 @@ export default {
    position: relative;
     text-align: center;
     font-size: 17PX;
-    font-family: PingFangSC-Medium;
+    // font-family: PingFangSC-Medium;
     font-size: 48px;
     color: #000000;
-    font-weight: 600;
+    font-weight: bold;
     // line-height: 48px;
   }
 }
@@ -383,14 +383,14 @@ export default {
         background-size: 100% 100%;
 
     }
-   
+
   }
   .right-search{
       display: flex;
       justify-content: flex-end;
       align-items: center;
     p{
-     
+
        background: url('../base/img/tv_btn_search.png');
         background-size: 100% 100%;
     }
@@ -434,7 +434,7 @@ export default {
     height: 36PX;
    justify-content: center;
    align-items: center;
-   
+
     .header-bottom-right-p{
        background: url('~@lib/base/tv/assets/new/tv_btn_open.png');
         background-size: 100% 100%;
