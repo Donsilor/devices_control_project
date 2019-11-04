@@ -61,13 +61,6 @@ export default {
     ...mapGetters(['isOffline']),
     ...mapState(['device', 'deviceAttrs']),
   },
-  watch: {
-    'device.stateChange'(){
-      this.$nextTick(()=>{
-        //  this.newRatio()
-      })
-    },
-  },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
@@ -80,8 +73,20 @@ export default {
           }
           this.currentdate=date.getFullYear() + fillz(date.getMonth() + 1) + fillz(date.getDate())
           this.currentdate1=date.getFullYear() + fillz(date.getMonth() ) + fillz(date.getDate())
-          this.today=fillz(date.getDate())
-          // 获取今日记录次数
+          this.getTwo()
+          .then(() =>{
+            this.getThree()
+          })
+        })
+        HdSmart.UI.setStatusBarColor(2)
+    })
+
+  },
+  methods: {
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    getTwo() {
+      return new Promise((resolve, reject) => {
+        // 获取今日记录次数
            HdSmart.Device.control({
             'date_start':this.currentdate,
             'date_end':this.currentdate,
@@ -90,15 +95,22 @@ export default {
               'begin':0
             }
           },(data)=>{
-            console.log(data)
-            this.todayNum = data
-            console.log(this.todayNum.result)
-            this.todayNum.result = JSON.parse(this.todayNum.result)
-            console.log(this.todayNum.result)
-          },()=>{
+            console.log('==================today',data)
+            // this.todayNum = data
+            if (typeof data.result === 'string') {
+              this.todayNum.result = JSON.parse(data.result)
+            } else if (typeof data.result === 'object') {
+              this.todayNum.result = data.result
+            }
+            resolve()
+          },(err)=>{
+            reject(err)
           },'da_get_dev_alert_list')
-
-          // 获取列表list
+      })
+    },
+    getThree() {
+      return new Promise((resolve, reject) =>{
+        // 获取列表list
           HdSmart.Device.control({
             'date_start':this.currentdate1,
             'date_end':this.currentdate,
@@ -107,18 +119,19 @@ export default {
               'begin':0
             }
           },(data)=>{
-            console.log(data)
+            console.log('=====================getList',data)
             this.timeList = data
-            console.log(this.timeList.result)
-            this.timeList.result = JSON.parse(this.timeList.result)
-            console.log(this.timeList.result)
-          },()=>{
+            if (typeof data.result === 'string') {
+              this.timeList.result = JSON.parse(data.result)
+            } else if (typeof data.result === 'object') {
+              this.timeList.result = data.result
+            }
+            resolve()
+          },(err)=>{
+            reject(err)
           },'da_get_dev_alert_list')
-        })
-    })
-  },
-  methods: {
-    ...mapActions(['getDeviceInfo', 'doControlDevice']),
+      })
+    },
     getDateTime(date, type) {
       // 时间格式获取
       if (!date) return

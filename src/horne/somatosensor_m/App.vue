@@ -63,7 +63,7 @@ export default {
           list: []
         }
       },
-      lockData:'',
+      lockData:{},
       lockStatus:'',
       setLock:''
     }
@@ -83,20 +83,6 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
-        // 获取设备布防/撤防状态
-        HdSmart.Device.control({
-          'list':[{
-            'device_id':this.device.device_id,
-            'device_category_id':this.device.device_category_id
-          }]
-        },(data)=>{
-          console.log('===================status  data',data)
-          this.lockData = data
-          this.lockData.result = JSON.parse(this.lockData.result)
-          this.lockStatus = this.lockData.result.list[0].status
-          console.log('===============status',this.lockStatus)
-        },()=>{
-        },'da_get_alert_status')
          // 当前时间和一个月前时间
           var date = new Date()
           function fillz(num) {
@@ -105,7 +91,46 @@ export default {
           }
           this.currentdate=date.getFullYear() + fillz(date.getMonth() + 1) + fillz(date.getDate())
           this.currentdate1=date.getFullYear() + fillz(date.getMonth() ) + fillz(date.getDate())
-          // 获取今日记录次数
+          this.getOne()
+          .then(() =>{
+            this.getTwo()
+            .then(() => {
+              this.getThree()
+            })
+          })
+        })
+        HdSmart.UI.setStatusBarColor(2)
+    })
+
+  },
+  methods: {
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    getOne() {
+      return new Promise((resolve, reject) => {
+        // 获取设备布防/撤防状态
+        HdSmart.Device.control({
+          'list':[{
+            'device_id':this.device.device_id,
+            'device_category_id':this.device.device_category_id
+          }]
+        },(data)=>{
+          console.log('===================status  data',data)
+          if (typeof data.result === 'string') {
+              this.lockData.result = JSON.parse(data.result)
+            } else if (typeof data.result === 'object') {
+              this.lockData.result = data.result
+            }
+            this.lockStatus = this.lockData.result.list.length > 0 ? this.lockData.result.list[0].status : ''
+          resolve()
+        },(err)=>{
+          reject(err)
+        },'da_get_alert_status')
+        
+      })
+    },
+    getTwo() {
+      return new Promise((resolve, reject) => {
+        // 获取今日记录次数
            HdSmart.Device.control({
             'date_start':this.currentdate,
             'date_end':this.currentdate,
@@ -115,14 +140,21 @@ export default {
             }
           },(data)=>{
             console.log('==================today',data)
-            this.todayNum = data
-            this.todayNum.result = JSON.parse(this.todayNum.result)
-            console.log('==================this.todayNum.result',this.todayNum.result)
-            
-          },()=>{
+            // this.todayNum = data
+            if (typeof data.result === 'string') {
+              this.todayNum.result = JSON.parse(data.result)
+            } else if (typeof data.result === 'object') {
+              this.todayNum.result = data.result
+            }
+            resolve()
+          },(err)=>{
+            reject(err)
           },'da_get_dev_alert_list')
-
-          // 获取列表list
+      })
+    },
+    getThree() {
+      return new Promise((resolve, reject) =>{
+        // 获取列表list
           HdSmart.Device.control({
             'date_start':this.currentdate1,
             'date_end':this.currentdate,
@@ -133,18 +165,17 @@ export default {
           },(data)=>{
             console.log('=====================getList',data)
             this.timeList = data
-            this.timeList.result = JSON.parse(this.timeList.result)
-            // this.timeList.result = data.result
-            console.log('=====================this.timeList.result',this.timeList.result)
-          },()=>{
+            if (typeof data.result === 'string') {
+              this.timeList.result = JSON.parse(data.result)
+            } else if (typeof data.result === 'object') {
+              this.timeList.result = data.result
+            }
+            resolve()
+          },(err)=>{
+            reject(err)
           },'da_get_dev_alert_list')
-        })
-        HdSmart.UI.setStatusBarColor(2)
-    })
-
-  },
-  methods: {
-    ...mapActions(['getDeviceInfo', 'doControlDevice']),
+      })
+    },
     getDateTime(date, type) {
       // 时间格式获取
       if (!date) return
