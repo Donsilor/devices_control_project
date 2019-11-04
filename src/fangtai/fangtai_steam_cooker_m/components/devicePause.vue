@@ -10,37 +10,43 @@
       <!--模式-->
       <div class="main center">
         <div class="status">
-          <p>{{ deviceAttrs.RemainingTime }}</p>
+          <p>01:36:23</p>
           <p>
-            当前 36℃ | 预设 {{ deviceAttrs.SetTemperature1 }}℃
+            当前 36℃ | 预设 100℃
           </p>
-          <p>{{ deviceAttrs.WorkState }}</p>
+          <p v-if="deviceAttrs.WaterShortage !== '1'">已暂停</p>
+          <p v-if="deviceAttrs.WaterShortage === '1'">水箱缺水，已暂停</p>
         </div>
       </div>
       <!--开机后按钮-->
       <div class="tool-bar">
-        <ul>
-          <li style="padding-top: 12px;">
+        <ul style="position: relative;">
+          <li v-if="deviceAttrs.WaterShortage === '1'">
             <div>
               <p class="water-box" @click="openWaterBox"></p>
               <p>开水箱</p>
             </div>
           </li>
           <li>
-            <div v-if="deviceAttrs.PowerSwitchAll === 1">
-              <p class="start"></p>
-              <p>启动</p>
-            </div>
-            <div v-if="deviceAttrs.PowerSwitchAll === 2">
-              <p class="pause" @click="pause"></p>
-              <p>暂停</p>
+            <div>
+              <p class="start-cook" @click="continueCook"></p>
+              <p>继续烹饪</p>
             </div>
           </li>
-          <li style="padding-top: 12px;">
+          <li>
+            <div>
+              <p class="end-cook" @click="endCook"></p>
+              <p>结束烹饪</p>
+            </div>
+          </li>
+          <li>
             <div>
               <p :class="['light', {'open-light': lightStatus}]" @click="light"></p>
               <p>照明</p>
             </div>
+          </li>
+          <li class="tips" v-if="deviceAttrs.WaterShortage === '1'">
+            <div>打开水箱，加水后可继续烹饪</div>
           </li>
         </ul>
       </div>
@@ -76,17 +82,13 @@
         lightStatus: false
       }
     },
+
     computed: {
       ...mapGetters(['isClose', 'isOffline']),
       ...mapState(['device', 'deviceAttrs'])
     },
     watch: {
-      'deviceAttrs.WaterShortage'(val) {
-        console.log('缺水监听')
-        if (val === '1') {
-          this.$router.push({path: '/devicePause'})
-        }
-      }
+
     },
     created() {
       HdSmart.ready(() => {
@@ -124,7 +126,7 @@
         if (this.isOffline) return
         this.controlDevice('switch',val)
       },
-      controlDevice(attr, param={}) {
+      controlDevice(attr, param) {
         return this.doControlDevice({
           nodeid: `airconditioner.main.${attr}`,
           params: {
@@ -134,12 +136,6 @@
           }
         })
       },
-      pause() {
-        this.controlDevice('WorkState', {WorkState: '1'}).then(res => {
-          this.$router.push({path:'/devicePause'})
-        })
-        this.$router.push({path:'/devicePause'})
-      },
       openWaterBox() {
         this.controlDevice('openWaterBox', {PushRod: '3'}).then(() => {
           this.$router.push({path:'/waterBoxOpen'})
@@ -148,6 +144,18 @@
       },
       light() {
         this.lightStatus = !this.lightStatus
+      },
+      continueCook() {
+        this.controlDevice('WorkState',{WorkState: '4'}).then(res => {
+          this.$router.push({path: '/deviceStatus'})
+        })
+        this.$router.push({path: '/deviceStatus'})
+      },
+      endCook() {
+        this.controlDevice('WorkState',{WorkState: '5'}).then(res => {
+          this.$router.push({path: '/deviceFinish'})
+        })
+        this.$router.push({path: '/deviceFinish'})
       }
     }
   }
@@ -247,10 +255,11 @@
           font-size: 160px;
           height: 160px;
           line-height: 160px;
+          opacity: 0.2;
         }
         p:nth-child(2) {
           font-size: 32px;
-          opacity: 0.8;
+          opacity: 0.4;
           height: 44px;
           line-height: 44px;
           padding-top: 20px;
@@ -299,12 +308,10 @@
           }
         }
         li:nth-child(2) {
-          font-size: 28px;
-          width: 18.5vw;
-          p{
-            width: 140px;
-            height: 140px;
-          }
+          /*p{*/
+          /*  width: 140px;*/
+          /*  height: 140px;*/
+          /*}*/
         }
       }
       .water-box{
@@ -323,10 +330,41 @@
         background: url('~@lib/@{imgPath}/zanting@3x.png') no-repeat center center;
         background-size: 80px 80px;
       }
+      .start-cook{
+        background: url('~@lib/@{imgPath}/qidong@3x.png') no-repeat center center;
+        background-size: 80px 80px;
+      }
+      .end-cook{
+        background: url('~@lib/@{imgPath}/btn_ac_on_cdc@2x.png') no-repeat center center;
+        background-size: 48px 48px;
+      }
       .open-light {
         background: url('~@lib/@{imgPath}/btn_ac_on_cdbb@2x.png') no-repeat center center;
         background-color: #000;
         background-size: 48px 48px;
+      }
+      .tips{
+        position: absolute;
+        top: -120px;
+        left: 60px;
+        div{
+          width: 366px;
+          height: 80px;
+          background-color: #fff;
+          line-height: 80px;
+          position: relative;
+          &::before{
+            width: 0;
+            height: 0;
+            content: '';
+            border-width: 20px;
+            border-style: solid;
+            border-color: transparent transparent transparent #fff;
+            position: absolute;
+            bottom: -25%;
+            left: 0;
+          }
+        }
       }
     }
     .close-style{

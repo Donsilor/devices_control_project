@@ -14,8 +14,11 @@ import '@lib/base/common.less'
 import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
 import NewTopBar from '@lib/components/NewTopBar.vue'
-import Index from './components/Index'
+import Index from './components/Index2'
 import DeviceStatus from './components/deviceStatus'
+import DevicePause from './components/devicePause'
+import DeviceFinish from './components/deviceFinish'
+import WaterBoxOpen from './components/waterBoxOpen'
 
 Vue.use(vueRouter)
 FastClick.attach(document.body)
@@ -37,6 +40,21 @@ let router = new vueRouter({
       path: '/deviceStatus',
       name: 'deviceStatus',
       component: DeviceStatus
+    },
+    {
+      path: '/devicePause',
+      name: 'devicePause',
+      component: DevicePause
+    },
+    {
+      path: '/deviceFinish',
+      name: 'deviceFinish',
+      component: DeviceFinish
+    },
+    {
+      path: '/waterBoxOpen',
+      name: 'waterBoxOpen',
+      component: WaterBoxOpen
     }
   ]
 })

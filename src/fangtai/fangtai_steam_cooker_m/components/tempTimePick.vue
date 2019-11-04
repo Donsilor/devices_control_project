@@ -1,6 +1,6 @@
 <template>
  <div>
-   <time-pick class="pickTime" @selectedchange="selectedchange" />
+   <time-pick class="pickTime" @selectedchange="selectedchange" :activeMode="activeMode" />
  </div>
 </template>
 
@@ -9,6 +9,11 @@
     export default {
       components: {
         'time-pick': timePick
+      },
+      props: {
+        activeMode: {
+          type: Number
+        }
       },
       data() {
         return {
