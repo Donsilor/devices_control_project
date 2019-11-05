@@ -13,17 +13,27 @@
           <li v-for="(v, i) in modeList" :key="v.name" @click="activeMode = i" :class="[{'active': activeMode === i}]">{{v.name}}</li>
         </ul>
         <!-- 时间选择器-->
-        <temp-time-pick style="width: 90%;" :class="{'close-style': deviceAttrs.PowerSwitchAll != 2}"></temp-time-pick>
+        <temp-time-pick style="width: 90%;" ref="tempTimePick" :class="{'close-style': deviceAttrs.PowerSwitchAll != 2}" v-if="activeMode != 3" :activeMode="activeMode"></temp-time-pick>
+        <div class="clear-dash" v-if="activeMode === 3">
+            <div>
+              <p class="clear-dash-time">1小时11分钟</p>
+              <p class="clear-dash-text">除垢用时</p>
+            </div>
+            <div class="clear-dash-tips">
+              <p>请在水箱内加入1包除垢剂</p>
+              <p>添加水至除垢水位</p>
+            </div>
+        </div>
       </div>
-      <div style="position: relative;top: -20px;" :class="{'close-style': deviceAttrs.PowerSwitchAll != 2}">
+      <div style="position: relative;top: -20px;" :class="{'close-style': deviceAttrs.PowerSwitchAll != 2}" v-if="activeMode != 3">
         <ul class="tips">
           <li>烹饪温度</li>
           <li>烹饪时长</li>
         </ul>
       </div>
       <!-- 开机键-->
-      <div class="openDeviceBtn-box">
-        <p class="openDeviceBtn">
+      <div class="openDeviceBtn-box" v-if="deviceAttrs.PowerSwitchAll === 0">
+        <p class="openDeviceBtn" @click="tuenOn">
         </p>
         <p>开机</p>
       </div>
@@ -38,7 +48,7 @@
           </li>
           <li>
             <div>
-              <p class="start"></p>
+              <p class="start" @click="startWork"></p>
               <p>启动</p>
             </div>
           </li>
@@ -125,20 +135,42 @@
         if (this.isOffline) return
         this.controlDevice('switch',val)
       },
-      controlDevice(attr, value) {
-        let param = {}
-        if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
-          param = { 'speed': 'low'}
-        }
+      controlDevice(attr, param={}) {
         return this.doControlDevice({
           nodeid: `airconditioner.main.${attr}`,
           params: {
             attribute: {
-              [attr]: value,
               ...param
             }
           }
         })
+      },
+      // 开机
+      tuenOn() {
+        this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
+      },
+      //启动
+      startWork() {
+        if (!this.$refs['tempTimePick'].time) {
+          HdSmart.UI.toast('请设定时长')
+          return
+        }
+        if (this.activeMode !== 3) {
+          var data = this.$refs['tempTimePick'].time.split(':')
+          var [tempIndex, h, m] = data
+          var temp = this.activeMode === 0 ? +tempIndex + 30 : this.activeMode === 1 ? +tempIndex + 110 : this.activeMode === 2 ? +tempIndex + 40 : this.activeMode === 3 ? +tempIndex + 110 : ''
+        }
+        let mode = this.activeMode === 0 || this.activeMode === 1 ? 1 : this.activeMode === 2 ? 4 :this.activeMode === 3 ? 3 : ''
+        let obj = {
+            WorkMode: mode,
+            SetTemperature1: this.activeMode === 3 ? 110 : temp,
+            SetWorkTime: this.activeMode === 3 ? 71 : h*60 +(+m),
+            WorkState: 0
+        }
+        this.controlDevice('startWork', obj).then(res => {
+          this.$router.push('/deviceStatus')
+        })
+        this.$router.push({path: '/deviceStatus'})
       }
     }
   }
@@ -325,6 +357,26 @@
       border: 1px solid #ccc;
       background: url('~@lib/@{imgPath}/yiguanbi@2x.png') no-repeat center center;
       background-size: 76px 76px;
+    }
+    .clear-dash{
+      width: 75%;
+      margin: 0 auto;
+      margin-top: 10vh;
+      .clear-dash-time{
+        font-size: 92px;
+        text-align: center;
+      }
+      .clear-dash-text{
+        font-size: 48px;
+        opacity: 0.5;
+        text-align: center;
+        margin-top: 2vh;
+      }
+      .clear-dash-tips{
+        font-size: 28px;
+        text-align: center;
+        margin-top: 15vh;
+      }
     }
   }
 

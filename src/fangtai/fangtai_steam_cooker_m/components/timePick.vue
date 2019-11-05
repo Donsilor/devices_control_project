@@ -16,7 +16,7 @@
             v-for="(it, idx) in dataList.temperature"
             :key="idx"
             :class="{'current-pre': tIndex!==idx,
-                     'current':tIndex===idx}">{{ +idx > 9 ? idx : '0' + idx }}</li>
+                     'current':tIndex===idx}">{{ +it > 9 ? it : '0' + it }}</li>
         </ul>
       </div>
       <div class="unit">°C</div>
@@ -59,14 +59,26 @@
 
 <script>
   export default {
+    props: {
+      activeMode: {
+        type: Number
+      }
+    },
     data() {
+      const getTemp = function(start, end) {
+        let arr = []
+        for (let i = start; i < end + 1; i++) {
+          arr.push(i)
+        }
+        return arr
+      }
       return {
         fontSize: 75,
         liheight: 50,
         dataList: {
-          hours: 24,
+          hours: 6,
           minute: 60,
-          temperature: 101
+          temperature: getTemp(30, 100)
         },
 
         hIndex: 0, // 小时选中下标
@@ -83,6 +95,21 @@
     watch: { //监听器
       selectedValue(value) { //选择值
         this.$emit('selectedchange', value) //自定义事件，暴露值
+      },
+      activeMode (value) {
+        if (value === 0) {
+          // 普通蒸
+          this.dataList.temperature = this.getTemp(30, 100)
+        } else if (value === 1) {
+          //过温度蒸
+          this.dataList.temperature = this.getTemp(110, 110)
+        } else if (value === 2) {
+          //解冻：温度设置范围40℃-50℃
+          this.dataList.temperature = this.getTemp(40, 50)
+        } else {
+          // 除垢
+          this.dataList.temperature = this.getTemp(110, 110)
+        }
       }
     },
     mounted() {
@@ -92,6 +119,7 @@
     },
     methods: {
       touchStart(e, type) {
+        console.log('touchStart')
         e.stopPropagation()
         e.preventDefault()
         // this.liheight =  document.getElementsByClassName('current-pre')[0].offsetHeight // 精度有问题
@@ -110,6 +138,7 @@
         }
       },
       touchMove(e, type) {
+        console.log('touchMove')
         e.stopPropagation()
         e.preventDefault()
         if(event.targetTouches.length == 1) {
@@ -126,6 +155,18 @@
             this.tIndex = Math.floor(-distance / this.liheight)
             this.tTop = distance / this.fontSize // 转换成 rem
           }
+          // if (this.tIndex == 101) {
+          //   this.tTop = 0
+          //   this.tIndex = 0
+          // }
+          // if (this.hIndex == 6) {
+          //   this.hTop = 0
+          //   this.hIndex = 0
+          // }
+          // if (this.mIndex == 60) {
+          //   this.mTop = 0
+          //   this.mIndex = 0
+          // }
           this.selectedValue = this.tIndex + ':' + this.hIndex + ':' + this.mIndex
         }
       },
@@ -133,6 +174,13 @@
         e.stopPropagation() //阻止冒泡
         e.preventDefault() //阻止默认行为
         let max = this.dataList[type]
+        if (type === 'temperature') {
+          if (this.dataList[type].length === 1) {
+            max = 1
+          } else {
+            max = (this.dataList[type][this.dataList[type].length -1] - this.dataList[type][0]) + 1
+          }
+        }
         console.log('-----touchEnd-----')
         if(type === 'minute'){
           if(this.mIndex < 0 ){
@@ -162,6 +210,13 @@
         console.log(this.selectedValue)
 
       },
+      getTemp(start, end) {
+        let arr = []
+        for (let i = start; i < end + 1; i++) {
+          arr.push(i)
+        }
+        return arr
+      }
     }
   }
 </script>

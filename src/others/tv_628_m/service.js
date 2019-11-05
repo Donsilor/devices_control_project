@@ -32,11 +32,14 @@ function sendApp(method, params, callback){
 
 export function getHomePageInfo(callback){
     jsonp('http://hdmedia.api.my7v.com/tmop-api/v1/carousel?sourceId=9&appId=hd1457430496', null, function(err, res){
+    
+        console.log(err,res,'getHomePageInfo------------------------------------------------------------------------------------------------------')
         if(!err && res.errorcode == '0'){
             callback(res.data)
         }
     })
 }
+
 
 export function getInitData(){
     return {

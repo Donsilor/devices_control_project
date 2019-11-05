@@ -254,10 +254,11 @@
       height: 60px;
       text-align: center;
       line-height:  60px;
-      margin-right: 20px;
+      
       color: #AAAAAA;
     }
     .screen{
+      margin-left: 20px;
       background:rgba(0, 0, 0, 0.04);
       border-radius: 2px;
       width: 180px;
@@ -376,14 +377,14 @@
   // align-content: space-between;
 }
 .vitem {
-  width: 200px;
+  width: 210px;
   margin: 0;
   position: relative;
 
   img {
     // border-radius: 10px;
-    width: 200px;
-    height: 310px;
+    width: 210px;
+    height: 318px;
     display: block;
     object-fit: cover;
     background-color: #ebebeb;
@@ -784,6 +785,18 @@ export default {
     })
     HdSmart.UI.hideLoading()
   },
+  //在页面离开时记录滚动位置
+  beforeRouteLeave(to, from, next) {
+    this.scrollTop1 = document.documentElement.scrollTop || document.body.scrollTop
+    console.log(this.scrollTop1)
+    next()
+  },
+  //进入该页面时，用之前保存的滚动位置赋值
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      document.body.scrollTop = vm.scrollTop1
+    })
+  },
   methods: {
     back() {
       HdSmart.UI.popWindow()
@@ -837,12 +850,24 @@ export default {
     },
     pageInit() {
       service.getHomePageInfo(data => {
-        infoCache = data
+        infoCache = this.arrayUnqiue(data,'vid') //通过VID去重
         this.homePageInfo = infoCache
         if(!data || this.homePageInfo.length == 0) {
           this.noVal = true
         }
       })
+    },
+    /**
+     * @param {object[]} arr 要去重的数组对象
+     * @param {string} name 根据对象里面哪个属性去重
+     * @return {object[]} 去重后的数组对象
+     */
+    arrayUnqiue(arr, name) {
+        let hash = {}
+        return arr.reduce((item, next) => {
+          hash[next[name]] ? '' : hash[next[name]] = true && item.push(next)
+          return item
+        }, [])
     },
     filterData(channelId) {
       // service.searchData(

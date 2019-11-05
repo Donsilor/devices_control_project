@@ -4,17 +4,13 @@
       <NewTopBar
         :title="device.device_name"
         :shutdown="isClose == false || isOffline == true"
-        :class-name="opcityStyle"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <!--模式-->
       <div class="main center">
         <div class="status">
-          <p>{{ deviceAttrs.RemainingTime }}</p>
-          <p>
-            当前 36℃ | 预设 {{ deviceAttrs.SetTemperature1 }}℃
-          </p>
-          <p>{{ deviceAttrs.WorkState }}</p>
+          <p>水箱已打开</p>
+          <p>关闭水箱后可以继续使用</p>
         </div>
       </div>
       <!--开机后按钮-->
@@ -22,18 +18,14 @@
         <ul>
           <li style="padding-top: 12px;">
             <div>
-              <p class="water-box" @click="openWaterBox"></p>
+              <p class="water-box"></p>
               <p>开水箱</p>
             </div>
           </li>
           <li>
-            <div v-if="deviceAttrs.PowerSwitchAll === 1">
-              <p class="start"></p>
-              <p>启动</p>
-            </div>
-            <div v-if="deviceAttrs.PowerSwitchAll === 2">
-              <p class="pause" @click="pause"></p>
-              <p>暂停</p>
+            <div>
+              <p class="pause" @click="continueCook"></p>
+              <p>继续烹饪</p>
             </div>
           </li>
           <li style="padding-top: 12px;">
@@ -57,62 +49,21 @@
     },
     data() {
       return {
-        opcityStyle: 'opcity-0',
-        modeList: [
-          {
-            name: '普通蒸'
-          },
-          {
-            name: '高温蒸'
-          },
-          {
-            name: '解冻'
-          },
-          {
-            name: '除垢'
-          }
-        ],
-        activeMode: 0,
         lightStatus: false
       }
     },
+
     computed: {
       ...mapGetters(['isClose', 'isOffline']),
       ...mapState(['device', 'deviceAttrs'])
     },
     watch: {
-      'deviceAttrs.WaterShortage'(val) {
-        console.log('缺水监听')
-        if (val === '1') {
-          this.$router.push({path: '/devicePause'})
-        }
-      }
+
     },
     created() {
-      HdSmart.ready(() => {
-        this.getDeviceInfo()
-          .then(() => {
 
-          })
-      })
     },
     mounted() {
-      let pageNode = document.querySelector('.page')
-      pageNode.addEventListener('scroll', (e) => {
-        // console.log(e.target.scrollTop)
-        let scrollHeight = e.target.scrollTop
-        if (scrollHeight === 0) {
-          this.opcityStyle = 'opcity-0'
-        } else if (scrollHeight < 20) {
-          this.opcityStyle = 'opcity-20'
-        }else if (scrollHeight < 40 ) {
-          this.opcityStyle = 'opcity-40'
-        }else if (scrollHeight < 60) {
-          this.opcityStyle = 'opcity-60'
-        }else if (scrollHeight < 80) {
-          this.opcityStyle = 'opcity-80'
-        }
-      })
     },
     methods: {
       ...mapActions(['getDeviceInfo', 'doControlDevice']),
@@ -134,20 +85,14 @@
           }
         })
       },
-      pause() {
-        this.controlDevice('WorkState', {WorkState: '1'}).then(res => {
-          this.$router.push({path:'/devicePause'})
-        })
-        this.$router.push({path:'/devicePause'})
-      },
-      openWaterBox() {
-        this.controlDevice('openWaterBox', {PushRod: '3'}).then(() => {
-          this.$router.push({path:'/waterBoxOpen'})
-        })
-        this.$router.push({path:'/waterBoxOpen'})
-      },
       light() {
         this.lightStatus = !this.lightStatus
+      },
+      continueCook() {
+        this.controlDevice('WorkState',{WorkState: '4'}).then(res => {
+          this.$router.push({path: '/deviceStatus'})
+        })
+        this.$router.push({path: '/deviceStatus'})
       }
     }
   }
@@ -244,20 +189,16 @@
         margin: 0 auto;
         text-align: center;
         p:nth-child(1) {
-          font-size: 160px;
+          font-size: 92px;
           height: 160px;
           line-height: 160px;
         }
         p:nth-child(2) {
-          font-size: 32px;
-          opacity: 0.8;
-          height: 44px;
-          line-height: 44px;
-          padding-top: 20px;
-        }
-        p:nth-child(3) {
           font-size: 48px;
-          padding-top: 40px;
+          opacity: 0.5;
+          height: 48px;
+          line-height: 48px;
+          padding-top: 20px;
         }
       }
     }
@@ -320,7 +261,7 @@
         background-size: 48px 48px;
       }
       .pause{
-        background: url('~@lib/@{imgPath}/zanting@3x.png') no-repeat center center;
+        background: url('~@lib/@{imgPath}/qidong@3x.png') no-repeat center center;
         background-size: 80px 80px;
       }
       .open-light {

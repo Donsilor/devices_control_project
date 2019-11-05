@@ -18,6 +18,10 @@ var res = {
     default_device_name: '厨房蒸箱',
     attribute: {
         PowerSwitchAll: 0, // 2开机 0关机
+        RemainingTime: '02:11', // 工作剩余时间
+        WorkState: '4', // 工作状态
+        SetTemperature1: 99, // 设定温度值1
+        WaterShortage: '1', // '0'不缺水 '1'缺水
         temperature: 170,
         env_temperature: 240,
         mode: 'cold',

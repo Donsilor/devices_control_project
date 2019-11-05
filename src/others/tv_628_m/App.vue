@@ -3,7 +3,12 @@
     id="app"
     :class="{isIOS:isIOS}"
     style="height: 100%;">
-    <router-view />
+    <!-- <router-view /> -->
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"/>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"/>
+
     <!-- <detail/> -->
   </div>
 </template>
@@ -63,6 +68,9 @@ export default {
     isNotIndex() {
       return this.$store.state.detailVisible || this.$route.path != '/'
     }
+  },
+  created(){
+    console.log(this.$route.meta.keepAlive,'*********************************************')
   }
 }
 </script>

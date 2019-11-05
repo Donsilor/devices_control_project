@@ -10,7 +10,8 @@
       :class="['topbar-fixed', className]">
 
       <div
-        :style="{height:status_bar_height+'px','background':'#fff'}"
+        ref="statusbar"
+        :style="{height:status_bar_height+'px'}"
         class="statusbar" />
       <div
         ref="newNavbar"
@@ -246,11 +247,13 @@ export default {
       if( this.scrollTop>=90 ){
         this.$refs.shutdown&&(this.$refs.shutdown.style.display='none')
         this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='#fff')
+        this.$refs.statusbar&&(this.$refs.statusbar.style.background='#fff')
         this.search&&(this.rightSearch = true)
         search_screen&&(search_screen.style.visibility='hidden')
       }else{
         this.$refs.shutdown&&(this.$refs.shutdown.style.display='flex')
         this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='')
+        this.$refs.statusbar&&(this.$refs.statusbar.style.background='')
         this.search&&(this.rightSearch = false)
         search_screen&&(search_screen.style.visibility='')
       }

@@ -256,6 +256,7 @@ export default {
   },
   data() {
     return {
+      getTime: 0,
       temperature: 0,
       isOpen: false,
       isMin: false,
@@ -481,6 +482,7 @@ export default {
       this.btnLoading['time'] = true
       let h = parseInt(time[0].split(':')[0])
       let m = parseInt(time[0].split(':')[1])
+      this.getTime = ((h*60)+m)*60
       this.controlDevice("bake_duration", ((h*60)+m)*60)
       .then(() => {
         this.btnLoading['time'] = false
@@ -501,6 +503,7 @@ export default {
       if (this.isClose) return
       if (this.deviceAttrs.status == 'start') return HdSmart.UI.toast('不支持暂停', 1000)
       if (!this.deviceAttrs.mode) return HdSmart.UI.toast('请选择模式', 1000)
+      if (this.getTime == 0) return HdSmart.UI.toast('请设置时间', 1000)
       this.btnLoading['status'] = true
       this.controlDevice('control', 'start')
       .then(() => {

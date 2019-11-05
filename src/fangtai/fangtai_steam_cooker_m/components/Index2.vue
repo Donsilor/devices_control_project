@@ -9,36 +9,46 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!--模式-->
       <div class="main center">
-        <div class="status">
-          <p>{{ deviceAttrs.RemainingTime }}</p>
-          <p>
-            当前 36℃ | 预设 {{ deviceAttrs.SetTemperature1 }}℃
-          </p>
-          <p>{{ deviceAttrs.WorkState }}</p>
+        <ul class="mode">
+          <li v-for="(v, i) in modeList" :key="v.name" @click="activeMode = i" :class="[{'active': activeMode === i}]">{{v.name}}</li>
+        </ul>
+        <!-- 时间选择器-->
+        <temp-time-pick style="width: 90%;" ref="tempTimePick"  v-if="activeMode != 3" :activeMode="activeMode"></temp-time-pick>
+        <div class="clear-dash" v-if="activeMode === 3">
+          <div>
+            <p class="clear-dash-time">1小时11分钟</p>
+            <p class="clear-dash-text">除垢用时</p>
+          </div>
+          <div class="clear-dash-tips">
+            <p>请在水箱内加入1包除垢剂</p>
+            <p>添加水至除垢水位</p>
+          </div>
         </div>
+      </div>
+      <div style="position: relative;top: -20px;" v-if="activeMode != 3">
+        <ul class="tips">
+          <li>烹饪温度</li>
+          <li>烹饪时长</li>
+        </ul>
       </div>
       <!--开机后按钮-->
       <div class="tool-bar">
         <ul>
           <li style="padding-top: 12px;">
             <div>
-              <p class="water-box" @click="openWaterBox"></p>
+              <p class="water-box"></p>
               <p>开水箱</p>
             </div>
           </li>
           <li>
-            <div v-if="deviceAttrs.PowerSwitchAll === 1">
-              <p class="start"></p>
+            <div>
+              <p class="start" @click="startWork"></p>
               <p>启动</p>
-            </div>
-            <div v-if="deviceAttrs.PowerSwitchAll === 2">
-              <p class="pause" @click="pause"></p>
-              <p>暂停</p>
             </div>
           </li>
           <li style="padding-top: 12px;">
             <div>
-              <p :class="['light', {'open-light': lightStatus}]" @click="light"></p>
+              <p class="light"></p>
               <p>照明</p>
             </div>
           </li>
@@ -72,21 +82,16 @@
             name: '除垢'
           }
         ],
-        activeMode: 0,
-        lightStatus: false
+        activeMode: 0
       }
     },
+
     computed: {
       ...mapGetters(['isClose', 'isOffline']),
       ...mapState(['device', 'deviceAttrs'])
     },
     watch: {
-      'deviceAttrs.WaterShortage'(val) {
-        console.log('缺水监听')
-        if (val === '1') {
-          this.$router.push({path: '/devicePause'})
-        }
-      }
+
     },
     created() {
       HdSmart.ready(() => {
@@ -134,20 +139,32 @@
           }
         })
       },
-      pause() {
-        this.controlDevice('WorkState', {WorkState: '1'}).then(res => {
-          this.$router.push({path:'/devicePause'})
-        })
-        this.$router.push({path:'/devicePause'})
+      // 开机
+      tuenOn() {
+        this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
       },
-      openWaterBox() {
-        this.controlDevice('openWaterBox', {PushRod: '3'}).then(() => {
-          this.$router.push({path:'/waterBoxOpen'})
+      //启动
+      startWork() {
+        if (!this.$refs['tempTimePick'].time) {
+          HdSmart.UI.toast('请设定时长')
+          return
+        }
+        if (this.activeMode !== 3) {
+          var data = this.$refs['tempTimePick'].time.split(':')
+          var [tempIndex, h, m] = data
+          var temp = this.activeMode === 0 ? +tempIndex + 30 : this.activeMode === 1 ? +tempIndex + 110 : this.activeMode === 2 ? +tempIndex + 40 : this.activeMode === 3 ? +tempIndex + 110 : ''
+        }
+        let mode = this.activeMode === 0 || this.activeMode === 1 ? 1 : this.activeMode === 2 ? 4 :this.activeMode === 3 ? 3 : ''
+        let obj = {
+          WorkMode: mode,
+          SetTemperature1: this.activeMode === 3 ? 110 : temp,
+          SetWorkTime: this.activeMode === 3 ? 71 : h*60 +(+m),
+          WorkState: 0
+        }
+        this.controlDevice('startWork', obj).then(res => {
+          this.$router.push('/deviceStatus')
         })
-        this.$router.push({path:'/waterBoxOpen'})
-      },
-      light() {
-        this.lightStatus = !this.lightStatus
+        this.$router.push({path: '/deviceStatus'})
       }
     }
   }
@@ -207,7 +224,8 @@
       }
     }
     .main {
-      margin-top: 300px;
+      margin-top: 7vh;
+      position: relative;
       &.center {
         flex-direction: column;
       }
@@ -239,25 +257,17 @@
           }
         }
       }
-      .status{
-        width: 84%;
-        margin: 0 auto;
-        text-align: center;
-        p:nth-child(1) {
-          font-size: 160px;
-          height: 160px;
-          line-height: 160px;
-        }
-        p:nth-child(2) {
-          font-size: 32px;
-          opacity: 0.8;
-          height: 44px;
-          line-height: 44px;
-          padding-top: 20px;
-        }
-        p:nth-child(3) {
-          font-size: 48px;
-          padding-top: 40px;
+    }
+    .tips {
+      display: flex;
+      width: 90%;
+      margin: 0 auto;
+      li {
+        font-size: 32px;
+        opacity: 0.8;
+        &:first-of-type{
+          width: 37%;
+          padding-left: 20px;
         }
       }
     }
@@ -319,18 +329,48 @@
         background: url('~@lib/@{imgPath}/btn_ac_on_cdb@2x.png') no-repeat center center;
         background-size: 48px 48px;
       }
-      .pause{
-        background: url('~@lib/@{imgPath}/zanting@3x.png') no-repeat center center;
-        background-size: 80px 80px;
-      }
-      .open-light {
-        background: url('~@lib/@{imgPath}/btn_ac_on_cdbb@2x.png') no-repeat center center;
-        background-color: #000;
-        background-size: 48px 48px;
-      }
     }
     .close-style{
       opacity: 0.2;
+    }
+    .openDeviceBtn-box{
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 380px;
+      p:last-child{
+        font-size: 24px;
+        text-align: center;
+        padding-top: 16px;
+      }
+    }
+    .openDeviceBtn{
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 1px solid #ccc;
+      background: url('~@lib/@{imgPath}/yiguanbi@2x.png') no-repeat center center;
+      background-size: 76px 76px;
+    }
+    .clear-dash{
+      width: 75%;
+      margin: 0 auto;
+      margin-top: 10vh;
+      .clear-dash-time{
+        font-size: 92px;
+        text-align: center;
+      }
+      .clear-dash-text{
+        font-size: 48px;
+        opacity: 0.5;
+        text-align: center;
+        margin-top: 2vh;
+      }
+      .clear-dash-tips{
+        font-size: 28px;
+        text-align: center;
+        margin-top: 15vh;
+      }
     }
   }
 

@@ -13,7 +13,7 @@
         <button
           class="submit"
           type="button"
-          @click="submit" >开启烘焙</button>
+          @click="submit" >确定</button>
         <div
           class="cancel"
           @click=" show = false">取消</div>
