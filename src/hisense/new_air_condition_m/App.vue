@@ -373,9 +373,7 @@ export default {
         if(this.deviceAttrs.mode == 'auto') {
           return HdSmart.UI.toast('智能模式下无法设定风速')
         }
-        // if (this.deviceAttrs.mode=='wind'){
-        //   return HdSmart.UI.toast('送风模式不能设置自动风速')
-        // } 
+        if (this.deviceAttrs.mode=='wind') return HdSmart.UI.toast('送风模式不支持自动风速')
         this.controlDevice('speed','auto')
       }
     },

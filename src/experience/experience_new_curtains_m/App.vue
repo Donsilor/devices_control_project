@@ -134,8 +134,23 @@ export default {
           this.txtShow = 'closing'
           console.log('======',this.txtShow, this.btnActive)
         }
+        if(newValue == oldValue) {
+          this.txtShow = ''
+          console.log('======',this.txtShow, this.btnActive)
+        }
+      }else{
+        this.txtShow = ''
+        this.btnActive='pause'
+        this.curtainStatus=''
       }
       if(this.deviceAttrs.open_percentage == this.range) {
+        this.txtShow = ''
+        this.myMove = false
+      }
+      if(this.deviceAttrs.open_percentage == 100) {
+        this.txtShow = ''
+      }
+      if(this.deviceAttrs.open_percentage == 0) {
         this.txtShow = ''
       }
     }
@@ -155,7 +170,7 @@ export default {
     setPause() {
       
       console.log(this.myMove)
-      
+      this.myMove = false
       this.txtShow = ''
       this.move = false
       this.btnActive = 'pause'
@@ -182,6 +197,7 @@ export default {
     },
     // 全开
     setOpen(){
+      this.myMove = false
       this.move = false
       this.btnActive = 'kai'
       this.controlDevice('switch', 'on')
@@ -189,6 +205,7 @@ export default {
     },
     //全关
     setClose(){
+      this.myMove = false
       this.move = false
       this.btnActive = 'guan'
       this.controlDevice('switch', 'off')
@@ -229,13 +246,13 @@ export default {
       console.log(maxW)
       console.log(this.range)
       this.controlDevice('open_percentage', this.range)
-      this.myMove = false
+      this.myMove = true
       console.log(this.myMove)
       
     },
     newRatio(){
        // let maxW = this.$refs.isgray.offsetWidth-14
-       if(this.move)return
+       if(this.myMove)return
        console.log('执行了')
        let maxW = document.querySelector('.isgray').clientWidth-20
       console.log('窗帘的最大宽度api', maxW)
