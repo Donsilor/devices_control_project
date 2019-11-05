@@ -153,12 +153,18 @@ const router = new Router({
   routes: [{
     path: '/',
     name: 'index',
-    component: Index
+    component: Index,
+    meta: {
+      keepAlive: true
+    }
   },
   {
     path: '/list',
     name: 'list',
-    component: List
+    component: List,
+    meta: {
+      keepAlive: true
+    }
   },
   {
     path: '/detail',
@@ -168,7 +174,10 @@ const router = new Router({
   {
     path: '/search',
     name: 'search',
-    component: Search
+    component: Search,
+    meta: {
+      keepAlive: true
+    }
   },
   {
     path: '/error',
