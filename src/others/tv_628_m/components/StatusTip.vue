@@ -17,17 +17,15 @@
       <div>
         <div
           v-if="tvStatus.tvOnlineStatus==-1" 
-          class="offline_bar"
+          class="offline_bar offline_bar_wifi"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">
             <p class="offline_bar_p">
-              <i class="error"/>
+              <i class="icon-wifi"/>
             </p>
             <span class="link">无法连接网络，请检查网络设置</span> 
 
           </div>
-         
-         
         </div>
         <div
           v-if="tvStatus.tvOnlineStatus==-2"
@@ -60,7 +58,7 @@
       v-if="tvStatus.tvOnlineStatus < 0 && !ios"
       class="offline_bar_blank"/> -->
   </div>
-</div></template>
+</template>
 
 <style lang="less">
 @status_bar_height: 25PX;
@@ -165,7 +163,15 @@
       background-size: 100% 100%;
     }
 }
-
+.offline_bar.offline_bar_wifi{
+    justify-content: center;
+    i{
+      &::before{
+        position: relative;
+        top: -6px;
+      }
+    }
+}
 .offline_bar i {
     display: inline-block;
     margin-right: 10px;

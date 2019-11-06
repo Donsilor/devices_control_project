@@ -223,7 +223,7 @@ export default {
       // let w = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2    如果标题要居中
       // console.log(statusTop,'statusTop')
       //  console.log(status.offsetTop,'status.offsetTop')
-        console.log( this.scrollTop,' this.scrollTop')
+        // console.log( this.scrollTop,' this.scrollTop')
       if(status&& status_bar_fixed){
         if(this.scrollTop>=s){
             status_bar_fixed.style.position = 'fixed'

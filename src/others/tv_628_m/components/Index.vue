@@ -837,7 +837,17 @@ export default {
     },
     showDetailInfo(item) {
       this.$store.dispatch('showDetail', item)
-      window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
+      // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
+      this.$router.push({
+         path:"/detail",
+         query:{
+           channelId:item.channelId,
+           vid:item.vid,
+           ispay:item.ispay,
+           showBar:1
+         }
+       })
+      
       // if (this.isShowBar) {
       //   window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
       // } else {
@@ -940,8 +950,20 @@ export default {
        this.itemData = item
     },
     toPage(item) {
-      let name = encodeURIComponent(item.channel)
-       window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
+
+      // let name = encodeURIComponent(item.channel)
+
+
+      //  window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
+       this.$router.push({
+         path:"/list",
+         query:{
+           channelId:item.channelId,
+           channel:item.channel,
+           showBar:1
+         }
+       })
+
       // if (this.isShowBar) {
       //   window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
       // } else {
