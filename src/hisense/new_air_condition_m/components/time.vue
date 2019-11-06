@@ -1,13 +1,10 @@
 <template>
-  <div>
-    <div
-      v-if="show"
-      class="model"
-      @click.self="show = false"
-      @touchmove.prevent/>
-    <div 
-      v-if="show" 
-      class="main show">
+  <div
+    v-if="show"
+    class="model"
+    @click.self="show = false"
+    @touchmove.prevent>
+    <div class="main">
       <div class="overtime">
         <span class="title">设置关机时间</span>
         <span 
@@ -31,17 +28,6 @@
   </div>
 </template>
 <style lang="less" scoped>
-@keyframes show {
-    0% {
-      bottom:-380px;
-    }
-    100% {
-       bottom:0;
-    }
-}
-.show{
-  animation: show .1s linear 0s;
-}
   .model{
     position: fixed;
     top: 0;
@@ -64,8 +50,7 @@
       height: 100%;
       background: rgba(0,0,0,0.8);
     }
-  }
-      .main{
+    .main{
       position: absolute;
       bottom: 0;
       z-index: 999999999999;
@@ -117,6 +102,7 @@
         color: #000;
       }
     }
+  }
 </style>
 <script>
 import timePick from './timePick.vue'

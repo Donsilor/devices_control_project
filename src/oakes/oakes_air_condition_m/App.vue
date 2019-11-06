@@ -143,7 +143,7 @@
               min="0"
               max="4"
               step="1"
-              @input="changeSpeed">
+              @touchend="changeSpeed">
             <p :class="['rang_width']"/>
           </div>
         </div>
@@ -237,7 +237,8 @@ export default {
       typeVal: 'hand',
       brightnessValue: 0,
       rangStyle: '',
-      opcityStyle: 'opcity-0'
+      opcityStyle: 'opcity-0',
+      animation:false
     }
   },
 
@@ -407,6 +408,18 @@ export default {
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
+          if (this.deviceAttrs.speed=='low') {
+            this.setRangWidth(23.25)
+          }
+          if (this.deviceAttrs.speed=='normal') {
+            this.setRangWidth(46.5)
+          }
+          if (this.deviceAttrs.speed=='high') {
+            this.setRangWidth(69.75)
+          }
+          if (this.deviceAttrs.speed=='auto') {
+            this.setRangWidth(93)
+          }
           if (this.deviceAttrs.mode=='auto') {
             this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
             this.$refs.$circle.init()
@@ -512,6 +525,10 @@ export default {
     showSpeed() {
       if (this.isClose) return
       this.$refs.speed.show = true
+      this.$nextTick(()=>{
+        this.animation = true
+      },0)
+      
     },
     showTime() {
       if (this.isClose) return
@@ -962,7 +979,13 @@ export default {
         }
     }
   }
-
+      .item{
+        animation: box 5s; 
+      }
+      @keyframes box {
+        from{height: 0;}
+        to{height: 100px;}
+      }
   // &.close {
   //   .btn-wrap {
   //     &.up-index{

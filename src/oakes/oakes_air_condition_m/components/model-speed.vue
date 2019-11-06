@@ -1,10 +1,13 @@
 <template>
-  <div
-    v-if="show"
-    class="model"
-    @click.self="show = false"
-    @touchmove.prevent>
-    <div class="main">
+  <div>
+    <div
+      v-if="show"
+      class="model "
+      @click.self="show = false"
+      @touchmove.prevent/>
+    <div 
+      v-if="show" 
+      class="main show" >
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
         <div 
@@ -21,8 +24,20 @@
         @click.self="show = false">取消</div>
     </div>
   </div>
+  
 </template>
 <style lang="less" scoped>
+@keyframes show {
+    0% {
+      bottom:-380px;
+    }
+    100% {
+       bottom:0;
+    }
+}
+.show{
+  animation: show .2s linear 0s;
+}
 @imgPath: 'base/air_condition/assets/new-air';
   .model{
     position: fixed;
@@ -30,6 +45,7 @@
     right: 0;
     bottom: 0;
     left: 0;
+
     overflow: auto;
     z-index: 99999;
 
@@ -46,9 +62,13 @@
       height: 100%;
       background: rgba(0,0,0,0.8);
     }
-    .main{
-      position: absolute;
+    
+  }
+
+  .main{
+      position: fixed;
       bottom: 0;
+      // bottom: -380px;
       z-index: 999999999999;
       width: 100%;
       height: 381px;
@@ -83,7 +103,6 @@
         background: #fff;
       }
     }
-  }
 </style>
 <script>
 export default {
