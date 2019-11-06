@@ -3,12 +3,15 @@ import Mock from 'mockjs'
 let res = {
     "connectivity": "online", //l
     "switch": 'on', //开关
-    'control':'stop',
+    'control':'halt',
     'mode':'nomal',
-    'operation_mode':'end',//洗涤状态
+    'operation_mode':'standby',//洗涤状态
     'remain_washtime':'121',
     'return_standby':'off',
-    'mode_status':'off'//程序是否运行
+    'mode_status':'off',//程序是否运行
+    'hardness_level':2,//水软
+    'brightener_weight':1,//光亮剂0-255
+    'childlock':'off'
 }
 export function generateSnapShot() {
     return Mock.mock({

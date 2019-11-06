@@ -79,11 +79,79 @@
             @click="setStart" />
           <div class="btn-name">启动</div>
         </div>
+        <!-- 更多选项 -->
+        <div 
+          class="more" 
+          @click="showMore">
+          <img src="../../../../lib/base/dishwasher/assets/gengduo@2x.png">
+          <span>更多选项</span>
+        </div>
       </div>
       <!-- 关机状态 -->
       <div
         v-else
         class="closed">请在设备端打开电源</div>
+      <!-- 弹出框 -->
+      <div class="bigBox">
+        <div
+          v-show="show"
+          class="model "
+          @click.self="show = false"
+          @touchmove.prevent/>
+        <div 
+          v-show="show" 
+          class="moreBox show">
+          <ul>
+            <li>更多选项</li>
+            <li><span>水软</span>
+              <div class="rangeBox">
+                <span>H1</span>
+                <div class="rang_input">
+                  <input
+                    :value="brightnessValue"
+                    type="range"
+                    min="0"
+                    max="9"
+                    step="1"
+                    @touchmove="changeWaterStyle"
+                    @touchend="changeWater">
+                  <p :class="['rang_width']"/>
+                </div>
+                <span>H9</span>
+              </div>
+
+            </li>
+            <li>
+              <span>光亮剂</span>
+              <div class="rangeBox">
+                <span>1</span>
+                <div class="rang_input">
+                  <input
+                    :value="brightnessValue1"
+                    type="range"
+                    min="0"
+                    max="9"
+                    step="1"
+                    @touchmove="changeWaterStyle1"
+                    @touchend="changeWeight">
+                  <p :class="['rang_width1']"/>
+                </div>
+                <span>7</span>
+              </div>
+            </li>
+            <li>
+              <span>童锁</span>
+              <div>
+                <input
+                  :checked="deviceAttrs.childlock=='on'"
+                  class="switch switch-anim"
+                  type="checkbox"
+                  @click="lock">
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -97,7 +165,10 @@ export default {
       temp:true,
       timeOutEvent:'',
       a:"",
+      brightnessValue:0,
+      brightnessValue1:0,
       currentMode:'normal',
+      show:false,
       tableware:[
         {
           name:'除味',
@@ -253,16 +324,18 @@ export default {
   },
   watch: {
     'device.stateChange'(){
-      this.$nextTick(()=>{
-        //  this.newRatio()
-      })
+        // 水软
+        this.brightnessValue = this.deviceAttrs.hardness_level
+        this.setRangWidth(this.brightnessValue * 8.333)
+        // 光亮剂
+        this.brightnessValue1 = this.deviceAttrs.brightener_weight
+        this.setRangWidth1(this.brightnessValue1 * 8.333)
     },
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
-
       })
       // HdSmart.UI.setStatusBarColor(2)
     })
@@ -313,6 +386,67 @@ export default {
         return
       }
       this.controlDevice("control",controlStatus )
+    },
+    // 更多选项
+    showMore(){
+      this.show = true
+      // 水软 刚进来的位置
+      this.brightnessValue = this.deviceAttrs.hardness_level
+      this.setRangWidth(this.brightnessValue*8.333)  
+      // 光亮剂 刚进来的位置
+      this.brightnessValue1 = this.deviceAttrs.brightener_weight
+      this.setRangWidth1(this.brightnessValue1*8.333) 
+    },
+    setRangWidth(val) {
+      document.querySelector('.rang_width').style.width = val+"%"
+    },
+    setRangWidth1(val) {
+      document.querySelector('.rang_width1').style.width = val+"%"
+    },
+        // range调样式
+    changeWaterStyle(e) {
+      var max = e.target.getAttribute("max")
+      var width = (75 / max * e.target.value) +"%"
+      document.querySelector('.rang_width').style.width = width
+    },
+    changeWaterStyle1(e) {
+      var max = e.target.getAttribute("max")
+      var width = (75 / max * e.target.value) +"%"
+      document.querySelector('.rang_width1').style.width = width
+    },
+    // 水软
+    changeWater(e) {
+      if(e.target.value == 0) {
+        this.rangeColor = true
+      } else {
+        this.rangeColor = false
+      }
+      this.brightness = e.target.value
+      console.log(e.target.value,'我在这里')
+      this.controlDevice('hardness_level',this.brightness)
+    },
+    // 光亮剂
+    changeWeight(e){
+      if(e.target.value == 0) {
+        this.rangeColor = true
+      } else {
+        this.rangeColor = false
+      }
+      this.brightness = e.target.value
+      console.log(e.target.value,'我在这里')
+      this.controlDevice('brightener_weight',this.brightness)
+    },
+    // 童锁
+    lock(e) {
+      console.log(this.isClose)
+       if (this.isClose) return
+      let ovp = ''
+      if(e.target.checked){
+          ovp = 'on'
+      }else{
+          ovp = 'off'
+      }
+       this.controlDevice('childlock',ovp)
     },
     // 长按事件
     touchStart(e){
@@ -377,6 +511,170 @@ export default {
 .body {
   min-height: 100%;
 }
+@keyframes show{
+    0% {
+      bottom:-380px;
+    }
+    100% {
+       bottom:0;
+    }
+}
+.show{
+  animation: show .2s linear;
+}
+.bigBox{
+  .model{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+  }
+  .moreBox{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 520px;
+    background-color: #fff;
+    padding: 0 40px;
+    z-index: 9999;
+  li{
+    border-top: 1px solid #EDEDED;
+    font-size: 32px;
+    height: 113px;
+    line-height: 113px;
+    display: flex;
+      align-items: center;
+      justify-content: space-between;
+    &:first-of-type{
+      border: none;
+      font-size: 40px;
+      height: 125px;
+      line-height: 125px;
+    }
+    .rangeBox{
+      width: 80%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &:last-of-type{
+        justify-content: center;
+      }
+        .rang_input{
+          position: relative;
+        }
+    }
+  }
+}
+input[type="range"] {
+  display: block;
+  -webkit-appearance: none;
+  // background-color: #bdc3c7;
+  background: rgba(101,101,101,0.3);
+  width: 400px;
+  height: 2px;
+  border-radius: 5px;
+  outline: 0;
+  margin: 0 20px;
+  &:last-of-type{
+    width: 410px;
+  }
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background-color: #000;
+  width: 76px;
+  height: 52px;
+  border-radius: 30%;
+  // border: 2px solid white;
+  cursor: pointer;
+  // transition: 0.3s ease-in-out;
+  content: "H4";
+}
+  .range {
+    position: relative;
+    width: 100%;
+    margin-bottom: 50px;
+    .range-zero::-webkit-slider-thumb {
+      background: #EDEDED;
+    }
+    .range-zero {
+      background: #EDEDED;
+    }
+  }
+  .tips {
+    font-size: 32px;
+    color: #000000;
+    float: right;
+  }
+  .tips-bak {
+    color: #EDEDED;
+  }
+  .rang_width,.rang_width1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #000;
+    height: 2px;
+    border-radius: 5px 0 0 5px;
+    margin: 0 20px;
+    }
+    .rang_bak {
+      background: #EDEDED;
+    }
+  .switch {
+    width: 74px;
+    height: 28px;
+    position: relative;
+    border: 1px solid transparent;
+    // background-color: #fdfdfd;
+    box-shadow: #dfdfdf 0 0 0 0 inset;
+    border-radius: 20px;
+    background-clip: content-box;
+    display: inline-block;
+    -webkit-appearance: none;
+    user-select: none;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  .switch:before {
+      content: '';
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      top: -8px;
+      left: 0;
+      border-radius: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      background: #7F7F7F;
+  }
+  .switch:checked {
+      border-color: #E1B96E;
+      box-shadow: #E1B96E 0 0 0 16px inset;
+      background-color: #E1B96E;
+  }
+  .switch:checked:before {
+      left: 30px;
+      background: #000000;
+  }
+  .switch.switch-anim {
+      transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+  }
+  .switch.switch-anim:before {
+      transition: left 0.3s;
+  }
+  .switch.switch-anim:checked {
+      // box-shadow: #64bd63 0 0 0 16px inset;
+      // background-color: #64bd63;
+      transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
+  }
+  .switch.switch-anim:checked:before {
+      transition: left 0.3s;
+  };
+}
+
 .page {
   height: 100vh;
   min-height: 550px;
@@ -548,8 +846,8 @@ export default {
     height: auto;
     width: 100%;
     position: fixed;
-    bottom: 130px;
-    z-index: 99999;
+    bottom: 90px;
+    // z-index: 99999;
     .btn {
       margin-top: 24px;
       width: 100%;
@@ -564,6 +862,18 @@ export default {
     &.center{
       display: flex;
       align-items: center;
+      flex-direction: column;
+    }
+    .more{
+      img{
+        width: 30px;
+      }
+      span{
+        opacity: 0.53;
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #000000;
+      }
     }
   }
   /*********** 按钮 ***********/
