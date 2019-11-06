@@ -11,7 +11,7 @@ let res = {
     'mode_status':'off',//程序是否运行
     'hardness_level':2,//水软
     'brightener_weight':1,//光亮剂0-255
-    'childlock':'off'
+    'childlock':'off'//童锁
 }
 export function generateSnapShot() {
     return Mock.mock({
