@@ -3,18 +3,19 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="isClose == false || isOffline == true"
+        :shutdown="true"
         :class-name="opcityStyle"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <!--模式-->
       <div class="main center">
         <div class="status">
-          <p>{{ deviceAttrs.RemainingTime }}</p>
+          <p>{{ transTime(deviceAttrs.RemainingTime) }}</p>
           <p>
-            当前 36℃ | 预设 {{ deviceAttrs.SetTemperature1 }}℃
+            当前 {{ deviceAttrs.SetTemperature1 }}℃ | 预设 {{ presetTemp }}℃
           </p>
-          <p>{{ deviceAttrs.WorkState }}</p>
+          <p v-if="!isOffline">{{ deviceAttrs.WorkState | modeType }}</p>
+          <p v-else>设备离线中</p>
         </div>
       </div>
       <!--开机后按钮-->
@@ -22,23 +23,23 @@
         <ul>
           <li style="padding-top: 12px;">
             <div>
-              <p class="water-box" @click="openWaterBox"></p>
+              <p class="water-box btn-style" @click="openWaterBox"></p>
               <p>开水箱</p>
             </div>
           </li>
           <li>
             <div v-if="deviceAttrs.PowerSwitchAll === 1">
-              <p class="start"></p>
+              <p class="start btn-style"></p>
               <p>启动</p>
             </div>
             <div v-if="deviceAttrs.PowerSwitchAll === 2">
-              <p class="pause" @click="pause"></p>
+              <p class="pause btn-style" @click="pause"></p>
               <p>暂停</p>
             </div>
           </li>
           <li style="padding-top: 12px;">
             <div>
-              <p :class="['light', {'open-light': lightStatus}]" @click="light"></p>
+              <p :class="['light', 'btn-style', {'open-light': lightStatus}]" @click="light"></p>
               <p>照明</p>
             </div>
           </li>
@@ -73,7 +74,8 @@
           }
         ],
         activeMode: 0,
-        lightStatus: false
+        lightStatus: false,
+        presetTemp: ''
       }
     },
     computed: {
@@ -86,6 +88,13 @@
         if (val === '1') {
           this.$router.push({path: '/devicePause'})
         }
+      },
+      '$route': {
+        handler(val) {
+          this.presetTemp = val.query.preset
+        },
+        // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
+        immediate: true
       }
     },
     created() {
@@ -95,6 +104,9 @@
 
           })
       })
+      if (this.deviceAttrs.WaterShortage === '1') {
+        this.$router.push({path: '/devicePause'})
+      }
     },
     mounted() {
       let pageNode = document.querySelector('.page')
@@ -120,9 +132,13 @@
         document.querySelector('.rang_width').style.width = val+"%"
       },
       // 开关机
-      shutdowncallback(val){
+      shutdowncallback(){
         if (this.isOffline) return
-        this.controlDevice('switch',val)
+        if (this.deviceAttrs.PowerSwitchAll === 2) {
+          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
+        } else if (this.deviceAttrs.PowerSwitchAll === 0) {
+          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
+        }
       },
       controlDevice(attr, param={}) {
         return this.doControlDevice({
@@ -136,9 +152,19 @@
       },
       pause() {
         this.controlDevice('WorkState', {WorkState: '1'}).then(res => {
-          this.$router.push({path:'/devicePause'})
+          this.$router.push({
+            path:'/devicePause',
+            query: {
+              preset: this.activeMode === 3 ? 110 : this.presetTemp
+            }
+          })
         })
-        this.$router.push({path:'/devicePause'})
+        this.$router.push({
+          path:'/devicePause',
+          query: {
+            preset: this.activeMode === 3 ? 110 : this.presetTemp
+          }
+        })
       },
       openWaterBox() {
         this.controlDevice('openWaterBox', {PushRod: '3'}).then(() => {
@@ -148,6 +174,22 @@
       },
       light() {
         this.lightStatus = !this.lightStatus
+      },
+      transTime(time) {
+        if (!time) {
+          return
+        }
+        let numTime = parseInt(time)
+        let h = ''
+        let m = ''
+        if (numTime >= 60) {
+          h = Math.floor(h/60)
+          m = numTime % 60 === 0 ? '00' : numTime % 60
+        } else {
+          h = '00'
+          m = numTime < 10 ? '0' + numTime : numTime
+        }
+        return h + ':' + m
       }
     }
   }
@@ -282,7 +324,6 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            border: 1px solid #ccc;
             &::before{
               content:'';
               position:absolute;

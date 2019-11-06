@@ -3,16 +3,16 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="isClose == false || isOffline == true"
+        :shutdown="true"
         :class-name="opcityStyle"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <!--模式-->
       <div class="main center">
         <div class="status">
-          <p>01:36:23</p>
+          <p>{{ transTime(deviceAttrs.RemainingTime) }}</p>
           <p>
-            当前 36℃ | 预设 100℃
+            当前 {{ deviceAttrs.SetTemperature1 }}℃ | 预设 {{ presetTemp }}℃
           </p>
           <p v-if="deviceAttrs.WaterShortage !== '1'">已暂停</p>
           <p v-if="deviceAttrs.WaterShortage === '1'">水箱缺水，已暂停</p>
@@ -23,25 +23,25 @@
         <ul style="position: relative;">
           <li v-if="deviceAttrs.WaterShortage === '1'">
             <div>
-              <p class="water-box" @click="openWaterBox"></p>
+              <p class="water-box btn-style" @click="openWaterBox"></p>
               <p>开水箱</p>
             </div>
           </li>
           <li>
             <div>
-              <p class="start-cook" @click="continueCook"></p>
+              <p class="start-cook btn-style" @click="continueCook"></p>
               <p>继续烹饪</p>
             </div>
           </li>
           <li>
             <div>
-              <p class="end-cook" @click="endCook"></p>
+              <p class="end-cook btn-style" @click="endCook"></p>
               <p>结束烹饪</p>
             </div>
           </li>
           <li>
             <div>
-              <p :class="['light', {'open-light': lightStatus}]" @click="light"></p>
+              <p :class="['light', 'btn-style', {'open-light': lightStatus}]" @click="light"></p>
               <p>照明</p>
             </div>
           </li>
@@ -79,7 +79,8 @@
           }
         ],
         activeMode: 0,
-        lightStatus: false
+        lightStatus: false,
+        presetTemp: ''
       }
     },
 
@@ -88,7 +89,13 @@
       ...mapState(['device', 'deviceAttrs'])
     },
     watch: {
-
+      '$route': {
+        handler(val) {
+          this.presetTemp = val.query.preset
+        },
+        // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
+        immediate: true
+      }
     },
     created() {
       HdSmart.ready(() => {
@@ -122,9 +129,13 @@
         document.querySelector('.rang_width').style.width = val+"%"
       },
       // 开关机
-      shutdowncallback(val){
+      shutdowncallback(){
         if (this.isOffline) return
-        this.controlDevice('switch',val)
+        if (this.deviceAttrs.PowerSwitchAll === 2) {
+          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
+        } else if (this.deviceAttrs.PowerSwitchAll === 0) {
+          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
+        }
       },
       controlDevice(attr, param) {
         return this.doControlDevice({
@@ -144,18 +155,49 @@
       },
       light() {
         this.lightStatus = !this.lightStatus
+        if (this.lightStatus) {
+          this.controlDevice('Light', {Light: '1'})
+        } else {
+          this.controlDevice('Light', {Light: '0'})
+        }
       },
       continueCook() {
         this.controlDevice('WorkState',{WorkState: '4'}).then(res => {
-          this.$router.push({path: '/deviceStatus'})
+          this.$router.push({
+            path: '/deviceStatus',
+            query: {
+              preset: this.activeMode === 3 ? 110 : this.presetTemp
+            }
+          })
         })
-        this.$router.push({path: '/deviceStatus'})
+        this.$router.push({
+          path: '/deviceStatus',
+          query: {
+            preset: this.activeMode === 3 ? 110 : this.presetTemp
+          }
+        })
       },
       endCook() {
         this.controlDevice('WorkState',{WorkState: '5'}).then(res => {
           this.$router.push({path: '/deviceFinish'})
         })
         this.$router.push({path: '/deviceFinish'})
+      },
+      transTime(time) {
+        if (!time) {
+          return
+        }
+        let numTime = parseInt(time)
+        let h = ''
+        let m = ''
+        if (numTime >= 60) {
+          h = Math.floor(h/60)
+          m = numTime % 60 === 0 ? '00' : numTime % 60
+        } else {
+          h = '00'
+          m = numTime < 10 ? '0' + numTime : numTime
+        }
+        return h + ':' + m
       }
     }
   }
@@ -291,7 +333,6 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            border: 1px solid #ccc;
             &::before{
               content:'';
               position:absolute;

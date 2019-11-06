@@ -3,7 +3,7 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="isClose == false || isOffline == true"
+        :shutdown="true"
         :class-name="opcityStyle"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
@@ -36,19 +36,19 @@
         <ul>
           <li style="padding-top: 12px;">
             <div>
-              <p class="water-box"></p>
+              <p class="water-box btn-style" @click="openWaterBox"></p>
               <p>开水箱</p>
             </div>
           </li>
           <li>
             <div>
-              <p class="start" @click="startWork"></p>
+              <p class="start btn-style" @click="startWork"></p>
               <p>启动</p>
             </div>
           </li>
           <li style="padding-top: 12px;">
             <div>
-              <p class="light"></p>
+              <p :class="['light', 'btn-style', {'open-light': lightStatus}]" @click="light"></p>
               <p>照明</p>
             </div>
           </li>
@@ -82,7 +82,8 @@
             name: '除垢'
           }
         ],
-        activeMode: 0
+        activeMode: 0,
+        lightStatus: false
       }
     },
 
@@ -125,9 +126,13 @@
         document.querySelector('.rang_width').style.width = val+"%"
       },
       // 开关机
-      shutdowncallback(val){
+      shutdowncallback(){
         if (this.isOffline) return
-        this.controlDevice('switch',val)
+        if (this.deviceAttrs.PowerSwitchAll === 2) {
+          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
+        } else if (this.deviceAttrs.PowerSwitchAll === 0) {
+          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
+        }
       },
       controlDevice(attr, param={}) {
         return this.doControlDevice({
@@ -162,9 +167,28 @@
           WorkState: 0
         }
         this.controlDevice('startWork', obj).then(res => {
-          this.$router.push('/deviceStatus')
+          this.$router.push({
+            path: '/deviceStatus',
+            query: {
+              preset: this.activeMode === 3 ? 110 : temp
+            }
+          })
         })
         this.$router.push({path: '/deviceStatus'})
+      },
+      light() {
+        this.lightStatus = !this.lightStatus
+        if (this.lightStatus) {
+          this.controlDevice('Light', {Light: '1'})
+        } else {
+          this.controlDevice('Light', {Light: '0'})
+        }
+      },
+      openWaterBox() {
+        this.controlDevice('openWaterBox', {PushRod: '3'}).then(() => {
+          this.$router.push({path:'/waterBoxOpen'})
+        })
+        this.$router.push({path:'/waterBoxOpen'})
       }
     }
   }
@@ -292,7 +316,6 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            border: 1px solid #ccc;
             &::before{
               content:'';
               position:absolute;
@@ -327,6 +350,11 @@
       }
       .light{
         background: url('~@lib/@{imgPath}/btn_ac_on_cdb@2x.png') no-repeat center center;
+        background-size: 48px 48px;
+      }
+      .open-light {
+        background: url('~@lib/@{imgPath}/btn_ac_on_cdbb@2x.png') no-repeat center center;
+        background-color: #000;
         background-size: 48px 48px;
       }
     }
