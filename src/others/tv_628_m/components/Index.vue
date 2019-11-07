@@ -101,7 +101,7 @@
           <div class="title">{{ idx | nameType }}</div>
           <div
             class="more"
-            @click="toListPage(idx)">更多&nbsp;></div>
+            @click="toListPage(idx)"><span class="more_text">更多</span> <span class="more_mg"/></div>
         </div>
 
         <ul class="vlist list-m60">
@@ -196,8 +196,18 @@
       padding: 48px 0 40px 0;
     }
     .more{
+      display: flex;
+      justify-content: center;
+      align-items: center;
       font-size: 24px;
       color: #20282B;
+      .more_mg{
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        background: url('~@lib/base/tv/assets/new/tv_arrow_more.png');
+        background-size:100% 100%; 
+      }
     }
   }
 

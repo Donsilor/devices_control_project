@@ -3,8 +3,8 @@ import Mock from 'mockjs'
 let res = {
     "connectivity": "online", //l
     "switch_status": 'on', //开关
-    "temperature":167 , //暖光3000K  自然光5000K  白光6000K
-    "level":80   
+    // "temperature":167 , //暖光3000K  自然光5000K  白光6000K
+    // "level":80   
 }
 export function generateSnapShot() {
     return Mock.mock({
@@ -12,7 +12,7 @@ export function generateSnapShot() {
         code: 0,
         result: {
             "device_name": "智能筒灯",
-            "category_sub":2,  
+            "category_sub":1,  
             "attribute": res
         }
     })

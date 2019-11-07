@@ -163,25 +163,20 @@ export default {
     })
   },
   mounted(){
-      // this.$nextTick(()=>{
-      //     let topbar_fixed = document.querySelectorAll('.topbar-fixed')[0]
-      //     let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
-      //     let search_screen_bg = document.querySelectorAll('.search-screen-bg')[0]
-      //     if(status_bar_fixed&&topbar_fixed&&search_screen_bg){
-      //       status_bar_fixed.style.top = topbar_fixed.offsetHeight + 'px'
-      //       search_screen_bg.style.marginTop = status_bar_fixed.offsetHeight + 'px'
-      //     }
-      // })
-
-
     if(this.scroll){
        addEventListener('scroll',this.scrollfn)
     }
-
-
   },
   destroyed(){
     removeEventListener('scroll',this.scrollfn)
+  },
+  activated(){
+    if(this.scroll){
+       addEventListener('scroll',this.scrollfn)
+    }   
+  },
+  deactivated(){
+      removeEventListener('scroll',this.scrollfn)
   },
   methods: {
     goBack() {
