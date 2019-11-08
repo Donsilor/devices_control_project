@@ -515,7 +515,8 @@ export default {
       loadState: "",
       error: false,
       isFirstLoad: true,
-      filterVisible: true
+      filterVisible: true,
+      time:null
       //filterToggleClicked: false
     }
   },
@@ -553,26 +554,13 @@ export default {
       }
     })
     window.addEventListener("scroll", this.loadMore)
-    addEventListener("scroll", ()=>{
-      var scrollTop =
-        document.documentElement.scrollTop ||
-        window.pageYOffset ||
-        document.body.scrollTop
-      if(this.a - scrollTop<130&&this.a - scrollTop>-130) return
-
-      this.a = scrollTop
-    
-      if(scrollTop>=200){
-        this.filterVisible = false
-      }else{
-        this.filterVisible = true
-      }
-    })
+    addEventListener("scroll", this.scrollfn)
     // filters
     
   },
   destroyed() {
     window.removeEventListener("scroll", this.loadMore)
+    removeEventListener("scroll", this.scrollfn)
   },
   //在页面离开时记录滚动位置
   beforeRouteLeave(to, from, next) {
@@ -586,10 +574,32 @@ export default {
     })
   },
   methods: {
+    scrollfn(){
+         var scrollTop =
+        document.documentElement.scrollTop ||
+        window.pageYOffset ||
+        document.body.scrollTop
+      if(this.a - scrollTop<130&&this.a - scrollTop>-130) return
+
+      this.a = scrollTop
+    
+      if(scrollTop>=200){
+        this.filterVisible = false
+      }else{
+        this.filterVisible = true
+      }
+    },
     toggleFilter() {
       this.filterVisible = !this.filterVisible
       window.removeEventListener("scroll", this.loadMore)
-      window.addEventListener("scroll", this.loadMore)
+      removeEventListener("scroll", this.scrollfn)
+      clearTimeout(this.time)
+      this.time = setTimeout(()=>{
+        window.addEventListener("scroll", this.loadMore)
+        addEventListener("scroll", this.scrollfn)
+      },300)
+      console.log(this.time)
+     
 
       // var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
       // scrollTop += this.filterVisible ? 132 : -132
