@@ -221,7 +221,7 @@
   }
   .search_fexid{
     position: fixed;
-    top: 25PX;
+    top:@status_bar_height;
     left: 0;
     width: 100%;
     height: 44px;

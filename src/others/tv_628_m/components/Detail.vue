@@ -36,7 +36,9 @@
               </p>
               <p v-show="isNotNull(cur.year)">年代：{{ cur.year }}</p>
               <p v-show="isNotNull(cur.cate)">类型：{{ cur.cate }}</p>
-              <p v-show="isNotNull(cur.director)">导演：{{ cur.director }}</p>
+              <p 
+                v-show="isNotNull(cur.director)" 
+                class="director">导演：{{ cur.director }}</p>
               <p
                 v-show="isNotNull(cur.starring)"
                 class="text_s">主演：{{ cur.starring }}</p>
@@ -408,6 +410,11 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     height: 6em
+  }
+  .director{
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
   }
 }
 .playstate {
