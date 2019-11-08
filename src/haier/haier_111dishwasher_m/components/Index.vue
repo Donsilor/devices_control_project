@@ -9,6 +9,7 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!-- tab切换栏 -->
       <div
+        v-show="deviceAttrs.operation_mode=='standby'||deviceAttrs.operation_mode=='end'" 
         class="main center"
         style="margin-top:52px">
         <div class="tab">
@@ -39,7 +40,7 @@
           <!-- 左右滑动选择 -->
           <!-- 餐具 -->
           <div
-            v-if="temp"
+            v-show="temp"
             class="swiper-container container">
             <div class="swiper-wrapper">
               <div
@@ -54,15 +55,15 @@
           </div>
           <!-- 食材 -->
           <div
-            v-if="!temp"
+            v-show="!temp"
             class="swiper-container container1">
             <div class="swiper-wrapper">
               <div
-                v-for="item in foodList"
+                v-for="it in foodList"
                 class="swiper-slide">
                 <div>
-                  <span>{{ item.time }}</span>
-                  <span>{{ item.name }}</span>
+                  <span>{{ it.time }}</span>
+                  <span>{{ it.name }}</span>
                 </div>
               </div>
             </div>
@@ -79,79 +80,11 @@
             @click="setStart" />
           <div class="btn-name">启动</div>
         </div>
-        <!-- 更多选项 -->
-        <div 
-          class="more" 
-          @click="showMore">
-          <img src="../../../../lib/base/dishwasher/assets/gengduo@2x.png">
-          <span>更多选项</span>
-        </div>
       </div>
       <!-- 关机状态 -->
       <div
         v-else
         class="closed">请在设备端打开电源</div>
-      <!-- 弹出框 -->
-      <div class="bigBox">
-        <div
-          v-show="show"
-          class="model "
-          @click.self="show = false"
-          @touchmove.prevent/>
-        <div 
-          v-show="show" 
-          class="moreBox show">
-          <ul>
-            <li>更多选项</li>
-            <li><span>水软</span>
-              <div class="rangeBox">
-                <span>H1</span>
-                <div class="rang_input">
-                  <input
-                    :value="brightnessValue"
-                    type="range"
-                    min="0"
-                    max="9"
-                    step="1"
-                    @touchmove="changeWaterStyle"
-                    @touchend="changeWater">
-                  <p :class="['rang_width']"/>
-                </div>
-                <span>H9</span>
-              </div>
-
-            </li>
-            <li>
-              <span>光亮剂</span>
-              <div class="rangeBox">
-                <span>1</span>
-                <div class="rang_input">
-                  <input
-                    :value="brightnessValue1"
-                    type="range"
-                    min="0"
-                    max="9"
-                    step="1"
-                    @touchmove="changeWaterStyle1"
-                    @touchend="changeWeight">
-                  <p :class="['rang_width1']"/>
-                </div>
-                <span>7</span>
-              </div>
-            </li>
-            <li>
-              <span>童锁</span>
-              <div>
-                <input
-                  :checked="deviceAttrs.childlock=='on'"
-                  class="switch switch-anim"
-                  type="checkbox"
-                  @click="lock">
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -324,18 +257,23 @@ export default {
   },
   watch: {
     'device.stateChange'(){
-        // 水软
-        this.brightnessValue = this.deviceAttrs.hardness_level
-        this.setRangWidth(this.brightnessValue * 8.333)
-        // 光亮剂
-        this.brightnessValue1 = this.deviceAttrs.brightener_weight
-        this.setRangWidth1(this.brightnessValue1 * 8.333)
+      console.log('2222')
+        if (this.deviceAttrs.control=='start'&&this.deviceAttrs.operation_mode!=='end'&&this.deviceAttrs.operation_mode!=='standby') {
+                    console.log('333333')
+          this.$router.push({ path: '/Washing' })
+        }
+
     },
   },
   created() {
+    console.log('111111111')
+    
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
+        // if (this.deviceAttrs.control=='start'&&this.deviceAttrs.operation_mode!=='end'&&this.deviceAttrs.operation_mode!=='standby') {
+        //   this.$router.push({ path: '/Washing' })
+        // }
       })
       // HdSmart.UI.setStatusBarColor(2)
     })
@@ -382,72 +320,12 @@ export default {
         this.controlDevice("mode",value).then(()=>{
           this.controlDevice("control",controlStatus)
         })  
-          this.$router.push({ path: '/Washing' })
+          // this.$router.push({ path: '/Washing' })
         return
       }
       this.controlDevice("control",controlStatus )
     },
-    // 更多选项
-    showMore(){
-      this.show = true
-      // 水软 刚进来的位置
-      this.brightnessValue = this.deviceAttrs.hardness_level
-      this.setRangWidth(this.brightnessValue*8.333)  
-      // 光亮剂 刚进来的位置
-      this.brightnessValue1 = this.deviceAttrs.brightener_weight
-      this.setRangWidth1(this.brightnessValue1*8.333) 
-    },
-    setRangWidth(val) {
-      document.querySelector('.rang_width').style.width = val+"%"
-    },
-    setRangWidth1(val) {
-      document.querySelector('.rang_width1').style.width = val+"%"
-    },
-        // range调样式
-    changeWaterStyle(e) {
-      var max = e.target.getAttribute("max")
-      var width = (75 / max * e.target.value) +"%"
-      document.querySelector('.rang_width').style.width = width
-    },
-    changeWaterStyle1(e) {
-      var max = e.target.getAttribute("max")
-      var width = (75 / max * e.target.value) +"%"
-      document.querySelector('.rang_width1').style.width = width
-    },
-    // 水软
-    changeWater(e) {
-      if(e.target.value == 0) {
-        this.rangeColor = true
-      } else {
-        this.rangeColor = false
-      }
-      this.brightness = e.target.value
-      console.log(e.target.value,'我在这里')
-      this.controlDevice('hardness_level',this.brightness)
-    },
-    // 光亮剂
-    changeWeight(e){
-      if(e.target.value == 0) {
-        this.rangeColor = true
-      } else {
-        this.rangeColor = false
-      }
-      this.brightness = e.target.value
-      console.log(e.target.value,'我在这里')
-      this.controlDevice('brightener_weight',this.brightness)
-    },
-    // 童锁
-    lock(e) {
-      console.log(this.isClose)
-       if (this.isClose) return
-      let ovp = ''
-      if(e.target.checked){
-          ovp = 'on'
-      }else{
-          ovp = 'off'
-      }
-       this.controlDevice('childlock',ovp)
-    },
+  
     // 长按事件
     touchStart(e){
       console.log(e)
@@ -474,7 +352,7 @@ export default {
       console.log(this.timeOutEvent)
       // alert('长按了')
       this.$nextTick(()=>{
-        this.controlDevice('remain_washtime',0)
+        this.controlDevice('remaining',0)
       })
     },
     // 洗涤完成

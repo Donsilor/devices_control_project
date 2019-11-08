@@ -19,7 +19,7 @@ var res = {
     attribute: {
         switchStatus: "on",
         temperature: 170,
-        env_temperature: 240,
+        env_temperature: 0,
         mode: 'cold',
         order_time:0,
         speed: 'normal',

@@ -9,9 +9,9 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!-- 洗涤中 -->
       <div
-        v-show="deviceAttrs.operation_mode!=='end'" 
+        v-if="deviceAttrs.operation_mode!=='end'" 
         class="working">
-        <div class="time">{{ deviceAttrs.remain_washtime | work_time }}</div>
+        <div class="time">{{ deviceAttrs.remaining | work_time }}</div>
         <div
           v-show="deviceAttrs.control=='halt'"
           class="progress">

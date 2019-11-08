@@ -4,8 +4,11 @@ export function toThousandFilter(num) {
 }
 export function filterTm(tm) {
   let tmp = '--'
-  if(tm || tm == 0){
+  if(tm&&tm!==0){
     tmp = (+tm)/10
+  }
+  if (tm==0) {
+    tmp = '--'
   }
   return tmp
 }
