@@ -66,7 +66,7 @@
     }
   }
       .main{
-      position: absolute;
+      position: fixed;
       bottom: 0;
       z-index: 999999999999;
       width: 100%;
@@ -108,6 +108,7 @@
         width: 650px;
         height: 100px;
         margin: auto;
+        border: 0;
       }
       .cancel{
         margin-top: 32px;
