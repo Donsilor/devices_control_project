@@ -96,7 +96,9 @@
       selectedValue(value) { //选择值
         this.$emit('selectedchange', value) //自定义事件，暴露值
       },
-      activeMode (value) {
+      activeMode(value) {
+        this.tTop = 0
+        this.tIndex = 0
         if (value === 0) {
           // 普通蒸
           this.dataList.temperature = this.getTemp(30, 100)

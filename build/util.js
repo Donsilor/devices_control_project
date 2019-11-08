@@ -4,6 +4,8 @@ try {
 } catch (ex) {
   argv = process.argv
 }
+console.log('process.env.npm_config_argv')
+console.log(process.env.npm_config_argv)
 var product = argv.slice(2)[0]
 // var params = require('minimist')(argv.slice(3))
 var isMock = false

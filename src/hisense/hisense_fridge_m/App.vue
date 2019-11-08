@@ -254,6 +254,7 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   data() {
     return {
+      code: true,
       isOpen: 'off',
       rangeColor: 'on',
       timeValue: 0,
@@ -306,6 +307,7 @@ export default {
   },
   watch: {
     "deviceAttrs.holiday"() {
+      if(this.code == false) return
       this.coldDisabled = false
       this.frozenDisabled = false
       if(this.deviceAttrs.holiday == 'on') {
@@ -316,6 +318,7 @@ export default {
       }
     },
     "deviceAttrs.intelligent"() {
+      if(this.code == false) return
       this.coldDisabled = false
       this.frozenDisabled = false
       if(this.deviceAttrs.intelligent == 'on') {
@@ -326,6 +329,7 @@ export default {
       }
     },
     "deviceAttrs.fast_cool"() {
+      if(this.code == false) return
       this.coldDisabled = false
       if(this.deviceAttrs.fast_cool == 'on') {
         this.coldValue = 'on'
@@ -337,6 +341,7 @@ export default {
       }
     },
     "deviceAttrs.fast_frozen"() {
+      if(this.code == false) return
       this.frozenDisabled = false
       if(this.deviceAttrs.fast_frozen == 'on') {
         this.frozenValue = 'on'
@@ -372,16 +377,26 @@ export default {
         value = 'on'
       }
       this.controlDevice(val, value)
-      // .then(() => {
-      //   if(this.deviceAttrs.holiday == 'on') {
-      //     this.coldValue = 'off'
-      //     this.frozenValue = 'off'
-      //   }
-      //   if(this.deviceAttrs.intelligent == 'on') {
-      //     this.coldValue = 'off'
-      //     this.frozenValue = 'off'
-      //   }
-      // })
+      .then((res) => {
+        if(res.code == 0) {
+          this.code = true
+        } else {
+          this.code = false
+          HdSmart.UI.toast('操作失败')
+          this.coldDisabled = false
+          this.frozenDisabled = false
+        }
+      })
+      .catch((res) => {
+        if(res.code == 0) {
+          this.code = true
+        } else {
+          this.code = false
+          HdSmart.UI.toast('操作失败')
+          this.coldDisabled = false
+          this.frozenDisabled = false
+        }
+      })
     },
     setTemperature(attr, step, [min, max ]) {
       if(this.isOffline) return HdSmart.UI.toast('设备已离线')
@@ -403,6 +418,22 @@ export default {
         }
       }
       this.controlDevice(attr, temp)
+      .then((res) => {
+        if(res.code == 0) {
+          this.code = true
+        } else {
+          this.code = false
+          HdSmart.UI.toast('操作失败')
+        }
+      })
+      .catch((res) => {
+        if(res.code == 0) {
+          this.code = true
+        } else {
+          this.code = false
+          HdSmart.UI.toast('操作失败')
+        }
+      })
     },
     changeSpeed(e) {
       var max = e.target.getAttribute("max")
@@ -441,6 +472,24 @@ export default {
         value = 'on'
       }
       this.controlDevice('fast_cool', value)
+      .then((res) => {
+        if(res.code == 0) {
+          this.code = true
+        } else {
+          this.code = false
+          HdSmart.UI.toast('操作失败')
+          this.coldDisabled = false
+        }
+      })
+      .catch((res) => {
+        if(res.code == 0) {
+          this.code = true
+        } else {
+          this.code = false
+          HdSmart.UI.toast('操作失败')
+          this.coldDisabled = false
+        }
+      })
     },
     frozen(e, val) {
       if(this.isOffline) return HdSmart.UI.toast('设备已离线')
@@ -452,6 +501,24 @@ export default {
         value = 'on'
       }
       this.controlDevice('fast_frozen', value)
+      .then((res) => {
+        if(res.code == 0) {
+          this.code = true
+        } else {
+          this.code = false
+          HdSmart.UI.toast('操作失败')
+          this.frozenDisabled = false
+        }
+      })
+      .catch((res) => {
+        if(res.code == 0) {
+          this.code = true
+        } else {
+          this.code = false
+          HdSmart.UI.toast('操作失败')
+          this.frozenDisabled = false
+        }
+      })
     },
     controlDevice(attr, value) {
       return this.doControlDevice({

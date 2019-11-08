@@ -3,7 +3,7 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="isClose == false || isOffline == true"
+        :shutdown="true"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <!--模式-->
@@ -18,19 +18,19 @@
         <ul>
           <li style="padding-top: 12px;">
             <div>
-              <p class="water-box"></p>
+              <p class="water-box btn-style"></p>
               <p>开水箱</p>
             </div>
           </li>
           <li>
             <div>
-              <p class="pause" @click="continueCook"></p>
+              <p class="pause btn-style" @click="continueCook"></p>
               <p>继续烹饪</p>
             </div>
           </li>
           <li style="padding-top: 12px;">
             <div>
-              <p :class="['light', {'open-light': lightStatus}]" @click="light"></p>
+              <p :class="['light', 'btn-style', {'open-light': lightStatus}]" @click="light"></p>
               <p>照明</p>
             </div>
           </li>
@@ -71,9 +71,13 @@
         document.querySelector('.rang_width').style.width = val+"%"
       },
       // 开关机
-      shutdowncallback(val){
+      shutdowncallback(){
         if (this.isOffline) return
-        this.controlDevice('switch',val)
+        if (this.deviceAttrs.PowerSwitchAll === 2) {
+          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
+        } else if (this.deviceAttrs.PowerSwitchAll === 0) {
+          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
+        }
       },
       controlDevice(attr, param={}) {
         return this.doControlDevice({
@@ -87,12 +91,22 @@
       },
       light() {
         this.lightStatus = !this.lightStatus
+        if (this.lightStatus) {
+          this.controlDevice('Light', {Light: '1'})
+        } else {
+          this.controlDevice('Light', {Light: '0'})
+        }
       },
       continueCook() {
-        this.controlDevice('WorkState',{WorkState: '4'}).then(res => {
+        // 如果没有启动 回到首页 如果启动回到状态页
+        if (this.deviceAttrs.PowerSwitchAll === 2) {
+          this.controlDevice('WorkState',{WorkState: '4'}).then(res => {
+            this.$router.push({path: '/deviceStatus'})
+          })
           this.$router.push({path: '/deviceStatus'})
-        })
-        this.$router.push({path: '/deviceStatus'})
+        } else {
+          this.$router.push({path: '/'})
+        }
       }
     }
   }
@@ -223,7 +237,6 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            border: 1px solid #ccc;
             &::before{
               content:'';
               position:absolute;

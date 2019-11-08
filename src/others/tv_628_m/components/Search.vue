@@ -950,7 +950,15 @@ export default {
     showDetailInfo(item) {
       console.log(item)
       this.$store.dispatch('showDetail', item)
-      window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
+      // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
+      this.$router.push({
+        path:"/detail",
+        query:{
+          channelId:item.channelId,
+          vid:item.vid,
+          ispay:item.ispay
+        }
+      })
     },
     getUpdateSet(count, last) {
       if (!count || !last || count == '0' || last == '0') {

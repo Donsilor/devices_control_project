@@ -24,6 +24,7 @@
           <!-- touch组件 -->
           <parcent-Light 
             :brightness="deviceAttrs.temperature"
+            :category_sub="device.category_sub"
             :switch_status="deviceAttrs.switch_status"
             @moveLight="moveLight"
             @endLight="endLight"/>
@@ -40,7 +41,7 @@
             @click="setSwitch" />
           <div class="btn-name">{{ isClose||isOffline?'开灯':'关灯' }}</div>
         </div>
-        <span v-if="!isClose&&(device.category_sub==2||device.category_sub==4)">亮度 {{ ratio }}%</span>
+        <!-- <span v-if="!isClose&&(device.category_sub==2||device.category_sub==4)">亮度 {{ ratio }}%</span> -->
       </div>
       <!-- 按钮 -->
       <div 
@@ -413,6 +414,7 @@ export default {
 
     display: flex;
     flex-direction: column;
+    background: rgba(0, 0, 0, 0.1);
     &.active {
       // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
       // border-color: #ffbf00;

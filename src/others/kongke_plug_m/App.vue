@@ -169,13 +169,13 @@ export default {
       // alert('长按了')
       this.$nextTick(()=>{
         // 删除延时
-        // let obj = {
-        //   remove_delay_task: {
-        //     encrptionFlag: '1001'
-        //   }
-        // }
-        // this.controlDevice('remove_time',true, obj)
-        this.controlDevice('countdownClose',0)
+        let obj = {
+          remove_delay_task: {
+            encrptionFlag: '1001'
+          }
+        }
+        this.controlDevice('remove_time',true, obj)
+        // this.controlDevice('countdownClose',0)
       })
     },
     controlDevice(attr, value,params) {

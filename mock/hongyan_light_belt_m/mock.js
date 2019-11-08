@@ -1,33 +1,44 @@
+/**
+ * Created by lenovo on 2017/7/10.
+ */
 import Mock from 'mockjs'
 
 let res = {
-    "connectivity": "online", //l
-    "switch_status": 'on', //开关
-    // "temperature":167 , //暖光3000K  自然光5000K  白光6000K
-    // "level":80   
+    "temperature": 6000,
+    "hue": 100,
+    "saturation": 254,
+    "r": 255,
+    "g": 255,
+    "b": 255,
+    "switch_status": "on",
+    "level": 90,
+    "connectivity": "online"
 }
+
 export function generateSnapShot() {
     return Mock.mock({
         method: 'dr_report_dev_status',
         code: 0,
         result: {
-            "device_name": "智能筒灯",
-            "category_sub":1,  
+            "device_name": "灯带",
             "attribute": res
         }
     })
+
 }
 
 export function set(data){
     var attr = data.params.attribute
-    if(attr.negative_ion_switch){
-        attr.negative_ion_switch_status = attr.negative_ion_switch
-    }
     if(attr.switch){
-        attr.switch_status = attr.switch
+      if(attr.switch == 'on'){
+        res.switch_status = 'on'
+      } else {
+        res.switch_status = 'off'
+      }
     }
     res = Object.assign({}, res, attr)
     return Mock.mock({
         code: 0
     })
 }
+

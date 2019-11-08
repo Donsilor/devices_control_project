@@ -3,7 +3,7 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="isClose == false || isOffline == true"
+        :shutdown="true"
         :class-name="opcityStyle"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
@@ -14,7 +14,7 @@
       </div>
       <!--确定按钮-->
       <div class="tool-bar">
-        <div class="ok">确定</div>
+        <div class="ok" @click="ok">确定</div>
         <div class="auto-back">{{timer}}秒后自动返回默认状态</div>
       </div>
     </div>
@@ -62,9 +62,13 @@
         document.querySelector('.rang_width').style.width = val+"%"
       },
       // 开关机
-      shutdowncallback(val){
+      shutdowncallback(){
         if (this.isOffline) return
-        this.controlDevice('switch',val)
+        if (this.deviceAttrs.PowerSwitchAll === 2) {
+          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
+        } else if (this.deviceAttrs.PowerSwitchAll === 0) {
+          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
+        }
       },
       controlDevice(attr, value) {
         let param = {}
@@ -80,6 +84,9 @@
             }
           }
         })
+      },
+      ok() {
+        this.$router.push('/')
       }
     }
   }
