@@ -9,7 +9,7 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!-- tab切换栏 -->
       <div
-        v-show="deviceAttrs.operation_mode=='standby'||deviceAttrs.operation_mode=='end'" 
+
         class="main center"
         style="margin-top:52px">
         <div class="tab">

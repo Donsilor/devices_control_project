@@ -80,6 +80,10 @@ export default {
     },
 
   },
+  created(){
+    console.log('washing');
+    
+  },
   watch: {
     'device.stateChange'(){
       this.$nextTick(()=>{
