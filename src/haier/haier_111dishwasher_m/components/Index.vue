@@ -258,23 +258,19 @@ export default {
   },
   watch: {
     'device.stateChange'(){
-      console.log('2222')
         if (this.deviceAttrs.operation_mode!=='standby') {
-                    console.log('333333')
           this.$router.push({ path: '/Washing' })
         }
 
     },
   },
   created() {
-    console.log('111111111')
-    
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
-        // if (this.deviceAttrs.control=='start'&&this.deviceAttrs.operation_mode!=='end'&&this.deviceAttrs.operation_mode!=='standby') {
-        //   this.$router.push({ path: '/Washing' })
-        // }
+          if (this.deviceAttrs.operation_mode!=='standby') {
+          this.$router.push({ path: '/Washing' })
+        }
       })
       // HdSmart.UI.setStatusBarColor(2)
     })
