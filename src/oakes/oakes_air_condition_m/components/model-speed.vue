@@ -5,26 +5,26 @@
       class="model "
       @click.self="show = false"
       @touchmove.prevent/>
-    <div 
-      v-if="show" 
+    <div
+      v-if="show"
       class="main show" >
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
-        <div 
-          class="btn" 
+        <div
+          class="btn"
           @click="setWind('auto', 'auto')">自动
         </div>
-        <div 
+        <div
           class="btn"
           @click="setWind(speed, 'hand')">手动
         </div>
       </div>
-      <div 
-        class="hide" 
+      <div
+        class="hide"
         @click.self="show = false">取消</div>
     </div>
   </div>
-  
+
 </template>
 <style lang="less" scoped>
 @keyframes show {
@@ -62,12 +62,13 @@
       height: 100%;
       background: rgba(0,0,0,0.8);
     }
-    
+
   }
 
   .main{
       position: fixed;
       bottom: 0;
+      left: 0;
       // bottom: -380px;
       z-index: 999999999999;
       width: 100%;
