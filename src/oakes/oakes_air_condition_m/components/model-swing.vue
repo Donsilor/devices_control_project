@@ -5,22 +5,22 @@
       class="model"
       @click.self="show = false"
       @touchmove.prevent/>
-    <div 
+    <div
       v-if="show"
       class="main show" >
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
-        <div 
-          class="btn" 
+        <div
+          class="btn"
           @click="setWind('wind_up_down')">上下风
         </div>
-        <div 
+        <div
           class="btn"
           @click="setWind('wind_left_right')">左右风
         </div>
       </div>
-      <div 
-        class="hide" 
+      <div
+        class="hide"
         @click.self="show = false">取消</div>
     </div>
   </div>
@@ -64,6 +64,7 @@
      .main{
       position: fixed;
       bottom: 0;
+      left: 0;
       z-index: 999999999999;
       width: 100%;
       height: 381px;

@@ -5,26 +5,26 @@
       class="model"
       @click.self="show = false"
       @touchmove.prevent/>
-    <div 
-      v-if="show" 
+    <div
+      v-if="show"
       class="main show">
       <div class="overtime">
         <span class="title">设置关机时间</span>
-        <span 
-          class="canceltime" 
+        <span
+          class="canceltime"
           @click="canceltime">取消定时</span>
       </div>
-      <time-pick 
+      <time-pick
         class="pickTime"
         @selectedchange="selectedchange" />
 
       <div class="wrap-btns">
-        <button 
-          class="submit" 
+        <button
+          class="submit"
           type="button"
           @click="submit" >确定</button>
-        <div 
-          class="cancel" 
+        <div
+          class="cancel"
           @click=" show = false">取消</div>
       </div>
     </div>
@@ -67,6 +67,7 @@
   }
       .main{
       position: fixed;
+      left: 0;
       bottom: 0;
       z-index: 999999999999;
       width: 100%;
@@ -129,7 +130,7 @@ export default {
   props: {
     // orderTime:{type: Number}
   },
-  
+
   data() {
     return {
       show: false,
@@ -142,7 +143,7 @@ export default {
     selectedchange(val) {
       this.time = val
     },
-    submit() { 
+    submit() {
       let val = [this.time || '0:0', 'time']
       this.$emit('selectedTime', val) //自定义事件，暴露值
       this.time = '0:0'

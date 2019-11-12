@@ -4,6 +4,7 @@
 import Mock from 'mockjs'
 
 let res = {
+    "switch_chan": "off",
     "switch_chan0": "off",
     "switch_chan1": "on",
     "switch_chan2": "off",
@@ -77,6 +78,19 @@ export function set(data){
       if(attr.switch_chan3 == 'on'){
         res.list[3].chan_status = 'on'
       } else {
+        res.list[3].chan_status = 'off'
+      }
+    }
+    if(attr.switch_chan){
+      if(attr.switch_chan == 'on'){
+        res.list[0].chan_status = 'on'
+        res.list[1].chan_status = 'on'
+        res.list[2].chan_status = 'on'
+        res.list[3].chan_status = 'on'
+      } else {
+        res.list[0].chan_status = 'off'
+        res.list[1].chan_status = 'off'
+        res.list[2].chan_status = 'off'
         res.list[3].chan_status = 'off'
       }
     }

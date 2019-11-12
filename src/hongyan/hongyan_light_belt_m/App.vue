@@ -113,7 +113,7 @@ export default {
       this.controlDevice('level', this.brightness * 10)
     },
     controlDevice(attr, value, param) {
-      if(attr=='switch'){
+      if (attr=='switch') {
          return this.doControlDevice({
         nodeid: `bulb.main.${attr}`,
         params: {
@@ -122,6 +122,18 @@ export default {
           }
         }
       })
+      } else if (attr == 'r') {
+        return this.doControlDevice({
+          nodeid: `bulb.main.rgb`,
+          params: {
+            attribute: {
+              [attr]: value,
+              ...param,
+              "transition_time":10,
+              "need_confirm":true
+            }
+          }
+        })
       } else {
         return this.doControlDevice({
           nodeid: `bulb.main.${attr}`,
@@ -129,7 +141,7 @@ export default {
             attribute: {
               [attr]: value,
               ...param,
-              "transition_time":2,
+              "transition_time":10,
               "need_confirm":true
             }
           }
