@@ -465,6 +465,9 @@ export default {
 
     getProgress() {
       // 计算温度进度条
+      if (this.deviceAttrs.temperature > MAX_TEMP) {
+        return 70 /(30 - 19) * (MAX_TEMP / 10 - 19)
+      }
       if (this.deviceAttrs.mode=='heat') {
         return 70 /(30 - 17) * (this.deviceAttrs.temperature / 10 - 17)
       }else{

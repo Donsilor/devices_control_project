@@ -21,7 +21,7 @@
             </div>
             <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='auto'"
-              class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
+              class="tm">24<sup>°C</sup>
             </div>
             <div
               v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
@@ -420,12 +420,12 @@ export default {
           if (this.deviceAttrs.speed=='auto') {
             this.setRangWidth(93)
           }
-          if (this.deviceAttrs.mode=='auto') {
-            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
-            this.$refs.$circle.init()
-            this.hide()
-            return
-          }
+          // if (this.deviceAttrs.mode=='auto') {
+          //   this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
+          //   this.$refs.$circle.init()
+          //   this.hide()
+          //   return
+          // }
           this.reset()
           this.hide()
         })
@@ -528,7 +528,6 @@ export default {
       this.$nextTick(()=>{
         this.animation = true
       },0)
-      
     },
     showTime() {
       if (this.isClose) return
@@ -542,7 +541,13 @@ export default {
 
     getProgress() {
       // 计算温度进度条
-      return 70 /(32 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+      if (this.deviceAttrs.mode=='auto') {
+        return 70 /(32 - 16) * (240 / 10 - 16)
+      }else if(this.deviceAttrs.mode=='wind') {
+        return 70 /(32 - 16) * (MIN_TEMP / 10 - 16)
+      }else{
+        return 70 /(32 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+      }
     }
   }
 }

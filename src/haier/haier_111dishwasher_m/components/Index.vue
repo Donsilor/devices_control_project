@@ -9,7 +9,6 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!-- tab切换栏 -->
       <div
-
         class="main center"
         style="margin-top:52px">
         <div class="tab">
@@ -44,7 +43,8 @@
             class="swiper-container container">
             <div class="swiper-wrapper">
               <div
-                v-for="item in tableware"
+                v-for="item in tableware" 
+                :key="item.english"
                 class="swiper-slide">
                 <div>
                   <span>{{ item.time }}</span>
@@ -60,6 +60,7 @@
             <div class="swiper-wrapper">
               <div
                 v-for="it in foodList"
+                :key="it.english"
                 class="swiper-slide">
                 <div>
                   <span>{{ it.time }}</span>
@@ -120,12 +121,12 @@ export default {
         },
         {
           name:'冲洗',
-          time:20,
+          time:19,
           english:'flush'
         },
         {
           name:'智能',
-          time:74,
+          time:89,
           english:'smart'
         }
         ,
@@ -143,7 +144,7 @@ export default {
         ,
         {
           name:'即时',
-          time:47,
+          time:46,
           english:'timely'
         }
         ,
@@ -172,7 +173,7 @@ export default {
         },
         {
           name:'核果',
-          time:30,
+          time:32,
           english:'stone_fruit'
         },
         {
@@ -182,19 +183,19 @@ export default {
         },
         {
           name:'瓜果',
-          time:32,
+          time:34,
           english:'melons'
         }
         ,
         {
           name:'蔬菜',
-          time:34,
+          time:33,
           english:'vegetables'
         }
         ,
         {
           name:'叶菜',
-          time:36,
+          time:34,
           english:'leaf_vegetable'
         }
         ,
@@ -206,13 +207,13 @@ export default {
         ,
         {
           name:'茎菜',
-          time:36,
+          time:35,
           english:'stem_vegetable'
         }
         ,
         {
           name:'果实',
-          time:33,
+          time:32,
           english:'fruit_vegetable'
         },
         {
@@ -223,25 +224,25 @@ export default {
         ,
         {
           name:'海鲜',
-          time:35,
+          time:38,
           english:'seafood'
         }
         ,
         {
           name:'甲壳',
-          time:35,
+          time:36,
           english:'crustaceans'
         }
         ,
         {
           name:'贝类',
-          time:38,
+          time:39,
           english:'testaceans'
         }
         ,
         {
           name:'螺类',
-          time:40,
+          time:41,
           english:'snails'
         }
       ]
@@ -258,7 +259,7 @@ export default {
   watch: {
     'device.stateChange'(){
       console.log('2222')
-        if (this.deviceAttrs.control=='start'&&this.deviceAttrs.operation_mode!=='end'&&this.deviceAttrs.operation_mode!=='standby') {
+        if (this.deviceAttrs.operation_mode!=='standby') {
                     console.log('333333')
           this.$router.push({ path: '/Washing' })
         }
@@ -309,7 +310,11 @@ export default {
         controlStatus = 'halt'
       } else {
         controlStatus = 'start'
-        this.currentMode = document.querySelectorAll('.swiper-slide-active>div>span')[1].innerHTML
+        if (this.temp) {
+          this.currentMode = document.querySelectorAll('.container .swiper-slide-active>div>span')[1].innerHTML
+        }else{
+          this.currentMode = document.querySelectorAll('.container1 .swiper-slide-active>div>span')[1].innerHTML
+        }
         let value
         let arr = this.tableware.concat(this.foodList)
         for(let i=0;i<arr.length;i++){

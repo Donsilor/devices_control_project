@@ -7,7 +7,7 @@ let res = {
     'mode':'nomal',
     'operation_mode':'standby',//洗涤状态
     // 'remain_washtime':'121',
-    'remaining':'121',
+    'remaining':121,
     'return_standby':'off',
     'mode_status':'off',//程序是否运行
     'hardness_level':2,//水软
@@ -42,9 +42,9 @@ export function set(data){
         attr.operation_mode= 'standby'
       }
     }
-    if(attr.operation_mode){
-      if(attr.operation_mode=='start'){
-        attr.remain_washtime = 121
+    if(attr.mode){
+      if (attr.mode == 'glass') {
+         attr.operation_mode = 'end'
       }
     }
     res = Object.assign({}, res, attr)

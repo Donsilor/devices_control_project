@@ -19,7 +19,7 @@ var res = {
     attribute: {
         switchStatus: "on",
         temperature: 170,
-        env_temperature: 0,
+        env_temperature: 200,
         mode: 'cold',
         order_time:0,
         speed: 'normal',
@@ -55,6 +55,11 @@ export function set(data) {
     } catch (error) {
       attr = data.content.params.attribute
     }
+    // if (attr.mode) {
+    //   if (attr.mode == 'dehumidify') {
+    //       res.attribute.temperature = 650
+    //   }
+    // }
     if (attr.time) {
       if (attr.time.timer_value>0) {
         res.attribute.timer_value=attr.time.timer_value

@@ -451,6 +451,9 @@ export default {
     // 设置风速
     setSpeed(speed, val) {
       this.typeVal = val
+      if (this.deviceAttrs.temperature == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
+        return HdSmart.UI.toast('低风、制冷模式下不支持此温度')
+      }
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
