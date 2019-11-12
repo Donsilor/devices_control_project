@@ -846,6 +846,11 @@ export default {
       service.onClickEvent(name)
     },
     showDetailInfo(item) {
+      // let obj = this.$store.state.tvStatus
+      // obj.tvOnlineStatus = -1
+      // this.$store.commit('setScreenProjectionStatus',obj)
+      // console.log(this.$store.state.tvStatus,'22222')
+      // return
       this.$store.dispatch('showDetail', item)
       // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
       this.$router.push({

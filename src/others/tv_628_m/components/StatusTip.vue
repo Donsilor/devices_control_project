@@ -21,9 +21,9 @@
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">
             <p class="offline_bar_p">
-              <i class="icon-wifi"/>
+              <i class="wifi"/>
             </p>
-            <span class="link">无法连接网络，请检查网络设置</span> 
+            <span class="link">当前网络不可用</span> 
 
           </div>
         </div>
@@ -148,6 +148,12 @@
       display: flex;
       justify-content:flex-start;
       align-items: center;
+      .wifi{
+        width: 40px;
+        height: 40px;
+        background: url('~@lib/base/tv/assets/new/tv_icn_tips_nowifi@2x.png');
+        background-size: 100% 100%;
+      }
      
     }
     .error{
@@ -164,7 +170,7 @@
     }
 }
 .offline_bar.offline_bar_wifi{
-    justify-content: center;
+    justify-content: left;
     i{
       &::before{
         position: relative;

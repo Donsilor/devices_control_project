@@ -167,7 +167,7 @@
 
 <style lang="less" scoped>
 .page-list{
- background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
     background-size: 100% 100%;
     background-attachment: fixed;
     min-height: 100%;
@@ -214,8 +214,10 @@
     // }
     .text{
       display: block;
-      width: 56px;
+      width: auto;
       height: 40px;
+      font-size: 28px;
+      padding-right: 16px;
     }
     .arrow{
       display: block;
