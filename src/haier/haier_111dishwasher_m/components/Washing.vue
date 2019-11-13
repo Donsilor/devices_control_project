@@ -12,7 +12,8 @@
         v-if="deviceAttrs.operation_mode!=='end'"
         ref="working" 
         class="working opacity1">
-        <div class="time">{{ deviceAttrs.remaining | work_time }}</div>
+        <div class="minute">剩余时间(分钟)</div>
+        <div class="time">{{ deviceAttrs.remaining }}</div>
         <div
           v-show="deviceAttrs.control=='halt'"
           class="progress">
@@ -89,31 +90,31 @@ export default {
           return '预洗'
           break
         case 'wash_inflow':
-          return '洗涤进水'
+          return '洗涤中'
           break
         case 'wash_warm':
-          return '洗涤加热'
+          return '洗涤中'
           break
         case'wash':
-          return '洗涤'
+          return '洗涤中'
           break
         case'wash_drainage':
-          return '洗涤排水'
+          return '洗涤中'
           break
         case'rinse_inflow':
-          return '漂洗进水'
+          return '漂洗中'
           break
         case'rinse_cold':
-          return '冷漂洗'
+          return '漂洗中'
           break
         case'rinse_drainage':
-          return '漂洗排水'
+          return '漂洗中'
           break
         case'rinse_warm':
-          return '热漂洗'
+          return '漂洗中'
           break
         case'drying':
-          return '干燥'
+          return '干燥中'
           break
         default:
           return '洗涤中'
@@ -328,6 +329,14 @@ export default {
   }
   .working{
     margin-top: 20vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    .minute{
+      font-size: 24px;
+      color: rgba(0, 0, 0, 0.5);
+      margin-bottom:12px;
+    }
     .time{
       width: 100%;
       font-size: 146px;
