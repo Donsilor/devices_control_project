@@ -182,7 +182,7 @@ export default {
       // alert('长按了')
       this.$nextTick(()=>{
         this.controlDevice('return_standby','on')
-          this.$router.push({ path: '/' })
+        this.$router.push({ path: '/' })
       })
     },
     // 洗涤完成
@@ -225,11 +225,11 @@ export default {
 }
 @keyframes progress-bar{
   0% {
-      transform: rotate(260deg);
+      transform: rotate(200deg);
       border: 3px solid transparent;
   }
   100% {
-      transform: rotate(358deg);
+      transform: rotate(318deg);
       border: 3px solid rgba(0, 0, 0, 1);
   }
 }
@@ -438,24 +438,27 @@ export default {
     margin: 0 34px 40px;
     position: relative;
     .progressBar {
-      top: -30px;
+      top: -60px;
       height: 50px;
       position: absolute;
-      width: 100%;
+      width: 240px;
+      left: 50%;
+      transform: translateX(-50%);
+
       overflow: hidden;
       &::before{
         content: "";
         display: block;
-        width: 200px;
-        height: 200px;
+        width: 240px;
+        height:240px;
         border-radius: 50%;
         position: absolute;
         // top: -30px;
-        left: -23%;
+        // left: -23%;
         // transform: translateX(-50%) rotate(260deg);
         border: 3px solid rgba(0, 0, 0, 1);
-        clip: rect(0px 200px 40px 0px);
-        animation: progress-bar 1s linear infinite;
+        clip: rect(-60px 300px 140px -60px);
+        animation: progress-bar 1s linear;
       }
     }
     .mask {
@@ -474,21 +477,23 @@ export default {
       }
     }
       .press{
-        top: -30px;
+        top: -60px;
         height: 50px;
         position: absolute;
-        width: 100%;
+        width: 240px;
         overflow: hidden;
+             left: 50%;
+      transform: translateX(-50%);
         &::before{
           content: "";
           display: block;
-          width: 200px;
-          height: 200px;
+          width:240px;
+          height: 240px;
           border-radius: 50%;
           position: absolute;
           // top: -30px;
-          left: 50%;
-          transform: translateX(-50%);
+          // left: 50%;
+          // transform: translateX(-50%);
           border: 3px solid rgba(136, 138, 137, 0.8);
           // clip: rect(0px 200px 40px 0px);
         }

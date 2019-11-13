@@ -390,16 +390,16 @@ export default {
   // 50%{opacity:.5;}
   100%{opacity:0.2;}
 }
-@keyframes progress-bar{
-  0% {
-      transform: rotate(260deg);
-      border: 3px solid transparent;
-  }
-  100% {
-      transform: rotate(358deg);
-      border: 3px solid rgba(0, 0, 0, 1);
-  }
-}
+// @keyframes progress-bar{
+//   0% {
+//       transform: rotate(260deg);
+//       border: 3px solid transparent;
+//   }
+//   100% {
+//       transform: rotate(358deg);
+//       border: 3px solid rgba(0, 0, 0, 1);
+//   }
+// }
 .body {
   min-height: 100%;
 }
@@ -772,22 +772,22 @@ input[type="range"]::-webkit-slider-thumb {
   .btn-wrap {
     margin: 0 34px 40px;
     position: relative;
-    .progressBar {
-      &::before{
-        content: "";
-        display: block;
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        position: absolute;
-        top: -30px;
-        left: -23%;
-        // transform: translateX(-50%) rotate(260deg);
-        border: 3px solid rgba(0, 0, 0, 1);
-        clip: rect(0px 200px 40px 0px);
-        animation: progress-bar 1s linear infinite;
-      }
-    }
+    // .progressBar {
+    //   &::before{
+    //     content: "";
+    //     display: block;
+    //     width: 200px;
+    //     height: 200px;
+    //     border-radius: 50%;
+    //     position: absolute;
+    //     top: -30px;
+    //     left: -23%;
+    //     // transform: translateX(-50%) rotate(260deg);
+    //     border: 3px solid rgba(0, 0, 0, 1);
+    //     clip: rect(0px 200px 40px 0px);
+    //     animation: progress-bar 1s linear infinite;
+    //   }
+    // }
     .mask {
       &::before{
         content: "";
