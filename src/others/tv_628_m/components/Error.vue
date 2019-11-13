@@ -5,6 +5,7 @@
     <div class="error-tip">
       <img src="~@lib/base/tv/assets/img_disconnection@2x.png" >
       <p>加载失败，请点击屏幕刷新</p>
+      <!-- <button @click="fn">按钮</button> -->
     </div>
   </div>
 </template>
@@ -44,7 +45,12 @@ export default {
     methods: {
         reload() {
             service.onClickEvent("reload")
-        }
+        },
+        // fn(){
+        //    let obj = this.$store.state.tvStatus
+        //   obj.tvOnlineStatus = 1
+        //   this.$store.commit('setScreenProjectionStatus',obj)
+        // }
     }
 }
 </script>

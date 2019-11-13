@@ -62,15 +62,26 @@ export default {
   data() {
     return {
       isIOS: /iphone|ipad/i.test(navigator.userAgent),
+      tv:this.$store.state.tvStatus.tvOnlineStatus
     }
-  },
+  },  
   computed: {
     isNotIndex() {
       return this.$store.state.detailVisible || this.$route.path != '/'
     }
   },
-  created(){
-    console.log(this.$route.meta.keepAlive,'*********************************************')
+  watch:{
+    '$store.state.tvStatus.tvOnlineStatus':{
+        handler:function(n,v){
+          console.log('111111111111111111111111111111111',n,v)
+            if(n===-1){
+                this.$router.push('/NoNetwork')
+            }else if(v===-1){
+              this.$router.go(-1)
+            }
+        },
+        immediate: true
+    }
   }
 }
 </script>
