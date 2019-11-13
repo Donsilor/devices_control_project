@@ -4,15 +4,10 @@ export function toThousandFilter(num) {
 }
 
 export function work_time(val) {
-  console.log(val);
-  
   let h = Math.floor(val/60)
   let m = val % 60
-  if (m>9) {
-    return h+':'+m+':'+':00'
-  }else{
-    return '0'+h+':0'+m+':00'
-  }
+  m = m>9?m:'0'+m
+  return `0${h}:${m}`
 }
 // export function run_time(val) {
 //   let m = Math.floor(val/60)

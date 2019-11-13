@@ -7,7 +7,7 @@ let res = {
     'mode':'nomal',
     'operation_mode':'standby',//洗涤状态
     // 'remain_washtime':'121',
-    'remaining':121,
+    'remaining':124,
     'return_standby':'off',
     'mode_status':'off',//程序是否运行
     'hardness_level':2,//水软
@@ -39,7 +39,12 @@ export function set(data){
         attr.operation_mode= 'wash_inflow'
         attr.mode_status= 'on'
       }else{
-        attr.operation_mode= 'standby'
+        attr.operation_mode= 'wash_inflow'
+      }
+    }
+    if (attr.return_standby) {
+      if (attr.return_standby=='on') {
+        attr.operation_mode='standby'
       }
     }
     if(attr.mode){
