@@ -9,17 +9,19 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!-- 洗涤中 -->
       <div
-        v-if="deviceAttrs.operation_mode!=='end'" 
-        class="working">
+        v-if="deviceAttrs.operation_mode!=='end'"
+        ref="working" 
+        class="working opacity1">
         <div class="time">{{ deviceAttrs.remaining | work_time }}</div>
         <div
           v-show="deviceAttrs.control=='halt'"
           class="progress">
-          <span>洗涤</span>
+          {{ workStatus }}
+          <!-- <span>洗涤</span>
           <span :class="[{'ongoing':deviceAttrs.operation_mode=='rinse_inflow'||deviceAttrs.operation_mode=='rinse_cold'||deviceAttrs.operation_mode=='rinse_drainage'||deviceAttrs.operation_mode=='rinse_warm'||deviceAttrs.operation_mode=='drying'},'isgray']"> —— 漂洗</span>
-          <span :class="[{'black':deviceAttrs.operation_mode=='drying'},'isgray']"> —— 烘干</span>
+          <span :class="[{'black':deviceAttrs.operation_mode=='drying'},'isgray']"> —— 烘干</span> -->
         </div>
-        <div class="status">{{ deviceAttrs.control=='halt'?'已暂停':'洗涤中' }}</div>
+        <div class="status">{{ deviceAttrs.control=='halt'?'已暂停':workStatus }}</div>
       </div>
       <!-- 洗涤完成 -->
       <div 
@@ -33,8 +35,9 @@
       </div>
       <!-- 底部按钮 -->
       <div
-        v-if="deviceAttrs.operation_mode!=='end'"
-        class="panel-btn center">
+        v-if="deviceAttrs.operation_mode!=='end'" 
+        ref="btn"
+        class="panel-btn center opacity1">
         <!-- 洗涤页面按钮 -->
         <div
           v-if="deviceAttrs.control=='halt'"
@@ -53,6 +56,7 @@
         <div
           class="btn-wrap">
           <div
+            ref="start"
             :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
             @click="setStart" />
           <div class="btn-name">{{ deviceAttrs.control=='start'?'暂停':'继续' }}</div>
@@ -78,11 +82,43 @@ export default {
     bakColor(){
       return this.isClose ? '#000' : '#fff'
     },
-
-  },
-  created(){
-    console.log('washing');
-    
+    workStatus(){
+         /* eslint-disable no-unreachable */
+      switch (this.deviceAttrs.operation_mode) {
+        case 'pre_wash':
+          return '预洗'
+          break
+        case 'wash_inflow':
+          return '洗涤进水'
+          break
+        case 'wash_warm':
+          return '洗涤加热'
+          break
+        case'wash':
+          return '洗涤'
+          break
+        case'wash_drainage':
+          return '洗涤排水'
+          break
+        case'rinse_inflow':
+          return '漂洗进水'
+          break
+        case'rinse_cold':
+          return '冷漂洗'
+          break
+        case'rinse_drainage':
+          return '漂洗排水'
+          break
+        case'rinse_warm':
+          return '热漂洗'
+          break
+        case'drying':
+          return '干燥'
+          break
+        default:
+          return '洗涤中'
+      }
+    },
   },
   watch: {
     'device.stateChange'(){
@@ -96,6 +132,13 @@ export default {
       })
     },
   },
+  created(){
+    console.log('washing')
+  },
+  // beforeMount() {
+  //       this.$refs.working.classList.add('opacity')
+  //   this.$refs.btn.classList.add('opacity')
+  // },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     // 开关机
@@ -166,6 +209,22 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
 @imgPath1: 'base/dishwasher/assets';
+.hide{
+  animation: hide 1s linear;
+}
+@keyframes hide {
+  0%{opacity:1}
+  50%{opacity:.5;}
+  100%{opacity:0;}
+}
+.opacity1{
+  animation: show 1s linear;
+}
+@keyframes show {
+  0%{opacity:0}
+  50%{opacity:.5;}
+  100%{opacity:1;}
+}
 @keyframes progress-bar{
   0% {
       transform: rotate(260deg);

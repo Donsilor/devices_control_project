@@ -1,7 +1,8 @@
 /* eslint-disable vue/no-unused-vars */
 <template>
   <div class="body">
-    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
+    <div 
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
         :shutdown="true"
@@ -9,6 +10,7 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!-- tab切换栏 -->
       <div
+        ref="main" 
         class="main center"
         style="margin-top:52px">
         <div class="tab">
@@ -72,7 +74,8 @@
         </div>
       </div>
       <div
-        v-if="!isClose&&!isOffline"
+        v-if="!isClose&&!isOffline" 
+        ref="btn"
         class="panel-btn center">
         <div
           class="btn-wrap">
@@ -306,6 +309,8 @@ export default {
         controlStatus = 'halt'
       } else {
         controlStatus = 'start'
+        this.$refs.main.classList.add('opacity')
+        this.$refs.btn.classList.add('opacity')
         if (this.temp) {
           this.currentMode = document.querySelectorAll('.container .swiper-slide-active>div>span')[1].innerHTML
         }else{
@@ -377,6 +382,14 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
 @imgPath1: 'base/dishwasher/assets';
+.opacity{
+  animation: hide 1s linear;
+}
+@keyframes hide {
+  0%{opacity:1}
+  // 50%{opacity:.5;}
+  100%{opacity:0.2;}
+}
 @keyframes progress-bar{
   0% {
       transform: rotate(260deg);

@@ -7,7 +7,7 @@ export function work_time(val) {
   let h = Math.floor(val/60)
   let m = val % 60
   m = m>9?m:'0'+m
-  return `0${h}:${m}:00`
+  return `0${h}:${m}`
 }
 // export function run_time(val) {
 //   let m = Math.floor(val/60)
