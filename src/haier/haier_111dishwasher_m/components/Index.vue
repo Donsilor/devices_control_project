@@ -399,6 +399,7 @@ export default {
   0%{opacity:1}
   100%{opacity:0.2;}
 }
+<<<<<<< HEAD
 .swiper-slide-active{
   .font{
     animation: small 0.2s linear;
@@ -412,6 +413,18 @@ export default {
       font-size: 160px;
   }
 }
+=======
+// @keyframes progress-bar{
+//   0% {
+//       transform: rotate(260deg);
+//       border: 3px solid transparent;
+//   }
+//   100% {
+//       transform: rotate(358deg);
+//       border: 3px solid rgba(0, 0, 0, 1);
+//   }
+// }
+>>>>>>> 37d551c01691b10e25edcd2603d478a1ecf49898
 .body {
   min-height: 100%;
 }
@@ -784,6 +797,25 @@ input[type="range"]::-webkit-slider-thumb {
   .btn-wrap {
     margin: 0 34px 40px;
     position: relative;
+<<<<<<< HEAD
+=======
+    // .progressBar {
+    //   &::before{
+    //     content: "";
+    //     display: block;
+    //     width: 200px;
+    //     height: 200px;
+    //     border-radius: 50%;
+    //     position: absolute;
+    //     top: -30px;
+    //     left: -23%;
+    //     // transform: translateX(-50%) rotate(260deg);
+    //     border: 3px solid rgba(0, 0, 0, 1);
+    //     clip: rect(0px 200px 40px 0px);
+    //     animation: progress-bar 1s linear infinite;
+    //   }
+    // }
+>>>>>>> 37d551c01691b10e25edcd2603d478a1ecf49898
     .mask {
       &::before{
         content: "";
