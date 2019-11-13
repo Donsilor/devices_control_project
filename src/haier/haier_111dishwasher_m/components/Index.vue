@@ -49,7 +49,7 @@
                 :key="item.english"
                 class="swiper-slide">
                 <div>
-                  <span>{{ item.time }}</span>
+                  <span class="font">{{ item.time }}</span>
                   <span>{{ item.name }}</span>
                 </div>
               </div>
@@ -65,7 +65,7 @@
                 :key="it.english"
                 class="swiper-slide">
                 <div>
-                  <span>{{ it.time }}</span>
+                  <span class="font">{{ it.time }}</span>
                   <span>{{ it.name }}</span>
                 </div>
               </div>
@@ -289,6 +289,16 @@ export default {
           paginationClickable: true,
           observer:true,//修改swiper自己或子元素时，自动初始化swiper
           observeParents:true,//修改swiper的父元素时，自动初始化swiper
+          // followFinger : false,
+          longSwipes: true,
+          effect : 'coverflow',
+           coverflowEffect: {
+            rotate: 50,
+            stretch: 50,
+            depth: 200,
+            modifier: 0,
+            slideShadows : false
+          },
         })
       },
   methods: {
@@ -387,17 +397,19 @@ export default {
 }
 @keyframes hide {
   0%{opacity:1}
-  // 50%{opacity:.5;}
   100%{opacity:0.2;}
 }
-@keyframes progress-bar{
+.swiper-slide-active{
+  .font{
+    animation: small 0.2s linear;
+  }
+}
+@keyframes small{
   0% {
-      transform: rotate(260deg);
-      border: 3px solid transparent;
+      font-size: 48px;
   }
   100% {
-      transform: rotate(358deg);
-      border: 3px solid rgba(0, 0, 0, 1);
+      font-size: 160px;
   }
 }
 .body {
@@ -772,22 +784,6 @@ input[type="range"]::-webkit-slider-thumb {
   .btn-wrap {
     margin: 0 34px 40px;
     position: relative;
-    .progressBar {
-      &::before{
-        content: "";
-        display: block;
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        position: absolute;
-        top: -30px;
-        left: -23%;
-        // transform: translateX(-50%) rotate(260deg);
-        border: 3px solid rgba(0, 0, 0, 1);
-        clip: rect(0px 200px 40px 0px);
-        animation: progress-bar 1s linear infinite;
-      }
-    }
     .mask {
       &::before{
         content: "";
