@@ -80,10 +80,6 @@ export default {
     },
 
   },
-  created(){
-    console.log('washing');
-    
-  },
   watch: {
     'device.stateChange'(){
       this.$nextTick(()=>{
@@ -95,6 +91,10 @@ export default {
         }
       })
     },
+  },
+  created(){
+    console.log('washing')
+    
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
@@ -373,6 +373,11 @@ export default {
     margin: 0 34px 40px;
     position: relative;
     .progressBar {
+      top: -30px;
+      height: 50px;
+      position: absolute;
+      width: 100%;
+      overflow: hidden;
       &::before{
         content: "";
         display: block;
@@ -380,7 +385,7 @@ export default {
         height: 200px;
         border-radius: 50%;
         position: absolute;
-        top: -30px;
+        // top: -30px;
         left: -23%;
         // transform: translateX(-50%) rotate(260deg);
         border: 3px solid rgba(0, 0, 0, 1);
@@ -404,6 +409,11 @@ export default {
       }
     }
       .press{
+        top: -30px;
+        height: 50px;
+        position: absolute;
+        width: 100%;
+        overflow: hidden;
         &::before{
           content: "";
           display: block;
@@ -411,11 +421,11 @@ export default {
           height: 200px;
           border-radius: 50%;
           position: absolute;
-          top: -30px;
+          // top: -30px;
           left: 50%;
           transform: translateX(-50%);
           border: 3px solid rgba(136, 138, 137, 0.8);
-          clip: rect(0px 200px 40px 0px);
+          // clip: rect(0px 200px 40px 0px);
         }
       }
     .btn {
