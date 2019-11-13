@@ -7,12 +7,13 @@
       :style="{height:status_bar_height+navigation_bar_height+'PX'}"
       class="statusbar" >
       <div 
-        ref="statusbar_fexid" 
+        ref="statusbar_fexid"
+        :style="{height:status_bar_height+'PX'}" 
         class="statusbar_fexid"/>
       <div 
         ref="search_fexid" 
         :search="false"
-        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}" 
+        :style="{top:status_bar_height+'PX',height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}" 
         class="search_fexid">
         <form
           class="search_bar"

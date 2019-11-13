@@ -4,7 +4,7 @@ import * as mockData from './mock'
 
 if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
   window.device_name = '电视'
-
+  window.status_bar_height = 40
   window.tvInitData = mockData.getInitData()
 
   on(apiList.util_dispatchevent, function(data, callback) {

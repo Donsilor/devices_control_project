@@ -2,8 +2,8 @@
   <div 
     class="NoNetwork-page" 
   >
-    <div
-      class="space-block" />
+    <!-- <div
+      class="space-block" /> -->
     <new-topbar
       :shutdown="true"
       :title="device_name"

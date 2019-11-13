@@ -1,16 +1,18 @@
 <!-- 首页 -->
 <template>
-  <div class="page-index">
+  <div 
+    class="page-index">
     <!-- 遥控器 --> 
     <remoteControl/>
-    <div
-      class="space-block" />
+    <!-- <div
+      class="space-block" /> -->
     <!-- 顶部导航菜单 -->
     <new-topbar
       :shutdown="true"
       :scroll="true"
       :search="true"
       :title="device_name"
+      page-class=".page-index"
       bak-color="#000"
       @shutdownCallback="cmd('rcPower')"
     />
@@ -763,7 +765,8 @@ export default {
     //   }
     // }
   },
-  created() {    
+  created() {   
+    //  this.$router.push('/NoNetwork') 
     this.pageInit()
     HdSmart.UI.toggleNav()
     console.log('1111',window.device_name)
