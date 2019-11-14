@@ -26,7 +26,7 @@
       <div class="search-screen">
         <router-link
           class="search2" 
-          to="/search"><span class="icon-search"/> 搜索</router-link>
+          to="/search"><span class="search-img"/><span>搜索</span> </router-link>
         <div 
           v-show="activeIndex!=0" 
           class="screen"
@@ -264,10 +264,19 @@
       background:rgba(0, 0, 0, 0.04);
       border-radius: 2px;
       height: 60px;
-      text-align: center;
-      line-height:  60px;
-      
+      // text-align: center;
+      // line-height:  60px;
+      display: flex;
       color: #AAAAAA;
+      justify-content: center;
+      align-items: center;
+      .search-img{
+        width: 32px;
+        height: 32px;
+         background: url('~@lib/base/img/tv_icn_search.png');
+        background-size:100% 100%; 
+        margin-right: 20px;
+      }
     }
     .screen{
       margin-left: 20px;

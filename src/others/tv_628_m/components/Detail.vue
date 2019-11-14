@@ -87,14 +87,14 @@
         <div
           v-if="cur.playlist2.list.length"
           class="hd" >
-          {{ channelId==='001' ? '正片' : getUpdateSet() }}
-
+          {{ channelId==='001' ? '正片' : '选集' }}
           <a
             v-show="!isShowAll && (channelId==='002' || channelId==='003')"
             href="#"
             class="showAll"
-            @click.prevent="showAll">全部
-            <i class="icon-arrow" />
+            @click.prevent="showAll"> 
+            <i>{{ channelId==='001' ? '正片' : getUpdateSet() }}</i>
+            <i class="arrow" />
           </a>
 
           <a
@@ -506,9 +506,14 @@
   padding-top: 30px;
 
   .hd {
+
+    font-family: PingFangSC-Medium;
+    font-size: 32px;
+    color: #222A37;
+    line-height: 44px;
     margin-bottom: 30px;
     color: #222a37;
-    font-size: 30px;
+    font-weight: 600;
 
     &.related {
       font-size: 34px;
@@ -550,16 +555,27 @@
   .showAll {
     float: right;
     margin-right: 32px;
-    color: #a4a9af;
+    display: flex;
+    align-items: center;
+
     i {
+      // display: inline-block;
+    
+      font-size: 24px;
+      color: #000000;
+      margin-left: 2px;
+      // transform: rotate(90deg);
+      font-family: PingFangSC-Light;
+      text-align: right;
+      font-style: normal;
+      font-weight:normal;
+    }
+    .arrow{
       display: inline-block;
       width: 24px;
       height: 24px;
-      // line-height: 12px;
-      font-size: 24px;
-      margin-left: 2px;
-      transform: rotate(90deg);
-      color: #c8cacc;
+      background: url('~@lib/base/tv/assets/new/tv_arrow_more.png');
+      background-size: 100% 100%;
     }
   }
   .bd-num {
@@ -593,7 +609,7 @@
     // background: #000;
     // opacity: 0.04;
     /*border: 1px solid #dbdbdb;*/
-    border-radius: 8px;
+    // border-radius: 8px;
     font-family: PingFangSC-Regular;
     font-size: 28px;
     letter-spacing: 0;

@@ -217,7 +217,6 @@ export default {
       }else{
         pageClass = this.$refs.topbar
       }
-      
       let fixedTop =  this.$refs.statusbar.offsetHeight+this.$refs.newNavbar.offsetHeight
       let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
       let h = this.$refs['header-bottom'].offsetHeight
@@ -284,7 +283,7 @@ export default {
     top: 0;
     z-index: 100;
     width: 100%;
-    background: #fff;
+    // background: #fff;
     border:0;
     // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
   }

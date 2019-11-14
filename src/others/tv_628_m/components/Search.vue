@@ -69,11 +69,12 @@
       v-show="curpage===1&&loadState !== 'NO_DATA' "
       class="search_history">
       <div class="hd">
+        <h3>搜索记录</h3>
         <a
           href="#"
-          class="del icon-del"
+          class="del"
           @click.prevent="clearHistory" />
-        搜索记录
+        
       </div>
       <ul class="bd clearfix">
         <li
@@ -339,14 +340,18 @@
     font-size: 48px;
     color: #000000;
     line-height: 48px;
-    .icon-del {
-      float: right;
-      margin-right: 10px;
-      width: 36px;
-      height: 36px;
-      line-height: 18px;
-      font-size: 36px;
-      color: #76787a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .del {
+      // margin-right: 10px;
+      width: 48px;
+      height: 48px;
+      background: url('~@lib/base/tv/assets/new/tv_btn_delete.png');
+      background-size: 100% 100%;
+      // line-height: 18px;
+      // font-size: 36px;
+      // color: #76787a;
      
       /*background-repeat: no-repeat;
             background-size: 100% 100%;
@@ -794,7 +799,7 @@ export default {
       },300)
     },
     scroll2(){
-         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop      
         // console.log(this.scrollTop,'this.scrollTop')
         //  HdSmart.UI.toggleNav()
         // HdSmart.UI.hideKeyboard()

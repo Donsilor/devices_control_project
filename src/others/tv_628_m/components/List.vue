@@ -181,7 +181,7 @@
 .filters {
   padding: 28px 28px 12px;
   // background: rgba(255, 255, 255, 0.98);
-  background: rgba(255, 255, 255, 1);
+  // background: rgba(255, 255, 255, 1);
   /**box-shadow: inset 0 -1px 0 0 #dbdbdb;**/
   position: fixed;
   left: 0;
@@ -272,7 +272,7 @@
   margin: 0 25px;
 }
 .vlist {
-  padding-top: 36px;
+  padding-top: 10PX;
   display: flex;
   flex-wrap: wrap;
   // align-content: space-between;
@@ -581,14 +581,18 @@ export default {
         document.documentElement.scrollTop ||
         window.pageYOffset ||
         document.body.scrollTop
-      if(this.a - scrollTop<130&&this.a - scrollTop>-130) return
-
-      this.a = scrollTop
-    
-      if(scrollTop>=200){
+      // if(this.a - scrollTop<130&&this.a - scrollTop>-130) return
+      // this.a = scrollTop
+      let topbar_fixed = document.querySelector('.topbar-fixed')
+      if(scrollTop>=10){
+        
+        this.$refs.filters.style.background = '#fff'
+        topbar_fixed.style.background = '#fff'
         this.filterVisible = false
       }else{
         this.filterVisible = true
+         this.$refs.filters.style.background = ''
+        topbar_fixed.style.background = ''
       }
     },
     toggleFilter() {
