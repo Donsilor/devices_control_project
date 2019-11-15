@@ -1,9 +1,10 @@
 <template>
   <div
+    ref="topbar"
     :class="[{'topbar-nobg':transparent}, {'topbar-black': bgBlack}]"
     class="topbar">
     <div
-      :style="{ 'background': bgColor }"
+      :style="{ 'background': bgColor ,height:status_bar_height+navigation_bar_height*2+'px', 'line-height': status_bar_height+navigation_bar_height*2 + 'px'}"
       class="topbar-block" />
     <div
       :style="{ background: bgColor }"
@@ -142,6 +143,10 @@ export default {
     search:{
       type: Boolean,
       default: false
+    },
+    pageClass:{
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -206,53 +211,29 @@ export default {
 
     scrollfn(){
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-      let status = document.querySelectorAll('.status')[0]
-      let statusbar = document.querySelectorAll('.statusbar')[0]
-      let newNavbar = document.querySelectorAll('.newNavbar')[0]
-      // let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
-      let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
-      let search_screen = document.querySelectorAll('.search-screen')[0]
-      let s = statusbar.offsetHeight+newNavbar.offsetHeight
-      // let statusTop = status.offsetTop-  this.scrollTop
-      // let topbar_fixed = document.querySelectorAll('.topbar-fixed')[0]
-      // let w = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2    如果标题要居中
-      // console.log(statusTop,'statusTop')
-      //  console.log(status.offsetTop,'status.offsetTop')
-        // console.log( this.scrollTop,' this.scrollTop')
-      if(status&& status_bar_fixed){
-        if(this.scrollTop>=s){
-            status_bar_fixed.style.position = 'fixed'
-            status_bar_fixed.style.top  = s +"px"
-
-        }else{
-            status_bar_fixed.style.position = ''
-
-        }
-      }
-      let h = this.$refs['header-bottom'].offsetHeight
-      let b = (h/s)*this.scrollTop
-      let l = (44/s)*this.scrollTop
-      let f = (-6/s)*this.scrollTop+24
-      b = b>=h?h:b
-      l = l>=44?44:l
-      f = f<=18?18:f
-      this.$refs.title.style.bottom = b/37.5 + 'rem'
-      this.$refs.title.style.left = l/37.5 + 'rem'
-      this.$refs.title.style.fontSize = f/37.5 + 'rem'
-      if( this.scrollTop>=90 ){
-        this.$refs.shutdown&&(this.$refs.shutdown.style.display='none')
-        this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='#fff')
-        this.$refs.statusbar&&(this.$refs.statusbar.style.background='#fff')
-        this.search&&(this.rightSearch = true)
-        search_screen&&(search_screen.style.visibility='hidden')
+      let pageClass
+      if(this.pageClass){
+        pageClass = document.querySelector(this.pageClass)
       }else{
-        this.$refs.shutdown&&(this.$refs.shutdown.style.display='flex')
-        this.$refs.newNavbar&&(this.$refs.newNavbar.style.background='')
-        this.$refs.statusbar&&(this.$refs.statusbar.style.background='')
-        this.search&&(this.rightSearch = false)
-        search_screen&&(search_screen.style.visibility='')
+        pageClass = this.$refs.topbar
       }
-
+      let fixedTop =  this.$refs.statusbar.offsetHeight+this.$refs.newNavbar.offsetHeight
+      let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
+      let h = this.$refs['header-bottom'].offsetHeight
+      let b = this.scrollTop
+      let f = (-6/44)*this.scrollTop+24
+      b = b>=h?h:b
+      f = f<=18?18:f
+      this.$refs.title.style.bottom =this.$refs.title.style.left= b + 'px'
+      this.$refs.title.style.fontSize = f + 'px'
+      if( this.scrollTop>=h ){
+        pageClass.classList.add('scroll44')
+        status_bar_fixed&&(status_bar_fixed.style.top  =fixedTop +"px")
+        this.search&&(this.rightSearch = true)
+      }else{
+        pageClass.classList.remove('scroll44')
+        this.search&&(this.rightSearch = false)
+      }
     }
   }
 }
@@ -260,6 +241,26 @@ export default {
 
 
 <style lang="less">
+.scroll44{
+  .status_bar_fixed{
+    position: fixed
+  }
+  .header-bottom-right{
+    display: none
+  }
+  .newNavbar,.statusbar{
+    background: #fff
+  }
+  .search-screen-bg{
+    visibility:hidden
+  }
+}
+
+
+
+
+
+
 /* topbar */
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
@@ -282,7 +283,7 @@ export default {
     top: 0;
     z-index: 100;
     width: 100%;
-    background: #fff;
+    // background: #fff;
     border:0;
     // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
   }
@@ -440,39 +441,6 @@ export default {
         height: 24PX;
     }
   }
-.opcity-0 {
-  background-color: rgba(255, 255, 255, 0) !important;
-}
-.opcity-20 {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-}
-.opcity-40 {
-  background-color: rgba(255, 255, 255, 0.4) !important;
-}
-.opcity-60 {
-  background-color: rgba(255, 255, 255, 0.6) !important;
-}
-.opcity-80 {
-  background-color: rgba(255, 255, 255, 0.8) !important;
-}
-//  .topbar-fixed {
-//       z-index: 1;
-//       position: absolute;
-//       top: 0;
-//       left:0;
-//       overflow: hidden;
-//     &::before{
-//       background-color: rgba(255, 255, 255,0.8);
-//       content: '';
-//       position: absolute;
-//       top: 0;
-//       bottom: 0;
-//       left: 0;
-//       right: 0;
-//       z-index: -1;
-//       background: url('../base/oakes_air_condition/assets/bg_01.png') 0 / cover fixed;
-//       filter: blur(60px);
-//       margin: -30px;
-//     }
-//  }
+
+
 </style>
