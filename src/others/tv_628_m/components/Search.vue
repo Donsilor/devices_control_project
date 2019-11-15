@@ -1,6 +1,8 @@
 <!-- 搜索页面 -->
 <template>
-  <div class="page-search">
+  <div 
+    ref="search" 
+    class="page-search">
     <!-- 遥控器 --> 
     <!-- <remoteControl/> -->
     <div
@@ -28,6 +30,7 @@
               type="text"
               placeholder="输入片名、导演、演员搜索"
               @blur="blurfn"
+              @click="getfixed()"
               @input="fuzzySearch">
             <div 
               v-show="word != ''" 
@@ -658,7 +661,18 @@ function splitWord(kw, input) {
     '<strong>$1</strong>'
   )
 }
-
+function plusReady(){
+}
+// 关闭自身窗口
+function getfixed(){
+	var ws=plus.webview.currentWebview()
+	ws.setStyle({
+        softinputMode: "adjustResize"  // 弹出软键盘时自动改变webview的高度
+    })
+}
+//  plus.webview.currentWebview().setStyle({
+//         softinputMode: "adjustResize"  // 弹出软键盘时自动改变webview的高度
+//     })
 export default {
   data() {
     return {
@@ -754,6 +768,11 @@ export default {
       if (window.navigation_bar_height) {
         this.navigation_bar_height = window.navigation_bar_height / dpr
       }
+      if(window.plus){
+	plusReady()
+}else{
+	document.addEventListener('plusready', plusReady, false)
+}
     })
     // this.getData()
   },
