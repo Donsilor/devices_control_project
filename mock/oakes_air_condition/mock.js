@@ -35,6 +35,7 @@ var res = {
         timer_value:0,
         wind_up:'off',
         wind_down:'off',
+        close_time:'false'
     }
 }
 
@@ -55,11 +56,11 @@ export function set(data) {
     } catch (error) {
       attr = data.content.params.attribute
     }
-    // if (attr.mode) {
-    //   if (attr.mode == 'dehumidify') {
-    //       res.attribute.temperature = 650
-    //   }
-    // }
+    if (attr.close_time) {
+      if (attr.close_time == 'true') {
+          res.attribute.timer_value = 0
+      }
+    }
     if (attr.time) {
       if (attr.time.timer_value>0) {
         res.attribute.timer_value=attr.time.timer_value

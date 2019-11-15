@@ -60,7 +60,7 @@
       </div>
       <!-- 当前状态 -->
       <div
-        v-show="deviceAttrs.timer_switch == 'on'&& deviceAttrs.timer_value >0"
+        v-show="deviceAttrs.timer_switch == 'off'&& deviceAttrs.timer_value >0"
         class="status">
         {{ deviceAttrs.timer_value | closeTime }}
       </div>
@@ -164,7 +164,7 @@
           <div>
             <span>定时</span>
             <span
-              v-if="deviceAttrs.timer_switch=='on'&&deviceAttrs.timer_value>0"
+              v-if="deviceAttrs.timer_switch=='off'&&deviceAttrs.timer_value>0"
               class="check"
               @click="showTime">{{ deviceAttrs.timer_value | closeTime }}
               <img 
@@ -360,15 +360,12 @@ export default {
       console.log(h,m,'hm')
         this.controlDevice('time',{
             timer_value:h*2+m,
-            timer_switch:'on'
+            timer_switch:'off'
         })
     },
     // 取消定时
     canceltime(){
-       this.controlDevice('time',{
-            timer_value:0,
-            timer_switch:'off'
-        })
+       this.controlDevice('close_time','true')
     },
     // 开关机
     shutdowncallback(val){
