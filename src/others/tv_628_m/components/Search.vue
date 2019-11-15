@@ -240,7 +240,7 @@
   // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
   // background-size: 100% 100%;
   // background-attachment: fixed;
-  // min-height: 100%;
+    height: 100%;
     &::before{
     content: "";
     background-image: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
