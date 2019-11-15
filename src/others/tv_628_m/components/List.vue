@@ -539,34 +539,55 @@ export default {
     }
   },
   mounted() {
-    setTimeout(()=>{
-        window.scrollTo(0,1)
-    },300)
-    let topbar = document.querySelectorAll('.topbar')[0]
-    console.log(topbar.offsetHeight,'sss')
-    console.log( this.$refs.filters,'222')
-    this.$refs.filters.style.top = topbar.offsetHeight +"px"
-    service.RemoteController({ 'show': true })
-    this.onPageInit()
-    this.$Lazyload.$on("error", function({ el, src, loading }) {
-      el.src = el.dataset.src1
-      el.onerror = function() {
-        el.src = loading
-        el.onerror = null
-      }
-    })
-    window.addEventListener("scroll", this.loadMore)
-    addEventListener("scroll", this.scrollfn)
-    // filters
-    
+    this.init()
+         console.log('mounted',1111111111111111111111111111111)
+        setTimeout(()=>{
+            window.scrollTo(0,1)
+        },300)
+           
+        let topbar = document.querySelector('.topbar2')
+        console.log(topbar.offsetHeight,'topbar.offsetHeight')
+        
+        this.$refs.filters.style.top = topbar.offsetHeight +"px"
+        service.RemoteController({ 'show': true })
+        this.onPageInit()
+        this.$Lazyload.$on("error", function({ el, src, loading }) {
+          el.src = el.dataset.src1
+          el.onerror = function() {
+            el.src = loading
+            el.onerror = null
+          }
+        })
   },
   destroyed() {
+    console.log('destroy')
     window.removeEventListener("scroll", this.loadMore)
     removeEventListener("scroll", this.scrollfn)
   },
+  activated(){  
+      this.init()
+      console.log('activated')
+      
+  },
+  deactivated(){
+       window.removeEventListener("scroll", this.loadMore)
+    removeEventListener("scroll", this.scrollfn)
+  },
+ 
   //在页面离开时记录滚动位置
   beforeRouteLeave(to, from, next) {
     this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    console.log(to,from,next)
+    if(to.name==='detail'){
+      if(!from.meta.keepAlive){
+          from.meta.keepAlive=true//当我们进入到detail时开启list的缓存
+      }
+      next()
+      }else{
+          from.meta.keepAlive=false
+          this.$destroy()//销毁B的实例
+          next()//当我们前进的不是detail时我们让list页面刷新
+      }
     next()
   },
   //进入该页面时，用之前保存的滚动位置赋值
@@ -576,6 +597,12 @@ export default {
     })
   },
   methods: {
+    init(){
+
+        window.addEventListener("scroll", this.loadMore)
+        addEventListener("scroll", this.scrollfn)
+        // filters
+    },
     scrollfn(){
          var scrollTop =
         document.documentElement.scrollTop ||
@@ -585,7 +612,6 @@ export default {
       // this.a = scrollTop
       let topbar_fixed = document.querySelector('.topbar-fixed')
       if(scrollTop>=10){
-        
         this.$refs.filters.style.background = '#fff'
         topbar_fixed.style.background = '#fff'
         this.filterVisible = false
