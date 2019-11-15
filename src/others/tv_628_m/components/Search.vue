@@ -216,7 +216,8 @@
   width: 100%;
   height: @status_bar_height;
   .statusbar_fexid{
-    position: fixed;
+    // position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -225,7 +226,8 @@
     z-index: 999
   }
   .search_fexid{
-    position: fixed;
+    // position: fixed;
+    position: absolute;
     top:@status_bar_height;
     left: 0;
     width: 100%;
@@ -235,10 +237,22 @@
   }
 }
 .page-search{
-  background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
-  background-size: 100% 100%;
-  background-attachment: fixed;
-  min-height: 100%;
+  // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+  // background-size: 100% 100%;
+  // background-attachment: fixed;
+  // min-height: 100%;
+    &::before{
+    content: "";
+    background-image: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    top:0;
+    left: 0; 
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
 }
 .search_bar {
    display: flex;
@@ -411,6 +425,11 @@
 }
 .search_result {
   // background-color: #f7f8fa;
+  position: absolute;
+  top: 150px;
+  bottom: 0;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   .hd {
     padding: 20px 32px 26px;
     // background-color: #fff;
