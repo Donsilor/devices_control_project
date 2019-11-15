@@ -419,9 +419,7 @@ export default {
             value = arr[i].english
           }
         }
-        this.controlDevice("mode",value).then(()=>{
-          this.controlDevice("control",controlStatus)
-        })  
+        this.controlDevice("mode",value,{'control':controlStatus})
         return
       }
       this.controlDevice("control",controlStatus )
