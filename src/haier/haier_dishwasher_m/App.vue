@@ -104,6 +104,7 @@
         <!-- 启动 -->
         <div
           v-show="deviceAttrs.operation_mode=='standby'&&deviceAttrs.control=='halt'"
+          ref="start"
           class="btn-wrap">
           <div
             :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
@@ -113,6 +114,7 @@
         <!-- 洗涤页面按钮 -->
         <div
           v-show="deviceAttrs.control=='halt'&&deviceAttrs.operation_mode!=='standby'&&deviceAttrs.operation_mode!=='end'&&deviceAttrs.operation_mode!=='ordering'"
+          ref="press"
           class="btn-wrap">
           <div :class="[{'press':timeOutEvent != 0}]"/>
           <div :class="[{'progressBar':timeOutEvent != 0}]"/>
@@ -127,10 +129,11 @@
         </div>
         <div
           v-show="deviceAttrs.operation_mode!=='end'&&deviceAttrs.operation_mode!=='standby'&&deviceAttrs.operation_mode!=='ordering'"
+          ref="btn"
           class="btn-wrap">
           <div
             :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
-            @click="setStart" />
+            @click="setStart1" />
           <div class="btn-name">{{ deviceAttrs.control=='start'?'暂停':'继续' }}</div>
         </div>
       </div>
@@ -357,7 +360,7 @@ export default {
       .then(()=>{
 
       })
-      // HdSmart.UI.setStatusBarColor(2)
+      HdSmart.UI.setStatusBarColor(2)
     })
   },
   // 初始化swiper
@@ -401,6 +404,8 @@ export default {
         controlStatus = 'halt'
       } else {
         controlStatus = 'start'
+        this.$refs.main.classList.add('opacity')
+        // this.$refs.start.classList.add('opacity')
         this.currentMode = document.querySelectorAll('.swiper-slide-active>div>span')[1].innerHTML
         if (this.temp) {
           this.currentMode = document.querySelectorAll('.container .swiper-slide-active>div>span')[1].innerHTML
@@ -420,6 +425,17 @@ export default {
         return
       }
       this.controlDevice("control",controlStatus )
+    },
+    // 暂停继续
+    setStart1(){
+      this.$refs.main.classList.remove('opacity')
+      let controlStatus1 = ''
+      if (this.deviceAttrs.control == 'start') {
+        controlStatus1 = 'halt'
+      } else {
+        controlStatus1 = 'start'
+      }
+      this.controlDevice("control",controlStatus1 )
     },
     // 长按事件
     touchStart(e){
@@ -471,6 +487,22 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
 @imgPath1: 'base/dishwasher/assets';
+.opacity{
+  animation: hide 0.5s linear;
+  animation-fill-mode : forwards;
+}
+@keyframes hide {
+  0%{opacity:1}
+  100%{opacity:0.2;}
+}
+.opacity1{
+  animation: show 1s linear;
+}
+@keyframes show {
+  0%{opacity:0}
+  50%{opacity:.5;}
+  100%{opacity:1;}
+}
 @keyframes progress-bar{
   0% {
       transform: rotate(200deg);

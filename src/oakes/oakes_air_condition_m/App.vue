@@ -356,10 +356,10 @@ export default {
     // 设置关机时间
     setReserve(time) {
       let h = parseInt(time[0].split(':')[0])
-      let m = parseInt(time[0].split(':')[1])
+      let m = parseInt(time[0].split(':')[1]) > 0 ? 1: 0
       console.log(h,m,'hm')
         this.controlDevice('time',{
-            timer_value:h*60+m,
+            timer_value:h*2+m,
             timer_switch:'on'
         })
     },
@@ -493,9 +493,9 @@ export default {
     },
     controlDevice(attr, value) {
       let param = {}
-      if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
-        param = { 'speed': 'low'}
-      }
+      // if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
+      //   param = { 'speed': 'low'}
+      // }
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {

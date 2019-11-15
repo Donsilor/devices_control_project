@@ -35,7 +35,7 @@
             v-for="(it, idx) in dataList.minute"
             :key="idx"
             :class="{'current-pre': mIndex!==idx,
-                     'current':mIndex===idx}">{{ +idx > 9 ? idx : '0' + idx }}</li>
+                     'current':mIndex===idx}">{{ it == 1 ? '00': '30' }}</li>
         </ul>
         <div class="time1">分钟</div>
       </div>
@@ -51,7 +51,7 @@
         liheight: 50,
         dataList: {
           hours: 24,
-          minute: 60,
+          minute: 2,
         },
 
         hIndex: 0, // 小时选中下标
