@@ -255,7 +255,7 @@
 }
 .detail-bd {
   // height: 100%;
-  padding-top: 32px;
+  padding-top: 20PX;
   // overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -842,9 +842,26 @@ export default {
     setTimeout(()=>{
         window.scrollTo(0,1)
     },300)
+    addEventListener('scroll',this.scrollfn)
+  },
+  destroyed(){
+    removeEventListener('scroll',this.scrollfn)
   },
   methods: {
     ...mapActions(["hideDetail", "showDetail"]),
+    scrollfn(){
+       var scrollTop =
+        document.documentElement.scrollTop ||
+        window.pageYOffset ||
+        document.body.scrollTop
+      let topbar_fixed = document.querySelector('.topbar-fixed')
+      if(scrollTop>=20){
+        topbar_fixed.style.background = '#fff'
+      }else{
+        topbar_fixed.style.background = ''
+      }
+      
+    },
     getData() {
       this.loading = true
       // this.setHistory()

@@ -1,6 +1,6 @@
 <!-- 导航条 -->
 <template>
-  <div class="topbar">
+  <div class="topbar topbar2">
     <div
       :style="{height:(status_bar_height + navigation_bar_height) +'px'}"
       class="topbar-block" />
