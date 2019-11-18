@@ -466,7 +466,7 @@ export default {
     },
     // 洗涤完成
     finish(){
-      this.controlDevice('operation_mode','standby')
+      this.controlDevice('return_standby','on')
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
