@@ -466,6 +466,7 @@ export default {
     },
     // 洗涤完成
     finish(){
+      this.$refs.main.classList.remove('opacity')
       this.controlDevice('return_standby','on')
     },
     controlDevice(attr, value,params) {
