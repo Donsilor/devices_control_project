@@ -313,7 +313,7 @@ export default {
          /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.operation_mode) {
         case 'pre_wash':
-          return '预洗'
+          return '洗涤中'
           break
         case 'wash_inflow':
           return '洗涤中'
