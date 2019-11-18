@@ -5,9 +5,9 @@ let res = {
     "switch": 'on', //开关
     'control':'halt',
     'mode':'nomal',
-    'operation_mode':'standby',//洗涤状态
+    'operation_mode':'end',//洗涤状态
     // 'remain_washtime':'121',
-    'remaining':124,
+    'remaining':1,
     'return_standby':'off',
     'mode_status':'off',//程序是否运行
     'hardness_level':2,//水软
