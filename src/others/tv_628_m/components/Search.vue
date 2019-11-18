@@ -7,7 +7,8 @@
     <!-- <remoteControl/> -->
     <div
       :style="{height:status_bar_height+navigation_bar_height+'PX'}"
-      class="statusbar" >
+      class="statusbar" 
+      @touchmove.prevent>
       <div 
         ref="statusbar_fexid"
         :style="{height:status_bar_height+'PX'}" 
@@ -30,7 +31,7 @@
               type="text"
               placeholder="输入片名、导演、演员搜索"
               @blur="blurfn"
-              @click="getfixed()"
+
               @input="fuzzySearch">
             <div 
               v-show="word != ''" 
@@ -69,8 +70,9 @@
     </div>
     <!-- 搜搜历史 -->
     <div
-      v-show="curpage===1&&loadState !== 'NO_DATA' "
-      class="search_history">
+      v-show="curpage===1&&loadState !== 'NO_DATA' " 
+      class="search_history"
+      @touchmove.prevent>
       <div class="hd">
         <h3>搜索记录</h3>
         <a
@@ -346,7 +348,13 @@
   text-align: right;
 }
 .search_history {
-  margin: 0 32px;
+  padding: 0 32px;
+  position: absolute;
+  top: 150px;
+  bottom: 0;
+  width: 100%;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   .hd {
     color: #75787a;
     padding: 32px 0 24px;
@@ -680,15 +688,15 @@ function splitWord(kw, input) {
     '<strong>$1</strong>'
   )
 }
-function plusReady(){
-}
-// 关闭自身窗口
-function getfixed(){
-	var ws=plus.webview.currentWebview()
-	ws.setStyle({
-        softinputMode: "adjustResize"  // 弹出软键盘时自动改变webview的高度
-    })
-}
+// function plusReady(){
+// }
+// // 关闭自身窗口
+// function getfixed(){
+// 	var ws=plus.webview.currentWebview()
+// 	ws.setStyle({
+//         softinputMode: "adjustResize"  // 弹出软键盘时自动改变webview的高度
+//     })
+// }
 //  plus.webview.currentWebview().setStyle({
 //         softinputMode: "adjustResize"  // 弹出软键盘时自动改变webview的高度
 //     })
@@ -796,6 +804,11 @@ export default {
     // this.getData()
   },
   mounted() {
+    //  document.body.addEventListener('touchmove', function(e) {
+    //    console.log(e)
+       
+    //           e.preventDefault()
+    //     }, { passive: false })
     setTimeout(()=>{
         window.scrollTo(0,1)
     },300)
@@ -821,7 +834,7 @@ export default {
     //     //     document.body.style.height = h;
     //     // }
     // }
-    addEventListener('scroll',this.scroll2)
+    addEventListener('scroll',this.scroll2, { passive: false })
   },
   destroyed() {
     window.removeEventListener('scroll', this.loadMore)
@@ -839,17 +852,30 @@ export default {
     })
   },
   methods: {
+    // aa(){
+    //     let b = this.$refs['search_result'].querySelector('ul')
+    //     console.log(b)
+    //      this.scrollTop = b.scrollTop 
+
+    //     console.log(b.offsetHeight,'offsetHeight')
+    //      console.log(b.clientHeight,'clientHeight')
+    //       console.log( this.scrollTop,'scrollTop')
+        
+        
+    // },
     blurfn(){
       setTimeout(()=>{
         window.scrollTo(0,0)
       },300)
     },
-    scroll2(){
+    scroll2(event){
+      // event.preventDefault()
          this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop      
         // console.log(this.scrollTop,'this.scrollTop')
         //  HdSmart.UI.toggleNav()
-        // HdSmart.UI.hideKeyboard()
+        // HdSmart.UI.hideKeyboard()scroll2
         if(this.scrollTop>=20){
+          // alert(11)
           this.$refs.search_fexid.style.background = "#fff"
           this.$refs.statusbar_fexid.style.background = "#fff"
         }else{
