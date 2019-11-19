@@ -39,11 +39,12 @@
           <!-- 左右滑动选择 -->
           <!-- 餐具 -->
           <div
-            v-if="temp"
+            v-show="temp"
             class="swiper-container container">
             <div class="swiper-wrapper">
               <div
                 v-for="item in tableware"
+                :key="item.english"
                 class="swiper-slide">
                 <div>
                   <span>{{ item.time }}</span>
@@ -54,11 +55,12 @@
           </div>
           <!-- 食材 -->
           <div
-            v-if="!temp"
+            v-show="!temp"
             class="swiper-container container1">
             <div class="swiper-wrapper">
               <div
                 v-for="item in foodList"
+                :key="item.english"
                 class="swiper-slide">
                 <div>
                   <span>{{ item.time }}</span>
@@ -284,7 +286,7 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     // 开关机
     shutdowncallback(val){
-      if (this.isOffline) return 
+      if (this.isOffline) return
       this.controlDevice('switch',val)
     },
     // tab切换
@@ -308,7 +310,7 @@ export default {
         }
         this.controlDevice("mode",value).then(()=>{
           this.controlDevice("control",controlStatus)
-        })  
+        })
           this.$router.push({ path: '/Washing' })
         return
       }
@@ -493,8 +495,8 @@ export default {
           color: #000;
         }
       }
-      
-      
+
+
     }
     .status{
       width: 100%;

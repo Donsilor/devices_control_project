@@ -17,7 +17,7 @@
       },
       data() {
         return {
-          time: ''
+          time: '100:00:30'
         }
       },
       methods: {

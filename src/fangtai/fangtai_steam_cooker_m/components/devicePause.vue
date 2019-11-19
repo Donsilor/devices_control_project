@@ -3,7 +3,6 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="true"
         :class-name="opcityStyle"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
@@ -11,17 +10,18 @@
       <div class="main center">
         <div class="status">
           <p>{{ transTime(deviceAttrs.RemainingTime) }}</p>
-          <p>
-            当前 {{ deviceAttrs.SetTemperature1 }}℃ | 预设 {{ presetTemp }}℃
+          <!-- 除垢模式不显示-->
+          <p v-if="deviceAttrs.WorkMode != 3">
+            当前 {{ deviceAttrs.TemperatureSensor1 }}℃ | 预设 {{ deviceAttrs.SetTemperature1 }}℃
           </p>
-          <p v-if="deviceAttrs.WaterShortage !== '1'">已暂停</p>
-          <p v-if="deviceAttrs.WaterShortage === '1'">水箱缺水，已暂停</p>
+          <p v-if="deviceAttrs.WaterShortage != 1">已暂停</p>
+          <p v-if="deviceAttrs.WaterShortage == 1">水箱缺水，已暂停</p>
         </div>
       </div>
       <!--开机后按钮-->
       <div class="tool-bar">
         <ul style="position: relative;">
-          <li v-if="deviceAttrs.WaterShortage === '1'">
+          <li v-if="deviceAttrs.WaterShortage == 1">
             <div>
               <p class="water-box btn-style" @click="openWaterBox"></p>
               <p>开水箱</p>
@@ -30,22 +30,22 @@
           <li>
             <div>
               <p class="start-cook btn-style" @click="continueCook"></p>
-              <p>继续烹饪</p>
+              <p>继续</p>
             </div>
           </li>
           <li>
             <div>
               <p class="end-cook btn-style" @click="endCook"></p>
-              <p>结束烹饪</p>
+              <p>结束</p>
             </div>
           </li>
           <li>
             <div>
-              <p :class="['light', 'btn-style', {'open-light': lightStatus}]" @click="light"></p>
+              <p :class="['light', {'btn-style': deviceAttrs.Light == 0}, {'open-light': deviceAttrs.Light == 1}]" @click="light"></p>
               <p>照明</p>
             </div>
           </li>
-          <li class="tips" v-if="deviceAttrs.WaterShortage === '1'">
+          <li class="tips" v-if="deviceAttrs.WaterShortage == 1">
             <div>打开水箱，加水后可继续烹饪</div>
           </li>
         </ul>
@@ -78,9 +78,7 @@
             name: '除垢'
           }
         ],
-        activeMode: 0,
-        lightStatus: false,
-        presetTemp: ''
+        activeMode: 0
       }
     },
 
@@ -91,10 +89,30 @@
     watch: {
       '$route': {
         handler(val) {
-          this.presetTemp = val.query.preset
+          this.activeMode = +val.query.activeMode
         },
         // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
         immediate: true
+      },
+      'deviceAttrs'(val) {
+        console.log('暂停页上报接收中', (+new Date().getMinutes()) + 1 + ':' + (+new Date().getSeconds()) + 1)
+        console.log(val)
+      },
+      'deviceAttrs.PushRod'(val) {
+        if (val == 1) {
+          this.$router.push('/waterBoxOpen')
+        }
+      },
+      'deviceAttrs.WorkState'(val) {
+        if (val == 0) {
+          if (Math.floor(this.deviceAttrs.RemainingTime) == 0) {
+            this.$router.push({path: '/deviceFinish'})
+          } else {
+            this.$router.push({path: '/'})
+          }
+        } else if (val == 2 || val == 4) {
+          this.$router.push({path: '/deviceStatus'})
+        }
       }
     },
     created() {
@@ -103,6 +121,7 @@
           .then(() => {
 
           })
+        HdSmart.UI.setStatusBarColor(2)
       })
     },
     mounted() {
@@ -131,11 +150,14 @@
       // 开关机
       shutdowncallback(){
         if (this.isOffline) return
-        if (this.deviceAttrs.PowerSwitchAll === 2) {
-          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
-        } else if (this.deviceAttrs.PowerSwitchAll === 0) {
-          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
-        }
+        // if (this.deviceAttrs.PowerSwitchAll == 2) {
+        //   this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
+        // } else if (this.deviceAttrs.PowerSwitchAll == 0) {
+        //   this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
+        // }
+        this.controlDevice('WorkState', {WorkState: 2}).then(res => {
+          this.$router.push('/')
+        })
       },
       controlDevice(attr, param) {
         return this.doControlDevice({
@@ -148,40 +170,37 @@
         })
       },
       openWaterBox() {
-        this.controlDevice('openWaterBox', {PushRod: '3'}).then(() => {
+        this.controlDevice('openWaterBox', {PushRod: 3}).then(() => {
           this.$router.push({path:'/waterBoxOpen'})
         })
-        this.$router.push({path:'/waterBoxOpen'})
+        //this.$router.push({path:'/waterBoxOpen'})
       },
       light() {
-        this.lightStatus = !this.lightStatus
-        if (this.lightStatus) {
-          this.controlDevice('Light', {Light: '1'})
-        } else {
-          this.controlDevice('Light', {Light: '0'})
-        }
+        // if (this.deviceAttrs.Light == 0) {
+        //   this.controlDevice('Light', {Light: 1})
+        // } else {
+        //   this.controlDevice('Light', {Light: 0})
+        // }
+        this.controlDevice('Light', {Light: 2})
       },
       continueCook() {
-        this.controlDevice('WorkState',{WorkState: '4'}).then(res => {
+        this.controlDevice('WorkState',{WorkState: 0}).then(res => {
           this.$router.push({
-            path: '/deviceStatus',
-            query: {
-              preset: this.activeMode === 3 ? 110 : this.presetTemp
-            }
+            path: '/deviceStatus'
           })
         })
-        this.$router.push({
-          path: '/deviceStatus',
-          query: {
-            preset: this.activeMode === 3 ? 110 : this.presetTemp
-          }
-        })
+        // this.$router.push({
+        //   path: '/deviceStatus',
+        //   query: {
+        //     preset: this.activeMode === 3 ? 110 : this.presetTemp
+        //   }
+        // })
       },
       endCook() {
-        this.controlDevice('WorkState',{WorkState: '5'}).then(res => {
-          this.$router.push({path: '/deviceFinish'})
+        this.controlDevice('WorkState',{WorkState: 2}).then(res => {
+          this.$router.push({path: '/'})
         })
-        this.$router.push({path: '/deviceFinish'})
+        // this.$router.push({path: '/deviceFinish'})
       },
       transTime(time) {
         if (!time) {
@@ -191,8 +210,9 @@
         let h = ''
         let m = ''
         if (numTime >= 60) {
-          h = Math.floor(h/60)
-          m = numTime % 60 === 0 ? '00' : numTime % 60
+          let hours = Math.floor(numTime/60)
+          h =  hours < 10 ? '0' + hours : hours
+          m = numTime % 60 === 0 ? '00' : numTime % 60 < 10 ? '0' + numTime % 60 : numTime % 60
         } else {
           h = '00'
           m = numTime < 10 ? '0' + numTime : numTime

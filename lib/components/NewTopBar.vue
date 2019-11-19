@@ -63,13 +63,14 @@
           ref="title"
           :style="{ 'color': bakColor }"
           class="title">{{ title }}</div>
-        <div
+        <button
           v-if="shutdown"
           ref="shutdown"
-          class="header-bottom-right"
+          :class="['header-bottom-right', styleName]"
+          :disabled="(styleName && Object.keys(styleName).indexOf('no-work') > -1) ? true : false"
           @click="shutdownCallback">
           <p class="header-bottom-right-p"/>
-        </div>
+        </button>
         <!-- <slot /> -->
       </div>
 
@@ -132,14 +133,24 @@ export default {
       default: ''
     },
     className: {
-      type: String,
+      type: '',
       default: ''
+    },
+    styleName: {
+      type: Object,
+      default: function() {
+        return null
+      }
     },
     scroll:{
        type: Boolean,
       default: false
     },
     search:{
+      type: Boolean,
+      default: false
+    },
+    hiddenSwitch: {
       type: Boolean,
       default: false
     }
@@ -268,6 +279,10 @@ export default {
 /* topbar */
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
+.no-work{
+  opacity: 0.3;
+  position: relative;
+}
 .topbar{
   position: relative;
   z-index: 9999;
@@ -437,7 +452,9 @@ export default {
     height: 36PX;
    justify-content: center;
    align-items: center;
-
+    border: transparent;
+   background: transparent;
+  outline: none;
     .header-bottom-right-p{
        background: url('~@lib/base/tv/assets/new/tv_btn_open.png');
         background-size: 100% 100%;

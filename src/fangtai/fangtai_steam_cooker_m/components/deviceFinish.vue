@@ -3,8 +3,7 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="true"
-        :class-name="opcityStyle"
+        :style-name="{'no-work': deviceAttrs.WorkState == 0 && deviceAttrs.WorkMode == 0}"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <!--模式-->
@@ -31,17 +30,37 @@
     data() {
       return {
         activeMode: 0,
-        timer: 10,
+        timer: 5,
         timerId: ''
       }
     },
-
     computed: {
       ...mapGetters(['isClose', 'isOffline']),
       ...mapState(['device', 'deviceAttrs'])
     },
     watch: {
-
+      'deviceAttrs'(val) {
+        console.log('上报接收中', new Date())
+        console.log(val)
+      },
+      'deviceAttrs.PushRod'(val) {
+        if (val == 1) {
+          this.$router.push('/waterBoxOpen')
+        }
+      },
+      'deviceAttrs.WorkState'(val) {
+        if (val == 0) {
+          if (Math.floor(this.deviceAttrs.RemainingTime) == 0) {
+            this.$router.push({path: '/deviceFinish'})
+          } else {
+            this.$router.push({path: '/'})
+          }
+        } else if (val == 2 || val == 4) {
+          this.$router.push({path: '/deviceStatus'})
+        }  else if (val == 1) {
+          this.$router.push({path: '/devicePause'})
+        }
+      },
     },
     created() {
       this.timerId = setInterval(() => {
@@ -52,6 +71,7 @@
           this.timer--
         }
       }, 1000)
+      HdSmart.UI.setStatusBarColor(2)
     },
     mounted() {
 
@@ -64,9 +84,9 @@
       // 开关机
       shutdowncallback(){
         if (this.isOffline) return
-        if (this.deviceAttrs.PowerSwitchAll === 2) {
+        if (this.deviceAttrs.PowerSwitchAll == 2) {
           this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
-        } else if (this.deviceAttrs.PowerSwitchAll === 0) {
+        } else if (this.deviceAttrs.PowerSwitchAll == 0) {
           this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
         }
       },

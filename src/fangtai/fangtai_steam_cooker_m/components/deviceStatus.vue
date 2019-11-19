@@ -3,7 +3,6 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="true"
         :class-name="opcityStyle"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
@@ -11,10 +10,11 @@
       <div class="main center">
         <div class="status">
           <p>{{ transTime(deviceAttrs.RemainingTime) }}</p>
-          <p>
-            当前 {{ deviceAttrs.SetTemperature1 }}℃ | 预设 {{ presetTemp }}℃
+<!--          <p>{{ transTime(134) }}</p>-->
+          <p v-if="deviceAttrs.WorkMode != 3">
+            当前 {{ deviceAttrs.TemperatureSensor1 }}℃ | 预设 {{ deviceAttrs.SetTemperature1 }}℃
           </p>
-          <p v-if="!isOffline">{{ deviceAttrs.WorkState | modeType }}</p>
+          <p v-if="!isOffline">{{ transText(deviceAttrs.WorkState, deviceAttrs.WorkMode) }}</p>
           <p v-else>设备离线中</p>
         </div>
       </div>
@@ -28,18 +28,18 @@
             </div>
           </li>
           <li>
-            <div v-if="deviceAttrs.PowerSwitchAll === 1">
+            <div v-if="deviceAttrs.WorkState == 1">
               <p class="start btn-style"></p>
               <p>启动</p>
             </div>
-            <div v-if="deviceAttrs.PowerSwitchAll === 2">
+            <div v-if="deviceAttrs.WorkState == 4 || deviceAttrs.WorkState == 2">
               <p class="pause btn-style" @click="pause"></p>
               <p>暂停</p>
             </div>
           </li>
           <li style="padding-top: 12px;">
             <div>
-              <p :class="['light', 'btn-style', {'open-light': lightStatus}]" @click="light"></p>
+              <p :class="['light', {'btn-style': deviceAttrs.Light == 0}, {'open-light': deviceAttrs.Light == 1}]" @click="light"></p>
               <p>照明</p>
             </div>
           </li>
@@ -74,8 +74,7 @@
           }
         ],
         activeMode: 0,
-        lightStatus: false,
-        presetTemp: ''
+        lightStatus: false
       }
     },
     computed: {
@@ -85,16 +84,36 @@
     watch: {
       'deviceAttrs.WaterShortage'(val) {
         console.log('缺水监听')
-        if (val === '1') {
+        if (val == 1) {
           this.$router.push({path: '/devicePause'})
         }
       },
+      'deviceAttrs.WorkState'(val) {
+        if (val == 0) {
+          if (Math.floor(this.deviceAttrs.RemainingTime) == 0) {
+            this.$router.push({path: '/deviceFinish'})
+          } else {
+            this.$router.push({path: '/'})
+          }
+        } else if (val == 1) {
+          this.$router.push({path: '/devicePause'})
+        }
+      },
+      'deviceAttrs'(val) {
+        console.log('状态页上报接收中', (+new Date().getMinutes()) + 1 + ':' + (+new Date().getSeconds()) + 1)
+        console.log(val)
+      },
       '$route': {
         handler(val) {
-          this.presetTemp = val.query.preset
+          this.activeMode = +val.query.activeMode
         },
         // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
         immediate: true
+      },
+      'deviceAttrs.PushRod'(val) {
+        if (val == 1) {
+          this.$router.push('/waterBoxOpen')
+        }
       }
     },
     created() {
@@ -103,8 +122,9 @@
           .then(() => {
 
           })
+        HdSmart.UI.setStatusBarColor(2)
       })
-      if (this.deviceAttrs.WaterShortage === '1') {
+      if (this.deviceAttrs.WaterShortage == 1) {
         this.$router.push({path: '/devicePause'})
       }
     },
@@ -134,11 +154,14 @@
       // 开关机
       shutdowncallback(){
         if (this.isOffline) return
-        if (this.deviceAttrs.PowerSwitchAll === 2) {
-          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
-        } else if (this.deviceAttrs.PowerSwitchAll === 0) {
-          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
-        }
+        // if (this.deviceAttrs.PowerSwitchAll == 2) {
+        //   this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
+        // } else if (this.deviceAttrs.PowerSwitchAll == 0) {
+        //   this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
+        // }
+        this.controlDevice('WorkState', {WorkState: 2}).then(res => {
+          this.$router.push('/')
+        })
       },
       controlDevice(attr, param={}) {
         return this.doControlDevice({
@@ -151,29 +174,44 @@
         })
       },
       pause() {
-        this.controlDevice('WorkState', {WorkState: '1'}).then(res => {
+        this.controlDevice('WorkState', {WorkState: 1}).then(res => {
           this.$router.push({
             path:'/devicePause',
             query: {
-              preset: this.activeMode === 3 ? 110 : this.presetTemp
+              preset: this.activeMode === 3 ? 110 : this.presetTemp,
+              activeMode : this.activeMode
             }
           })
         })
-        this.$router.push({
-          path:'/devicePause',
-          query: {
-            preset: this.activeMode === 3 ? 110 : this.presetTemp
-          }
-        })
+        // this.$router.push({
+        //   path:'/devicePause',
+        //   query: {
+        //     preset: this.activeMode === 3 ? 110 : this.presetTemp,
+        //     activeMode : this.activeMode
+        //   }
+        // })
       },
       openWaterBox() {
-        this.controlDevice('openWaterBox', {PushRod: '3'}).then(() => {
+        // this.controlDevice('openWaterBox', {PushRod: 3}).then(() => {
+        //   this.$router.push({
+        //     path:'/waterBoxOpen',
+        //     query: {
+        //       preset: this.activeMode === 3 ? 110 : this.presetTemp,
+        //       activeMode : this.activeMode
+        //     }
+        //   })
+        // })
+        this.controlDevice('openWaterBox', {PushRod: 3}).then(() => {
           this.$router.push({path:'/waterBoxOpen'})
         })
-        this.$router.push({path:'/waterBoxOpen'})
       },
       light() {
-        this.lightStatus = !this.lightStatus
+        // if (this.deviceAttrs.Light == 0) {
+        //   this.controlDevice('Light', {Light: 1})
+        // } else {
+        //   this.controlDevice('Light', {Light: 0})
+        // }
+        this.controlDevice('Light', {Light: 2})
       },
       transTime(time) {
         if (!time) {
@@ -183,13 +221,34 @@
         let h = ''
         let m = ''
         if (numTime >= 60) {
-          h = Math.floor(h/60)
-          m = numTime % 60 === 0 ? '00' : numTime % 60
+          let hours = Math.floor(numTime/60)
+          h =  hours < 10 ? '0' + hours : hours
+          m = numTime % 60 === 0 ? '00' : numTime % 60 < 10 ? '0' + numTime % 60 : numTime % 60
         } else {
           h = '00'
           m = numTime < 10 ? '0' + numTime : numTime
         }
         return h + ':' + m
+      },
+      transText(type, mode) {
+        if (type == 4 && mode == 1) {
+          return '烹饪中'
+        } else if (type == 1 && mode == 1) {
+          return '已暂停'
+        } else if (type == 4 && mode == 3) {
+          return '除垢中'
+        } else if (type == 4 && mode == 4) {
+          return '解冻中'
+        } else if (type == 2 && mode == 1) {
+          return '预热中'
+        } else if (type == 2 && mode == 2) {
+          return '预热中'
+        } else if (type == 2 && mode == 4) {
+          return '预热中'
+        } else if (type == 4 && mode == 2) {
+          return '烹饪中'
+        }
+        return  ''
       }
     }
   }
@@ -366,7 +425,7 @@
       }
       .open-light {
         background: url('~@lib/@{imgPath}/btn_ac_on_cdbb@2x.png') no-repeat center center;
-        background-color: #000;
+        background-color: #000 !important;
         background-size: 48px 48px;
       }
     }
