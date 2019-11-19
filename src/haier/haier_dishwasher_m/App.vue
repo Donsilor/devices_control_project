@@ -352,9 +352,9 @@ export default {
       this.$nextTick(()=>{
         //  this.newRatio()
         // console.log(this.$refs.main,'2222222222222222')
-        if (this.deviceAttrs.operation_mode=='standby') {
+        // if (this.deviceAttrs.operation_mode=='standby') {
           this.$refs.main.classList.remove('opacity')
-        }
+        // }
       })
     },
   },

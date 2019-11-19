@@ -23,9 +23,9 @@
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='auto'"
               class="tm">24<sup>°C</sup>
             </div>
-            <div
+            <!-- <div
               v-show="isOffline||deviceAttrs.switchStatus == 'off'"
-              :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
+              :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div> -->
           </div>
           <circle-progress
             v-if="isShow"
@@ -121,27 +121,23 @@
         v-show="!isClose&&!isOffline"
         class="optionbox">
         <div class="option1">
-          <div>
+          <div class="check">
             <span>风速</span>
-            <span 
-              class="check" 
-              @click="showSpeed">{{ typeVal=='auto'?'自动':'手动' }}
-              <img 
-                v-show="typeVal!=='auto'" 
-                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
-            </span>
-          </div>
-          <div
-            v-show="typeVal!=='auto'"
-            class="range">
-            <input
-              :value="brightnessValue"
-              type="range"
-              min="0"
-              max="4"
-              step="1"
-            >
-            <p :class="['rang_width']"/>
+            <div 
+              class="checkBox">
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']" 
+                @click="setSpeed('low')">1档</div>
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']" 
+                @click="setSpeed('normal')">2档</div>
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']" 
+                @click="setSpeed('high')">3档</div>
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'auto'},'speedBtn']" 
+                @click="setSpeed('auto')">自动</div>
+            </div>
           </div>
         </div>
       </div>
@@ -278,13 +274,13 @@ export default {
         })
     },
     setTemperature(step) {
-      if(this.deviceAttrs.mode == 'auto') {
-        return HdSmart.UI.toast('智能模式不支持温度调节')
-      }
-      // 送风模式不能设置温度
-      if (this.deviceAttrs.mode === 'wind') {
-        return HdSmart.UI.toast('送风模式不支持温度调节')
-      }
+      // if(this.deviceAttrs.mode == 'auto') {
+      //   return HdSmart.UI.toast('智能模式不支持温度调节')
+      // }
+      // // 送风模式不能设置温度
+      // if (this.deviceAttrs.mode === 'wind') {
+      //   return HdSmart.UI.toast('送风模式不支持温度调节')
+      // }
       let temp = +this.deviceAttrs.temperature + step
       // 最小温度
       if (temp < MIN_TEMP) {
@@ -309,14 +305,10 @@ export default {
         })
     },
     // 设置风速
-    setSpeed(speed, val) {
-      this.typeVal = val
-      if (this.deviceAttrs.mode=='wind'&&val=='auto') {
-        this.typeVal = 'hand'
-      }
-      if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
-        return HdSmart.UI.toast('送风模式不能设置自动风速')
-      }
+    setSpeed(speed) {
+      // if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
+      //   return HdSmart.UI.toast('送风模式不能设置自动风速')
+      // }
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
@@ -324,9 +316,6 @@ export default {
     },
     controlDevice(attr, value) {
       let param = {}
-      // if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
-      //   param = { 'speed': 'low'}
-      // }
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {
@@ -345,29 +334,23 @@ export default {
         this.$refs.$circle.init()
       })
     },
-    showSwing() {
-      if (this.isClose) return
-      this.$refs.swing.show = true
-    },
     showMode() {
       if (this.isClose) return
       this.$refs.mode.show = true
     },
-    showSpeed() {
-      if (this.isClose) return
-      this.$refs.speed.show = true
-      this.$nextTick(()=>{
-        this.animation = true
-      },0)
-    },
-    showTime() {
-      if (this.isClose) return
-      this.$refs.time.show = true
-    },
+    // showSpeed() {
+    //   if (this.isClose) return
+    //   this.$refs.speed.show = true
+    //   this.$nextTick(()=>{
+    //     this.animation = true
+    //   },0)
+    // },
+    // showTime() {
+    //   if (this.isClose) return
+    //   this.$refs.time.show = true
+    // },
     hide(){
-      if(this.$refs.swing.show) this.$refs.swing.show = false
       if(this.$refs.mode.show) this.$refs.mode.show = false
-      if(this.$refs.speed.show) this.$refs.speed.show = false
     },
 
     getProgress() {
@@ -740,7 +723,7 @@ export default {
     .option1{
       padding: 0 40px;
       border-top: 1px solid rgba(0, 0, 0, 0.1);
-      >div{
+            .check{
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -750,18 +733,31 @@ export default {
           display: inline-block;
           line-height: 120px;
           height: 120px;
-          &:last-of-type{
-            color: rgba(0, 0, 0, 0.5);
-          }
-          &.check{
+          font-size: 32px;
+          color: #000;
+        }
+        .checkBox{
             display: flex;
             align-items: center;
-            >img{
-              width: 32px;
+            justify-content: space-between;
+            .speedBtn{
+              width: 120px;
+              height: 64px;
+              border: 1px solid #000;
+              text-align: center;
+              line-height: 64px;
+              font-family: PingFangSC-Light;
+              font-size: 24px;
+              margin-right: 20px;
+              &:last-of-type{
+                margin-right: 0px;
+              }
+              &.active{
+                background-color: #000;
+                color: #fff;
+              }
             }
           }
-        }
-
       }
       input[type="range"] {
         display: block;
