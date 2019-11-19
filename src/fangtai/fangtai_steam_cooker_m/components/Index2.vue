@@ -9,11 +9,21 @@
       <!--模式-->
       <div class="main center">
         <ul class="mode">
-          <li v-for="(v, i) in modeList" :key="v.name" @click="changeMode(i)" :class="[{'active': activeMode === i}]">{{v.name}}</li>
+          <li 
+            v-for="(v, i) in modeList" 
+            :key="v.name" 
+            :class="[{'active': activeMode === i}]" 
+            @click="changeMode(i)">{{ v.name }}</li>
         </ul>
         <!-- 时间选择器-->
-        <temp-time-pick style="width: 90%;" ref="tempTimePick"  v-show="activeMode != 3" :activeMode="activeMode"></temp-time-pick>
-        <div class="clear-dash" v-if="activeMode === 3">
+        <temp-time-pick 
+          v-show="activeMode != 3" 
+          ref="tempTimePick" 
+          :active-mode="activeMode" 
+          style="width: 90%;"/>
+        <div 
+          v-if="activeMode === 3" 
+          class="clear-dash">
           <div>
             <p class="clear-dash-time">1小时11分钟</p>
             <p class="clear-dash-text">除垢用时</p>
@@ -24,10 +34,12 @@
           </div>
         </div>
       </div>
-      <div style="position: relative;top: -20px;" v-if="activeMode != 3">
+      <div 
+        v-if="activeMode != 3" 
+        style="position: relative;top: -20px;">
         <ul class="tips">
           <li>{{ activeMode === 0 || activeMode === 1 ? '烹饪温度' : '解冻温度' }}</li>
-          <li>{{ activeMode === 0 || activeMode === 1 ? '烹饪时长' : '解冻时长' }}</li>
+          <li class="padl">{{ activeMode === 0 || activeMode === 1 ? '烹饪时长' : '解冻时长' }}</li>
         </ul>
       </div>
       <!--开机后按钮-->
@@ -35,19 +47,25 @@
         <ul>
           <li style="padding-top: 12px;">
             <div>
-              <p class="water-box btn-style" @click="openWaterBox"></p>
+              <p 
+                class="water-box btn-style" 
+                @click="openWaterBox"/>
               <p>开水箱</p>
             </div>
           </li>
           <li>
             <div>
-              <p class="start btn-style" @click="startWork"></p>
+              <p 
+                class="start btn-style" 
+                @click="startWork"/>
               <p>启动</p>
             </div>
           </li>
           <li style="padding-top: 12px;">
             <div>
-              <p :class="['light', {'btn-style': deviceAttrs.Light == 0}, {'open-light': deviceAttrs.Light == 1}]" @click="light"></p>
+              <p 
+                :class="['light', {'btn-style': deviceAttrs.Light == 0}, {'open-light': deviceAttrs.Light == 1}]" 
+                @click="light"/>
               <p>照明</p>
             </div>
           </li>
@@ -331,7 +349,7 @@
         font-size: 32px;
         opacity: 0.8;
         &:first-of-type{
-          width: 37%;
+          // width: 37%;
           padding-left: 20px;
         }
       }
@@ -442,5 +460,7 @@
       }
     }
   }
-
+.padl{
+  padding-left: 170px;
+}
 </style>

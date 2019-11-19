@@ -4,7 +4,7 @@
       选中值为：<span>{{ selectedValue }}</span>
     </div> -->
     <div class="wrap-box">
-      <div class="box">
+      <div class="box box1">
         <ul
           :style="{ top: tTop+0.85 +'rem' }"
           class="list"
@@ -20,7 +20,7 @@
         </ul>
       </div>
       <div class="unit">°C</div>
-      <div class="box">
+      <div class="box box2">
         <ul
           :style="{ top: hTop+0.85 +'rem' }"
           class="list"
@@ -52,7 +52,7 @@
         </ul>
       </div>
       <div class="unit">分钟</div>
-      <div class="border-box"></div>
+      <div class="border-box"/>
     </div>
   </div>
 </template>
@@ -313,6 +313,13 @@
     li.down-pre{
       background-image: linear-gradient(180deg, rgba(55,62,65,0.00) 0%, #373E41 100%);
     }
+  }
+  .box1{
+    flex: none;
+    width: 180px;
+  }
+  .box2{
+    padding-left: 100px;
   }
   .unit{
     // flex: 1;

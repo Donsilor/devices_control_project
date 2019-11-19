@@ -23,29 +23,39 @@
         <ul style="position: relative;">
           <li v-if="deviceAttrs.WaterShortage == 1">
             <div>
-              <p class="water-box btn-style" @click="openWaterBox"></p>
+              <p 
+                class="water-box btn-style" 
+                @click="openWaterBox"/>
               <p>开水箱</p>
             </div>
           </li>
           <li>
             <div>
-              <p class="start-cook btn-style" @click="continueCook"></p>
+              <p 
+                class="start-cook btn-style" 
+                @click="continueCook"/>
               <p>继续</p>
             </div>
           </li>
           <li>
             <div>
-              <p class="end-cook btn-style" @click="endCook"></p>
+              <p 
+                class="end-cook btn-style" 
+                @click="endCook"/>
               <p>结束</p>
             </div>
           </li>
           <li>
             <div>
-              <p :class="['light', {'btn-style': deviceAttrs.Light == 0}, {'open-light': deviceAttrs.Light == 1}]" @click="light"></p>
+              <p 
+                :class="['light', {'btn-style': deviceAttrs.Light == 0}, {'open-light': deviceAttrs.Light == 1}]" 
+                @click="light"/>
               <p>照明</p>
             </div>
           </li>
-          <li class="tips" v-if="deviceAttrs.WaterShortage == 1">
+          <li 
+            v-if="deviceAttrs.WaterShortage == 1" 
+            class="tips">
             <div>打开水箱，加水后可继续烹饪</div>
           </li>
         </ul>
@@ -392,8 +402,8 @@
         background-size: 80px 80px;
       }
       .start-cook{
-        background: url('~@lib/@{imgPath}/qidong@3x.png') no-repeat center center;
-        background-size: 80px 80px;
+        background: url('~@lib/@{imgPath}/btn_ac_on_cdd@3x.png') no-repeat center center;
+        background-size: 48px 48px;
       }
       .end-cook{
         background: url('~@lib/@{imgPath}/btn_ac_on_cdc@2x.png') no-repeat center center;
