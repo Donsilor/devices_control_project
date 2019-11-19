@@ -1,7 +1,8 @@
 /* eslint-disable vue/no-unused-vars */
 <template>
   <div class="body">
-    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
+    <div
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
         :shutdown="true"
@@ -9,6 +10,7 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!-- tab切换栏 -->
       <div
+        ref="main"
         class="main center"
         style="margin-top:52px">
         <div class="tab">
@@ -47,7 +49,7 @@
                 :key="item.english"
                 class="swiper-slide">
                 <div>
-                  <span>{{ item.time }}</span>
+                  <span class="font">{{ item.time }}</span>
                   <span>{{ item.name }}</span>
                 </div>
               </div>
@@ -59,12 +61,12 @@
             class="swiper-container container1">
             <div class="swiper-wrapper">
               <div
-                v-for="item in foodList"
-                :key="item.english"
+                v-for="it in foodList"
+                :key="it.english"
                 class="swiper-slide">
                 <div>
-                  <span>{{ item.time }}</span>
-                  <span>{{ item.name }}</span>
+                  <span class="font">{{ it.time }}</span>
+                  <span>{{ it.name }}</span>
                 </div>
               </div>
             </div>
@@ -73,6 +75,7 @@
       </div>
       <div
         v-if="!isClose&&!isOffline"
+        ref="btn"
         class="panel-btn center">
         <div
           class="btn-wrap">
@@ -99,7 +102,10 @@ export default {
       temp:true,
       timeOutEvent:'',
       a:"",
+      brightnessValue:0,
+      brightnessValue1:0,
       currentMode:'normal',
+      show:false,
       tableware:[
         {
           name:'除味',
@@ -118,12 +124,12 @@ export default {
         },
         {
           name:'冲洗',
-          time:20,
+          time:19,
           english:'flush'
         },
         {
           name:'智能',
-          time:74,
+          time:89,
           english:'smart'
         }
         ,
@@ -141,7 +147,7 @@ export default {
         ,
         {
           name:'即时',
-          time:47,
+          time:46,
           english:'timely'
         }
         ,
@@ -170,7 +176,7 @@ export default {
         },
         {
           name:'核果',
-          time:30,
+          time:32,
           english:'stone_fruit'
         },
         {
@@ -180,19 +186,19 @@ export default {
         },
         {
           name:'瓜果',
-          time:32,
+          time:34,
           english:'melons'
         }
         ,
         {
           name:'蔬菜',
-          time:34,
+          time:33,
           english:'vegetables'
         }
         ,
         {
           name:'叶菜',
-          time:36,
+          time:34,
           english:'leaf_vegetable'
         }
         ,
@@ -204,13 +210,13 @@ export default {
         ,
         {
           name:'茎菜',
-          time:36,
+          time:35,
           english:'stem_vegetable'
         }
         ,
         {
           name:'果实',
-          time:33,
+          time:32,
           english:'fruit_vegetable'
         },
         {
@@ -221,25 +227,25 @@ export default {
         ,
         {
           name:'海鲜',
-          time:35,
+          time:38,
           english:'seafood'
         }
         ,
         {
           name:'甲壳',
-          time:35,
+          time:36,
           english:'crustaceans'
         }
         ,
         {
           name:'贝类',
-          time:38,
+          time:39,
           english:'testaceans'
         }
         ,
         {
           name:'螺类',
-          time:40,
+          time:41,
           english:'snails'
         }
       ]
@@ -255,16 +261,19 @@ export default {
   },
   watch: {
     'device.stateChange'(){
-      this.$nextTick(()=>{
-        //  this.newRatio()
-      })
+        if (this.deviceAttrs.operation_mode!=='standby') {
+          this.$router.push({ path: '/Washing' })
+        }
+
     },
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
-
+          if (this.deviceAttrs.operation_mode!=='standby') {
+          this.$router.push({ path: '/Washing' })
+        }
       })
       // HdSmart.UI.setStatusBarColor(2)
     })
@@ -280,6 +289,16 @@ export default {
           paginationClickable: true,
           observer:true,//修改swiper自己或子元素时，自动初始化swiper
           observeParents:true,//修改swiper的父元素时，自动初始化swiper
+          // followFinger : false,
+          longSwipes: true,
+          effect : 'coverflow',
+           coverflowEffect: {
+            rotate: 50,
+            stretch: 50,
+            depth: 200,
+            modifier: 0,
+            slideShadows : false
+          },
         })
       },
   methods: {
@@ -300,7 +319,13 @@ export default {
         controlStatus = 'halt'
       } else {
         controlStatus = 'start'
-        this.currentMode = document.querySelectorAll('.swiper-slide-active>div>span')[1].innerHTML
+        this.$refs.main.classList.add('opacity')
+        this.$refs.btn.classList.add('opacity')
+        if (this.temp) {
+          this.currentMode = document.querySelectorAll('.container .swiper-slide-active>div>span')[1].innerHTML
+        }else{
+          this.currentMode = document.querySelectorAll('.container1 .swiper-slide-active>div>span')[1].innerHTML
+        }
         let value
         let arr = this.tableware.concat(this.foodList)
         for(let i=0;i<arr.length;i++){
@@ -311,11 +336,12 @@ export default {
         this.controlDevice("mode",value).then(()=>{
           this.controlDevice("control",controlStatus)
         })
-          this.$router.push({ path: '/Washing' })
+          // this.$router.push({ path: '/Washing' })
         return
       }
       this.controlDevice("control",controlStatus )
     },
+
     // 长按事件
     touchStart(e){
       console.log(e)
@@ -342,7 +368,7 @@ export default {
       console.log(this.timeOutEvent)
       // alert('长按了')
       this.$nextTick(()=>{
-        this.controlDevice('remain_washtime',0)
+        this.controlDevice('remaining',0)
       })
     },
     // 洗涤完成
@@ -366,19 +392,193 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
 @imgPath1: 'base/dishwasher/assets';
-@keyframes progress-bar{
+.opacity{
+  animation: hide 1s linear;
+}
+@keyframes hide {
+  0%{opacity:1}
+  100%{opacity:0.2;}
+}
+.swiper-slide-active{
+  .font{
+    animation: small 0.2s linear;
+  }
+}
+@keyframes small{
   0% {
-      transform: rotate(260deg);
-      border: 3px solid transparent;
+      font-size: 48px;
   }
   100% {
-      transform: rotate(358deg);
-      border: 3px solid rgba(0, 0, 0, 1);
+      font-size: 160px;
   }
 }
 .body {
   min-height: 100%;
 }
+@keyframes show{
+    0% {
+      bottom:-380px;
+    }
+    100% {
+       bottom:0;
+    }
+}
+.show{
+  animation: show .2s linear;
+}
+.bigBox{
+  .model{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+  }
+  .moreBox{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 520px;
+    background-color: #fff;
+    padding: 0 40px;
+    z-index: 9999;
+  li{
+    border-top: 1px solid #EDEDED;
+    font-size: 32px;
+    height: 113px;
+    line-height: 113px;
+    display: flex;
+      align-items: center;
+      justify-content: space-between;
+    &:first-of-type{
+      border: none;
+      font-size: 40px;
+      height: 125px;
+      line-height: 125px;
+    }
+    .rangeBox{
+      width: 80%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &:last-of-type{
+        justify-content: center;
+      }
+        .rang_input{
+          position: relative;
+        }
+    }
+  }
+}
+input[type="range"] {
+  display: block;
+  -webkit-appearance: none;
+  // background-color: #bdc3c7;
+  background: rgba(101,101,101,0.3);
+  width: 400px;
+  height: 2px;
+  border-radius: 5px;
+  outline: 0;
+  margin: 0 20px;
+  &:last-of-type{
+    width: 410px;
+  }
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background-color: #000;
+  width: 76px;
+  height: 52px;
+  border-radius: 30%;
+  // border: 2px solid white;
+  cursor: pointer;
+  // transition: 0.3s ease-in-out;
+  content: "H4";
+}
+  .range {
+    position: relative;
+    width: 100%;
+    margin-bottom: 50px;
+    .range-zero::-webkit-slider-thumb {
+      background: #EDEDED;
+    }
+    .range-zero {
+      background: #EDEDED;
+    }
+  }
+  .tips {
+    font-size: 32px;
+    color: #000000;
+    float: right;
+  }
+  .tips-bak {
+    color: #EDEDED;
+  }
+  .rang_width,.rang_width1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #000;
+    height: 2px;
+    border-radius: 5px 0 0 5px;
+    margin: 0 20px;
+    }
+    .rang_bak {
+      background: #EDEDED;
+    }
+  .switch {
+    width: 74px;
+    height: 28px;
+    position: relative;
+    border: 1px solid transparent;
+    // background-color: #fdfdfd;
+    box-shadow: #dfdfdf 0 0 0 0 inset;
+    border-radius: 20px;
+    background-clip: content-box;
+    display: inline-block;
+    -webkit-appearance: none;
+    user-select: none;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  .switch:before {
+      content: '';
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      top: -8px;
+      left: 0;
+      border-radius: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      background: #7F7F7F;
+  }
+  .switch:checked {
+      border-color: #E1B96E;
+      box-shadow: #E1B96E 0 0 0 16px inset;
+      background-color: #E1B96E;
+  }
+  .switch:checked:before {
+      left: 30px;
+      background: #000000;
+  }
+  .switch.switch-anim {
+      transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+  }
+  .switch.switch-anim:before {
+      transition: left 0.3s;
+  }
+  .switch.switch-anim:checked {
+      // box-shadow: #64bd63 0 0 0 16px inset;
+      // background-color: #64bd63;
+      transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
+  }
+  .switch.switch-anim:checked:before {
+      transition: left 0.3s;
+  };
+}
+
 .page {
   height: 100vh;
   min-height: 550px;
@@ -550,8 +750,8 @@ export default {
     height: auto;
     width: 100%;
     position: fixed;
-    bottom: 130px;
-    z-index: 99999;
+    bottom: 90px;
+    // z-index: 99999;
     .btn {
       margin-top: 24px;
       width: 100%;
@@ -566,28 +766,24 @@ export default {
     &.center{
       display: flex;
       align-items: center;
+      flex-direction: column;
+    }
+    .more{
+      img{
+        width: 30px;
+      }
+      span{
+        opacity: 0.53;
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #000000;
+      }
     }
   }
   /*********** 按钮 ***********/
   .btn-wrap {
     margin: 0 34px 40px;
     position: relative;
-    .progressBar {
-      &::before{
-        content: "";
-        display: block;
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        position: absolute;
-        top: -30px;
-        left: -23%;
-        // transform: translateX(-50%) rotate(260deg);
-        border: 3px solid rgba(0, 0, 0, 1);
-        clip: rect(0px 200px 40px 0px);
-        animation: progress-bar 1s linear infinite;
-      }
-    }
     .mask {
       &::before{
         content: "";

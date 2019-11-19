@@ -21,6 +21,7 @@ import remoteControl from './components/remoteControl.vue'
 import NewTopbar from '@lib/components/NewTopBar.vue'
 
 import ErrorView from './components/Error.vue'
+import NoNetwork from './components/NoNetwork.vue'
 import OfflineMask from './components/OfflineMask.vue'
 // import Statusbar from './components/Statusbar.vue'
 import StatusTip from './components/StatusTip.vue'
@@ -59,6 +60,8 @@ Vue.component('new-topbar', NewTopbar)
 Vue.component('offline-mask', OfflineMask)
 Vue.component('StatusTip', StatusTip)
 Vue.component('remoteControl', remoteControl)
+Vue.component('NoNetwork', NoNetwork)
+
 // Vue.component('statusbar', Statusbar)
 
 // 强制关闭3d(详情页改成不透明了)
@@ -183,6 +186,11 @@ const router = new Router({
     path: '/error',
     name: 'error',
     component: ErrorView
+  },
+  {
+    path: '/NoNetwork',
+    name: 'NoNetwork',
+    component: NoNetwork
   }
   ]
 })

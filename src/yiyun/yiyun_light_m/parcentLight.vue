@@ -2,7 +2,7 @@
   <div 
     id="parcent-light">
     <img 
-      v-if="switch_status == 'on' &&brightness==370"
+      v-if="switch_status == 'on' &&(brightness==370||category_sub==1||category_sub==3)"
       src="../../../lib/base/yiyun_light/assets/tongdengruanguang@2x.png" 
       class="coverlight">
     <img 
@@ -25,7 +25,7 @@
       @touchend="touchEnd($event)">
       <div 
         class="touch"/> -->
-  </div>
+  <!-- </div> -->
   </div>
 </template>
 <script>
@@ -37,6 +37,9 @@ export default {
     switch_status:{
       type:String,
       default:"on"
+    },
+    category_sub:{
+      type:Number
     }
   },
   data(){

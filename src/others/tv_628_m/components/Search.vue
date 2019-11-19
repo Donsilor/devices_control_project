@@ -1,18 +1,22 @@
 <!-- 搜索页面 -->
 <template>
-  <div class="page-search">
+  <div 
+    ref="search" 
+    class="page-search">
     <!-- 遥控器 --> 
     <!-- <remoteControl/> -->
     <div
       :style="{height:status_bar_height+navigation_bar_height+'PX'}"
-      class="statusbar" >
+      class="statusbar" 
+      @touchmove.prevent>
       <div 
-        ref="statusbar_fexid" 
+        ref="statusbar_fexid"
+        :style="{height:status_bar_height+'PX'}" 
         class="statusbar_fexid"/>
       <div 
         ref="search_fexid" 
         :search="false"
-        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}" 
+        :style="{top:status_bar_height+'PX',height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}" 
         class="search_fexid">
         <form
           class="search_bar"
@@ -27,6 +31,7 @@
               type="text"
               placeholder="输入片名、导演、演员搜索"
               @blur="blurfn"
+
               @input="fuzzySearch">
             <div 
               v-show="word != ''" 
@@ -65,14 +70,16 @@
     </div>
     <!-- 搜搜历史 -->
     <div
-      v-show="curpage===1&&loadState !== 'NO_DATA' "
-      class="search_history">
+      v-show="curpage===1&&loadState !== 'NO_DATA' " 
+      class="search_history"
+      @touchmove.prevent>
       <div class="hd">
+        <h3>搜索记录</h3>
         <a
           href="#"
-          class="del icon-del"
+          class="del"
           @click.prevent="clearHistory" />
-        搜索记录
+        
       </div>
       <ul class="bd clearfix">
         <li
@@ -211,7 +218,8 @@
   width: 100%;
   height: @status_bar_height;
   .statusbar_fexid{
-    position: fixed;
+    // position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -220,8 +228,9 @@
     z-index: 999
   }
   .search_fexid{
-    position: fixed;
-    top: 25PX;
+    // position: fixed;
+    position: absolute;
+    top:@status_bar_height;
     left: 0;
     width: 100%;
     height: 44px;
@@ -230,10 +239,22 @@
   }
 }
 .page-search{
-  background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
-  background-size: 100% 100%;
-  background-attachment: fixed;
-  min-height: 100%;
+  // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+  // background-size: 100% 100%;
+  // background-attachment: fixed;
+    height: 100%;
+    &::before{
+    content: "";
+    background-image: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    top:0;
+    left: 0; 
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
 }
 .search_bar {
    display: flex;
@@ -327,7 +348,13 @@
   text-align: right;
 }
 .search_history {
-  margin: 0 32px;
+  padding: 0 32px;
+  position: absolute;
+  top: 150px;
+  bottom: 0;
+  width: 100%;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   .hd {
     color: #75787a;
     padding: 32px 0 24px;
@@ -338,14 +365,18 @@
     font-size: 48px;
     color: #000000;
     line-height: 48px;
-    .icon-del {
-      float: right;
-      margin-right: 10px;
-      width: 36px;
-      height: 36px;
-      line-height: 18px;
-      font-size: 36px;
-      color: #76787a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .del {
+      // margin-right: 10px;
+      width: 48px;
+      height: 48px;
+      background: url('~@lib/base/tv/assets/new/tv_btn_delete.png');
+      background-size: 100% 100%;
+      // line-height: 18px;
+      // font-size: 36px;
+      // color: #76787a;
      
       /*background-repeat: no-repeat;
             background-size: 100% 100%;
@@ -402,6 +433,11 @@
 }
 .search_result {
   // background-color: #f7f8fa;
+  position: absolute;
+  top: 150px;
+  bottom: 0;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   .hd {
     padding: 20px 32px 26px;
     // background-color: #fff;
@@ -652,7 +688,18 @@ function splitWord(kw, input) {
     '<strong>$1</strong>'
   )
 }
-
+// function plusReady(){
+// }
+// // 关闭自身窗口
+// function getfixed(){
+// 	var ws=plus.webview.currentWebview()
+// 	ws.setStyle({
+//         softinputMode: "adjustResize"  // 弹出软键盘时自动改变webview的高度
+//     })
+// }
+//  plus.webview.currentWebview().setStyle({
+//         softinputMode: "adjustResize"  // 弹出软键盘时自动改变webview的高度
+//     })
 export default {
   data() {
     return {
@@ -748,10 +795,20 @@ export default {
       if (window.navigation_bar_height) {
         this.navigation_bar_height = window.navigation_bar_height / dpr
       }
+      if(window.plus){
+	plusReady()
+}else{
+	document.addEventListener('plusready', plusReady, false)
+}
     })
     // this.getData()
   },
   mounted() {
+    //  document.body.addEventListener('touchmove', function(e) {
+    //    console.log(e)
+       
+    //           e.preventDefault()
+    //     }, { passive: false })
     setTimeout(()=>{
         window.scrollTo(0,1)
     },300)
@@ -769,7 +826,15 @@ export default {
         el.onerror = null
       }
     })
-    addEventListener('scroll',this.scroll2)
+   
+    // window.onresize = function() { // 如果当前窗口小于一开始记录的窗口高度，那就让当前窗口等于一开始窗口的高度
+    //     alert('1')
+    
+    //     // if (document.body.scrollHeight < h) {
+    //     //     document.body.style.height = h;
+    //     // }
+    // }
+    addEventListener('scroll',this.scroll2, { passive: false })
   },
   destroyed() {
     window.removeEventListener('scroll', this.loadMore)
@@ -787,17 +852,30 @@ export default {
     })
   },
   methods: {
+    // aa(){
+    //     let b = this.$refs['search_result'].querySelector('ul')
+    //     console.log(b)
+    //      this.scrollTop = b.scrollTop 
+
+    //     console.log(b.offsetHeight,'offsetHeight')
+    //      console.log(b.clientHeight,'clientHeight')
+    //       console.log( this.scrollTop,'scrollTop')
+        
+        
+    // },
     blurfn(){
       setTimeout(()=>{
         window.scrollTo(0,0)
       },300)
     },
-    scroll2(){
-         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    scroll2(event){
+      // event.preventDefault()
+         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop      
         // console.log(this.scrollTop,'this.scrollTop')
         //  HdSmart.UI.toggleNav()
-        // HdSmart.UI.hideKeyboard()
+        // HdSmart.UI.hideKeyboard()scroll2
         if(this.scrollTop>=20){
+          // alert(11)
           this.$refs.search_fexid.style.background = "#fff"
           this.$refs.statusbar_fexid.style.background = "#fff"
         }else{
@@ -950,7 +1028,15 @@ export default {
     showDetailInfo(item) {
       console.log(item)
       this.$store.dispatch('showDetail', item)
-      window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
+      // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
+      this.$router.push({
+        path:"/detail",
+        query:{
+          channelId:item.channelId,
+          vid:item.vid,
+          ispay:item.ispay
+        }
+      })
     },
     getUpdateSet(count, last) {
       if (!count || !last || count == '0' || last == '0') {

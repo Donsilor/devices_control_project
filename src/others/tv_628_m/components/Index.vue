@@ -1,16 +1,18 @@
 <!-- 首页 -->
 <template>
-  <div class="page-index">
+  <div 
+    class="page-index">
     <!-- 遥控器 --> 
     <remoteControl/>
-    <div
-      class="space-block" />
+    <!-- <div
+      class="space-block" /> -->
     <!-- 顶部导航菜单 -->
     <new-topbar
       :shutdown="true"
       :scroll="true"
       :search="true"
       :title="device_name"
+      page-class=".page-index"
       bak-color="#000"
       @shutdownCallback="cmd('rcPower')"
     />
@@ -24,7 +26,7 @@
       <div class="search-screen">
         <router-link
           class="search2" 
-          to="/search"><span class="icon-search"/> 搜索</router-link>
+          to="/search"><span class="search-img"/><span>搜索</span> </router-link>
         <div 
           v-show="activeIndex!=0" 
           class="screen"
@@ -101,7 +103,7 @@
           <div class="title">{{ idx | nameType }}</div>
           <div
             class="more"
-            @click="toListPage(idx)">更多&nbsp;></div>
+            @click="toListPage(idx)"><span class="more_text">更多</span> <span class="more_mg"/></div>
         </div>
 
         <ul class="vlist list-m60">
@@ -196,8 +198,18 @@
       padding: 48px 0 40px 0;
     }
     .more{
+      display: flex;
+      justify-content: center;
+      align-items: center;
       font-size: 24px;
       color: #20282B;
+      .more_mg{
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        background: url('~@lib/base/tv/assets/new/tv_arrow_more.png');
+        background-size:100% 100%; 
+      }
     }
   }
 
@@ -252,10 +264,19 @@
       background:rgba(0, 0, 0, 0.04);
       border-radius: 2px;
       height: 60px;
-      text-align: center;
-      line-height:  60px;
-      
+      // text-align: center;
+      // line-height:  60px;
+      display: flex;
       color: #AAAAAA;
+      justify-content: center;
+      align-items: center;
+      .search-img{
+        width: 32px;
+        height: 32px;
+         background: url('~@lib/base/img/tv_icn_search.png');
+        background-size:100% 100%; 
+        margin-right: 20px;
+      }
     }
     .screen{
       margin-left: 20px;
@@ -753,7 +774,8 @@ export default {
     //   }
     // }
   },
-  created() {    
+  created() {   
+    //  this.$router.push('/NoNetwork') 
     this.pageInit()
     HdSmart.UI.toggleNav()
     console.log('1111',window.device_name)
@@ -836,8 +858,23 @@ export default {
       service.onClickEvent(name)
     },
     showDetailInfo(item) {
+      // let obj = this.$store.state.tvStatus
+      // obj.tvOnlineStatus = -1
+      // this.$store.commit('setScreenProjectionStatus',obj)
+      // console.log(this.$store.state.tvStatus,'22222')
+      // return
       this.$store.dispatch('showDetail', item)
-      window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
+      // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
+      this.$router.push({
+         path:"/detail",
+         query:{
+           channelId:item.channelId,
+           vid:item.vid,
+           ispay:item.ispay,
+           showBar:1
+         }
+       })
+      
       // if (this.isShowBar) {
       //   window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
       // } else {
@@ -940,8 +977,20 @@ export default {
        this.itemData = item
     },
     toPage(item) {
-      let name = encodeURIComponent(item.channel)
-       window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
+
+      // let name = encodeURIComponent(item.channel)
+
+
+      //  window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
+       this.$router.push({
+         path:"/list",
+         query:{
+           channelId:item.channelId,
+           channel:item.channel,
+           showBar:1
+         }
+       })
+
       // if (this.isShowBar) {
       //   window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
       // } else {

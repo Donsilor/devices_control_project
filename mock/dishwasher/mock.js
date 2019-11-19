@@ -3,12 +3,16 @@ import Mock from 'mockjs'
 let res = {
     "connectivity": "online", //l
     "switch": 'on', //开关
-    'control':'stop',
+    'control':'halt',
     'mode':'nomal',
     'operation_mode':'end',//洗涤状态
-    'remain_washtime':'121',
+    // 'remain_washtime':'121',
+    'remaining':1,
     'return_standby':'off',
-    'mode_status':'off'//程序是否运行
+    'mode_status':'off',//程序是否运行
+    'hardness_level':2,//水软
+    'brightener_weight':1,//光亮剂0-255
+    'childlock':'off'//童锁
 }
 export function generateSnapShot() {
     return Mock.mock({
@@ -31,15 +35,21 @@ export function set(data){
     }
     if(attr.control){
       if(attr.control=='start'){
-        attr.remain_washtime = 121
+        attr.remaining = 121
         attr.operation_mode= 'wash_inflow'
+        attr.mode_status= 'on'
       }else{
-        attr.operation_mode= 'standby'
+        attr.operation_mode= 'wash_inflow'
       }
     }
-    if(attr.operation_mode){
-      if(attr.operation_mode=='start'){
-        attr.remain_washtime = 121
+    if (attr.return_standby) {
+      if (attr.return_standby=='on') {
+        attr.operation_mode='standby'
+      }
+    }
+    if(attr.mode){
+      if (attr.mode == 'glass') {
+         attr.operation_mode = 'end'
       }
     }
     res = Object.assign({}, res, attr)

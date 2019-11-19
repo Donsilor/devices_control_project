@@ -21,7 +21,7 @@
             </div>
             <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='auto'"
-              class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
+              class="tm">24<sup>°C</sup>
             </div>
             <div
               v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
@@ -60,7 +60,7 @@
       </div>
       <!-- 当前状态 -->
       <div
-        v-show="deviceAttrs.timer_switch == 'on'&& deviceAttrs.timer_value >0"
+        v-show="deviceAttrs.timer_switch == 'off'&& deviceAttrs.timer_value >0"
         class="status">
         {{ deviceAttrs.timer_value | closeTime }}
       </div>
@@ -164,7 +164,7 @@
           <div>
             <span>定时</span>
             <span
-              v-if="deviceAttrs.timer_switch=='on'&&deviceAttrs.timer_value>0"
+              v-if="deviceAttrs.timer_switch=='off'&&deviceAttrs.timer_value>0"
               class="check"
               @click="showTime">{{ deviceAttrs.timer_value | closeTime }}
               <img 
@@ -356,19 +356,16 @@ export default {
     // 设置关机时间
     setReserve(time) {
       let h = parseInt(time[0].split(':')[0])
-      let m = parseInt(time[0].split(':')[1])
+      let m = parseInt(time[0].split(':')[1]) > 0 ? 1: 0
       console.log(h,m,'hm')
         this.controlDevice('time',{
-            timer_value:h*60+m,
-            timer_switch:'on'
+            timer_value:h*2+m,
+            timer_switch:'off'
         })
     },
     // 取消定时
     canceltime(){
-       this.controlDevice('time',{
-            timer_value:0,
-            timer_switch:'off'
-        })
+       this.controlDevice('close_time','true')
     },
     // 开关机
     shutdowncallback(val){
@@ -420,12 +417,12 @@ export default {
           if (this.deviceAttrs.speed=='auto') {
             this.setRangWidth(93)
           }
-          if (this.deviceAttrs.mode=='auto') {
-            this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
-            this.$refs.$circle.init()
-            this.hide()
-            return
-          }
+          // if (this.deviceAttrs.mode=='auto') {
+          //   this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
+          //   this.$refs.$circle.init()
+          //   this.hide()
+          //   return
+          // }
           this.reset()
           this.hide()
         })
@@ -493,9 +490,9 @@ export default {
     },
     controlDevice(attr, value) {
       let param = {}
-      if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
-        param = { 'speed': 'low'}
-      }
+      // if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
+      //   param = { 'speed': 'low'}
+      // }
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {
@@ -528,7 +525,6 @@ export default {
       this.$nextTick(()=>{
         this.animation = true
       },0)
-      
     },
     showTime() {
       if (this.isClose) return
@@ -542,7 +538,13 @@ export default {
 
     getProgress() {
       // 计算温度进度条
-      return 70 /(32 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+      if (this.deviceAttrs.mode=='auto') {
+        return 70 /(32 - 16) * (240 / 10 - 16)
+      }else if(this.deviceAttrs.mode=='wind') {
+        return 70 /(32 - 16) * (MIN_TEMP / 10 - 16)
+      }else{
+        return 70 /(32 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+      }
     }
   }
 }

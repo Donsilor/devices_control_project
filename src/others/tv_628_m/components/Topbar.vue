@@ -1,6 +1,6 @@
 <!-- 导航条 -->
 <template>
-  <div class="topbar">
+  <div class="topbar topbar2">
     <div
       :style="{height:(status_bar_height + navigation_bar_height) +'px'}"
       class="topbar-block" />
@@ -90,8 +90,8 @@ export default {
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
 .topbar-block, .topbar-fixed{
-  background-color: #fff;
-  // background-color: transparent;
+  // background-color: #fff;
+  background-color: transparent;
 }
 .topbar-fixed{
   border-bottom: 0;

@@ -113,14 +113,22 @@
         v-show="!isClose&&!isOffline"
         class="optionbox">
         <div class="option1">
-          <div>
+          <div class="check">
             <span>风速</span>
-            <span 
-              class="check" 
-            >手动
-            </span>
+            <div 
+              class="checkBox">
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']" 
+                @click="setSpeed('low')">1档</div>
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']" 
+                @click="setSpeed('normal')">2档</div>
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']" 
+                @click="setSpeed('high')">3档</div>
+            </div>
           </div>
-          <div 
+          <!-- <div 
             v-show="typeVal!=='auto'" 
             class="range">
             <input
@@ -132,7 +140,7 @@
               @touchmove="changeSpeedStyle"
               @touchend="changeSpeed">
             <p :class="['rang_width']"/>
-          </div>
+          </div> -->
         </div>
       </div>
       <!--选择模式-->
@@ -239,20 +247,20 @@ export default {
     },
   },
   watch: {
-    "deviceAttrs.speed"() {
-      if(this.deviceAttrs.speed == 'low') {
-        this.brightnessValue = 1
-        this.setRangWidth(31)
-      }
-      if(this.deviceAttrs.speed == 'normal') {
-        this.brightnessValue = 2
-        this.setRangWidth(62)
-      }
-      if(this.deviceAttrs.speed == 'high') {
-        this.brightnessValue = 3
-        this.setRangWidth(93)
-      }
-    }
+    // "deviceAttrs.speed"() {
+    //   if(this.deviceAttrs.speed == 'low') {
+    //     this.brightnessValue = 1
+    //     this.setRangWidth(31)
+    //   }
+    //   if(this.deviceAttrs.speed == 'normal') {
+    //     this.brightnessValue = 2
+    //     this.setRangWidth(62)
+    //   }
+    //   if(this.deviceAttrs.speed == 'high') {
+    //     this.brightnessValue = 3
+    //     this.setRangWidth(93)
+    //   }
+    // }
   },
   created() {
     HdSmart.ready(() => {
@@ -283,55 +291,55 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    setRangWidth(val) {
-      document.querySelector('.rang_width').style.width = val+"%"
-    },
+    // setRangWidth(val) {
+    //   document.querySelector('.rang_width').style.width = val+"%"
+    // },
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return
       this.controlDevice('switch',val)
     },
     // range调风速样式
-    changeSpeedStyle(e) {
-      var max = e.target.getAttribute("max")
-      var width = (93 / max * e.target.value) +"%"
-      document.querySelector('.rang_width').style.width = width
-    },
-    // range调风速
-    changeSpeed(e) {
-      if(e.target.value == 0) {
-        this.rangeColor = true
-      } else {
-        this.rangeColor = false
-      }
-      this.brightness = e.target.value
-      console.log(e.target.value,'我在这里')
+    // changeSpeedStyle(e) {
+    //   var max = e.target.getAttribute("max")
+    //   var width = (93 / max * e.target.value) +"%"
+    //   document.querySelector('.rang_width').style.width = width
+    // },
+    // // range调风速
+    // changeSpeed(e) {
+    //   if(e.target.value == 0) {
+    //     this.rangeColor = true
+    //   } else {
+    //     this.rangeColor = false
+    //   }
+    //   this.brightness = e.target.value
+    //   console.log(e.target.value,'我在这里')
 
-      if (this.brightness=='1') {
-        this.controlDevice('speed','low')
-      }
-      if (this.brightness=='2') {
-        this.controlDevice('speed','normal')
-      }
-      if (this.brightness=='3') {
-        this.controlDevice('speed','high')
-      }
-    },
+    //   if (this.brightness=='1') {
+    //     this.controlDevice('speed','low')
+    //   }
+    //   if (this.brightness=='2') {
+    //     this.controlDevice('speed','normal')
+    //   }
+    //   if (this.brightness=='3') {
+    //     this.controlDevice('speed','high')
+    //   }
+    // },
     // 设置模式
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose) return
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
-          if (this.deviceAttrs.speed=='low') {
-            this.setRangWidth(31)
-          }
-          if (this.deviceAttrs.speed=='normal') {
-            this.setRangWidth(62)
-          }
-          if (this.deviceAttrs.speed=='high') {
-            this.setRangWidth(93)
-          }
+          // if (this.deviceAttrs.speed=='low') {
+          //   this.setRangWidth(31)
+          // }
+          // if (this.deviceAttrs.speed=='normal') {
+          //   this.setRangWidth(62)
+          // }
+          // if (this.deviceAttrs.speed=='high') {
+          //   this.setRangWidth(93)
+          // }
           this.reset()
           this.hide()
         })
@@ -383,43 +391,43 @@ export default {
         })
     },
     // 设置摆风
-    setWind(attr) {
-      if (this.isClose) return
-      if (attr=='wind_up') {
-        this.controlDevice('wind_up','on',{'wind_down':'off'})
-                  .then(() =>{
-            this.hide()
-          })
-      }
-      if (attr=='wind_down') {
-         this.controlDevice('wind_down','on',{'wind_up':'off'})
-                   .then(() =>{
-            this.hide()
-          })
-      }
-      if (this.deviceAttrs.wind_up=='on') {
-         if (attr=='wind_up') {
-           this.controlDevice('wind_up','off')
-            .then(() =>{
-              this.hide()
-            })
-         }
-      }
-       if (this.deviceAttrs.wind_down=='on') {
-         if (attr=='wind_down') {
-           this.controlDevice('wind_down','off')
-            .then(() =>{
-              this.hide()
-            })
-         }
-      }
-    },
+    // setWind(attr) {
+    //   if (this.isClose) return
+    //   if (attr=='wind_up') {
+    //     this.controlDevice('wind_up','on',{'wind_down':'off'})
+    //               .then(() =>{
+    //         this.hide()
+    //       })
+    //   }
+    //   if (attr=='wind_down') {
+    //      this.controlDevice('wind_down','on',{'wind_up':'off'})
+    //                .then(() =>{
+    //         this.hide()
+    //       })
+    //   }
+    //   if (this.deviceAttrs.wind_up=='on') {
+    //      if (attr=='wind_up') {
+    //        this.controlDevice('wind_up','off')
+    //         .then(() =>{
+    //           this.hide()
+    //         })
+    //      }
+    //   }
+    //    if (this.deviceAttrs.wind_down=='on') {
+    //      if (attr=='wind_down') {
+    //        this.controlDevice('wind_down','off')
+    //         .then(() =>{
+    //           this.hide()
+    //         })
+    //      }
+    //   }
+    // },
     // 设置风速
     setSpeed(speed) {
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
-          this.setRangWidth(93)
+          // this.setRangWidth(93)
         })
     },
     controlDevice(attr, value,param) {
@@ -465,6 +473,9 @@ export default {
 
     getProgress() {
       // 计算温度进度条
+      if (this.deviceAttrs.temperature > MAX_TEMP) {
+        return 70 /(30 - 19) * (MAX_TEMP / 10 - 19)
+      }
       if (this.deviceAttrs.mode=='heat') {
         return 70 /(30 - 17) * (this.deviceAttrs.temperature / 10 - 17)
       }else{
@@ -839,6 +850,7 @@ export default {
            &.check{
             display: flex;
             align-items: center;
+            justify-content: space-between;
             >img{
               width: 32px;
             }
@@ -849,7 +861,7 @@ export default {
     .option1{
       padding: 0 40px;
       border-top: 1px solid rgba(0, 0, 0, 0.1);
-      >div{
+      .check{
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -859,18 +871,31 @@ export default {
           display: inline-block;
           line-height: 120px;
           height: 120px;
-          &:last-of-type{
-            color: rgba(0, 0, 0, 0.5);
-          }
-           &.check{
+          font-size: 32px;
+          color: #000;
+        }
+        .checkBox{
             display: flex;
             align-items: center;
-            >img{
-              width: 32px;
+            justify-content: space-between;
+            .speedBtn{
+              width: 120px;
+              height: 64px;
+              border: 1px solid #000;
+              text-align: center;
+              line-height: 64px;
+              font-family: PingFangSC-Light;
+              font-size: 24px;
+              margin-right: 20px;
+              &:last-of-type{
+                margin-right: 0px;
+              }
+              &.active{
+                background-color: #000;
+                color: #fff;
+              }
             }
           }
-        }
-
       }
       input[type="range"] {
         display: block;

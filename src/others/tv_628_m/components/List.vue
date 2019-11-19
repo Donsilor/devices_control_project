@@ -167,7 +167,7 @@
 
 <style lang="less" scoped>
 .page-list{
- background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
     background-size: 100% 100%;
     background-attachment: fixed;
     min-height: 100%;
@@ -181,7 +181,7 @@
 .filters {
   padding: 28px 28px 12px;
   // background: rgba(255, 255, 255, 0.98);
-  background: rgba(255, 255, 255, 1);
+  // background: rgba(255, 255, 255, 1);
   /**box-shadow: inset 0 -1px 0 0 #dbdbdb;**/
   position: fixed;
   left: 0;
@@ -214,8 +214,10 @@
     // }
     .text{
       display: block;
-      width: 56px;
+      width: auto;
       height: 40px;
+      font-size: 28px;
+      padding-right: 16px;
     }
     .arrow{
       display: block;
@@ -270,7 +272,7 @@
   margin: 0 25px;
 }
 .vlist {
-  padding-top: 36px;
+  padding-top: 10PX;
   display: flex;
   flex-wrap: wrap;
   // align-content: space-between;
@@ -515,7 +517,8 @@ export default {
       loadState: "",
       error: false,
       isFirstLoad: true,
-      filterVisible: true
+      filterVisible: true,
+      time:null
       //filterToggleClicked: false
     }
   },
@@ -536,47 +539,55 @@ export default {
     }
   },
   mounted() {
-    setTimeout(()=>{
-        window.scrollTo(0,1)
-    },300)
-    let topbar = document.querySelectorAll('.topbar')[0]
-    console.log(topbar.offsetHeight,'sss')
-    console.log( this.$refs.filters,'222')
-    this.$refs.filters.style.top = topbar.offsetHeight +"px"
-    service.RemoteController({ 'show': true })
-    this.onPageInit()
-    this.$Lazyload.$on("error", function({ el, src, loading }) {
-      el.src = el.dataset.src1
-      el.onerror = function() {
-        el.src = loading
-        el.onerror = null
-      }
-    })
-    window.addEventListener("scroll", this.loadMore)
-    addEventListener("scroll", ()=>{
-      var scrollTop =
-        document.documentElement.scrollTop ||
-        window.pageYOffset ||
-        document.body.scrollTop
-      if(this.a - scrollTop<130&&this.a - scrollTop>-130) return
-
-      this.a = scrollTop
-    
-      if(scrollTop>=200){
-        this.filterVisible = false
-      }else{
-        this.filterVisible = true
-      }
-    })
-    // filters
-    
+    this.init()
+         console.log('mounted',1111111111111111111111111111111)
+        setTimeout(()=>{
+            window.scrollTo(0,1)
+        },300)
+           
+        let topbar = document.querySelector('.topbar2')
+        console.log(topbar.offsetHeight,'topbar.offsetHeight')
+        
+        this.$refs.filters.style.top = topbar.offsetHeight +"px"
+        service.RemoteController({ 'show': true })
+        this.onPageInit()
+        this.$Lazyload.$on("error", function({ el, src, loading }) {
+          el.src = el.dataset.src1
+          el.onerror = function() {
+            el.src = loading
+            el.onerror = null
+          }
+        })
   },
   destroyed() {
+    console.log('destroy')
     window.removeEventListener("scroll", this.loadMore)
+    removeEventListener("scroll", this.scrollfn)
   },
+  activated(){  
+      this.init()
+      console.log('activated')
+      
+  },
+  deactivated(){
+       window.removeEventListener("scroll", this.loadMore)
+    removeEventListener("scroll", this.scrollfn)
+  },
+ 
   //在页面离开时记录滚动位置
   beforeRouteLeave(to, from, next) {
     this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    console.log(to,from,next)
+    if(to.name==='detail'){
+      if(!from.meta.keepAlive){
+          from.meta.keepAlive=true//当我们进入到detail时开启list的缓存
+      }
+      next()
+      }else{
+          from.meta.keepAlive=false
+          this.$destroy()//销毁B的实例
+          next()//当我们前进的不是detail时我们让list页面刷新
+      }
     next()
   },
   //进入该页面时，用之前保存的滚动位置赋值
@@ -586,10 +597,41 @@ export default {
     })
   },
   methods: {
+    init(){
+
+        window.addEventListener("scroll", this.loadMore)
+        addEventListener("scroll", this.scrollfn)
+        // filters
+    },
+    scrollfn(){
+         var scrollTop =
+        document.documentElement.scrollTop ||
+        window.pageYOffset ||
+        document.body.scrollTop
+      // if(this.a - scrollTop<130&&this.a - scrollTop>-130) return
+      // this.a = scrollTop
+      let topbar_fixed = document.querySelector('.topbar-fixed')
+      if(scrollTop>=10){
+        this.$refs.filters.style.background = '#fff'
+        topbar_fixed.style.background = '#fff'
+        this.filterVisible = false
+      }else{
+        this.filterVisible = true
+         this.$refs.filters.style.background = ''
+        topbar_fixed.style.background = ''
+      }
+    },
     toggleFilter() {
       this.filterVisible = !this.filterVisible
       window.removeEventListener("scroll", this.loadMore)
-      window.addEventListener("scroll", this.loadMore)
+      removeEventListener("scroll", this.scrollfn)
+      clearTimeout(this.time)
+      this.time = setTimeout(()=>{
+        window.addEventListener("scroll", this.loadMore)
+        addEventListener("scroll", this.scrollfn)
+      },300)
+      console.log(this.time)
+     
 
       // var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
       // scrollTop += this.filterVisible ? 132 : -132
@@ -667,7 +709,17 @@ export default {
     }, 300),
     showDetailInfo(item) {
       this.$store.dispatch("showDetail", item)
-      window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
+      // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
+
+      this.$router.push({
+         path:"/detail",
+         query:{
+           channelId:item.channelId,
+           vid:item.vid,
+           ispay:item.ispay,
+           showBar:1
+         }
+       })
     },
     getUpdateSet(count, last) {
       if (!count || !last || count == "0" || last == "0") {

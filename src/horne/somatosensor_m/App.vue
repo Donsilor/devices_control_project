@@ -9,7 +9,7 @@
       <div class="top">
         <div class="node">
           <div>今日记录次数</div>
-          <div class="num">{{ todayNum.result.list.length }}</div>
+          <div class="num">{{ todayNum.result.total }}</div>
         </div>
         <div class="status">{{ lockStatus=='1'?'布防中...':'撤防中...' }}</div>
         <!-- 按钮 -->
@@ -54,7 +54,8 @@ export default {
       // 今日记录次数
       todayNum:{
         result: {
-          list: []
+          // list: []
+          total:""
         }
       },
       // 时间记录

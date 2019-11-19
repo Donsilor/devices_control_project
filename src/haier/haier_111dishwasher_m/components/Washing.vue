@@ -9,17 +9,20 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!-- 洗涤中 -->
       <div
-        v-show="deviceAttrs.operation_mode!=='end'" 
-        class="working">
-        <div class="time">{{ deviceAttrs.remain_washtime | work_time }}</div>
+        v-if="deviceAttrs.operation_mode!=='end'"
+        ref="working" 
+        class="working opacity1">
+        <div class="minute">剩余时间(分钟)</div>
+        <div class="time">{{ deviceAttrs.remaining }}</div>
         <div
           v-show="deviceAttrs.control=='halt'"
           class="progress">
-          <span>洗涤</span>
+          {{ workStatus }}
+          <!-- <span>洗涤</span>
           <span :class="[{'ongoing':deviceAttrs.operation_mode=='rinse_inflow'||deviceAttrs.operation_mode=='rinse_cold'||deviceAttrs.operation_mode=='rinse_drainage'||deviceAttrs.operation_mode=='rinse_warm'||deviceAttrs.operation_mode=='drying'},'isgray']"> —— 漂洗</span>
-          <span :class="[{'black':deviceAttrs.operation_mode=='drying'},'isgray']"> —— 烘干</span>
+          <span :class="[{'black':deviceAttrs.operation_mode=='drying'},'isgray']"> —— 烘干</span> -->
         </div>
-        <div class="status">{{ deviceAttrs.control=='halt'?'已暂停':'洗涤中' }}</div>
+        <div class="status">{{ deviceAttrs.control=='halt'?'已暂停':workStatus }}</div>
       </div>
       <!-- 洗涤完成 -->
       <div 
@@ -33,8 +36,9 @@
       </div>
       <!-- 底部按钮 -->
       <div
-        v-if="deviceAttrs.operation_mode!=='end'"
-        class="panel-btn center">
+        v-if="deviceAttrs.operation_mode!=='end'" 
+        ref="btn"
+        class="panel-btn center opacity1">
         <!-- 洗涤页面按钮 -->
         <div
           v-if="deviceAttrs.control=='halt'"
@@ -53,6 +57,7 @@
         <div
           class="btn-wrap">
           <div
+            ref="start"
             :class="[{'active':deviceAttrs.control == 'start'},'btn-start btn center']"
             @click="setStart" />
           <div class="btn-name">{{ deviceAttrs.control=='start'?'暂停':'继续' }}</div>
@@ -78,7 +83,43 @@ export default {
     bakColor(){
       return this.isClose ? '#000' : '#fff'
     },
-
+    workStatus(){
+         /* eslint-disable no-unreachable */
+      switch (this.deviceAttrs.operation_mode) {
+        case 'pre_wash':
+          return '预洗'
+          break
+        case 'wash_inflow':
+          return '洗涤中'
+          break
+        case 'wash_warm':
+          return '洗涤中'
+          break
+        case'wash':
+          return '洗涤中'
+          break
+        case'wash_drainage':
+          return '洗涤中'
+          break
+        case'rinse_inflow':
+          return '漂洗中'
+          break
+        case'rinse_cold':
+          return '漂洗中'
+          break
+        case'rinse_drainage':
+          return '漂洗中'
+          break
+        case'rinse_warm':
+          return '漂洗中'
+          break
+        case'drying':
+          return '干燥中'
+          break
+        default:
+          return '洗涤中'
+      }
+    },
   },
   watch: {
     'device.stateChange'(){
@@ -91,6 +132,10 @@ export default {
         }
       })
     },
+  },
+  created(){
+    console.log('washing')
+    
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
@@ -137,7 +182,7 @@ export default {
       // alert('长按了')
       this.$nextTick(()=>{
         this.controlDevice('return_standby','on')
-          this.$router.push({ path: '/' })
+        this.$router.push({ path: '/' })
       })
     },
     // 洗涤完成
@@ -162,13 +207,29 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
 @imgPath1: 'base/dishwasher/assets';
+.hide{
+  animation: hide 1s linear;
+}
+@keyframes hide {
+  0%{opacity:1}
+  50%{opacity:.5;}
+  100%{opacity:0;}
+}
+.opacity1{
+  animation: show 1s linear;
+}
+@keyframes show {
+  0%{opacity:0}
+  50%{opacity:.5;}
+  100%{opacity:1;}
+}
 @keyframes progress-bar{
   0% {
-      transform: rotate(260deg);
+      transform: rotate(200deg);
       border: 3px solid transparent;
   }
   100% {
-      transform: rotate(358deg);
+      transform: rotate(318deg);
       border: 3px solid rgba(0, 0, 0, 1);
   }
 }
@@ -268,6 +329,14 @@ export default {
   }
   .working{
     margin-top: 20vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    .minute{
+      font-size: 24px;
+      color: rgba(0, 0, 0, 0.5);
+      margin-bottom:12px;
+    }
     .time{
       width: 100%;
       font-size: 146px;
@@ -369,19 +438,27 @@ export default {
     margin: 0 34px 40px;
     position: relative;
     .progressBar {
+      top: -60px;
+      height: 50px;
+      position: absolute;
+      width: 240px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      overflow: hidden;
       &::before{
         content: "";
         display: block;
-        width: 200px;
-        height: 200px;
+        width: 240px;
+        height:240px;
         border-radius: 50%;
         position: absolute;
-        top: -30px;
-        left: -23%;
+        // top: -30px;
+        // left: -23%;
         // transform: translateX(-50%) rotate(260deg);
         border: 3px solid rgba(0, 0, 0, 1);
-        clip: rect(0px 200px 40px 0px);
-        animation: progress-bar 1s linear infinite;
+        clip: rect(-60px 300px 140px -60px);
+        animation: progress-bar 1s linear;
       }
     }
     .mask {
@@ -400,18 +477,25 @@ export default {
       }
     }
       .press{
+        top: -60px;
+        height: 50px;
+        position: absolute;
+        width: 240px;
+        overflow: hidden;
+             left: 50%;
+      transform: translateX(-50%);
         &::before{
           content: "";
           display: block;
-          width: 200px;
-          height: 200px;
+          width:240px;
+          height: 240px;
           border-radius: 50%;
           position: absolute;
-          top: -30px;
-          left: 50%;
-          transform: translateX(-50%);
+          // top: -30px;
+          // left: 50%;
+          // transform: translateX(-50%);
           border: 3px solid rgba(136, 138, 137, 0.8);
-          clip: rect(0px 200px 40px 0px);
+          // clip: rect(0px 200px 40px 0px);
         }
       }
     .btn {

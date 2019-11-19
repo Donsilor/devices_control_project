@@ -4,9 +4,9 @@
       选中值为：<span>{{ selectedValue }}</span>
     </div> -->
     <div class="wrap-box">
-      <!-- <div 
-        :style="{ top: 1.5 +'rem' }" 
-        class="noplay"/> -->
+      <div class="border"/>
+      <div class="opacity"/>
+      <div class="opacity1"/>
       <div class="box">
         <ul 
           :style="{ top: hTop+0.85 +'rem' }" 
@@ -21,8 +21,8 @@
             :class="{'current-pre': hIndex!==idx,
                      'current':hIndex===idx}">{{ +idx > 9 ? idx : '0' + idx }}</li>
         </ul>
+        <div class="time">小时</div>
       </div>
-      <div class="unit">小时</div>
       <div class="box">
         <ul 
           :style="{ top: mTop+0.85 +'rem' }" 
@@ -35,10 +35,10 @@
             v-for="(it, idx) in dataList.minute"
             :key="idx"
             :class="{'current-pre': mIndex!==idx,
-                     'current':mIndex===idx}">{{ +idx > 9 ? idx : '0' + idx }}</li>
+                     'current':mIndex===idx}">{{ it == 1 ? '00': '30' }}</li>
         </ul>
+        <div class="time1">分钟</div>
       </div>
-      <div class="unit">分钟</div>
     </div>
   </div>
 </template>
@@ -51,7 +51,7 @@
         liheight: 50,
         dataList: {
           hours: 24,
-          minute: 60,
+          minute: 2,
         },
 
         hIndex: 0, // 小时选中下标
@@ -154,23 +154,52 @@
     align-items: center;
     justify-content: center;
   }
-  // .noplay{
+  .border{
+    // position: fixed;
+    position: absolute;
+    border: 1px solid rgba(.0, .0, .0, .05);
+    width: 88%;
+    height: 113px;
+    border-right: none;
+    border-left: none;
+  }
+  // .opacity,.opacity1{
+  //   opacity: 0.5;
+  //   width: 100%;
+  //   height: 60px;
   //   position: absolute;
-  //   border: 1px solid rgba(.0, .0, .0, .1);
-  //   border-right: none;
-  //   border-left: none;
-  //   width: 80%;
-  //   height: 114px;
+  //   border: 1px solid rgba(.0, .0, .0, 1);
+  // }
+  // .opacity{
+  //   top: -18px;
+  // }
+  // .opacity1{
+  //   bottom: -18px;
   // }
   .box {
-    flex: 1;
+    // flex: 1;
     // height: 260px;
     height: 380px;
     overflow: hidden;
     position: relative;
+    .time{
+      position: fixed;
+      bottom: 312px;
+      left: 206px;
+      font-size: 24px;
+      color: #000;
+    }
+    .time1{
+      position: fixed;
+      bottom: 312px;
+      right: 206px;
+      font-size: 24px;
+      color: #000;
+    }
     .list {
       position: relative;
       flex: 1;
+      margin: 0 120px;
       text-align: center;
     }
     
@@ -178,27 +207,25 @@
       box-sizing: border-box;
       user-select: none;
       transform-origin: center center;
-      font-size: 32px;
-      color: #888;
     }
     /*滚动样式*/
     
     li.current {
       font-size: 40px;
-      color: #FFC600;
+      color: #E1B96E;
       height: 114px;
       line-height: 114px;
       transform: translateZ(0px) rotateX(0deg);
-      // border-top: 1px solid rgba(.0, .0, .0, .1);
-      // border-bottom: 1px solid rgba(.0, .0, .0, .1)
+      font-family: PingFangSC-Medium;
     }
     li.current-pre{
       // background-image: linear-gradient(-180deg, rgba(55,62,65,0.00) 0%, #373E41 100%);
       border-radius: 0px;
-
       height: 70px;
       line-height: 70px;
-      color: #888;
+      color: #808080;
+      font-family: PingFangSC-Regular;
+      font-size: 32px;
       transform: translateZ(-20px) rotateX(40deg);
     }
     li.up-pre{

@@ -7,22 +7,22 @@
     <div class="main">
       <div class="overtime">
         <span class="title">{{ title }}</span>
-        <span 
-          v-show="title!=='设置延时断电'"
-          class="canceltime" 
+        <span
+          v-show="title!='设置延时断电' & title!='设置延时通电'"
+          class="canceltime"
           @click="canceltime">取消定时</span>
       </div>
-      <time-pick 
+      <time-pick
         class="pickTime"
         @selectedchange="selectedchange" />
 
       <div class="wrap-btns">
-        <button 
-          class="submit" 
+        <button
+          class="submit"
           type="button"
           @click="submit" >确定</button>
-        <div 
-          class="cancel" 
+        <div
+          class="cancel"
           @click=" show = false">取消</div>
       </div>
     </div>
@@ -118,7 +118,7 @@ export default {
     },
     // switchStatus:{type: String}
   },
-  
+
   data() {
     return {
       show: false,
@@ -131,7 +131,7 @@ export default {
     selectedchange(val) {
       this.time = val
     },
-    submit() { 
+    submit() {
       let val = [this.time || '0:0', 'time']
       this.$emit('selectedTime', val) //自定义事件，暴露值
       this.time = '0:0'

@@ -9,7 +9,7 @@
       <div
         class="main center"
         style="margin-top:52px">
-        <div class="bg"><div class="circle"><div class="status">{{ deviceAttrs.switch=='open'?'通电中':'断电中' }}</div></div></div>
+        <div class="bg"><div class="circle"><div class="status">{{ this.switch=='open'?'通电中':'断电中' }}</div></div></div>
       </div>
       <div
         v-show="deviceAttrs.countdownClose>0"
@@ -20,15 +20,22 @@
         <div
           class="btn-wrap"
           @click="setSwitch">
-          <div :class="[{ 'btn-source': deviceAttrs.switch == 'close' },{ 'btn-over': deviceAttrs.switch == 'open' } ,'btn btn-source center']" />
-          <div class="btn-name">{{ deviceAttrs.switch=='open'?'断电':'通电' }}</div>
+          <div :class="[{ 'btn-source': this.switch == 'close' },{ 'btn-over': this.switch == 'open' } ,'btn btn-source center']" />
+          <div class="btn-name">{{ this.switch=='open'?'断电':'通电' }}</div>
         </div>
         <div
-          v-if="deviceAttrs.countdownClose=='0'"
+          v-if="delayOpen.openEnable=='y' && this.switch == 'open'"
           class="btn-wrap"
           @click="showTime('设置延时断电')">
           <div :class="['btn btn-delay center']" />
           <div class="btn-name">延时断电</div>
+        </div>
+        <div
+          v-else-if="delayClose.closeEnable=='y' && this.switch == 'close'"
+          class="btn-wrap"
+          @click="showTime('设置延时通电')">
+          <div :class="['btn btn-delay center']" />
+          <div class="btn-name">延时通电</div>
         </div>
         <div
           v-else
@@ -53,7 +60,7 @@
         <div class="timing">
           <div>定时</div>
           <div
-            v-if="deviceAttrs.switch=='open'"
+            v-if="this.switch=='open'"
             class="timing-right"
             @click="showTime('设置关机时间')">{{ deviceAttrs.closeTime | closeTime }}＞ </div>
           <div
@@ -64,7 +71,8 @@
         <div class="Charging-protection">
           <div>充电保护</div>
           <div><input
-            :checked="deviceAttrs.ovp=='open'"
+            :checked="ovp"
+            :disabled="ovpDisabled"
             class="switch switch-anim"
             type="checkbox"
             @click="lock"></div>
@@ -74,7 +82,6 @@
       <SelectTime
         ref="time"
         :title="title"
-        :switch-status="deviceAttrs.switch"
         @selectedTime="setReserve"
         @canceltime="canceltime" />
     </div>
@@ -95,14 +102,23 @@ export default {
       timeOutEvent:'',
       a:"",
       currentMode:'normal',
-      title:""
+      title:"",
+      ovp: false,
+      ovpDisabled: false,
+      switch: 'close',
+      delayClose: {
+        closeEnable: 'y'
+      },
+      delayOpen: {
+        openEnable: 'y'
+      },
     }
   },
   computed: {
     ...mapGetters(['isOffline']),
     ...mapState(['device', 'deviceAttrs']),
     isClose(){
-      return this.deviceAttrs.switch=='close'?true:false
+      return this.switch=='close'?true:false
     },
     bakColor(){
       return this.isClose ? '#000' : '#fff'
@@ -114,6 +130,30 @@ export default {
       this.$nextTick(()=>{
         //  this.newRatio()
       })
+    },
+    'deviceAttrs.ovp'() {
+      this.ovpDisabled = false
+      if(this.deviceAttrs.ovp == 'open') {
+        this.ovp = true
+      }
+      if(this.deviceAttrs.ovp == 'close') {
+        this.ovp = false
+      }
+    },
+    'deviceAttrs.switch'() {
+      if(this.deviceAttrs.switch == 'open') {
+        this.switch = 'open'
+      }
+      if(this.deviceAttrs.switch == 'close') {
+        this.switch = 'close'
+      }
+
+      if(this.deviceAttrs.delayClose) {
+        this.delayClose = this.deviceAttrs.delayClose
+      }
+      if(this.deviceAttrs.delayOpen) {
+        this.delayOpen = this.deviceAttrs.delayOpen
+      }
     },
   },
   created() {
@@ -130,31 +170,50 @@ export default {
     // 开关机
     setSwitch(){
       if (this.isOffline) return
-      let switchStatus = ''
-      if (this.deviceAttrs.switch=='close') {
-        switchStatus = 'open'
+      let switchStatus = {}
+      if (this.switch=='close') {
+        switchStatus = {
+          "switch": "open"
+        }
       }else{
-        switchStatus = 'close'
+        switchStatus = {
+          "switch": "close"
+        }
       }
       this.controlDevice('switch',switchStatus)
+      .then((res) => {
+        if(res.code == 0) {
+          if(switchStatus == 'open') {
+            this.switch = 'open'
+          }
+          if(switchStatus == 'close') {
+            this.switch = 'close'
+          }
+        } else {
+          HdSmart.UI.toast('操作失败')
+        }
+      })
+      .catch(() => {
+        HdSmart.UI.toast('操作失败')
+      })
     },
     // tab切换
     tabMode(t){
       this.temp = t
     },
     // 长按事件
-    touchStart(e){
+    touchStart(){
       // console.log(e)
       this.timeOutEvent=setTimeout(() => {
         this.longPress()
       }, 1000)
     },
     //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
-    touchMove(e){
+    touchMove(){
       clearTimeout(this.timeOutEvent)
       this.timeOutEvent=0
     },
-    touchEnd(e){
+    touchEnd(){
       clearTimeout(this.timeOutEvent)//清除定时器
       this.timeOutEvent=0
       if(this.timeOutEvent!=0){
@@ -169,37 +228,67 @@ export default {
       // alert('长按了')
       this.$nextTick(()=>{
         // 删除延时
-        // let obj = {
-        //   remove_delay_task: {
-        //     encrptionFlag: '1001'
-        //   }
-        // }
-        // this.controlDevice('remove_time',true, obj)
-        this.controlDevice('countdownClose',0)
+        let obj = {
+          "remove_delay_task": {
+            "encrptionFlag": "1000"
+          }
+        }
+        this.controlDevice('remove_time', obj)
+        // this.controlDevice('countdownClose',0)
       })
     },
-    controlDevice(attr, value,params) {
+    // controlDevice(attr, value,params) {
+    //   return this.doControlDevice({
+    //     nodeid: `kongke_plug.main.${attr}`,
+    //     params: {
+    //       attribute: {
+    //         [attr]: value,
+    //         ...params
+    //       }
+    //     }
+    //   })
+    // },
+    controlDevice(attr, params) {
       return this.doControlDevice({
         nodeid: `kongke_plug.main.${attr}`,
         params: {
           attribute: {
-            [attr]: value,
             ...params
           }
         }
       })
     },
     lock(e) {
-      console.log(this.isClose)
-       if (this.isClose) return
+      if (this.isClose) return
+      this.ovpDisabled = true
       let ovp = ''
       if(e.target.checked){
-          ovp = 'open'
+          ovp = {
+            "ovp": "open"
+          }
       }else{
-          ovp = 'close'
+          ovp = {
+            "ovp": "close"
+          }
       }
        this.controlDevice('ovp',ovp)
-      // console.log(e.target.checked)
+       .then((res) => {
+         if(res.code == 0) {
+           if(ovp == 'open') {
+             this.ovp = true
+           }
+           if(ovp == 'close') {
+             this.ovp = false
+           }
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+         this.ovpDisabled = false
+       })
+       .catch(() => {
+         this.ovpDisabled = false
+         HdSmart.UI.toast('操作失败')
+       })
     },
     showTime(v) {
       console.log('我进来了')
@@ -213,61 +302,79 @@ export default {
       let h = parseInt(time[0].split(':')[0])
       let m = parseInt(time[0].split(':')[1])
       if(this.title=='设置延时断电'){
-        if(this.deviceAttrs.switch === 'open'){
+        if(this.switch === 'open'){
+          //延时关
           let obj = {
-            set_delay_task: {
-              openEnable: false,
-              countdownClose: h*60+m,
-              closeEnable: true,
-              countdownOpen: 0,
-              repeat: '1',
-              encrptionFlag: '1001'
+            "set_delay_task": {
+              "openEnable": "false",
+              "countdownOpen": h*60+m+'',
+              "closeEnable": "true",
+              "countdownClose": h*60+m+'',
+              "repeat": 1,
+              "encrptionFlag": '1000'
             }
           }
-          this.controlDevice('countdownClose',h*60+m, obj)
+          this.controlDevice('countdownClose', obj)
+        } else {
+          //延时开
+          let obj = {
+            "set_delay_task": {
+              "openEnable": "true",
+              "countdownOpen": h*60+m+'',
+              "closeEnable": "false",
+              "countdownClose": h*60+m+'',
+              "repeat": 1,
+              "encrptionFlag": '1000'
+            }
+          }
+          this.controlDevice('countdownClose', obj)
         }
 
       }else{
         let hours = h < 10 ? '0' + h : h
         let min = m < 10 ? '0' + m : m
-        let time = this.getDateTime(new Date()) + ' ' + hours + ':' + min + ':' + '00'
-        if(this.deviceAttrs.switch === 'close'){
+        let time = this.getDateTime(new Date()) + '-' + hours + ':' + min + ':' + '00'
+        if(this.switch === 'close'){
            // 定时开
           let obj1 = {
-            set_time_task: {
-              openEnable: true,
-              openTime: time,
-              repeat: "1",
-              timerId: "1 ",
-              encrptionFlag: '1001',
-              timerEnable: false
+            "set_time_task": {
+              "openEnable": "true",
+              "openTime": time,
+              "closeEnable": "false",
+              "closeTime": time,
+              "repeat": "0",
+              "timerId": "1",
+              "encrptionFlag": "1000",
+              "timerEnable": "true"
             }
           }
-          this.controlDevice('openTime',h*60+m, obj1)
+          this.controlDevice('openTime', obj1)
         }else{
           // 定时关
           let obj2 = {
-            set_time_task: {
-              closeEnable: true,
-              closeTime: time,
-              repeat: "1",
-              timerId: "1 ",
-              encrptionFlag: '1001',
-              timerEnable: false
+            "set_time_task": {
+              "openEnable": "false",
+              "openTime": time,
+              "closeEnable": "true",
+              "closeTime": time,
+              "repeat": "0",
+              "timerId": "1",
+              "encrptionFlag": "1000",
+              "timerEnable": "true"
             }
           }
-           this.controlDevice('closeTime',h*60+m, obj2)
+           this.controlDevice('closeTime', obj2)
         }
       }
     },
     // 取消定时
     canceltime(){
-       this.controlDevice('remove_time_task',
-         {
-           timerId: '1',
-		       encrptionFlag: '1001'
+       this.controlDevice('remove_time_task', {
+         "remove_time_task": {
+           "timerId": "1",
+           "encrptionFlag" : "1000"
          }
-    )
+       })
     },
     getDateTime(date, type) {
       // 时间格式获取
@@ -326,7 +433,7 @@ export default {
   min-height: 550px;
   overflow-x: hidden;
   position: relative;
-  background-image: url('~@lib/@{imgPath}/bg_01@2x.png');
+  background-image: url('~@lib/@{imgPath}/bg_img@2x.png');
   background-size: 100% 100%;
   .switch {
     width: 74px;
