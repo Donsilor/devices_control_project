@@ -75,7 +75,7 @@
       </div>
       <!-- 洗涤中 -->
       <div
-        v-show="deviceAttrs.operation_mode!=='end'&&deviceAttrs.operation_mode!=='standby'&&deviceAttrs.operation_mode!=='ordering'"
+        v-show="!isClose&&deviceAttrs.operation_mode!=='end'&&deviceAttrs.operation_mode!=='standby'&&deviceAttrs.operation_mode!=='ordering'"
         ref="working" 
         class="working opacity1">
         <div class="minute">剩余时间(分钟)</div>
@@ -89,7 +89,7 @@
       </div>
       <!-- 洗涤完成 -->
       <div 
-        v-show="deviceAttrs.operation_mode=='end'" 
+        v-show="!isClose&&deviceAttrs.operation_mode=='end'" 
         class="end">
         <div class="circle"/>
         <span>已完成洗涤</span>
@@ -148,6 +148,47 @@
 <script>
 import Swiper from 'swiper'
 import { mapGetters, mapState, mapActions } from 'vuex'
+
+/**
+ * 创建并返回一个像节流阀一样的函数，当重复调用函数的时候，最多每隔 wait毫秒调用一次该函数
+ * @param func 执行函数
+ * @param wait 时间间隔
+ * @param options 如果你想禁用第一次首先执行的话，传递{leading: false}，
+ *                如果你想禁用最后一次执行的话，传递{trailing: false}
+ * @returns {Function}
+ */
+function throttle(func, wait, options) {
+    var context, args, result
+    var timeout = null
+    var previous = 0
+    if (!options) options = {}
+    var later = function() {
+        previous = options.leading === false ? 0 : new Date().getTime()
+        timeout = null
+        result = func.apply(context, args)
+        if (!timeout) context = args = null
+    }
+    var wait = wait || 1000
+    return function() {
+        var now = new Date().getTime()
+        if (!previous && options.leading === false) previous = now
+        var remaining = wait - (now - previous)
+        context = this
+        args = arguments
+        if (remaining <= 0 || remaining > wait) {
+            if (timeout) {
+                clearTimeout(timeout)
+                timeout = null
+            }
+            previous = now
+            result = func.apply(context, args)
+            if (!timeout) context = args = null
+        } else if (!timeout && options.trailing !== false) {
+            timeout = setTimeout(later, remaining)
+        }
+        return result
+    }
+}
 export default {
   data() {
     return {
@@ -402,7 +443,7 @@ export default {
       this.temp = t
     },
     // 启动
-    setStart() {
+    setStart: throttle(function() {
       let controlStatus = ''
       if (this.deviceAttrs.control == 'start') {
         controlStatus = 'halt'
@@ -429,9 +470,9 @@ export default {
         return
       }
       this.controlDevice("control",controlStatus )
-    },
+    }),
     // 暂停继续
-    setStart1(){
+    setStart1:throttle(function(){
       let controlStatus1 = ''
       if (this.deviceAttrs.control == 'start') {
         controlStatus1 = 'halt'
@@ -439,7 +480,7 @@ export default {
         controlStatus1 = 'start'
       }
       this.controlDevice("control",controlStatus1 )
-    },
+    }),
     // 长按事件
     touchStart(e){
       console.log(e)
