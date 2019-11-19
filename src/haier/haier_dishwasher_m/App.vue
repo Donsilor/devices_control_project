@@ -351,14 +351,18 @@ export default {
     'device.stateChange'(){
       this.$nextTick(()=>{
         //  this.newRatio()
+        // console.log(this.$refs.main,'2222222222222222')
+        if (this.deviceAttrs.operation_mode=='standby') {
+          this.$refs.main.classList.remove('opacity')
+        }
       })
     },
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
-      .then(()=>{
-
+      this.$nextTick(()=>{
+        this.$refs.main.classList.remove('opacity')
       })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -419,14 +423,15 @@ export default {
             value = arr[i].english
           }
         }
-        this.controlDevice("mode",value,{'control':controlStatus})
+        this.controlDevice("mode",value,{'control':controlStatus}).then(()=>{
+          this.$refs.main.classList.remove('opacity')
+        })
         return
       }
       this.controlDevice("control",controlStatus )
     },
     // 暂停继续
     setStart1(){
-      this.$refs.main.classList.remove('opacity')
       let controlStatus1 = ''
       if (this.deviceAttrs.control == 'start') {
         controlStatus1 = 'halt'
