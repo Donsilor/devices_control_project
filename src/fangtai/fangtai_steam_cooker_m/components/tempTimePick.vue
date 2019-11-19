@@ -17,12 +17,26 @@
       },
       data() {
         return {
-          time: '100:00:30'
+          time: '70:00:30'
         }
+      },
+      created() {
+
       },
       methods: {
         selectedchange(val) {
           this.time = val
+        }
+      },
+      watch: {
+        activeMode(val) {
+          if (val === 0) {
+            this.time = '70:00:30'
+          } else if (val === 1) {
+            this.time = '00:00:30'
+          } else if (val === 2) {
+            this.time = '10:00:30'
+          }
         }
       }
     }
