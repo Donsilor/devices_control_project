@@ -65,7 +65,7 @@
           :style="{ 'color': bakColor }"
           class="title">{{ title }}</div>
         <button
-          v-if="shutdown"
+          v-if="shutdown||3"
           ref="shutdown"
           :class="['header-bottom-right', styleName]"
           :disabled="(styleName && Object.keys(styleName).indexOf('no-work') > -1) ? true : false"
@@ -379,7 +379,7 @@ export default {
     justify-content: flex-start;
     align-items: center;
     p{
-        background: url('../base/img/tv_btn_close.png');
+        background: url('../base/img/btn_ac_close@2x.png');
         background-size: 100% 100%;
 
     }
@@ -389,7 +389,7 @@ export default {
       justify-content: center;
       align-items: center;
     p{
-      background: url('../base/img/tv_btn_setting.png');
+      background: url('../base/img/btn_ac_seting@2x.png');
         background-size: 100% 100%;
 
     }
@@ -448,7 +448,7 @@ export default {
    background: transparent;
   outline: none;
     .header-bottom-right-p{
-       background: url('~@lib/base/tv/assets/new/tv_btn_open.png');
+       background: url('~@lib/base/img/btn_ac_open@2x.png');
         background-size: 100% 100%;
         width: 24PX;
         height: 24PX;
