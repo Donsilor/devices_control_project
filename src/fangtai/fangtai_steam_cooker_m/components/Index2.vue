@@ -3,18 +3,27 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="true"
-        :class-name="opcityStyle"
+        :style-name="{'no-work': deviceAttrs.WorkState == 0 && deviceAttrs.WorkMode == 0}"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <!--模式-->
       <div class="main center">
         <ul class="mode">
-          <li v-for="(v, i) in modeList" :key="v.name" @click="activeMode = i" :class="[{'active': activeMode === i}]">{{v.name}}</li>
+          <li 
+            v-for="(v, i) in modeList" 
+            :key="v.name" 
+            :class="[{'active': activeMode === i}]" 
+            @click="changeMode(i)">{{ v.name }}</li>
         </ul>
         <!-- 时间选择器-->
-        <temp-time-pick style="width: 90%;" ref="tempTimePick"  v-if="activeMode != 3" :activeMode="activeMode"></temp-time-pick>
-        <div class="clear-dash" v-if="activeMode === 3">
+        <temp-time-pick 
+          v-show="activeMode != 3" 
+          ref="tempTimePick" 
+          :active-mode="activeMode" 
+          style="width: 90%;"/>
+        <div 
+          v-if="activeMode === 3" 
+          class="clear-dash">
           <div>
             <p class="clear-dash-time">1小时11分钟</p>
             <p class="clear-dash-text">除垢用时</p>
@@ -25,10 +34,12 @@
           </div>
         </div>
       </div>
-      <div style="position: relative;top: -20px;" v-if="activeMode != 3">
+      <div 
+        v-if="activeMode != 3" 
+        style="position: relative;top: -20px;">
         <ul class="tips">
-          <li>烹饪温度</li>
-          <li>烹饪时长</li>
+          <li>{{ activeMode === 0 || activeMode === 1 ? '烹饪温度' : '解冻温度' }}</li>
+          <li class="padl">{{ activeMode === 0 || activeMode === 1 ? '烹饪时长' : '解冻时长' }}</li>
         </ul>
       </div>
       <!--开机后按钮-->
@@ -36,19 +47,25 @@
         <ul>
           <li style="padding-top: 12px;">
             <div>
-              <p class="water-box btn-style" @click="openWaterBox"></p>
+              <p 
+                class="water-box btn-style" 
+                @click="openWaterBox"/>
               <p>开水箱</p>
             </div>
           </li>
           <li>
             <div>
-              <p class="start btn-style" @click="startWork"></p>
+              <p 
+                class="start btn-style" 
+                @click="startWork"/>
               <p>启动</p>
             </div>
           </li>
           <li style="padding-top: 12px;">
             <div>
-              <p :class="['light', 'btn-style', {'open-light': lightStatus}]" @click="light"></p>
+              <p 
+                :class="['light', {'btn-style': deviceAttrs.Light == 0}, {'open-light': deviceAttrs.Light == 1}]" 
+                @click="light"/>
               <p>照明</p>
             </div>
           </li>
@@ -67,7 +84,7 @@
     },
     data() {
       return {
-        opcityStyle: 'opcity-0',
+        opcityStyle: 'no-work',
         modeList: [
           {
             name: '普通蒸'
@@ -92,14 +109,36 @@
       ...mapState(['device', 'deviceAttrs'])
     },
     watch: {
-
+      'deviceAttrs'(val) {
+        console.log('首页上报接收中', (+new Date().getMinutes()) + 1 + ':' + (+new Date().getSeconds()) + 1)
+        console.log(val)
+      },
+      'deviceAttrs.PushRod'(val) {
+        if (val == 1) {
+          this.$router.push('/waterBoxOpen')
+        }
+      },
+      '$route'(val) {
+        if (val === '/') {
+          this.moveToPage()
+        }
+      },
+      'deviceAttrs.WorkState'(val) {
+        if (val == 2 || val == 4) {
+          this.$router.push({path: '/deviceStatus'})
+        } else if (val == 1) {
+          this.$router.push({path: '/devicePause'})
+        }
+      }
     },
     created() {
       HdSmart.ready(() => {
         this.getDeviceInfo()
           .then(() => {
-
+            console.log('获取设备信息成功')
+            this.moveToPage()
           })
+        HdSmart.UI.setStatusBarColor(2)
       })
     },
     mounted() {
@@ -125,14 +164,23 @@
       setRangWidth(val) {
         document.querySelector('.rang_width').style.width = val+"%"
       },
-      // 开关机
+      changeMode(index) {
+        this.activeMode = index
+      },
+      moveToPage() {
+        console.log('页面即将跳转')
+        if (this.deviceAttrs.WorkState == 4) {
+          this.$router.push('/deviceStatus')
+        } else if (this.deviceAttrs.WorkState == 1) {
+          this.$router.push('/devicePause')
+        } else if (this.deviceAttrs.WorkState == 2) {
+          this.$router.push('/deviceStatus')
+        }
+      },
+      // 关闭任务
       shutdowncallback(){
         if (this.isOffline) return
-        if (this.deviceAttrs.PowerSwitchAll === 2) {
-          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
-        } else if (this.deviceAttrs.PowerSwitchAll === 0) {
-          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
-        }
+        this.controlDevice('WorkState', {WorkState: 2})
       },
       controlDevice(attr, param={}) {
         return this.doControlDevice({
@@ -150,7 +198,11 @@
       },
       //启动
       startWork() {
-        if (!this.$refs['tempTimePick'].time) {
+        console.log('启动时间', this.$refs['tempTimePick'].time)
+        let time = this.$refs['tempTimePick'].time.split(':')
+        let hours = Math.floor(time[1])
+        let min = Math.floor(time[2])
+        if (this.activeMode != 3 && !hours && !min) {
           HdSmart.UI.toast('请设定时长')
           return
         }
@@ -159,7 +211,7 @@
           var [tempIndex, h, m] = data
           var temp = this.activeMode === 0 ? +tempIndex + 30 : this.activeMode === 1 ? +tempIndex + 110 : this.activeMode === 2 ? +tempIndex + 40 : this.activeMode === 3 ? +tempIndex + 110 : ''
         }
-        let mode = this.activeMode === 0 || this.activeMode === 1 ? 1 : this.activeMode === 2 ? 4 :this.activeMode === 3 ? 3 : ''
+        let mode = this.activeMode === 0 ? 1 : this.activeMode === 1 ? 2 : this.activeMode === 2 ? 4 :this.activeMode === 3 ? 3 : ''
         let obj = {
           WorkMode: mode,
           SetTemperature1: this.activeMode === 3 ? 110 : temp,
@@ -170,25 +222,32 @@
           this.$router.push({
             path: '/deviceStatus',
             query: {
-              preset: this.activeMode === 3 ? 110 : temp
+              preset: this.activeMode === 3 ? 110 : temp,
+              activeMode: this.activeMode
             }
           })
         })
-        this.$router.push({path: '/deviceStatus'})
+        // this.$router.push({path: '/deviceStatus'})
       },
       light() {
-        this.lightStatus = !this.lightStatus
-        if (this.lightStatus) {
-          this.controlDevice('Light', {Light: '1'})
-        } else {
-          this.controlDevice('Light', {Light: '0'})
-        }
+        // if (this.deviceAttrs.Light == 0) {
+        //   this.controlDevice('Light', {Light: 1}).then(res => {
+        //     console.log('light状态', this.deviceAttrs.Light)
+        //   })
+        // } else {
+        //   this.controlDevice('Light', {Light: 0}).then(res => {
+        //     console.log('light状态', this.deviceAttrs.Light)
+        //   })
+        // }
+        this.controlDevice('Light', {Light: 2})
       },
       openWaterBox() {
-        this.controlDevice('openWaterBox', {PushRod: '3'}).then(() => {
+        this.controlDevice('openWaterBox', {PushRod: 3}).then((res) => {
+          console.log('打印开水箱日志')
+          console.log(res)
           this.$router.push({path:'/waterBoxOpen'})
         })
-        this.$router.push({path:'/waterBoxOpen'})
+        //this.$router.push({path:'/waterBoxOpen'})
       }
     }
   }
@@ -290,7 +349,7 @@
         font-size: 32px;
         opacity: 0.8;
         &:first-of-type{
-          width: 37%;
+          // width: 37%;
           padding-left: 20px;
         }
       }
@@ -397,9 +456,11 @@
       .clear-dash-tips{
         font-size: 28px;
         text-align: center;
-        margin-top: 15vh;
+        margin-top: 11vh;
       }
     }
   }
-
+.padl{
+  padding-left: 170px;
+}
 </style>

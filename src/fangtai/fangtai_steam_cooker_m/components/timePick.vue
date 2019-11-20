@@ -4,7 +4,7 @@
       选中值为：<span>{{ selectedValue }}</span>
     </div> -->
     <div class="wrap-box">
-      <div class="box">
+      <div class="box box1">
         <ul
           :style="{ top: tTop+0.85 +'rem' }"
           class="list"
@@ -20,7 +20,7 @@
         </ul>
       </div>
       <div class="unit">°C</div>
-      <div class="box">
+      <div class="box box2">
         <ul
           :style="{ top: hTop+0.85 +'rem' }"
           class="list"
@@ -36,7 +36,7 @@
         </ul>
       </div>
       <div class="unit">小时</div>
-      <div class="box">
+      <div :class="['box', {'min-box': hIndex == 5}]">
         <ul
           :style="{ top: mTop+0.85 +'rem' }"
           class="list"
@@ -52,7 +52,7 @@
         </ul>
       </div>
       <div class="unit">分钟</div>
-      <div class="border-box"></div>
+      <div class="border-box"/>
     </div>
   </div>
 </template>
@@ -80,16 +80,17 @@
           minute: 60,
           temperature: getTemp(30, 100)
         },
-
         hIndex: 0, // 小时选中下标
-        mIndex: 0,
-        tIndex: 0,
+        mIndex: 30,
+        tIndex: 70,
+        // tIndex: 0,
         selectedValue: '00:00', //选中值
         oldTop: null,  // 单位为px
         top1: null, //从touchstart到touchmove记忆top位置 单位为px
         hTop: 0, //用于ul列表定位 单位为rem
-        mTop: 0, //用于ul列表定位 单位为rem
-        tTop: 0
+        mTop: -27.99, //用于ul列表定位 单位为rem
+        tTop: -65.31
+        // tTop: 0
       }
     },
     watch: { //监听器
@@ -97,16 +98,21 @@
         this.$emit('selectedchange', value) //自定义事件，暴露值
       },
       activeMode(value) {
-        this.tTop = 0
-        this.tIndex = 0
+
         if (value === 0) {
           // 普通蒸
+          this.tTop = -65.31
+          this.tIndex = 70
           this.dataList.temperature = this.getTemp(30, 100)
         } else if (value === 1) {
           //过温度蒸
+          this.tTop = 0
+          this.tIndex = 0
           this.dataList.temperature = this.getTemp(110, 110)
         } else if (value === 2) {
           //解冻：温度设置范围40℃-50℃
+          this.tTop = -9.33
+          this.tIndex = 10
           this.dataList.temperature = this.getTemp(40, 50)
         } else {
           // 除垢
@@ -210,7 +216,12 @@
         }
         this.selectedValue = this.tIndex + ':' + this.hIndex + ':' + this.mIndex
         console.log(this.selectedValue)
-
+        if (this.hIndex == 5) {
+          this.$nextTick(() => {
+            this.mTop = 0
+            this.mIndex = 0
+          })
+        }
       },
       getTemp(start, end) {
         let arr = []
@@ -303,6 +314,13 @@
       background-image: linear-gradient(180deg, rgba(55,62,65,0.00) 0%, #373E41 100%);
     }
   }
+  .box1{
+    flex: none;
+    width: 180px;
+  }
+  .box2{
+    padding-left: 100px;
+  }
   .unit{
     // flex: 1;
     height: 114px;
@@ -313,6 +331,16 @@
     /*border-top: 1px solid rgba(.0, .0, .0, .3);*/
     /*border-bottom: 1px solid rgba(.0, .0, .0, .3)*/
   }
-
+  .min-box{
+    position: relative;
+    &::before{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 9999;
+    }
+  }
 </style>
 

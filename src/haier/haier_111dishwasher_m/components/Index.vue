@@ -1,7 +1,7 @@
 /* eslint-disable vue/no-unused-vars */
 <template>
   <div class="body">
-    <div 
+    <div
       :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
@@ -10,7 +10,7 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!-- tab切换栏 -->
       <div
-        ref="main" 
+        ref="main"
         class="main center"
         style="margin-top:52px">
         <div class="tab">
@@ -45,7 +45,7 @@
             class="swiper-container container">
             <div class="swiper-wrapper">
               <div
-                v-for="item in tableware" 
+                v-for="item in tableware"
                 :key="item.english"
                 class="swiper-slide">
                 <div>
@@ -74,7 +74,7 @@
         </div>
       </div>
       <div
-        v-if="!isClose&&!isOffline" 
+        v-if="!isClose&&!isOffline"
         ref="btn"
         class="panel-btn center">
         <div
@@ -305,7 +305,7 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     // 开关机
     shutdowncallback(val){
-      if (this.isOffline) return 
+      if (this.isOffline) return
       this.controlDevice('switch',val)
     },
     // tab切换
@@ -335,13 +335,13 @@ export default {
         }
         this.controlDevice("mode",value).then(()=>{
           this.controlDevice("control",controlStatus)
-        })  
+        })
           // this.$router.push({ path: '/Washing' })
         return
       }
       this.controlDevice("control",controlStatus )
     },
-  
+
     // 长按事件
     touchStart(e){
       console.log(e)
@@ -695,8 +695,8 @@ input[type="range"]::-webkit-slider-thumb {
           color: #000;
         }
       }
-      
-      
+
+
     }
     .status{
       width: 100%;

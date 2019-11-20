@@ -3,14 +3,14 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="true"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <!--模式-->
       <div class="main center">
         <div class="status">
-          <p>水箱已打开</p>
-          <p>关闭水箱后可以继续使用</p>
+<!--          <p>水箱已打开</p>-->
+          <p>{{ deviceAttrs.PushRod == 0 ? '水箱已关闭' : deviceAttrs.PushRod == 1 ? '水箱已打开' : '' }}</p>
+          <p v-if="deviceAttrs.PushRod == 1">关闭水箱后可以继续使用</p>
         </div>
       </div>
       <!--开机后按钮-->
@@ -18,19 +18,19 @@
         <ul>
           <li style="padding-top: 12px;">
             <div>
-              <p class="water-box btn-style"></p>
-              <p>开水箱</p>
+              <p class="water-box btn-style" @click="closeWaterBox"></p>
+              <p>{{ deviceAttrs.PushRod == 0 ? '开水箱' : deviceAttrs.PushRod == 1 ? '关水箱' : '' }}</p>
             </div>
           </li>
           <li>
             <div>
               <p class="pause btn-style" @click="continueCook"></p>
-              <p>继续烹饪</p>
+              <p>继续</p>
             </div>
           </li>
           <li style="padding-top: 12px;">
             <div>
-              <p :class="['light', 'btn-style', {'open-light': lightStatus}]" @click="light"></p>
+              <p :class="['light', {'btn-style': deviceAttrs.Light == 0}, {'open-light': deviceAttrs.Light == 1}]" @click="light"></p>
               <p>照明</p>
             </div>
           </li>
@@ -49,7 +49,9 @@
     },
     data() {
       return {
-        lightStatus: false
+        lightStatus: false,
+        presetTemp: '',
+        activeMode: ''
       }
     },
 
@@ -58,10 +60,54 @@
       ...mapState(['device', 'deviceAttrs'])
     },
     watch: {
-
+      '$route': {
+        handler(val) {
+          this.activeMode = +val.query.activeMode
+        },
+        // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
+        immediate: true
+      },
+      'deviceAttrs'(val) {
+        console.log('水箱上报接收中', (+new Date().getMinutes()) + 1 + ':' + (+new Date().getSeconds()) + 1)
+        console.log(val)
+      },
+      'deviceAttrs.PushRod'(val) {
+        if (val == 0) {
+          if (this.deviceAttrs.WorkState == 4) {
+            setTimeout(() => {
+              this.$router.push('/deviceStatus')
+            }, 1000)
+          } else if (this.deviceAttrs.WorkState == 1) {
+            setTimeout(() => {
+              this.$router.push('/devicePause')
+            }, 1000)
+          } else if (this.deviceAttrs.WorkState == 2) {
+            setTimeout(() => {
+              this.$router.push('/deviceStatus')
+            }, 1000)
+          } else {
+            setTimeout(() => {
+              this.$router.push('/')
+            }, 1000)
+          }
+        }
+      },
+      'deviceAttrs.WorkState'(val) {
+        if (val == 0) {
+          if (Math.floor(this.deviceAttrs.RemainingTime) == 0) {
+            this.$router.push({path: '/deviceFinish'})
+          } else {
+            this.$router.push({path: '/'})
+          }
+        } else if (val == 2 || val == 4) {
+          this.$router.push({path: '/deviceStatus'})
+        }  else if (val == 1) {
+          this.$router.push({path: '/devicePause'})
+        }
+      }
     },
     created() {
-
+      HdSmart.UI.setStatusBarColor(2)
     },
     mounted() {
     },
@@ -73,11 +119,14 @@
       // 开关机
       shutdowncallback(){
         if (this.isOffline) return
-        if (this.deviceAttrs.PowerSwitchAll === 2) {
-          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
-        } else if (this.deviceAttrs.PowerSwitchAll === 0) {
-          this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
-        }
+        // if (this.deviceAttrs.PowerSwitchAll == 2) {
+        //   this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
+        // } else if (this.deviceAttrs.PowerSwitchAll == 0) {
+        //   this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
+        // }
+        this.controlDevice('WorkState', {WorkState: 2}).then(res => {
+          this.$router.push('/')
+        })
       },
       controlDevice(attr, param={}) {
         return this.doControlDevice({
@@ -90,23 +139,41 @@
         })
       },
       light() {
-        this.lightStatus = !this.lightStatus
-        if (this.lightStatus) {
-          this.controlDevice('Light', {Light: '1'})
-        } else {
-          this.controlDevice('Light', {Light: '0'})
-        }
+        // if (this.deviceAttrs.Light == 0) {
+        //   this.controlDevice('Light', {Light: 1})
+        // } else {
+        //   this.controlDevice('Light', {Light: 0})
+        // }
+        this.controlDevice('Light', {Light: 2})
       },
       continueCook() {
         // 如果没有启动 回到首页 如果启动回到状态页
-        if (this.deviceAttrs.PowerSwitchAll === 2) {
-          this.controlDevice('WorkState',{WorkState: '4'}).then(res => {
-            this.$router.push({path: '/deviceStatus'})
-          })
-          this.$router.push({path: '/deviceStatus'})
-        } else {
-          this.$router.push({path: '/'})
-        }
+        // if (this.deviceAttrs.PowerSwitchAll == 2) {
+        //   this.controlDevice('WorkState',{WorkState: 0}).then(res => {
+        //     this.$router.push({
+        //       path: '/deviceStatus',
+        //       query: {
+        //         preset: this.activeMode === 3 ? 110 : this.presetTemp,
+        //         activeMode : this.activeMode
+        //       }
+        //     })
+        //   })
+        // } else {
+        //   this.$router.push({path: '/'})
+        // }
+        this.$router.go(-1)
+      },
+      closeWaterBox() {
+        // if (this.deviceAttrs.PushRod == 3) {
+        //   this.controlDevice('openWaterBox', {PushRod: 0}).then(() => {
+        //     this.$router.push({path:'/waterBoxOpen'})
+        //   })
+        // } else {
+        //   this.controlDevice('openWaterBox', {PushRod: 3}).then(() => {
+        //     this.$router.push({path:'/waterBoxOpen'})
+        //   })
+        // }
+        this.controlDevice('openWaterBox', {PushRod: 3})
       }
     }
   }

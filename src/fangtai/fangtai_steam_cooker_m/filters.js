@@ -21,7 +21,7 @@ export function modeType(type) {
       return '暂停中'
       break;
     case '2':
-      return '预热中'
+      return '烹饪完成'
       break;
     case '3':
       return '预热完成'
