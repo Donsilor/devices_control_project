@@ -132,6 +132,7 @@ export default {
       this.time = val
     },
     submit() {
+      if(!this.time || this.time == '0:0') return HdSmart.UI.toast('请选择时间')
       let val = [this.time || '0:0', 'time']
       this.$emit('selectedTime', val) //自定义事件，暴露值
       this.time = '0:0'

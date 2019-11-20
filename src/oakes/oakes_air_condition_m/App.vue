@@ -1,7 +1,7 @@
 <template>
   <div class="body">
-    <div 
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']" 
+    <div
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']"
     >
       <NewTopBar
         :title="device.device_name"
@@ -13,22 +13,22 @@
         <div class="wrap-circle">
           <div class="bg">
             <div
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'"
+              v-if="loaclAttr.connectivity == 'offline'||loaclAttr.switchStatus=='off'||loaclAttr.mode=='wind'"
               class="tm">-- <sup>°C</sup></div>
             <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='auto'&&deviceAttrs.mode!=='wind'"
-              class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
+              v-if="!isOffline&& loaclAttr.switchStatus == 'on'&&loaclAttr.mode!=='auto'&&loaclAttr.mode!=='wind'"
+              class="tm">{{ loaclAttr.temperature | filterTm }}<sup>°C</sup>
             </div>
             <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='auto'"
+              v-if="!isOffline&& loaclAttr.switchStatus == 'on'&&loaclAttr.mode=='auto'"
               class="tm">24<sup>°C</sup>
             </div>
             <div
-              v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
-              :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
+              v-show="!isOffline&& loaclAttr.switchStatus == 'on'"
+              :class="[loaclAttr.mode, 'c-mode']">室内温度{{ loaclAttr.env_temperature | filterTm }}℃</div>
             <div
-              v-show="isOffline||deviceAttrs.switchStatus == 'off'"
-              :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
+              v-show="isOffline||loaclAttr.switchStatus == 'off'"
+              :class="[loaclAttr.mode, 'c-mode']">室内温度--℃</div>
           </div>
           <circle-progress
             v-if="isShow"
@@ -60,9 +60,9 @@
       </div>
       <!-- 当前状态 -->
       <div
-        v-show="deviceAttrs.timer_switch == 'on'&& deviceAttrs.timer_value >0"
+        v-show="loaclAttr.timer_switch == 'on'&& loaclAttr.timer_value >0"
         class="status">
-        {{ deviceAttrs.timer_value | closeTime }}
+        {{ loaclAttr.timer_value | closeTime }}
       </div>
       <!-- 底部按钮 -->
       <!-- 开关 -->
@@ -86,32 +86,32 @@
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'cold' }, 'btn btn-cold center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'cold' }, 'btn btn-cold center']" />
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'heat' }, 'btn btn-heat center']" />
+          <div :class="[ { 'active': loaclAttr.mode == 'heat' }, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('auto')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'auto' }, 'btn btn-auto center']" />
+          <div :class="[ { 'active': loaclAttr.mode == 'auto' }, 'btn btn-auto center']" />
           <div
             class="btn-name" >智能</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'wind' }, 'btn btn-wind center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'wind' }, 'btn btn-wind center']" />
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -126,11 +126,11 @@
         <div class="option1">
           <div>
             <span>风速</span>
-            <span 
-              class="check" 
+            <span
+              class="check"
               @click="showSpeed">{{ typeVal=='auto'?'自动':'手动' }}
-              <img 
-                v-show="typeVal!=='auto'" 
+              <img
+                v-show="typeVal!=='auto'"
                 src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
             </span>
           </div>
@@ -151,10 +151,10 @@
         <div class="option">
           <div>
             <span>摆风</span>
-            <span 
-              class="check" 
-              @click="showSwing">{{ deviceAttrs.wind_up_down=='on'?'上下风 ':'' }}{{ deviceAttrs.wind_left_right=='on'?'左右风':'' }}{{ deviceAttrs.wind_up_down=='off'&&deviceAttrs.wind_left_right=='off'?'设置':'' }}
-              <img 
+            <span
+              class="check"
+              @click="showSwing">{{ loaclAttr.wind_up_down=='on'?'上下风 ':'' }}{{ loaclAttr.wind_left_right=='on'?'左右风':'' }}{{ loaclAttr.wind_up_down=='off'&&loaclAttr.wind_left_right=='off'?'设置':'' }}
+              <img
                 src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
             </span>
           </div>
@@ -164,17 +164,17 @@
           <div>
             <span>定时</span>
             <span
-              v-if="deviceAttrs.timer_switch=='on'&&deviceAttrs.timer_value>0"
+              v-if="loaclAttr.timer_switch=='on'&&loaclAttr.timer_value>0"
               class="check"
-              @click="showTime">{{ deviceAttrs.timer_value | closeTime }}
-              <img 
+              @click="showTime">{{ loaclAttr.timer_value | closeTime }}
+              <img
                 src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
             </span>
             <span
               v-else
               class="check"
-              @click="showTime">设置关机时间 
-              <img 
+              @click="showTime">设置关机时间
+              <img
                 src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
             </span>
           </div>
@@ -184,18 +184,18 @@
       <!--选择摆风-->
       <model-swing
         ref="swing"
-        :wind_up_down="deviceAttrs.wind_up_down"
-        :wind_left_right="deviceAttrs.wind_left_right"
+        :wind_up_down="loaclAttr.wind_up_down"
+        :wind_left_right="loaclAttr.wind_left_right"
         @setWind="setWind" />
       <!--选择模式-->
       <model-mode
         ref="mode"
-        :mode="deviceAttrs.mode"
+        :mode="loaclAttr.mode"
         @setMode="setMode" />
       <!--选择风速-->
       <model-speed
         ref="speed"
-        :speed="deviceAttrs.speed"
+        :speed="loaclAttr.speed"
         @setSpeed="setSpeed" />
       <!-- 时间选择 -->
       <SelectTime
@@ -238,7 +238,8 @@ export default {
       brightnessValue: 0,
       rangStyle: '',
       opcityStyle: 'opcity-0',
-      animation:false
+      animation:false,
+      loaclAttr: {}
     }
   },
 
@@ -319,6 +320,10 @@ export default {
         this.brightnessValue = 4
         this.setRangWidth(93)
       }
+    },
+    "deviceAttrs"() {
+      this.loaclAttr = this.deviceAttrs
+      console.log('=============', this.loaclAttr.mode)
     }
   },
   created() {
@@ -578,7 +583,7 @@ export default {
     background-size: 100% 100%;
     position: fixed;
     top:0;
-    left: 0; 
+    left: 0;
     right: 0;
     bottom: 0;
     z-index: -1;
@@ -985,7 +990,7 @@ export default {
     }
   }
       .item{
-        animation: box 5s; 
+        animation: box 5s;
       }
       @keyframes box {
         from{height: 0;}

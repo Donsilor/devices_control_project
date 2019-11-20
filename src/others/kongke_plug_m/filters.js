@@ -21,9 +21,11 @@ export function openTime(val) {
 }
 
 export function delayTime(val) {
-  let h = Math.floor(val/60)
-  let m = val % 60
+  let h = Math.floor(val/3600)
+  let m = Math.floor((val % 3600) / 60)
+  let s = (val % 3600) % 60
   h = h < 10 ? ("0" + h) : h
   m = m < 10 ? ("0" + m) : m
-  return h + ":" + m + ':00'
+  s = s < 10 ? ("0" + s) : s
+  return h + ":" + m + ":" + s + " "
 }
