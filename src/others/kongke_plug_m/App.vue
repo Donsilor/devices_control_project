@@ -74,11 +74,11 @@
           <div
             v-if="switchValue=='open'"
             class="timing-right"
-            @click="showTime('设置关机时间')">{{ timer.closeTime }}＞ </div>
+            @click="showTime('设置关机时间')">{{ timer.openEnable == 'y'?timer.closeTime:'' }}＞ </div>
           <div
             v-else
             class="timing-right"
-            @click="showTime('设置开机时间')">{{ timer.openTime }}＞ </div>
+            @click="showTime('设置开机时间')">{{ timer.closeEnable == 'y'?timer.openTime:'' }}＞ </div>
         </div>
         <div class="Charging-protection">
           <div>充电保护</div>
@@ -124,7 +124,9 @@ export default {
       timeOutDelay: '',
       timer: {},
       pickerValue: '',
-      openPickerH: 0
+      openPickerH: 0,
+      closeLocalTime: '',
+      openLocalTime: ''
     }
   },
   computed: {
@@ -146,6 +148,8 @@ export default {
     },
     'deviceAttrs'() {
       this.timer = this.deviceAttrs.timer
+      this.closeLocalTime = this.deviceAttrs.timer.closeTime
+      this.openLocalTime = this.deviceAttrs.timer.openTime
     },
     'deviceAttrs.ovp'() {
       this.ovpDisabled = false
@@ -171,25 +175,25 @@ export default {
       //   this.delayOpen = this.deviceAttrs.delayOpen
       // }
     },
-    'deviceAttrs.delayClose'() {
-      if(this.deviceAttrs.delayClose) {
-        this.deviceAttrs.delayClose.closeTime = '2019-11-19-21:41:05'
-        let abcqwe = this.deviceAttrs.delayClose.closeTime.substring(0,10)
-        let cbaqwe = this.deviceAttrs.delayClose.closeTime.substring(11)
-        let tqwe = abcqwe + ' ' + cbaqwe
-        let timeqwe = this.getDateTime(new Date(), 'fulltime')
-        console.log('==========李哥测试===============', new Date(`${tqwe}`), new Date().getTime)
-        let aqwe = (new Date(`${tqwe}`)).getTime()
-        let bqwe = (new Date(timeqwe)).getTime()
-        console.log(this.deviceAttrs.delayClose.closeTime, '=====2019-11-19 21:41:05=====', tqwe, timeqwe, aqwe ,bqwe)
-        if(aqwe > bqwe) {
-          let timeVal = (aqwe - bqwe) / 1000
-          this.delayClose.countdownClose = timeVal
-          this.timeIntDelay('countdownClose')
-          console.log(timeVal, '====ABC====')
-        }
-      }
-    },
+    // 'deviceAttrs.delayClose'() {
+    //   if(this.deviceAttrs.delayClose) {
+    //     this.deviceAttrs.delayClose.closeTime = '2019-11-19-21:41:05'
+    //     let abcqwe = this.deviceAttrs.delayClose.closeTime.substring(0,10)
+    //     let cbaqwe = this.deviceAttrs.delayClose.closeTime.substring(11)
+    //     let tqwe = abcqwe + ' ' + cbaqwe
+    //     let timeqwe = this.getDateTime(new Date(), 'fulltime')
+    //     console.log('==========李哥测试===============', new Date(`${tqwe}`), new Date().getTime)
+    //     let aqwe = (new Date(`${tqwe}`)).getTime()
+    //     let bqwe = (new Date(timeqwe)).getTime()
+    //     console.log(this.deviceAttrs.delayClose.closeTime, '=====2019-11-19 21:41:05=====', tqwe, timeqwe, aqwe ,bqwe)
+    //     if(aqwe > bqwe) {
+    //       let timeVal = (aqwe - bqwe) / 1000
+    //       this.delayClose.countdownClose = timeVal
+    //       this.timeIntDelay('countdownClose')
+    //       console.log(timeVal, '====ABC====')
+    //     }
+    //   }
+    // },
     // 'deviceAttrs.delayOpen'() {
     //   if(this.deviceAttrs.delayOpen) {
     //     this.delayOpen = this.deviceAttrs.delayOpen
@@ -452,15 +456,15 @@ export default {
         let hours = h < 10 ? '0' + h : h
         let min = m < 10 ? '0' + m : m
         let time = this.getDateTime(new Date()) + '-' + hours + ':' + min + ':' + '00'
-        console.log(time, '=====================')
         if(this.switchValue === 'close'){
+          this.closeLocalTime = time
            // 定时开
           let obj1 = {
             "set_time_task": {
               "openEnable": "true",
               "openTime": time,
               "closeEnable": "false",
-              "closeTime": '',
+              "closeTime": this.openLocalTime,
               "repeat": "0",
               "timerId": "100",
               "encrptionFlag": "1000",
@@ -482,11 +486,12 @@ export default {
             HdSmart.UI.toast('操作失败')
           })
         }else{
+          this.openLocalTime = time
           // 定时关
           let obj2 = {
             "set_time_task": {
               "openEnable": "false",
-              "openTime": '',
+              "openTime": this.closeLocalTime,
               "closeEnable": "true",
               "closeTime": time,
               "repeat": "0",

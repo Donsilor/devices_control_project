@@ -60,11 +60,7 @@
       </div>
       <!-- 当前状态 -->
       <div
-<<<<<<< HEAD
         v-show="loaclAttr.timer_switch == 'on'&& loaclAttr.timer_value >0"
-=======
-        v-show="deviceAttrs.timer_switch == 'off'&& deviceAttrs.timer_value >0"
->>>>>>> 6c3d0e3017a0835cd4f1ab1f54336644cdd5149d
         class="status">
         {{ loaclAttr.timer_value | closeTime }}
       </div>
@@ -168,11 +164,7 @@
           <div>
             <span>定时</span>
             <span
-<<<<<<< HEAD
               v-if="loaclAttr.timer_switch=='on'&&loaclAttr.timer_value>0"
-=======
-              v-if="deviceAttrs.timer_switch=='off'&&deviceAttrs.timer_value>0"
->>>>>>> 6c3d0e3017a0835cd4f1ab1f54336644cdd5149d
               class="check"
               @click="showTime">{{ loaclAttr.timer_value | closeTime }}
               <img
@@ -234,7 +226,7 @@ export default {
     return {
       isOpen: false,
       isShow: true,
-      width: 230,
+      width: 250,
       radius: 8,
       progress: 30, // 0~70
       duration: 0,
@@ -379,6 +371,16 @@ export default {
     // 取消定时
     canceltime(){
        this.controlDevice('close_time','true')
+       .then((res) => {
+         if(res.code == 0) {
+           this.loaclAttr.close_time = true
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+       })
+       .catch(() => {
+         HdSmart.UI.toast('操作失败')
+       })
     },
     // 开关机
     shutdowncallback(val){
@@ -613,7 +615,7 @@ export default {
     top: -40px;
     z-index: 9;
 
-    width: 190PX;
+    width: 430px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1020,7 +1022,7 @@ export default {
     &:before {
       content: "";
       position: fixed;
-      top: 64PX;
+      top: 0;
       left: 0;
       bottom: 0;
       right: 0;
