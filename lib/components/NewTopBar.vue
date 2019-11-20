@@ -65,7 +65,7 @@
           :style="{ 'color': bakColor }"
           class="title">{{ title }}</div>
         <button
-          v-if="shutdown||3"
+          v-if="shutdown"
           ref="shutdown"
           :class="['header-bottom-right', styleName]"
           :disabled="(styleName && Object.keys(styleName).indexOf('no-work') > -1) ? true : false"
