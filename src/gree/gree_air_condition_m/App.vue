@@ -23,9 +23,9 @@
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='auto'"
               class="tm">24<sup>°C</sup>
             </div>
-            <!-- <div
-              v-show="isOffline||deviceAttrs.switchStatus == 'off'"
-              :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div> -->
+            <div 
+              v-if="!deviceAttrs.switchStatus&&!deviceAttrs.connectivity"
+              class="tm">-- <sup>°C</sup></div>
           </div>
           <circle-progress
             v-if="isShow"
@@ -171,7 +171,7 @@ export default {
     return {
       isOpen: false,
       isShow: true,
-      width: 230,
+      width: 250,
       radius: 8,
       progress: 30, // 0~70
       duration: 0,
@@ -252,6 +252,8 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
+          console.log(this.deviceAttrs)
+          
           this.reset()
         })
       HdSmart.UI.setStatusBarColor(2)
@@ -355,13 +357,13 @@ export default {
 
     getProgress() {
       // 计算温度进度条
-      if (this.deviceAttrs.mode=='auto') {
-        return 70 /(30 - 16) * (240 / 10 - 16)
-      }else if(this.deviceAttrs.mode=='wind') {
-        return 70 /(30 - 16) * (MIN_TEMP / 10 - 16)
-      }else{
+      // if (this.deviceAttrs.mode=='auto') {
+      //   return 70 /(30 - 16) * (240 / 10 - 16)
+      // }else if(this.deviceAttrs.mode=='wind') {
+      //   return 70 /(30 - 16) * (MIN_TEMP / 10 - 16)
+      // }else{
         return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
-      }
+      // }
     }
   }
 }
@@ -417,7 +419,8 @@ export default {
     top: -40px;
     z-index: 9;
 
-    width: 190PX;
+    // width: 190PX;
+    width: 430px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -459,6 +462,7 @@ export default {
         .tm{
           // margin-top: 60PX;
           position: relative;
+          font-family: PingFangSC-Light;
           font-size: 144px;
           color: #20282B;
           text-align: center;
@@ -667,7 +671,7 @@ export default {
     }
     .btn-auto{
       &::before {
-        background-image: url('~@lib/@{imgPath}/auto.png');
+        background-image: url('~@lib/@{imgPath1}/auto.png');
         background-size: 100% 100%;
       }
        &.active::before {
@@ -690,7 +694,7 @@ export default {
   }
   .optionbox{
     width: 100%;
-    margin-top: 10px;
+    margin-top: 21px;
     margin: 10px 0 30px 0;
     .option{
       width: 100%;
@@ -837,7 +841,7 @@ export default {
     &:before {
       content: "";
       position: fixed;
-      top: 64PX;
+      top: 0;
       left: 0;
       bottom: 0;
       right: 0;

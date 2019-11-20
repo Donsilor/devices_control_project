@@ -850,7 +850,7 @@ export default {
     }
     .btn-auto{
       &::before {
-        background-image: url('~@lib/@{imgPath}/auto.png');
+        background-image: url('~@lib/@{imgPath1}/auto.png');
         background-size: 100% 100%;
       }
        &.active::before {
