@@ -60,7 +60,11 @@
       </div>
       <!-- 当前状态 -->
       <div
+<<<<<<< HEAD
         v-show="loaclAttr.timer_switch == 'on'&& loaclAttr.timer_value >0"
+=======
+        v-show="deviceAttrs.timer_switch == 'off'&& deviceAttrs.timer_value >0"
+>>>>>>> 6c3d0e3017a0835cd4f1ab1f54336644cdd5149d
         class="status">
         {{ loaclAttr.timer_value | closeTime }}
       </div>
@@ -164,7 +168,11 @@
           <div>
             <span>定时</span>
             <span
+<<<<<<< HEAD
               v-if="loaclAttr.timer_switch=='on'&&loaclAttr.timer_value>0"
+=======
+              v-if="deviceAttrs.timer_switch=='off'&&deviceAttrs.timer_value>0"
+>>>>>>> 6c3d0e3017a0835cd4f1ab1f54336644cdd5149d
               class="check"
               @click="showTime">{{ loaclAttr.timer_value | closeTime }}
               <img
@@ -365,15 +373,12 @@ export default {
       console.log(h,m,'hm')
         this.controlDevice('time',{
             timer_value:h*2+m,
-            timer_switch:'on'
+            timer_switch:'off'
         })
     },
     // 取消定时
     canceltime(){
-       this.controlDevice('time',{
-            timer_value:0,
-            timer_switch:'off'
-        })
+       this.controlDevice('close_time','true')
     },
     // 开关机
     shutdowncallback(val){
@@ -858,7 +863,7 @@ export default {
     }
     .btn-auto{
       &::before {
-        background-image: url('~@lib/@{imgPath}/auto.png');
+        background-image: url('~@lib/@{imgPath1}/auto.png');
         background-size: 100% 100%;
       }
        &.active::before {

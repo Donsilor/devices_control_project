@@ -19,9 +19,11 @@ var res = {
     attribute: {
         PowerSwitchAll: 2, // 2开机 0关机
         RemainingTime: '9', // 工作剩余时间
-        WorkState: '4', // 工作状态
+        WorkState: '0', // 工作状态
+        WorkMode: '0',
         SetTemperature1: 99, // 设定温度值1
         WaterShortage: '0', // '0'不缺水 '1'缺水
+        Light: '0',
         temperature: 170,
         env_temperature: 240,
         mode: 'cold',

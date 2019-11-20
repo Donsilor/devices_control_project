@@ -10,38 +10,33 @@ export function filterTm(tm) {
   return tmp
 }
 export function closeTime(val) {
-  let h = Math.floor(val/60)
-  let m = val%60
+  let h = Math.floor(val/2)
+  let m = val%2*30
   // console.log(h+'小时'+m+'分后关机');
-  return h+'小时'+m+'分钟后关机'
+  return h+'小时'+m+'分钟后关机' 
 }
 export function modeType(type) {
   switch(type) {
-    case '1':
-      return '暂停中'
+    case 'auto':
+      return '智能'
       break;
-    case '2':
-      return '烹饪完成'
+    case 'cold':
+      return '制冷'
       break;
-    case '3':
-      return '预热完成'
+    case 'heat':
+      return '制热'
       break;
-    case '4':
-      return '烹饪中'
+    case 'dehumidify':
+      return '除湿'
       break;
-    case '5':
-      return '烹饪完成'
-      break;
-    case '6':
-      return '预约中'
-      break;
-    case '7':
-      return '需要除垢'
-      break;
-  }
+    case 'wind':
+      return '送风'
+      break; 
+  } 
 }
 export function time_H(val) {
   let h = Math.floor(val/3600)
   let m = (val%3600)/60
   return h+'小时'+m+'分后关机'
+  
 }

@@ -9,52 +9,75 @@
         @shutdownCallback="shutdowncallback('off')" />
       <!--模式-->
       <div class="main center">
-        <ul class="mode" v-if="deviceAttrs.PowerSwitchAll === 2">
-          <li v-for="(v, i) in modeList" :key="v.name" @click="activeMode = i" :class="[{'active': activeMode === i}]">{{v.name}}</li>
+        <ul 
+          v-if="deviceAttrs.PowerSwitchAll === 2" 
+          class="mode">
+          <li 
+            v-for="(v, i) in modeList" 
+            :key="v.name" 
+            :class="[{'active': activeMode === i}]" 
+            @click="activeMode = i">{{ v.name }}</li>
         </ul>
         <!-- 时间选择器-->
-        <temp-time-pick style="width: 90%;" ref="tempTimePick" :class="{'close-style': deviceAttrs.PowerSwitchAll != 2}" v-if="activeMode != 3" :activeMode="activeMode"></temp-time-pick>
-        <div class="clear-dash" v-if="activeMode === 3">
-            <div>
-              <p class="clear-dash-time">1小时11分钟</p>
-              <p class="clear-dash-text">除垢用时</p>
-            </div>
-            <div class="clear-dash-tips">
-              <p>请在水箱内加入1包除垢剂</p>
-              <p>添加水至除垢水位</p>
-            </div>
+        <temp-time-pick 
+          v-if="activeMode != 3" 
+          ref="tempTimePick" 
+          :class="{'close-style': deviceAttrs.PowerSwitchAll != 2}" 
+          :active-mode="activeMode" 
+          style="width: 90%;"/>
+        <div 
+          v-if="activeMode === 3" 
+          class="clear-dash">
+          <div>
+            <p class="clear-dash-time">1小时11分钟</p>
+            <p class="clear-dash-text">除垢用时</p>
+          </div>
+          <div class="clear-dash-tips">
+            <p>请在水箱内加入1包除垢剂</p>
+            <p>添加水至除垢水位</p>
+          </div>
         </div>
       </div>
-      <div style="position: relative;top: -20px;" :class="{'close-style': deviceAttrs.PowerSwitchAll != 2}" v-if="activeMode != 3">
+      <div 
+        v-if="activeMode != 3" 
+        :class="{'close-style': deviceAttrs.PowerSwitchAll != 2}" 
+        style="position: relative;top: -20px;">
         <ul class="tips">
           <li>烹饪温度</li>
-          <li>烹饪时长</li>
+          <li class="padl">烹饪时长</li>
         </ul>
       </div>
       <!-- 开机键-->
-      <div class="openDeviceBtn-box" v-if="deviceAttrs.PowerSwitchAll === 0">
-        <p class="openDeviceBtn" @click="tuenOn">
-        </p>
+      <div 
+        v-if="deviceAttrs.PowerSwitchAll === 0" 
+        class="openDeviceBtn-box">
+        <p 
+          class="openDeviceBtn" 
+          @click="tuenOn"/>
         <p>开机</p>
       </div>
       <!--开机后按钮-->
-      <div class="tool-bar" v-if="deviceAttrs.PowerSwitchAll === 2">
+      <div 
+        v-if="deviceAttrs.PowerSwitchAll === 2" 
+        class="tool-bar">
         <ul>
           <li style="padding-top: 12px;">
             <div>
-              <p class="water-box"></p>
+              <p class="water-box"/>
               <p>开水箱</p>
             </div>
           </li>
           <li>
             <div>
-              <p class="start" @click="startWork"></p>
+              <p 
+                class="start" 
+                @click="startWork"/>
               <p>启动</p>
             </div>
           </li>
           <li style="padding-top: 12px;">
             <div>
-              <p class="light"></p>
+              <p class="light"/>
               <p>照明</p>
             </div>
           </li>
@@ -272,7 +295,7 @@
         font-size: 32px;
         opacity: 0.8;
         &:first-of-type{
-          width: 37%;
+          // width: 37%;
           padding-left: 20px;
         }
       }
@@ -379,5 +402,7 @@
       }
     }
   }
-
+.padl{
+  padding-left: 170px;
+}
 </style>
