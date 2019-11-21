@@ -249,8 +249,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['isClose', 'isOffline']),
+    ...mapGetters(['isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    isClose(){
+      return this.loaclAttr.switchStatus == 'on'?false:true
+    },
     modeIsActive() {
       return this.loaclAttr.mode == 'auto' || this.loaclAttr.mode == 'dehumidify' || this.loaclAttr.mode == 'wind'
     },
