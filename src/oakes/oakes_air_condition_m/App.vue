@@ -1,7 +1,7 @@
 <template>
   <div class="body">
-    <div 
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']" 
+    <div
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']"
     >
       <NewTopBar
         :title="device.device_name"
@@ -13,22 +13,22 @@
         <div class="wrap-circle">
           <div class="bg">
             <div
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'"
+              v-if="loaclAttr.connectivity == 'offline'||loaclAttr.switchStatus=='off'||loaclAttr.mode=='wind'"
               class="tm">-- <sup>°C</sup></div>
             <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='auto'&&deviceAttrs.mode!=='wind'"
-              class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
+              v-if="!isOffline&& loaclAttr.switchStatus == 'on'&&loaclAttr.mode!=='auto'&&loaclAttr.mode!='wind'"
+              class="tm">{{ loaclAttr.temperature | filterTm }}<sup>°C</sup>
             </div>
             <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='auto'"
-              class="tm">24<sup>°C</sup>
+              v-if="!isOffline&& loaclAttr.switchStatus == 'on'&&loaclAttr.mode=='auto'"
+              class="tm">25<sup>°C</sup>
             </div>
             <div
-              v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
-              :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
+              v-show="!isOffline&& loaclAttr.switchStatus == 'on'"
+              :class="[loaclAttr.mode, 'c-mode']">室内温度{{ loaclAttr.env_temperature | filterTm }}℃</div>
             <div
-              v-show="isOffline||deviceAttrs.switchStatus == 'off'"
-              :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
+              v-show="isOffline||loaclAttr.switchStatus == 'off'"
+              :class="[loaclAttr.mode, 'c-mode']">室内温度--℃</div>
           </div>
           <circle-progress
             v-if="isShow"
@@ -60,9 +60,9 @@
       </div>
       <!-- 当前状态 -->
       <div
-        v-show="deviceAttrs.timer_switch == 'off'&& deviceAttrs.timer_value >0"
+        v-show="loaclAttr.timer_switch == 'on'&& loaclAttr.timer_value >0"
         class="status">
-        {{ deviceAttrs.timer_value | closeTime }}
+        {{ loaclAttr.timer_value | closeTime }}
       </div>
       <!-- 底部按钮 -->
       <!-- 开关 -->
@@ -86,32 +86,32 @@
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'cold' }, 'btn btn-cold center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'cold' }, 'btn btn-cold center']" />
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'heat' }, 'btn btn-heat center']" />
+          <div :class="[ { 'active': loaclAttr.mode == 'heat' }, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('auto')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'auto' }, 'btn btn-auto center']" />
+          <div :class="[ { 'active': loaclAttr.mode == 'auto' }, 'btn btn-auto center']" />
           <div
             class="btn-name" >智能</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'wind' }, 'btn btn-wind center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'wind' }, 'btn btn-wind center']" />
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -124,17 +124,22 @@
         v-show="!isClose&&!isOffline"
         class="optionbox">
         <div class="option1">
-          <div>
+          <div class="check">
             <span>风速</span>
-            <span 
-              class="check" 
-              @click="showSpeed">{{ typeVal=='auto'?'自动':'手动' }}
-              <img 
-                v-show="typeVal!=='auto'" 
-                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
-            </span>
+            <div 
+              class="checkBox">
+              <div 
+                :class="[{ 'active': loaclAttr.speed == 'low'},'speedBtn']" 
+                @click="setSpeed('low')">1档</div>
+              <div 
+                :class="[{ 'active': loaclAttr.speed == 'normal'},'speedBtn']" 
+                @click="setSpeed('normal')">2档</div>
+              <div 
+                :class="[{ 'active': loaclAttr.speed == 'high'},'speedBtn']" 
+                @click="setSpeed('high')">3档</div>
+            </div>
           </div>
-          <div
+          <!-- <div
             v-show="typeVal!=='auto'"
             class="range">
             <input
@@ -145,63 +150,63 @@
               step="1"
               @touchend="changeSpeed">
             <p :class="['rang_width']"/>
-          </div>
+          </div> -->
         </div>
         <!-- 摆风 -->
         <div class="option">
           <div>
             <span>摆风</span>
-            <span 
-              class="check" 
-              @click="showSwing">{{ deviceAttrs.wind_up_down=='on'?'上下风 ':'' }}{{ deviceAttrs.wind_left_right=='on'?'左右风':'' }}{{ deviceAttrs.wind_up_down=='off'&&deviceAttrs.wind_left_right=='off'?'设置':'' }}
-              <img 
+            <span
+              class="check"
+              @click="showSwing">{{ loaclAttr.wind_up_down=='on'?'上下风 ':'' }}{{ loaclAttr.wind_left_right=='on'?'左右风':'' }}{{ loaclAttr.wind_up_down=='off'&&loaclAttr.wind_left_right=='off'?'设置':'' }}
+              <img
                 src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
             </span>
           </div>
         </div>
         <!-- 定时 -->
-        <div class="option">
+        <!-- <div class="option">
           <div>
             <span>定时</span>
             <span
-              v-if="deviceAttrs.timer_switch=='off'&&deviceAttrs.timer_value>0"
+              v-if="loaclAttr.timer_switch=='on'&&loaclAttr.timer_value>0"
               class="check"
-              @click="showTime">{{ deviceAttrs.timer_value | closeTime }}
-              <img 
+              @click="showTime">{{ loaclAttr.timer_value | closeTime }}
+              <img
                 src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
             </span>
             <span
               v-else
               class="check"
-              @click="showTime">设置关机时间 
-              <img 
+              @click="showTime">设置关机时间
+              <img
                 src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
             </span>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!--选择摆风-->
       <model-swing
         ref="swing"
-        :wind_up_down="deviceAttrs.wind_up_down"
-        :wind_left_right="deviceAttrs.wind_left_right"
+        :wind_up_down="loaclAttr.wind_up_down"
+        :wind_left_right="loaclAttr.wind_left_right"
         @setWind="setWind" />
       <!--选择模式-->
       <model-mode
         ref="mode"
-        :mode="deviceAttrs.mode"
+        :mode="loaclAttr.mode"
         @setMode="setMode" />
       <!--选择风速-->
       <model-speed
         ref="speed"
-        :speed="deviceAttrs.speed"
+        :speed="loaclAttr.speed"
         @setSpeed="setSpeed" />
-      <!-- 时间选择 -->
-      <SelectTime
+        <!-- 时间选择 -->
+        <!-- <SelectTime
         ref="time"
         @selectedTime="setReserve"
-        @canceltime="canceltime" />
+        @canceltime="canceltime" /> -->
     </div>
   </div>
 </template>
@@ -226,7 +231,7 @@ export default {
     return {
       isOpen: false,
       isShow: true,
-      width: 230,
+      width: 250,
       radius: 8,
       progress: 30, // 0~70
       duration: 0,
@@ -238,7 +243,8 @@ export default {
       brightnessValue: 0,
       rangStyle: '',
       opcityStyle: 'opcity-0',
-      animation:false
+      animation:false,
+      loaclAttr: {}
     }
   },
 
@@ -246,14 +252,14 @@ export default {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
     modeIsActive() {
-      return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
+      return this.loaclAttr.mode == 'auto' || this.loaclAttr.mode == 'dehumidify' || this.loaclAttr.mode == 'wind'
     },
     windIsActive() {
-      return this.deviceAttrs.wind_up_down == 'on' || this.deviceAttrs.wind_left_right == 'on'
+      return this.loaclAttr.wind_up_down == 'on' || this.loaclAttr.wind_left_right == 'on'
     },
     modeClass() {
       /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
+      switch (this.loaclAttr.mode) {
         case 'auto':
           return 'btn-auto'
           break
@@ -269,7 +275,7 @@ export default {
     },
     speedClass() {
       /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.speed) {
+      switch (this.loaclAttr.speed) {
         case 'low':
           return 'btn-low'
           break
@@ -289,7 +295,7 @@ export default {
     getBarColor() {
       if(this.isClose || this.isOffline) return '#D8D8D8'
             /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
+      switch (this.loaclAttr.mode) {
         case 'cold':
           return '#00A3FF '
           break
@@ -302,23 +308,9 @@ export default {
     },
   },
   watch: {
-    "deviceAttrs.speed"() {
-      if(this.deviceAttrs.speed == 'low') {
-        this.brightnessValue = 1
-        this.setRangWidth(23.25)
-      }
-      if(this.deviceAttrs.speed == 'normal') {
-        this.brightnessValue = 2
-        this.setRangWidth(46.5)
-      }
-      if(this.deviceAttrs.speed == 'high') {
-        this.brightnessValue = 3
-        this.setRangWidth(69.75)
-      }
-      if(this.deviceAttrs.speed == 'auto') {
-        this.brightnessValue = 4
-        this.setRangWidth(93)
-      }
+    "deviceAttrs"() {
+      this.loaclAttr = this.deviceAttrs
+      console.log('=============', this.loaclAttr.mode)
     }
   },
   created() {
@@ -330,115 +322,97 @@ export default {
       HdSmart.UI.setStatusBarColor(2)
     })
   },
-  mounted() {
-    let pageNode = document.querySelector('.page')
-    pageNode.addEventListener('scroll', (e) => {
-      // console.log(e.target.scrollTop)
-      let scrollHeight = e.target.scrollTop
-      if (scrollHeight === 0) {
-        this.opcityStyle = 'opcity-0'
-      } else if (scrollHeight < 20) {
-        this.opcityStyle = 'opcity-20'
-      }else if (scrollHeight < 40 ) {
-        this.opcityStyle = 'opcity-40'
-      }else if (scrollHeight < 60) {
-        this.opcityStyle = 'opcity-60'
-      }else if (scrollHeight < 80) {
-        this.opcityStyle = 'opcity-80'
-      }
-    })
-  },
+  // mounted() {
+  //   let pageNode = document.querySelector('.page')
+  //   pageNode.addEventListener('scroll', (e) => {
+  //     // console.log(e.target.scrollTop)
+  //     let scrollHeight = e.target.scrollTop
+  //     if (scrollHeight === 0) {
+  //       this.opcityStyle = 'opcity-0'
+  //     } else if (scrollHeight < 20) {
+  //       this.opcityStyle = 'opcity-20'
+  //     }else if (scrollHeight < 40 ) {
+  //       this.opcityStyle = 'opcity-40'
+  //     }else if (scrollHeight < 60) {
+  //       this.opcityStyle = 'opcity-60'
+  //     }else if (scrollHeight < 80) {
+  //       this.opcityStyle = 'opcity-80'
+  //     }
+  //   })
+  // },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    setRangWidth(val) {
-      document.querySelector('.rang_width').style.width = val+"%"
-    },
+    // setRangWidth(val) {
+    //   document.querySelector('.rang_width').style.width = val+"%"
+    // },
     // 设置关机时间
-    setReserve(time) {
-      let h = parseInt(time[0].split(':')[0])
-      let m = parseInt(time[0].split(':')[1]) > 0 ? 1: 0
-      console.log(h,m,'hm')
-        this.controlDevice('time',{
-            timer_value:h*2+m,
-            timer_switch:'off'
-        })
-    },
-    // 取消定时
-    canceltime(){
-       this.controlDevice('close_time','true')
-    },
+    // setReserve(time) {
+    //   let h = parseInt(time[0].split(':')[0])
+    //   let m = parseInt(time[0].split(':')[1]) > 0 ? 1: 0
+    //   console.log(h,m,'hm')
+    //     this.controlDevice('time',{
+    //         timer_value:h*2+m,
+    //         timer_switch:'off'
+    //     })
+    // },
+    // // 取消定时
+    // canceltime(){
+    //    this.controlDevice('close_time','true')
+    //    .then((res) => {
+    //      if(res.code == 0) {
+    //        this.loaclAttr.close_time = true
+    //      } else {
+    //        HdSmart.UI.toast('操作失败')
+    //      }
+    //    })
+    //    .catch(() => {
+    //      HdSmart.UI.toast('操作失败')
+    //    })
+    // },
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return
       this.controlDevice('switch',val)
-    },
-    // range调风速
-    changeSpeed(e) {
-      var max = e.target.getAttribute("max")
-      var width = (93 / max * e.target.value) +"%"
-      document.querySelector('.rang_width').style.width = width
-      if(e.target.value == 0) {
-        this.rangeColor = true
-      } else {
-        this.rangeColor = false
-      }
-      this.brightness = e.target.value
-      console.log(e.target.value,'我在这里')
-
-      if (this.brightness=='1') {
-        this.controlDevice('speed','low')
-      }
-      if (this.brightness=='2') {
-        this.controlDevice('speed','normal')
-      }
-      if (this.brightness=='3') {
-        this.controlDevice('speed','high')
-      }
-      if (this.brightness=='4') {
-        if (this.deviceAttrs.mode=='wind') return HdSmart.UI.toast('送风模式不能设置自动风速')
-        this.controlDevice('speed','auto')
-      }
+      .then((res) => {
+         if(res.code == 0) {
+           this.loaclAttr.switchStatus = val
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+       })
+       .catch(() => {
+         HdSmart.UI.toast('操作失败')
+       })
     },
     // 设置模式
     setMode(val) {
-      if (val == this.deviceAttrs.mode || this.isClose) return
+      if (val == this.loaclAttr.mode || this.isClose) return
       this.controlDevice('mode', val)
-        .then(() => {
-          this.deviceAttrs.mode = val
-          if (this.deviceAttrs.speed=='low') {
-            this.setRangWidth(23.25)
-          }
-          if (this.deviceAttrs.speed=='normal') {
-            this.setRangWidth(46.5)
-          }
-          if (this.deviceAttrs.speed=='high') {
-            this.setRangWidth(69.75)
-          }
-          if (this.deviceAttrs.speed=='auto') {
-            this.setRangWidth(93)
-          }
-          // if (this.deviceAttrs.mode=='auto') {
-          //   this.progress = 70 /(32 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
-          //   this.$refs.$circle.init()
-          //   this.hide()
-          //   return
-          // }
-          this.reset()
-          this.hide()
-        })
+      .then((res) => {
+         if(res.code == 0) {
+            this.loaclAttr.mode = val
+            this.reset()
+            this.hide()
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+       })
+       .catch(() => {
+         HdSmart.UI.toast('操作失败')
+       })
     },
     setTemperature(step) {
-      if(this.deviceAttrs.mode == 'auto') {
+      if(this.loaclAttr.mode == 'auto') {
         return HdSmart.UI.toast('智能模式不支持温度调节')
       }
       // 送风模式不能设置温度
-      if (this.deviceAttrs.mode === 'wind') {
+      if (this.loaclAttr.mode === 'wind') {
         return HdSmart.UI.toast('送风模式不支持温度调节')
       }
-      let temp = +this.deviceAttrs.temperature + step
+      let temp = +this.loaclAttr.temperature + step
       // 最小温度
       if (temp < MIN_TEMP) {
-        if (this.deviceAttrs.temperature == MIN_TEMP) {
+        if (this.loaclAttr.temperature == MIN_TEMP) {
           return HdSmart.UI.toast('温度已调至最低')
         } else {
           temp = MIN_TEMP
@@ -446,53 +420,76 @@ export default {
       }
       // 最大温度
       if (temp > MAX_TEMP) {
-        if (this.deviceAttrs.temperature == MAX_TEMP) {
+        if (this.loaclAttr.temperature == MAX_TEMP) {
           return HdSmart.UI.toast('温度已调至最高')
         } else {
           temp = MAX_TEMP
         }
       }
       this.controlDevice('temperature', temp)
-        .then(() => {
-          this.deviceAttrs.temperature = temp
-          this.reset()
-        })
+        .then((res) => {
+         if(res.code == 0) {
+            this.loaclAttr.temperature = temp
+             this.reset()
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+       })
+       .catch(() => {
+         HdSmart.UI.toast('操作失败')
+       })
     },
     // 设置摆风
     setWind(attr) {
       if (this.isClose) return
-      var val = this.deviceAttrs[attr] === 'on' ? 'off' : 'on'
+      var val = this.loaclAttr[attr] === 'on' ? 'off' : 'on'
       // if (this.deviceAttrs.wind_up_down=='on') {
       //   this.controlDevice('wind_left_right','off')
       // }
       // if (this.deviceAttrs.wind_left_right=='on') {
       //    this.controlDevice('wind_up_down','off')
       // }
+      console.log(attr,val,'2222222222222222222222')
+      
       this.controlDevice(attr, val)
-        .then(() =>{
-          this.hide()
-        })
+        .then((res) => {
+         if(res.code == 0) {
+            this.loaclAttr[attr] = val
+            this.hide()
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+       })
+       .catch(() => {
+         HdSmart.UI.toast('操作失败')
+       })
     },
     // 设置风速
-    setSpeed(speed, val) {
-      this.typeVal = val
-      if (this.deviceAttrs.mode=='wind'&&val=='auto') {
-        this.typeVal = 'hand'
-      }
-      if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
+    setSpeed(speed) {
+      // this.typeVal = val
+      // if (this.deviceAttrs.mode=='wind'&&val=='auto') {
+      //   this.typeVal = 'hand'
+      // }
+      if(this.loaclAttr.mode == 'wind' && speed == 'auto') {
         return HdSmart.UI.toast('送风模式不能设置自动风速')
       }
       this.controlDevice('speed', speed)
-        .then(() =>{
-          this.hide()
-          this.setRangWidth(93)
-        })
+        .then((res) => {
+          if(res.code == 0) {
+            this.loaclAttr.speed = speed
+            this.hide()
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+       })
+       .catch(() => {
+         HdSmart.UI.toast('操作失败')
+       })
     },
     controlDevice(attr, value) {
+      console.log(this.loaclAttr,'-------------------------------------')
+      
       let param = {}
-      // if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
-      //   param = { 'speed': 'low'}
-      // }
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {
@@ -538,12 +535,12 @@ export default {
 
     getProgress() {
       // 计算温度进度条
-      if (this.deviceAttrs.mode=='auto') {
-        return 70 /(32 - 16) * (240 / 10 - 16)
-      }else if(this.deviceAttrs.mode=='wind') {
-        return 70 /(32 - 16) * (MIN_TEMP / 10 - 16)
+      if (this.loaclAttr.mode=='auto') {
+        return 70 /(32 - 16) * (250 / 10 - 16)
+      }else if(this.loaclAttr.mode=='wind'){
+        return 0
       }else{
-        return 70 /(32 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+        return 70 /(32 - 16) * (this.loaclAttr.temperature / 10 - 16)
       }
     }
   }
@@ -575,7 +572,7 @@ export default {
     background-size: 100% 100%;
     position: fixed;
     top:0;
-    left: 0; 
+    left: 0;
     right: 0;
     bottom: 0;
     z-index: -1;
@@ -600,7 +597,7 @@ export default {
     top: -40px;
     z-index: 9;
 
-    width: 190PX;
+    width: 430px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -903,10 +900,10 @@ export default {
         }
       }
     }
-    .option1{
+      .option1{
       padding: 0 40px;
       border-top: 1px solid rgba(0, 0, 0, 0.1);
-      >div{
+      .check{
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -916,18 +913,31 @@ export default {
           display: inline-block;
           line-height: 120px;
           height: 120px;
-          &:last-of-type{
-            color: rgba(0, 0, 0, 0.5);
-          }
-          &.check{
+          font-size: 32px;
+          color: #000;
+        }
+        .checkBox{
             display: flex;
             align-items: center;
-            >img{
-              width: 32px;
+            justify-content: space-between;
+            .speedBtn{
+              width: 120px;
+              height: 64px;
+              border: 1px solid #000;
+              text-align: center;
+              line-height: 64px;
+              font-family: PingFangSC-Light;
+              font-size: 24px;
+              margin-right: 20px;
+              &:last-of-type{
+                margin-right: 0px;
+              }
+              &.active{
+                background-color: #000;
+                color: #fff;
+              }
             }
           }
-        }
-
       }
       input[type="range"] {
         display: block;
@@ -982,7 +992,7 @@ export default {
     }
   }
       .item{
-        animation: box 5s; 
+        animation: box 5s;
       }
       @keyframes box {
         from{height: 0;}
@@ -1007,7 +1017,7 @@ export default {
     &:before {
       content: "";
       position: fixed;
-      top: 64PX;
+      top: 0;
       left: 0;
       bottom: 0;
       right: 0;

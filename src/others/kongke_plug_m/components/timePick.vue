@@ -4,18 +4,18 @@
       选中值为：<span>{{ selectedValue }}</span>
     </div> -->
     <div class="wrap-box">
-      <!-- <div 
-        :style="{ top: 1.5 +'rem' }" 
+      <!-- <div
+        :style="{ top: 1.5 +'rem' }"
         class="noplay"/> -->
       <div class="box">
-        <ul 
-          :style="{ top: hTop+0.85 +'rem' }" 
-          class="list" 
-          @touchstart="touchStart($event,'hours')" 
-          @touchmove="touchMove($event,'hours')" 
+        <ul
+          :style="{ top: hTop+0.85 +'rem' }"
+          class="list"
+          @touchstart="touchStart($event,'hours')"
+          @touchmove="touchMove($event,'hours')"
           @touchend="touchEnd($event, 'hours')">
           <li class="current-pre"/>
-          <li 
+          <li
             v-for="(it, idx) in dataList.hours"
             :key="idx"
             :class="{'current-pre': hIndex!==idx,
@@ -24,14 +24,14 @@
       </div>
       <div class="unit">小时</div>
       <div class="box">
-        <ul 
-          :style="{ top: mTop+0.85 +'rem' }" 
-          class="list" 
-          @touchstart="touchStart($event,'minute')" 
-          @touchmove="touchMove($event,'minute')" 
+        <ul
+          :style="{ top: mTop+0.85 +'rem' }"
+          class="list"
+          @touchstart="touchStart($event,'minute')"
+          @touchmove="touchMove($event,'minute')"
           @touchend="touchEnd($event,'minute')">
           <li class="current-pre"/>
-          <li 
+          <li
             v-for="(it, idx) in dataList.minute"
             :key="idx"
             :class="{'current-pre': mIndex!==idx,
@@ -128,11 +128,11 @@
           }
           this.hTop = - (this.hIndex * this.liheight) / this.fontSize
           console.log(this.hTop)
-          
+
         }
         this.selectedValue = this.hIndex + ':' + this.mIndex
         console.log(this.selectedValue)
-        
+
       },
     }
   }
@@ -173,7 +173,7 @@
       flex: 1;
       text-align: center;
     }
-    
+
     .list li {
       box-sizing: border-box;
       user-select: none;
@@ -182,7 +182,7 @@
       color: #888;
     }
     /*滚动样式*/
-    
+
     li.current {
       font-size: 40px;
       color: #FFC600;

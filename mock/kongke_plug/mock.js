@@ -13,7 +13,11 @@ let res = {
     'openEnable': 'false',
     'closeEnable': 'false',
     'delayClose': {},
-    'delayOpen': {}
+    'delayOpen': {},
+    'timer': {
+      'closeTime': '2019-11-20-14:20:20',
+      'openTime': '2019-11-20-18:40:50',
+    }
 }
 export function generateSnapShot() {
     return Mock.mock({
