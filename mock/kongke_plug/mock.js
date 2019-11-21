@@ -12,7 +12,16 @@ let res = {
     'ovp':'open',//充电保护 open/close
     'openEnable': 'false',
     'closeEnable': 'false',
-    'delayClose': {},
+    'delayClose': {
+      'closeEnable':'y',
+      'closeTime':'2019-11-21-23:37:44',
+      'openEnable':'n',
+      'openTime':'2019-11-19-17:37:44',
+      'respeat':'1',
+      'setTime':'2019-11-19-17:32:44',
+      'timerEnable':'y',
+      'timerld':'1023'
+    },
     'delayOpen': {},
     'timer': {
       'closeTime': '2019-11-20-14:20:20',
