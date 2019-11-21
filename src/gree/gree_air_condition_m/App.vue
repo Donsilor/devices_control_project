@@ -302,7 +302,7 @@ export default {
       }
       this.controlDevice('temperature', temp)
         .then(() => {
-          this.deviceAttrs.temperature = temp
+          // this.deviceAttrs.temperature = temp
           this.reset()
         })
     },
@@ -822,20 +822,6 @@ export default {
         from{height: 0;}
         to{height: 100px;}
       }
-  // &.close {
-  //   .btn-wrap {
-  //     &.up-index{
-  //       opacity: 1;
-  //     }
-  //   }
-  // }
-  // &.offline {
-  //   .btn-wrap {
-  //     &.up-index{
-  //       opacity: .2;
-  //     }
-  //   }
-  // }
   &.close,
   &.offline {
     &:before {
