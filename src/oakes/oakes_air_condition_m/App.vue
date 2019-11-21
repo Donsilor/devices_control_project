@@ -137,6 +137,9 @@
               <div 
                 :class="[{ 'active': loaclAttr.speed == 'high'},'speedBtn']" 
                 @click="setSpeed('high')">3档</div>
+              <div 
+                :class="[{ 'active': loaclAttr.speed == 'auto'},'speedBtn']" 
+                @click="setSpeed('auto')">自动</div>
             </div>
           </div>
           <!-- <div
