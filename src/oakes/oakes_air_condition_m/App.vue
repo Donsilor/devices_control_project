@@ -13,15 +13,15 @@
         <div class="wrap-circle">
           <div class="bg">
             <div
-              v-if="loaclAttr.connectivity == 'offline'||loaclAttr.switchStatus=='off'"
+              v-if="loaclAttr.connectivity == 'offline'||loaclAttr.switchStatus=='off'||loaclAttr.mode=='wind'"
               class="tm">-- <sup>°C</sup></div>
             <div
-              v-if="!isOffline&& loaclAttr.switchStatus == 'on'&&loaclAttr.mode!=='auto'"
+              v-if="!isOffline&& loaclAttr.switchStatus == 'on'&&loaclAttr.mode!=='auto'&&loaclAttr.mode!='wind'"
               class="tm">{{ loaclAttr.temperature | filterTm }}<sup>°C</sup>
             </div>
             <div
               v-if="!isOffline&& loaclAttr.switchStatus == 'on'&&loaclAttr.mode=='auto'"
-              class="tm">24<sup>°C</sup>
+              class="tm">25<sup>°C</sup>
             </div>
             <div
               v-show="!isOffline&& loaclAttr.switchStatus == 'on'"
@@ -372,7 +372,7 @@ export default {
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return
-      this.controlDevice('switchStatus',val)
+      this.controlDevice('switch',val)
       .then((res) => {
          if(res.code == 0) {
            this.loaclAttr.switchStatus = val
@@ -536,7 +536,9 @@ export default {
     getProgress() {
       // 计算温度进度条
       if (this.loaclAttr.mode=='auto') {
-        return 70 /(32 - 16) * (240 / 10 - 16)
+        return 70 /(32 - 16) * (250 / 10 - 16)
+      }else if(this.loaclAttr.mode=='wind'){
+        return 0
       }else{
         return 70 /(32 - 16) * (this.loaclAttr.temperature / 10 - 16)
       }
