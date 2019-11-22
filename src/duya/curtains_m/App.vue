@@ -8,12 +8,20 @@
         bak-color="#000"/>
       <div class="main center">
         <div class="stick" >
-          <img 
-            class="curtainLeft" 
-            src="../../../lib/base/new_curtains/assets/single.png">
-          <img 
-            class="curtainRight" 
-            src="../../../lib/base/new_curtains/assets/single.png">
+          <div class="imgBox">
+            <img 
+              class="curtainLeft" 
+              src="../../../lib/base/new_curtains/assets/single.png">
+            <img 
+              class="left" 
+              src="../../../lib/base/new_curtains/assets/left.png">
+            <img 
+              class="curtainRight" 
+              src="../../../lib/base/new_curtains/assets/single.png">
+            <img 
+              class="right" 
+              src="../../../lib/base/new_curtains/assets/right.png">
+          </div>
         </div>
         <!-- <div
           ref="isgray"
@@ -107,9 +115,14 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    setOpen(){},
+    // 全开
+    setOpen(){
+      this.controlDevice('switch', 'on')
+    },
     setPause(){},
-    setClose(){},
+    setClose(){
+      this.controlDevice('switch', 'off')
+    },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
         nodeid: `curtain.main.${attr}`,
@@ -152,16 +165,39 @@ export default {
         background-image: url('~@lib/@{imgPath}/gun.png');
         background-size: 100% 100%;
       }
-      >img{
+      .imgBox{
         position: absolute;
         top: 16px;
-        width: 49%;
+        width: 100%;
         height: 38vh;
-        &.curtainLeft{
+        .curtainLeft{
+          top: 0;
+          left: 10px;
+          width: 49%;
+          height: 38vh;
+          position: absolute;
           left: 10px;
         }
-        &.curtainRight{
+        .curtainRight{
+          top: 0;
+          width: 49%;
+          height: 38vh;
+          position: absolute;
           right: 10px;
+        }
+        .left{ 
+          position: absolute;
+          top: 50%;
+          left: 20px;
+          width: 276px;
+          margin-top: -52px;
+        }
+        .right{ 
+          position: absolute;
+          top: 50%;
+          right: 20px;
+          width: 276px;
+          margin-top: -52px;
         }
       }
     }
