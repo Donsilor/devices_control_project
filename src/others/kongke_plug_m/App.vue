@@ -21,10 +21,10 @@
       </div>
       <div
         v-show="delayClose.countdownClose && switchValue == 'open' && delayClose.closeEnable=='y'"
-        class="status1">{{ delayClose.countdownClose | delayTime }}后断电</div>
+        class="status1">{{ delayClose.countdownClose | delayTime }}后延时断电</div>
       <div
         v-show="delayOpen.countdownOpen && switchValue == 'close' && delayOpen.openEnable=='y'"
-        class="status1">{{ delayOpen.countdownOpen | delayTime }}后通电</div>
+        class="status1">{{ delayOpen.countdownOpen | delayTime }}后延时通电</div>
       <div
         v-show="!isOffline"
         class="panel-btn center">
@@ -35,7 +35,7 @@
           <div class="btn-name">{{ switchValue=='open'?'断电':'通电' }}</div>
         </div>
         <div
-          v-if="delayOpen.openEnable=='y' || delayClose.closeEnable=='y'"
+          v-if="(delayOpen.openEnable=='y' && switchValue == 'close') || (delayClose.closeEnable=='y' && switchValue == 'open')"
           class="btn-wrap">
           <div
             :class="[{'progress':timeOutEvent != 0},'btn btn-delay center circleProgress_wrapper']"
@@ -176,14 +176,14 @@ export default {
     'deviceAttrs.delayClose.closeTime'() {
       //获取时间格式转换时间戳对比作倒计时处理，变量局部使用
       // if(this.deviceAttrs.delayClose.closeTime) {
-      //   let abcqwe = this.deviceAttrs.delayClose.closeTime.substring(0,10)
-      //   let cbaqwe = this.deviceAttrs.delayClose.closeTime.substring(11)
-      //   let tqwe = abcqwe + ' ' + cbaqwe
-      //   let timeqwe = this.getDateTime(new Date(), 'fulltime')
-      //   let aqwe = (new Date(tqwe.replace(/-/g, "/"))).getTime()
-      //   let bqwe = (new Date(timeqwe.replace(/-/g, "/"))).getTime()
-      //   if(aqwe > bqwe) {
-      //     let timeVal = (aqwe - bqwe) / 1000
+      //   let beforeDate = this.deviceAttrs.delayClose.closeTime.substring(0,10)
+      //   let afterDate = this.deviceAttrs.delayClose.closeTime.substring(11)
+      //   let mergeDate = beforeDate + ' ' + afterDate
+      //   let currentDate = this.getDateTime(new Date(), 'fulltime')
+      //   let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+      //   let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+      //   if(returnTimestamp > currentTimestamp) {
+      //     let timeVal = (returnTimestamp - currentTimestamp) / 1000
       //     this.delayClose.countdownClose = timeVal
       //     this.timeIntDelay('countdownClose')
       //   }
@@ -192,18 +192,42 @@ export default {
     'deviceAttrs.delayOpen.openTime'() {
       //获取时间格式转换时间戳对比作倒计时处理，变量局部使用
       // if(this.deviceAttrs.delayOpen.openTime) {
-      //   let abcqwe = this.deviceAttrs.delayOpen.openTime.substring(0,10)
-      //   let cbaqwe = this.deviceAttrs.delayOpen.openTime.substring(11)
-      //   let tqwe = abcqwe + ' ' + cbaqwe
-      //   let timeqwe = this.getDateTime(new Date(), 'fulltime')
-      //   let aqwe = (new Date(tqwe.replace(/-/g, "/"))).getTime()
-      //   let bqwe = (new Date(timeqwe.replace(/-/g, "/"))).getTime()
-      //   if(aqwe > bqwe) {
-      //     let timeVal = (aqwe - bqwe) / 1000
+      //   let beforeDate = this.deviceAttrs.delayOpen.openTime.substring(0,10)
+      //   let afterDate = this.deviceAttrs.delayOpen.openTime.substring(11)
+      //   let mergeDate = beforeDate + ' ' + afterDate
+      //   let currentDate = this.getDateTime(new Date(), 'fulltime')
+      //   let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+      //   let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+      //   if(returnTimestamp > currentTimestamp) {
+      //     let timeVal = (returnTimestamp - currentTimestamp) / 1000
       //     this.delayOpen.countdownOpen = timeVal
       //     this.timeIntDelay('countdownOpen')
       //   }
       // }
+    },
+    'deviceAttrs.timer.openTime'() {
+      //获取时间格式转换时间戳对比作定时处理，变量局部使用
+      let beforeDate = this.deviceAttrs.timer.openTime.substring(0,10)
+      let afterDate = this.deviceAttrs.timer.openTime.substring(11)
+      let mergeDate = beforeDate + ' ' + afterDate
+      let currentDate = this.getDateTime(new Date(), 'fulltime')
+      let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+      let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+      if(returnTimestamp < currentTimestamp) {
+        this.timer.openEnable = 'n'
+      }
+    },
+    'deviceAttrs.timer.closeTime'() {
+      //获取时间格式转换时间戳对比作定时处理，变量局部使用
+      let beforeDate = this.deviceAttrs.timer.closeTime.substring(0,10)
+      let afterDate = this.deviceAttrs.timer.closeTime.substring(11)
+      let mergeDate = beforeDate + ' ' + afterDate
+      let currentDate = this.getDateTime(new Date(), 'fulltime')
+      let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+      let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+      if(returnTimestamp < currentTimestamp) {
+        this.timer.closeEnable = 'n'
+      }
     }
   },
   created() {
@@ -211,6 +235,7 @@ export default {
       this.getDeviceInfo()
       .then(() => {
         this.timer = this.deviceAttrs.timer
+        console.log(this.timer)
         this.closeLocalTime = this.deviceAttrs.timer.closeTime
         this.openLocalTime = this.deviceAttrs.timer.openTime
         if(this.deviceAttrs.delayClose) {
@@ -219,32 +244,62 @@ export default {
         if(this.deviceAttrs.delayOpen) {
           this.delayOpen = Object.assign(this.delayOpen, this.deviceAttrs.delayOpen)
         }
+        //获取时间格式转换时间戳对比作定时处理，变量局部使用
+        if(this.deviceAttrs.timer.openTime) {
+          let beforeDate = this.deviceAttrs.timer.openTime.substring(0,10)
+          let afterDate = this.deviceAttrs.timer.openTime.substring(11)
+          let mergeDate = beforeDate + ' ' + afterDate
+          let currentDate = this.getDateTime(new Date(), 'fulltime')
+          let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+          let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+          if(returnTimestamp < currentTimestamp) {
+            this.timer.openEnable = 'n'
+          }
+        }
+        //获取时间格式转换时间戳对比作定时处理，变量局部使用
+        if(this.deviceAttrs.timer.closeTime) {
+          let beforeDate = this.deviceAttrs.timer.closeTime.substring(0,10)
+          let afterDate = this.deviceAttrs.timer.closeTime.substring(11)
+          let mergeDate = beforeDate + ' ' + afterDate
+          let currentDate = this.getDateTime(new Date(), 'fulltime')
+          let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+          let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+          if(returnTimestamp < currentTimestamp) {
+            this.timer.closeEnable = 'n'
+          }
+        }
         //获取时间格式转换时间戳对比作倒计时处理，变量局部使用
         if(this.deviceAttrs.delayClose.closeEnable == 'y') {
-          let abcqwe = this.deviceAttrs.delayClose.closeTime.substring(0,10)
-          let cbaqwe = this.deviceAttrs.delayClose.closeTime.substring(11)
-          let tqwe = abcqwe + ' ' + cbaqwe
-          let timeqwe = this.getDateTime(new Date(), 'fulltime')
-          let aqwe = (new Date(tqwe.replace(/-/g, "/"))).getTime()
-          let bqwe = (new Date(timeqwe.replace(/-/g, "/"))).getTime()
-          if(aqwe > bqwe) {
-            let timeVal = (aqwe - bqwe) / 1000
+          let beforeDate = this.deviceAttrs.delayClose.closeTime.substring(0,10)
+          let afterDate = this.deviceAttrs.delayClose.closeTime.substring(11)
+          let mergeDate = beforeDate + ' ' + afterDate
+          let currentDate = this.getDateTime(new Date(), 'fulltime')
+          let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+          let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+          if(returnTimestamp > currentTimestamp) {
+            let timeVal = (returnTimestamp - currentTimestamp) / 1000
             this.delayClose.countdownClose = timeVal
             this.timeIntDelay('countdownClose')
+          } else {
+            this.delayOpen.openEnable = 'n'
+            this.delayClose.closeEnable = 'n'
           }
         }
         //获取时间格式转换时间戳对比作倒计时处理，变量局部使用
         if(this.deviceAttrs.delayOpen.openEnable == 'y') {
-          let abcqwe = this.deviceAttrs.delayOpen.openTime.substring(0,10)
-          let cbaqwe = this.deviceAttrs.delayOpen.openTime.substring(11)
-          let tqwe = abcqwe + ' ' + cbaqwe
-          let timeqwe = this.getDateTime(new Date(), 'fulltime')
-          let aqwe = (new Date(tqwe.replace(/-/g, "/"))).getTime()
-          let bqwe = (new Date(timeqwe.replace(/-/g, "/"))).getTime()
-          if(aqwe > bqwe) {
-            let timeVal = (aqwe - bqwe) / 1000
+          let beforeDate = this.deviceAttrs.delayOpen.openTime.substring(0,10)
+          let afterDate = this.deviceAttrs.delayOpen.openTime.substring(11)
+          let mergeDate = beforeDate + ' ' + afterDate
+          let currentDate = this.getDateTime(new Date(), 'fulltime')
+          let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+          let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+          if(returnTimestamp > currentTimestamp) {
+            let timeVal = (returnTimestamp - currentTimestamp) / 1000
             this.delayOpen.countdownOpen = timeVal
             this.timeIntDelay('countdownOpen')
+          } else {
+            this.delayOpen.openEnable = 'n'
+            this.delayClose.closeEnable = 'n'
           }
         }
       })
@@ -274,9 +329,9 @@ export default {
       this.controlDevice('switch',switchStatus)
       .then((res) => {
         if(res.code == 0) {
-          clearInterval(this.timeOutDelay)
-          this.delayClose = {}
-          this.delayOpen = {}
+          // clearInterval(this.timeOutDelay)
+          // this.delayClose = {}
+          // this.delayOpen = {}
           if(switchStatus.switch == 'open') {
             this.switchValue = 'open'
           }
@@ -332,12 +387,6 @@ export default {
             this.timeOutEvent = 0
             this.delayClose = {}
             this.delayOpen = {}
-            // for(let key in this.delayClose){
-            //   delete this.delayClose[key]
-            // }
-            // for(let idx in this.delayOpen){
-            //   delete this.delayOpen[idx]
-            // }
           } else {
            HdSmart.UI.toast('操作失败')
          }
@@ -451,6 +500,7 @@ export default {
           this.controlDevice('countdownClose', obj)
           .then((res) => {
             if(res.code == 0) {
+              this.delayOpen = {}
               this.delayClose = obj.set_delay_task
               this.delayClose.openEnable = 'n'
               this.delayClose.closeEnable = 'y'
@@ -478,6 +528,7 @@ export default {
           this.controlDevice('countdownOpen', obj)
           .then((res) => {
             if(res.code == 0) {
+              this.delayClose = {}
               this.delayOpen = obj.set_delay_task
               this.delayOpen.openEnable = 'y'
               this.delayOpen.closeEnable = 'n'
@@ -499,16 +550,18 @@ export default {
         let Mtime = this.getDateTime(new Date(), 'm')
         //获取时间格式转换时间戳对比，作日期选择，变量局部使用
         if(h < Htime) {
-          let abcqwe = time.substring(0,10)
-          let aqwe = (new Date(abcqwe.replace(/-/g, "/"))).getTime() + 86400000//当天时间戳 + 1 天
-          let timeVal = aqwe + (h * (60 * 60 * 1000)) + (m * (60 * 1000))
+          let beforeDate = time.substring(0,10)
+          let returnTimestamp = (new Date(beforeDate.replace(/-/g, "/"))).getTime() + 86400000//当天时间戳 + 1 天
+          let timeVal = returnTimestamp + (h * (60 * 60 * 1000)) + (m * (60 * 1000))
           this.timeValue = this.getDateTime(new Date(timeVal)) + '-' + hours + ':' + min + ':' + '00'
+          HdSmart.UI.toast('当前设定时间为明天')
         } else if(h == Htime) {
           if(m <= Mtime) {
-            let abcqwe = time.substring(0,10)
-            let aqwe = (new Date(abcqwe.replace(/-/g, "/"))).getTime() + 86400000//当天时间戳 + 1 天
-            let timeVal = aqwe + (h * (60 * 60 * 1000)) + (m * (60 * 1000))
+            let beforeDate = time.substring(0,10)
+            let returnTimestamp = (new Date(beforeDate.replace(/-/g, "/"))).getTime() + 86400000//当天时间戳 + 1 天
+            let timeVal = returnTimestamp + (h * (60 * 60 * 1000)) + (m * (60 * 1000))
             this.timeValue = this.getDateTime(new Date(timeVal)) + '-' + hours + ':' + min + ':' + '00'
+            HdSmart.UI.toast('当前设定时间为明天')
           }
         }
         if(this.switchValue === 'close'){
