@@ -10,17 +10,27 @@
         <div class="stick" >
           <div class="imgBox">
             <img 
+              ref="curtainLeft"
               class="curtainLeft" 
               src="../../../lib/base/new_curtains/assets/single.png">
             <img 
+              ref="left"
               class="left" 
-              src="../../../lib/base/new_curtains/assets/left.png">
+              src="../../../lib/base/new_curtains/assets/left.png"
+              @touchstart="leftStart($event)"
+              @touchmove="leftMove($event)"
+              @touchend="leftEnd($event)">
             <img 
+              ref="curtainRight"
               class="curtainRight" 
               src="../../../lib/base/new_curtains/assets/single.png">
             <img 
+              ref="right"
               class="right" 
-              src="../../../lib/base/new_curtains/assets/right.png">
+              src="../../../lib/base/new_curtains/assets/right.png"
+              @touchstart="rightStart($event)"
+              @touchmove="rightMove($event)"
+              @touchend="rightEnd($event)">
           </div>
         </div>
         <!-- <div
@@ -119,10 +129,30 @@ export default {
     setOpen(){
       this.controlDevice('switch', 'on')
     },
+    //暂停
     setPause(){},
+    //全关
     setClose(){
       this.controlDevice('switch', 'off')
     },
+    // 滑动窗帘
+    leftStart(e){
+      console.log(e)
+    },
+    leftMove(e){
+      //滑动时计算窗帘的宽度
+      let curtainLeft = this.$refs.curtainLeft
+      let leftWidth = e.targetTouches[0].pageX - curtainLeft.offsetLeft
+      let maxWidth = curtainLeft.offsetWidth
+      leftWidth = leftWidth <= 40 ? 40 : leftWidth
+      leftWidth = leftWidth >= maxWidth ? maxWidth : leftWidth
+      curtainLeft.style.width = leftWidth + "px"
+      //滑动时裁切滑块的宽度
+      let left = this.$refs.left
+      leftSlider = left.offsetWidth 
+      coverlight.style.clip = `rect( ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
+    },
+    leftEnd(e){},
     controlDevice(attr, value,params) {
       return this.doControlDevice({
         nodeid: `curtain.main.${attr}`,

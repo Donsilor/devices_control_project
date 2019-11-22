@@ -127,13 +127,13 @@
               class="checkBox">
               <div 
                 :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']" 
-                @click="setSpeed('low')">1档</div>
+                @click="setSpeed('low')">低</div>
               <div 
                 :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']" 
-                @click="setSpeed('normal')">2档</div>
+                @click="setSpeed('normal')">中</div>
               <div 
                 :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']" 
-                @click="setSpeed('high')">3档</div>
+                @click="setSpeed('high')">高</div>
               <div 
                 :class="[{ 'active': deviceAttrs.speed == 'auto'},'speedBtn']" 
                 @click="setSpeed('auto')">自动</div>
@@ -231,18 +231,18 @@ export default {
           return 'btn-low'
       }
     },
-    getBarColor() {
+ getBarColor() {
       if(this.isClose || this.isOffline) return '#D8D8D8'
             /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.mode) {
         case 'cold':
-          return '#00A3FF '
+          return '#008CDA '
           break
         case 'heat':
-          return '#FF6600'
+          return ' #DA6C00'
           break
         default:
-          return '#000'
+          return '#E1B96E'
       }
     },
   },
@@ -424,7 +424,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .control{
+   .control{
       outline: none;
       border: none;
       width: 72px;
@@ -432,12 +432,18 @@ export default {
       background: rgba(0,0,0,0.04);
       border-radius: 50%;
       &.add{
-        background-image: url(~@lib/base/fridge/assets/add.png);
-        background-size: 100% 100%;
+         width: 72px;
+         height: 72px;
+          background-image: url('~@lib/@{imgPath1}/up.png');
+          background-size: 70% 70%;
+          background-position: center;
       }
       &.reduce{
-        background-image: url(~@lib/base/fridge/assets/reduce.png);
-        background-size: 100% 100%;
+        width: 72px;
+         height: 72px;
+          background-image: url('~@lib/@{imgPath1}/down.png');
+          background-size: 70% 70%;
+          background-position: center;
       }
     }
   }
@@ -569,7 +575,7 @@ export default {
         height: 44px;
       }
       &.active {
-        background: #000;
+        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
       }
     }
     .btn-name {
@@ -590,18 +596,10 @@ export default {
         background-image: url('~@lib/@{imgPath1}/cold.png');
         background-size: 100% 100%;
       }
-      &.active::before {
-        background-image: url('~@lib/@{imgPath1}/cold1.png');
-        background-size: 100% 100%;
-      }
     }
     .btn-heat {
       &::before {
         background-image: url('~@lib/@{imgPath1}/heat.png');
-        background-size: 100% 100%;
-      }
-       &.active::before {
-        background-image: url('~@lib/@{imgPath1}/heat1.png');
         background-size: 100% 100%;
       }
     }
@@ -629,19 +627,11 @@ export default {
         background-image: url('~@lib/@{imgPath1}/wind.png');
         background-size: 100% 100%;
       }
-      &.active::before {
-        background-image: url('~@lib/@{imgPath1}/wind1.png');
-        background-size: 100% 100%;
-      }
     }
 
     .btn-dehumidify {
       &::before {
         background-image: url('~@lib/@{imgPath1}/dehumidify.png');
-        background-size: 100% 100%;
-      }
-      &.active::before {
-        background-image: url('~@lib/@{imgPath1}/dehumidify1.png');
         background-size: 100% 100%;
       }
     }
@@ -672,10 +662,6 @@ export default {
     .btn-auto{
       &::before {
         background-image: url('~@lib/@{imgPath1}/auto.png');
-        background-size: 100% 100%;
-      }
-       &.active::before {
-        background-image: url('~@lib/@{imgPath1}/auto1.png');
         background-size: 100% 100%;
       }
     }
@@ -745,20 +731,33 @@ export default {
             align-items: center;
             justify-content: space-between;
             .speedBtn{
-              width: 120px;
+              width: 96px;
               height: 64px;
-              border: 1px solid #000;
               text-align: center;
               line-height: 64px;
               font-family: PingFangSC-Light;
-              font-size: 24px;
+              font-size: 32px;
               margin-right: 20px;
+              color: #000;
+              opacity: .5;
               &:last-of-type{
                 margin-right: 0px;
               }
               &.active{
-                background-color: #000;
-                color: #fff;
+                opacity: 1;
+                position: relative;
+                &::before{
+                  display: block;
+                  content: "";
+                  width: 8px;
+                  height: 8px;
+                  border-radius: 50%;
+                  background: #000;
+                  position: absolute;
+                  bottom: 0;
+                  left: 50%;
+                  margin-left: -4px;
+                }
               }
             }
           }
