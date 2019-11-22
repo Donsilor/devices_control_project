@@ -119,13 +119,13 @@
               class="checkBox">
               <div 
                 :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']" 
-                @click="setSpeed('low')">1档</div>
+                @click="setSpeed('low')">低风</div>
               <div 
                 :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']" 
-                @click="setSpeed('normal')">2档</div>
+                @click="setSpeed('normal')">中风</div>
               <div 
                 :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']" 
-                @click="setSpeed('high')">3档</div>
+                @click="setSpeed('high')">高风</div>
             </div>
           </div>
           <!-- <div 

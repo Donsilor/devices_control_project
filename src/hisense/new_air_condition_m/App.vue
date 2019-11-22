@@ -118,27 +118,23 @@
         v-show="!isClose&&!isOffline"
         class="optionbox">
         <div class="option1">
-          <div>
+          <div class="check">
             <span>风速</span>
-            <span 
-              class="check" 
-              @click="showSpeed">{{ typeVal=='auto'?'自动':'手动' }}
-              <img 
-                v-show="typeVal!=='auto'" 
-                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
-            </span>
-          </div>
-          <div
-            v-show="typeVal!=='auto'"
-            class="range">
-            <input
-              :value="brightnessValue"
-              type="range"
-              min="0"
-              max="4"
-              step="1"
-              @touchend="changeSpeed">
-            <p :class="['rang_width']"/>
+            <div 
+              class="checkBox">
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']" 
+                @click="setSpeed('low')">1档</div>
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']" 
+                @click="setSpeed('normal')">2档</div>
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']" 
+                @click="setSpeed('high')">3档</div>
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'auto'},'speedBtn']" 
+                @click="setSpeed('auto')">自动</div>
+            </div>
           </div>
         </div>
         <!-- 摆风 -->
@@ -195,7 +191,7 @@ export default {
     return {
       isOpen: false,
       isShow: true,
-      width: 230,
+      width: 250,
       radius: 8,
       progress: 30, // 0~70
       duration: 0,
@@ -270,24 +266,6 @@ export default {
     },
   },
   watch: {
-    "deviceAttrs.speed"() {
-      if(this.deviceAttrs.speed == 'low') {
-        this.brightnessValue = 1
-        this.setRangWidth(23.25)
-      }
-      if(this.deviceAttrs.speed == 'normal') {
-        this.brightnessValue = 2
-        this.setRangWidth(46.5)
-      }
-      if(this.deviceAttrs.speed == 'high') {
-        this.brightnessValue = 3
-        this.setRangWidth(69.75)
-      }
-      if(this.deviceAttrs.speed == 'auto') {
-        this.brightnessValue = 4
-        this.setRangWidth(93)
-      }
-    }
   },
   created() {
     HdSmart.ready(() => {
@@ -298,84 +276,12 @@ export default {
       HdSmart.UI.setStatusBarColor(2)
     })
   },
-  mounted() {
-    let pageNode = document.querySelector('.page')
-    pageNode.addEventListener('scroll', (e) => {
-      // console.log(e.target.scrollTop)
-      let scrollHeight = e.target.scrollTop
-      if (scrollHeight === 0) {
-        this.opcityStyle = 'opcity-0'
-      } else if (scrollHeight < 20) {
-        this.opcityStyle = 'opcity-20'
-      }else if (scrollHeight < 40 ) {
-        this.opcityStyle = 'opcity-40'
-      }else if (scrollHeight < 60) {
-        this.opcityStyle = 'opcity-60'
-      }else if (scrollHeight < 80) {
-        this.opcityStyle = 'opcity-80'
-      }
-    })
-  },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    setRangWidth(val) {
-      document.querySelector('.rang_width').style.width = val+"%"
-    },
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return
       this.controlDevice('switch',val)
-    },
-    // range调风速
-    changeSpeed(e) {
-      var max = e.target.getAttribute("max")
-      var width = (93 / max * e.target.value) +"%"
-      document.querySelector('.rang_width').style.width = width
-      if(e.target.value == 0) {
-        this.rangeColor = true
-      } else {
-        this.rangeColor = false
-      }
-      this.brightness = e.target.value
-      console.log(e.target.value,'我在这里')
-
-      if (this.brightness=='1') {
-        if(this.deviceAttrs.mode == 'dehumidify') {
-          return HdSmart.UI.toast('除湿模式下无法设定风速')
-        }
-        if(this.deviceAttrs.mode == 'auto') {
-          return HdSmart.UI.toast('智能模式下无法设定风速')
-        }
-        this.controlDevice('speed','low')
-      }
-      if (this.brightness=='2') {
-        if(this.deviceAttrs.mode == 'dehumidify') {
-          return HdSmart.UI.toast('除湿模式下无法设定风速')
-        }
-        if(this.deviceAttrs.mode == 'auto') {
-          return HdSmart.UI.toast('智能模式下无法设定风速')
-        }
-        this.controlDevice('speed','normal')
-      }
-      if (this.brightness=='3') {
-        if(this.deviceAttrs.mode == 'dehumidify') {
-          return HdSmart.UI.toast('除湿模式下无法设定风速')
-        }
-        if(this.deviceAttrs.mode == 'auto') {
-          return HdSmart.UI.toast('智能模式下无法设定风速')
-        }
-        this.controlDevice('speed','high')
-      }
-      if (this.brightness=='4') {
-        if(this.deviceAttrs.mode == 'dehumidify') {
-          return HdSmart.UI.toast('除湿模式下无法设定风速')
-        }
-        if(this.deviceAttrs.mode == 'auto') {
-          return HdSmart.UI.toast('智能模式下无法设定风速')
-        }
-        if (this.deviceAttrs.mode=='wind') return HdSmart.UI.toast('送风模式不支持自动风速')
-        this.controlDevice('speed','auto')
-      }
     },
     // 设置模式
     setMode(val) {
@@ -388,18 +294,6 @@ export default {
             this.$refs.$circle.init()
             this.hide()
             return
-          }
-          if (this.deviceAttrs.speed=='low') {
-            this.setRangWidth(23.25)
-          }
-          if (this.deviceAttrs.speed=='normal') {
-            this.setRangWidth(46.5)
-          }
-          if (this.deviceAttrs.speed=='high') {
-            this.setRangWidth(69.75)
-          }
-          if (this.deviceAttrs.speed=='auto') {
-            this.setRangWidth(93)
           }
           this.reset()
           this.hide()
@@ -457,7 +351,6 @@ export default {
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
-          // this.setRangWidth(val)
         })
     },
     controlDevice(attr, value) {
@@ -564,7 +457,7 @@ export default {
     top: -40px;
     z-index: 9;
 
-    width: 190PX;
+    width: 430px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -814,7 +707,7 @@ export default {
     }
     .btn-auto{
       &::before {
-        background-image: url('~@lib/@{imgPath}/auto.png');
+        background-image: url('~@lib/@{imgPath1}/auto.png');
         background-size: 100% 100%;
       }
        &.active::before {
@@ -870,7 +763,7 @@ export default {
     .option1{
       padding: 0 40px;
       border-top: 1px solid rgba(0, 0, 0, 0.1);
-      >div{
+            .check{
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -880,18 +773,31 @@ export default {
           display: inline-block;
           line-height: 120px;
           height: 120px;
-          &:last-of-type{
-            color: rgba(0, 0, 0, 0.5);
-          }
-          &.check{
+          font-size: 32px;
+          color: #000;
+        }
+        .checkBox{
             display: flex;
             align-items: center;
-            >img{
-              width: 32px;
+            justify-content: space-between;
+            .speedBtn{
+              width: 120px;
+              height: 64px;
+              border: 1px solid #000;
+              text-align: center;
+              line-height: 64px;
+              font-family: PingFangSC-Light;
+              font-size: 24px;
+              margin-right: 20px;
+              &:last-of-type{
+                margin-right: 0px;
+              }
+              &.active{
+                background-color: #000;
+                color: #fff;
+              }
             }
           }
-        }
-
       }
       input[type="range"] {
         display: block;
