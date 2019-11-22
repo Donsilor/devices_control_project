@@ -20,11 +20,14 @@
         <div class="bg"><div class="circle"><div class="status">{{ switchValue=='open'?'通电中':'断电中' }}</div></div></div>
       </div>
       <div
-        v-show="delayClose.countdownClose && switchValue == 'open' && delayClose.closeEnable=='y'"
+        v-if="delayClose.countdownClose && switchValue == 'open' && delayClose.closeEnable=='y'"
         class="status1">{{ delayClose.countdownClose | delayTime }}后延时断电</div>
       <div
-        v-show="delayOpen.countdownOpen && switchValue == 'close' && delayOpen.openEnable=='y'"
+        v-else-if="delayOpen.countdownOpen && switchValue == 'close' && delayOpen.openEnable=='y'"
         class="status1">{{ delayOpen.countdownOpen | delayTime }}后延时通电</div>
+      <div
+        v-else
+        class="status1">&nbsp;</div>
       <div
         v-show="!isOffline"
         class="panel-btn center">
@@ -80,7 +83,7 @@
             class="timing-right"
             @click="showTime('设置开机时间')">{{ timer.openEnable == 'y'?timer.openTime + ' 开机':'' }}＞ </div>
         </div>
-        <div class="Charging-protection">
+        <!-- <div class="Charging-protection">
           <div>充电保护</div>
           <div
             style="z-index: 999;"><input
@@ -89,7 +92,7 @@
               class="switch switch-anim"
               type="checkbox"
               @click="lock"></div>
-        </div>
+        </div> -->
       </div>
       <!-- 时间选择 -->
       <SelectTime
@@ -778,6 +781,7 @@ export default {
       height: 120px;
       line-height: 120px;
       border-top: 1px rgba(0, 0, 0, .1) solid;
+      border-bottom: 1px rgba(0, 0, 0, .1) solid;
     }
 
   }
@@ -820,6 +824,8 @@ export default {
     text-align: center;
     line-height: 28px;
     margin-top: 52px;
+    position: relative;
+    top: 20px;
   }
   .closed{
     font-size: 48px;

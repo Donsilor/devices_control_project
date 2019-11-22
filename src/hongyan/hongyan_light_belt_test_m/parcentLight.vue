@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     touchStart(e){
-      console.log(e)
+      // console.log(e)
     },
     touchMove(e){
       e.stopPropagation()
@@ -55,9 +55,9 @@ export default {
       let parcentlight = document.querySelectorAll("#parcent-light")[0]
       let touchbox = document.querySelectorAll(".touchbox")[0]
       let coverlight = document.querySelectorAll(".coverlight")[0]
-      let h = e.targetTouches[0].pageY - parcentlight.offsetTop
-      h=h<=0?0:h
-      h=h>=185?185:h
+      let h = e.targetTouches[0].pageY - parcentlight.offsetTop - 67
+      h=(h<=0)?0:h
+      h=(h>=185)?185:h
       touchbox.style.top = (h + coverlight.offsetTop)/37.5 +"rem"
       coverlight.style.clip = `rect(${h /37.5 +'rem'} ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
       this.scale = Math.round((h/185)*100)
@@ -68,7 +68,7 @@ export default {
       e.preventDefault()
       // let level = parseInt(this.scale/100*254)
       let level = parseInt((100-this.scale)/100*254)
-      console.log(level)
+      // console.log(level)
       this.$emit('endLight',level)
     },
     // lightRatio(e){
