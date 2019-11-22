@@ -63,7 +63,7 @@
         <div
           ref="title"
           :style="{ 'color': bakColor }"
-          class="title">{{ title }}</div>
+          class="title">{{ room&&room+'|' }}{{ title }}</div>
         <button
           v-if="shutdown"
           ref="shutdown"
@@ -154,6 +154,10 @@ export default {
     pageClass:{
       type: String,
       default: ''
+    },
+    room:{
+      type:String,
+      default:''
     }
   },
   data() {

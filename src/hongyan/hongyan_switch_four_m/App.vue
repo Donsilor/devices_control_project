@@ -17,7 +17,7 @@
                 <div
                   :class="[{ 'active': deviceAttrs.list[0].chan_status == 'on' }, 'btn btn-switch center']"
                   @click="setSwitch1"/>
-                <div class="btn-name">开关</div>
+                <div class="btn-name">{{ deviceAttrs.list[0].chan_status == 'on'? '关灯' : '开灯' }}</div>
               </div>
             </div>
           </div>
@@ -30,7 +30,7 @@
                 <div
                   :class="[{ 'active': deviceAttrs.list[1].chan_status == 'on' }, 'btn btn-switch center']"
                   @click="setSwitch2"/>
-                <div class="btn-name">开关</div>
+                <div class="btn-name">{{ deviceAttrs.list[1].chan_status == 'on'? '关灯' : '开灯' }}</div>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@
                 <div
                   :class="[{ 'active': deviceAttrs.list[2].chan_status == 'on' }, 'btn btn-switch center']"
                   @click="setSwitch3"/>
-                <div class="btn-name">开关</div>
+                <div class="btn-name">{{ deviceAttrs.list[2].chan_status == 'on'? '关灯' : '开灯' }}</div>
               </div>
             </div>
           </div>
@@ -56,7 +56,7 @@
                 <div
                   :class="[{ 'active': deviceAttrs.list[3].chan_status == 'on' }, 'btn btn-switch center']"
                   @click="setSwitch4"/>
-                <div class="btn-name">开关</div>
+                <div class="btn-name">{{ deviceAttrs.list[3].chan_status == 'on'? '关灯' : '开灯' }}</div>
               </div>
             </div>
           </div>

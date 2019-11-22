@@ -130,13 +130,16 @@
               class="checkBox">
               <div 
                 :class="[{ 'active': loaclAttr.speed == 'low'},'speedBtn']" 
-                @click="setSpeed('low')">1档</div>
+                @click="setSpeed('low')">低风</div>
               <div 
                 :class="[{ 'active': loaclAttr.speed == 'normal'},'speedBtn']" 
-                @click="setSpeed('normal')">2档</div>
+                @click="setSpeed('normal')">中风</div>
               <div 
                 :class="[{ 'active': loaclAttr.speed == 'high'},'speedBtn']" 
-                @click="setSpeed('high')">3档</div>
+                @click="setSpeed('high')">高风</div>
+              <div 
+                :class="[{ 'active': loaclAttr.speed == 'auto'},'speedBtn']" 
+                @click="setSpeed('auto')">自动</div> 
             </div>
           </div>
           <!-- <div
@@ -249,8 +252,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['isClose', 'isOffline']),
+    ...mapGetters(['isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    isClose(){
+      return this.loaclAttr.switchStatus == 'on'?false:true
+    },
     modeIsActive() {
       return this.loaclAttr.mode == 'auto' || this.loaclAttr.mode == 'dehumidify' || this.loaclAttr.mode == 'wind'
     },

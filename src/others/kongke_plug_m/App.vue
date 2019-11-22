@@ -20,11 +20,11 @@
         <div class="bg"><div class="circle"><div class="status">{{ switchValue=='open'?'通电中':'断电中' }}</div></div></div>
       </div>
       <div
-        v-show="delayClose.countdownClose && switchValue == 'open'"
-        class="status1">{{ delayClose.countdownClose | delayTime }}后断电</div>
+        v-show="delayClose.countdownClose && switchValue == 'open' && delayClose.closeEnable=='y'"
+        class="status1">{{ delayClose.countdownClose | delayTime }}后延时断电</div>
       <div
-        v-show="delayOpen.countdownOpen && switchValue == 'close'"
-        class="status1">{{ delayOpen.countdownOpen | delayTime }}后通电</div>
+        v-show="delayOpen.countdownOpen && switchValue == 'close' && delayOpen.openEnable=='y'"
+        class="status1">{{ delayOpen.countdownOpen | delayTime }}后延时通电</div>
       <div
         v-show="!isOffline"
         class="panel-btn center">
@@ -35,7 +35,7 @@
           <div class="btn-name">{{ switchValue=='open'?'断电':'通电' }}</div>
         </div>
         <div
-          v-if="delayOpen.openEnable=='y' || delayClose.closeEnable=='y'"
+          v-if="(delayOpen.openEnable=='y' && switchValue == 'close') || (delayClose.closeEnable=='y' && switchValue == 'open')"
           class="btn-wrap">
           <div
             :class="[{'progress':timeOutEvent != 0},'btn btn-delay center circleProgress_wrapper']"
@@ -74,11 +74,11 @@
           <div
             v-if="switchValue=='open'"
             class="timing-right"
-            @click="showTime('设置关机时间')">{{ timer.openEnable == 'y'?timer.closeTime:'' }}＞ </div>
+            @click="showTime('设置关机时间')">{{ timer.closeEnable == 'y'?timer.closeTime + ' 关机':'' }}＞ </div>
           <div
             v-else
             class="timing-right"
-            @click="showTime('设置开机时间')">{{ timer.closeEnable == 'y'?timer.openTime:'' }}＞ </div>
+            @click="showTime('设置开机时间')">{{ timer.openEnable == 'y'?timer.openTime + ' 开机':'' }}＞ </div>
         </div>
         <div class="Charging-protection">
           <div>充电保护</div>
@@ -119,14 +119,19 @@ export default {
       ovp: false,
       ovpDisabled: false,
       switchValue: 'close',
-      delayClose: {},
-      delayOpen: {},
+      delayClose: {
+        countdownClose: ''
+      },
+      delayOpen: {
+        countdownOpen: ''
+      },
       timeOutDelay: '',
       timer: {},
       pickerValue: '',
       openPickerH: 0,
       closeLocalTime: '',
-      openLocalTime: ''
+      openLocalTime: '',
+      timeValue: ''
     }
   },
   computed: {
@@ -147,9 +152,9 @@ export default {
       })
     },
     'deviceAttrs'() {
-      this.timer = this.deviceAttrs.timer
-      this.closeLocalTime = this.deviceAttrs.timer.closeTime
-      this.openLocalTime = this.deviceAttrs.timer.openTime
+      // this.timer = this.deviceAttrs.timer
+      // this.closeLocalTime = this.deviceAttrs.timer.closeTime
+      // this.openLocalTime = this.deviceAttrs.timer.openTime
     },
     'deviceAttrs.ovp'() {
       this.ovpDisabled = false
@@ -167,44 +172,136 @@ export default {
       if(this.deviceAttrs.switch == 'close') {
         this.switchValue = 'close'
       }
-
-      // if(this.deviceAttrs.delayClose) {
-      //   this.delayClose = this.deviceAttrs.delayClose
-      // }
-      // if(this.deviceAttrs.delayOpen) {
-      //   this.delayOpen = this.deviceAttrs.delayOpen
+    },
+    'deviceAttrs.delayClose.closeTime'() {
+      //获取时间格式转换时间戳对比作倒计时处理，变量局部使用
+      // if(this.deviceAttrs.delayClose.closeTime) {
+      //   let beforeDate = this.deviceAttrs.delayClose.closeTime.substring(0,10)
+      //   let afterDate = this.deviceAttrs.delayClose.closeTime.substring(11)
+      //   let mergeDate = beforeDate + ' ' + afterDate
+      //   let currentDate = this.getDateTime(new Date(), 'fulltime')
+      //   let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+      //   let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+      //   if(returnTimestamp > currentTimestamp) {
+      //     let timeVal = (returnTimestamp - currentTimestamp) / 1000
+      //     this.delayClose.countdownClose = timeVal
+      //     this.timeIntDelay('countdownClose')
+      //   }
       // }
     },
-    // 'deviceAttrs.delayClose'() {
-    //   if(this.deviceAttrs.delayClose) {
-    //     this.deviceAttrs.delayClose.closeTime = '2019-11-19-21:41:05'
-    //     let abcqwe = this.deviceAttrs.delayClose.closeTime.substring(0,10)
-    //     let cbaqwe = this.deviceAttrs.delayClose.closeTime.substring(11)
-    //     let tqwe = abcqwe + ' ' + cbaqwe
-    //     let timeqwe = this.getDateTime(new Date(), 'fulltime')
-    //     console.log('==========李哥测试===============', new Date(`${tqwe}`), new Date().getTime)
-    //     let aqwe = (new Date(`${tqwe}`)).getTime()
-    //     let bqwe = (new Date(timeqwe)).getTime()
-    //     console.log(this.deviceAttrs.delayClose.closeTime, '=====2019-11-19 21:41:05=====', tqwe, timeqwe, aqwe ,bqwe)
-    //     if(aqwe > bqwe) {
-    //       let timeVal = (aqwe - bqwe) / 1000
-    //       this.delayClose.countdownClose = timeVal
-    //       this.timeIntDelay('countdownClose')
-    //       console.log(timeVal, '====ABC====')
-    //     }
-    //   }
-    // },
-    // 'deviceAttrs.delayOpen'() {
-    //   if(this.deviceAttrs.delayOpen) {
-    //     this.delayOpen = this.deviceAttrs.delayOpen
-    //   }
-    // }
+    'deviceAttrs.delayOpen.openTime'() {
+      //获取时间格式转换时间戳对比作倒计时处理，变量局部使用
+      // if(this.deviceAttrs.delayOpen.openTime) {
+      //   let beforeDate = this.deviceAttrs.delayOpen.openTime.substring(0,10)
+      //   let afterDate = this.deviceAttrs.delayOpen.openTime.substring(11)
+      //   let mergeDate = beforeDate + ' ' + afterDate
+      //   let currentDate = this.getDateTime(new Date(), 'fulltime')
+      //   let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+      //   let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+      //   if(returnTimestamp > currentTimestamp) {
+      //     let timeVal = (returnTimestamp - currentTimestamp) / 1000
+      //     this.delayOpen.countdownOpen = timeVal
+      //     this.timeIntDelay('countdownOpen')
+      //   }
+      // }
+    },
+    'deviceAttrs.timer.openTime'() {
+      //获取时间格式转换时间戳对比作定时处理，变量局部使用
+      let beforeDate = this.deviceAttrs.timer.openTime.substring(0,10)
+      let afterDate = this.deviceAttrs.timer.openTime.substring(11)
+      let mergeDate = beforeDate + ' ' + afterDate
+      let currentDate = this.getDateTime(new Date(), 'fulltime')
+      let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+      let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+      if(returnTimestamp < currentTimestamp) {
+        this.timer.openEnable = 'n'
+      }
+    },
+    'deviceAttrs.timer.closeTime'() {
+      //获取时间格式转换时间戳对比作定时处理，变量局部使用
+      let beforeDate = this.deviceAttrs.timer.closeTime.substring(0,10)
+      let afterDate = this.deviceAttrs.timer.closeTime.substring(11)
+      let mergeDate = beforeDate + ' ' + afterDate
+      let currentDate = this.getDateTime(new Date(), 'fulltime')
+      let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+      let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+      if(returnTimestamp < currentTimestamp) {
+        this.timer.closeEnable = 'n'
+      }
+    }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
-      .then(()=>{
-
+      .then(() => {
+        this.timer = this.deviceAttrs.timer
+        console.log(this.timer)
+        this.closeLocalTime = this.deviceAttrs.timer.closeTime
+        this.openLocalTime = this.deviceAttrs.timer.openTime
+        if(this.deviceAttrs.delayClose) {
+          this.delayClose = Object.assign(this.delayClose, this.deviceAttrs.delayClose)
+        }
+        if(this.deviceAttrs.delayOpen) {
+          this.delayOpen = Object.assign(this.delayOpen, this.deviceAttrs.delayOpen)
+        }
+        //获取时间格式转换时间戳对比作定时处理，变量局部使用
+        if(this.deviceAttrs.timer.openTime) {
+          let beforeDate = this.deviceAttrs.timer.openTime.substring(0,10)
+          let afterDate = this.deviceAttrs.timer.openTime.substring(11)
+          let mergeDate = beforeDate + ' ' + afterDate
+          let currentDate = this.getDateTime(new Date(), 'fulltime')
+          let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+          let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+          if(returnTimestamp < currentTimestamp) {
+            this.timer.openEnable = 'n'
+          }
+        }
+        //获取时间格式转换时间戳对比作定时处理，变量局部使用
+        if(this.deviceAttrs.timer.closeTime) {
+          let beforeDate = this.deviceAttrs.timer.closeTime.substring(0,10)
+          let afterDate = this.deviceAttrs.timer.closeTime.substring(11)
+          let mergeDate = beforeDate + ' ' + afterDate
+          let currentDate = this.getDateTime(new Date(), 'fulltime')
+          let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+          let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+          if(returnTimestamp < currentTimestamp) {
+            this.timer.closeEnable = 'n'
+          }
+        }
+        //获取时间格式转换时间戳对比作倒计时处理，变量局部使用
+        if(this.deviceAttrs.delayClose.closeEnable == 'y') {
+          let beforeDate = this.deviceAttrs.delayClose.closeTime.substring(0,10)
+          let afterDate = this.deviceAttrs.delayClose.closeTime.substring(11)
+          let mergeDate = beforeDate + ' ' + afterDate
+          let currentDate = this.getDateTime(new Date(), 'fulltime')
+          let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+          let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+          if(returnTimestamp > currentTimestamp) {
+            let timeVal = (returnTimestamp - currentTimestamp) / 1000
+            this.delayClose.countdownClose = timeVal
+            this.timeIntDelay('countdownClose')
+          } else {
+            this.delayOpen.openEnable = 'n'
+            this.delayClose.closeEnable = 'n'
+          }
+        }
+        //获取时间格式转换时间戳对比作倒计时处理，变量局部使用
+        if(this.deviceAttrs.delayOpen.openEnable == 'y') {
+          let beforeDate = this.deviceAttrs.delayOpen.openTime.substring(0,10)
+          let afterDate = this.deviceAttrs.delayOpen.openTime.substring(11)
+          let mergeDate = beforeDate + ' ' + afterDate
+          let currentDate = this.getDateTime(new Date(), 'fulltime')
+          let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+          let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+          if(returnTimestamp > currentTimestamp) {
+            let timeVal = (returnTimestamp - currentTimestamp) / 1000
+            this.delayOpen.countdownOpen = timeVal
+            this.timeIntDelay('countdownOpen')
+          } else {
+            this.delayOpen.openEnable = 'n'
+            this.delayClose.closeEnable = 'n'
+          }
+        }
       })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -213,7 +310,6 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     openPicker() {
       let time = this.getDateTime(new Date(), 'picker')
-      console.log(time)
       this.openPickerH = time + 1
       this.$refs.picker.open()
     },
@@ -233,8 +329,9 @@ export default {
       this.controlDevice('switch',switchStatus)
       .then((res) => {
         if(res.code == 0) {
-          this.delayClose = {}
-          this.delayOpen = {}
+          // clearInterval(this.timeOutDelay)
+          // this.delayClose = {}
+          // this.delayOpen = {}
           if(switchStatus.switch == 'open') {
             this.switchValue = 'open'
           }
@@ -255,7 +352,6 @@ export default {
     },
     // 长按事件
     touchStart(){
-      // console.log(e)
       this.timeOutEvent=setTimeout(() => {
         this.longPress()
       }, 1000)
@@ -276,7 +372,6 @@ export default {
     },
     longPress(){
       this.timeOutEvent = 0
-      console.log(this.timeOutEvent)
       // alert('长按了')
       // this.$nextTick(()=>{
         // 删除延时
@@ -292,12 +387,6 @@ export default {
             this.timeOutEvent = 0
             this.delayClose = {}
             this.delayOpen = {}
-            // for(let key in this.delayClose){
-            //   delete this.delayClose[key]
-            // }
-            // for(let idx in this.delayOpen){
-            //   delete this.delayOpen[idx]
-            // }
           } else {
            HdSmart.UI.toast('操作失败')
          }
@@ -362,19 +451,18 @@ export default {
        })
     },
     showTime(v) {
-      console.log('我进来了')
       this.title = v
       // if (this.isClose) return
       this.$refs.time.show = true
     },
     timeIntDelay(val) {
-      clearTimeout(this.timeOutDelay)
+      clearInterval(this.timeOutDelay)
       if(val == 'countdownClose') {
         this.timeOutDelay=setInterval(() => {
-          console.log('12312321')
+        console.log('定时关')
           this.delayClose.countdownClose = this.delayClose.countdownClose - 1
           if(this.delayClose.countdownClose == 0) {
-            clearTimeout(this.timeOutDelay)
+            clearInterval(this.timeOutDelay)
             this.delayClose.closeEnable = 'n'
             this.delayOpen.openEnable = 'n'
           }
@@ -382,9 +470,10 @@ export default {
       }
       if(val == 'countdownOpen') {
         this.timeOutDelay=setInterval(() => {
+        console.log('定时开')
           this.delayOpen.countdownOpen = this.delayOpen.countdownOpen - 1
           if(this.delayOpen.countdownOpen == 0) {
-            clearTimeout(this.timeOutDelay)
+            clearInterval(this.timeOutDelay)
             this.delayOpen.openEnable = 'n'
             this.delayClose.closeEnable = 'n'
           }
@@ -393,7 +482,6 @@ export default {
     },
     // 设置关机时间
     setReserve(time) {
-      console.log(this.title)
       let h = parseInt(time[0].split(':')[0])
       let m = parseInt(time[0].split(':')[1])
       if(this.title=='设置延时断电' || this.title=='设置延时通电'){
@@ -412,6 +500,7 @@ export default {
           this.controlDevice('countdownClose', obj)
           .then((res) => {
             if(res.code == 0) {
+              this.delayOpen = {}
               this.delayClose = obj.set_delay_task
               this.delayClose.openEnable = 'n'
               this.delayClose.closeEnable = 'y'
@@ -439,6 +528,7 @@ export default {
           this.controlDevice('countdownOpen', obj)
           .then((res) => {
             if(res.code == 0) {
+              this.delayClose = {}
               this.delayOpen = obj.set_delay_task
               this.delayOpen.openEnable = 'y'
               this.delayOpen.closeEnable = 'n'
@@ -456,13 +546,31 @@ export default {
         let hours = h < 10 ? '0' + h : h
         let min = m < 10 ? '0' + m : m
         let time = this.getDateTime(new Date()) + '-' + hours + ':' + min + ':' + '00'
+        let Htime = this.getDateTime(new Date(), 'h')
+        let Mtime = this.getDateTime(new Date(), 'm')
+        //获取时间格式转换时间戳对比，作日期选择，变量局部使用
+        if(h < Htime) {
+          let beforeDate = time.substring(0,10)
+          let returnTimestamp = (new Date(beforeDate.replace(/-/g, "/"))).getTime() + 86400000//当天时间戳 + 1 天
+          let timeVal = returnTimestamp + (h * (60 * 60 * 1000)) + (m * (60 * 1000))
+          this.timeValue = this.getDateTime(new Date(timeVal)) + '-' + hours + ':' + min + ':' + '00'
+          HdSmart.UI.toast('当前设定时间为明天')
+        } else if(h == Htime) {
+          if(m <= Mtime) {
+            let beforeDate = time.substring(0,10)
+            let returnTimestamp = (new Date(beforeDate.replace(/-/g, "/"))).getTime() + 86400000//当天时间戳 + 1 天
+            let timeVal = returnTimestamp + (h * (60 * 60 * 1000)) + (m * (60 * 1000))
+            this.timeValue = this.getDateTime(new Date(timeVal)) + '-' + hours + ':' + min + ':' + '00'
+            HdSmart.UI.toast('当前设定时间为明天')
+          }
+        }
         if(this.switchValue === 'close'){
-          this.closeLocalTime = time
+          this.closeLocalTime = this.timeValue?this.timeValue:time
            // 定时开
           let obj1 = {
             "set_time_task": {
               "openEnable": "true",
-              "openTime": time,
+              "openTime": this.timeValue?this.timeValue:time,
               "closeEnable": "false",
               "closeTime": this.openLocalTime,
               "repeat": "0",
@@ -478,22 +586,25 @@ export default {
               this.timer.openEnable = 'y'
               this.timer.closeEnable = 'n'
               this.timer.timerEnable = 'y'
+              this.timeValue = ''
             } else {
               HdSmart.UI.toast('操作失败')
+              this.timeValue = ''
             }
           })
           .catch(() => {
             HdSmart.UI.toast('操作失败')
+            this.timeValue = ''
           })
         }else{
-          this.openLocalTime = time
+          this.openLocalTime = this.timeValue?this.timeValue:time
           // 定时关
           let obj2 = {
             "set_time_task": {
               "openEnable": "false",
               "openTime": this.closeLocalTime,
               "closeEnable": "true",
-              "closeTime": time,
+              "closeTime": this.timeValue?this.timeValue:time,
               "repeat": "0",
               "timerId": "100",
               "encrptionFlag": "1000",
@@ -507,12 +618,15 @@ export default {
                 this.timer.openEnable = 'n'
                 this.timer.closeEnable = 'y'
                 this.timer.timerEnable = 'y'
+                this.timeValue = ''
               } else {
                 HdSmart.UI.toast('操作失败')
+                this.timeValue = ''
               }
            })
            .catch(() => {
             HdSmart.UI.toast('操作失败')
+            this.timeValue = ''
           })
         }
       }
@@ -521,11 +635,17 @@ export default {
     canceltime(){
       this.controlDevice('remove_time_task', {
         "remove_time_task": {
-          "timerId": "1",
+          "timerId": "100",
           "encrptionFlag" : "1000"
         }
       })
-      .then()
+      .then((res) => {
+        if(res.code == 0) {
+          this.timer = {}
+        } else {
+          HdSmart.UI.toast('操作失败')
+        }
+      })
       .catch(() => {
         HdSmart.UI.toast('操作失败')
       })
