@@ -25,9 +25,9 @@
       <div
         v-else-if="delayOpen.countdownOpen && switchValue == 'close' && delayOpen.openEnable=='y'"
         class="status1">{{ delayOpen.countdownOpen | delayTime }}后延时通电</div>
-      <div
+      <!-- <div
         v-else
-        class="status1">&nbsp;</div>
+        class="status1">&nbsp;</div> -->
       <div
         v-show="!isOffline"
         class="panel-btn center">

@@ -97,7 +97,7 @@
           @click="setMode('auto')">
           <div :class="[ { 'active': deviceAttrs.mode == 'auto' }, 'btn btn-auto center']" />
           <div
-            class="btn-name" >智能</div>
+            class="btn-name" >自动</div>
         </div>
         <div
           class="btn-wrap"
@@ -276,13 +276,13 @@ export default {
         })
     },
     setTemperature(step) {
-      // if(this.deviceAttrs.mode == 'auto') {
-      //   return HdSmart.UI.toast('智能模式不支持温度调节')
-      // }
-      // // 送风模式不能设置温度
-      // if (this.deviceAttrs.mode === 'wind') {
-      //   return HdSmart.UI.toast('送风模式不支持温度调节')
-      // }
+      if(this.deviceAttrs.mode == 'auto') {
+        return HdSmart.UI.toast('自动模式不支持温度调节')
+      }
+      // 送风模式不能设置温度
+      if (this.deviceAttrs.mode === 'wind') {
+        return HdSmart.UI.toast('送风模式不支持温度调节')
+      }
       let temp = +this.deviceAttrs.temperature + step
       // 最小温度
       if (temp < MIN_TEMP) {
