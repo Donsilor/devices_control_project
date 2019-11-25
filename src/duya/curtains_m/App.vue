@@ -9,28 +9,37 @@
       <div class="main center">
         <div class="stick" >
           <div class="imgBox">
-            <img 
-              ref="curtainLeft"
-              class="curtainLeft" 
-              src="../../../lib/base/new_curtains/assets/single.png">
-            <img 
-              ref="left"
-              class="left" 
-              src="../../../lib/base/new_curtains/assets/left.png"
+            <div 
+              ref="leftCurtainBox" 
+              class="leftCurtainBox"
               @touchstart="leftStart($event)"
               @touchmove="leftMove($event)"
               @touchend="leftEnd($event)">
-            <img 
-              ref="curtainRight"
-              class="curtainRight" 
-              src="../../../lib/base/new_curtains/assets/single.png">
-            <img 
-              ref="right"
-              class="right" 
-              src="../../../lib/base/new_curtains/assets/right.png"
-              @touchstart="rightStart($event)"
-              @touchmove="rightMove($event)"
-              @touchend="rightEnd($event)">
+              <img 
+                ref="curtainLeft"
+                class="curtainLeft" 
+                src="../../../lib/base/new_curtains/assets/single.png">
+              <img 
+                ref="left"
+                class="left" 
+                src="../../../lib/base/new_curtains/assets/left.png"
+              >
+            </div>
+            <div 
+              ref="rightCurtainBox" 
+              class="rightCurtainBox">
+              <img 
+                ref="curtainRight"
+                class="curtainRight" 
+                src="../../../lib/base/new_curtains/assets/single.png">
+              <img 
+                ref="right"
+                class="right" 
+                src="../../../lib/base/new_curtains/assets/right.png"
+                @touchstart="rightStart($event)"
+                @touchmove="rightMove($event)"
+                @touchend="rightEnd($event)">
+            </div>
           </div>
         </div>
         <!-- <div
@@ -141,16 +150,19 @@ export default {
     },
     leftMove(e){
       //滑动时计算窗帘的宽度
-      let curtainLeft = this.$refs.curtainLeft
-      let leftWidth = e.targetTouches[0].pageX - curtainLeft.offsetLeft
-      let maxWidth = curtainLeft.offsetWidth
-      leftWidth = leftWidth <= 40 ? 40 : leftWidth
+      let leftCurtainBox = this.$refs.leftCurtainBox
+      let leftWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft
+      let maxWidth = leftCurtainBox.offsetWidth
+      leftWidth = leftWidth <= 30 ? 30 : leftWidth
       leftWidth = leftWidth >= maxWidth ? maxWidth : leftWidth
-      curtainLeft.style.width = leftWidth + "px"
+      leftCurtainBox.style.width = leftWidth + "px"
       //滑动时裁切滑块的宽度
       let left = this.$refs.left
-      leftSlider = left.offsetWidth 
-      coverlight.style.clip = `rect( ${320/37.5 +'rem'} ${450/37.5 +'rem'} 0)`
+      let leftSlider = left.offsetWidth 
+      if (parseInt(leftCurtainBox.style.width) <= leftSlider) {
+        console.log('11111111111111111')
+        left.style.clip = `rect(0 ${leftSlider + 'px'} 30px ${leftSlider-parseInt(leftCurtainBox.style.width)+'px'})`
+      }
     },
     leftEnd(e){},
     controlDevice(attr, value,params) {
@@ -199,35 +211,49 @@ export default {
         position: absolute;
         top: 16px;
         width: 100%;
-        height: 38vh;
-        .curtainLeft{
+        height: 564px;
+        .leftCurtainBox{
+          position: absolute;
           top: 0;
-          left: 10px;
+          left: 1%;
           width: 49%;
-          height: 38vh;
-          position: absolute;
-          left: 10px;
+          height: 564px;
+          .curtainLeft{
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 564px;
+            position: absolute;
+          }
+          .left{ 
+            position: absolute;
+            top: 50%;
+            right: 0;
+            // width: 49%;
+            height: 60px;
+            margin-top: -30px;
+          }
         }
-        .curtainRight{
-          top: 0;
-          width: 49%;
-          height: 38vh;
-          position: absolute;
-          right: 10px;
-        }
-        .left{ 
-          position: absolute;
-          top: 50%;
-          left: 20px;
-          width: 276px;
-          margin-top: -52px;
-        }
-        .right{ 
-          position: absolute;
-          top: 50%;
-          right: 20px;
-          width: 276px;
-          margin-top: -52px;
+        .rightCurtainBox{
+           position: absolute;
+           top: 0;
+           width: 49%;
+           height: 564px;
+           right: 1%;
+          .curtainRight{
+            top: 0;
+            width: 100%;
+            height: 564px;
+            position: absolute;
+          }
+          .right{ 
+            position: absolute;
+            top: 50%;
+            left: 0;
+            // width: 100%;
+            height: 60px;
+            margin-top: -30px;
+          }
         }
       }
     }

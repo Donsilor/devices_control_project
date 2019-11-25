@@ -249,6 +249,7 @@ export default {
   watch: {
     "deviceAttrs"() {
       this.loaclAttr = this.deviceAttrs
+      this.reset()
       console.log('=============', this.loaclAttr.mode)
     }
   },
