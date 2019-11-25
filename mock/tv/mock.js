@@ -113,7 +113,7 @@ export function getChannelData(data) {
     data: {
       total: 6201,
       pageNo: 1,
-      pageSize: 20,
+      pageSize: 21,
       list: [
         {
           title: '九天玄鸟',

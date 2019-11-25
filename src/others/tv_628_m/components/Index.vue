@@ -117,17 +117,27 @@
               v-lazy="getThumbPic(item.pictureUrl)"
               :data-src="item.pictureUrl"
               alt="">
-
+       
             <div class="name">{{ item.title }}</div>
-            <span class="update">
-              {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
-            </span>
-            <!-- <span
+            <div class="bottom">
+              <span 
+                v-if="item.channelId=='002'" 
+                class="text">
+                {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
+              </span>
+              <span 
+                v-if="item.channelId=='001'" 
+                class="text score" >{{ item.score }}</span>
+              <p 
+                class="play" 
+                @click.stop="play(item)"/>
+            </div>
+            
+            <span
               v-if="item.ispay && item.ispay !== '1'"
-              class="isvip">付费</span> -->
-            <!-- <span class="score">{{ item.score }}</span> -->
-            <!--<div class="label">-->
-            <!--</div>-->
+              class="isvip">付费</span>
+              <!--<div class="label">-->
+              <!--</div>-->
           </li>
         </ul>
       </div>
@@ -413,17 +423,17 @@
     background-position: center center;
     background-size: 120px 120px;
   }
-  .update {
-    position: absolute;
-    right: 0;
-    bottom: 85px;
-    color: #fff;
-    line-height: 30px;
-    font-size: 24px;
-    padding: 0 12px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.50);
-    // display: none;
-  }
+  // .update {
+  //   position: absolute;
+  //   right: 0;
+  //   bottom: 85px;
+  //   color: #fff;
+  //   line-height: 30px;
+  //   font-size: 24px;
+  //   padding: 0 12px;
+  //   text-shadow: 0 2px 4px rgba(0,0,0,0.50);
+  //   // display: none;
+  // }
   /*.label {
         position: absolute;
         right: 0;
@@ -431,33 +441,59 @@
     }*/
   .isvip {
     position: absolute;
-    right: 15px;
-    top: 40px;
-    background: #f26161;
-    width: 60px;
-    line-height: 30px;
-    border-radius: 4px;
+    right: 0;
+    top:0;
+    background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
+    // width: 48px;
+    line-height: 32px;
+    // border-radius: 4px;
     font-size: 24px;
     text-align: center;
-    color: #fff;
-    opacity: 0.9;
+    color: #000;
+    // opacity: 0.9;
     display: block;
     margin-bottom: 5px;
   }
-  .score {
+  // .score {
+  //   position: absolute;
+  //   right: 15px;
+  //   top: 260px;
+  //   background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);
+  //   width: 60px;
+  //   line-height: 30px;
+  //   border-radius: 4px;
+  //   font-size: 24px;
+  //   text-align: center;
+  //   color: #fff;
+  //   opacity: 0.9;
+  //   display: none;
+  // }
+  .bottom{
+    width: 100%;
+    height:36px;
     position: absolute;
-    right: 15px;
-    top: 260px;
-    background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);
-    width: 60px;
-    line-height: 30px;
-    border-radius: 4px;
-    font-size: 24px;
-    text-align: center;
-    color: #fff;
-    opacity: 0.9;
-    display: none;
+    bottom: 86px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 12px;
+    align-items: center;
+    .text{
+      font-family: PingFangSC-Regular;
+      font-size: 20px;
+      color: #FFFFFF;
+    }
+    .score{
+       color: #E1B96E;
+    }
+    .play{
+      width: 36px;
+      height: 36px;
+      background:  url('~@lib/base/tv/assets/new/tv_icn_play.png');
+      background-size:100% 100%; 
+  
+    }
   }
+  
   .name {
     text-align: left;
     white-space: nowrap;
@@ -820,6 +856,50 @@ export default {
     })
   },
   methods: {
+    play(item,e) {
+      if ( e && e.stopPropagation ) {
+    //因此它支持W3C的stopPropagation()方法 
+       e.stopPropagation() 
+      }else {
+          //否则，我们需要使用IE的方式来取消事件冒泡 
+          window.event.cancelBubble = true 
+      }play
+      service.getDetaileData(
+        {
+          channelId: item.channelId,
+          vid: item.vid
+        },
+        (err, data) => {
+          // this.loading = false
+          if (err) {
+            // this.close()
+            return
+          }
+          var temp = data.data
+          var playlist = temp.playlist[0]
+          temp.playlist2 = {}
+          temp.playlist2.total = playlist.total
+          temp.playlist2.list = playlist.list.filter(
+            item => item.states == "1"
+          )
+          temp.playlist2.list2 = playlist.list.filter(
+            item => item.states != "1"
+          )
+          let cur = Object.freeze(temp)
+          let clickItem = cur.playlist2.list[0]
+          // console.log(clickItem,'clickItem')
+          // console.log( cur ,'cur')
+          if (!clickItem) {
+            clickItem = this.cur.playlist2.list[0] || this.cur.playlist2.list2[0]
+          }
+          // console.log(clickItem,'clickItem')
+          if (clickItem) {
+            service.playVideo(clickItem.link, clickItem.name)
+            
+          }      
+        }
+      )  
+    },
     back() {
       HdSmart.UI.popWindow()
     },

@@ -302,7 +302,7 @@ export default {
     getBarColor() {
       if(this.isClose || this.isOffline) return '#D8D8D8'
             /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
+      switch (this.loaclAttr.mode) {
         case 'cold':
           return '#008CDA '
           break
@@ -317,6 +317,7 @@ export default {
   watch: {
     "deviceAttrs"() {
       this.loaclAttr = this.deviceAttrs
+      this.reset()
       console.log('=============', this.loaclAttr.mode)
     }
   },

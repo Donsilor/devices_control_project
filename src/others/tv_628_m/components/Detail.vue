@@ -106,7 +106,7 @@
           </a>
         </div>
         <ul
-          v-if="channelId==='0011' || channelId==='0041'"
+          v-if="channelId==='001' || channelId==='004'"
         
           class="bd">
           <li
@@ -124,9 +124,8 @@
               class="tag_pay">付费</span>
           </li>
         </ul>
-        <!-- v-else -->
-
         <ul
+          v-else
           :class="[isShowAll?'bd-num-all':'bd-num']"
           class="bd" >
           <li
