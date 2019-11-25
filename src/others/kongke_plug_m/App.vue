@@ -14,20 +14,22 @@
         hour-format="{value} 时"
         minute-format="{value} 分"
       /> -->
-      <div
+      <!-- <div
         class="main center"
-        style="margin-top:52px">
+        style="margin-top:52px"> -->
+      <div
+        class="main center">
         <div class="bg"><div class="circle"><div class="status">{{ switchValue=='open'?'通电中':'断电中' }}</div></div></div>
       </div>
       <div
-        v-if="delayClose.countdownClose && switchValue == 'open' && delayClose.closeEnable=='y'"
+        v-if="delayClose.countdownClose && delayClose.closeEnable=='y'"
         class="status1">{{ delayClose.countdownClose | delayTime }}后延时断电</div>
       <div
-        v-else-if="delayOpen.countdownOpen && switchValue == 'close' && delayOpen.openEnable=='y'"
+        v-else-if="delayOpen.countdownOpen && delayOpen.openEnable=='y'"
         class="status1">{{ delayOpen.countdownOpen | delayTime }}后延时通电</div>
-      <!-- <div
+      <div
         v-else
-        class="status1">&nbsp;</div> -->
+        class="status1">&nbsp;</div>
       <div
         v-show="!isOffline"
         class="panel-btn center">
@@ -116,7 +118,6 @@ export default {
     return {
       temp:true,
       timeOutEvent:'',
-      a:"",
       currentMode:'normal',
       title:"",
       ovp: false,
@@ -169,6 +170,30 @@ export default {
       }
     },
     'deviceAttrs.switch'() {
+      //获取时间格式转换时间戳对比作定时处理，变量局部使用
+      if(this.deviceAttrs.timer.openTime) {
+        let beforeDate = this.deviceAttrs.timer.openTime.substring(0,10)
+        let afterDate = this.deviceAttrs.timer.openTime.substring(11)
+        let mergeDate = beforeDate + ' ' + afterDate
+        let currentDate = this.getDateTime(new Date(), 'fulltime')
+        let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+        let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+        if(returnTimestamp < currentTimestamp) {
+          this.timer.openEnable = 'n'
+        }
+      }
+      //获取时间格式转换时间戳对比作定时处理，变量局部使用
+      if(this.deviceAttrs.timer.closeTime) {
+        let beforeDate = this.deviceAttrs.timer.closeTime.substring(0,10)
+        let afterDate = this.deviceAttrs.timer.closeTime.substring(11)
+        let mergeDate = beforeDate + ' ' + afterDate
+        let currentDate = this.getDateTime(new Date(), 'fulltime')
+        let returnTimestamp = (new Date(mergeDate.replace(/-/g, "/"))).getTime()
+        let currentTimestamp = (new Date(currentDate.replace(/-/g, "/"))).getTime()
+        if(returnTimestamp < currentTimestamp) {
+          this.timer.closeEnable = 'n'
+        }
+      }
       if(this.deviceAttrs.switch == 'open') {
         this.switchValue = 'open'
       }
@@ -823,9 +848,9 @@ export default {
     font-size: 28px;
     text-align: center;
     line-height: 28px;
-    margin-top: 52px;
+    // margin-top: 52px;
     position: relative;
-    top: 20px;
+    top: 40px;
   }
   .closed{
     font-size: 48px;
@@ -908,7 +933,7 @@ export default {
   .panel-btn {
     height: auto;
     width: 100%;
-    margin-top: 120px;
+    margin-top: 100px;
     position:relative;
     z-index: 99999;
   .btn-wrap {

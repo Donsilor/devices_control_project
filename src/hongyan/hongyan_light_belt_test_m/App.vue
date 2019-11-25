@@ -138,7 +138,11 @@ export default {
     },
     //
     endLight(val){
-      this.controlDevice('level',val)
+      if(val <= 15) {
+        this.controlDevice('level', 15)
+      } else {
+        this.controlDevice('level', val)
+      }
     },
     newLevel(){
       this.ratio = Math.round(this.deviceAttrs.level/254*100)
