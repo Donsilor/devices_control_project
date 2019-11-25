@@ -133,7 +133,8 @@ export function getChannelData(data) {
             'cover_id=6e6kfdou0y303wl|version=1|episode_idx=-1|channel_code=1|video_id=|video_name=九天玄鸟|topic_id=|showtype=100',
           ispay: '5',
           states: '1',
-          hasPart: true
+          hasPart: true,
+          score:"7.4"
         },
         {
           title: '弄江湖之情到深处',

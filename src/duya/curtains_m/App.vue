@@ -7,14 +7,18 @@
         :title="device.device_name"
         bak-color="#000"/>
       <div class="main center">
-        <div class="stick" >
-          <div class="imgBox">
+        <div 
+          ref="stick" 
+          class="stick" >
+          <div 
+            ref="imgBox" 
+            class="imgBox">
             <div 
               ref="leftCurtainBox" 
               class="leftCurtainBox"
               @touchstart="leftStart($event)"
-              @touchmove="leftMove($event)"
-              @touchend="leftEnd($event)">
+              @touchmove="movefn($event,'left')"
+              @touchend="endfn($event)">
               <img 
                 ref="curtainLeft"
                 class="curtainLeft" 
@@ -27,7 +31,10 @@
             </div>
             <div 
               ref="rightCurtainBox" 
-              class="rightCurtainBox">
+              class="rightCurtainBox"
+              @touchstart="rightStart($event)"
+              @touchmove="movefn($event,'right')"
+              @touchend="endfn($event)">
               <img 
                 ref="curtainRight"
                 class="curtainRight" 
@@ -36,9 +43,7 @@
                 ref="right"
                 class="right" 
                 src="../../../lib/base/new_curtains/assets/right.png"
-                @touchstart="rightStart($event)"
-                @touchmove="rightMove($event)"
-                @touchend="rightEnd($event)">
+              >
             </div>
           </div>
         </div>
@@ -113,7 +118,8 @@ export default {
       btnActive: '',
       range: 0,
       txtShow: '',
-      myMove:false
+      myMove:false,
+      curtainWidth:0,
     }
   },
   computed: {
@@ -123,11 +129,16 @@ export default {
       return this.isClose ? '#000' : '#fff'
     }
   },
-
+  watch:{
+    "deviceAttrs"(){
+      this.newRatio()
+    }
+  },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
+        this.newRatio()
       })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -148,23 +159,47 @@ export default {
     leftStart(e){
       console.log(e)
     },
-    leftMove(e){
-      //滑动时计算窗帘的宽度
-      let leftCurtainBox = this.$refs.leftCurtainBox
-      let leftWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft
-      let maxWidth = leftCurtainBox.offsetWidth
-      leftWidth = leftWidth <= 30 ? 30 : leftWidth
-      leftWidth = leftWidth >= maxWidth ? maxWidth : leftWidth
-      leftCurtainBox.style.width = leftWidth + "px"
-      //滑动时裁切滑块的宽度
-      let left = this.$refs.left
-      let leftSlider = left.offsetWidth 
-      if (parseInt(leftCurtainBox.style.width) <= leftSlider) {
-        console.log('11111111111111111')
-        left.style.clip = `rect(0 ${leftSlider + 'px'} 30px ${leftSlider-parseInt(leftCurtainBox.style.width)+'px'})`
-      }
+    leftEnd(e){
+     
     },
-    leftEnd(e){},
+    rightStart(e){
+      console.log(e)
+    },
+    rightEnd(e){},
+    endfn(){
+       let circle = this.$refs.right.offsetHeight
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.49
+      this.range = 100-Math.round((this.curtainWidth-circle) / (maxWidth-circle) * 100)
+      console.log(this.range)
+      this.controlDevice('open_percentage',this.range)
+    },
+    movefn(e,val){
+            //滑动时计算窗帘的宽度
+      let circle = this.$refs.right.offsetHeight
+      let leftCurtainBox = this.$refs.leftCurtainBox
+      let rightCurtainBox = this.$refs.rightCurtainBox
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.49
+      this.curtainWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft - this.$refs.stick.offsetLeft +circle/2 
+      if(val=='right'){
+        this.curtainWidth-=maxWidth 
+        this.curtainWidth=maxWidth-this.curtainWidth+circle
+      }
+      this.curtainWidth = this.curtainWidth <= circle ? circle : this.curtainWidth
+      this.curtainWidth = this.curtainWidth >= maxWidth ? maxWidth : this.curtainWidth
+      leftCurtainBox.style.width = this.curtainWidth +"px"
+      rightCurtainBox.style.width = leftCurtainBox.style.width
+    },
+    //根据后台返回数据得出窗帘的宽度
+    newRatio(){
+      let circle = this.$refs.right.offsetHeight
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.49
+      let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
+      let leftCurtainBox = this.$refs.leftCurtainBox
+      let rightCurtainBox = this.$refs.rightCurtainBox
+      leftCurtainBox.style.width =width +"px"
+      console.log(width)
+      rightCurtainBox.style.width = leftCurtainBox.style.width
+    },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
         nodeid: `curtain.main.${attr}`,
@@ -218,6 +253,7 @@ export default {
           left: 1%;
           width: 49%;
           height: 564px;
+          overflow: hidden;
           .curtainLeft{
             top: 0;
             left: 0;
@@ -240,6 +276,7 @@ export default {
            width: 49%;
            height: 564px;
            right: 1%;
+           overflow: hidden;
           .curtainRight{
             top: 0;
             width: 100%;

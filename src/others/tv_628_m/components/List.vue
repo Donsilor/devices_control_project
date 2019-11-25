@@ -644,7 +644,7 @@ export default {
       }else {
           //否则，我们需要使用IE的方式来取消事件冒泡 
           window.event.cancelBubble = true 
-      }play
+      }
       service.getDetaileData(
         {
           channelId: item.channelId,
