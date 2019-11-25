@@ -13,18 +13,14 @@
         <div class="wrap-circle">
           <div class="bg">
             <div
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'"
+              v-if="loaclAttr.connectivity == 'offline'||loaclAttr.switchStatus=='off'||loaclAttr.mode=='auto'||loaclAttr.mode=='wind'"
               class="tm">-- <sup>°C</sup></div>
             <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='auto'&&deviceAttrs.mode!=='wind'"
-              class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
-            </div>
-            <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='auto'"
-              class="tm">24<sup>°C</sup>
+              v-if="!isOffline&& loaclAttr.switchStatus == 'on'&&loaclAttr.mode!=='auto'&&loaclAttr.mode!=='wind'"
+              class="tm">{{ loaclAttr.temperature | filterTm }}<sup>°C</sup>
             </div>
             <div 
-              v-if="!deviceAttrs.switchStatus&&!deviceAttrs.connectivity"
+              v-if="!loaclAttr.switchStatus&&!loaclAttr.connectivity"
               class="tm">-- <sup>°C</sup></div>
           </div>
           <circle-progress
@@ -57,9 +53,9 @@
       </div>
       <!-- 当前状态 -->
       <div
-        v-show="deviceAttrs.timer_switch == 'off'&& deviceAttrs.timer_value >0"
+        v-show="loaclAttr.timer_switch == 'off'&& loaclAttr.timer_value >0"
         class="status">
-        {{ deviceAttrs.timer_value | closeTime }}
+        {{ loaclAttr.timer_value | closeTime }}
       </div>
       <!-- 底部按钮 -->
       <!-- 开关 -->
@@ -83,32 +79,32 @@
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'cold' }, 'btn btn-cold center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'cold' }, 'btn btn-cold center']" />
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'heat' }, 'btn btn-heat center']" />
+          <div :class="[ { 'active': loaclAttr.mode == 'heat' }, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('auto')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'auto' }, 'btn btn-auto center']" />
+          <div :class="[ { 'active': loaclAttr.mode == 'auto' }, 'btn btn-auto center']" />
           <div
             class="btn-name" >自动</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'wind' }, 'btn btn-wind center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'wind' }, 'btn btn-wind center']" />
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -126,16 +122,16 @@
             <div 
               class="checkBox">
               <div 
-                :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']" 
+                :class="[{ 'active': loaclAttr.speed == 'low'},'speedBtn']" 
                 @click="setSpeed('low')">低</div>
               <div 
-                :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']" 
+                :class="[{ 'active': loaclAttr.speed == 'normal'},'speedBtn']" 
                 @click="setSpeed('normal')">中</div>
               <div 
-                :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']" 
+                :class="[{ 'active': loaclAttr.speed == 'high'},'speedBtn']" 
                 @click="setSpeed('high')">高</div>
               <div 
-                :class="[{ 'active': deviceAttrs.speed == 'auto'},'speedBtn']" 
+                :class="[{ 'active': loaclAttr.speed == 'auto'},'speedBtn']" 
                 @click="setSpeed('auto')">自动</div>
             </div>
           </div>
@@ -144,12 +140,12 @@
       <!--选择模式-->
       <model-mode
         ref="mode"
-        :mode="deviceAttrs.mode"
+        :mode="loaclAttr.mode"
         @setMode="setMode" />
       <!--选择风速-->
       <model-speed
         ref="speed"
-        :speed="deviceAttrs.speed"
+        :speed="loaclAttr.speed"
         @setSpeed="setSpeed" />
     </div>
   </div>
@@ -183,22 +179,26 @@ export default {
       brightnessValue: 0,
       rangStyle: '',
       opcityStyle: 'opcity-0',
-      animation:false
+      animation:false,
+      loaclAttr: {}
     }
   },
 
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    isClose(){
+      return this.loaclAttr.switchStatus == 'on'?false:true
+    },
     modeIsActive() {
-      return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
+      return this.loaclAttr.mode == 'auto' || this.loaclAttr.mode == 'dehumidify' || this.loaclAttr.mode == 'wind'
     },
     windIsActive() {
-      return this.deviceAttrs.wind_up_down == 'on' || this.deviceAttrs.wind_left_right == 'on'
+      return this.loaclAttr.wind_up_down == 'on' || this.loaclAttr.wind_left_right == 'on'
     },
     modeClass() {
       /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
+      switch (this.loaclAttr.mode) {
         case 'auto':
           return 'btn-auto'
           break
@@ -214,7 +214,7 @@ export default {
     },
     speedClass() {
       /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.speed) {
+      switch (this.loaclAttr.speed) {
         case 'low':
           return 'btn-low'
           break
@@ -234,7 +234,7 @@ export default {
  getBarColor() {
       if(this.isClose || this.isOffline) return '#D8D8D8'
             /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
+      switch (this.loaclAttr.mode) {
         case 'cold':
           return '#008CDA '
           break
@@ -247,13 +247,15 @@ export default {
     },
   },
   watch: {
+    "deviceAttrs"() {
+      this.loaclAttr = this.deviceAttrs
+      console.log('=============', this.loaclAttr.mode)
+    }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-          console.log(this.deviceAttrs)
-          
           this.reset()
         })
       HdSmart.UI.setStatusBarColor(2)
@@ -265,28 +267,46 @@ export default {
     shutdowncallback(val){
       if (this.isOffline) return
       this.controlDevice('switch',val)
+        .then((res) => {
+         if(res.code == 0) {
+           this.loaclAttr.switchStatus = val
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+       })
+       .catch(() => {
+         HdSmart.UI.toast('操作失败')
+       })
     },
     // 设置模式
     setMode(val) {
-      if (val == this.deviceAttrs.mode || this.isClose) return
+      if (val == this.loaclAttr.mode || this.isClose) return
       this.controlDevice('mode', val)
-        .then(() => {
-          this.reset()
-          this.hide()
-        })
+        .then((res) => {
+         if(res.code == 0) {
+            this.loaclAttr.mode = val
+            this.reset()
+            this.hide()
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+       })
+       .catch(() => {
+         HdSmart.UI.toast('操作失败')
+       })
     },
     setTemperature(step) {
-      if(this.deviceAttrs.mode == 'auto') {
+      if(this.loaclAttr.mode == 'auto') {
         return HdSmart.UI.toast('自动模式不支持温度调节')
       }
       // 送风模式不能设置温度
       if (this.deviceAttrs.mode === 'wind') {
         return HdSmart.UI.toast('送风模式不支持温度调节')
       }
-      let temp = +this.deviceAttrs.temperature + step
+      let temp = +this.loaclAttr.temperature + step
       // 最小温度
       if (temp < MIN_TEMP) {
-        if (this.deviceAttrs.temperature == MIN_TEMP) {
+        if (this.loaclAttr.temperature == MIN_TEMP) {
           return HdSmart.UI.toast('温度已调至最低')
         } else {
           temp = MIN_TEMP
@@ -294,17 +314,24 @@ export default {
       }
       // 最大温度
       if (temp > MAX_TEMP) {
-        if (this.deviceAttrs.temperature == MAX_TEMP) {
+        if (this.loaclAttr.temperature == MAX_TEMP) {
           return HdSmart.UI.toast('温度已调至最高')
         } else {
           temp = MAX_TEMP
         }
       }
       this.controlDevice('temperature', temp)
-        .then(() => {
-          // this.deviceAttrs.temperature = temp
-          this.reset()
-        })
+        .then((res) => {
+         if(res.code == 0) {
+            this.loaclAttr.temperature = temp
+             this.reset()
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+       })
+       .catch(() => {
+         HdSmart.UI.toast('操作失败')
+       })
     },
     // 设置风速
     setSpeed(speed) {
@@ -312,11 +339,20 @@ export default {
       //   return HdSmart.UI.toast('送风模式不能设置自动风速')
       // }
       this.controlDevice('speed', speed)
-        .then(() =>{
-          this.hide()
-        })
+        .then((res) => {
+         if(res.code == 0) {
+            this.loaclAttr.speed = speed
+            this.hide()
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+       })
+       .catch(() => {
+         HdSmart.UI.toast('操作失败')
+       })
     },
     controlDevice(attr, value) {
+      console.log(this.loaclAttr,'-------------------------------------')
       let param = {}
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
@@ -362,7 +398,7 @@ export default {
       // }else if(this.deviceAttrs.mode=='wind') {
       //   return 70 /(30 - 16) * (MIN_TEMP / 10 - 16)
       // }else{
-        return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+        return 70 /(30 - 16) * (this.loaclAttr.temperature / 10 - 16)
       // }
     }
   }
