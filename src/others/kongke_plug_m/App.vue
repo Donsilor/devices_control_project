@@ -79,11 +79,11 @@
           <div
             v-if="switchValue=='open'"
             class="timing-right"
-            @click="showTime('设置关机时间')">{{ timer.closeEnable == 'y'?timer.closeTime + ' 关机':'' }}＞ </div>
+            @click="showTime('设置断电时间')">{{ timer.closeEnable == 'y'?timer.closeTime + ' 断电':'' }}＞ </div>
           <div
             v-else
             class="timing-right"
-            @click="showTime('设置开机时间')">{{ timer.openEnable == 'y'?timer.openTime + ' 开机':'' }}＞ </div>
+            @click="showTime('设置通电时间')">{{ timer.openEnable == 'y'?timer.openTime + ' 通电':'' }}＞ </div>
         </div>
         <!-- <div class="Charging-protection">
           <div>充电保护</div>

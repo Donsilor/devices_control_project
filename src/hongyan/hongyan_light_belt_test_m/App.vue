@@ -138,6 +138,7 @@ export default {
     },
     //
     endLight(val){
+      if(val == 0) return this.controlDevice('level', val)
       if(val <= 15) {
         this.controlDevice('level', 15)
       } else {
