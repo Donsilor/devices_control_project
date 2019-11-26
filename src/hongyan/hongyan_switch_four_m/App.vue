@@ -8,25 +8,13 @@
       <!-- 灯 -->
       <div class="main center">
         <div class="bg center">
+
           <div class="panel">
             <div class="panel-btn center">
               <div
                 v-if="deviceAttrs.list"
                 :class="['btn-wrap', 'btn-wrap-four']">
-                <div class="btn-name btn-name-top">{{ deviceAttrs.list[0].chan_name?deviceAttrs.list[0].chan_name:'一路开关' }}</div>
-                <div
-                  :class="[{ 'active': deviceAttrs.list[0].chan_status == 'on' }, 'btn btn-switch center']"
-                  @click="setSwitch1"/>
-                <div class="btn-name">{{ deviceAttrs.list[0].chan_status == 'on'? '关灯' : '开灯' }}</div>
-              </div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-btn center">
-              <div
-                v-if="deviceAttrs.list"
-                :class="['btn-wrap', 'btn-wrap-four']">
-                <div class="btn-name btn-name-top">{{ deviceAttrs.list[1].chan_name?deviceAttrs.list[1].chan_name:'二路开关' }}</div>
+                <div class="btn-name btn-name-top">{{ deviceAttrs.list[1].chan_name?deviceAttrs.list[1].chan_name:'二路' }}</div>
                 <div
                   :class="[{ 'active': deviceAttrs.list[1].chan_status == 'on' }, 'btn btn-switch center']"
                   @click="setSwitch2"/>
@@ -39,7 +27,7 @@
               <div
                 v-if="deviceAttrs.list"
                 :class="['btn-wrap', 'btn-wrap-four']">
-                <div class="btn-name btn-name-top">{{ deviceAttrs.list[2].chan_name?deviceAttrs.list[2].chan_name:'三路开关' }}</div>
+                <div class="btn-name btn-name-top">{{ deviceAttrs.list[2].chan_name?deviceAttrs.list[2].chan_name:'三路' }}</div>
                 <div
                   :class="[{ 'active': deviceAttrs.list[2].chan_status == 'on' }, 'btn btn-switch center']"
                   @click="setSwitch3"/>
@@ -47,12 +35,27 @@
               </div>
             </div>
           </div>
+
           <div class="panel">
             <div class="panel-btn center">
               <div
                 v-if="deviceAttrs.list"
                 :class="['btn-wrap', 'btn-wrap-four']">
-                <div class="btn-name btn-name-top">{{ deviceAttrs.list[3].chan_name?deviceAttrs.list[3].chan_name:'四路开关' }}</div>
+                <div class="btn-name btn-name-top">{{ deviceAttrs.list[0].chan_name?deviceAttrs.list[0].chan_name:'一路' }}</div>
+                <div
+                  :class="[{ 'active': deviceAttrs.list[0].chan_status == 'on' }, 'btn btn-switch center']"
+                  @click="setSwitch1"/>
+                <div class="btn-name">{{ deviceAttrs.list[0].chan_status == 'on'? '关灯' : '开灯' }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-btn center">
+              <div
+                v-if="deviceAttrs.list"
+                :class="['btn-wrap', 'btn-wrap-four']">
+                <div class="btn-name btn-name-top">{{ deviceAttrs.list[3].chan_name?deviceAttrs.list[3].chan_name:'四路' }}</div>
                 <div
                   :class="[{ 'active': deviceAttrs.list[3].chan_status == 'on' }, 'btn btn-switch center']"
                   @click="setSwitch4"/>
