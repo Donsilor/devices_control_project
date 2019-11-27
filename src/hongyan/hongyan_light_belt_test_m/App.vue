@@ -202,6 +202,7 @@ export default {
 @imgPath: "base/hongyan_light/assets";
 @imgPath1: "base/blend/assets";
 @imgPath2: "base/air_cleaner/assets/new-air";
+@imgPath3: 'base/honghan_switch/assets';
 @keyframes rotate {
     from {
       transform:rotate(0deg);
@@ -212,7 +213,7 @@ export default {
 }
 .page{
   height:100vh;
-  background: url('~@lib/base/img/img_bg_01.png');
+  background: url('~@lib/@{imgPath3}/img_bg_01@2x.png');
   background-size: 100% 100%;
 }
 .main{

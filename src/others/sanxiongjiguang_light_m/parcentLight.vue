@@ -55,7 +55,7 @@ export default {
       let parcentlight = document.querySelectorAll("#parcent-light")[0]
       let touchbox = document.querySelectorAll(".touchbox")[0]
       let coverlight = document.querySelectorAll(".coverlight")[0]
-      let h = e.targetTouches[0].pageY - parcentlight.offsetTop - 67
+      let h = e.targetTouches[0].pageY - parcentlight.offsetTop - (touchbox.offsetHeight * 1.6)
       h=h<=0?0:h
       h=h>=185?185:h
       touchbox.style.top = (h + coverlight.offsetTop)/37.5 +"rem"

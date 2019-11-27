@@ -8,7 +8,75 @@
       <!-- 灯 -->
       <div class="main center">
         <div class="bg center">
-          <div class="panel">
+          <div
+            v-if="deviceAttrs.list"
+            :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}]"
+            @click="setSwitch1"
+          >
+            <div class="panel-btn center">
+              <div class="btn-wrap btn-wrap-four">
+                <div
+                  :class="['btn-name', 'tis', {'tisActive': deviceAttrs.list[0].chan_status == 'on'}]"
+                />
+                <div
+                  :class="['btn-switch', 'center', {'active': deviceAttrs.list[0].chan_status == 'on'}]"
+                />
+                <div class="btn-name">开关</div>
+              </div>
+            </div>
+          </div>
+          <div
+            v-if="deviceAttrs.list"
+            :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}]"
+            @click="setSwitch2"
+          >
+            <div class="panel-btn center">
+              <div class="btn-wrap btn-wrap-four">
+                <div
+                  :class="['btn-name', 'tis', {'tisActive': deviceAttrs.list[1].chan_status == 'on'}]"
+                />
+                <div
+                  :class="['btn-switch', 'center', {'active': deviceAttrs.list[1].chan_status == 'on'}]"
+                />
+                <div class="btn-name">开关</div>
+              </div>
+            </div>
+          </div>
+          <div
+            v-if="deviceAttrs.list"
+            :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}]"
+            @click="setSwitch3"
+          >
+            <div class="panel-btn center">
+              <div class="btn-wrap btn-wrap-four">
+                <div
+                  :class="['btn-name', 'tis', {'tisActive': deviceAttrs.list[2].chan_status == 'on'}]"
+                />
+                <div
+                  :class="['btn-switch', 'center', {'active': deviceAttrs.list[2].chan_status == 'on'}]"
+                />
+                <div class="btn-name">开关</div>
+              </div>
+            </div>
+          </div>
+          <div
+            v-if="deviceAttrs.list"
+            :class="['panel', {'panelActive': deviceAttrs.list[3].chan_status == 'on'}]"
+            @click="setSwitch4"
+          >
+            <div class="panel-btn center">
+              <div class="btn-wrap btn-wrap-four">
+                <div
+                  :class="['btn-name', 'tis', {'tisActive': deviceAttrs.list[3].chan_status == 'on'}]"
+                />
+                <div
+                  :class="['btn-switch', 'center', {'active': deviceAttrs.list[3].chan_status == 'on'}]"
+                />
+                <div class="btn-name">开关</div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="panel">
             <div class="panel-btn center">
               <div
                 v-if="deviceAttrs.list"
@@ -20,8 +88,8 @@
                 <div class="btn-name">{{ deviceAttrs.list[0].chan_status == 'on'? '关灯' : '开灯' }}</div>
               </div>
             </div>
-          </div>
-          <div class="panel">
+          </div> -->
+          <!-- <div class="panel">
             <div class="panel-btn center">
               <div
                 v-if="deviceAttrs.list"
@@ -59,7 +127,7 @@
                 <div class="btn-name">{{ deviceAttrs.list[3].chan_status == 'on'? '关灯' : '开灯' }}</div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <!-- 按钮 -->
@@ -205,7 +273,7 @@ export default {
   height: 100vh;
   touch-action: manipulation;
   // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
-  background: url('~@lib/@{imgPath}/img_bg_01@2x.png');
+  background: url('~@lib/@{imgPath}/bg02.png');
   background-size: 100% 100%;
 }
 .page {
@@ -237,7 +305,7 @@ export default {
     position: relative;
     .bg {
       display: flex;
-      justify-content: space-evenly;
+      // justify-content: space-evenly;
       align-items: center;
       flex-wrap: wrap;
       .left {
@@ -286,11 +354,15 @@ export default {
     }
   }
   .panel {
-    background: rgba(255, 255, 255, 0.4);
-    width: 332px;
-    height: 374px;
+    background: rgba(255, 255, 255, 0.5);
+    width: 294px;
+    height: 337px;
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
+    margin-right: 14px;
+  }
+  .panelActive {
+    background: #fff;
   }
   .panel-btn {
     // position: fixed;
@@ -321,7 +393,7 @@ export default {
   }
   .btn-wrap {
     &.btn-wrap-four {
-      width: 332px;
+      width: 294px;
     }
     &.up-index {
       position: relative;
@@ -346,6 +418,16 @@ export default {
     .btn-name-top {
       margin-bottom: 60px;
     }
+    .tis {
+      margin: 0 auto 147px;
+      width: 48px;
+      height: 8px;
+      border-radius: 5px;
+      background: #D8D8D8;
+    }
+    .tisActive {
+      background: #E9BE6E;
+    }
     .btn-name {
       text-align: center;
       color: #000;
@@ -356,16 +438,14 @@ export default {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('~@lib/@{imgPath}/btn_ac_on_cd@3x.png');
+        width: 48px;
+        height: 48px;
+        background-image: url('~@lib/@{imgPath}/kg_btn_off.png');
         background-size: @100;
       }
       &.active {
-        border-color: #000000;
-        background: #000000;
         &::before {
-          background-image: url('~@lib/@{imgPath}/dakai4@3x.png')
+          background-image: url('~@lib/@{imgPath}/kg_btn_on.png')
         }
       }
     }
