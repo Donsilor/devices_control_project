@@ -10,15 +10,16 @@
         <div 
           ref="stick" 
           class="stick" >
+          <div class="Pole"/>
           <div 
             ref="imgBox" 
             class="imgBox">
             <div 
               ref="leftCurtainBox" 
               class="leftCurtainBox"
-              @touchstart="leftStart($event)"
-              @touchmove="movefn($event,'left')"
-              @touchend="endfn($event)">
+              @touchstart="touchStart($event)"
+              @touchmove="touchMove($event,'left')"
+              @touchend="touchEnd($event)">
               <img 
                 ref="curtainLeft"
                 class="curtainLeft" 
@@ -32,9 +33,9 @@
             <div 
               ref="rightCurtainBox" 
               class="rightCurtainBox"
-              @touchstart="rightStart($event)"
-              @touchmove="movefn($event,'right')"
-              @touchend="endfn($event)">
+              @touchstart="touchStart($event)"
+              @touchmove="touchMove($event,'right')"
+              @touchend="touchEnd($event)">
               <img 
                 ref="curtainRight"
                 class="curtainRight" 
@@ -47,41 +48,13 @@
             </div>
           </div>
         </div>
-        <!-- <div
-          ref="isgray"
-          class="isgray" >
-          <div
-            ref="cover"
-            :class="['cover']">
-            <div
-              ref="touchbox"
-              class="touchbox"
-              @touchstart="touchStart($event)"
-              @touchmove="touchMove($event)"
-              @touchend="touchEnd($event)">
-              <div
-                class="touch"/>
-            </div>
-          </div>
-        </div> -->
-        <div 
-          v-if="txtShow === 'opening'" 
-          class="status">正在打开窗帘</div>
-        <div 
-          v-if="txtShow === 'closing'" 
-          class="status">正在关闭窗帘</div>
-        <div 
-          v-if="txtShow === 'opened'" 
-          class="status">窗帘已打开</div>
-        <div 
-          v-if="txtShow === 'closed'"
-          class="status" >窗帘已关闭</div>
+        <div class="status" >{{ curtainStatusText }}</div>
       </div>
       <!-- 底部按钮 -->
       <div class="panel-btn center">
         <div class="btn-wrap">
           <div
-            :class="[{'active': curtainStatus === 'opening' },'btn-open btn center']"
+            :class="[{'active': btnActive === 'open' },'btn-open btn center']"
             @click="setOpen" />
           <div class="btn-name">全开</div>
         </div>
@@ -96,7 +69,7 @@
           class="btn-wrap"
         >
           <div
-            :class="[{ 'active': curtainStatus === 'closing' }, 'btn btn-close center']"
+            :class="[{ 'active': btnActive === 'close' }, 'btn btn-close center']"
             @click="setClose" />
           <div class="btn-name">全关</div>
         </div>
@@ -107,6 +80,7 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
+// import './animate8.0.js'
 export default {
   data() {
     return {
@@ -114,12 +88,11 @@ export default {
       // 点击中部到指定幅度按钮显示的信息
       coverWidth:"",
       timeId: '',
-      curtainStatus: '',
       btnActive: '',
       range: 0,
-      txtShow: '',
       myMove:false,
       curtainWidth:0,
+      curtainStatusText:''
     }
   },
   computed: {
@@ -130,8 +103,58 @@ export default {
     }
   },
   watch:{
-    "deviceAttrs"(){
-      this.newRatio()
+    "device.stateChange"(){
+      if (this.myMove==false) {
+          this.newRatio()
+      }
+      if (this.btnActive === 'open') {
+          this.curtainStatusText='正在打开窗帘'
+      } else if (this.btnActive === 'close') {
+          this.curtainStatusText='正在关闭窗帘'
+      }
+      // if (this.deviceAttrs.open_percentage=='100') {
+      //   this.curtainStatusText = '窗帘已打开'
+      //   this.btnActive = ''
+      // }else if (this.deviceAttrs.open_percentage=='0') {
+      //   this.curtainStatusText = '窗帘已关闭'
+      //   this.btnActive = ''
+      // }
+      console.log(this.curtainStatusText,'curtainStatusText')
+      console.log(this.btnActive,'btnActive')
+      
+    },
+    'deviceAttrs.open_percentage'(newValue, oldValue) {
+      if(this.btnActive == 'open'||this.btnActive == 'close'||this.myMove==true) {
+        if(newValue > oldValue) {
+          this.curtainStatusText = '正在打开窗帘'
+        }
+        if(newValue < oldValue) {
+          this.curtainStatusText = '正在关闭窗帘'
+        }
+        if(newValue == oldValue) {
+          this.curtainStatusText = ''
+        }
+      }else{
+        this.curtainStatusText = ''
+        this.btnActive='pause'
+      }
+      if(this.deviceAttrs.open_percentage == this.range) {
+        this.curtainStatusText = ''
+        this.myMove = false
+      }
+      if (oldValue-newValue<0&&this.deviceAttrs.open_percentage=='100') {
+        this.curtainStatusText = '窗帘已打开'
+        this.btnActive = ''
+      }else if (this.deviceAttrs.open_percentage=='0') {
+        this.curtainStatusText = '窗帘已关闭'
+        this.btnActive = ''
+      }
+      // if(this.deviceAttrs.open_percentage == 100) {
+      //   this.curtainStatusText = ''
+      // }
+      // if(this.deviceAttrs.open_percentage == 0) {
+      //   this.curtainStatusText = ''
+      // }
     }
   },
   created() {
@@ -139,42 +162,59 @@ export default {
       this.getDeviceInfo()
       .then(()=>{
         this.newRatio()
+        if (this.deviceAttrs.open_percentage=='100') {
+          this.curtainStatusText = '窗帘已打开'
+        }
+        if (this.deviceAttrs.open_percentage=='0') {
+          this.curtainStatusText = '窗帘已关闭'
+        }
       })
       HdSmart.UI.setStatusBarColor(2)
     })
+  },
+  mounted(){
+        console.log(this.animate,'4444444444')
+        
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     // 全开
     setOpen(){
+      this.btnActive = 'open'
+      this.curtainStatusText = '正在打开窗帘'
+      this.myMove = false
       this.controlDevice('switch', 'on')
     },
-    //暂停
-    setPause(){},
     //全关
     setClose(){
+      this.btnActive = 'close'
+      this.curtainStatusText = '正在关闭窗帘'
+      this.myMove = false
       this.controlDevice('switch', 'off')
     },
+    //暂停
+    setPause(){
+      this.btnActive = 'pause'
+      this.curtainStatusText = ''
+      this.myMove = false
+      this.$refs['btn-pause'].classList.add('active')
+      setTimeout(()=>{
+        this.$refs['btn-pause'].classList.remove('active')
+      },500)
+      this.controlDevice('switch', 'pause')
+    },
+    // clear
     // 滑动窗帘
-    leftStart(e){
+    touchStart(e){
+      this.myMove = true
+      this.curtainStatusText = ''
+      this.btnActive = ''
       console.log(e)
     },
-    leftEnd(e){
-     
-    },
-    rightStart(e){
-      console.log(e)
-    },
-    rightEnd(e){},
-    endfn(){
-       let circle = this.$refs.right.offsetHeight
-      let maxWidth = this.$refs.imgBox.offsetWidth*0.49
-      this.range = 100-Math.round((this.curtainWidth-circle) / (maxWidth-circle) * 100)
-      console.log(this.range)
-      this.controlDevice('open_percentage',this.range)
-    },
-    movefn(e,val){
-            //滑动时计算窗帘的宽度
+    touchMove(e,val){
+      //除了自己的手机，其他手机都要监听
+      this.myMove = true
+      //滑动时计算窗帘的宽度
       let circle = this.$refs.right.offsetHeight
       let leftCurtainBox = this.$refs.leftCurtainBox
       let rightCurtainBox = this.$refs.rightCurtainBox
@@ -189,16 +229,35 @@ export default {
       leftCurtainBox.style.width = this.curtainWidth +"px"
       rightCurtainBox.style.width = leftCurtainBox.style.width
     },
+    touchEnd(){
+      this.myMove = true
+      let circle = this.$refs.right.offsetHeight
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.49
+      this.range = 100-Math.round((this.curtainWidth-circle) / (maxWidth-circle) * 100)
+      console.log(this.range)
+      this.controlDevice('open_percentage',this.range)
+    },
     //根据后台返回数据得出窗帘的宽度
     newRatio(){
+      if(this.myMove)return
       let circle = this.$refs.right.offsetHeight
       let maxWidth = this.$refs.imgBox.offsetWidth*0.49
       let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
+      console.log(width,'width')
+      console.log(circle)
+      
+      
       let leftCurtainBox = this.$refs.leftCurtainBox
       let rightCurtainBox = this.$refs.rightCurtainBox
-      leftCurtainBox.style.width =width +"px"
-      console.log(width)
-      rightCurtainBox.style.width = leftCurtainBox.style.width
+      this.animate(leftCurtainBox,{
+        width:Math.round(width)
+      })
+      this.animate(rightCurtainBox,{
+        width:Math.round(width)
+      })
+      // leftCurtainBox.style.width =width +"px"
+      // // console.log(width)
+      // rightCurtainBox.style.width = leftCurtainBox.style.width
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
@@ -211,6 +270,61 @@ export default {
         }
       })
     },
+    animate(ele,param,callBack,speedTime){
+	//callBack没有传递时
+	//如果想要传递speedTime
+	//这里callBack就是时间
+	if(!!callBack && !(callBack instanceof Function)){//!!callBack表示存在并且不是一个函数
+		//执行这里说明callBack是一个时间
+		speedTime = callBack
+		callBack = undefined
+	}
+	speedTime = speedTime ? speedTime : 10
+	//console.log(speedTime);
+	clearInterval(ele.timer)
+	ele.timer = setInterval(()=>{
+		var flag = true//表示所有的属性都到达了目标 值
+		for(var attr in param){
+			if(attr === "zIndex"){
+				//zIndex不需要做任何动画，直接赋值就可以 了
+				ele.style[attr] = param[attr]
+			}else{
+				var current = 0
+				if(attr === "opacity"){
+					current = this.getStyle(ele,attr)*100
+				}else{
+					current = parseInt(this.getStyle(ele,attr))
+				}
+				var speed = (param[attr] - current)/10
+				speed = speed > 0 ?  Math.ceil(speed) : Math.floor(speed)
+				if(current != param[attr]){
+          // console.log(current,param[attr],speed,'222222222')
+          
+					//属性没有到达 目标 值
+					flag = false//最少有一个属性没有到达目标 值
+					if(attr === "opacity"){
+						ele.style[attr] = (current + speed)/100
+					}else{
+						ele.style[attr] = (current*100 + speed*100)/100 + "px"
+					}
+				}
+			}
+    }
+    // console.log(flag,'flag')
+    
+		if(flag){
+			clearInterval(ele.timer)
+			//到达了目标值。
+			if(callBack){
+				callBack()
+			}
+		}
+	},speedTime)
+},
+//兼容ie8获取元素对应浏览器渲染后的样式值。这个值是一个带单位的字符串
+getStyle(obj,attr){
+	return window.getComputedStyle ? window.getComputedStyle(obj,null)[attr] : obj.currentStyle[attr]
+}
   }
 }
 </script>
@@ -232,33 +346,41 @@ export default {
     margin-top: 100px;
     .stick{
       width: 80%;
-      height: 20px;
+      // height: 20px;
+      height: 586px;
       position: relative;
-      &::before{
-        content: "";
-        display: block;
+      .Pole{
+        position: absolute;
         width: 100%;
-        height: 100%;
-        background-image: url('~@lib/@{imgPath}/gun.png');
-        background-size: 100% 100%;
+        height: 20px;
+        &::before{
+          content: "";
+          display: block;
+          width: 100%;
+          height: 100%;
+          background-image: url('~@lib/@{imgPath}/gun.png');
+          background-size: 100% 100%;
+        }
       }
+
       .imgBox{
         position: absolute;
         top: 16px;
         width: 100%;
-        height: 564px;
+        // height: 500px;
+        height: 500px;
         .leftCurtainBox{
           position: absolute;
           top: 0;
           left: 1%;
           width: 49%;
-          height: 564px;
+          height: 500px;
           overflow: hidden;
           .curtainLeft{
             top: 0;
             left: 0;
             width: 100%;
-            height: 564px;
+            height: 500px;
             position: absolute;
           }
           .left{ 
@@ -274,13 +396,13 @@ export default {
            position: absolute;
            top: 0;
            width: 49%;
-           height: 564px;
+           height: 500px;
            right: 1%;
            overflow: hidden;
           .curtainRight{
             top: 0;
             width: 100%;
-            height: 564px;
+            height: 500px;
             position: absolute;
           }
           .right{ 
@@ -294,79 +416,12 @@ export default {
         }
       }
     }
-    // &.center {
-    //   flex-direction: column;
-    // }
-    // .cover{
-    //   width: 572px;
-    //   height: 204px;
-    //   left: 0;
-    //   top: 0px;
-    //   background-image: linear-gradient(-90deg, #E5B864 3%, #F1CB85 52%);
-    //   border-radius: 1px;
-    //   position: absolute;
-    //   clip:rect(0px 572px 204px 0px);
-    //   .touchbox{
-    //     // width: 28px;
-    //     width: 40px;
-    //     height: 204px;
-    //     position: absolute;
-    //     top: 50%;
-    //     right: 0px;
-    //     transform: translateY(-50%);
-    //     display: flex;
-    //     align-items: center;
-    //     justify-content: center;
-    //     .touch{
-    //       width: 12px;
-    //       height: 65px;
-    //       border-left: 2px solid #BF954C;
-    //       border-right: 2px solid #BF954C;
-    //     }
-    //   }
-    //   &.move{
-    //     transition: 5s linear;
-    //   }
-    //   &.openCurtains{
-    //     animation: open 5s linear;
-    //   }
-    //   &.closeCurtains{
-    //     animation: close 5s linear;
-    //   }
-    //   &.pause{
-    //     animation-play-state: paused;
-    //   }
-    //   @-webkit-keyframes open {
-    //     0% {
-    //       width: 0px;
-    //     }
-    //     100% {
-    //       width: 572px;
-    //     }
-    //   }
-    //   @-webkit-keyframes close {
-    //       0% {
-    //       width: 572px;
-    //     }
-    //     100% {
-    //       width: 28px;
-    //     }
-    //   }
-
-    // }
-    // .isgray {
-    //   width: 76%;
-    //   height: 204px;
-    //   // background: rgb(234, 235, 238);
-    //   background: rgba(0, 0, 0,0.1);
-    //   border-radius: 1px;
-    //   margin-top: 15vh;
-    //   position: relative;
-    // }
     .status{
-      font-size: 28px;
+      position: absolute;
+      font-size: 24px;
       height: auto;
-      margin-top: 120px;
+      bottom: 0px;
+      font-family: PingFangSC-Light;
     }
   }
   .panel-btn {
