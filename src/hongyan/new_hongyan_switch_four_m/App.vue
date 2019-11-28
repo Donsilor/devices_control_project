@@ -9,11 +9,12 @@
       <div class="main center">
         <div class="bg center">
           <div
-            v-if="deviceAttrs.list"
+            v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}]"
             @click="setSwitch1"
           >
-            <div class="panel-btn center">
+            <div
+              class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
                 <div
                   :class="['btn-name', 'tis', {'tisActive': deviceAttrs.list[0].chan_status == 'on'}]"
@@ -25,8 +26,21 @@
               </div>
             </div>
           </div>
+          <!-- 配置开关 -->
           <div
-            v-if="deviceAttrs.list"
+            v-else
+            :class="['panel']"
+          >
+            <div
+              class="panel-btn center">
+              <div class="btn-wrap btn-wrap-four">
+                <div class="btn-add center" />
+                <div class="add-name">配置灯</div>
+              </div>
+            </div>
+          </div>
+          <div
+            v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}]"
             @click="setSwitch2"
           >
@@ -42,8 +56,21 @@
               </div>
             </div>
           </div>
+          <!-- 配置开关 -->
           <div
-            v-if="deviceAttrs.list"
+            v-else
+            :class="['panel']"
+          >
+            <div
+              class="panel-btn center">
+              <div class="btn-wrap btn-wrap-four">
+                <div class="btn-add center" />
+                <div class="add-name">配置灯</div>
+              </div>
+            </div>
+          </div>
+          <div
+            v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}]"
             @click="setSwitch3"
           >
@@ -59,8 +86,21 @@
               </div>
             </div>
           </div>
+          <!-- 配置开关 -->
           <div
-            v-if="deviceAttrs.list"
+            v-else
+            :class="['panel']"
+          >
+            <div
+              class="panel-btn center">
+              <div class="btn-wrap btn-wrap-four">
+                <div class="btn-add center" />
+                <div class="add-name">配置灯</div>
+              </div>
+            </div>
+          </div>
+          <div
+            v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[3].chan_status == 'on'}]"
             @click="setSwitch4"
           >
@@ -73,6 +113,19 @@
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[3].chan_status == 'on'}]"
                 />
                 <div class="btn-name">开关</div>
+              </div>
+            </div>
+          </div>
+          <!-- 配置开关 -->
+          <div
+            v-else
+            :class="['panel']"
+          >
+            <div
+              class="panel-btn center">
+              <div class="btn-wrap btn-wrap-four">
+                <div class="btn-add center" />
+                <div class="add-name">配置灯</div>
               </div>
             </div>
           </div>
@@ -148,7 +201,11 @@
           >
             <div
               :class="[{ 'active': deviceAttrs.list[0].chan_status == 'off' && deviceAttrs.list[1].chan_status == 'off' && deviceAttrs.list[2].chan_status == 'off' && deviceAttrs.list[3].chan_status == 'off' }, 'btn btn-close center']"
-              @click="setSwitchOff('off')"/>
+              @touchstart="touchStart($event)"
+              @touchmove="touchMove($event)"
+              @touchend="touchEnd($event)"
+              @click="setSwitchOff('off')"
+            />
             <div class="btn-name">全关</div>
           </div>
         </div>
@@ -260,6 +317,20 @@ export default {
           }
         }
       })
+    },
+    touchStart(e) {
+      console.log(e, 'start')
+      e.stopPropagation() //阻止冒泡
+      e.preventDefault() //阻止默认行为
+    },
+    touchMove(e) {
+      console.log(e, 'move')
+      e.stopPropagation() //阻止冒泡
+      e.preventDefault() //阻止默认行为
+    },
+    touchEnd(e) {
+      e.stopPropagation() //阻止冒泡
+      e.preventDefault() //阻止默认行为
     },
   },
 }
@@ -524,5 +595,26 @@ export default {
     position: fixed;
     bottom: 0;
   }
+}
+.btn-add {
+  &::before {
+    content: "";
+    display: block;
+    width: 48px;
+    height: 48px;
+    background-image: url('~@lib/@{imgPath}/kg_btn_peizhi.png');
+    background-size: @100;
+  }
+  &.active {
+    &::before {
+      background-image: url('~@lib/@{imgPath}/kg_btn_peizhi.png')
+    }
+  }
+}
+.add-name {
+  margin-top: 20px;
+  font-size: 24px;
+  color: #000000;
+  text-align: center;
 }
 </style>
