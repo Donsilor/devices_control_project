@@ -7,10 +7,20 @@
       <!-- 主体部分 -->
       <div class="main">
         <div class="headline">准备就绪</div>
-        <div class="subheading">
+        <!-- <div class="subheading">
           <div class="subheading_tips">风温 | 低</div>
-          <div class="subheading_tips">水温 | 中</div>
+          <div class="subheading_tips margin-tips">水温 | 中</div>
           <div class="subheading_tips">座温 | 中</div>
+        </div> -->
+        <!-- <div class="subheading">
+          <div class="subheading_tips">妇洗</div>
+          <div class="subheading_tips tips-margin">——</div>
+          <div class="subheading_tips"> 冲水</div>
+          <div class="subheading_tips tips-margin">——</div>
+          <div class="subheading_tips"> 烘干</div>
+        </div> -->
+        <div class="subheading">
+          <div class="subheading_tips-big">正在烘干</div>
         </div>
       </div>
 
@@ -537,9 +547,17 @@ export default {
         font-size: 24px;
         color: #000000;
         text-align: center;
-        &:nth-child(2) {
+        &.margin-tips {
           margin: 0 80px;
         }
+        &.tips-margin {
+          margin: 0 45px;
+        }
+      }
+      .subheading_tips-big {
+        font-size: 48px;
+        color: #000000;
+        text-align: center;
       }
     }
     .line{
