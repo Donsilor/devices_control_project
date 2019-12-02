@@ -116,8 +116,8 @@
         href="#"
         class="toggle" 
         @click.prevent="toggleFilter()">
-        <p class="text">筛选</p>
-        <p class="arrow"/>
+        <p class="text">综合排序</p>
+        <!-- <p class="arrow"/> -->
       </div>
 
     </div>
@@ -284,7 +284,7 @@
   }
 }
 .list-m60 {
-  margin: 0 25px;
+  margin: 0 40px;
 }
 .vlist {
   padding-top: 10PX;
@@ -297,13 +297,17 @@
 //   background-size: 100% 100%;
 // }
 .vitem {
-  width: 320px;
-  margin: 0 15px;
+  width: 210px;
+  // height: 318px;
+  margin-right: 20px;
   position: relative;
+  &:nth-child(3n){
+      margin-right:0; 
+    }
 
   img {
-    width: 320px;
-    height: 470px;
+     width: 210px;
+  height: 318px;
     display: block;
     object-fit: cover;
     background-color: #ebebeb;
@@ -580,13 +584,13 @@ export default {
   },
   mounted() {
     this.init()
-         console.log('mounted',1111111111111111111111111111111)
+
         setTimeout(()=>{
             window.scrollTo(0,1)
         },300)
            
         let topbar = document.querySelector('.topbar2')
-        console.log(topbar.offsetHeight,'topbar.offsetHeight')
+        // console.log(topbar)
         
         this.$refs.filters.style.top = topbar.offsetHeight +"px"
         service.RemoteController({ 'show': true })
