@@ -14,6 +14,10 @@
         ref="statusbar"
         :style="{height:status_bar_height+'px'}"
         class="statusbar" />
+      <!-- <div 
+        ref="statusbarBg"
+        :style="{height:status_bar_height+navigation_bar_height+'px'}"
+        class="statusbarBg"/> -->
       <div
         ref="newNavbar"
         :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
@@ -70,7 +74,12 @@
           :class="['header-bottom-right', styleName]"
           :disabled="(styleName && Object.keys(styleName).indexOf('no-work') > -1) ? true : false"
           @click="shutdownCallback">
-          <p class="header-bottom-right-p"/>
+          <p 
+            v-if="!switchimg" 
+            class="header-bottom-right-p"/>
+          <p 
+            v-if="switchimg=='tv'" 
+            class="header-bottom-right-tvimg"/>
         </button>
         <!-- <slot /> -->
       </div>
@@ -158,6 +167,10 @@ export default {
     room:{
       type:String,
       default:''
+    },
+    switchimg:{
+      type:String,
+      default:''
     }
   },
   data() {
@@ -233,9 +246,15 @@ export default {
       let h = this.$refs['header-bottom'].offsetHeight
       let b = this.scrollTop
       let f = (-6/44)*this.scrollTop+24
+      let w = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2   //如果标题要居中
+      let l = (w/44)*this.scrollTop
       b = b>=h?h:b
+      // w2 =  this.scrollTop *24/44+20
+
       f = f<=18?18:f
-      this.$refs.title.style.bottom =this.$refs.title.style.left= b + 'px'
+      l = l<=w?l :w
+      this.$refs.title.style.bottom = b + 'px'
+      this.$refs.title.style.left = l + 'px'
       this.$refs.title.style.fontSize = f + 'px'
       if( this.scrollTop>=h ){
         pageClass.classList.add('scroll44')
@@ -259,9 +278,24 @@ export default {
   .header-bottom-right{
     display: none
   }
-  .newNavbar,.statusbar{
+.newNavbar,.statusbar{
     background: #fff
-  }
+}
+// .topbar-fixed{
+//   &::before{
+//     width: 100%;
+//     height: 100%;
+//     background: rgba(225, 225, 225, 0.6);
+//     background: red;
+//     filter: blur(20px);
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     content: '';
+//   }
+// }
   .search-screen-bg{
     visibility:hidden
   }
@@ -340,6 +374,16 @@ export default {
 .statusbar {
   height: @status_bar_height;
 }
+// .statusbarBg{
+//   height: @status_bar_height+@navigation_bar_height;
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   background: #fff;
+//   -webkit-filter: blur(20px);
+//   filter: blur(20px);
+// }
 .header-bottom{
   display: flex;
   justify-content: space-between;
@@ -453,6 +497,12 @@ export default {
   outline: none;
     .header-bottom-right-p{
        background: url('~@lib/base/img/btn_ac_open@2x.png');
+        background-size: 100% 100%;
+        width: 24PX;
+        height: 24PX;
+    }
+    .header-bottom-right-tvimg{
+      background: url('~@lib/base/tv/assets/new/tv_btn_close01.png');
         background-size: 100% 100%;
         width: 24PX;
         height: 24PX;

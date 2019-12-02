@@ -42,6 +42,11 @@
               <p
                 v-show="isNotNull(cur.starring)"
                 class="text_s">主演：{{ cur.starring }}</p>
+              <p 
+                v-show="isNotNull(cur.desc)" 
+                class="synopsis"
+                @click="synopsisFn" 
+              ><span>简介：{{ cur.desc }}</span> </p>
             </div>
             <div 
               :class="{'gray':tvStatus.tvOnlineStatus==-3}" 
@@ -50,7 +55,7 @@
                 href="#"
                 class="btn"
                 @click.prevent="play(cur.playlist2.list[0])">
-                <i class="play" /><span>在电视上播放</span> 
+                <i class="play" /><span>电视播放</span> 
               </a>
             </div>
           </div>
@@ -268,8 +273,8 @@
     margin-bottom: 32px;
   }
   .pic {
-    width: 320px;
-    height: 470px;
+    width: 264px;
+    height: 400px;
     float: left;
     img {
       width: 100%;
@@ -297,8 +302,9 @@
     }
   }
   .text {
-    margin-left: 344px;
-    height: 470px;
+    margin-left: 304px;
+    height: 400px;
+    width: 366px;
     position: relative;
     color: #222a37;
   }
@@ -397,23 +403,44 @@
 .shortinfo {
   margin-bottom: 48px;
   p {
-    line-height: 54px;
+    opacity: 0.5;
+    font-family: PingFangSC-Light;
+    font-size: 24px;
+    color: #000000;
+    letter-spacing: 0;
+    line-height: 40px;
+    padding-bottom:4px; 
   }
   span {
     color: #000;
   }
   .text_s {
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
     overflow: hidden;
-    height: 6em
+    text-overflow:ellipsis;
+    white-space: nowrap;
   }
   .director{
     overflow: hidden;
     text-overflow:ellipsis;
     white-space: nowrap;
+  }
+  .synopsis{
+    line-height: 40px;
+    height: 160px;
+    overflow: hidden;
+    span{
+      &::after{
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        position: relative;
+        top: 4px;
+        background: url('~@lib/base/tv/assets/new/tv_btn_xiala.png')
+          no-repeat;
+        background-size: 100% 100%;
+      }
+    }
   }
 }
 .playstate {
@@ -428,10 +455,11 @@
     /*background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);*/
     /*border-radius: 45px;*/
     background-color: #000000;
+    background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
     height: 84px;
     line-height: 84px;
     display: block;
-    color: #fff;
+    color: #000;
     font-size: 36px;
     text-align: center;
     display: flex;
@@ -848,6 +876,10 @@ export default {
   },
   methods: {
     ...mapActions(["hideDetail", "showDetail"]),
+    synopsisFn(){
+      console.log('点击了')
+      
+    },
     scrollfn(){
        var scrollTop =
         document.documentElement.scrollTop ||
@@ -887,6 +919,46 @@ export default {
             item => item.states != "1"
           )
           this.cur = Object.freeze(temp)
+          this.$nextTick(()=>{
+            let num =0 
+            if(!this.cur.score){
+              num +=1
+            }
+             if(!this.cur.year){
+              num +=1
+            }
+             if(!this.cur.cate){
+              num +=1
+            }
+             if(!this.cur.director){
+              num +=1
+            }
+             if(!this.cur.starring){
+              num +=1
+            }
+            console.log(num,'---------')
+            
+            
+            let synopsis = document.querySelector('.synopsis')
+            synopsis.style.height = 20*(2+num)+'px'
+            
+            let synopsisSpan = document.querySelector('.synopsis>span')
+            let synopsisH = synopsis.offsetHeight
+            let synopsisSpanH = synopsisSpan.offsetHeight
+            synopsisSpan.innerText+='...'
+            while (synopsisSpanH>synopsisH){
+              synopsisSpan.innerText =  synopsisSpan.innerText.substr(0,synopsisSpan.innerText.length-4)
+              synopsisSpan.innerText+='...'
+              synopsisSpanH = synopsisSpan.offsetHeight
+            }
+             console.log(synopsis,synopsisSpan)
+             
+            // synopsis.innerText = 'aaaaa' +  synopsis.innerText
+          
+          })
+      
+         
+          
         }
       )
     },

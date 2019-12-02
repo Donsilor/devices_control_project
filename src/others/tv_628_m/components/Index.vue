@@ -14,6 +14,7 @@
       :title="device_name"
       page-class=".page-index"
       bak-color="#000"
+      switchimg="tv"
       @shutdownCallback="cmd('rcPower')"
     />
     <!--    -->
@@ -40,7 +41,9 @@
     <!--      <div class="title mar">栏目分类</div>-->
     <!--    </div>-->
 
-    <div class="icon_grid">
+    <div 
+      ref="icon_grid" 
+      class="icon_grid">
       <div class="icon_grid_inner">
         <div
           v-for="(item, idx) in channels"
@@ -90,9 +93,15 @@
       </div>
     </div>
    
+   
+   
+   
+  
     <!-- 列表 -->
     
-    <div class="index-list">
+    <div 
+      class="index-list" 
+      @>
       <div
         v-for="(it, idx) in allList"
         :key="idx"
@@ -108,11 +117,10 @@
 
         <ul class="vlist list-m60">
           <li
-            v-for="item in it"
-            :key="item.vid"
+            v-for="(item,index) in it"
+            :key="item.vid+index"
             :class="['item-'+ item.channelId, 'vitem']"
             @click="showDetailInfo(item)">
-
             <img
               v-lazy="getThumbPic(item.pictureUrl)"
               :data-src="item.pictureUrl"
@@ -141,6 +149,19 @@
           </li>
         </ul>
       </div>
+      <!-- 没有数据 -->
+      <div
+        v-show="loadState === 'NO_DATA'"
+        class="nodata">
+        <i />
+        <p>暂无结果</p>
+      </div>
+      <!-- 加载更多 -->
+      <div class="loadmore">
+        <p v-show="!isFirstLoad && loadState === 'LOADING'">正在加载中...</p>
+        <p v-show="!isFirstLoad && loadState === 'LOADED'">加载更多...</p>
+        <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
+      </div>
     </div>
     <!-- 控制菜单 -->
     <div :class="[{'hide': hideMenu}, 'control']">
@@ -163,7 +184,9 @@
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-detail center"
           @click.prevent="goDetail" />
+ 
       </div>
+      
       <div class="block" />
     </div>
   </div>
@@ -316,8 +339,10 @@
 
 .icon_grid {
   overflow: hidden;
-  margin: 0 40px;
-  padding: 20px 0;
+  // margin: 0 40px;
+  padding: 20px 40px;
+  z-index: 10000;
+  width: 100%;
 
   -webkit-overflow-scrolling: touch;
   .icon_grid_inner {
@@ -683,11 +708,35 @@
     height: 186px;
   }
 }
+.loadmore {
+  text-align: center;
+  /*padding: 30px 0;*/
+  height: 60px;
+  color: #75787a;
+  font-size: 24px;
+  .finish {
+    color: #c8cacc;
+  }
+}
+.nodata {
+  text-align: center;
+  color: #9097a2;
+  padding-top: 126px;
+  i {
+    width: 360px;
+    height: 360px;
+    background: url('~@lib/base/tv/assets/img_nodata@2x.png') no-repeat;
+    background-size: 100% 100%;
+    display: block;
+    margin: 0 auto;
+  }
+}
 </style>
 
 <script>
 import { mapState } from 'vuex'
 import * as service from '../service'
+import _ from "../util"
 import Icon from '@lib/components/SettingIconMobile.vue'
 let infoCache = []
 
@@ -704,13 +753,38 @@ export default {
       activeIndex:0,
       channelId: '',
       vid: '',
-      itemData:{},
+      itemData:{
+        channel: "精选",
+        channelId: "005"
+      },
       swiperOption: {
         loop: true,
         autoplay: {
           delay: 2000,
           disableOnInteraction: false
         },
+        pagination: {
+          el: '.swiper-pagination'
+        },
+        on: {
+          tap() {
+            let i = this.clickedIndex - 1
+            const len = self.homePageInfo.length
+            if (i == -1) {
+              i = len - 1
+            } else if (i == len) {
+              i = 0
+            }
+            self.showDetailInfo(self.homePageInfo[i])
+          }
+        }
+      },
+      swiperOption2: {
+        // loop: true,
+        // autoplay: {
+        //   delay: 2000,
+        //   disableOnInteraction: false
+        // },
         pagination: {
           el: '.swiper-pagination'
         },
@@ -734,7 +808,49 @@ export default {
       listDSJ: [],
       listZY: [],
       listDM: [],
-
+      dataList:[
+        {
+          channelId: '005',
+          channel: '精选',
+          list:[]
+        },
+        {
+          channelId: '001',
+          channel: '电影',
+          list:[]
+        },
+        {
+          channelId: '002',
+          channel: '电视剧',
+          list:[]
+        },
+        {
+          channelId: '003',
+          channel: '动漫',
+          list:[]
+        },
+        {
+          channelId: '004',
+          channel: '综艺',
+          list:[]
+        }
+      ],
+         //总条数
+      total: 0,
+      //当前页码
+      pageNo: 1,
+      //分页数
+      pageSize: 21,
+      /**
+              加载状态
+              LOADING  分页加载中，显示 分页loading
+              LOADED   分页加载成功，显示 加载更多...
+              NO_DATA  没有数据，显示  暂无结果
+              NO_MORE  全部加载完成，显示 已加载全部
+           */
+      loadState: "",
+      error: false,
+      isFirstLoad:true,
       //排序
       orderby: Object.freeze([
         { text: "最新", orderId: "year" },
@@ -746,7 +862,8 @@ export default {
       current_orderby: "year",
 
       hideMenu: false,
-      noVal: false
+      noVal: false,
+      maxh:0
     }
   },
   computed: {
@@ -817,9 +934,12 @@ export default {
     console.log('1111',window.device_name)
   },
   mounted() {
+    this.maxh = this.$refs.icon_grid.offsetTop    
     setTimeout(()=>{
       window.scrollTo(0,1)
     },300)
+    window.addEventListener("scroll", this.loadMore)
+    addEventListener("scroll", this.fn)
     document.body.scrollTop = 0
     this.initFixedMenu()
     console.log('uu', this.channels)
@@ -835,7 +955,7 @@ export default {
     // 获取推荐电视信息
     // this.allList = []
     for (var i in this.channels) {
-      this.filterData(this.channels[i].channelId)
+      this.filterData(this.channels[i].channelId,1)
     }
 
     document.addEventListener('contextmenu', function(e) {
@@ -856,6 +976,29 @@ export default {
     })
   },
   methods: {
+    fn(){
+      let statusbarH = document.querySelector('.statusbar').offsetHeight
+      let newNavbarH = document.querySelector('.newNavbar').offsetHeight
+
+      
+      this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      let icon_grid = this.$refs.icon_grid
+      console.log(this.scrollTop+statusbarH+newNavbarH, this.maxh)
+      
+      if((this.scrollTop+statusbarH+newNavbarH)>= this.maxh){
+        icon_grid.style.position = 'fixed'
+        icon_grid.style.top = statusbarH+newNavbarH + 'px'
+         icon_grid.style.background= '#fff'
+      }else{
+        icon_grid.style.position = ''
+         icon_grid.style.background = ''
+
+      }
+      // console.log(icon_grid.offsetTop)
+      // console.log( this.scrollTop)
+      
+      
+    },
     play(item,e) {
       if ( e && e.stopPropagation ) {
     //因此它支持W3C的stopPropagation()方法 
@@ -986,61 +1129,158 @@ export default {
           return item
         }, [])
     },
-    filterData(channelId) {
-      // service.searchData(
-      //   {
-      //     channelId: channelId,
-      //     category: this.current_category,
-      //     region: this.current_region,
-      //     year: this.current_year,
-      //     cateId: this.current_category,
-      //     regionId: this.current_region,
-      //     orderby: this.current_orderby,
-      //     pageSize: 6,
-      //     pageNo: 1
-      //   },
-      //   (err, data) => {
-      //     let cid = data.data.channelId
-      //     console.log(cid)
-      //     console.log(data.data.list.slice(0, 6))
-      //     if(cid === '001'){
-      //       this.listDY = data.data.list.slice(0, 6)
-      //     } else if(cid === '002') {
-      //       this.listDSJ = data.data.list.slice(0, 6)
-      //     } else if(cid === '003') {
-      //       this.listZY = data.data.list.slice(0, 6)
-      //     } else if(cid === '004') {
-      //       this.listDM = data.data.list.slice(0, 6)
-      //     }
+    filterData(channelId,page) {
+      if (page === 1) this.isFirstLoad = true
+      this.loadState = "LOADING"
+      service.searchData(
+        {
+          channelId: channelId,
+          pageSize: this.pageSize,
+          pageNo: page
+        },
+        (err, data) => {
+          console.log(data,'333333333')
+          
+          this.loadState = "LOADED"
+          if (err) return
+
+          if (data.data) {
+            data = data.data
+          }
+          if (data.list == "") {
+            data.list = []
+          }
+          let cid = data.channelId
+          
+          this.$nextTick(() => {
+            switch(cid){
+              case '001':
+                this.listDY = Object.freeze(
+                  (page === 1 ? [] : this.listDY).concat(data.list)
+                )
+                this.dataList[1].list = Object.freeze(
+                  (page === 1 ? [] : this.dataList[1].list).concat(data.list)
+                )
+                break
+              case '002':
+                this.listDSJ = Object.freeze(
+                  (page === 1 ? [] : this.listDSJ).concat(data.list)
+                )
+                this.dataList[2].list = Object.freeze(
+                  (page === 1 ? [] : this.dataList[2].list).concat(data.list)
+                )
+                break
+              case '003':
+                this.listZY = Object.freeze(
+                  (page === 1 ? [] : this.listZY).concat(data.list)
+                )
+                this.dataList[3].list = Object.freeze(
+                  (page === 1 ? [] : this.dataList[3].list).concat(data.list)
+                )
+                break
+              case '004':
+                this.listDM = Object.freeze(
+                  (page === 1 ? [] : this.listDM).concat(data.list)
+                )
+                this.dataList[4].list = Object.freeze(
+                  (page === 1 ? [] : this.dataList[4].list).concat(data.list)
+                )
+                break
+            }
+            this.dataList[0].list = [
+              this.dataList[1].list.slice(0,6),
+              this.dataList[2].list.slice(0,6),
+              this.dataList[3].list.slice(0,6),
+              this.dataList[4].list.slice(0,6)
+            ]
+            console.log( this.dataList,' this.dataList----------------------------------')
+            
+
+            // if(cid === '001'){
+            //   this.listDY = Object.freeze(
+            //     (page === 1 ? [] : this.listDY).concat(data.list)
+            //   )
+            // } else if(cid === '002') {
+            //   this.listDSJ = data.data.list
+            // } else if(cid === '003') {
+            //   this.listZY = data.data.list
+            // } else if(cid === '004') {
+            //   this.listDM = data.data.list
+            // }
+            // this.list = Object.freeze(
+            //   (page === 1 ? [] : this.list).concat(data.list)
+            // )
+
+            this.total = data.total
+            this.pageNo = page
+            if (this.isFirstLoad) {
+              this.isFirstLoad = false
+              window.scrollTo(0, 0)
+            }
+            if (this.total === 0) {
+              //没有数据
+              this.loadState = "NO_DATA"
+            } else if (this.pageSize * this.pageNo >= this.total) {
+              //加载完全部
+              this.loadState = "NO_MORE"
+              //HdSmart.UI.toast('已加载全部')
+            }
+          })
+
+         
+        }
+      )
+      // console.log('----getChannelData--------')
+      // service.getChannelData(channelId, (err, data) => {
+      //   console.log('data',data)
+      //   if (err) {
+      //     console.log(err)
+      //     this.error = true
+      //     return
       //   }
-      // )
-      console.log('----getChannelData--------')
-      service.getChannelData(channelId, (err, data) => {
-        console.log('data',data)
-        if (err) {
-          console.log(err)
-          this.error = true
+      //   let cid = data.channelId
+      //   if(cid === '001'){
+      //     this.listDY = data.data.list
+      //   } else if(cid === '002') {
+      //     this.listDSJ = data.data.list
+      //   } else if(cid === '003') {
+      //     this.listZY = data.data.list
+      //   } else if(cid === '004') {
+      //     this.listDM = data.data.list
+      //   }
+      // })
+    },
+     loadMore: _.debounce(function() {
+       if(this.itemData.channelId === '005') return
+      var scrollTop =
+        document.documentElement.scrollTop ||
+        window.pageYOffset ||
+        document.body.scrollTop
+        console.log(this.itemData.channelId,'3333333333333333555')
+  
+      if ( scrollTop > 0 && scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 15) {
+        // if (this.$store.state.detailVisible) {
+        //   return
+        // }
+        if ( this.loadState === "LOADING" || this.loadState === "NO_DATA") { return }
+        if (this.loadState === "NO_MORE") {
+          HdSmart.UI.toast("已加载全部")
           return
         }
-        let cid = data.channelId
-        if(cid === '001'){
-          this.listDY = data.data.list
-        } else if(cid === '002') {
-          this.listDSJ = data.data.list
-        } else if(cid === '003') {
-          this.listZY = data.data.list
-        } else if(cid === '004') {
-          this.listDM = data.data.list
-        }
-      })
-    },
+        
+        this.filterData(this.itemData.channelId,this.pageNo + 1)
+      }
+    }, 300),
     //换成小图地址
     getThumbPic(pic) {
-      let imgObj = {
+      if(pic){
+        let imgObj = {
         src: pic.replace(".jpg", "_y.jpg"),
         error: pic
       }
       return imgObj
+      }
+      
     },
     getUpdateSet(count, last) {
       if (!count || !last || count == "0" || last == "0") {
@@ -1055,6 +1295,8 @@ export default {
         console.log(this.$store.state.tvStatus)
        this.activeIndex = idx
        this.itemData = item
+       console.log( this.activeIndex,this.itemData,555555555)
+       
     },
     toPage(item) {
 

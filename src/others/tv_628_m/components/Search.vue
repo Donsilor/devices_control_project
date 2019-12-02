@@ -126,8 +126,8 @@
       
       <ul class="vlist list-m60">
         <li
-          v-for="item in resultData"
-          :key="item.vid"
+          v-for="(item,index) in resultData"
+          :key="item.vid+index"
           :class="['item-'+item.channelId]"
           class="vitem"
           @click="showDetailInfo(item)">
@@ -795,11 +795,11 @@ export default {
       if (window.navigation_bar_height) {
         this.navigation_bar_height = window.navigation_bar_height / dpr
       }
-      if(window.plus){
-	plusReady()
-}else{
-	document.addEventListener('plusready', plusReady, false)
-}
+//       if(window.plus){
+// 	plusReady()
+// }else{
+// 	document.addEventListener('plusready', plusReady, false)
+// }
     })
     // this.getData()
   },
