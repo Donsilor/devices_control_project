@@ -750,7 +750,7 @@ export default {
       background: rgba(0, 0, 0,.1);
       overflow: hidden;
       display: flex;
-      justify-content: space-evenly;
+      // justify-content: space-evenly;
       align-items: center;
     }
     &.center{

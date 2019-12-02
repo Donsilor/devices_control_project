@@ -30,7 +30,7 @@
               v-show="isOffline||deviceAttrs.switchStatus == 'off'"
               :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
           </div>
-          <circle-progress
+          <!-- <circle-progress
             v-if="isShow"
             id="myId"
             ref="$circle"
@@ -39,14 +39,20 @@
             :is-round="true"
             :width="width"
             :radius="radius"
+            :radiusds="radiusds"
             :progress="progress"
             :bar-color="getBarColor"
             :duration="duration"
             :delay="delay"
             :background-color="backgroundColor"
             class="progress"
+          /> -->
+          <canvas 
+            ref="canvas"
+            class="canvas" 
+            width="270" 
+            height="270"
           />
-          <div class="whiteCircle"/>
         </div>
         <div
           v-show="!isOffline&&!isClose"
@@ -181,7 +187,7 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
-import circleProgress from './components/circle-progress'
+// import circleProgress from './components/circle-progress'
 import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
@@ -189,7 +195,7 @@ import SelectTime from './components/time.vue'
 const [MIN_TEMP, MAX_TEMP] = [160, 300]
 export default {
   components: {
-    circleProgress,
+    // circleProgress,
     modelSwing,
     modelMode,
     modelSpeed,
@@ -201,16 +207,24 @@ export default {
       isShow: true,
       width: 250,
       radius: 8,
+      radiusds: 12,
       progress: 30, // 0~70
       duration: 0,
       delay: 0,
       // barColor: '#D8D8D8',
+      dotColor:'#fff',
       backgroundColor: '#ececec',
       timeShow: false,
       typeVal: 'hand',
       brightnessValue: 0,
       rangStyle: '',
-      opcityStyle: 'opcity-0'
+      opcityStyle: 'opcity-0',
+      //圆的数据
+      ox:125,
+      oy:125,
+      or:120,
+      br:15,
+      moveFlag:false
     }
   },
 
@@ -274,19 +288,109 @@ export default {
     },
   },
   watch: {
-
+    "device.stateChange"(){
+      this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
+    }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-          this.reset()
+          this.draw(`${0.125+0.05*(this.deviceAttrs.temperature/10-16)}`)
+          // this.reset()
         })
       HdSmart.UI.setStatusBarColor(2)
     })
   },
+  mounted(){
+    this.$nextTick(() => {
+      let on = ("ontouchstart" in document)? {
+          start: "touchstart", move: "touchmove", end: "touchend"
+      } : {
+          start: "mousedown", move: "mousemove", end: "mouseup"
+      }
+        this.$refs.canvas.addEventListener(on.start,(e)=> {
+          this.moveFlag = true
+          // console.log(e.targetTouches[0].clientX ,'鼠标的X')
+          // console.log(e.targetTouches[0].clientY ,'鼠标的Y')
+          
+      },false)
+
+        this.$refs.canvas.addEventListener(on.move, (e)=> {
+          // console.log(111111111,'222222')
+            if (this.moveFlag) {
+                var k = this.getXY(e,this.$refs.canvas)
+                // console.log(e)
+                
+                // console.log(k.x-this.ox)
+                var r = Math.atan2(k.x-this.ox, this.oy-k.y)
+                var hd = (Math.PI+r)/(2*Math.PI)
+                //console.log('k', k)
+                //console.log('r', r)
+                console.log('hd', hd)
+                // 半圆的滑动范围判断
+                if (hd <= 0.875 && hd >= 0.125) {
+                    this.draw(hd)
+                }
+            }
+        }, false)
+
+        this.$refs.canvas.addEventListener(on.end,()=> {
+          // console.log(111111111,'3333333')
+            this.moveFlag = false
+        }, false)
+    })
+  },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    offset(r,d) {//根据弧度与距离计算偏移坐标
+      return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
+    },
+    draw(n) {
+      let ctx = this.$refs.canvas.getContext("2d")
+      ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
+      ctx.strokeStyle = "#99a"
+      ctx.lineWidth = 5
+      ctx.beginPath()
+      ctx.arc(this.ox+10,this.oy+10,this.or,1/4 * Math.PI,3/4 * Math.PI,true)//半圆(逆时针)
+      // ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true);//整圆
+      ctx.stroke()
+      ctx.strokeStyle = "#69f"
+      ctx.lineWidth = 5
+      ctx.beginPath()
+      ctx.arc(this.ox+10,this.oy+10,this.or,3/4 *Math.PI,(n*2+0.5)*Math.PI,false)
+      // ctx.arc(this.ox,this.oy,this.or,0.5*Math.PI,(n*2+0.5)*Math.PI,false);
+      ctx.stroke()
+      ctx.fillStyle = "#69f"
+      ctx.font = "80px Arial"
+      ctx.textAlign = "center"
+      ctx.textBaseline = "middle"
+      ctx.fillText(Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))+"℃",this.ox,this.oy)
+      console.log( Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))+"℃",'温度')
+      ctx.fillStyle = "#00f"
+      ctx.beginPath()
+      let d =  this.offset(n*2*Math.PI,this.or)
+      // console.log('d', d)
+      ctx.arc(this.ox+10+d.x,this.oy+10+d.y,this.br,0,2*Math.PI,true)
+      // console.log(this.ox+d.x,'圆的X')
+      // console.log(this.oy+d.y,'圆的Y')
+      
+      ctx.fill()
+    },
+    getXY(e,obj) {
+        let et = e.touches? e.touches[0] : e
+        let x = et.clientX
+        let y = et.clientY
+        return {
+            x : x - obj.offsetLeft + (document.body.scrollLeft || document.documentElement.scrollLeft),
+            y : y - obj.offsetTop  + (document.body.scrollTop || document.documentElement.scrollTop)
+        }
+    },
+    reset() {
+      this.$nextTick(() => {
+        // this.$refs.canvas.init()
+      })
+    },
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return
@@ -300,7 +404,7 @@ export default {
           this.deviceAttrs.mode = val
           if (this.deviceAttrs.mode=='wind') {
             this.progress = 70 /(30 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
-            this.$refs.$circle.init()
+            this.$refs.$canvas.init()
             this.hide()
             return
           }
@@ -380,14 +484,6 @@ export default {
         }
       })
     },
-    // 重置动画
-    reset() {
-      // this.barColor = this.getBarColor()
-      this.progress = this.getProgress()
-      this.$nextTick(() => {
-        this.$refs.$circle.init()
-      })
-    },
     showSwing() {
       if (this.isClose) return
       this.$refs.swing.show = true
@@ -412,7 +508,7 @@ export default {
 
     getProgress() {
       // 计算温度进度条
-      return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
+      // return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
     }
   }
 }
@@ -457,13 +553,6 @@ export default {
   .progress{
     transform: rotate(-126deg);
     position: relative;
-  }
-  .whiteCircle{
-    position: absolute;
-    top: 0;
-    width: 40px;
-    height: 40px;
-    background: white;
   }
   .c-status {
     margin-top: 30px;

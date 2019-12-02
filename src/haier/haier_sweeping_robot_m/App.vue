@@ -1019,7 +1019,7 @@ export default {
       background: #ffffff;
       box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
       display: flex;
-      justify-content: space-evenly;
+      // justify-content: space-evenly;
       align-items: center;
     }
   }

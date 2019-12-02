@@ -425,7 +425,7 @@ export default {
       background: rgba(136, 138, 137,.4);
       overflow: hidden;
       display: flex;
-      justify-content: space-evenly;
+      // justify-content: space-evenly;
       align-items: center;
     }
     &.center{

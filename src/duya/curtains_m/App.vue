@@ -52,26 +52,28 @@
       </div>
       <!-- 底部按钮 -->
       <div class="panel-btn center">
-        <div class="btn-wrap">
-          <div
-            :class="[{'active': btnActive === 'open' },'btn-open btn center']"
-            @click="setOpen" />
-          <div class="btn-name">全开</div>
-        </div>
-        <div class="btn-wrap">
-          <div
-            ref="btn-pause"
-            :class="['btn-pause btn center']"
-            @click="setPause" />
-          <div class="btn-name">暂停</div>
-        </div>
         <div
           class="btn-wrap"
         >
           <div
-            :class="[{ 'active': btnActive === 'close' }, 'btn btn-close center']"
+            ref="btn-close"
+            class="btn btn-close center"
             @click="setClose" />
           <div class="btn-name">全关</div>
+        </div>
+        <div class="btn-wrap">
+          <div
+            ref="btn-pause"
+            class="btn-pause btn center"
+            @click="setPause" />
+          <div class="btn-name">暂停</div>
+        </div>
+        <div class="btn-wrap">
+          <div
+            ref="btn-open"
+            class="btn-open btn center"
+            @click="setOpen" />
+          <div class="btn-name">全开</div>
         </div>
       </div>
     </div>
@@ -92,7 +94,8 @@ export default {
       range: 0,
       myMove:false,
       curtainWidth:0,
-      curtainStatusText:''
+      curtainStatusText:'',
+      count: 0
     }
   },
   computed: {
@@ -107,23 +110,43 @@ export default {
       if (this.myMove==false) {
           this.newRatio()
       }
-      if (this.btnActive === 'open') {
-          this.curtainStatusText='正在打开窗帘'
-      } else if (this.btnActive === 'close') {
-          this.curtainStatusText='正在关闭窗帘'
-      }
-      // if (this.deviceAttrs.open_percentage=='100') {
-      //   this.curtainStatusText = '窗帘已打开'
-      //   this.btnActive = ''
-      // }else if (this.deviceAttrs.open_percentage=='0') {
-      //   this.curtainStatusText = '窗帘已关闭'
-      //   this.btnActive = ''
+      // if (this.btnActive === 'open') {
+      //     this.curtainStatusText='正在打开窗帘'
+      // } else if (this.btnActive === 'close') {
+      //     this.curtainStatusText='正在关闭窗帘'
       // }
       console.log(this.curtainStatusText,'curtainStatusText')
       console.log(this.btnActive,'btnActive')
-      
     },
     'deviceAttrs.open_percentage'(newValue, oldValue) {
+      this.count = this.count + 1
+      console.log("count数", this.count)
+      // var _this = this
+      // (function(num) {
+      //   setTimeout(() => {
+      //     console.log("定时检索num", num)
+      //     console.log("定时检索count", _this.count)
+      //     if (num === _this.count) {
+      //        console.log('暂停了') 
+      //     }
+      //   }, 2000)  
+      // })(this.count)
+      var _that = this
+      function a(num) {
+        setTimeout(() => {
+            console.log("定时检索num", num)
+            console.log("定时检索count", _that.count)
+            if (num === _that.count) {
+              console.log('暂停了') 
+              if (_that.curtainStatusText=='正在关闭窗帘'||_that.curtainStatusText=='正在打开窗帘') {
+                _that.curtainStatusText=''
+              }
+            }
+          }, 2000)
+      }
+      a(this.count)
+      console.log(newValue,oldValue,'打印新旧值111111111111111111111')
+      
       if(this.btnActive == 'open'||this.btnActive == 'close'||this.myMove==true) {
         if(newValue > oldValue) {
           this.curtainStatusText = '正在打开窗帘'
@@ -158,6 +181,7 @@ export default {
     }
   },
   created() {
+    
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
@@ -180,15 +204,23 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     // 全开
     setOpen(){
+      this.$refs['btn-open'].classList.add('active')
+      setTimeout(()=>{
+        this.$refs['btn-open'].classList.remove('active')
+      },500)
       this.btnActive = 'open'
-      this.curtainStatusText = '正在打开窗帘'
+      // this.curtainStatusText = '正在打开窗帘'
       this.myMove = false
       this.controlDevice('switch', 'on')
     },
     //全关
     setClose(){
+      this.$refs['btn-close'].classList.add('active')
+      setTimeout(()=>{
+        this.$refs['btn-close'].classList.remove('active')
+      },500)
       this.btnActive = 'close'
-      this.curtainStatusText = '正在关闭窗帘'
+      // this.curtainStatusText = '正在关闭窗帘'
       this.myMove = false
       this.controlDevice('switch', 'off')
     },
@@ -254,7 +286,8 @@ export default {
       })
       this.animate(rightCurtainBox,{
         width:Math.round(width)
-      })
+      }
+      )
       // leftCurtainBox.style.width =width +"px"
       // // console.log(width)
       // rightCurtainBox.style.width = leftCurtainBox.style.width
@@ -439,7 +472,7 @@ getStyle(obj,attr){
       background: rgba(0, 0, 0, 0.1);
       overflow: hidden;
       display: flex;
-      justify-content: space-evenly;
+      // justify-content: space-evenly;
       align-items: center;
     }
     &.center{
@@ -468,7 +501,7 @@ getStyle(obj,attr){
       &.active {
         background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
         &.btn-open::before{
-          background-image: url('~@lib/@{imgPath}/on.png');
+          background-image: url('~@lib/@{imgPath}/off.png');
           background-size: 100% 100%;
         }
         &.btn-pause::before{
@@ -476,7 +509,7 @@ getStyle(obj,attr){
           background-size: 100% 100%;
         }
         &.btn-close::before{
-          background-image: url('~@lib/@{imgPath}/off.png');
+          background-image: url('~@lib/@{imgPath}/on.png');
           background-size: 100% 100%;
         }
       }
@@ -492,7 +525,7 @@ getStyle(obj,attr){
 
     .btn-open {
       &::before {
-        background-image: url('~@lib/@{imgPath}/on.png');
+        background-image: url('~@lib/@{imgPath}/off.png');
         background-size: 100% 100%;
       }
     }
@@ -504,7 +537,7 @@ getStyle(obj,attr){
     }
     .btn-close {
       &::before {
-        background-image: url('~@lib/@{imgPath}/off.png');
+        background-image: url('~@lib/@{imgPath}/on.png');
         background-size: 100% 100%;
       }
     }
