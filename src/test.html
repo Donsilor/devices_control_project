@@ -73,8 +73,8 @@
             var k = getXY(e,canvas);
             var r = Math.atan2(k.x-ox, oy-k.y);
             var hd = (Math.PI+r)/(2*Math.PI);
-            //console.log('k', k)
-            //console.log('r', r)
+            console.log('k', k)
+            console.log('r', r)
             console.log('hd', hd)
             // 半圆的滑动范围判断
             if (hd <= 0.875 && hd >= 0.125) {

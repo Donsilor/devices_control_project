@@ -11,13 +11,13 @@
         @shutdownCallback="shutdowncallback('off')" />
       <div class="main center">
         <div class="wrap-circle">
-          <div class="bg">
+          <div class="showtemp">
             <div
               v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'"
               class="tm">-- <sup>°C</sup></div>
             <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
-              class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
+              class="tm">{{ thermography }}<sup>°C</sup>
             </div>
             <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
@@ -30,28 +30,11 @@
               v-show="isOffline||deviceAttrs.switchStatus == 'off'"
               :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
           </div>
-          <!-- <circle-progress
-            v-if="isShow"
-            id="myId"
-            ref="$circle"
-            key="animation-model"
-            :is-animation="false"
-            :is-round="true"
-            :width="width"
-            :radius="radius"
-            :radiusds="radiusds"
-            :progress="progress"
-            :bar-color="getBarColor"
-            :duration="duration"
-            :delay="delay"
-            :background-color="backgroundColor"
-            class="progress"
-          /> -->
           <canvas 
             ref="canvas"
             class="canvas" 
-            width="270" 
-            height="270"
+            width="280" 
+            height="280"
           />
         </div>
         <div
@@ -220,11 +203,15 @@ export default {
       rangStyle: '',
       opcityStyle: 'opcity-0',
       //圆的数据
-      ox:125,
-      oy:125,
-      or:120,
-      br:15,
-      moveFlag:false
+      ox:140,
+      oy:140,
+      or:130,
+      br:10,
+      moveFlag:false,
+      centigrade:0,//摄氏度
+      ctx: '',
+      //记录温度
+      thermography:16,
     }
   },
 
@@ -296,13 +283,14 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-          this.draw(`${0.125+0.05*(this.deviceAttrs.temperature/10-16)}`)
+          this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
           // this.reset()
         })
       HdSmart.UI.setStatusBarColor(2)
     })
   },
   mounted(){
+    this.ctx = this.$refs.canvas.getContext("2d")
     this.$nextTick(() => {
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
@@ -313,32 +301,36 @@ export default {
           this.moveFlag = true
           // console.log(e.targetTouches[0].clientX ,'鼠标的X')
           // console.log(e.targetTouches[0].clientY ,'鼠标的Y')
-          
       },false)
 
-        this.$refs.canvas.addEventListener(on.move, (e)=> {
-          // console.log(111111111,'222222')
-            if (this.moveFlag) {
-                var k = this.getXY(e,this.$refs.canvas)
-                // console.log(e)
-                
-                // console.log(k.x-this.ox)
-                var r = Math.atan2(k.x-this.ox, this.oy-k.y)
-                var hd = (Math.PI+r)/(2*Math.PI)
-                //console.log('k', k)
-                //console.log('r', r)
-                console.log('hd', hd)
-                // 半圆的滑动范围判断
-                if (hd <= 0.875 && hd >= 0.125) {
-                    this.draw(hd)
-                }
-            }
-        }, false)
+      this.$refs.canvas.addEventListener(on.move, (e)=> {
+        console.log('move')
+        // console.log(111111111,'222222')
+          if (this.moveFlag) {
+              var k = this.getXY(e,this.$refs.canvas)
+              // console.log(e)
+              
+              // console.log(k.x-this.ox)
+              var r = Math.atan2(k.x-this.ox, this.oy-k.y)
+              var hd = (Math.PI+r)/(2*Math.PI)
+              console.log('k', k)
+              console.log('r', r)
+              console.log('hd', hd)
+              // 半圆的滑动范围判断
+              if (hd <= 0.875 && hd >= 0.125) {
+                  console.log('开始运动')
+                  this.draw(hd)
+              }else{
+                return
+              }
+          }
+      }, false)
 
-        this.$refs.canvas.addEventListener(on.end,()=> {
-          // console.log(111111111,'3333333')
-            this.moveFlag = false
-        }, false)
+      this.$refs.canvas.addEventListener(on.end,()=> {
+        // console.log(111111111,'3333333')
+          this.moveFlag = false
+          this.controlDevice('temperature',this.centigrade)
+      }, false)
     })
   },
   methods: {
@@ -347,43 +339,62 @@ export default {
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
     },
     draw(n) {
-      let ctx = this.$refs.canvas.getContext("2d")
-      ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
-      ctx.strokeStyle = "#99a"
-      ctx.lineWidth = 5
-      ctx.beginPath()
-      ctx.arc(this.ox+10,this.oy+10,this.or,1/4 * Math.PI,3/4 * Math.PI,true)//半圆(逆时针)
-      // ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true);//整圆
-      ctx.stroke()
-      ctx.strokeStyle = "#69f"
-      ctx.lineWidth = 5
-      ctx.beginPath()
-      ctx.arc(this.ox+10,this.oy+10,this.or,3/4 *Math.PI,(n*2+0.5)*Math.PI,false)
-      // ctx.arc(this.ox,this.oy,this.or,0.5*Math.PI,(n*2+0.5)*Math.PI,false);
-      ctx.stroke()
-      ctx.fillStyle = "#69f"
-      ctx.font = "80px Arial"
-      ctx.textAlign = "center"
-      ctx.textBaseline = "middle"
-      ctx.fillText(Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))+"℃",this.ox,this.oy)
+      
+      this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
+      this.ctx.strokeStyle = "rgba(0,0,0,0.1)"
+      this.ctx.lineWidth = 7
+      this.ctx.beginPath()
+      this.ctx.arc(this.ox,this.oy,this.or,1/4 * Math.PI,3/4 * Math.PI,true)//半圆(逆时针)
+      // this.ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true);//整圆
+      this.ctx.stroke()
+      if (this.deviceAttrs.switchStatus=='on') {
+          if (this.deviceAttrs.mode == 'heat') {
+            console.log('heat111')
+            this.ctx.strokeStyle = "#DA6C00"
+          }else if(this.deviceAttrs.mode == 'cold'){
+            console.log('cold111')
+            this.ctx.strokeStyle = "#008CDA"
+          }else{
+            console.log('else')
+            this.ctx.strokeStyle = "#E1B96E"
+          }
+      }else{
+        this.ctx.strokeStyle = "transparent"
+      }
+      
+      this.ctx.lineWidth = 7
+      this.ctx.beginPath()
+      this.ctx.arc(this.ox,this.oy,this.or,3/4 *Math.PI,(n*2+0.5)*Math.PI,false)
+      // this.ctx.arc(this.ox,this.oy,this.or,0.5*Math.PI,(n*2+0.5)*Math.PI,false);
+      this.ctx.stroke()
+      this.ctx.fillStyle = "transparent"
+      this.ctx.font = "70px PingFangSC-Light"
+      this.ctx.textAlign = "center"
+      this.ctx.textBaseline = "middle"
+      this.ctx.fillText(Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))+"℃",this.ox,this.oy)
       console.log( Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))+"℃",'温度')
-      ctx.fillStyle = "#00f"
-      ctx.beginPath()
+      this.thermography = Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))
+      this.centigrade = Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))*10
+      this.ctx.fillStyle = "#fff"
+      this.ctx.beginPath()
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
-      ctx.arc(this.ox+10+d.x,this.oy+10+d.y,this.br,0,2*Math.PI,true)
-      // console.log(this.ox+d.x,'圆的X')
-      // console.log(this.oy+d.y,'圆的Y')
-      
-      ctx.fill()
+      // 关机显示
+      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline) {
+        this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
+      }else{
+        //开机显示
+        this.ctx.arc(0,0,0,0,0,true)
+      }
+      this.ctx.fill()
     },
     getXY(e,obj) {
         let et = e.touches? e.touches[0] : e
         let x = et.clientX
         let y = et.clientY
         return {
-            x : x - obj.offsetLeft + (document.body.scrollLeft || document.documentElement.scrollLeft),
-            y : y - obj.offsetTop  + (document.body.scrollTop || document.documentElement.scrollTop)
+            x : x - obj.offsetLeft + (document.body.scrollLeft || document.documentElement.scrollLeft)-30,
+            y : y - obj.offsetTop  + (document.body.scrollTop || document.documentElement.scrollTop) -145
         }
     },
     reset() {
@@ -600,13 +611,13 @@ export default {
     }
     .wrap-circle{
       position: relative;
-      .bg{
+      .showtemp{
         position: absolute;
         top: 49%;
         left: 49.5%;
+        width: 280px;
+        height: 280px;
         transform: translate(-50%, -50%);
-        width: 84%;
-        height: 81%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -628,7 +639,7 @@ export default {
         .c-mode{
           position: absolute;
           transform: translate(-50%,-50%);
-          top: 78%;
+          top: 95%;
           left: 50%;
           width: 216px;
           height: 48px;
