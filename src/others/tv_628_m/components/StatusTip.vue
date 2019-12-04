@@ -138,8 +138,10 @@
       justify-content: flex-start;
       align-items: center;
        .link{
-        color: #fff;
+        font-family: PingFangSC-Light;
         font-size: 32px;
+        color: #FFFFFF;
+        letter-spacing: 0;
       }
     }
     .offline_bar_p{

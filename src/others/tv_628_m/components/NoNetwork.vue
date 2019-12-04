@@ -8,7 +8,9 @@
       :shutdown="true"
       :title="device_name"
       bak-color="#000"
+      switchimg="tv"
       @shutdownCallback="cmd('rcPower')"
+
     />
     <status-tip
       v-show="device_uuid" 

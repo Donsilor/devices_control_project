@@ -12,6 +12,7 @@
       :scroll="true"
       :search="true"
       :title="device_name"
+      :room="room_name"
       page-class=".page-index"
       bak-color="#000"
       switchimg="tv"
@@ -101,7 +102,8 @@
     
     <div 
       class="index-list" 
-      @>
+      @touchstart="touchstart"
+      @touchend="touchend">
       <div
         v-for="(it, idx) in allList"
         :key="idx"
@@ -157,10 +159,14 @@
         <p>暂无结果</p>
       </div>
       <!-- 加载更多 -->
-      <div class="loadmore">
-        <p v-show="!isFirstLoad && loadState === 'LOADING'">正在加载中...</p>
-        <p v-show="!isFirstLoad && loadState === 'LOADED'">加载更多...</p>
-        <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
+      <div 
+        v-show="activeIndex!=0" 
+        class="loadmore">
+        <p v-show=" loadState === 'LOADING'">正在加载中...</p>
+        <p v-show=" loadState === 'LOADED'">上拉加载更多</p>
+        <p 
+          v-show="loadState === 'NO_MORE'" 
+          class="finish">已加载全部</p>
       </div>
     </div>
     <!-- 控制菜单 -->
@@ -466,7 +472,7 @@
     }*/
   .isvip {
     position: absolute;
-    right: 0;
+    right: 8px;
     top:0;
     background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
     // width: 48px;
@@ -712,11 +718,12 @@
   text-align: center;
   /*padding: 30px 0;*/
   height: 60px;
-  color: #75787a;
+  color: #000;
+  opacity: 0.5;
   font-size: 24px;
-  .finish {
-    color: #c8cacc;
-  }
+  // .finish {
+  //   color: #c8cacc;
+  // }
 }
 .nodata {
   text-align: center;
@@ -749,6 +756,7 @@ export default {
       ios: /iPad|iPhone|iPod/.test(navigator.userAgent),
       device_uuid: window.device_uuid || '',
       device_name:window.device_name||'',
+      room_name:window.room_name||'',
       isShowBar: this.$route.query.showBar == 1,
       activeIndex:0,
       channelId: '',
@@ -863,7 +871,25 @@ export default {
 
       hideMenu: false,
       noVal: false,
-      maxh:0
+      maxh:0,
+      starX:0,
+      endX:0,
+      starY:0,
+      endY:0,
+      scrollToList:{
+        '0':0,
+        '1':0,
+        '2':0,
+        '3':0,
+        '4':0
+      },
+      pageNoList:{
+        '0':1,
+        '1':1,
+        '2':1,
+        '3':1,
+        '4':1
+      }
     }
   },
   computed: {
@@ -895,14 +921,22 @@ export default {
     allList() {
       switch(this.activeIndex){
         case 0:
+
+        console.log([this.listDY.slice(0, 6), this.listDSJ.slice(0, 6), this.listZY.slice(0, 6), this.listDM.slice(0, 6)],'allList-------------------------------------')
         return [this.listDY.slice(0, 6), this.listDSJ.slice(0, 6), this.listZY.slice(0, 6), this.listDM.slice(0, 6)]
         case 1:
+            console.log([this.listDY],'allList-------------------------------------')
         return [this.listDY]
+        
         case 2:
+           console.log([ this.listDSJ],'allList-------------------------------------')
         return [ this.listDSJ]
         case 3:
+           console.log([ this.listDSJ],'allList-------------------------------------')
         return [this.listZY]
+
         case 4:
+           console.log([ this.listDSJ],'allList-------------------------------------')
         return [this.listDM]
       }
       
@@ -914,6 +948,22 @@ export default {
     // }
   },
   watch: {
+    activeIndex(v){
+  
+        console.log(this.scrollToList[v],'-11111111111111111111111111')
+        console.log(this.pageNoList)
+        
+      
+      this.$nextTick(()=>{
+       
+      window.scrollTo(0,this.scrollToList[v])
+   
+      })
+     
+      console.log(this.scrollToList,'------------------------------')
+      
+
+    }
     // detailVisible(visible) {
     //   if (visible) {
     //     this.$refs.swiper.swiper.autoplay.stop()
@@ -955,13 +1005,27 @@ export default {
     // 获取推荐电视信息
     // this.allList = []
     for (var i in this.channels) {
-      this.filterData(this.channels[i].channelId,1)
+      this.getinitData(this.channels[i].channelId,1)
     }
 
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault()
     })
     HdSmart.UI.hideLoading()
+  },
+   destroyed() {
+    console.log('destroy')
+    window.removeEventListener("scroll", this.loadMore)
+    removeEventListener("scroll", this.fn)
+  },
+  activated(){  
+      window.addEventListener("scroll", this.loadMore)
+    addEventListener("scroll", this.fn)
+      
+  },
+  deactivated(){
+       window.removeEventListener("scroll", this.loadMore)
+    removeEventListener("scroll", this.fn)
   },
   //在页面离开时记录滚动位置
   beforeRouteLeave(to, from, next) {
@@ -977,13 +1041,15 @@ export default {
   },
   methods: {
     fn(){
+      // console.log('滚动')
+      
       let statusbarH = document.querySelector('.statusbar').offsetHeight
       let newNavbarH = document.querySelector('.newNavbar').offsetHeight
 
       
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       let icon_grid = this.$refs.icon_grid
-      console.log(this.scrollTop+statusbarH+newNavbarH, this.maxh)
+      // console.log(this.scrollTop+statusbarH+newNavbarH, this.maxh)
       
       if((this.scrollTop+statusbarH+newNavbarH)>= this.maxh){
         icon_grid.style.position = 'fixed'
@@ -994,6 +1060,12 @@ export default {
          icon_grid.style.background = ''
 
       }
+      // console.log(this.scrollTop,this.activeIndex,'999999')
+      this.scrollToList[this.activeIndex] = this.scrollTop
+      // console.log(this.activeIndex,this.scrollToList,'fn-----------------')
+      
+
+      
       // console.log(icon_grid.offsetTop)
       // console.log( this.scrollTop)
       
@@ -1130,7 +1202,7 @@ export default {
         }, [])
     },
     filterData(channelId,page) {
-      if (page === 1) this.isFirstLoad = true
+      // if (page === 1) this.isFirstLoad = true
       this.loadState = "LOADING"
       service.searchData(
         {
@@ -1153,8 +1225,8 @@ export default {
           let cid = data.channelId
           
           this.$nextTick(() => {
-            switch(cid){
-              case '001':
+            switch(this.activeIndex){
+              case 1:
                 this.listDY = Object.freeze(
                   (page === 1 ? [] : this.listDY).concat(data.list)
                 )
@@ -1162,7 +1234,7 @@ export default {
                   (page === 1 ? [] : this.dataList[1].list).concat(data.list)
                 )
                 break
-              case '002':
+              case 2:
                 this.listDSJ = Object.freeze(
                   (page === 1 ? [] : this.listDSJ).concat(data.list)
                 )
@@ -1170,7 +1242,7 @@ export default {
                   (page === 1 ? [] : this.dataList[2].list).concat(data.list)
                 )
                 break
-              case '003':
+              case 3:
                 this.listZY = Object.freeze(
                   (page === 1 ? [] : this.listZY).concat(data.list)
                 )
@@ -1178,7 +1250,7 @@ export default {
                   (page === 1 ? [] : this.dataList[3].list).concat(data.list)
                 )
                 break
-              case '004':
+              case 4:
                 this.listDM = Object.freeze(
                   (page === 1 ? [] : this.listDM).concat(data.list)
                 )
@@ -1193,6 +1265,8 @@ export default {
               this.dataList[3].list.slice(0,6),
               this.dataList[4].list.slice(0,6)
             ]
+            console.log(this.listDY,'listDY')
+            
             console.log( this.dataList,' this.dataList----------------------------------')
             
 
@@ -1212,15 +1286,20 @@ export default {
             // )
 
             this.total = data.total
-            this.pageNo = page
-            if (this.isFirstLoad) {
-              this.isFirstLoad = false
-              window.scrollTo(0, 0)
-            }
-            if (this.total === 0) {
+            // this.pageNo = page
+          console.log(page,'page')
+          
+            this.pageNoList[this.activeIndex] = page
+            // if (this.isFirstLoad) {
+            //   this.isFirstLoad = false
+            //   // console.log('?????????????????????????????')
+              
+            //   window.scrollTo(0, 0)
+            // }
+            if (data.total === 0) {
               //没有数据
               this.loadState = "NO_DATA"
-            } else if (this.pageSize * this.pageNo >= this.total) {
+            } else if (this.pageSize * page >= data.total) {
               //加载完全部
               this.loadState = "NO_MORE"
               //HdSmart.UI.toast('已加载全部')
@@ -1250,6 +1329,28 @@ export default {
       //   }
       // })
     },
+    getinitData(channelId){
+         service.getChannelData(channelId, (err, data) => {
+        console.log('data',data)
+       this.loadState = "LOADED"
+
+        if (err) {
+          console.log(err)
+          this.error = true
+          return
+        }
+        let cid = data.channelId
+        if(cid === '001'){
+          this.listDY = data.data.list
+        } else if(cid === '002') {
+          this.listDSJ = data.data.list
+        } else if(cid === '003') {
+          this.listZY = data.data.list
+        } else if(cid === '004') {
+          this.listDM = data.data.list
+        }
+      })
+    },
      loadMore: _.debounce(function() {
        if(this.itemData.channelId === '005') return
       var scrollTop =
@@ -1267,8 +1368,9 @@ export default {
           HdSmart.UI.toast("已加载全部")
           return
         }
+        // console.log(this.pageNoList[this.activeIndex] + 1,'3433333333333333333333364678')
         
-        this.filterData(this.itemData.channelId,this.pageNo + 1)
+        this.filterData(this.itemData.channelId,this.pageNoList[this.activeIndex] + 1)
       }
     }, 300),
     //换成小图地址
@@ -1292,9 +1394,13 @@ export default {
       }
     },
     toActive(item,idx){
+      // setTimeout(()=>{
+      //   window.scrollTo(0,1000)
+      // },300)
         console.log(this.$store.state.tvStatus)
        this.activeIndex = idx
        this.itemData = item
+       this.loadState = 'LOADED'
        console.log( this.activeIndex,this.itemData,555555555)
        
     },
@@ -1353,6 +1459,33 @@ export default {
     },
     shutdownCallback(){
       console.log('11111111')
+    },
+    touchstart(e){
+      console.log(this.activeIndex)
+      this.starX = e.changedTouches[0].clientX
+      this.starY = e.changedTouches[0].clientY
+      
+    },
+    touchend(e){
+      this.endX = e.changedTouches[0].clientX
+      this.endY = e.changedTouches[0].clientY
+      if(Math.abs(this.endY-this.starY)>30) return
+      console.log(this.starX,this.endX)
+      if(this.endX-this.starX>50){
+        if(this.activeIndex==4){
+          this.activeIndex=0
+        }else{
+          this.activeIndex+=1
+        }
+      }
+      if(this.endX-this.starX<-50){
+           if(this.activeIndex==0){
+          this.activeIndex=4
+        }else{
+          this.activeIndex-=1
+        }
+      }
+      
     }
   }
 }

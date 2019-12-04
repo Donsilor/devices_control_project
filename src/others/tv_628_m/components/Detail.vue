@@ -60,9 +60,43 @@
             </div>
           </div>
         </div>
+        <transition name="fade">
+          <div 
+            v-show="synopsisB" 
+            class="mb"
+            @click="synopsisResetFn"/>
+        </transition>
+        <!-- <transition name="bottom"> -->
+        <div 
+          ref="synopsisD"
+          class="synopsisD">
+          <div class="synopsisD-header">
+            <p>{{ title }}</p>
+            <span @click="synopsisResetFn"/>
+          </div>
+          <div class="synopsisD-content">
+            <div class="text2">
+              <p>{{ cur.cate }}{{ cur.year&&'.'+cur.year }}{{ cur.region&&'·'+cur.region }}</p>
+              <p v-show="isNotNull(cur.score)">评分：
+                <span>{{ cur.score }}</span>
+              </p>
+              <p 
+                v-show="isNotNull(cur.director)" 
+                class="director">导演：{{ cur.director }}</p>
+              <p
+                v-show="isNotNull(cur.starring)"
+                class="text_s"><span class="text_s_1"> 主演：</span><span>{{ cur.starring }}</span></p>
+            </div>
+            <div class="text3">简介</div>
+            <div class="desc2">{{ cur.desc }}</div>
+          </div>
+          
+
+        </div>
+        <!-- </transition> -->
         <!-- 描述 -->
        
-        <div
+        <!-- <div
           v-show="cur.desc"
           class="desc">
           <div
@@ -84,98 +118,111 @@
             <i class="arrow-desc" />
           </a>
         </div>
-      </div>
+      </div> -->
 
-      <div
-        :class="[isShowAll?'detail-playlist-all':'']"
-        class="detail-playlist">
         <div
-          v-if="cur.playlist2.list.length"
-          class="hd" >
-          {{ channelId==='001' ? '正片' : '选集' }}
-          <a
-            v-show="!isShowAll && (channelId==='002' || channelId==='003')"
-            href="#"
-            class="showAll"
-            @click.prevent="showAll"> 
-            <i>{{ channelId==='001' ? '正片' : getUpdateSet() }}</i>
-            <i class="arrow" />
-          </a>
-
-          <a
-            v-show="isShowAll"
-            href="#"
-            class="showAll"
-            @click.prevent="showAllClose">
-            <span class="icon-close" />
-          </a>
-        </div>
-        <ul
-          v-if="channelId==='001' || channelId==='004'"
+          ref="isShowAll"
+          :class="[isShowAll?'detail-playlist-all a':'']"
+          class="detail-playlist">
+          <div
+            v-if="cur.playlist2.list.length"
+            class="hd" >
+            <span>{{ channelId==='001' ? '正片' : '选集' }}</span>
+            <a
+              v-show="!isShowAll && (channelId==='002' || channelId==='003')"
+              href="#"
+              class="showAll"
+              @click.prevent="showAll"> 
+              <i>{{ channelId==='001' ? '正片' : getUpdateSet() }}</i>
+              <i class="arrow" />
+            </a>
+            <a
+              v-show="isShowAll"
+             
+              href="#"
+              class="showAll"
+              @click.prevent="showAllClose">
+              <span class="close" />
+            </a>
+          </div>
+          <ul
+            v-if="channelId==='001' || channelId==='004'"
         
-          class="bd">
-          <li
-            v-for="item in cur.playlist2.list"
-            :key="item.index"
-            class="item-haspic"
-            @click="play(item)">
-            <img
-              v-lazy="item.pictureUrl"
-              :key="item.pictureUrl">
-            <p>{{ item.name }}</p>
-            <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
-            <span
-              v-show="item.drm && item.drm!='0'"
-              class="tag_pay">付费</span>
-          </li>
-        </ul>
-        <ul
-          v-else
-          :class="[isShowAll?'bd-num-all':'bd-num']"
-          class="bd" >
-          <li
-            v-for="(item, num) in cur.playlist2.list"
-            :key="item.index"
-            :class="{'gray':tvStatus.tvOnlineStatus==-3}"
-            class="item-num" 
-            @click="play(item)">
-            {{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}         
-            <!-- <span 
+            class="bd">
+            <li
+              v-for="item in cur.playlist2.list"
+              :key="item.index"
+              class="item-haspic"
+              @click="play(item)">
+              <img
+                v-lazy="item.pictureUrl"
+                :key="item.pictureUrl">
+              <p>{{ item.name }}</p>
+              <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
+              <span
+                v-show="item.drm && item.drm!='0'"
+                class="tag_pay">付费</span>
+            </li>
+          </ul>
+          <ul
+            v-else
+            :class="[isShowAll?'bd-num-all':'bd-num']"
+            class="bd" >
+            <li
+              v-for="(item, num) in cur.playlist2.list"
+              :key="item.index"
+              :class="{'gray':tvStatus.tvOnlineStatus==-3,'active':activeIndex==num}"
+              class="item-num" 
+              @click="play(item,num)">
+              {{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}         
+              <!-- <span 
               v-show="item.states" 
               class="tag_new">新</span> -->
-            <span
-              v-show="item.drm && item.drm!='0'"
-              class="tag_pay">付费</span>
-          </li>
-        </ul>
-      </div>
+              <span
+                v-show="item.drm && item.drm!='0'"
+                class="tag_pay">付费</span>
+            </li>
+          </ul>
+        </div>
 
-      <div class="detail-playlist">
-        <div
-          v-if="cur.playlist2.list2.length"
-          class="hd related"
-          style="clear:both">相关视频</div>
-        <ul class="bd" >
-          <li
-            v-for="item in cur.playlist2.list2"
-            :key="item.index"
-            class="item-haspic"
-            @click="play(item)">
-            <img
-              v-lazy="item.pictureUrl"
-              :key="item.pictureUrl">
-            <p>{{ item.name }}</p>
-            <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
-            <span
-              v-show="item.drm && item.drm!='0'"
-              class="tag_pay">付费</span>
-          </li>
-        </ul>
+
+
+
+
+
+
+
+
+
+
+
+        <div class="detail-playlist">
+          <div
+            v-if="cur.playlist2.list2.length"
+            class="hd related"
+            style="clear:both">相关视频</div>
+          <ul class="bd" >
+            <li
+              v-for="item in cur.playlist2.list2"
+              :key="item.index"
+              class="item-haspic"
+              @click="play(item)">
+              <img
+                v-lazy="item.pictureUrl"
+                :key="item.pictureUrl">
+              <p class="palyimg"/>
+              <p>{{ item.name }}</p>
+              <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
+              <span
+                v-show="item.drm && item.drm!='0'"
+                class="tag_pay">付费</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-  <!-- </transition> -->
-</template>
+    <!-- </transition> -->
+</div></template>
 
 <style lang="less">
 // .gray{
@@ -266,7 +313,7 @@
 
 .detail-info {
   margin: 0 32px;
-  border-bottom: 1px solid rgba(0,0,0,.1);
+  // border-bottom: 1px solid rgba(0,0,0,.1);
   .info-inner {
     position: relative;
     overflow: hidden;
@@ -307,6 +354,130 @@
     width: 366px;
     position: relative;
     color: #222a37;
+  }
+  .mb{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    
+    background: #000;
+    opacity: 0.5;
+    z-index: 9999
+  }
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .4s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active, 2.1.8 版本以下 */ {
+      opacity: 0
+  }
+  .synopsisD{
+    position: fixed;
+    bottom: -966px;
+    // bottom: -0;
+
+    left: 0;
+    width: 100%;
+    max-height: 966px;
+ 
+    background: #fff;
+    z-index: 10000;
+    .synopsisD-header{
+    padding: 0 32px;
+
+      height: 120px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      p{
+        font-family: PingFangSC-Regular;
+        font-size: 32px;
+        color: #222A37;
+      }
+      span{
+        width: 48px;
+        height: 48px;
+        background: url('~@lib/base/img/btn_ac_close@2x.png');
+        background-size: 100% 100%;
+      }
+    }
+    .synopsisD-content{
+    padding: 0 32px;
+
+         overflow-y: scroll;
+         max-height: 846px;
+      .text2{
+      border-bottom: 1px solid rgba(0,0,0,.1);
+      padding-bottom: 40px;
+      p{
+        opacity: 0.5;
+        font-family: PingFangSC-Light;
+        font-size: 24px;
+        color: #000000;
+        letter-spacing: 0;
+        line-height: 40px;
+      }
+      .text_s{
+        display: flex;
+        justify-content: left;
+        .text_s_1{
+          width:46PX;
+        }
+      }
+    }
+    .text3{
+      height: 48px;
+      line-height: 48px;
+      margin: 41px 0 12px 0;
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: #222A37;
+      line-height: 44px;
+    }
+    .desc2{
+      opacity: 0.5;
+      font-family: PingFangSC-Light;
+      font-size: 24px;
+      color: #000000;
+      letter-spacing: 0;
+      text-align: justify;
+      line-height: 40px;
+      padding-bottom: 68px;
+    }
+
+    }
+    
+    
+  }
+  .a{
+    animation: bottom .2s linear;
+    animation-fill-mode : forwards
+  }
+   @keyframes bottom {
+      from {
+            bottom: -1010px;
+      }
+      to {
+            bottom: 0;
+      }
+  }
+  .b{
+    animation: bottomReset .2s linear;
+    animation-fill-mode : forwards
+
+  }
+   @keyframes bottomReset {
+      from {
+            bottom: 0;
+      }
+      to {
+            bottom: -1010px;
+      }
+      //  from {
+      //       bottom: -966px;
+      // }
   }
   .desc {
     clear: both;
@@ -470,7 +641,7 @@
       vertical-align: middle;
       width: 32px;
       height: 32px;
-      background: url('~@lib/base/tv/assets/new/tv_icn_play.png');
+      background: url('~@lib/base/tv/assets/new/tv_icn_play2.png');
         background-size: 100% 100%;
     }
     span{
@@ -529,8 +700,21 @@
 }
 
 .detail-playlist {
-  margin-left: 32px;
+  // margin-left: 32px;
   padding-top: 30px;
+  position: relative;
+  .item-haspic{
+    p.palyimg{
+      position: absolute;
+      top: 136px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      background:  url('~@lib/base/tv/assets/new/tv_icn_play.png');
+      background-size:100% 100%; 
+    }
+  }
+  
 
   .hd {
 
@@ -550,32 +734,40 @@
   &-all {
     position: fixed;
     bottom: 0;
-    z-index: 10;
+    left:0;
+    z-index: 10000;
     width: 100%;
-    height: 776px;
+    max-height: 1010px;
     overflow: hidden;
     background-color: #fff;
     margin-left: 0;
     padding-top: 0;
 
     .hd {
-      height: 106px;
-      line-height: 106px;
+      height: 120px;
+      line-height: 120px;
       padding-left: 32px;
-      border: 1px solid #d8d8d8;
+      // border: 1px solid #d8d8d8;
       margin-bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
     }
 
     .bd-num-all {
       width: 100%;
-      padding-top: 30px;
-      max-height: 670px;
+      // padding-top: 30px;
+      max-height: 890px;
       padding-left: 32px;
       overflow-y: auto;
     }
 
-    .icon-close {
-      line-height: 1;
+    .close {
+        width: 48px;
+        height: 48px;
+        background: url('~@lib/base/img/btn_ac_close@2x.png');
+        background-size: 100% 100%;
     }
   }
 
@@ -622,7 +814,7 @@
     display: flex;
     flex-wrap: wrap;
     li {
-      margin: 0 30px 30px 0;
+      margin: 0 20px 20px 0;
     }
   }
   li.item-num {
@@ -654,17 +846,18 @@
                 no-repeat center center;
             background-size: 36px 36px;
             text-indent: -9999px;*/
-      font-family: PingFangSC-Regular;
-      font-size: 28px;
+      font-family: PingFangSC-Light;
+      font-size: 24px;
       color: #E1B96E;
       letter-spacing: 0;
+      text-align: center;
     }
   }
   li.item-haspic {
     position: relative;
     width: 320px;
     height: 306px;
-    margin: 0 25px 0 5px;
+    // margin: 0 25px 0 5px;
     float: left;
     overflow: hidden;
     color: #222a37;
@@ -798,10 +991,13 @@ export default {
       loading: false,
       history: false,
       isShowAll: false,
+       isShowAll2: false,
 
       channelId: this.$route.query.channelId || '',
       vid: this.$route.query.vid || '',
       ispay: this.$route.query.ispay || '',
+      synopsisB:false,
+      activeIndex:-1
     }
   },
   computed: {
@@ -853,7 +1049,7 @@ export default {
   created() {
     service.RemoteController({ 'show': true })
 
-    this.$watch("cur.desc", this.getDescLine)
+    // this.$watch("cur.desc", this.getDescLine)
     //详情页添加history change
     this.$watch("$route.query.detail", (newVal, oldVal) => {
       if (oldVal && newVal === undefined && this.visible) {
@@ -878,7 +1074,20 @@ export default {
     ...mapActions(["hideDetail", "showDetail"]),
     synopsisFn(){
       console.log('点击了')
+            this.$refs.synopsisD.classList.remove('b')
+
+      this.$refs.synopsisD.classList.add('a')
+      this.synopsisB = true
       
+    },
+    synopsisResetFn(){
+      this.synopsisB = false
+      this.$refs.synopsisD.classList.remove('a')
+      this.$refs.synopsisD.classList.add('b')
+      this.isShowAll=false
+
+
+
     },
     scrollfn(){
        var scrollTop =
@@ -963,7 +1172,11 @@ export default {
       )
     },
     //点播：播放状态如playstate
-    play(clickItem) {
+    play(clickItem,num) {
+      if(num!=undefined){
+         this.activeIndex = num
+      }
+      
       console.log(clickItem,'clickItem')
       if (!clickItem) {
         clickItem =
@@ -974,23 +1187,23 @@ export default {
       }
     },
     //描述按行截取：对比实际文本高度和3行文本高度，如果超出则截断，显示展开按钮
-    getDescLine() {
-      if (this.$el) {
-        this.isDescShow = false
-        this.isDescOverflow = false
-        this.$nextTick(() => {
-          let wrapHeight = this.$el.querySelector(".desc-cont")
-            .offsetHeight
-          let textHeight = this.$el.querySelector(".desc-cont-p")
-            .offsetHeight
-          if (textHeight > wrapHeight) {
-            this.isDescOverflow = true
-          } else {
-            this.isDescOverflow = false
-          }
-        })
-      }
-    },
+    // getDescLine() {
+    //   if (this.$el) {
+    //     this.isDescShow = false
+    //     this.isDescOverflow = false
+    //     this.$nextTick(() => {
+    //       let wrapHeight = this.$el.querySelector(".desc-cont")
+    //         .offsetHeight
+    //       let textHeight = this.$el.querySelector(".desc-cont-p")
+    //         .offsetHeight
+    //       if (textHeight > wrapHeight) {
+    //         this.isDescOverflow = true
+    //       } else {
+    //         this.isDescOverflow = false
+    //       }
+    //     })
+    //   }
+    // },
     getUpdateSet() {
       var count = this.cur.playlist2.total + 1 //-this.cur.playlist2.list2.length
       var last = this.cur.playlist2.list.length
@@ -1024,9 +1237,20 @@ export default {
     },
     showAll() {
       this.isShowAll = true
+      this.synopsisB =true
+      //  this.isShowAll2 = true
+
     },
     showAllClose() {
       this.isShowAll = false
+      this.synopsisB =false
+      console.log($('.title'))
+
+
+      console.log(this.$refs.isShowAll)
+      // this.$refs.isShowAll.classList.add('b')
+      
+      // this.isShowAll2 = false
     },
     goBack(){
       this.hideDetail()

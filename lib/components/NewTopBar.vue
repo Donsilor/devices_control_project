@@ -67,7 +67,7 @@
         <div
           ref="title"
           :style="{ 'color': bakColor }"
-          class="title">{{ room&&room+'|' }}{{ title }}</div>
+          class="title"> {{ room && room+'&nbsp;|&nbsp;' }}{{ title }}</div>
         <button
           v-if="shutdown"
           ref="shutdown"
@@ -392,11 +392,11 @@ export default {
  .title {
    position: relative;
     text-align: center;
-    font-size: 17PX;
+    // font-size: 17PX;
     // font-family: PingFangSC-Medium;
-    font-size: 48px;
+    font-size: 46px;
     color: #000000;
-    font-weight: bold;
+    // font-weight: bold;
     // line-height: 48px;
   }
 }
