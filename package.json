@@ -12,6 +12,7 @@
     "alloyfinger": "^0.1.16",
     "axios": "^0.18.0",
     "iscroll": "^5.2.0",
+    "jquery": "^3.4.1",
     "jsonp": "^0.2.1",
     "mint-ui": "^2.2.13",
     "mockjs": "^1.0.1-beta3",

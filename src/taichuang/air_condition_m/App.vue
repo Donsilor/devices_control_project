@@ -71,12 +71,6 @@
       <div
         v-show="!isOffline&&!isClose"
         class="panel-btn center">
-        <!-- <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
-          <div
-            :class="[{ 'active': !isClose }, 'btn-swich btn center']"
-            @click="setSwitch" />
-          <div class="btn-name">开关</div>
-        </div> -->
         <div
           class="btn-wrap"
           @click="setMode('cold')">
@@ -109,6 +103,24 @@
           <div class="btn-name">除湿</div>
         </div>
         <div
+          class="btn-wrap"
+          @click="setMode('breath')">
+          <div :class="[{ 'active': deviceAttrs.mode == 'breath' }, 'btn btn-breath center']" />
+          <div class="btn-name">换气</div>
+        </div>
+        <div
+          class="btn-wrap"
+          @click="setMode('sleep')">
+          <div :class="[{ 'active': deviceAttrs.mode == 'sleep' }, 'btn btn-sleep center']" />
+          <div class="btn-name">睡眠</div>
+        </div>
+        <div
+          class="btn-wrap"
+          @click="setMode('fresh')">
+          <div :class="[{ 'active': deviceAttrs.mode == 'fresh' }, 'btn btn-fresh center']" />
+          <div class="btn-name">清爽</div>
+        </div>
+        <div
           style="visibility:hidden"
           class="btn-wrap"/>
       </div>
@@ -117,9 +129,32 @@
       <div
         v-show="!isClose&&!isOffline"
         class="optionbox">
-        <div class="option1">
+        <!-- 风速大于4种的时候展示 -->
+        <div 
+          v-show="speedNum.length > 4" 
+          class="option">
           <div class="check">
             <span>风速</span>
+            <span 
+              class="check" 
+              @click="showSpeed">{{ speedName }}
+              <img 
+                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
+            </span>
+          </div>
+        </div>
+        <!-- 风速小于等于4种的时候展示 -->
+        <div 
+          v-show="speedNum.length <= 4" 
+          class="option1">
+          <div class="check">
+            <span>风速</span>
+            <!-- <span 
+              class="check" 
+              @click="showSpeed">{{ speedName }}
+              <img 
+                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
+            </span> -->
             <div 
               class="checkBox">
               <div 
@@ -138,53 +173,26 @@
             </div>
           </div>
         </div>
-        <!-- 摆风 -->
-        <div class="option">
-          <div>
-            <span>摆风</span>
-            <span 
-              class="check" 
-              @click="showSwing">{{ deviceAttrs.wind_up_down=='on'?'上下风 ':'' }}{{ deviceAttrs.wind_left_right=='on'?'左右风':'' }}{{ deviceAttrs.wind_up_down=='off'&&deviceAttrs.wind_left_right=='off'?'设置':'' }}
-              <img 
-                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
-            </span>
-          </div>
-        </div>
       </div>
-
-      <!--选择摆风-->
-      <model-swing
-        ref="swing"
-        :wind_up_down="deviceAttrs.wind_up_down"
-        :wind_left_right="deviceAttrs.wind_left_right"
-        @setWind="setWind" />
-      <!--选择模式-->
-      <model-mode
-        ref="mode"
-        :mode="deviceAttrs.mode"
-        @setMode="setMode" />
-      <!--选择风速-->
-      <model-speed
+      <SelectTime
         ref="speed"
-        :speed="deviceAttrs.speed"
-        @setSpeed="setSpeed" />
+        :speed-type="speedType"
+        @selectedSpeed="setReserve"
+        @canceltime="canceltime" />
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
-// import circleProgress from './components/circle-progress'
-import modelSwing from './components/model-swing'
-import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
 import SelectTime from './components/time.vue'
 const [MIN_TEMP, MAX_TEMP] = [160, 300]
 export default {
   components: {
     // circleProgress,
-    modelSwing,
-    modelMode,
+    // modelSwing,
+    // modelMode,
     modelSpeed,
     SelectTime
   },
@@ -216,6 +224,11 @@ export default {
       ctx: '',
       //记录温度
       thermography:16,
+      tempType:'',
+      speedType:'',
+      modeType:'',
+      speedNum:'',
+      speedcount:'low'
     }
   },
 
@@ -244,23 +257,30 @@ export default {
           return 'btn-wind'
       }
     },
-    speedClass() {
+    speedName() {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.speed) {
         case 'low':
-          return 'btn-low'
+          return '低风'
+          break
+        case 'overlow':
+          return '中低风'
           break
         case 'normal':
-          return 'btn-normal'
+          return '中风'
+          break
+        case 'overnormal':
+          return '中高风'
           break
         case 'high':
-          return 'btn-high'
+          return '高风'
           break
         case 'auto':
-          return 'btn-auto'
+          return '自动风'
           break
-        default:
-          return 'btn-low'
+        case 'strong':
+          return '强风'
+          break
       }
     },
     getBarColor() {
@@ -281,12 +301,25 @@ export default {
   watch: {
     "device.stateChange"(){
       this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
+    },
+    "deviceAttrs"() {
+      this.tempType = this.deviceAttrs.selection.split(";")[0]
+      this.speedType = this.deviceAttrs.selection.split(";")[1]
+      this.speedNum = this.speedType.replace(/,/g, "")//取消字符串中出现的所有逗号 
+      this.modeType = this.deviceAttrs.selection.split(";")[2]
+      console.log(this.tempType,'tempType')
+      console.log(this.speedNum,'speedType')
+      console.log(this.modeType,'modeType')
     }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
+          this.tempType = this.deviceAttrs.selection.split(";")[0]
+          this.speedType = this.deviceAttrs.selection.split(";")[1]
+          this.speedNum = this.speedType.replace(/,/g, "")//取消字符串中出现的所有逗号 
+          this.modeType = this.deviceAttrs.selection.split(";")[2]
           this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
           // this.reset()
         })
@@ -339,6 +372,46 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+        // 设置关机时间
+    setReserve(speed) {
+      console.log(speed)
+      if (speed==0) {
+        this.speedcount = 'auto'
+      }
+      if (speed==1) {
+        this.speedcount = 'low'
+      }
+      if (speed==2) {
+        this.speedcount = 'overlow'
+      }
+      if (speed==3) {
+        this.speedcount = 'normal'
+      }
+      if (speed==4) {
+        this.speedcount = 'overnormal'
+      }
+      if (speed==5) {
+        this.speedcount = 'high'
+      }
+      if (speed==6) {
+        this.speedcount = 'strong'
+      }
+        this.controlDevice('speed',this.speedcount)
+    },
+    // 取消定时
+    canceltime(){
+       this.controlDevice('close_time','true')
+       .then((res) => {
+         if(res.code == 0) {
+           this.loaclAttr.close_time = true
+         } else {
+           HdSmart.UI.toast('操作失败')
+         }
+       })
+       .catch(() => {
+         HdSmart.UI.toast('操作失败')
+       })
+    },
     offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
     },
@@ -499,10 +572,10 @@ export default {
         }
       })
     },
-    showSwing() {
-      if (this.isClose) return
-      this.$refs.swing.show = true
-    },
+    // showSwing() {
+    //   if (this.isClose) return
+    //   this.$refs.swing.show = true
+    // },
     showMode() {
       if (this.isClose) return
       this.$refs.mode.show = true
@@ -516,8 +589,7 @@ export default {
       this.$refs.time.show = true
     },
     hide(){
-      if(this.$refs.swing.show) this.$refs.swing.show = false
-      if(this.$refs.mode.show) this.$refs.mode.show = false
+      // if(this.$refs.swing.show) this.$refs.swing.show = false
       if(this.$refs.speed.show) this.$refs.speed.show = false
     },
 
@@ -794,6 +866,24 @@ export default {
     .btn-dehumidify {
       &::before {
         background-image: url('~@lib/@{imgPath1}/dehumidify.png');
+        background-size: 100% 100%;
+      }
+    }
+    .btn-breath {
+      &::before {
+        background-image: url('~@lib/@{imgPath1}/huanqi.png');
+        background-size: 100% 100%;
+      }
+    }
+    .btn-sleep {
+      &::before {
+        background-image: url('~@lib/@{imgPath1}/sleep.png');
+        background-size: 100% 100%;
+      }
+    }
+    .btn-fresh {
+      &::before {
+        background-image: url('~@lib/@{imgPath1}/fresh.png');
         background-size: 100% 100%;
       }
     }
