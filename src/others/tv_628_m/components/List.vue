@@ -44,8 +44,8 @@
         </dt>
         <dd>
           <a
-            v-for="item in region"
-            :key="item.regionId"
+            v-for="(item,index) in region"
+            :key="item.regionId+index"
             :class="{active:current_region==item.regionId}"
             href="#"
             @click.prevent="setParam('current_region',item.regionId)">
@@ -65,8 +65,8 @@
         </dt>
         <dd>
           <a
-            v-for="item in category"
-            :key="item.cateId"
+            v-for="(item,index) in category"
+            :key="item.cateId+index"
             :class="{active:current_category==item.cateId}"
             href="#"
             @click.prevent="setParam('current_category',item.cateId)">
@@ -86,8 +86,8 @@
         </dt>
         <dd>
           <a
-            v-for="item in year"
-            :key="item.yearrange"
+            v-for="(item,index) in year"
+            :key="item.yearrange+index"
             :class="{active:current_year==item.yearrange}"
             href="#"
             @click.prevent="setParam('current_year',item.yearrange)">
@@ -101,8 +101,8 @@
         class="row">
         <dd>
           <a
-            v-for="item in orderby"
-            :key="item.orderId"
+            v-for="(item,index) in orderby"
+            :key="item.orderId+index"
             :class="{active:current_orderby==item.orderId}"
             href="#"
             @click.prevent="setParam('current_orderby',item.orderId)">
@@ -127,8 +127,8 @@
   
       <ul class="vlist list-m60">
         <li
-          v-for="item in list"
-          :key="item.vid"
+          v-for="(item,index) in list"
+          :key="item.vid+index"
           :class="['item-'+channelId]"
           class="vitem"
           @click="showDetailInfo(item)">
@@ -174,8 +174,10 @@
     <!-- 加载更多 -->
     <div class="loadmore">
       <p v-show="!isFirstLoad && loadState === 'LOADING'">正在加载中...</p>
-      <p v-show="!isFirstLoad && loadState === 'LOADED'">加载更多...</p>
-      <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
+      <p v-show="!isFirstLoad && loadState === 'LOADED'">上拉加载更多</p>
+      <p 
+        v-show="loadState === 'NO_MORE'" 
+        class="finish">已加载全部</p>
     </div>
   </div>
 </template>
@@ -334,7 +336,7 @@
     }*/
   .isvip {
     position: absolute;
-    right: 0;
+    right: 8px;
     top:0;
     background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
     // width: 48px;
@@ -432,11 +434,12 @@
   text-align: center;
   /*padding: 30px 0;*/
   height: 60px;
-  color: #75787a;
+  color: #000;
+  opacity: 0.5;
   font-size: 24px;
-  .finish {
-    color: #c8cacc;
-  }
+  // .finish {
+  //   color: #c8cacc;
+  // }
 }
 .spinner > div {
   background-color: #13d5dc;

@@ -74,7 +74,7 @@
             <p>{{ title }}</p>
             <span @click="synopsisResetFn"/>
           </div>
-          <div>
+          <div class="synopsisD-content">
             <div class="text2">
               <p>{{ cur.cate }}{{ cur.year&&'.'+cur.year }}{{ cur.region&&'·'+cur.region }}</p>
               <p v-show="isNotNull(cur.score)">评分：
@@ -171,9 +171,9 @@
             <li
               v-for="(item, num) in cur.playlist2.list"
               :key="item.index"
-              :class="{'gray':tvStatus.tvOnlineStatus==-3}"
+              :class="{'gray':tvStatus.tvOnlineStatus==-3,'active':activeIndex==num}"
               class="item-num" 
-              @click="play(item)">
+              @click="play(item,num)">
               {{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}         
               <!-- <span 
               v-show="item.states" 
@@ -210,6 +210,7 @@
               <img
                 v-lazy="item.pictureUrl"
                 :key="item.pictureUrl">
+              <p class="palyimg"/>
               <p>{{ item.name }}</p>
               <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
               <span
@@ -372,7 +373,6 @@
       opacity: 0
   }
   .synopsisD{
-    padding: 0 32px;
     position: fixed;
     bottom: -966px;
     // bottom: -0;
@@ -380,10 +380,12 @@
     left: 0;
     width: 100%;
     max-height: 966px;
-    overflow-y: scroll;
+ 
     background: #fff;
     z-index: 10000;
     .synopsisD-header{
+    padding: 0 32px;
+
       height: 120px;
       width: 100%;
       display: flex;
@@ -401,7 +403,12 @@
         background-size: 100% 100%;
       }
     }
-    .text2{
+    .synopsisD-content{
+    padding: 0 32px;
+
+         overflow-y: scroll;
+         max-height: 846px;
+      .text2{
       border-bottom: 1px solid rgba(0,0,0,.1);
       padding-bottom: 40px;
       p{
@@ -440,6 +447,8 @@
       padding-bottom: 68px;
     }
 
+    }
+    
     
   }
   .a{
@@ -693,6 +702,19 @@
 .detail-playlist {
   // margin-left: 32px;
   padding-top: 30px;
+  position: relative;
+  .item-haspic{
+    p.palyimg{
+      position: absolute;
+      top: 136px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      background:  url('~@lib/base/tv/assets/new/tv_icn_play.png');
+      background-size:100% 100%; 
+    }
+  }
+  
 
   .hd {
 
@@ -824,10 +846,11 @@
                 no-repeat center center;
             background-size: 36px 36px;
             text-indent: -9999px;*/
-      font-family: PingFangSC-Regular;
-      font-size: 28px;
+      font-family: PingFangSC-Light;
+      font-size: 24px;
       color: #E1B96E;
       letter-spacing: 0;
+      text-align: center;
     }
   }
   li.item-haspic {
@@ -973,7 +996,8 @@ export default {
       channelId: this.$route.query.channelId || '',
       vid: this.$route.query.vid || '',
       ispay: this.$route.query.ispay || '',
-      synopsisB:false
+      synopsisB:false,
+      activeIndex:-1
     }
   },
   computed: {
@@ -1148,7 +1172,11 @@ export default {
       )
     },
     //点播：播放状态如playstate
-    play(clickItem) {
+    play(clickItem,num) {
+      if(num!=undefined){
+         this.activeIndex = num
+      }
+      
       console.log(clickItem,'clickItem')
       if (!clickItem) {
         clickItem =

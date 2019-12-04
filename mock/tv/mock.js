@@ -933,7 +933,7 @@ export function searchData(data) {
       total: 31,
       pageNo: 1,
       pageSize: 20,
-      channelId: data.params.channelId,
+      // channelId: data.params.channelId,
       list: [
         {
           title: '不期而遇',

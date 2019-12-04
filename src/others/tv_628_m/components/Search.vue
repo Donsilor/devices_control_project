@@ -93,6 +93,7 @@
     <!-- 搜索结果 -->
     <div
       v-show="curpage===3"
+      ref="search_result"
       class="search_result">
       <!-- <div
         v-show="resultData.length && loadState !== 'NO_DATA' || current_channel!=''"
@@ -167,9 +168,11 @@
      
       <!-- 加载更多 -->
       <div class="loadmore">
-        <p v-show="!isFirstLoad && loadState === 'LOADING'">正在加载中...</p>
-        <p v-show="!isFirstLoad && loadState === 'LOADED'">加载更多...</p>
-        <!--<p class="finish" v-show="loadState === 'NO_MORE'">已加载全部</p>-->
+        <p v-show=" loadState === 'LOADING'">正在加载中...</p>
+        <p v-show=" loadState === 'LOADED'">上拉加载更多</p>
+        <p 
+          v-show="loadState === 'NO_MORE'" 
+          class="finish">已加载全部</p>
       </div>
     </div>
     <!-- 没有数据 -->
@@ -492,7 +495,7 @@
        .label {
         background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
         position: absolute;
-        right: 0;
+        right: 8px;
         top: 0;
         width: 48px;
         height: 32px;
@@ -558,16 +561,20 @@
     display: none;
   }
   .title{
-    font-family: PingFangSC-Medium;
     font-size: 32px;
     color: #000000;
-    font-weight: 900;
+    // font-weight: 900;
     // line-height: 80px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     width: 366px;
-    padding-bottom: 20px
+    // padding-bottom: 20px;
+    font-family: PingFangSC-Light;
+    height: 45px;
+    line-height: 45px;
+    font-size: 32px;
+    color: #000000;
     
   }
   .name {
@@ -595,7 +602,7 @@
     height: 72px;
     line-height: 72px;
     display: block;
-    color: #fff;
+    color: #000;
     font-size: 36px;
     text-align: center;
     width: 294px;
@@ -668,11 +675,12 @@
   text-align: center;
   /*padding: 30px 0;*/
   height: 60px;
-  color: #75787a;
+  color: #000;
+  opacity: 0.5;
   font-size: 24px;
-  .finish {
-    color: #c8cacc;
-  }
+  // .finish {
+  //   color: #c8cacc;
+  // }
 }
 </style>
 
@@ -818,7 +826,7 @@ export default {
       this.$el.querySelector('.search_input input').focus()
     }, 500)
 
-    window.addEventListener('scroll', this.loadMore)
+    this.$refs.search_result.addEventListener('scroll', this.loadMore)
     this.$Lazyload.$on('error', function({ el, src, loading }) {
       el.src = el.dataset.src1
       el.onerror = function() {
@@ -837,7 +845,7 @@ export default {
     addEventListener('scroll',this.scroll2, { passive: false })
   },
   destroyed() {
-    window.removeEventListener('scroll', this.loadMore)
+     this.$refs.search_result.removeEventListener('scroll', this.loadMore)
     removeEventListener('scroll', this.scroll2)
   },
   //在页面离开时记录滚动位置
@@ -951,8 +959,10 @@ export default {
       // }
     },
     filterData(page) {
-      if (page === 1) this.isFirstLoad = true
+      // if (page === 1) this.isFirstLoad = true
       this.loadState = 'LOADING'
+      console.log('筛选')
+      
       service.searchData(
         {
           keyword: this.word.trim(),
@@ -962,6 +972,7 @@ export default {
           pageNo: page
         },
         (err, data) => {
+          
           this.loadState = 'LOADED'
           if (err) return
 
@@ -971,6 +982,7 @@ export default {
           if (data.list == '') {
             data.list = []
           }
+          console.log(data,'ssdata----------------------')
           this.$nextTick(() => {
             this.resultData = Object.freeze(
               (page === 1 ? [] : this.resultData).concat(
@@ -981,10 +993,10 @@ export default {
             console.log(this.resultData,'this.resultData')
             this.total = data.total
             this.pageNo = page
-            if (this.isFirstLoad) {
-              this.isFirstLoad = false
-              window.scrollTo(0, 0)
-            }
+            // if (this.isFirstLoad) {
+            //   this.isFirstLoad = false
+            //   window.scrollTo(0, 0)
+            // }
             if (this.total === 0) {
               this.loadState = 'NO_DATA'
             } else if (this.pageSize * this.pageNo >= this.total) {
@@ -996,32 +1008,44 @@ export default {
       )
     },
     loadMore: _.debounce(function() {
+      console.log('滚动')
+      
       if (this.curpage !== 3) {
         return
       }
+        console.log(this.pageNo,'this.pageNo')
 
       var scrollTop =
         document.documentElement.scrollTop ||
         window.pageYOffset ||
         document.body.scrollTop
+        console.log(
+        scrollTop + window.innerHeight >=
+        document.documentElement.scrollHeight - 15)
+        
       if (
-        scrollTop > 0 &&
         scrollTop + window.innerHeight >=
         document.documentElement.scrollHeight - 15
       ) {
         if (this.$store.state.detailVisible) {
+          console.log(this.$store.state.detailVisible)
+          
           return
         }
         if (
           this.loadState === 'LOADING' ||
           this.loadState === 'NO_DATA'
         ) {
+            console.log(this.loadState)
           return
         }
         if (this.loadState === 'NO_MORE') {
+          
           HdSmart.UI.toast('已加载全部')
           return
         }
+        console.log(this.pageNo,'this.pageNo')
+
         this.filterData(this.pageNo + 1)
       }
     }, 300),
