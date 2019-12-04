@@ -101,7 +101,8 @@
     
     <div 
       class="index-list" 
-      @>
+      @touchstart="touchstart"
+      @touchend="touchend">
       <div
         v-for="(it, idx) in allList"
         :key="idx"
@@ -863,7 +864,16 @@ export default {
 
       hideMenu: false,
       noVal: false,
-      maxh:0
+      maxh:0,
+      star:0,
+      end:0,
+      scrollToList:{
+        '0':0,
+        '1':0,
+        '2':0,
+        '3':0,
+        '4':0
+      }
     }
   },
   computed: {
@@ -895,14 +905,22 @@ export default {
     allList() {
       switch(this.activeIndex){
         case 0:
+
+        console.log([this.listDY.slice(0, 6), this.listDSJ.slice(0, 6), this.listZY.slice(0, 6), this.listDM.slice(0, 6)],'allList-------------------------------------')
         return [this.listDY.slice(0, 6), this.listDSJ.slice(0, 6), this.listZY.slice(0, 6), this.listDM.slice(0, 6)]
         case 1:
+            console.log([this.listDY],'allList-------------------------------------')
         return [this.listDY]
+        
         case 2:
+           console.log([ this.listDSJ],'allList-------------------------------------')
         return [ this.listDSJ]
         case 3:
+           console.log([ this.listDSJ],'allList-------------------------------------')
         return [this.listZY]
+
         case 4:
+           console.log([ this.listDSJ],'allList-------------------------------------')
         return [this.listDM]
       }
       
@@ -914,6 +932,20 @@ export default {
     // }
   },
   watch: {
+    activeIndex(v){
+  
+        console.log(this.scrollToList[v],'-11111111111111111111111111')
+      
+      this.$nextTick(()=>{
+       
+      window.scrollTo(0,this.scrollToList[v])
+   
+      })
+     
+      console.log(this.scrollToList,'------------------------------')
+      
+
+    }
     // detailVisible(visible) {
     //   if (visible) {
     //     this.$refs.swiper.swiper.autoplay.stop()
@@ -955,7 +987,7 @@ export default {
     // 获取推荐电视信息
     // this.allList = []
     for (var i in this.channels) {
-      this.filterData(this.channels[i].channelId,1)
+      this.getinitData(this.channels[i].channelId,1)
     }
 
     document.addEventListener('contextmenu', function(e) {
@@ -977,6 +1009,8 @@ export default {
   },
   methods: {
     fn(){
+      console.log('滚动')
+      
       let statusbarH = document.querySelector('.statusbar').offsetHeight
       let newNavbarH = document.querySelector('.newNavbar').offsetHeight
 
@@ -994,6 +1028,12 @@ export default {
          icon_grid.style.background = ''
 
       }
+      console.log(this.scrollTop,this.activeIndex,'999999')
+      this.scrollToList[this.activeIndex] = this.scrollTop
+      console.log(this.activeIndex,this.scrollToList,'fn-----------------')
+      
+
+      
       // console.log(icon_grid.offsetTop)
       // console.log( this.scrollTop)
       
@@ -1193,6 +1233,8 @@ export default {
               this.dataList[3].list.slice(0,6),
               this.dataList[4].list.slice(0,6)
             ]
+            console.log(this.listDY,'listDY')
+            
             console.log( this.dataList,' this.dataList----------------------------------')
             
 
@@ -1213,10 +1255,12 @@ export default {
 
             this.total = data.total
             this.pageNo = page
-            if (this.isFirstLoad) {
-              this.isFirstLoad = false
-              window.scrollTo(0, 0)
-            }
+            // if (this.isFirstLoad) {
+            //   this.isFirstLoad = false
+            //   // console.log('?????????????????????????????')
+              
+            //   window.scrollTo(0, 0)
+            // }
             if (this.total === 0) {
               //没有数据
               this.loadState = "NO_DATA"
@@ -1249,6 +1293,26 @@ export default {
       //     this.listDM = data.data.list
       //   }
       // })
+    },
+    getinitData(channelId){
+         service.getChannelData(channelId, (err, data) => {
+        console.log('data',data)
+        if (err) {
+          console.log(err)
+          this.error = true
+          return
+        }
+        let cid = data.channelId
+        if(cid === '001'){
+          this.listDY = data.data.list
+        } else if(cid === '002') {
+          this.listDSJ = data.data.list
+        } else if(cid === '003') {
+          this.listZY = data.data.list
+        } else if(cid === '004') {
+          this.listDM = data.data.list
+        }
+      })
     },
      loadMore: _.debounce(function() {
        if(this.itemData.channelId === '005') return
@@ -1292,6 +1356,9 @@ export default {
       }
     },
     toActive(item,idx){
+      // setTimeout(()=>{
+      //   window.scrollTo(0,1000)
+      // },300)
         console.log(this.$store.state.tvStatus)
        this.activeIndex = idx
        this.itemData = item
@@ -1353,6 +1420,30 @@ export default {
     },
     shutdownCallback(){
       console.log('11111111')
+    },
+    touchstart(e){
+      console.log(this.activeIndex)
+      this.star = e.changedTouches[0].clientX
+      
+    },
+    touchend(e){
+      this.end = e.changedTouches[0].clientX
+      console.log(this.star,this.end)
+      if(this.end-this.star>50){
+        if(this.activeIndex==4){
+          this.activeIndex=0
+        }else{
+          this.activeIndex+=1
+        }
+      }
+      if(this.end-this.star<-50){
+           if(this.activeIndex==0){
+          this.activeIndex=4
+        }else{
+          this.activeIndex-=1
+        }
+      }
+      
     }
   }
 }

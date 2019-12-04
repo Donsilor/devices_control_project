@@ -5,6 +5,9 @@ if (process.env.NODE_ENV == 'development') {
 import Vue from 'vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
+import $ from 'jquery'
+console.log($,'jq-----------------')
+
 // import FastClick from 'fastclick'
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
