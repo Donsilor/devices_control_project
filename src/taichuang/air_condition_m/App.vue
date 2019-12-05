@@ -33,7 +33,8 @@
           <!-- 当不可调节温度时，显示这个盒子，可以挡着canvas，使它不能滑动 -->
           <div 
             v-if="deviceAttrs.mode=='wind'" 
-            class="cover"/>
+            class="cover"
+            @touchmove.prevent/>
           <canvas 
             ref="canvas"
             class="canvas" 

@@ -3,24 +3,25 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
+        :room="device.room_name"
         :shutdown="isClose == false || isOffline == true"
         :scroll="true"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
       <div class="main center">
         <div class="wrap-circle">
-          <div class="bg">
+          <div class="showtemp">
             <div 
               v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'" 
               class="tm">-- <sup>°C</sup></div>
             <!-- 如果模式是从制热模式最低17度切换模式,温度应该展示为19 -->
             <div 
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='heat'" 
-              class="tm">{{ (deviceAttrs.temperature < 190 ? 190: deviceAttrs.temperature) | filterTm }}<sup>°C</sup></div>
+              class="tm">{{ (centigrade < 190 ? 190: centigrade) | filterTm }}<sup>°C</sup></div>
 
             <div 
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='heat'"
-              class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
+              class="tm">{{ thermography }}<sup>°C</sup>
             </div>
             <div 
               v-show="!isOffline&& deviceAttrs.switchStatus == 'on'" 
@@ -29,21 +30,11 @@
               v-show="isOffline||deviceAttrs.switchStatus == 'off'"
               :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
           </div>
-          <circle-progress
-            v-if="isShow"
-            id="myId"
-            ref="$circle"
-            key="animation-model"
-            :is-animation="false"
-            :is-round="true"
-            :width="width"
-            :radius="radius"
-            :progress="progress"
-            :bar-color="getBarColor"
-            :duration="duration"
-            :delay="delay"
-            :background-color="backgroundColor"
-            class="progress"
+          <canvas 
+            ref="canvas"
+            class="canvas" 
+            width="280" 
+            height="280"
           />
         </div>
         <div 
@@ -76,12 +67,6 @@
       <div
         v-show="!isOffline&&!isClose"
         class="panel-btn center">
-        <!-- <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
-          <div
-            :class="[{ 'active': !isClose }, 'btn-swich btn center']"
-            @click="setSwitch" />
-          <div class="btn-name">开关</div>
-        </div> -->
         <div
           class="btn-wrap"
           @click="setMode('cold')">
@@ -119,28 +104,15 @@
               class="checkBox">
               <div 
                 :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']" 
-                @click="setSpeed('low')">低风</div>
+                @click="setSpeed('low')">低</div>
               <div 
                 :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']" 
-                @click="setSpeed('normal')">中风</div>
+                @click="setSpeed('normal')">中</div>
               <div 
                 :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']" 
-                @click="setSpeed('high')">高风</div>
+                @click="setSpeed('high')">高</div>
             </div>
           </div>
-          <!-- <div 
-            v-show="typeVal!=='auto'" 
-            class="range">
-            <input
-              :value="brightnessValue"
-              type="range"
-              min="0"
-              max="3"
-              step="1"
-              @touchmove="changeSpeedStyle"
-              @touchend="changeSpeed">
-            <p :class="['rang_width']"/>
-          </div> -->
         </div>
       </div>
       <!--选择模式-->
@@ -184,6 +156,16 @@ export default {
       brightnessValue: 0,
       rangStyle: '',
       opcityStyle: 'opcity-0',
+            //圆的数据
+      ox:140,
+      oy:140,
+      or:130,
+      br:10,
+      moveFlag:false,
+      centigrade:0,//摄氏度
+      ctx: '',
+      //记录温度
+      thermography:16,
     }
   },
 
@@ -247,108 +229,175 @@ export default {
     },
   },
   watch: {
-    // "deviceAttrs.speed"() {
-    //   if(this.deviceAttrs.speed == 'low') {
-    //     this.brightnessValue = 1
-    //     this.setRangWidth(31)
-    //   }
-    //   if(this.deviceAttrs.speed == 'normal') {
-    //     this.brightnessValue = 2
-    //     this.setRangWidth(62)
-    //   }
-    //   if(this.deviceAttrs.speed == 'high') {
-    //     this.brightnessValue = 3
-    //     this.setRangWidth(93)
-    //   }
-    // }
+    "device.stateChange"(){
+      if (this.moveEnd == false) {
+        if (this.deviceAttrs.mode == 'heat') {
+        this.draw(`${0.125+0.0577*(this.deviceAttrs.temperature/10-17)}`)
+        // console.log(0.125+0.0577*(this.deviceAttrs.temperature/10-17),'11111111111')//0.125
+        }else{
+          if (0.125+0.0682*(this.deviceAttrs.temperature/10-19)<0.125) {
+            this.draw(0.125)
+          }else{
+            this.draw(`${0.125+0.0682*(this.deviceAttrs.temperature/10-19)}`)
+          }
+          // console.log(0.125+0.0682*(this.deviceAttrs.temperature/10-19),'22222222222')//假设温度是17，结果是个负数  
+        }
+      }
+    }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-          this.reset()
+          this.draw(`${0.125+0.0577*(this.deviceAttrs.temperature/10-17)}`)
+          // console.log(`${0.125+0.0577*(this.deviceAttrs.temperature/10-17)}`,'000000000')//0.125
+          // this.reset()
         })
       HdSmart.UI.setStatusBarColor(2)
     })
   },
-  mounted() {
-    let pageNode = document.querySelector('.page')
-    pageNode.addEventListener('scroll', (e) => {
-      // console.log(e.target.scrollTop)
-      let scrollHeight = e.target.scrollTop
-      if (scrollHeight === 0) {
-        this.opcityStyle = 'opcity-0'
-      } else if (scrollHeight < 20) {
-        this.opcityStyle = 'opcity-20'
-      }else if (scrollHeight < 40 ) {
-        this.opcityStyle = 'opcity-40'
-      }else if (scrollHeight < 60) {
-        this.opcityStyle = 'opcity-60'
-      }else if (scrollHeight < 80) {
-        this.opcityStyle = 'opcity-80'
+  mounted(){
+    this.ctx = this.$refs.canvas.getContext("2d")
+    this.$nextTick(() => {
+      let on = ("ontouchstart" in document)? {
+          start: "touchstart", move: "touchmove", end: "touchend"
+      } : {
+          start: "mousedown", move: "mousemove", end: "mouseup"
       }
+        this.$refs.canvas.addEventListener(on.start,(e)=> {
+          this.moveFlag = true
+      },false)
+
+      this.$refs.canvas.addEventListener(on.move, (e)=> {
+        if(e.preventDefault){
+            e.preventDefault()
+        }else{
+            e.returnValue = false
+        }
+        console.log('move')
+          if (this.moveFlag) {
+              var k = this.getXY(e,this.$refs.canvas)
+              // console.log(e)
+              
+              // console.log(k.x-this.ox)
+              var r = Math.atan2(k.x-this.ox, this.oy-k.y)
+              var hd = (Math.PI+r)/(2*Math.PI)
+              console.log('k', k)
+              console.log('r', r)
+              console.log('hd', hd)
+              // 半圆的滑动范围判断
+              if (hd <= 0.875 && hd >= 0.125) {
+                  console.log('开始运动')
+                  this.draw(hd)
+              }else{
+                return
+              }
+          }
+      }, false)
+
+      this.$refs.canvas.addEventListener(on.end,()=> {
+        // console.log(111111111,'3333333')
+          this.moveFlag = false
+          this.controlDevice('temperature',this.centigrade)
+          this.moveEnd = true
+      }, false)
     })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    // setRangWidth(val) {
-    //   document.querySelector('.rang_width').style.width = val+"%"
-    // },
+
+    offset(r,d) {//根据弧度与距离计算偏移坐标
+      return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
+    },
+    draw(n) {
+      console.log(n,'nnnnnnnnnnnn')
+      
+      this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
+      this.ctx.strokeStyle = "rgba(0,0,0,0.1)"
+      this.ctx.lineWidth = 7
+      this.ctx.beginPath()
+      this.ctx.arc(this.ox,this.oy,this.or,1/4 * Math.PI,3/4 * Math.PI,true)//半圆(逆时针)
+      // this.ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true);//整圆
+      this.ctx.stroke()
+      if (this.deviceAttrs.switchStatus=='on') {
+          if (this.deviceAttrs.mode == 'heat') {
+            console.log('heat111')
+            this.ctx.strokeStyle = "#DA6C00"
+          }else if(this.deviceAttrs.mode == 'cold'){
+            console.log('cold111')
+            this.ctx.strokeStyle = "#008CDA"
+          }else{
+            console.log('else')
+            this.ctx.strokeStyle = "#E1B96E"
+          }
+      }else{
+        this.ctx.strokeStyle = "transparent"
+      }
+      
+      this.ctx.lineWidth = 7
+      this.ctx.beginPath()
+      this.ctx.arc(this.ox,this.oy,this.or,3/4 *Math.PI,(n*2+0.5)*Math.PI,false)
+      // this.ctx.arc(this.ox,this.oy,this.or,0.5*Math.PI,(n*2+0.5)*Math.PI,false);
+      this.ctx.stroke()
+      this.ctx.fillStyle = "transparent"
+      this.ctx.font = "70px PingFangSC-Light"
+      this.ctx.textAlign = "center"
+      this.ctx.textBaseline = "middle"
+      // 制热模式最低温度为17，其他模式最低19
+      if (this.deviceAttrs.mode == 'heat') {
+         this.ctx.fillText(Math.round((n*(13/0.75))+(17-((13*0.125)/0.75)))+"℃",this.ox,this.oy)
+        this.thermography = Math.round((n*(13/0.75))+(17-((13*0.125)/0.75)))
+        console.log('3333333333333')
+        
+      }else{
+       this.ctx.fillText(Math.round((n*(11/0.75))+(19-((11*0.125)/0.75)))+"℃",this.ox,this.oy)
+        this.thermography = Math.round((n*(11/0.75))+(19-((11*0.125)/0.75)))
+        console.log('44444444444444')
+        
+      }
+
+      this.centigrade = this.thermography*10
+      this.ctx.fillStyle = "#fff"
+      this.ctx.beginPath()
+      let d =  this.offset(n*2*Math.PI,this.or)
+      // console.log('d', d)
+      // 关机显示
+      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline) {
+        this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
+      }else{
+        //开机显示
+        this.ctx.arc(0,0,0,0,0,true)
+      }
+      this.ctx.fill()
+    },
+    getXY(e,obj) {
+        let et = e.touches? e.touches[0] : e
+        let x = et.clientX
+        let y = et.clientY
+        return {
+            x : x - obj.offsetLeft + (document.body.scrollLeft || document.documentElement.scrollLeft)-30,
+            y : y - obj.offsetTop  + (document.body.scrollTop || document.documentElement.scrollTop) -145
+        }
+    },
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return
+      this.moveEnd = false
       this.controlDevice('switch',val)
     },
-    // range调风速样式
-    // changeSpeedStyle(e) {
-    //   var max = e.target.getAttribute("max")
-    //   var width = (93 / max * e.target.value) +"%"
-    //   document.querySelector('.rang_width').style.width = width
-    // },
-    // // range调风速
-    // changeSpeed(e) {
-    //   if(e.target.value == 0) {
-    //     this.rangeColor = true
-    //   } else {
-    //     this.rangeColor = false
-    //   }
-    //   this.brightness = e.target.value
-    //   console.log(e.target.value,'我在这里')
-
-    //   if (this.brightness=='1') {
-    //     this.controlDevice('speed','low')
-    //   }
-    //   if (this.brightness=='2') {
-    //     this.controlDevice('speed','normal')
-    //   }
-    //   if (this.brightness=='3') {
-    //     this.controlDevice('speed','high')
-    //   }
-    // },
     // 设置模式
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose) return
+      this.moveEnd = false
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
-          // if (this.deviceAttrs.speed=='low') {
-          //   this.setRangWidth(31)
-          // }
-          // if (this.deviceAttrs.speed=='normal') {
-          //   this.setRangWidth(62)
-          // }
-          // if (this.deviceAttrs.speed=='high') {
-          //   this.setRangWidth(93)
-          // }
-          this.reset()
+          // this.reset()
           this.hide()
         })
     },
     setTemperature(step) {
-      // // 送风模式不能设置温度
-      // if (this.deviceAttrs.mode === 'wind') {
-      //   return HdSmart.UI.toast('送风模式不支持温度调节')
-      // }
+      this.moveEnd = false
       let temp = +this.deviceAttrs.temperature + step
       if (step== 10) {
         if (this.deviceAttrs.mode!=='heat'&&this.deviceAttrs.temperature == 170) {
@@ -387,43 +436,12 @@ export default {
       this.controlDevice('temperature', temp)
         .then(() => {
           this.deviceAttrs.temperature = temp
-          this.reset()
+          // this.reset()
         })
     },
-    // 设置摆风
-    // setWind(attr) {
-    //   if (this.isClose) return
-    //   if (attr=='wind_up') {
-    //     this.controlDevice('wind_up','on',{'wind_down':'off'})
-    //               .then(() =>{
-    //         this.hide()
-    //       })
-    //   }
-    //   if (attr=='wind_down') {
-    //      this.controlDevice('wind_down','on',{'wind_up':'off'})
-    //                .then(() =>{
-    //         this.hide()
-    //       })
-    //   }
-    //   if (this.deviceAttrs.wind_up=='on') {
-    //      if (attr=='wind_up') {
-    //        this.controlDevice('wind_up','off')
-    //         .then(() =>{
-    //           this.hide()
-    //         })
-    //      }
-    //   }
-    //    if (this.deviceAttrs.wind_down=='on') {
-    //      if (attr=='wind_down') {
-    //        this.controlDevice('wind_down','off')
-    //         .then(() =>{
-    //           this.hide()
-    //         })
-    //      }
-    //   }
-    // },
     // 设置风速
     setSpeed(speed) {
+      this.moveEnd = false
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
@@ -439,14 +457,6 @@ export default {
             ...param
           }
         }
-      })
-    },
-    // 重置动画
-    reset() {
-      // this.barColor = this.getBarColor()
-      this.progress = this.getProgress()
-      this.$nextTick(() => {
-        this.$refs.$circle.init()
       })
     },
     showSwing() {
@@ -471,21 +481,21 @@ export default {
       // if(this.$refs.speed.show) this.$refs.speed.show = false
     },
 
-    getProgress() {
-      // 计算温度进度条
-      if (this.deviceAttrs.temperature > MAX_TEMP) {
-        return 70 /(30 - 19) * (MAX_TEMP / 10 - 19)
-      }
-      if (this.deviceAttrs.mode=='heat') {
-        return 70 /(30 - 17) * (this.deviceAttrs.temperature / 10 - 17)
-      }else{
-        let wendu = this.deviceAttrs.temperature
-        if (wendu < 190) {
-          wendu = 190
-        }
-         return 70 /(30 - 19) * (wendu / 10 - 19)
-      }  
-    }
+    // getProgress() {
+    //   // 计算温度进度条
+    //   if (this.deviceAttrs.temperature > MAX_TEMP) {
+    //     return 70 /(30 - 19) * (MAX_TEMP / 10 - 19)
+    //   }
+    //   if (this.deviceAttrs.mode=='heat') {
+    //     return 70 /(30 - 17) * (this.deviceAttrs.temperature / 10 - 17)
+    //   }else{
+    //     let wendu = this.deviceAttrs.temperature
+    //     if (wendu < 190) {
+    //       wendu = 190
+    //     }
+    //      return 70 /(30 - 19) * (wendu / 10 - 19)
+    //   }  
+    // }
   }
 }
 </script>
@@ -540,11 +550,11 @@ export default {
     top: -40px;
     z-index: 9;
 
-    width: 190PX;
+     width: 430px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .control{
+     .control{
       outline: none;
       border: none;
       width: 72px;
@@ -552,12 +562,18 @@ export default {
       background: rgba(0,0,0,0.04);
       border-radius: 50%;
       &.add{
-        background-image: url(~@lib/base/fridge/assets/add.png);
-        background-size: 100% 100%;
+         width: 72px;
+         height: 72px;
+          background-image: url('~@lib/@{imgPath1}/up.png');
+          background-size: 70% 70%;
+          background-position: center;
       }
       &.reduce{
-        background-image: url(~@lib/base/fridge/assets/reduce.png);
-        background-size: 100% 100%;
+        width: 72px;
+         height: 72px;
+          background-image: url('~@lib/@{imgPath1}/down.png');
+          background-size: 70% 70%;
+          background-position: center;
       }
     }
   }
@@ -569,13 +585,13 @@ export default {
     }
     .wrap-circle{
       position: relative;
-      .bg{
+      .showtemp{
         position: absolute;
         top: 49%;
         left: 49.5%;
+        width: 280px;
+        height: 280px;
         transform: translate(-50%, -50%);
-        width: 84%;
-        height: 81%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -597,15 +613,11 @@ export default {
         .c-mode{
           position: absolute;
           transform: translate(-50%,-50%);
-          top: 80%;
+          top: 95%;
           left: 50%;
           width: 216px;
           height: 48px;
           font-size: 24px;
-          background: rgba(0,0,0,0.04);
-          // border: 1px solid rgba(0,0,0,0.05);
-          border-radius: 24px;
-          border-radius: 24px;
           text-align: center;
           line-height: 48px;
         }
@@ -684,7 +696,7 @@ export default {
         height: 44px;
       }
       &.active {
-        background: #000;
+         background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
       }
     }
     .btn-name {
@@ -723,18 +735,10 @@ export default {
         background-image: url('~@lib/@{imgPath1}/cold.png');
         background-size: 100% 100%;
       }
-      &.active::before {
-        background-image: url('~@lib/@{imgPath1}/cold1.png');
-        background-size: 100% 100%;
-      }
     }
     .btn-heat {
       &::before {
         background-image: url('~@lib/@{imgPath1}/heat.png');
-        background-size: 100% 100%;
-      }
-       &.active::before {
-        background-image: url('~@lib/@{imgPath1}/heat1.png');
         background-size: 100% 100%;
       }
     }
@@ -762,19 +766,11 @@ export default {
         background-image: url('~@lib/@{imgPath1}/wind.png');
         background-size: 100% 100%;
       }
-      &.active::before {
-        background-image: url('~@lib/@{imgPath1}/wind1.png');
-        background-size: 100% 100%;
-      }
     }
 
     .btn-dehumidify {
       &::before {
         background-image: url('~@lib/@{imgPath1}/dehumidify.png');
-        background-size: 100% 100%;
-      }
-      &.active::before {
-        background-image: url('~@lib/@{imgPath1}/dehumidify1.png');
         background-size: 100% 100%;
       }
     }
@@ -861,7 +857,7 @@ export default {
     .option1{
       padding: 0 40px;
       border-top: 1px solid rgba(0, 0, 0, 0.1);
-      .check{
+            .check{
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -879,20 +875,33 @@ export default {
             align-items: center;
             justify-content: space-between;
             .speedBtn{
-              width: 120px;
+              width: 96px;
               height: 64px;
-              border: 1px solid #000;
               text-align: center;
               line-height: 64px;
               font-family: PingFangSC-Light;
-              font-size: 24px;
+              font-size: 32px;
               margin-right: 20px;
+              color: #000;
+              opacity: .5;
               &:last-of-type{
                 margin-right: 0px;
               }
               &.active{
-                background-color: #000;
-                color: #fff;
+                opacity: 1;
+                position: relative;
+                &::before{
+                  display: block;
+                  content: "";
+                  width: 8px;
+                  height: 8px;
+                  border-radius: 50%;
+                  background: #000;
+                  position: absolute;
+                  bottom: 0;
+                  left: 50%;
+                  margin-left: -4px;
+                }
               }
             }
           }

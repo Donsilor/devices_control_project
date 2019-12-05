@@ -250,7 +250,7 @@ export default {
       let circle = this.$refs.right.offsetHeight
       let leftCurtainBox = this.$refs.leftCurtainBox
       let rightCurtainBox = this.$refs.rightCurtainBox
-      let maxWidth = this.$refs.imgBox.offsetWidth*0.49
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.495
       this.curtainWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft - this.$refs.stick.offsetLeft +circle/2 
       if(val=='right'){
         this.curtainWidth-=maxWidth 
@@ -264,7 +264,7 @@ export default {
     touchEnd(){
       this.myMove = true
       let circle = this.$refs.right.offsetHeight
-      let maxWidth = this.$refs.imgBox.offsetWidth*0.49
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.495
       this.range = 100-Math.round((this.curtainWidth-circle) / (maxWidth-circle) * 100)
       console.log(this.range)
       this.controlDevice('open_percentage',this.range)
@@ -273,7 +273,7 @@ export default {
     newRatio(){
       if(this.myMove)return
       let circle = this.$refs.right.offsetHeight
-      let maxWidth = this.$refs.imgBox.offsetWidth*0.49
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.495
       let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
       console.log(width,'width')
       console.log(circle)
@@ -419,7 +419,7 @@ getStyle(obj,attr){
           .left{ 
             position: absolute;
             top: 50%;
-            right: 0;
+            right: 1px;
             // width: 49%;
             height: 60px;
             margin-top: -30px;
@@ -441,7 +441,7 @@ getStyle(obj,attr){
           .right{ 
             position: absolute;
             top: 50%;
-            left: 0;
+            left: 1px;
             // width: 100%;
             height: 60px;
             margin-top: -30px;
