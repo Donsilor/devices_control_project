@@ -308,6 +308,11 @@ export default {
       },false)
 
       this.$refs.canvas.addEventListener(on.move, (e)=> {
+        if(e.preventDefault){
+            e.preventDefault()
+        }else{
+            e.returnValue = false
+        }
         console.log('move')
         // console.log(111111111,'222222')
           if (this.moveFlag) {

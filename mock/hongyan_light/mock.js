@@ -12,6 +12,7 @@ export function generateSnapShot() {
         code: 0,
         result: {
             "device_name": "智能筒灯",
+            "room_name": "卧室",
             "attribute": res
         }
     })
