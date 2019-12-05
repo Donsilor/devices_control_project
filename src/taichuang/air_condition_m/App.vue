@@ -68,22 +68,26 @@
           @click="shutdowncallback('on')" />
         <div class="btn-name">开机</div>
       </div>
+      <!-- 模式 -->
       <div
         v-show="!isOffline&&!isClose"
         class="panel-btn center">
         <div
+          v-show="modeType.indexOf(2)!==-1"
           class="btn-wrap"
           @click="setMode('cold')">
           <div :class="[{ 'active': deviceAttrs.mode == 'cold' }, 'btn btn-cold center']" />
           <div class="btn-name">制冷</div>
         </div>
         <div
+          v-show="modeType.indexOf(1)!==-1"
           class="btn-wrap"
           @click="setMode('heat')">
           <div :class="[ { 'active': deviceAttrs.mode == 'heat' }, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
         <div
+          v-show="modeType.indexOf(0)!==-1"
           class="btn-wrap"
           @click="setMode('auto')">
           <div :class="[ { 'active': deviceAttrs.mode == 'auto' }, 'btn btn-auto center']" />
@@ -91,30 +95,35 @@
             class="btn-name" >智能</div>
         </div>
         <div
+          v-show="modeType.indexOf(3)!==-1"
           class="btn-wrap"
           @click="setMode('wind')">
           <div :class="[{ 'active': deviceAttrs.mode == 'wind' }, 'btn btn-wind center']" />
           <div class="btn-name">送风</div>
         </div>
         <div
+          v-show="modeType.indexOf(4)!==-1"
           class="btn-wrap"
           @click="setMode('dehumidify')">
           <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
           <div class="btn-name">除湿</div>
         </div>
         <div
+          v-show="modeType.indexOf(5)!==-1"
           class="btn-wrap"
           @click="setMode('breath')">
           <div :class="[{ 'active': deviceAttrs.mode == 'breath' }, 'btn btn-breath center']" />
           <div class="btn-name">换气</div>
         </div>
         <div
+          v-show="modeType.indexOf(6)!==-1"
           class="btn-wrap"
           @click="setMode('sleep')">
           <div :class="[{ 'active': deviceAttrs.mode == 'sleep' }, 'btn btn-sleep center']" />
           <div class="btn-name">睡眠</div>
         </div>
         <div
+          v-show="modeType.indexOf(7)!==-1"
           class="btn-wrap"
           @click="setMode('fresh')">
           <div :class="[{ 'active': deviceAttrs.mode == 'fresh' }, 'btn btn-fresh center']" />
@@ -177,8 +186,7 @@
       <SelectTime
         ref="speed"
         :speed-type="speedType"
-        @selectedSpeed="setReserve"
-        @canceltime="canceltime" />
+        @selectedSpeed="setReserve" />
     </div>
   </div>
 </template>
@@ -187,7 +195,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex'
 import modelSpeed from './components/model-speed'
 import SelectTime from './components/time.vue'
-const [MIN_TEMP, MAX_TEMP] = [160, 300]
+// let [MIN_TEMP, MAX_TEMP] = [160, 300]
 export default {
   components: {
     // circleProgress,
@@ -198,17 +206,6 @@ export default {
   },
   data() {
     return {
-      isOpen: false,
-      isShow: true,
-      width: 250,
-      radius: 8,
-      radiusds: 12,
-      progress: 30, // 0~70
-      duration: 0,
-      delay: 0,
-      // barColor: '#D8D8D8',
-      dotColor:'#fff',
-      backgroundColor: '#ececec',
       timeShow: false,
       typeVal: 'hand',
       brightnessValue: 0,
@@ -228,7 +225,12 @@ export default {
       speedType:'',
       modeType:'',
       speedNum:'',
-      speedcount:'low'
+      speedcount:'low',
+      MIN_TEMP:'',
+      MAX_TEMP:'',
+      minTemp:'',
+      maxTemp:'',
+      stepLength:0,//步长
     }
   },
 
@@ -300,27 +302,41 @@ export default {
   },
   watch: {
     "device.stateChange"(){
-      this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
+      if (this.moveEnd == false) {
+        if (0.125+(0.75/this.stepLength)*(this.deviceAttrs.temperature/10-this.MIN_TEMP/10)) {
+          this.draw(`${0.125+(0.75/this.stepLength)*(this.deviceAttrs.temperature/10-this.MIN_TEMP/10)}`)
+        }
+      }
     },
-    "deviceAttrs"() {
-      this.tempType = this.deviceAttrs.selection.split(";")[0]
-      this.speedType = this.deviceAttrs.selection.split(";")[1]
-      this.speedNum = this.speedType.replace(/,/g, "")//取消字符串中出现的所有逗号 
-      this.modeType = this.deviceAttrs.selection.split(";")[2]
-      console.log(this.tempType,'tempType')
-      console.log(this.speedNum,'speedType')
-      console.log(this.modeType,'modeType')
-    }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
           this.tempType = this.deviceAttrs.selection.split(";")[0]
+          this.minTemp = this.tempType.split(",")[0]*10//160
+          this.maxTemp = this.tempType.split(",")[1]*10//300
+          //设置最低温和最高温
+          this.MIN_TEMP = this.minTemp
+          this.MAX_TEMP = this.maxTemp
+          //步数
+          this.stepLength = this.MAX_TEMP/10 - this.MIN_TEMP/10
+          console.log(this.stepLength,'9999')
+          
+          console.log(this.MIN_TEMP,'0000')
+          console.log(this.MAX_TEMP,'1111')
           this.speedType = this.deviceAttrs.selection.split(";")[1]
           this.speedNum = this.speedType.replace(/,/g, "")//取消字符串中出现的所有逗号 
           this.modeType = this.deviceAttrs.selection.split(";")[2]
-          this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
+          // this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
+          this.draw(`${0.125+(0.75/this.stepLength)*(this.deviceAttrs.temperature/10-this.MIN_TEMP/10)}`)
+          let a = `${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`
+          let b = `${0.125+(0.75/this.stepLength)*(this.deviceAttrs.temperature/10-this.MIN_TEMP/10)}`
+          console.log('a--->',a)
+          console.log('b--->',b)
+          console.log('temp', this.deviceAttrs.temperature)
+          console.log(`${0.125+(0.75/this.stepLength)*(this.deviceAttrs.temperature/10-this.MIN_TEMP/10)}`,'')
+          
           // this.reset()
         })
       HdSmart.UI.setStatusBarColor(2)
@@ -336,13 +352,15 @@ export default {
       }
         this.$refs.canvas.addEventListener(on.start,(e)=> {
           this.moveFlag = true
-          // console.log(e.targetTouches[0].clientX ,'鼠标的X')
-          // console.log(e.targetTouches[0].clientY ,'鼠标的Y')
       },false)
 
       this.$refs.canvas.addEventListener(on.move, (e)=> {
+        if(e.preventDefault){
+            e.preventDefault()
+        }else{
+            e.returnValue = false
+        }
         console.log('move')
-        // console.log(111111111,'222222')
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
               // console.log(e)
@@ -354,6 +372,7 @@ export default {
               console.log('r', r)
               console.log('hd', hd)
               // 半圆的滑动范围判断
+            
               if (hd <= 0.875 && hd >= 0.125) {
                   console.log('开始运动')
                   this.draw(hd)
@@ -364,9 +383,10 @@ export default {
       }, false)
 
       this.$refs.canvas.addEventListener(on.end,()=> {
-        // console.log(111111111,'3333333')
+        console.log(111111111,this.centigrade)
           this.moveFlag = false
           this.controlDevice('temperature',this.centigrade)
+          this.moveEnd = true
       }, false)
     })
   },
@@ -398,25 +418,11 @@ export default {
       }
         this.controlDevice('speed',this.speedcount)
     },
-    // 取消定时
-    canceltime(){
-       this.controlDevice('close_time','true')
-       .then((res) => {
-         if(res.code == 0) {
-           this.loaclAttr.close_time = true
-         } else {
-           HdSmart.UI.toast('操作失败')
-         }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
-       })
-    },
     offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
     },
-    draw(n) {
-      
+    draw(n) {   
+      console.log('hua', n)
       this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
       this.ctx.strokeStyle = "rgba(0,0,0,0.1)"
       this.ctx.lineWidth = 7
@@ -448,10 +454,15 @@ export default {
       this.ctx.font = "70px PingFangSC-Light"
       this.ctx.textAlign = "center"
       this.ctx.textBaseline = "middle"
-      this.ctx.fillText(Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))+"℃",this.ox,this.oy)
-      console.log( Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))+"℃",'温度')
-      this.thermography = Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))
-      this.centigrade = Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))*10
+      // this.ctx.fillText(Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))+"℃",this.ox,this.oy)
+      // this.ctx.fillText(Math.round((n*(this.stepLength/0.75))+(this.MIN_TEMP/10-((this.stepLength*0.125)/0.75)))+"℃",this.ox,this.oy)
+      this.thermography = Math.round((n*(this.stepLength/0.75))+(this.MIN_TEMP/10-((this.stepLength*0.125)/0.75)))
+      console.log("ccc", ((this.thermography)))
+      console.log("ddd", (this.MIN_TEMP/10-((this.stepLength*0.125)/0.75)))
+    
+      console.log(this.thermography,'121212')
+      
+      this.centigrade =  this.thermography*10
       this.ctx.fillStyle = "#fff"
       this.ctx.beginPath()
       let d =  this.offset(n*2*Math.PI,this.or)
@@ -483,15 +494,17 @@ export default {
     shutdowncallback(val){
       if (this.isOffline) return
       this.controlDevice('switch',val)
+      this.moveEnd = false
     },
     // 设置模式
     setMode(val) {
+      this.moveEnd = false
       if (val == this.deviceAttrs.mode || this.isClose) return
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
           if (this.deviceAttrs.mode=='wind') {
-            this.progress = 70 /(30 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
+            // this.progress = 70 /(30 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
             // this.$refs.$canvas.init()
             this.hide()
             return
@@ -501,25 +514,26 @@ export default {
         })
     },
     setTemperature(step) {
+      this.moveEnd = false
       // 送风模式不能设置温度
       if (this.deviceAttrs.mode === 'wind') {
         return HdSmart.UI.toast('送风模式不支持温度调节')
       }
       let temp = +this.deviceAttrs.temperature + step
       // 最小温度
-      if (temp < MIN_TEMP) {
-        if (this.deviceAttrs.temperature == MIN_TEMP) {
+      if (temp < this.MIN_TEMP) {
+        if (this.deviceAttrs.temperature == this.MIN_TEMP) {
           return HdSmart.UI.toast('温度已调至最低')
         } else {
-          temp = MIN_TEMP
+          temp = this.MIN_TEMP
         }
       }
       // 最大温度
-      if (temp > MAX_TEMP) {
-        if (this.deviceAttrs.temperature == MAX_TEMP) {
+      if (temp > this.MAX_TEMP) {
+        if (this.deviceAttrs.temperature == this.MAX_TEMP) {
           return HdSmart.UI.toast('温度已调至最高')
         } else {
-          temp = MAX_TEMP
+          temp = this.MAX_TEMP
         }
       }
       this.controlDevice('temperature', temp)
@@ -530,6 +544,7 @@ export default {
     },
     // 设置摆风
     setWind(attr) {
+      this.moveEnd = false
       if (this.isClose) return
       var val = this.deviceAttrs[attr] === 'on' ? 'off' : 'on'
       // if (this.deviceAttrs.wind_up_down=='on') {
@@ -545,6 +560,7 @@ export default {
     },
     // 设置风速
     setSpeed(speed, val) {
+      this.moveEnd = false
       this.typeVal = val
       if (this.deviceAttrs.mode=='wind'&&val=='auto') {
         this.typeVal = 'hand'

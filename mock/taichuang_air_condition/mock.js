@@ -17,9 +17,9 @@ var res = {
     device_name: '挂式空调',
     default_device_name: '挂式空调',
     attribute: {
-        selection:"16,30;0,2,3,5;0,1,2,3,4,5",
+        selection:"17,31;0,2,3,5;1,2,3,4,5,7",
         switchStatus: "on",
-        temperature: 170,
+        temperature: 200,
         env_temperature: 200,
         mode: 'cold',
         order_time:0,
