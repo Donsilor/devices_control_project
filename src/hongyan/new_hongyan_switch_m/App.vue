@@ -10,7 +10,39 @@
         <div class="bg center">
 
           <div
-            v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
+            v-if="deviceAttrs.list"
+            :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}, {'panelOne': deviceAttrs.chan_num == 1 && deviceAttrs.list && deviceAttrs.list.length == 1}]"
+            @click="setSwitch1"
+          >
+            <div
+              class="panel-btn center">
+              <div
+                :class="['btn-wrap', 'btn-wrap-four', {'btn-wrap-one': deviceAttrs.chan_num == 1 && deviceAttrs.list && deviceAttrs.list.length == 1}]">
+                <div
+                  :class="['btn-name', 'tis', {'tisActive': deviceAttrs.list[0].chan_status == 'on'}]"
+                />
+                <div
+                  :class="['btn-switch', 'center', {'active': deviceAttrs.list[0].chan_status == 'on'}]"
+                />
+                <div class="btn-name">{{ deviceAttrs.chan_num == 1 && deviceAttrs.list && deviceAttrs.list.length == 1 ? '开关' : '开关1' }}</div>
+              </div>
+            </div>
+          </div>
+          <!-- 配置开关 -->
+          <!-- <div
+            v-else
+            :class="['panel']"
+          >
+            <div
+              class="panel-btn center">
+              <div class="btn-wrap btn-wrap-four">
+                <div class="btn-add center" />
+                <div class="add-name">配置灯</div>
+              </div>
+            </div>
+          </div> -->
+          <div
+            v-if="deviceAttrs.chan_num != 1 && deviceAttrs.list && deviceAttrs.list[1]"
             :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}]"
             @click="setSwitch2"
           >
@@ -27,7 +59,7 @@
             </div>
           </div>
           <!-- 配置开关 -->
-          <div
+          <!-- <div
             v-else
             :class="['panel']"
           >
@@ -38,9 +70,9 @@
                 <div class="add-name">配置灯</div>
               </div>
             </div>
-          </div>
+          </div> -->
           <div
-            v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
+            v-if="deviceAttrs.chan_num != 1 && deviceAttrs.chan_num != 2 && deviceAttrs.list && deviceAttrs.list[2]"
             :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}]"
             @click="setSwitch3"
           >
@@ -57,7 +89,7 @@
             </div>
           </div>
           <!-- 配置开关 -->
-          <div
+          <!-- <div
             v-else
             :class="['panel']"
           >
@@ -68,41 +100,11 @@
                 <div class="add-name">配置灯</div>
               </div>
             </div>
-          </div>
+          </div> -->
 
-          <div
-            v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
-            :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}]"
-            @click="setSwitch1"
-          >
-            <div
-              class="panel-btn center">
-              <div class="btn-wrap btn-wrap-four">
-                <div
-                  :class="['btn-name', 'tis', {'tisActive': deviceAttrs.list[0].chan_status == 'on'}]"
-                />
-                <div
-                  :class="['btn-switch', 'center', {'active': deviceAttrs.list[0].chan_status == 'on'}]"
-                />
-                <div class="btn-name">开关1</div>
-              </div>
-            </div>
-          </div>
-          <!-- 配置开关 -->
-          <div
-            v-else
-            :class="['panel']"
-          >
-            <div
-              class="panel-btn center">
-              <div class="btn-wrap btn-wrap-four">
-                <div class="btn-add center" />
-                <div class="add-name">配置灯</div>
-              </div>
-            </div>
-          </div>
 
-          <div
+
+          <!-- <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[3].chan_status == 'on'}]"
             @click="setSwitch4"
@@ -118,9 +120,9 @@
                 <div class="btn-name">开关4</div>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- 配置开关 -->
-          <div
+          <!-- <div
             v-else
             :class="['panel']"
           >
@@ -131,7 +133,7 @@
                 <div class="add-name">配置灯</div>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- <div class="panel">
             <div class="panel-btn center">
               <div
@@ -187,7 +189,7 @@
         </div>
       </div>
       <!-- 按钮 -->
-      <div class="panel-btn-bottom">
+      <!-- <div class="panel-btn-bottom">
         <div class="panel-btn center">
           <div
             v-if="deviceAttrs.list"
@@ -209,7 +211,7 @@
             <div class="btn-name">全关</div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -229,18 +231,18 @@ export default {
     ...mapState(['device', 'deviceAttrs']),
   },
   watch: {
-    'deviceAttrs.list'() {
-      if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') {
-        this.flagOn = true
-      } else {
-        this.flagOn = true
-      }
-      if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') {
-        this.flagOff = true
-      } else {
-        this.flagOff = true
-      }
-    }
+    // 'deviceAttrs.list'() {
+    //   if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') {
+    //     this.flagOn = true
+    //   } else {
+    //     this.flagOn = true
+    //   }
+    //   if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') {
+    //     this.flagOff = true
+    //   } else {
+    //     this.flagOff = true
+    //   }
+    // }
   },
   created() {
     HdSmart.ready(() => {
@@ -372,7 +374,7 @@ export default {
   //   line-height: 24px;
   // }
   .main {
-    margin-top: 10%;
+    margin-top: 20%;
     position: relative;
     .bg {
       display: flex;
@@ -426,14 +428,17 @@ export default {
   }
   .panel {
     background: rgba(255, 255, 255, 0.5);
-    width: 294px;
-    height: 337px;
+    width: 214px;
+    height: 632px;
     display: flex;
     margin-bottom: 14px;
     margin-right: 14px;
   }
   .panelActive {
     background: #fff;
+  }
+  .panelOne {
+    width: 294px;
   }
   .panel-btn {
     // position: fixed;
@@ -464,6 +469,9 @@ export default {
   }
   .btn-wrap {
     &.btn-wrap-four {
+      width: 214px;
+    }
+    &.btn-wrap-one {
       width: 294px;
     }
     &.up-index {
@@ -490,7 +498,7 @@ export default {
       margin-bottom: 60px;
     }
     .tis {
-      margin: 0 auto 147px;
+      margin: 0 auto 442px;
       width: 48px;
       height: 8px;
       border-radius: 5px;
