@@ -11,7 +11,7 @@
         @shutdownCallback="shutdowncallback('off')" />
       <div class="main center">
         <div class="wrap-circle">
-          <div class="bg">
+          <div class="showtemp">
             <div
               v-if="loaclAttr.connectivity == 'offline'||loaclAttr.switchStatus=='off'||loaclAttr.mode=='auto'||loaclAttr.mode=='wind'"
               class="tm">-- <sup>°C</sup></div>
@@ -23,7 +23,18 @@
               v-if="!loaclAttr.switchStatus&&!loaclAttr.connectivity"
               class="tm">-- <sup>°C</sup></div>
           </div>
-          <circle-progress
+          <!-- 当不可调节温度时，显示这个盒子，可以挡着canvas，使它不能滑动 -->
+          <div 
+            v-show="loaclAttr.mode=='auto'||loaclAttr.mode=='wind'" 
+            class="cover"
+            @touchmove.prevent/>
+          <canvas 
+            ref="canvas"
+            class="canvas" 
+            width="280" 
+            height="280"
+          />
+          <!-- <circle-progress
             v-if="isShow"
             id="myId"
             ref="$circle"
@@ -38,7 +49,7 @@
             :delay="delay"
             :background-color="backgroundColor"
             class="progress"
-          />
+          /> -->
         </div>
         <div
           v-show="!isOffline&&!isClose"
@@ -222,9 +233,20 @@ export default {
       brightnessValue: 0,
       rangStyle: '',
       opcityStyle: 'opcity-0',
+            //圆的数据
+      ox:140,
+      oy:140,
+      or:130,
+      br:10,
+      moveFlag:false,
+      centigrade:0,//摄氏度
+      ctx: '',
+      //记录温度
+      thermography:16,
       animation:false,
       loaclAttr: {},
       setTemperatureDis: false,
+      moveEnd:false
     }
   },
 
@@ -292,25 +314,147 @@ export default {
   },
   watch: {
     "deviceAttrs"() {
+     
       this.loaclAttr = this.deviceAttrs
-      this.reset()
+      // this.reset()
       console.log('=============', this.loaclAttr.mode)
+    },
+    "device.stateChange"(){
+       if(!this.moveEnd){
+            this.draw(`${0.125+0.75/13*(this.loaclAttr.temperature/10-17)}`)
+
+       }
     }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-          this.reset()
+          // this.reset()
+          this.draw(`${0.125+0.053*(this.loaclAttr.temperature/10-16)}`)
+
         })
       HdSmart.UI.setStatusBarColor(2)
     })
   },
+  mounted(){
+    this.ctx = this.$refs.canvas.getContext("2d")
+    this.$nextTick(() => {
+      let on = ("ontouchstart" in document)? {
+          start: "touchstart", move: "touchmove", end: "touchend"
+      } : {
+          start: "mousedown", move: "mousemove", end: "mouseup"
+      }
+        this.$refs.canvas.addEventListener(on.start,(e)=> {
+          this.moveFlag = true
+          // console.log(e.targetTouches[0].clientX ,'鼠标的X')
+          // console.log(e.targetTouches[0].clientY ,'鼠标的Y')
+      },false)
+
+      this.$refs.canvas.addEventListener(on.move, (e)=> {
+        if(e.preventDefault){
+            e.preventDefault()
+        }else{
+            e.returnValue = false
+        }
+        console.log('move')
+        // console.log(111111111,'222222')
+          if (this.moveFlag) {
+              var k = this.getXY(e,this.$refs.canvas)
+              // console.log(e)
+              
+              // console.log(k.x-this.ox)
+              var r = Math.atan2(k.x-this.ox, this.oy-k.y)
+              var hd = (Math.PI+r)/(2*Math.PI)
+              console.log('k', k)
+              console.log('r', r)
+              console.log('hd', hd)
+              // 半圆的滑动范围判断
+              if (hd <= 0.875 && hd >= 0.125) {
+                  console.log('开始运动')
+                  this.draw(hd)
+              }else{
+                return
+              }
+          }
+      }, false)
+
+      this.$refs.canvas.addEventListener(on.end,()=> {
+        this.moveEnd = true 
+        this.moveFlag = false
+        this.controlDevice('temperature',this.centigrade)
+      }, false)
+    })
+  },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    offset(r,d) {//根据弧度与距离计算偏移坐标
+      return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
+    },
+    draw(n) {
+      
+      this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
+      this.ctx.strokeStyle = "rgba(0,0,0,0.1)"
+      this.ctx.lineWidth = 7
+      this.ctx.beginPath()
+      this.ctx.arc(this.ox,this.oy,this.or,1/4 * Math.PI,3/4 * Math.PI,true)//半圆(逆时针)
+      // this.ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true);//整圆
+      this.ctx.stroke()
+      if (this.loaclAttr.switchStatus=='on') {
+          if (this.loaclAttr.mode == 'heat') {
+            console.log('heat111')
+            this.ctx.strokeStyle = "#DA6C00"
+          }else if(this.loaclAttr.mode == 'cold'){
+            console.log('cold111')
+            this.ctx.strokeStyle = "#008CDA"
+          }else{
+            console.log('else')
+            this.ctx.strokeStyle = "#E1B96E"
+          }
+      }else{
+        this.ctx.strokeStyle = "transparent"
+      }
+      
+      this.ctx.lineWidth = 7
+      this.ctx.beginPath()
+      this.ctx.arc(this.ox,this.oy,this.or,3/4 *Math.PI,(n*2+0.5)*Math.PI,false)
+      // this.ctx.arc(this.ox,this.oy,this.or,0.5*Math.PI,(n*2+0.5)*Math.PI,false);
+      this.ctx.stroke()
+      this.ctx.fillStyle = "transparent"
+      this.ctx.font = "70px PingFangSC-Light"
+      this.ctx.textAlign = "center"
+      this.ctx.textBaseline = "middle"
+      this.ctx.fillText(Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))+"℃",this.ox,this.oy)
+      console.log( Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))+"℃",'温度')
+      this.thermography = Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))
+      this.centigrade = Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))*10
+      this.ctx.fillStyle = "#fff"
+      this.ctx.beginPath()
+      let d =  this.offset(n*2*Math.PI,this.or)
+      // console.log('d', d)
+      // 关机显示
+      if (this.loaclAttr.switchStatus=='on'&&!this.isOffline) {
+        this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
+      }else{
+        //开机显示
+        this.ctx.arc(0,0,0,0,0,true)
+      }
+      this.ctx.fill()
+    },
+    getXY(e,obj) {
+        let et = e.touches? e.touches[0] : e
+        let x = et.clientX
+        let y = et.clientY
+        return {
+            x : x - obj.offsetLeft + (document.body.scrollLeft || document.documentElement.scrollLeft)-30,
+            y : y - obj.offsetTop  + (document.body.scrollTop || document.documentElement.scrollTop) -145
+        }
+    },
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return
+        this.moveEnd = false
+
       this.controlDevice('switch',val)
         .then((res) => {
          if(res.code == 0) {
@@ -325,12 +469,14 @@ export default {
     },
     // 设置模式
     setMode(val) {
+        this.moveEnd = false
+
       if (val == this.loaclAttr.mode || this.isClose) return
       this.controlDevice('mode', val)
         .then((res) => {
          if(res.code == 0) {
             this.loaclAttr.mode = val
-            this.reset()
+            // this.reset()
             this.hide()
          } else {
            HdSmart.UI.toast('操作失败')
@@ -341,12 +487,18 @@ export default {
        })
     },
     setTemperature(step) {
+      console.log('点击了')
+        this.moveEnd = false
+
+      
       this.setTemperatureDis = true
+      console.log(this.loaclAttr.mode,'--------------11')
+      
       if(this.loaclAttr.mode == 'auto') {
         return HdSmart.UI.toast('自动模式不支持温度调节')
       }
       // 送风模式不能设置温度
-      if (this.deviceAttrs.mode === 'wind') {
+      if (this.loaclAttr.mode === 'wind') {
         return HdSmart.UI.toast('送风模式不支持温度调节')
       }
       let temp = +this.loaclAttr.temperature + step
@@ -371,7 +523,7 @@ export default {
          if(res.code == 0) {
             this.loaclAttr.temperature = temp
             this.setTemperatureDis = false
-             this.reset()
+            //  this.reset()
          } else {
            HdSmart.UI.toast('操作失败')
            this.setTemperatureDis = false
@@ -384,6 +536,8 @@ export default {
     },
     // 设置风速
     setSpeed(speed) {
+        this.moveEnd = false
+
       // if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
       //   return HdSmart.UI.toast('送风模式不能设置自动风速')
       // }
@@ -414,13 +568,13 @@ export default {
       })
     },
     // 重置动画
-    reset() {
-      // this.barColor = this.getBarColor()
-      this.progress = this.getProgress()
-      this.$nextTick(() => {
-        this.$refs.$circle.init()
-      })
-    },
+    // reset() {
+    //   // this.barColor = this.getBarColor()
+    //   this.progress = this.getProgress()
+    //   this.$nextTick(() => {
+    //     this.$refs.$circle.init()
+    //   })
+    // },
     showMode() {
       if (this.isClose) return
       this.$refs.mode.show = true
@@ -540,13 +694,13 @@ export default {
     }
     .wrap-circle{
       position: relative;
-      .bg{
+      .showtemp{
         position: absolute;
         top: 49%;
         left: 49.5%;
         transform: translate(-50%, -50%);
-        width: 84%;
-        height: 81%;
+        width: 280px;
+        height: 280px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -581,6 +735,13 @@ export default {
           text-align: center;
           line-height: 48px;
         }
+      }
+       .cover{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 560px;
+        height: 560px;
       }
     }
   }

@@ -207,7 +207,8 @@ export default {
       centigrade:0,//摄氏度
       ctx: '',
       //记录温度
-      thermography:17
+      thermography:17,
+      moveEnd:false
     }
   },
 
