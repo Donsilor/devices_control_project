@@ -206,7 +206,7 @@ export default {
       centigrade:0,//摄氏度
       ctx: '',
       //记录温度
-      thermography:17,
+      thermography:17
     }
   },
 
@@ -270,7 +270,8 @@ export default {
     },
   },
   watch: {
-        "device.stateChange"(){
+    "device.stateChange"(){
+      if(!this.moveEnd)
       this.draw(`${0.125+0.75/13*(this.deviceAttrs.temperature/10-17)}`)
     }
   },
@@ -328,6 +329,7 @@ export default {
       }, false)
 
       this.$refs.canvas.addEventListener(on.end,()=> {
+        this.moveEnd = true
         // console.log(111111111,'3333333')
           this.moveFlag = false
           this.controlDevice('temperature',this.centigrade)
@@ -401,11 +403,15 @@ export default {
     // 开关机
     shutdowncallback(val){
       if (this.isOffline) return
+        this.moveEnd = false
+
       this.controlDevice('switch',val)
     },
     // 设置模式
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose) return
+        this.moveEnd = false
+
       this.controlDevice('mode', val)
         .then(() => {
           this.deviceAttrs.mode = val
@@ -421,6 +427,8 @@ export default {
     },
     setTemperature(step) {
       // 送风模式不能设置温度
+        this.moveEnd = false
+
       if (this.deviceAttrs.mode === 'wind') {
         return HdSmart.UI.toast('送风模式不支持温度调节')
       }
@@ -450,6 +458,8 @@ export default {
     // 设置摆风
     setWind(attr) {
       if (this.isClose) return
+        this.moveEnd = false
+
       var val = this.deviceAttrs[attr] === 'on' ? 'off' : 'on'
       // if (this.deviceAttrs.wind_up_down=='on') {
       //   this.controlDevice('wind_left_right','off')
@@ -464,6 +474,8 @@ export default {
     },
     // 设置风速
     setSpeed(speed) {
+        this.moveEnd = false
+
       // console.log(speed, val)
       // this.typeVal = val
       // if (this.deviceAttrs.temperature == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
