@@ -75,8 +75,8 @@
         </div> -->
         <div
           class="btn-wrap"
-          @click="setSpeed(167)">
-          <div :class="[ { 'active': deviceAttrs.temperature == 167}, 'btn btn-bc center']" />
+          @click="setSpeed(370)">
+          <div :class="[ { 'active': deviceAttrs.temperature == 370 }, 'btn btn-bc center']" />
           <div class="btn-name">暖光</div>
         </div>
         <div
@@ -87,8 +87,8 @@
         </div>
         <div
           class="btn-wrap"
-          @click="setSpeed(370)">
-          <div :class="[{ 'active': deviceAttrs.temperature == 370 }, 'btn btn-rs center']" />
+          @click="setSpeed(167)">
+          <div :class="[{ 'active': deviceAttrs.temperature == 167 }, 'btn btn-rs center']" />
           <div class="btn-name">白光</div>
         </div>
       </div>

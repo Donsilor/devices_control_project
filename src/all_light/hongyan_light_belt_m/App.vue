@@ -34,7 +34,6 @@
           width="240"
           height="240"
         />
-        <div class="mask"/>
         <div class="tips">
           <span
             v-if="!isClose"
@@ -186,6 +185,7 @@ export default {
       }, false)
       this.$refs.canvas.addEventListener(on.end,()=> {
           this.moveFlag = false
+          if(parseInt(this.brightness*2.55) <= 15 && parseInt(this.brightness*2.55) > 0) return this.controlDevice('level',15)
           this.controlDevice('level',parseInt(this.brightness*2.55))
       }, false)
     })
@@ -372,14 +372,6 @@ export default {
   z-index: 2;
   position: absolute;
   width: 460px;
-}
-.mask {
-  position: absolute;
-  margin-top: 13%;
-  width: 300px;
-  height: 300px;
-  z-index: 3;
-  border-radius: 50%;
 }
 .small {
   background: url("~@lib/@{imgPath3}/btn_ac_on_zron@2x.png") no-repeat;

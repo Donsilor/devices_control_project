@@ -34,7 +34,6 @@
           width="240"
           height="240"
         />
-        <div class="mask"/>
         <div class="tips">
           <span
             v-if="!isClose"
@@ -64,15 +63,9 @@
         <!-- <span v-if="!isClose">亮度 {{ ratio }}%</span> -->
       </div>
       <!-- 按钮 -->
-      <div
+      <!-- <div
         v-if="!isClose"
         class="panel-btn center">
-        <!-- <div :class="[{'up-index': !isOffline }, 'btn-wrap']">
-          <div
-            :class="[{ 'active': !isClose }, 'btn-swich btn center']"
-            @click="setSwitch" />
-          <div class="btn-name">{{ isClose||isOffline?'开灯':'关灯' }}</div>
-        </div> -->
         <div
           class="btn-wrap"
           @click="setSpeed(167)">
@@ -91,7 +84,7 @@
           <div :class="[{ 'active': deviceAttrs.temperature == 370 }, 'btn btn-rs center']" />
           <div class="btn-name">白光</div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -372,14 +365,6 @@ export default {
   z-index: 2;
   position: absolute;
   width: 460px;
-}
-.mask {
-  position: absolute;
-  margin-top: 13%;
-  width: 300px;
-  height: 300px;
-  z-index: 3;
-  border-radius: 50%;
 }
 .small {
   background: url("~@lib/@{imgPath3}/btn_ac_on_zron@2x.png") no-repeat;
