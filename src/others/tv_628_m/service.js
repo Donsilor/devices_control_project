@@ -19,8 +19,12 @@ function sendApp(method, params, callback){
                 errormsg: data.errormsg
             }
         }
+
         if(error && method !== 'fuzzySearch'){
-            // HdSmart.UI.toast(error.errormsg)
+          
+          console.log(error.errormsg,'error.errormsg---------------------')
+          
+            HdSmart.UI.toast(error.errormsg)
         }
         callback && callback(error, data)
     })

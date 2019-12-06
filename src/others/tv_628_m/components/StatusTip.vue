@@ -16,6 +16,18 @@
       </div>
       <div>
         <div
+          v-if="tvStatus.tvOnlineStatus==0" 
+          class="offline_bar">
+          <div class="offline_bar_div">
+            <p class="offline_bar_p">
+              <i 
+                class="synchronization rotate"/>
+            </p>
+            <span class="link">状态同步中,&nbsp;&nbsp;请稍后...</span> 
+
+          </div>
+        </div>
+        <div
           v-if="tvStatus.tvOnlineStatus==-1" 
           class="offline_bar offline_bar_wifi"
           @click="goToOfflineHelpPage">
@@ -156,6 +168,12 @@
         background: url('~@lib/base/tv/assets/new/tv_icn_tips_nowifi@2x.png');
         background-size: 100% 100%;
       }
+      .synchronization{
+        width: 40px;
+        height: 40px;
+        background: url('~@lib/base/tv/assets/new/tv_icn_tips_tongbu.png');
+        background-size: 100% 100%;
+      }
      
     }
     .error{
@@ -185,6 +203,18 @@
     margin-right: 10px;
     font-size: 30px;
 }
+.rotate{
+  animation:changDeg 1.5s linear  infinite;
+
+}
+@keyframes changDeg{
+			0%{
+				transform: rotate(0deg);
+			}
+			100%{
+				transform: rotate(360deg);
+			}
+		}
 
 </style>
 
