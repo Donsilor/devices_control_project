@@ -5,6 +5,7 @@
     >
       <NewTopBar
         :title="device.device_name"
+        :room="device.room_name"
         :shutdown="isClose == false || isOffline == true"
         :scroll="true"
         bak-color="#000"
