@@ -87,9 +87,10 @@
       .submit{
         margin-top: 50px;
         outline: none;
-        background: #000;
+        background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
+        border: none;
         font-size: 32px;
-        color: #fff;
+        // color: #fff;
         text-align: center;
         width: 650px;
         height: 100px;
