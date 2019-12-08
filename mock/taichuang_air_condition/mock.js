@@ -36,7 +36,6 @@ var res = {
         timer_value:0,
         wind_up:'off',
         wind_down:'off',
-        close_time:'false'
     }
 }
 

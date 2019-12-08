@@ -1,7 +1,7 @@
 console.log(`argv_is_mock: ${argv_is_mock}`)
-// if (argv_is_mock || process.env.NODE_ENV == 'development') {
-//   require('@mock/somatosensor/index.js')
-// }
+if (argv_is_mock || process.env.NODE_ENV == 'development') {
+  require('@mock/somatosensor/index.js')
+}
 import Vue from 'vue'
 import App from './App.vue'
 

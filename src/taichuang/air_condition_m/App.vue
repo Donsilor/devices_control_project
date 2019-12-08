@@ -6,10 +6,8 @@
       <NewTopBar
         :title="device.device_name"
         :room="device.room_name"
-        :shutdown="isClose == false || isOffline == true"
         :scroll="true"
-        bak-color="#000"
-        @shutdownCallback="shutdowncallback('off')" />
+        bak-color="#000" />
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
@@ -44,7 +42,6 @@
           />
         </div>
         <div
-          v-show="!isOffline&&!isClose"
           class="control-tm center">
           <button
             class="control reduce"
@@ -63,36 +60,33 @@
       <!-- 底部按钮 -->
       <!-- 开关 -->
       <div
-        v-show="isOffline||isClose"
         class="starting">
         <div
-          class="btn btn-start"
-          @click="shutdowncallback('on')" />
-        <div class="btn-name">开机</div>
+          :class="[{'active': deviceAttrs.switchStatus == 'on'},'btn btn-start']"
+          @click="setSwitch" />
       </div>
       <!-- 模式 -->
       <div
-        v-show="!isOffline&&!isClose"
         class="panel-btn center">
         <div
           v-show="modeType.indexOf(2)!==-1"
           class="btn-wrap"
           @click="setMode('cold')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'cold' }, 'btn btn-cold center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-cold center']" />
           <div class="btn-name">制冷</div>
         </div>
         <div
           v-show="modeType.indexOf(1)!==-1"
           class="btn-wrap"
           @click="setMode('heat')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'heat' }, 'btn btn-heat center']" />
+          <div :class="[ { 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
         <div
           v-show="modeType.indexOf(0)!==-1"
           class="btn-wrap"
           @click="setMode('auto')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'auto' }, 'btn btn-auto center']" />
+          <div :class="[ { 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-auto center']" />
           <div
             class="btn-name" >智能</div>
         </div>
@@ -100,35 +94,35 @@
           v-show="modeType.indexOf(3)!==-1"
           class="btn-wrap"
           @click="setMode('wind')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'wind' }, 'btn btn-wind center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-wind center']" />
           <div class="btn-name">送风</div>
         </div>
         <div
           v-show="modeType.indexOf(4)!==-1"
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-dehumidify center']" />
           <div class="btn-name">除湿</div>
         </div>
         <div
           v-show="modeType.indexOf(5)!==-1"
           class="btn-wrap"
           @click="setMode('breath')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'breath' }, 'btn btn-breath center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'breath'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-breath center']" />
           <div class="btn-name">换气</div>
         </div>
         <div
           v-show="modeType.indexOf(6)!==-1"
           class="btn-wrap"
           @click="setMode('sleep')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'sleep' }, 'btn btn-sleep center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'sleep'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-sleep center']" />
           <div class="btn-name">睡眠</div>
         </div>
         <div
           v-show="modeType.indexOf(7)!==-1"
           class="btn-wrap"
           @click="setMode('fresh')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'fresh' }, 'btn btn-fresh center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'fresh'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-fresh center']" />
           <div class="btn-name">清爽</div>
         </div>
         <div
@@ -138,7 +132,6 @@
       <!-- 规格选择 -->
       <!-- 风速 -->
       <div
-        v-show="!isClose&&!isOffline"
         class="optionbox">
         <!-- 风速大于4种的时候展示 -->
         <div 
@@ -385,6 +378,7 @@ export default {
       }, false)
 
       this.$refs.canvas.addEventListener(on.end,()=> {
+        if (this.isOffline||this.isClose) return
         console.log(111111111,this.centigrade)
           this.moveFlag = false
           this.controlDevice('temperature',this.centigrade)
@@ -487,35 +481,44 @@ export default {
             y : y - obj.offsetTop  + (document.body.scrollTop || document.documentElement.scrollTop) -145
         }
     },
-    reset() {
-      this.$nextTick(() => {
-        // this.$refs.canvas.init()
-      })
-    },
+    // reset() {
+    //   this.$nextTick(() => {
+    //     // this.$refs.canvas.init()
+    //   })
+    // },
     // 开关机
-    shutdowncallback(val){
+    setSwitch(){
       if (this.isOffline) return
-      this.controlDevice('switch',val)
-      this.moveEnd = false
+        this.moveEnd = false
+      let switchstatus = ''
+      if (this.deviceAttrs.switchStatus=='on') {
+        switchstatus = 'off'
+      }else{
+        switchstatus = 'on'
+      }
+      this.controlDevice('switch',switchstatus)
     },
     // 设置模式
     setMode(val) {
       this.moveEnd = false
-      if (val == this.deviceAttrs.mode || this.isClose) return
+      if (val == this.deviceAttrs.mode || this.isClose||this.isOffline) return
       this.controlDevice('mode', val)
-        .then(() => {
-          this.deviceAttrs.mode = val
+        .then((res) => {
+          if(res.code == 0) {
+            this.deviceAttrs.mode = val
+          }
           if (this.deviceAttrs.mode=='wind') {
             // this.progress = 70 /(30 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
             // this.$refs.$canvas.init()
             this.hide()
             return
           }
-          this.reset()
+          // this.reset()
           this.hide()
         })
     },
     setTemperature(step) {
+      if (this.isOffline||this.isClose) return
       this.moveEnd = false
       // 送风模式不能设置温度
       if (this.deviceAttrs.mode === 'wind') {
@@ -539,15 +542,17 @@ export default {
         }
       }
       this.controlDevice('temperature', temp)
-        .then(() => {
-          this.deviceAttrs.temperature = temp
-          this.reset()
+        .then((res) => {
+          if(res.code==0){
+            this.deviceAttrs.temperature = temp
+          }
+          // this.reset()
         })
     },
     // 设置摆风
     setWind(attr) {
+      if (this.isOffline||this.isClose) return
       this.moveEnd = false
-      if (this.isClose) return
       var val = this.deviceAttrs[attr] === 'on' ? 'off' : 'on'
       // if (this.deviceAttrs.wind_up_down=='on') {
       //   this.controlDevice('wind_left_right','off')
@@ -562,6 +567,7 @@ export default {
     },
     // 设置风速
     setSpeed(speed, val) {
+      if (this.isOffline||this.isClose) return
       this.moveEnd = false
       this.typeVal = val
       if (this.deviceAttrs.mode=='wind'&&val=='auto') {
@@ -757,28 +763,31 @@ export default {
     color: #20282B;
   }
   .starting{
-    margin-top: 15vh;
+    margin-top: 158px;
      .btn-start{
-        z-index: 999999;
+        z-index: 999;
         box-sizing: border-box;
         margin: 0 auto;
-        width: 120px;
-        height: 120px;
+        width: 132px;
+        height: 132px;
         // border: 1px solid #818181;
         background: rgba(0, 0, 0, 0.1);
         border-radius: 50%;
         position: relative;
+        &.active{
+          background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        }
         &::before{
           content: "";
           position: absolute;
           left: 50%;
           top: 50%;
-          margin-left: -22px;
-          margin-top: -22px;
+          margin-left: -24px;
+          margin-top: -24px;
           background-image: url('~@lib/@{imgPath1}/dakai3@2x.png');
           background-size: 100% 100%;
-          width: 44px;
-          height: 44px;
+          width: 48px;
+          height: 48px;
         }
      }
       .btn-name{
@@ -792,7 +801,7 @@ export default {
     overflow-x: auto;
     display: -webkit-box;
     z-index: 9999;
-    margin-top: 130px;
+    margin-top: 60px;
     /*适应苹果*/
     -webkit-overflow-scrolling: touch;
 
@@ -1129,9 +1138,6 @@ export default {
         }
       }
     }
-    .panel-btn {
-      background: #efefef;
-    }
     .btn-wrap {
       opacity: .2;
       &.up-index {
@@ -1143,6 +1149,9 @@ export default {
           border: 1px solid #818181;
         }
       }
+    }
+    .optionbox{
+      opacity: .2;
     }
   }
 }

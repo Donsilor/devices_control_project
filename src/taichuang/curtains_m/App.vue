@@ -17,18 +17,11 @@
             <div 
               ref="leftCurtainBox" 
               class="leftCurtainBox"
-              @touchstart="touchStart($event)"
-              @touchmove="touchMove($event,'left')"
-              @touchend="touchEnd($event)">
+            >
               <img 
                 ref="curtainLeft"
                 class="curtainLeft" 
                 src="../../../lib/base/new_curtains/assets/single.png">
-              <img 
-                ref="left"
-                class="left" 
-                src="../../../lib/base/new_curtains/assets/left.png"
-              >
             </div>
             <div 
               ref="rightCurtainBox" 
@@ -39,12 +32,7 @@
               <img 
                 ref="curtainRight"
                 class="curtainRight" 
-                src="../../../lib/base/new_curtains/assets/single.png">
-              <img 
-                ref="right"
-                class="right" 
-                src="../../../lib/base/new_curtains/assets/right.png"
-              >
+                src="../../../lib/base/new_curtains/assets/single.png">  
             </div>
           </div>
         </div>
@@ -95,7 +83,9 @@ export default {
       myMove:false,
       curtainWidth:0,
       curtainStatusText:'',
-      count: 0
+      count: 0,
+      leftCurtainBox:'',
+      rightCurtainBox:'',
     }
   },
   computed: {
@@ -108,21 +98,12 @@ export default {
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
-      .then(()=>{
-        // this.newRatio()
-        if (this.deviceAttrs.open_percentage=='100') {
-          this.curtainStatusText = '窗帘已打开'
-        }
-        if (this.deviceAttrs.open_percentage=='0') {
-          this.curtainStatusText = '窗帘已关闭'
-        }
-      })
       HdSmart.UI.setStatusBarColor(2)
     })
   },
   mounted(){
-        // console.log(this.animate,'4444444444')
-        
+    this.leftCurtainBox = this.$refs.leftCurtainBox
+    this.rightCurtainBox = this.$refs.rightCurtainBox
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
@@ -133,20 +114,15 @@ export default {
         this.$refs['btn-open'].classList.remove('active')
       },500)
       this.btnActive = 'open'
-      // this.curtainStatusText = '正在打开窗帘'
-      this.myMove = false
-      let leftCurtainBox = this.$refs.leftCurtainBox
-      let rightCurtainBox = this.$refs.rightCurtainBox
-      // let rightCurtainBox = this.$refs.rightCurtainBox
       this.controlDevice('switch', 'on')
       .then((res)=>{
         if (res.code==0) {
-          leftCurtainBox.classList.add('setOpen')
-          rightCurtainBox.classList.add('setOpen')
-          leftCurtainBox.classList.remove('setClose')
-      rightCurtainBox.classList.remove('setClose')
-          console.log('99999999')
-          
+          this.leftCurtainBox.classList.add('setOpen')
+          this.rightCurtainBox.classList.add('setOpen')
+          this.leftCurtainBox.classList.remove('setClose')
+          this.rightCurtainBox.classList.remove('setClose')
+          this.leftCurtainBox.classList.remove('pause')
+          this.rightCurtainBox.classList.remove('pause')
         }else{
           HdSmart.UI.toast('操作失败')
         }
@@ -154,23 +130,21 @@ export default {
     },
     //全关
     setClose(){
-      
       this.$refs['btn-close'].classList.add('active')
       setTimeout(()=>{
         this.$refs['btn-close'].classList.remove('active')
       },500)
       this.btnActive = 'close'
-      // this.curtainStatusText = '正在关闭窗帘'
-      this.myMove = false
-      let leftCurtainBox = this.$refs.leftCurtainBox
-      let rightCurtainBox = this.$refs.rightCurtainBox
-      leftCurtainBox.classList.remove('setOpen')
-      rightCurtainBox.classList.remove('setOpen')
       this.controlDevice('switch', 'off')
       .then((res)=>{
         if (res.code==0) {
-          leftCurtainBox.classList.add('setClose')
-          rightCurtainBox.classList.add('setClose')
+          console.log(this.leftCurtainBox.offsetWidth,this.$refs.imgBox.offsetWidth*0.5,'5555555')
+            this.leftCurtainBox.classList.add('setClose')
+            this.rightCurtainBox.classList.add('setClose')
+            this.leftCurtainBox.classList.remove('setOpen')
+            this.rightCurtainBox.classList.remove('setOpen')
+            this.leftCurtainBox.classList.remove('pause')
+            this.rightCurtainBox.classList.remove('pause')
         }else{
           HdSmart.UI.toast('操作失败')
         }
@@ -180,12 +154,20 @@ export default {
     setPause(){
       this.btnActive = 'pause'
       this.curtainStatusText = ''
-      this.myMove = false
       this.$refs['btn-pause'].classList.add('active')
       setTimeout(()=>{
         this.$refs['btn-pause'].classList.remove('active')
       },500)
       this.controlDevice('switch', 'pause')
+      .then((res)=>{
+        if (res.code==0) {
+          this.leftCurtainBox.classList.add('pause')
+          this.rightCurtainBox.classList.add('pause')
+          console.log('99999999')
+        }else{
+          HdSmart.UI.toast('操作失败')
+        }
+      })
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
@@ -210,7 +192,7 @@ getStyle(obj,attr){
 @imgPath: 'base/new_curtains/assets';
 .setOpen{
   animation: open 1s linear;
-  animation-fill-mode : forwards;
+  animation-fill-mode:forwards;
 }
 @keyframes open {
   0%{
@@ -231,6 +213,10 @@ getStyle(obj,attr){
   100%{
     width: 50%;
   }
+}
+//暂停动画
+.pause{
+	animation-play-state:paused;
 }
 .body {
   min-height: 100%;
@@ -273,8 +259,8 @@ getStyle(obj,attr){
         .leftCurtainBox{
           position: absolute;
           top: 0;
-          left: 1%;
-          width: 49%;
+          left: 2px;
+          width: 50%;
           height: 500px;
           overflow: hidden;
           .curtainLeft{
@@ -284,35 +270,19 @@ getStyle(obj,attr){
             height: 500px;
             position: absolute;
           }
-          .left{ 
-            position: absolute;
-            top: 50%;
-            right: 1px;
-            // width: 49%;
-            height: 60px;
-            margin-top: -30px;
-          }
         }
         .rightCurtainBox{
            position: absolute;
            top: 0;
-           width: 49%;
+           width: 50%;
            height: 500px;
-           right: 1%;
+           right: 2px;
            overflow: hidden;
           .curtainRight{
             top: 0;
             width: 100%;
             height: 500px;
             position: absolute;
-          }
-          .right{ 
-            position: absolute;
-            top: 50%;
-            left: 1px;
-            // width: 100%;
-            height: 60px;
-            margin-top: -30px;
           }
         }
       }
