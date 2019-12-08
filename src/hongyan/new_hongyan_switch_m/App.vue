@@ -24,7 +24,7 @@
                 <div
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[0].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.chan_num == 1 && deviceAttrs.list && deviceAttrs.list.length == 1 ? '开关' : '开关1' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[0].chan_name?deviceAttrs.list[0].chan_name:'开关1' }}</div>
               </div>
             </div>
           </div>
@@ -54,7 +54,7 @@
                 <div
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[1].chan_status == 'on'}]"
                 />
-                <div class="btn-name">开关2</div>
+                <div class="btn-name">{{ deviceAttrs.list[1].chan_name?deviceAttrs.list[1].chan_name:'开关2' }}</div>
               </div>
             </div>
           </div>
@@ -84,7 +84,7 @@
                 <div
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[2].chan_status == 'on'}]"
                 />
-                <div class="btn-name">开关3</div>
+                <div class="btn-name">{{ deviceAttrs.list[2].chan_name?deviceAttrs.list[2].chan_name:'开关3' }}</div>
               </div>
             </div>
           </div>
