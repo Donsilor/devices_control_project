@@ -34,6 +34,7 @@
           width="240"
           height="240"
         />
+        <div class="mask"/>
         <div class="tips">
           <span
             v-if="!isClose"
@@ -372,6 +373,14 @@ export default {
   z-index: 2;
   position: absolute;
   width: 460px;
+}
+.mask {
+  position: absolute;
+  margin-top: 13%;
+  width: 300px;
+  height: 300px;
+  z-index: 3;
+  border-radius: 50%;
 }
 .small {
   background: url("~@lib/@{imgPath3}/btn_ac_on_zron@2x.png") no-repeat;
