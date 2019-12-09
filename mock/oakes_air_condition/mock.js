@@ -37,6 +37,11 @@ var res = {
         wind_up:'off',
         wind_down:'off',
         close_time:'false'
+    },
+    third_attribute:{
+      "selection":"16,30;0,1,2,3,4;0,1,2,3",
+      "id":"10",
+      "tantron_id":"b5dc664042c5edab"
     }
 }
 

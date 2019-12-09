@@ -4,6 +4,7 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
+        :room="device.room_name"
         bak-color="#000" />
       <!-- tab切换栏 -->
       <!-- <mt-datetime-picker
@@ -21,14 +22,13 @@
         class="main center">
         <div class="bg"><div class="circle"><div class="status">{{ switchValue=='open'?'通电中':'断电中' }}</div></div></div>
       </div>
-      <div
+      <!-- <div
         v-if="delayClose.countdownClose && delayClose.closeEnable=='y'"
         class="status1">{{ delayClose.countdownClose | delayTime }}后延时断电</div>
       <div
         v-else-if="delayOpen.countdownOpen && delayOpen.openEnable=='y'"
-        class="status1">{{ delayOpen.countdownOpen | delayTime }}后延时通电</div>
+        class="status1">{{ delayOpen.countdownOpen | delayTime }}后延时通电</div> -->
       <div
-        v-else
         class="status1">&nbsp;</div>
       <div
         v-show="!isOffline"
@@ -37,9 +37,9 @@
           class="btn-wrap"
           @click="setSwitch">
           <div :class="[{ 'btn-source': switchValue == 'close' },{ 'btn-over': switchValue == 'open' } ,'btn btn-source center']" />
-          <div class="btn-name">{{ switchValue=='open'?'断电':'通电' }}</div>
+          <!-- <div class="btn-name">{{ switchValue=='open'?'断电':'通电' }}</div> -->
         </div>
-        <div
+        <!-- <div
           v-if="(delayOpen.openEnable=='y' && switchValue == 'close') || (delayClose.closeEnable=='y' && switchValue == 'open')"
           class="btn-wrap">
           <div
@@ -55,8 +55,8 @@
             </div>
           </div>
           <div class="btn-name">取消延迟</div>
-        </div>
-        <div
+        </div> -->
+        <!-- <div
           v-else-if="switchValue == 'open'"
           class="btn-wrap"
           @click="showTime('设置延时断电')">
@@ -69,12 +69,59 @@
           @click="showTime('设置延时通电')">
           <div :class="['btn btn-delay center']" />
           <div class="btn-name">延时通电</div>
-        </div>
+        </div> -->
 
       </div>
 
       <div class="bottom">
-        <div class="timing">
+        <div
+          v-if="(delayOpen.openEnable=='y' && switchValue == 'close') || (delayClose.closeEnable=='y' && switchValue == 'open')"
+          class="timing"
+          @click="showMode">
+          <div>取消延迟</div>
+          <div
+            v-if="delayClose.countdownClose && delayClose.closeEnable=='y'"
+            class="timing-right">{{ delayClose.countdownClose | delayTime }}后延时断电 ＞ </div>
+          <div
+            v-else-if="delayOpen.countdownOpen && delayOpen.openEnable=='y'"
+            class="timing-right">{{ delayOpen.countdownOpen | delayTime }}后延时通电 ＞ </div>
+        </div>
+        <div
+          v-else-if="switchValue=='open'"
+          class="timing"
+          @click="showTime('设置延时断电')">
+          <div>延时断电</div>
+          <div
+            class="timing-right">＞ </div>
+        </div>
+        <div
+          v-else-if="switchValue == 'close'"
+          class="timing"
+          @click="showTime('设置延时通电')">
+          <div>延时通电</div>
+          <div
+            class="timing-right">＞ </div>
+        </div>
+      </div>
+
+      <div class="bottom margin-none">
+        <div
+          v-if="switchValue=='open'"
+          class="timing"
+          @click="showTime('设置断电时间')">
+          <div>定时</div>
+          <div
+            class="timing-right">{{ timer.closeEnable == 'y'?timer.closeTime + ' 断电':'' }}＞ </div>
+        </div>
+        <div
+          v-else
+          class="timing"
+          @click="showTime('设置通电时间')">
+          <div>定时</div>
+          <div
+            class="timing-right">{{ timer.openEnable == 'y'?timer.openTime + ' 通电':'' }}＞ </div>
+        </div>
+        <!-- <div class="timing">
           <div>定时</div>
           <div
             v-if="switchValue=='open'"
@@ -84,7 +131,7 @@
             v-else
             class="timing-right"
             @click="showTime('设置通电时间')">{{ timer.openEnable == 'y'?timer.openTime + ' 通电':'' }}＞ </div>
-        </div>
+        </div> -->
         <!-- <div class="Charging-protection">
           <div>充电保护</div>
           <div
@@ -102,6 +149,10 @@
         :title="title"
         @selectedTime="setReserve"
         @canceltime="canceltime" />
+      <!--取消延时-->
+      <model-swing
+        ref="swing"
+        @setWind="setWind" />
     </div>
   </div>
 </template>
@@ -110,9 +161,11 @@
 // import Swiper from 'swiper'
 import { mapGetters, mapState, mapActions } from 'vuex'
 import SelectTime from './components/time.vue'
+import modelSwing from './components/model-swing'
 export default {
  components: {
-    SelectTime
+    SelectTime,
+    modelSwing
   },
   data() {
     return {
@@ -336,11 +389,18 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    openPicker() {
-      let time = this.getDateTime(new Date(), 'picker')
-      this.openPickerH = time + 1
-      this.$refs.picker.open()
+    showMode() {
+      this.$refs.swing.show = true
     },
+    // 取消延时
+    setWind() {
+      this.longPress()
+    },
+    // openPicker() {
+    //   let time = this.getDateTime(new Date(), 'picker')
+    //   this.openPickerH = time + 1
+    //   this.$refs.picker.open()
+    // },
     // 开关机
     setSwitch(){
       if (this.isOffline) return
@@ -410,6 +470,7 @@ export default {
         }
         this.controlDevice('remove_time', obj)
         .then((res) => {
+          if(this.$refs.swing.show) this.$refs.swing.show = false
           if(res.code == 0) {
             clearTimeout(this.timeOutDelay)
             this.timeOutEvent = 0
@@ -722,6 +783,7 @@ export default {
 @imgPath: 'base/new_curtains/assets';
 @imgPath1: 'base/dishwasher/assets';
 @imgPath2: 'base/kongke_plug/assets';
+@imgPath3: 'base/honghan_switch/assets';
 * { touch-action: pan-y; }
 @keyframes progress-bar{
   0% {
@@ -741,7 +803,7 @@ export default {
   min-height: 550px;
   overflow-x: hidden;
   position: relative;
-  background-image: url('~@lib/@{imgPath}/bg_img@2x.png');
+  background-image: url('~@lib/@{imgPath3}/bg02.png');
   background-size: 100% 100%;
   .switch {
     width: 74px;
@@ -794,10 +856,17 @@ export default {
   };
   .bottom{
     width: 100%;
-
+    z-index: 999;
     margin-top: 40px;
+    &.margin-none {
+      margin-top: 0;
+      .timing {
+        border-top: none;
+      }
+    }
     .timing,.Charging-protection{
-       padding: 0 40px;
+      z-index: 999;
+      padding: 0 40px;
       display: flex;
       justify-content: space-between;
       font-family: PingFangSC-Regular;
@@ -832,7 +901,7 @@ export default {
         width: 420px;
         height: 420px;
         border-radius: 50%;
-        border: 1px solid rgba(0, 0, 0, 0.1);
+        // border: 1px solid rgba(0, 0, 0, 0.1);
         position: absolute;
         top: 50%;
         left: 50%;
@@ -943,13 +1012,15 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid #818181;
+      // border: 1px solid #818181;
       border-radius: 50%;
       display: flex;
       justify-content: space-around;
       flex-direction: column;
       position: relative;
+
       &.btn-source{
+        background: rgba(0,0,0,0.05);
         &::before{
           content: "";
           position: absolute;
@@ -957,13 +1028,14 @@ export default {
           top: 50%;
           margin-left: -22px;
           margin-top: -22px;
-          background-image: url('~@lib/@{imgPath2}/tongdian.png');
+          background-image: url('~@lib/base/air_cleaner/assets/new-air/swich-black.png');
           background-size: 100% 100%;
           width: 44px;
           height: 44px;
         }
       }
       &.btn-over{
+        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
         &::before{
           content: "";
           position: absolute;
@@ -971,7 +1043,7 @@ export default {
           top: 50%;
           margin-left: -22px;
           margin-top: -22px;
-          background-image: url('~@lib/@{imgPath2}/duandian.png');
+          background-image: url('~@lib/base/air_cleaner/assets/new-air/swich-black.png');
           background-size: 100% 100%;
           width: 44px;
           height: 44px;
@@ -1097,17 +1169,17 @@ export default {
   }
   &.close,
   &.offline {
-    &:before {
-      content: "";
-      position: fixed;
-      top: 64PX;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      z-index: 999;
-      width: 100%;
-      // background: rgba(0, 0, 0, 0.1);
-    }
+    // &:before {
+    //   content: "";
+    //   position: fixed;
+    //   top: 64PX;
+    //   left: 0;
+    //   bottom: 0;
+    //   right: 0;
+    //   z-index: 999;
+    //   width: 100%;
+    //   background: rgba(0, 0, 0, 0.1);
+    // }
     &.page {
       ul{
         li{

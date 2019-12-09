@@ -6,10 +6,8 @@
       <NewTopBar
         :title="device.device_name"
         :room="device.room_name"
-        :shutdown="isClose == false || isOffline == true"
         :scroll="true"
-        bak-color="#000"
-        @shutdownCallback="shutdowncallback('off')" />
+        bak-color="#000"/>
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
@@ -32,19 +30,18 @@
               :class="[loaclAttr.mode, 'c-mode']">室内温度--℃</div>
           </div>
           <!-- 当不可调节温度时，显示这个盒子，可以挡着canvas，使它不能滑动 -->
-          <div 
-            v-if="loaclAttr.mode=='wind'||loaclAttr.mode=='auto'" 
+          <div
+            v-if="loaclAttr.mode=='wind'||loaclAttr.mode=='auto'"
             class="cover"
             @touchmove.prevent/>
-          <canvas 
+          <canvas
             ref="canvas"
-            class="canvas" 
-            width="280" 
+            class="canvas"
+            width="280"
             height="280"
           />
         </div>
         <div
-          v-show="!isOffline&&!isClose"
           class="control-tm center">
           <button
             class="control reduce"
@@ -63,45 +60,42 @@
       <!-- 底部按钮 -->
       <!-- 开关 -->
       <div
-        v-show="isOffline||isClose"
         class="starting">
         <div
-          class="btn btn-start"
-          @click="shutdowncallback('on')" />
-        <div class="btn-name">开机</div>
+          :class="[{'active': loaclAttr.switchStatus == 'on'},'btn btn-start']"
+          @click="setSwitch" />
       </div>
       <div
-        v-show="!isOffline&&!isClose"
         class="panel-btn center">
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div :class="[{ 'active': loaclAttr.mode == 'cold' }, 'btn btn-cold center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'cold' && loaclAttr.switchStatus == 'on' }, 'btn btn-cold center']" />
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div :class="[ { 'active': loaclAttr.mode == 'heat' }, 'btn btn-heat center']" />
+          <div :class="[ { 'active': loaclAttr.mode == 'heat' && loaclAttr.switchStatus == 'on' }, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('auto')">
-          <div :class="[ { 'active': loaclAttr.mode == 'auto' }, 'btn btn-auto center']" />
+          <div :class="[ { 'active': loaclAttr.mode == 'auto' && loaclAttr.switchStatus == 'on' }, 'btn btn-auto center']" />
           <div
             class="btn-name" >智能</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div :class="[{ 'active': loaclAttr.mode == 'wind' }, 'btn btn-wind center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'wind' && loaclAttr.switchStatus == 'on' }, 'btn btn-wind center']" />
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': loaclAttr.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'dehumidify' && loaclAttr.switchStatus == 'on' }, 'btn btn-dehumidify center']" />
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -111,26 +105,25 @@
       <!-- 规格选择 -->
       <!-- 风速 -->
       <div
-        v-show="!isClose&&!isOffline"
         class="optionbox">
         <div class="option1">
           <div class="check">
             <span>风速</span>
-            <div 
+            <div
               class="checkBox">
-              <div 
-                :class="[{ 'active': loaclAttr.speed == 'low'},'speedBtn']" 
+              <div
+                :class="[{ 'active': loaclAttr.speed == 'low'},'speedBtn']"
                 @click="setSpeed('low')">低</div>
-              <div 
-                :class="[{ 'active': loaclAttr.speed == 'normal'},'speedBtn']" 
+              <div
+                :class="[{ 'active': loaclAttr.speed == 'normal'},'speedBtn']"
                 @click="setSpeed('normal')">中</div>
-              <div 
-                :class="[{ 'active': loaclAttr.speed == 'high'},'speedBtn']" 
+              <div
+                :class="[{ 'active': loaclAttr.speed == 'high'},'speedBtn']"
                 @click="setSpeed('high')">高</div>
-              <div 
+              <div
                 v-if="loaclAttr.mode!='wind'"
-                :class="[{ 'active': loaclAttr.speed == 'auto'},'speedBtn']" 
-                @click="setSpeed('auto')">自动</div> 
+                :class="[{ 'active': loaclAttr.speed == 'auto'},'speedBtn']"
+                @click="setSpeed('auto')">自动</div>
             </div>
           </div>
         </div>
@@ -347,7 +340,7 @@ export default {
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
               // console.log(e)
-              
+
               // console.log(k.x-this.ox)
               var r = Math.atan2(k.x-this.ox, this.oy-k.y)
               var hd = (Math.PI+r)/(2*Math.PI)
@@ -365,19 +358,21 @@ export default {
       }, false)
 
       this.$refs.canvas.addEventListener(on.end,()=> {
+        if (this.isOffline||this.isClose) return
         // console.log(111111111,'3333333')
           this.moveFlag = false
           this.controlDevice('temperature',this.centigrade)
-            .then((res) => {
-         if(res.code == 0) {
-           this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
-         } else {
-           HdSmart.UI.toast('操作失败')
-         }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
-       })
+          .then((res) => {
+            if(res.code == 0) {
+            this.loaclAttr.temperature = this.centigrade
+            this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
+            } else {
+            HdSmart.UI.toast('操作失败')
+            }
+          })
+          .catch(() => {
+            HdSmart.UI.toast('操作失败')
+          })
       }, false)
     })
   },
@@ -408,7 +403,7 @@ export default {
       }else{
         this.ctx.strokeStyle = "transparent"
       }
-      
+
       this.ctx.lineWidth = 7
       this.ctx.beginPath()
       this.ctx.arc(this.ox,this.oy,this.or,3/4 *Math.PI,(n*2+0.5)*Math.PI,false)
@@ -469,9 +464,30 @@ export default {
     //    })
     // },
     // 开关机
-    shutdowncallback(val){
+    // shutdowncallback(val){
+    //   if (this.isOffline) return
+    //   this.controlDevice('switch',val)
+    //   .then((res) => {
+    //      if(res.code == 0) {
+    //        this.loaclAttr.switchStatus = val
+    //      } else {
+    //        HdSmart.UI.toast('操作失败')
+    //      }
+    //    })
+    //    .catch(() => {
+    //      HdSmart.UI.toast('操作失败')
+    //    })
+    // },
+    // 开关机
+    setSwitch(){
       if (this.isOffline) return
-      this.controlDevice('switch',val)
+      let switchstatus = ''
+      if (this.loaclAttr.switchStatus=='on') {
+        switchstatus = 'off'
+      }else{
+        switchstatus = 'on'
+      }
+      this.controlDevice('switch',switchstatus)
       .then((res) => {
          if(res.code == 0) {
            this.loaclAttr.switchStatus = val
@@ -500,6 +516,7 @@ export default {
        })
     },
     setTemperature(step) {
+      if (this.isOffline||this.isClose) return
       if(this.loaclAttr.mode == 'auto') {
         return HdSmart.UI.toast('智能模式不支持温度调节')
       }
@@ -548,7 +565,7 @@ export default {
       //    this.controlDevice('wind_up_down','off')
       // }
       console.log(attr,val,'2222222222222222222222')
-      
+
       this.controlDevice(attr, val)
         .then((res) => {
          if(res.code == 0) {
@@ -564,6 +581,7 @@ export default {
     },
     // 设置风速
     setSpeed(speed) {
+      if (this.isOffline||this.isClose) return
       if(this.loaclAttr.mode == 'wind' && speed == 'auto') {
         return HdSmart.UI.toast('送风模式不能设置自动风速')
       }
@@ -582,7 +600,7 @@ export default {
     },
     controlDevice(attr, value) {
       console.log(this.loaclAttr,'-------------------------------------')
-      
+
       let param = {}
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
@@ -778,28 +796,31 @@ export default {
     color: #20282B;
   }
   .starting{
-    margin-top: 15vh;
+    margin-top: 158px;
      .btn-start{
-        z-index: 999999;
+        z-index: 999;
         box-sizing: border-box;
         margin: 0 auto;
-        width: 120px;
-        height: 120px;
+        width: 132px;
+        height: 132px;
         // border: 1px solid #818181;
         background: rgba(0, 0, 0, 0.1);
         border-radius: 50%;
         position: relative;
+        &.active{
+          background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        }
         &::before{
           content: "";
           position: absolute;
           left: 50%;
           top: 50%;
-          margin-left: -22px;
-          margin-top: -22px;
+          margin-left: -24px;
+          margin-top: -24px;
           background-image: url('~@lib/@{imgPath1}/dakai3@2x.png');
           background-size: 100% 100%;
-          width: 44px;
-          height: 44px;
+          width: 48px;
+          height: 48px;
         }
      }
       .btn-name{
@@ -813,7 +834,7 @@ export default {
     overflow-x: auto;
     display: -webkit-box;
     z-index: 9999;
-    margin-top: 130px;
+    margin-top: 60px;
     /*适应苹果*/
     -webkit-overflow-scrolling: touch;
 
@@ -1159,7 +1180,7 @@ export default {
       }
     }
     .panel-btn {
-      background: #efefef;
+      // background: #efefef;
     }
     .btn-wrap {
       opacity: .2;
@@ -1172,6 +1193,9 @@ export default {
           border: 1px solid #818181;
         }
       }
+    }
+    .optionbox{
+      opacity: .2;
     }
   }
 }
