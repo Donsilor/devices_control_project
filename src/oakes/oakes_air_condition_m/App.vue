@@ -362,16 +362,17 @@ export default {
         // console.log(111111111,'3333333')
           this.moveFlag = false
           this.controlDevice('temperature',this.centigrade)
-            .then((res) => {
-         if(res.code == 0) {
-           this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
-         } else {
-           HdSmart.UI.toast('操作失败')
-         }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
-       })
+          .then((res) => {
+            if(res.code == 0) {
+            this.loaclAttr.temperature = this.centigrade
+            this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
+            } else {
+            HdSmart.UI.toast('操作失败')
+            }
+          })
+          .catch(() => {
+            HdSmart.UI.toast('操作失败')
+          })
       }, false)
     })
   },

@@ -1,7 +1,7 @@
 <template>
   <div class="body">
-    <div 
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']" 
+    <div
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']"
     >
       <NewTopBar
         :title="device.device_name"
@@ -31,14 +31,14 @@
               :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
           </div>
           <!-- 当不可调节温度时，显示这个盒子，可以挡着canvas，使它不能滑动 -->
-          <div 
-            v-show="deviceAttrs.mode=='wind'" 
-            class="cover" 
+          <div
+            v-show="deviceAttrs.mode=='wind'"
+            class="cover"
             @touchmove.prevent/>
-          <canvas 
+          <canvas
             ref="canvas"
-            class="canvas" 
-            width="280" 
+            class="canvas"
+            width="280"
             height="280"
           />
         </div>
@@ -110,19 +110,19 @@
         <div class="option1">
           <div class="check">
             <span>风速</span>
-            <div 
+            <div
               class="checkBox">
-              <div 
-                :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']" 
+              <div
+                :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']"
                 @click="setSpeed('low')">低</div>
-              <div 
-                :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']" 
+              <div
+                :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']"
                 @click="setSpeed('normal')">中</div>
-              <div 
-                :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']" 
+              <div
+                :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']"
                 @click="setSpeed('high')">高</div>
-              <div 
-                :class="[{ 'active': deviceAttrs.speed == 'auto'},'speedBtn']" 
+              <div
+                :class="[{ 'active': deviceAttrs.speed == 'auto'},'speedBtn']"
                 @click="setSpeed('auto')">自动</div>
             </div>
           </div>
@@ -131,10 +131,10 @@
         <div class="option">
           <div>
             <span>摆风</span>
-            <span 
-              class="check" 
+            <span
+              class="check"
               @click="showSwing">{{ deviceAttrs.wind_up_down=='on'?'上下风 ':'' }}{{ deviceAttrs.wind_left_right=='on'?'左右风':'' }}{{ deviceAttrs.wind_up_down=='off'&&deviceAttrs.wind_left_right=='off'?'设置':'' }}
-              <img 
+              <img
                 src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
             </span>
           </div>
@@ -308,7 +308,7 @@ export default {
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
               // console.log(e)
-              
+
               // console.log(k.x-this.ox)
               var r = Math.atan2(k.x-this.ox, this.oy-k.y)
               var hd = (Math.PI+r)/(2*Math.PI)
@@ -340,7 +340,7 @@ export default {
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
     },
     draw(n) {
-      
+
       this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
       this.ctx.strokeStyle = "rgba(0,0,0,0.1)"
       this.ctx.lineWidth = 7
@@ -362,7 +362,7 @@ export default {
       }else{
         this.ctx.strokeStyle = "transparent"
       }
-      
+
       this.ctx.lineWidth = 7
       this.ctx.beginPath()
       this.ctx.arc(this.ox,this.oy,this.or,3/4 *Math.PI,(n*2+0.5)*Math.PI,false)
@@ -459,7 +459,7 @@ export default {
         .then((res) => {
           if(res.code == 0) {
             this.deviceAttrs.temperature = temp
-          }         
+          }
           // this.reset()
         })
     },
@@ -524,7 +524,7 @@ export default {
     showSpeed() {
       if (this.isClose) return
       this.$refs.speed.show = true
-       
+
     },
     showTime() {
       if (this.isClose) return
@@ -569,7 +569,7 @@ export default {
     background-size: 100% 100%;
     position: fixed;
     top:0;
-    left: 0; 
+    left: 0;
     right: 0;
     bottom: 0;
     z-index: -1;

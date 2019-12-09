@@ -7,42 +7,42 @@
         :title="device.device_name"
         bak-color="#000"/>
       <div class="main center">
-        <div 
-          ref="stick" 
+        <div
+          ref="stick"
           class="stick" >
           <div class="Pole"/>
-          <div 
-            ref="imgBox" 
+          <div
+            ref="imgBox"
             class="imgBox">
-            <div 
-              ref="leftCurtainBox" 
+            <div
+              ref="leftCurtainBox"
               class="leftCurtainBox"
               @touchstart="touchStart($event)"
               @touchmove="touchMove($event,'left')"
               @touchend="touchEnd($event)">
-              <img 
+              <img
                 ref="curtainLeft"
-                class="curtainLeft" 
+                class="curtainLeft"
                 src="../../../lib/base/new_curtains/assets/single.png">
-              <img 
+              <img
                 ref="left"
-                class="left" 
+                class="left"
                 src="../../../lib/base/new_curtains/assets/left.png"
               >
             </div>
-            <div 
-              ref="rightCurtainBox" 
+            <div
+              ref="rightCurtainBox"
               class="rightCurtainBox"
               @touchstart="touchStart($event)"
               @touchmove="touchMove($event,'right')"
               @touchend="touchEnd($event)">
-              <img 
+              <img
                 ref="curtainRight"
-                class="curtainRight" 
+                class="curtainRight"
                 src="../../../lib/base/new_curtains/assets/single.png">
-              <img 
+              <img
                 ref="right"
-                class="right" 
+                class="right"
                 src="../../../lib/base/new_curtains/assets/right.png"
               >
             </div>
@@ -127,9 +127,9 @@ export default {
       //     console.log("定时检索num", num)
       //     console.log("定时检索count", _this.count)
       //     if (num === _this.count) {
-      //        console.log('暂停了') 
+      //        console.log('暂停了')
       //     }
-      //   }, 2000)  
+      //   }, 2000)
       // })(this.count)
       var _that = this
       function a(num) {
@@ -137,7 +137,7 @@ export default {
             console.log("定时检索num", num)
             console.log("定时检索count", _that.count)
             if (num === _that.count) {
-              console.log('暂停了') 
+              console.log('暂停了')
               if (_that.curtainStatusText=='正在关闭窗帘'||_that.curtainStatusText=='正在打开窗帘') {
                 _that.curtainStatusText=''
               }
@@ -146,7 +146,7 @@ export default {
       }
       a(this.count)
       console.log(newValue,oldValue,'打印新旧值111111111111111111111')
-      
+
       if(this.btnActive == 'open'||this.btnActive == 'close'||this.myMove==true) {
         if(newValue > oldValue) {
           this.curtainStatusText = '正在打开窗帘'
@@ -181,7 +181,7 @@ export default {
     }
   },
   created() {
-    
+
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
@@ -198,7 +198,7 @@ export default {
   },
   mounted(){
         console.log(this.animate,'4444444444')
-        
+
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
@@ -251,9 +251,9 @@ export default {
       let leftCurtainBox = this.$refs.leftCurtainBox
       let rightCurtainBox = this.$refs.rightCurtainBox
       let maxWidth = this.$refs.imgBox.offsetWidth*0.495
-      this.curtainWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft - this.$refs.stick.offsetLeft +circle/2 
+      this.curtainWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft - this.$refs.stick.offsetLeft +circle/2
       if(val=='right'){
-        this.curtainWidth-=maxWidth 
+        this.curtainWidth-=maxWidth
         this.curtainWidth=maxWidth-this.curtainWidth+circle
       }
       this.curtainWidth = this.curtainWidth <= circle ? circle : this.curtainWidth
@@ -277,8 +277,8 @@ export default {
       let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
       console.log(width,'width')
       console.log(circle)
-      
-      
+
+
       let leftCurtainBox = this.$refs.leftCurtainBox
       let rightCurtainBox = this.$refs.rightCurtainBox
       this.animate(leftCurtainBox,{
@@ -332,7 +332,7 @@ export default {
 				speed = speed > 0 ?  Math.ceil(speed) : Math.floor(speed)
 				if(current != param[attr]){
           // console.log(current,param[attr],speed,'222222222')
-          
+
 					//属性没有到达 目标 值
 					flag = false//最少有一个属性没有到达目标 值
 					if(attr === "opacity"){
@@ -344,7 +344,7 @@ export default {
 			}
     }
     // console.log(flag,'flag')
-    
+
 		if(flag){
 			clearInterval(ele.timer)
 			//到达了目标值。
@@ -416,7 +416,7 @@ getStyle(obj,attr){
             height: 500px;
             position: absolute;
           }
-          .left{ 
+          .left{
             position: absolute;
             top: 50%;
             right: 1px;
@@ -438,7 +438,7 @@ getStyle(obj,attr){
             height: 500px;
             position: absolute;
           }
-          .right{ 
+          .right{
             position: absolute;
             top: 50%;
             left: 1px;
