@@ -11,7 +11,7 @@
           <div>今日记录次数</div>
           <div class="num">{{ todayNum.result.total }}</div>
         </div>
-        <div class="status">{{ lockStatus=='1'?'布防中...':'撤防中...' }}</div>
+        <div class="status">{{ lockStatus=='1'?'已布防':'已撤防' }}</div>
         <!-- 按钮 -->
         <div class="panel-btn center">
           <div class="btn-wrap">

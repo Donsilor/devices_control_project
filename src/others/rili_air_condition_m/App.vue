@@ -4,10 +4,8 @@
       <NewTopBar
         :title="device.device_name"
         :room="device.room_name"
-        :shutdown="isClose == false || isOffline == true"
         :scroll="true"
-        bak-color="#000"
-        @shutdownCallback="shutdowncallback('off')" />
+        bak-color="#000"/>
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
@@ -38,7 +36,6 @@
           />
         </div>
         <div 
-          v-show="!isOffline&&!isClose" 
           class="control-tm center">
           <button 
             class="control reduce" 
@@ -57,45 +54,41 @@
       <!-- 底部按钮 -->
       <!-- 开关 -->
       <div
-        v-show="isOffline||isClose"
         class="starting">
         <div
-          class="btn btn-start"
-          @click="shutdowncallback('on')" />
-        <div class="btn-name">开机</div>
+          :class="[{'active': deviceAttrs.switchStatus == 'on'},'btn btn-start']"
+          @click="setSwitch" />
       </div>
       <div
-        v-show="!isOffline&&!isClose"
         class="panel-btn center">
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'cold' }, 'btn btn-cold center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-cold center']" />
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'heat' }, 'btn btn-heat center']" />
+          <div :class="[ { 'active': deviceAttrs.mode == 'heat' && deviceAttrs.switchStatus == 'on'}, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'wind' }, 'btn btn-wind center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'wind' && deviceAttrs.switchStatus == 'on'}, 'btn btn-wind center']" />
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' }, 'btn btn-dehumidify center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify' && deviceAttrs.switchStatus == 'on'}, 'btn btn-dehumidify center']" />
           <div class="btn-name">除湿</div>
         </div>
       </div>
       <!-- 规格选择 -->
       <!-- 风速 -->
       <div
-        v-show="!isClose&&!isOffline"
         class="optionbox">
         <div class="option1">
           <div class="check">
@@ -296,6 +289,7 @@ export default {
       }, false)
 
       this.$refs.canvas.addEventListener(on.end,()=> {
+        if (this.isOffline||this.isClose) return
         // console.log(111111111,'3333333')
           this.moveFlag = false
           this.controlDevice('temperature',this.centigrade)
@@ -380,23 +374,32 @@ export default {
         }
     },
     // 开关机
-    shutdowncallback(val){
+    setSwitch(){
       if (this.isOffline) return
-      this.moveEnd = false
-      this.controlDevice('switch',val)
+        this.moveEnd = false
+      let switchstatus = ''
+      if (this.deviceAttrs.switchStatus=='on') {
+        switchstatus = 'off'
+      }else{
+        switchstatus = 'on'
+      }
+      this.controlDevice('switch',switchstatus)
     },
     // 设置模式
     setMode(val) {
-      if (val == this.deviceAttrs.mode || this.isClose) return
+      if (val == this.deviceAttrs.mode || this.isClose||this.isOffline) return
       this.moveEnd = false
       this.controlDevice('mode', val)
-        .then(() => {
-          this.deviceAttrs.mode = val
+        .then((res) => {
+          if(res.code == 0) {
+            this.deviceAttrs.mode = val
+          }
           // this.reset()
           this.hide()
         })
     },
     setTemperature(step) {
+      if (this.isOffline||this.isClose) return
       this.moveEnd = false
       let temp = +this.deviceAttrs.temperature + step
       if (step== 10) {
@@ -434,13 +437,16 @@ export default {
         }
       }
       this.controlDevice('temperature', temp)
-        .then(() => {
-          this.deviceAttrs.temperature = temp
+        .then((res) => {
+          if(res.code == 0) {
+            this.deviceAttrs.temperature = temp
+          }  
           // this.reset()
         })
     },
     // 设置风速
     setSpeed(speed) {
+      if (this.isOffline||this.isClose) return
       this.moveEnd = false
       this.controlDevice('speed', speed)
         .then(() =>{
@@ -978,7 +984,7 @@ export default {
     &:before {
       content: "";
       position: fixed;
-      top: 64PX;
+      top: 0;
       left: 0;
       bottom: 0;
       right: 0;
@@ -1003,9 +1009,6 @@ export default {
         }
       }
     }
-    .panel-btn {
-      background: #efefef;
-    }
     .btn-wrap {
       opacity: .2;
       &.up-index {
@@ -1017,6 +1020,9 @@ export default {
           border: 1px solid #818181;
         }
       }
+    }
+    .optionbox{
+      opacity: .2;
     }
   }
 }

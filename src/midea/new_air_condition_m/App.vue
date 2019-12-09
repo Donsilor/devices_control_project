@@ -7,8 +7,7 @@
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
-        bak-color="#000"
-        @shutdownCallback="shutdowncallback('off')" />
+        bak-color="#000"/>
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
@@ -564,7 +563,7 @@ export default {
 .page {
   &::before{
     content: "";
-    background-image: url('~@lib/@{imgPath1}/img_bg_01@2x.png');
+    background-image: url('~@lib/@{imgPath1}/img_bg.png');
     background-repeat:no-repeat;
     background-size: 100% 100%;
     position: fixed;
@@ -603,7 +602,7 @@ export default {
       border: none;
       width: 72px;
       height: 72px;
-      background: rgba(0,0,0,0.04);
+      background: rgba(0,0,0,0.05);
       border-radius: 50%;
       &.add{
          width: 72px;
@@ -689,11 +688,11 @@ export default {
         width: 132px;
         height: 132px;
         // border: 1px solid #818181;
-        background: rgba(0, 0, 0, 0.1);
+        background: rgba(0, 0, 0, 0.05);
         border-radius: 50%;
         position: relative;
         &.active{
-          background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+          background-image: linear-gradient(221deg, #F1CB85 100%, #E1B96E 100%);
         }
         &::before{
           content: "";
@@ -742,7 +741,7 @@ export default {
       width: 120px;
       height: 120px;
       // border: 1px solid #818181;
-      background: rgba(0,0,0,0.1);
+      background: rgba(0,0,0,0.05);
       border-radius: 50%;
 
       display: flex;
@@ -754,7 +753,7 @@ export default {
         height: 44px;
       }
       &.active {
-        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        background-image: linear-gradient(221deg, #F1CB85 100%, #E1B96E 100%);
       }
     }
     .btn-name {
@@ -762,6 +761,7 @@ export default {
       color: #000;
       margin-top: 16px;
       font-size: 24px;
+      font-family: PingFangSC-Light;
     }
 
     .btn-swich {
@@ -861,6 +861,7 @@ export default {
     width: 100%;
     margin-top: 10px;
     margin: 10px 0 30px 0;
+    font-family: PingFangSC-Light;
     .option{
       width: 100%;
       height: 120px;

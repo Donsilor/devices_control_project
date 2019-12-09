@@ -212,6 +212,11 @@ export default {
       // this.curtainStatusText = '正在打开窗帘'
       this.myMove = false
       this.controlDevice('switch', 'on')
+      .then((res)=>{
+        if (res.code==-90004) {
+          return HdSmart.UI.toast('网络超时，请重试')
+        }
+      })
     },
     //全关
     setClose(){
@@ -223,6 +228,11 @@ export default {
       // this.curtainStatusText = '正在关闭窗帘'
       this.myMove = false
       this.controlDevice('switch', 'off')
+      .then((res)=>{
+        if (res.code==-90004) {
+          return HdSmart.UI.toast('网络超时，请重试')
+        }
+      })
     },
     //暂停
     setPause(){
@@ -234,6 +244,11 @@ export default {
         this.$refs['btn-pause'].classList.remove('active')
       },500)
       this.controlDevice('switch', 'pause')
+      .then((res)=>{
+        if (res.code==-90004) {
+          return HdSmart.UI.toast('网络超时，请重试')
+        }
+      })
     },
     // clear
     // 滑动窗帘
@@ -250,7 +265,7 @@ export default {
       let circle = this.$refs.right.offsetHeight
       let leftCurtainBox = this.$refs.leftCurtainBox
       let rightCurtainBox = this.$refs.rightCurtainBox
-      let maxWidth = this.$refs.imgBox.offsetWidth*0.495
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.5
       this.curtainWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft - this.$refs.stick.offsetLeft +circle/2 
       if(val=='right'){
         this.curtainWidth-=maxWidth 
@@ -264,16 +279,21 @@ export default {
     touchEnd(){
       this.myMove = true
       let circle = this.$refs.right.offsetHeight
-      let maxWidth = this.$refs.imgBox.offsetWidth*0.495
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.5
       this.range = 100-Math.round((this.curtainWidth-circle) / (maxWidth-circle) * 100)
       console.log(this.range)
       this.controlDevice('open_percentage',this.range)
+      .then((res)=>{
+        if (res.code==-90004) {
+          return HdSmart.UI.toast('网络超时，请重试')
+        }
+      })
     },
     //根据后台返回数据得出窗帘的宽度
     newRatio(){
       if(this.myMove)return
       let circle = this.$refs.right.offsetHeight
-      let maxWidth = this.$refs.imgBox.offsetWidth*0.495
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.5
       let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
       console.log(width,'width')
       console.log(circle)

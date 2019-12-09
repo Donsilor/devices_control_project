@@ -286,7 +286,6 @@ export default {
   },
   mounted(){
     this.ctx = this.$refs.canvas.getContext("2d")
-    if (this.isOffline||this.isClose) return
     this.$nextTick(() => {
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
@@ -327,6 +326,7 @@ export default {
       }, false)
 
       this.$refs.canvas.addEventListener(on.end,()=> {
+        if (this.isOffline||this.isClose) return
         this.moveEnd = true
         // console.log(111111111,'3333333')
           this.moveFlag = false

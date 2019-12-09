@@ -221,8 +221,8 @@ export default {
       modeType:'',
       speedNum:'',
       speedcount:'low',
-      MIN_TEMP:'',
-      MAX_TEMP:'',
+      MIN_TEMP:160,
+      MAX_TEMP:300,
       minTemp:'',
       maxTemp:'',
       stepLength:0,//步长
