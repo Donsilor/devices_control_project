@@ -58,6 +58,7 @@
 
     <!-- 栏目分类 -->
     <div 
+      v-if="activeIndex==0"
       style="position:relative" 
       class="status">
 
@@ -114,7 +115,7 @@
           <div class="title">{{ idx | nameType }}</div>
           <div
             class="more"
-            @click="toListPage(idx)"><span class="more_text">更多</span> <span class="more_mg"/></div>
+            @click="toListPage(idx)"><span class="more_mg"/></div>
         </div>
 
         <ul class="vlist list-m60">
@@ -206,10 +207,19 @@
   align-items: center;
 }
 .page-index {
-  padding-bottom: 48px;
-  background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
-  background-size: 100% 100%;
-  background-attachment: fixed;
+  &::after{
+    content: "";
+    padding-bottom: 48px;
+    background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+  }
   // // background-position:center center; 
   // &::before{
   //   //  content: ' ';
@@ -230,11 +240,12 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    height:auto;
+    padding: 32px 0;
     .title {
-      font-size: 40px;
+      font-size: 32px;
       color: #20282b;
-      font-weight: bold;
-      padding: 48px 0 40px 0;
+      font-weight: normal;
     }
     .more{
       display: flex;
@@ -289,10 +300,14 @@
 }
 .search-screen-bg{
     // padding-top: 20px;
-    margin-top: 28PX;
+    // margin-top: 28PX;
+    width:100%;
+    display:flex;
     height: 44PX;
+    align-items: center;
   .search-screen{
     overflow: hidden;
+    width:100%;
     margin: 0 40px;
     // padding: 20px 0;
     display: flex;
@@ -309,6 +324,8 @@
       color: #AAAAAA;
       justify-content: center;
       align-items: center;
+      font-weight: lighter;
+      font-size:24px;
       .search-img{
         width: 32px;
         height: 32px;
@@ -325,10 +342,12 @@
       height: 60px;
       text-align: center;
       line-height: 60px;
-      color: #AAA;
+      color: #000;
       display: flex;
       justify-content: center;
       align-items: center;
+      font-weight: lighter;
+      font-size:24px;
       span{
         display: block;
         width:  40px;;
@@ -346,9 +365,13 @@
 .icon_grid {
   overflow: hidden;
   // margin: 0 40px;
-  padding: 20px 40px;
+  height:44PX;
+  padding: 0 40px;
   z-index: 10000;
   width: 100%;
+  display:flex;
+  align-items: center;
+  margin-bottom:16px;
 
   -webkit-overflow-scrolling: touch;
   .icon_grid_inner {
@@ -367,9 +390,10 @@
   .active{
     color: #000000;
     opacity: 1 !important;
-    font-size: 40px !important;
+    font-size: 32px !important;
     font-weight: 500;
     position:relative;
+    font-weight:normal;
     &::before{
       content: '';
       width: 0.5rem;
@@ -392,6 +416,7 @@
     font-size: 32px;
     text-align: center;
     border-radius: 12px;
+    font-weight:lighter;
     /*width: 60px;*/
     /*height: 152px;*/
     padding: 14px 0;
@@ -472,18 +497,22 @@
     }*/
   .isvip {
     position: absolute;
+    // width:56px;
+    padding: 0 4px;
+    height:32px;
     right: 8px;
     top:0;
     background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
     // width: 48px;
     line-height: 32px;
     // border-radius: 4px;
-    font-size: 24px;
+    font-size: 20px;
     text-align: center;
     color: #000;
     // opacity: 0.9;
     display: block;
     margin-bottom: 5px;
+    font-weight: lighter;
   }
   // .score {
   //   position: absolute;
@@ -519,7 +548,7 @@
     .play{
       width: 36px;
       height: 36px;
-      background:  url('~@lib/base/tv/assets/new/tv_icn_play.png');
+      background:  url('~@lib/base/tv/assets/new/tv_btn_play.png');
       background-size:100% 100%; 
   
     }
@@ -530,8 +559,10 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 2;
-    height: 76px;
+    // line-height: 2;
+    // height: 76px;
+    font-size:24px;
+    padding:12px 0 24px 0;
   }
 }
 /* 根据栏目控制样式显示 */
@@ -736,6 +767,26 @@
     background-size: 100% 100%;
     display: block;
     margin: 0 auto;
+  }
+}
+.status{
+  height:336px;
+  margin-bottom:20px;
+  .swiper{
+    height:100%;
+    .swiper-container{
+      height:100%;
+      .swiper-wrapper{
+         height:100%;
+         .swiper-slide{
+            height:100%;
+            a{
+              height:100%
+            }
+          }
+      }
+    }
+    
   }
 }
 </style>
@@ -1051,7 +1102,8 @@ export default {
       let icon_grid = this.$refs.icon_grid
       // console.log(this.scrollTop+statusbarH+newNavbarH, this.maxh)
       
-      if((this.scrollTop+statusbarH+newNavbarH)>= this.maxh){
+      // if((this.scrollTop+statusbarH+newNavbarH)>= this.maxh){
+            if((this.scrollTop)>= 44){
         icon_grid.style.position = 'fixed'
         icon_grid.style.top = statusbarH+newNavbarH + 'px'
          icon_grid.style.background= '#fff'

@@ -244,11 +244,22 @@ export default {
       let fixedTop =  this.$refs.statusbar.offsetHeight+this.$refs.newNavbar.offsetHeight
       let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
       let h = this.$refs['header-bottom'].offsetHeight
-      let b = this.scrollTop
+      console.log(h,'h---------------')
+      console.log(this.scrollTop,'this.scrollTop---------------')
+
+      
+      // let b =                                                                                                                               this.scrollTop
+      let b = (h/44)*this.scrollTop
+
       let f = (-6/44)*this.scrollTop+24
       let w = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2   //如果标题要居中
       let l = (w/44)*this.scrollTop
+      console.log(b,'b---------------')
+
       b = b>=h?h:b
+      console.log(b,'b2---------------')
+
+
       // w2 =  this.scrollTop *24/44+20
 
       f = f<=18?18:f
@@ -297,7 +308,7 @@ export default {
 //   }
 // }
   .search-screen-bg{
-    visibility:hidden
+    display:none
   }
 }
 

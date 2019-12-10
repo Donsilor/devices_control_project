@@ -224,7 +224,7 @@
     <!-- </transition> -->
 </div></template>
 
-<style lang="less">
+<style lang="less" scoped>
 // .gray{
 //   opacity: 0.2;
 // }
@@ -306,7 +306,7 @@
 }
 .detail-bd {
   // height: 100%;
-  padding-top: 20PX;
+  padding-top: 20px;
   // overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -317,7 +317,7 @@
   .info-inner {
     position: relative;
     overflow: hidden;
-    margin-bottom: 32px;
+    // margin-bottom: 32px;
   }
   .pic {
     width: 264px;
@@ -374,13 +374,12 @@
   }
   .synopsisD{
     position: fixed;
-    bottom: -966px;
+    bottom: -1010px;
     // bottom: -0;
 
     left: 0;
     width: 100%;
-    max-height: 966px;
- 
+    max-height: 1010px;
     background: #fff;
     z-index: 10000;
     .synopsisD-header{
@@ -637,15 +636,15 @@
     justify-content: center;
     align-items: center;
     i {
-      margin-right: 14px;
+      margin-right: 12px;
       vertical-align: middle;
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       background: url('~@lib/base/tv/assets/new/tv_icn_play2.png');
         background-size: 100% 100%;
     }
     span{
-      font-size: 28px;
+      font-size: 32px;
     }
     .icon-play,
     .icon-playing {
@@ -701,7 +700,7 @@
 
 .detail-playlist {
   // margin-left: 32px;
-  padding-top: 30px;
+  padding-top: 52px;
   position: relative;
   .item-haspic{
     p.palyimg{
@@ -725,7 +724,7 @@
     margin-bottom: 30px;
     color: #222a37;
     font-weight: 600;
-
+    font-size:32px;
     &.related {
       font-size: 34px;
     }
@@ -737,7 +736,7 @@
     left:0;
     z-index: 10000;
     width: 100%;
-    max-height: 1010px;
+    height: 1010px;
     overflow: hidden;
     background-color: #fff;
     margin-left: 0;
@@ -787,7 +786,8 @@
       font-family: PingFangSC-Light;
       text-align: right;
       font-style: normal;
-      font-weight:normal;
+            font-weight: lighter;
+
     }
     .arrow{
       display: inline-block;
@@ -801,7 +801,7 @@
     width: 100%;
     overflow-x: scroll;
     display: -webkit-box;
-    margin-bottom: 30px;
+    // margin-bottom: 30px;
     -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
       display: none;
@@ -856,16 +856,18 @@
   li.item-haspic {
     position: relative;
     width: 320px;
-    height: 306px;
+    // height: 306px;
+    margin-bottom:40px;
     // margin: 0 25px 0 5px;
     float: left;
     overflow: hidden;
     color: #222a37;
+    margin-right:22px;
     img {
       width: 320px;
       height: 180px;
       display: block;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
     }
     p {
       text-overflow: ellipsis;
@@ -873,8 +875,10 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      line-height: 40px;
-      height: 3em;
+      line-height: 36px;
+      // height: 3em;
+      font-size:24px;
+      font-weight: lighter;
     }
     .play {
       position: absolute;

@@ -184,10 +184,19 @@
 
 <style lang="less" scoped>
 .page-list{
+  &::after{
+    content: "";
+    padding-bottom: 48px;
     background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
     background-size: 100% 100%;
     background-attachment: fixed;
-    min-height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+  }
 }
 .filters-placeholder {
   height: 120px;
@@ -196,15 +205,17 @@
   }
 }
 .filters {
-  padding: 28px 28px 12px;
+  // padding: 28px 28px 12px;
   // background: rgba(255, 255, 255, 0.98);
   // background: rgba(255, 255, 255, 1);
   /**box-shadow: inset 0 -1px 0 0 #dbdbdb;**/
   position: fixed;
+  height:88px;
   left: 0;
   top: 65px;
   width: 100%;
   z-index: 999;
+  font-size:24px;
   &.active {
     padding: 32px 32px 16px 32px;
     .toggle {
@@ -212,29 +223,16 @@
     }
   }
   .toggle {
+    width: 100%;
+    height: 100%;
     display: flex;
-    // position: absolute;
-    // right: 0px;
-    // bottom: 15px;
     justify-content: center;
-    line-height: 42px;
-    color: #75787a;
-    padding: 20px;
-    text-align: center;
-    
-    // i {
-    //   font-size: 16px;
-    //   line-height: 24px;
-    //   margin-left: 2px;
-    //   color: #222a37;
-    //   transform-origin: 50% 80%;
-    // }
+    align-items: center;
     .text{
       display: block;
       width: auto;
-      height: 40px;
-      font-size: 28px;
-      padding-right: 16px;
+      font-size: 24px;
+      font-weight: lighter;
     }
     .arrow{
       display: block;
@@ -271,17 +269,20 @@
     height: 56px;
     line-height: 56px;
     display: block;
-    margin-right: 12px;
-    margin-bottom: 16px;
+    // margin-right: 24px;
+    margin-bottom: 24px;
     color: #7f8082;
     height: 56px;
     line-height: 56px;
     white-space: nowrap;
-    padding: 0 10px;
+    padding: 0 24px;
+    font-weight: lighter;
     &.active {
       color: #000000;
-      background: #f6f6f6;
+      background: rgba(0,0,0,.05);
       border-radius: 2px;
+      height:60px;
+      padding:0 24px;
     }
   }
 }
@@ -338,6 +339,7 @@
     position: absolute;
     right: 8px;
     top:0;
+    padding: 0 4px;
     background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
     // width: 48px;
     line-height: 32px;
@@ -365,17 +367,19 @@
   // }
   .bottom{
     width: 100%;
-    height:36px;
+    height:56px;
     position: absolute;
-    bottom: 86px;
+    bottom: 76px;
     display: flex;
     justify-content: space-between;
     padding: 0 12px;
     align-items: center;
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.5));
     .text{
       font-family: PingFangSC-Regular;
       font-size: 20px;
       color: #FFFFFF;
+      font-weight: lighter;
     }
     .score{
        color: #E1B96E;
@@ -383,7 +387,7 @@
     .play{
       width: 36px;
       height: 36px;
-      background:  url('~@lib/base/tv/assets/new/tv_icn_play.png');
+      background:  url('~@lib/base/tv/assets/new/tv_btn_play.png');
       background-size:100% 100%; 
   
     }
@@ -393,8 +397,12 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 2;
+    // line-height: 2;
     height: 76px;
+    text-align: left;
+    font-size: 24px;
+    font-weight: lighter;
+    padding: 12px 0 40px 0;
   }
 }
 /* 根据栏目控制样式显示 */
