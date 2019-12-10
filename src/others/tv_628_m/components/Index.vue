@@ -132,12 +132,12 @@
             <div class="name">{{ item.title }}</div>
             <div class="bottom">
               <span 
-                v-if="item.channelId=='002'" 
+                v-show="item.channelId=='002'" 
                 class="text">
                 {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
               </span>
               <span 
-                v-if="item.channelId=='001'" 
+                v-show="item.channelId=='001'" 
                 class="text score" >{{ item.score }}</span>
               <p 
                 class="play" 
