@@ -231,7 +231,7 @@ export default {
 
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
-    ...mapState(['device', 'deviceAttrs']),
+    ...mapState(['device', 'deviceAttrs', 'ThirddeviceAttrs']),
     modeIsActive() {
       return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
     },
@@ -308,7 +308,9 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-          this.tempType = this.deviceAttrs.selection.split(";")[0]
+          // console.log(this.ThirddeviceAttrs)
+          
+          this.tempType = this.ThirddeviceAttrs.selection.split(";")[0]
           this.minTemp = this.tempType.split(",")[0]*10//160
           this.maxTemp = this.tempType.split(",")[1]*10//300
           //设置最低温和最高温
@@ -320,9 +322,9 @@ export default {
           
           console.log(this.MIN_TEMP,'0000')
           console.log(this.MAX_TEMP,'1111')
-          this.speedType = this.deviceAttrs.selection.split(";")[1]
+          this.speedType = this.ThirddeviceAttrs.selection.split(";")[1]
           this.speedNum = this.speedType.replace(/,/g, "")//取消字符串中出现的所有逗号 
-          this.modeType = this.deviceAttrs.selection.split(";")[2]
+          this.modeType = this.ThirddeviceAttrs.selection.split(";")[2]
           // this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
           this.draw(`${0.125+(0.75/this.stepLength)*(this.deviceAttrs.temperature/10-this.MIN_TEMP/10)}`)
           let a = `${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`

@@ -37,8 +37,8 @@
           <canvas 
             ref="canvas"
             class="canvas" 
-            width="280" 
-            height="280"
+            width="560" 
+            height="560"
           />
         </div>
         <div
@@ -62,7 +62,7 @@
       <div
         class="starting">
         <div
-          :class="[{'active': deviceAttrs.switchStatus == 'on'},'btn btn-start']"
+          :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn btn-start']"
           @click="setSwitch" />
       </div>
       <div
@@ -70,32 +70,32 @@
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-cold center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" />
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-heat center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('auto')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-auto center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" />
           <div
             class="btn-name" >智能</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-wind center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" />
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-dehumidify center']" />
+          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" />
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -121,6 +121,7 @@
                 :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']" 
                 @click="setSpeed('high')">高</div>
               <div 
+                v-show="deviceAttrs.mode!=='wind'"
                 :class="[{ 'active': deviceAttrs.speed == 'auto'},'speedBtn']" 
                 @click="setSpeed('auto')">自动</div>
             </div>
@@ -195,7 +196,7 @@ export default {
             //圆的数据
       ox:140,
       oy:140,
-      or:130,
+      or:127,
       br:10,
       moveFlag:false,
       centigrade:0,//摄氏度
@@ -283,7 +284,7 @@ export default {
   },
   mounted(){
     this.ctx = this.$refs.canvas.getContext("2d")
-    
+    this.ctx.scale(2,2)
     this.$nextTick(() => {
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
@@ -340,9 +341,14 @@ export default {
     draw(n) {
       
       this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
-      this.ctx.strokeStyle = "rgba(0,0,0,0.1)"
+      this.ctx.strokeStyle = "rgba(0,0,0,0.05)"
       this.ctx.lineWidth = 7
       this.ctx.beginPath()
+      this.ctx.shadowColor =  "none"
+      this.ctx.shadowOffsetX = 0
+      this.ctx.shadowOffsetY = 0
+      this.ctx.shadowBlur = 0
+      this.ctx.lineCap = 'round'
       this.ctx.arc(this.ox,this.oy,this.or,1/4 * Math.PI,3/4 * Math.PI,true)//半圆(逆时针)
       // this.ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true);//整圆
       this.ctx.stroke()
@@ -363,6 +369,10 @@ export default {
       
       this.ctx.lineWidth = 7
       this.ctx.beginPath()
+      this.ctx.shadowColor =  "none"
+      this.ctx.shadowOffsetX = 0
+      this.ctx.shadowOffsetY = 0
+      this.ctx.shadowBlur = 0
       this.ctx.arc(this.ox,this.oy,this.or,3/4 *Math.PI,(n*2+0.5)*Math.PI,false)
       // this.ctx.arc(this.ox,this.oy,this.or,0.5*Math.PI,(n*2+0.5)*Math.PI,false);
       this.ctx.stroke()
@@ -376,6 +386,10 @@ export default {
       this.centigrade = Math.round((n*(13/0.75))+(17-((13*0.125)/0.75)))*10
       this.ctx.fillStyle = "#fff"
       this.ctx.beginPath()
+      this.ctx.shadowOffsetX = 0
+      this.ctx.shadowOffsetY = 2
+      this.ctx.shadowBlur = 4
+      this.ctx.shadowColor = "rgba(0, 0, 0, 0.1)"
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
       // 关机显示
@@ -481,7 +495,12 @@ export default {
     setSpeed(speed) {
       if (this.isOffline||this.isClose) return
         this.moveEnd = false
-
+      if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
+        return HdSmart.UI.toast('送风模式不能设置自动风速')
+      }
+      if(this.deviceAttrs.mode == 'dehumidify') {
+        return HdSmart.UI.toast('除湿模式下无法设定风速')
+      }
       // console.log(speed, val)
       // this.typeVal = val
       // if (this.deviceAttrs.temperature == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
@@ -566,7 +585,7 @@ export default {
 .page {
   &::before{
     content: "";
-    background-image: url('~@lib/@{imgPath1}/img_bg_01@2x.png');
+    background-image: url('~@lib/@{imgPath1}/img_bg.png');
     background-repeat:no-repeat;
     background-size: 100% 100%;
     position: fixed;
@@ -605,7 +624,7 @@ export default {
       border: none;
       width: 72px;
       height: 72px;
-      background: rgba(0,0,0,0.04);
+      background: rgba(0,0,0,0.05);
       border-radius: 50%;
       &.add{
          width: 72px;
@@ -631,6 +650,7 @@ export default {
     }
     .wrap-circle{
       position: relative;
+      zoom: 0.5;
       .showtemp{
         position: absolute;
         top: 49%;
@@ -645,21 +665,23 @@ export default {
           // margin-top: 60PX;
           position: relative;
           font-size: 144px;
-          color: #20282B;
+          color: #000;
           text-align: center;
+          transform: scale(2);
           sup{
-            opacity: .5;
             position: absolute;
-            top: 15px;
-            right: -20px;
+            top: -5px;
+            right: -22px;
             font-size: 24px;
-            color: #20282B;
+            color: #000;
+            zoom: 0.5;
+            transform: scale(0.5);
           }
         }
         .c-mode{
           position: absolute;
           transform: translate(-50%,-50%);
-          top: 78%;
+          top: 93%;
           left: 50%;
           width: 216px;
           height: 48px;
@@ -696,7 +718,7 @@ export default {
         border-radius: 50%;
         position: relative;
         &.active{
-          background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+          background-image: linear-gradient(to right, #F1CB85, #E1B96E);
         }
         &::before{
           content: "";
@@ -716,6 +738,7 @@ export default {
         color: #000;
         margin-top: 16px;
         font-size: 24px;
+        font-family: PingFangSC-Light;
       }
   }
   .panel-btn {
@@ -745,7 +768,7 @@ export default {
       width: 120px;
       height: 120px;
       // border: 1px solid #818181;
-      background: rgba(0,0,0,0.1);
+      background: rgba(0,0,0,0.05);
       border-radius: 50%;
 
       display: flex;
@@ -757,7 +780,7 @@ export default {
         height: 44px;
       }
       &.active {
-        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        background-image: linear-gradient(to right, #F1CB85, #E1B96E);
       }
     }
     .btn-name {
@@ -863,7 +886,8 @@ export default {
   .optionbox{
     width: 100%;
     margin-top: 10px;
-    margin: 10px 0 30px 0;
+    margin: 10px 0 90px 0;
+    font-family: PingFangSC-Light;
     .option{
       width: 100%;
       height: 120px;
