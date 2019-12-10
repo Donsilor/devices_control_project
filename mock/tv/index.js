@@ -6,6 +6,8 @@ if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
   window.device_name = '电视'
   window.room_name = '客厅'
   window.status_bar_height = 40
+  window.navigation_bar_height = 44
+
   window.tvInitData = mockData.getInitData()
 
   on(apiList.util_dispatchevent, function(data, callback) {

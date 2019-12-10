@@ -14,7 +14,7 @@
         <div class="left">
           <a
             href="#/"
-            class="icon-return"
+            class="return"
             @click.prevent="goBack" />
         </div>
         <div class="right">
@@ -105,17 +105,30 @@ export default {
   align-items: center;
   justify-content: center;
    height: @navigation_bar_height;
-  .left a.icon-return {
-    position: absolute;
-    left: 40px;
-    top: 55%;
-    display: inline-block;
-    width: 14PX;
-    height: 14PX;
-    border: solid #000;
-    border-width: 2px 2px 0 0;
-    transform: translate(0, -50%) rotate(225deg);
+  .left {
+    width: 44PX;
+    display: flex;
+  align-items: center;
+    justify-content: flex-end;
+  
+      a.return {
+      background: url('~@lib/base/tv/assets/new/tv_arrow_back.png');
+      background-size: 100% 100%;
+      width: 48px;
+      height: 48px;
+    // position: absolute;
+    // left: 40px;
+    // top: 55%;
+    // display: inline-block;
+    // width: 14PX;
+    // height: 14PX;
+    // border: solid #000;
+    // border-width: 2px 2px 0 0;
+    // transform: translate(0, -50%) rotate(225deg);
+
   }
+  }
+
 
   .right a.icon-more {
     display: inline-block;

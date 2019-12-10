@@ -72,7 +72,7 @@
   </div>
 </template>
 
-<style lang="less">
+<style lang="less" scoped>
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
 // .status_bar_block{
@@ -116,6 +116,7 @@
 }
 .status_bar .link {
     color: #FFC800;
+    font-weight: lighter;
 }
 .status_bar .icon-tv1 {
     display: inline-block;

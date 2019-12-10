@@ -142,11 +142,13 @@
               class="label">付费
             </div>
           </div>
-          <div class="vitem-right">
+          <div 
+            class="vitem-right" 
+            style="position:relative">
             <div class="title">{{ item.title }}</div>
             <div class="name">{{ item.cate }}·{{ item.year }}{{ item.region&&'·'+item.region }}</div>
             <div class="name">{{ item.director&&'导演：'+item.director }}</div>
-            <div class="starring">{{ item.director&&'主演：'+item.starring }}</div>
+            <div class="name starring">{{ item.director&&'主演：'+item.starring }}</div>
             <div 
               :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0}" 
               class="playstate playstate_unplay" >
@@ -154,7 +156,7 @@
                 href="#"
                 class="btn"
                 @click.prevent="play(item)">
-              <i class="play" /><span>在电视上播放</span></a>
+              <i class="play" /><span>电视播放</span></a>
             </div>
             <span
               class="update">
@@ -245,8 +247,8 @@
   // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
   // background-size: 100% 100%;
   // background-attachment: fixed;
-    height: 100%;
-    &::before{
+  height: 100%;
+  &::before{
     content: "";
     background-image: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
     background-repeat:no-repeat;
@@ -308,6 +310,7 @@
     padding-left: 68px;
     padding-right: 64px;
     font-size: 24px;
+    font-weight: lighter;
     &::-webkit-input-placeholder {
       color: #c8cacc;
     }
@@ -323,7 +326,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    width: 60px;
+    width: 40px;
     height: 60px;
     // color: #d8d8d8;
     // font-size: 35px;
@@ -331,7 +334,7 @@
     p{
         width: 40px;
         height: 40px;
-        background: url('~@lib/base/img/btn_text_delete@2x.png');
+        background: url('~@lib/base/img/tv_btn_text_delete.png');
         background-size:100% 100%; 
     }
     // &:active {
@@ -341,8 +344,10 @@
 }
 
 .search_submit {
-  width: 150px;
-  font-size: 28px;
+  width: auto;
+  margin-left:32px; 
+  font-weight: lighter;
+  font-size: 32px;
   appearance: none;
   border: none;
   background: none;
@@ -352,6 +357,7 @@
 }
 .search_history {
   padding: 0 32px;
+  padding-top: 60px;
   position: absolute;
   top: 150px;
   bottom: 0;
@@ -360,7 +366,8 @@
   -webkit-overflow-scrolling: touch;
   .hd {
     color: #75787a;
-    padding: 32px 0 24px;
+    // padding: 32px 0 24px;
+    padding-bottom: 36px;
     // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
     margin-bottom: 24px;
     color: #a4a9af;
@@ -393,20 +400,24 @@
   .bd {
     li {
       color: #222a37;
+      height: 68px;
+      line-height: 68px;
       // width: 50%;
       box-sizing: border-box;
       // height: 56px;
       // line-height: 56px;
-      margin-right: 16px;
+      margin-right: 20px;
       margin-bottom: 16px;
       // white-space: nowrap;
       // overflow: hidden;
       // text-overflow: ellipsis;
       float: left;
-      padding:16px 36px;
-      background: rgba(0, 0, 0, 0.06);
+      padding:0 30px;
+      background: rgba(0, 0, 0, 0.05);
       border-radius: 34px;
       font-family: PingFangSC-Regular;
+      font-size: 24px;
+      font-weight: lighter;
       // font-size: 24px;
       color: #5F5F60;
     }
@@ -497,7 +508,8 @@
         position: absolute;
         right: 8px;
         top: 0;
-        width: 48px;
+        padding: 0 4px;
+        // width: 48px;
         height: 32px;
         line-height: 32px;
         text-align: center;
@@ -563,6 +575,7 @@
   .title{
     font-size: 32px;
     color: #000000;
+    font-weight: lighter;
     // font-weight: 900;
     // line-height: 80px;
     white-space: nowrap;
@@ -575,6 +588,7 @@
     line-height: 45px;
     font-size: 32px;
     color: #000000;
+    margin-bottom: 20px;
     
   }
   .name {
@@ -582,8 +596,13 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 50px;
+    line-height: 40px;
     width: 366px;
+    font-size:24px;
+    font-weight: lighter;
+    clear: rgba(0,0,0,.5);
+    margin-bottom:4px; 
+
   }
   .starring{
     text-align: left;
@@ -593,31 +612,47 @@
   .playstate {
   position: absolute;
   bottom: 0;
-  width: 294px;
-  height: 84px;
+  width: 100%;
+  // height: 84px;
+   .play {
+    margin-right: 0.16rem;
+    vertical-align: middle;
+    width: 0.533rem;
+    height: 0.533rem;
+      background: url('~@lib/base/tv/assets/new/tv_icn_play2.png');
+
+    background-size: 100% 100%;
+    // margin-top: -4px;
+      
+  }
   .btn {
     /*background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);*/
     /*border-radius: 45px;*/
     background-color: #000000;
-    height: 72px;
-    line-height: 72px;
-    display: block;
+      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+    height: 80px;
+    // line-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: #000;
-    font-size: 36px;
+    font-size: 32px;
+    font-weight: lighter;
     text-align: center;
-    width: 294px;
+    width: 100%;
     height: 72px;
     i {
       display: inline-block;
       background-size: 100% 100%;
       background-repeat: no-repeat;
       margin-right: 12px;
-      margin-top: -2px;
+      // margin-top: -2px;
       vertical-align: middle;
       font-size: 30px;
     }
     span{
       font-size: 28px;
+      line-height: 0;
     }
     .icon-play,
     .icon-playing {
