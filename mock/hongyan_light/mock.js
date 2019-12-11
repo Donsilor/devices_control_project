@@ -13,7 +13,10 @@ export function generateSnapShot() {
         result: {
             "device_name": "智能筒灯",
             "room_name": "卧室",
-            "attribute": res
+            "attribute": res,
+            "third_attribute": {
+              "sub_device_category": "01"
+            }
         }
     })
 }

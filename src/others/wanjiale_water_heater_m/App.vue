@@ -781,17 +781,17 @@ export default {
   }
   &.close,
   &.offline {
-    &:before {
-      // content: "";
-      // position: fixed;
-      // top: 64px;
-      // left: 0;
-      // bottom: 0;
-      // right: 0;
-      // z-index: 999;
-      // width: 100%;
-      // background: rgba(0, 0, 0, 0.1);
-    }
+    // &:before {
+    //   content: "";
+    //   position: fixed;
+    //   top: 64px;
+    //   left: 0;
+    //   bottom: 0;
+    //   right: 0;
+    //   z-index: 999;
+    //   width: 100%;
+    //   background: rgba(0, 0, 0, 0.1);
+    // }
     &.page {
       // background: #fff;
       .cover {
