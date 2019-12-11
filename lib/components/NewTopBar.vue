@@ -296,7 +296,8 @@ export default {
 //   }
 // }
   .search-screen-bg{
-    display:none
+    // display:none
+    visibility: hidden;
   }
 }
 

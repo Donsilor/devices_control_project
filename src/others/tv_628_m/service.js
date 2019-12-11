@@ -2,8 +2,9 @@
  * 服务类
  */
 import jsonp from 'jsonp'
-
 const deviceType = 'tv'
+import store from './store'
+import router from './router'
 
 function sendApp(method, params, callback){
     HdSmart.Util.dispatchEvent({
@@ -11,6 +12,11 @@ function sendApp(method, params, callback){
         deviceType,
         params,
     }, function(error, data){
+      console.log(store.state.tvStatus.tvOnlineStatus,'store.state.tvStatus.tvOnlineStatus')
+      if(store.state.tvStatus.tvOnlineStatus==-1){
+        router.push('/NoNetwork')
+      }
+
         console.log(method,'method')
         console.log(error,'error')
         console.log(data,'data')
@@ -19,12 +25,9 @@ function sendApp(method, params, callback){
                 errormsg: data.errormsg
             }
         }
-
         if(error && method !== 'fuzzySearch'){
-          
           console.log(error.errormsg,'error.errormsg---------------------')
-          
-            HdSmart.UI.toast(error.errormsg)
+          HdSmart.UI.toast(error.errormsg)
         }
         callback && callback(error, data)
     })
@@ -75,9 +78,9 @@ export function getInitData(){
 /**
  * 获取channel所有数据接口
  */
-export function getChannelData(channelId, callback){
+export function getChannelData(params, callback){
     setTimeout(()=>{
-        sendApp('getChannelData', {channelId}, callback)
+        sendApp('getChannelData', params, callback)
     }, 150)
 }
 

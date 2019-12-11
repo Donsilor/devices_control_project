@@ -929,6 +929,7 @@ export default {
     // 删除搜索词
     clearWord() {
       this.word = ''
+      this.loadState = ''
       this.$el.querySelector('.search_input input').focus()
     },
     // 清空搜索历史
@@ -1007,7 +1008,6 @@ export default {
           pageNo: page
         },
         (err, data) => {
-          
           this.loadState = 'LOADED'
           if (err) return
 
@@ -1168,6 +1168,7 @@ export default {
             return
           }
           var temp = data.data
+          console.log(temp,'temp')
           var playlist = temp.playlist[0]
           temp.playlist2 = {}
           temp.playlist2.total = playlist.total
@@ -1178,16 +1179,11 @@ export default {
             item => item.states != "1"
           )
           let cur = Object.freeze(temp)
-          let clickItem = cur.playlist2.list[0]
-          console.log(clickItem,'clickItem')
-          console.log( cur ,'cur')
-          if (!clickItem) {
-            clickItem = this.cur.playlist2.list[0] || this.cur.playlist2.list2[0]
-          }
+          console.log(cur,'cur')
+          let clickItem = cur.playlist2.list[0] || cur.playlist2.list2[0]
           console.log(clickItem,'clickItem')
           if (clickItem) {
             service.playVideo(clickItem.link, clickItem.name)
-            
           }      
         }
       )

@@ -303,11 +303,10 @@ export default {
       let rightCurtainBox = this.$refs.rightCurtainBox
       this.animate(leftCurtainBox,{
         width:Math.round(width)
-      })
+      },30)
       this.animate(rightCurtainBox,{
         width:Math.round(width)
-      }
-      )
+      },50)
       // leftCurtainBox.style.width =width +"px"
       // // console.log(width)
       // rightCurtainBox.style.width = leftCurtainBox.style.width
