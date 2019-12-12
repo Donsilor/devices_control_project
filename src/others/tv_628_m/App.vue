@@ -5,9 +5,9 @@
     style="height: 100%;">
     <!-- <router-view /> -->
     <keep-alive>
-      <router-view v-if="$route.meta.keepAlive"/>
+      <router-view v-if="$route.meta.keepAlive&&isRouterAlive"/>
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive"/>
+    <router-view v-if="!$route.meta.keepAlive&&isRouterAlive"/>
 
     <!-- <detail/> -->
   </div>
@@ -59,10 +59,17 @@ input {
 
 <script>
 export default {
+  name: 'App',
+  provide(){
+    return{
+      reload:this.reload
+    }
+  },
   data() {
     return {
       isIOS: /iphone|ipad/i.test(navigator.userAgent),
-      tv:this.$store.state.tvStatus.tvOnlineStatus
+      tv:this.$store.state.tvStatus.tvOnlineStatus,
+      isRouterAlive:true
     }
   },  
   computed: {
@@ -75,12 +82,20 @@ export default {
         handler:function(n,v){
           console.log('111111111111111111111111111111111',n,v)
             if(n===-1){
-                this.$router.push('/NoNetwork')
+              this.$router.push('/NoNetwork')
             }else if(v===-1){
               this.$router.go(-1)
             }
         },
         immediate: true
+    }
+  },
+ methods:{
+    reload(){
+      this.isRouterAlive = false
+      this.$nextTick(function(){
+        this.isRouterAlive = true
+      })
     }
   }
 }

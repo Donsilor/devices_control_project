@@ -803,6 +803,7 @@ import Icon from '@lib/components/SettingIconMobile.vue'
 let infoCache = []
 
 export default {
+  inject:['reload'],
   components: { Icon },
   data() {
     const self = this
@@ -1022,6 +1023,19 @@ export default {
             window.scrollTo(0,this.scrollToList[n])
         }    
       })
+    },
+    '$store.state.tvStatus.tvOnlineStatus':{
+        handler:function(n,v){
+          console.log('111111111111111111111111111111111',n,v)
+            if(n===2){
+               this.reload()
+               this.pageInit()
+               for (var i in this.channels) {
+                  this.getinitData(this.channels[i].channelId,1)
+              }
+            }
+        },
+        immediate: true
     }
     // detailVisible(visible) {
     //   if (visible) {
@@ -1041,6 +1055,9 @@ export default {
     this.pageInit()
     HdSmart.UI.toggleNav()
     console.log('1111',window.device_name)
+    if(this.$store.state.tvStatus.tvOnlineStatus == 2){
+      // this.reload()
+    }
   },
   mounted() {
     this.maxh = this.$refs.icon_grid.offsetTop    
@@ -1053,6 +1070,14 @@ export default {
     this.initFixedMenu()
     console.log('uu', this.channels)
     service.RemoteController({ show: false })
+    // setTimeout(()=>{
+    //   console.log('时间到')
+    //   this.$store.commit('setScreenProjectionStatus',{
+    //     tvOnlineStatus:2
+    //   })
+    //   console.log(this.$store.state.tvStatus)
+      
+    // },3000)
     // this.$nextTick(() => {
     //   this.pageInit()
     //   if (!infoCache.length) {

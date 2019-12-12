@@ -1,5 +1,17 @@
 <template>
   <div class="body">
+    <div
+      v-show="deviceAttrs.error=='overheaterro'||deviceAttrs.error=='burnerro'||deviceAttrs.error=='tsensorerro'"
+      :style="{top:status_bar_height+44+'px'}"
+      class="offline_bar offline_bar_wifi">
+      <div class="offline_bar_div">
+        <span class="link">{{ errorText }}</span> 
+      </div>
+    </div>
+    <div 
+      v-show="deviceAttrs.error=='overheaterro'||deviceAttrs.error=='burnerro'||deviceAttrs.error=='tsensorerro'"
+      :style="{top:status_bar_height+44+'px'}" 
+      class="bgc"/>
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <topbar
         :title="device.device_name"
@@ -26,7 +38,7 @@
 
         <div class="bg center">
           <div
-            v-if="isClose"
+            v-if="isClose||isOffline"
             class="bg2 center">
             <div class="num">--</div>
             <div class="time">--<sup>°C</sup></div>
@@ -54,7 +66,8 @@
           @click="setTemperature(-1)" ><img
             src="~@lib/base/oakes_air_condition/assets/down.png"
             alt=""></div>
-        <div class="main-control"><i class="icon" /> 预设温度 {{ deviceAttrs.temperature }}°C</div>
+        <div 
+          class="main-control"><i class="icon" /> 预设温度 {{ deviceAttrs.temperature }}°C</div>
         <div
           v-show="deviceAttrs.mode != 'hot'"
           class="add"
@@ -72,9 +85,9 @@
           class="inverted-chronography">45分钟后跳到即热模式</div> -->
       </div>
       <div
-        class="tips-btn">
+        :class="[{'close': isClose }, 'tips-btn']">
         <div
-          :class="[{'up-index': !isOffline }, 'btn-wrap']">
+          :class="[{'up-index': isClose }, 'btn-wrap']">
           <div
             :class="[{ 'active': !isClose }, 'btn-swich btn center']"
             @click="setSwitch" />
@@ -165,6 +178,7 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
 import SelectTime from './components/time.vue'
+let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
 export default {
   components: {
     SelectTime
@@ -172,6 +186,9 @@ export default {
   data() {
     return {
       isOpen: false,
+      disabledVal: false,
+      status_bar_height:25,
+      errorText:""
     }
   },
   computed: {
@@ -181,18 +198,22 @@ export default {
       return this.deviceAttrs.status == 'run'
     },
     cRotate() {
-      if (this.isClose) {
+      if (this.isClose||this.isOffline||this.deviceAttrs.currenttemperature<=30) {
         return -45
-      } else if(this.deviceAttrs.mode == 'hot') {
+      } else if(this.deviceAttrs.currenttemperature>=75){
+          return 135
+      }else if(this.deviceAttrs.mode == 'hot') {
         return (+this.deviceAttrs.currenttemperature - 30) * 3.75 - 45
       } else {
         return (+this.deviceAttrs.currenttemperature - 30) * 4 - 45
       }
     },
     arrowRotate() {
-      if (this.isClose) {
+      if (this.isClose||this.isOffline||this.deviceAttrs.currenttemperature<=30) {
         return 0
-      } else if(this.deviceAttrs.mode == 'hot') {
+      } else if(this.deviceAttrs.currenttemperature>=75){
+         return 180
+      }else if(this.deviceAttrs.mode == 'hot') {
         return (+this.deviceAttrs.currenttemperature - 30) * 3.75
       } else {
         return (+this.deviceAttrs.currenttemperature - 30) * 4
@@ -218,10 +239,35 @@ export default {
       }
     },
   },
+  watch: {
+   'deviceAttrs.error':{
+        handler:function(newValue){
+            switch(newValue){
+              case "overheaterro":
+              this.errorText = "超温故障"
+              break
+              case "burnerro":
+              this.errorText = "干烧故障"
+              break
+              case "tsensorerro":
+              this.errorText = "内胆温度传感器故障"
+              break
+            }
+        },
+        immediate: true
+    }
+  },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
+       if (window.status_bar_height) {
+        this.status_bar_height = window.status_bar_height / dpr
+      }
     })
+    //测试报错
+    // setTimeout(()=>{
+    //   this.controlDevice("error", 'tsensorerro')
+    // },2000)
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
@@ -230,6 +276,14 @@ export default {
       let m = parseInt(time[0].split(':')[1])
       let val = h * 60 + m
       this.controlDevice('remaining', val)
+      .then((res) => {
+        if(res.code != 0) {
+          HdSmart.UI.toast('操作失败，请确认设备状态')
+        } 
+      })
+      .catch(() => {
+        HdSmart.UI.toast('操作失败，请确认设备状态')
+      })
     },
     showTime() {
       this.$refs.time.show = true
@@ -243,6 +297,14 @@ export default {
       }
       if (this.isClose) return
       this.controlDevice('mode', val)
+      .then((res) => {
+        if(res.code != 0) {
+          HdSmart.UI.toast('操作失败，请确认设备状态')
+        } 
+      })
+      .catch(() => {
+        HdSmart.UI.toast('操作失败，请确认设备状态')
+      })
     },
     setSwitch() {
       let switchStatus = ''
@@ -252,19 +314,39 @@ export default {
         switchStatus = 'on'
       }
       this.controlDevice("switch", switchStatus)
-        .then(() => {
-        })
+       .then((res) => {
+        if(res.code != 0) {
+          HdSmart.UI.toast('操作失败，请确认设备状态')
+        } 
+      })
+      .catch(() => {
+        HdSmart.UI.toast('操作失败，请确认设备状态')
+      })
     },
     setTemperature(step) {
+      if(this.disabledVal == true) return
+      this.disabledVal = true
       let val = +this.deviceAttrs.temperature + step
       if (val > 75) {
         val = 75
         return HdSmart.UI.toast('温度最高为75℃')
-      } else if (val < 35) {
-        val = 35
-        return HdSmart.UI.toast('温度最低为35℃')
+      } else if (val < 30) {
+        val = 30
+        return HdSmart.UI.toast('温度最低为30℃')
       }
       this.controlDevice('temperature', val)
+      .then((res) => { 
+        if(res.code == 0) {
+          this.disabledVal = false
+        }  else {
+          this.disabledVal = false
+          HdSmart.UI.toast('操作失败，请确认设备状态')
+        }
+      })
+      .catch(() => {
+        this.disabledVal = false
+        HdSmart.UI.toast('操作失败，请确认设备状态')
+      })
     },
     controlDevice(attr, value) {
       return this.doControlDevice({
@@ -281,6 +363,49 @@ export default {
 </script>
 <style lang="less" scoped>
 @imgPath3: 'base/honghan_switch/assets';
+.offline_bar {
+    background: rgba(0, 0, 0, .3);
+    position: fixed;
+    z-index:1000000;
+    width: 100%;
+    height: 44PX;
+    line-height: 44PX;
+    text-align: center;
+    color: #fff;
+    font-size: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20PX;
+    .offline_bar_div{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+       .link{
+        font-family: PingFangSC-Light;
+        font-size: 32px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+      }
+    }
+    .offline_bar_p{
+      width: 26PX;
+      height: 44PX;
+      display: flex;
+      justify-content:flex-start;
+      align-items: center;
+    }
+}
+.bgc{
+  position: fixed;
+  z-index:99999;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.1);
+}   
 .body {
   min-height: 100%;
 }
@@ -291,7 +416,20 @@ export default {
   position: relative;
   background: url('~@lib/@{imgPath3}/bg02.png');
   background-size: 100% 100%;
-
+  &.close,
+  &.offline {
+    &:before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 999;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
   &.filter {
     filter: blur(12px);
   }
@@ -536,7 +674,7 @@ export default {
     left: 0;
     right: 0;
     padding: 38px 0;
-    z-index: 9999;
+    z-index: 99;
 
     // background: #ffffff;
     // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
@@ -694,6 +832,8 @@ export default {
     }
 
     .btn-swich {
+      position: relative;
+      z-index:10000;
       &::before {
         content: "";
         display: block;
@@ -1271,12 +1411,19 @@ export default {
     font-size: 36px;
     display: flex;
     justify-content: center;
+    &.close{
+      z-index: 9999
+    }
   }
 .chronography {
   font-size: 12px;
   color: #000000;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 40px;
   .subscribe-chronography {
+    width: auto;
     &::after {
       content: "";
       display: inline-block;
