@@ -5,12 +5,12 @@
       :style="{top:status_bar_height+44+'px'}"
       class="offline_bar offline_bar_wifi">
       <div class="offline_bar_div">
-        <span class="link">{{ errorText }}</span> 
+        <span class="link">{{ errorText }}</span>
       </div>
     </div>
-    <div 
+    <div
       v-show="deviceAttrs.error=='overheaterro'||deviceAttrs.error=='burnerro'||deviceAttrs.error=='tsensorerro'"
-      :style="{top:status_bar_height+44+'px'}" 
+      :style="{top:status_bar_height+44+'px'}"
       class="bgc"/>
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <topbar
@@ -30,7 +30,7 @@
           </div>
           <div class="cover">
             <span class="point left" />
-            <span class="point right" />
+            <span :class="['point', 'right', {'rightRed': deviceAttrs.currenttemperature >= 75}]" />
             <span class="txt left">30<sup>°C</sup></span>
             <span class="txt right">{{ deviceAttrs.mode == 'hot' ? 78 : 75 }}<sup>°C</sup></span>
           </div>
@@ -66,7 +66,7 @@
           @click="setTemperature(-1)" ><img
             src="~@lib/base/oakes_air_condition/assets/down.png"
             alt=""></div>
-        <div 
+        <div
           class="main-control"><i class="icon" /> 预设温度 {{ deviceAttrs.temperature }}°C</div>
         <div
           v-show="deviceAttrs.mode != 'hot'"
@@ -272,14 +272,20 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setReserve(time) {
-      let h = parseInt(time[0].split(':')[0])
-      let m = parseInt(time[0].split(':')[1])
-      let val = h * 60 + m
+      console.log(time)
+      let h = parseInt(time[0].split(':')[0]) + 1
+      // let m = parseInt(time[0].split(':')[1])
+      var val = 0
+      if(this.getDateTime(new Date(), 'm') < 30) {
+        val = (this.getDateTime(new Date(), 'h') * 60) + (h * 60)
+      } else {
+        val = (this.getDateTime(new Date(), 'h') * 60) + (h * 60) + 60
+      }
       this.controlDevice('remaining', val)
       .then((res) => {
         if(res.code != 0) {
           HdSmart.UI.toast('操作失败，请确认设备状态')
-        } 
+        }
       })
       .catch(() => {
         HdSmart.UI.toast('操作失败，请确认设备状态')
@@ -300,7 +306,7 @@ export default {
       .then((res) => {
         if(res.code != 0) {
           HdSmart.UI.toast('操作失败，请确认设备状态')
-        } 
+        }
       })
       .catch(() => {
         HdSmart.UI.toast('操作失败，请确认设备状态')
@@ -317,7 +323,7 @@ export default {
        .then((res) => {
         if(res.code != 0) {
           HdSmart.UI.toast('操作失败，请确认设备状态')
-        } 
+        }
       })
       .catch(() => {
         HdSmart.UI.toast('操作失败，请确认设备状态')
@@ -329,13 +335,15 @@ export default {
       let val = +this.deviceAttrs.temperature + step
       if (val > 75) {
         val = 75
+        this.disabledVal = false
         return HdSmart.UI.toast('温度最高为75℃')
       } else if (val < 30) {
         val = 30
+        this.disabledVal = false
         return HdSmart.UI.toast('温度最低为30℃')
       }
       this.controlDevice('temperature', val)
-      .then((res) => { 
+      .then((res) => {
         if(res.code == 0) {
           this.disabledVal = false
         }  else {
@@ -347,6 +355,43 @@ export default {
         this.disabledVal = false
         HdSmart.UI.toast('操作失败，请确认设备状态')
       })
+    },
+    getDateTime(date, type) {
+      // 时间格式获取
+      if (!date) return
+      let d = new Date(+date)
+      let year = d.getFullYear()
+      let month =
+        d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1
+      let day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate()
+      let hours = d.getHours() < 10 ? '0' + d.getHours() : d.getHours()
+      let minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()
+      let seconds = d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds()
+      if (type === 'fulltime') {
+        return (
+          year +
+          '-' +
+          month +
+          '-' +
+          day +
+          ' ' +
+          hours +
+          ':' +
+          minutes +
+          ':' +
+          seconds
+        )
+      } else if (type === 'hms') {
+        return hours + ':' + minutes + ':' + seconds
+      } else if (type === 'h') {
+        return hours
+      } else if (type === 'm') {
+        return minutes
+      } else if (type === 's') {
+        return seconds
+      } {
+        return year + '-' + month + '-' + day
+      }
     },
     controlDevice(attr, value) {
       return this.doControlDevice({
@@ -363,6 +408,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @imgPath3: 'base/honghan_switch/assets';
+@imgPath4: 'base/oakes_air_condition/assets';
 .offline_bar {
     background: rgba(0, 0, 0, .3);
     position: fixed;
@@ -405,7 +451,7 @@ export default {
       right: 0;
       width: 100%;
       background: rgba(0, 0, 0, 0.1);
-}   
+}
 .body {
   min-height: 100%;
 }
@@ -538,6 +584,9 @@ export default {
             top: -8px;
             right: -5px;
             background: #d8d8d8;
+          }
+          &.rightRed {
+            background: #ff210e;
           }
         }
         .txt {
@@ -839,12 +888,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('~@lib/base/air_cleaner/assets/new-air/swich-black.png');
+        background-image: url('~@lib/@{imgPath4}/dakai3@2x.png');
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url('~@lib/base/air_cleaner/assets/new-air/swich-black.png');
+          background-image: url('~@lib/@{imgPath4}/dakai3@2x.png');
         }
       }
     }
