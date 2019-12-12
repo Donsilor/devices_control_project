@@ -5,6 +5,7 @@
       <new-topbar
         :title="device.device_name"
         :room="device.room_name"
+        :scroll="true"
         bak-color="#000"
       />
       <div
@@ -18,30 +19,32 @@
           <div
             :style="{opacity: brightness/100}"
             :class="[{'animation1': !isClose }, rotateClass, 'bg']" />
-          <div class="small"/>
-          <div class="big"/>
+          <div :class="['small', {'none': ThirddeviceAttrs.sub_device_category == '01'}]"/>
+          <div :class="['big', {'none': ThirddeviceAttrs.sub_device_category == '01'}]"/>
         </div>
         <canvas
-          v-show="!isClose"
+          v-show="ThirddeviceAttrs.sub_device_category != '01'"
           ref="canvas"
           class="canvas"
-          width="240"
-          height="240"
+          width="280"
+          height="280"
         />
-        <canvas
+        <!-- <canvas
           v-show="isClose"
           class="canvas"
           width="240"
           height="240"
-        />
+        /> -->
         <div class="mask"/>
         <div class="tips">
           <span
-            v-if="!isClose"
+            v-if="!isClose && ThirddeviceAttrs.sub_device_category != '01'"
             class="txt"
           >{{ brightness }}%</span>
         </div>
-        <div :class="['scale', {'scale-close': isClose}]" />
+        <div
+          :style="{opacity: brightness/100}"
+          :class="['scale', {'scale-close': isClose}, {'scale-none': ThirddeviceAttrs.sub_device_category == '01'}]" />
 
       </div>
       <!-- <canvas
@@ -73,24 +76,24 @@
             @click="setSwitch" />
           <div class="btn-name">{{ isClose||isOffline?'开灯':'关灯' }}</div>
         </div> -->
-        <div
+        <!-- <div
           class="btn-wrap"
           @click="setSpeed(167)">
-          <div :class="[ { 'active': deviceAttrs.temperature == 167}, 'btn btn-bc center']" />
+          <div :class="[ { 'active': deviceAttrs.temperature == 167 && deviceAttrs.switch_status=='on' && !isOffline }, 'btn btn-bc center']" />
           <div class="btn-name">暖光</div>
         </div>
         <div
           class="btn-wrap"
           @click="setSpeed(240)">
-          <div :class="[ { 'active': deviceAttrs.temperature == 240 }, 'btn btn-gs center']" />
+          <div :class="[ { 'active': deviceAttrs.temperature == 240 && deviceAttrs.switch_status=='on' && !isOffline }, 'btn btn-gs center']" />
           <div class="btn-name">自然光</div>
         </div>
         <div
           class="btn-wrap"
           @click="setSpeed(370)">
-          <div :class="[{ 'active': deviceAttrs.temperature == 370 }, 'btn btn-rs center']" />
+          <div :class="[{ 'active': deviceAttrs.temperature == 370 && deviceAttrs.switch_status=='on' && !isOffline }, 'btn btn-rs center']" />
           <div class="btn-name">白光</div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -110,12 +113,12 @@ export default {
       or: 110,
       br: 10,
       moveFlag: false,
-      brightness: 0,
+      brightness: 100,
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
-    ...mapState(['device', 'deviceAttrs']),
+    ...mapState(['device', 'deviceAttrs', 'ThirddeviceAttrs']),
     rotateClass() {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.temperature) {
@@ -161,6 +164,7 @@ export default {
   },
   mounted(){
     this.ctx = this.$refs.canvas.getContext("2d")
+    this.ctx.scale(2,2)
     this.$nextTick(() => {
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
@@ -172,6 +176,11 @@ export default {
       },false)
 
       this.$refs.canvas.addEventListener(on.move, (e)=> {
+          if(e.preventDefault){
+              e.preventDefault()
+          }else{
+              e.returnValue = false
+          }
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
               var r = Math.atan2(k.x-this.ox, this.oy-k.y)
@@ -185,6 +194,7 @@ export default {
           }
       }, false)
       this.$refs.canvas.addEventListener(on.end,()=> {
+          if (this.isOffline||this.isClose) return
           this.moveFlag = false
           this.controlDevice('level',parseInt(this.brightness*2.55))
       }, false)
@@ -203,12 +213,16 @@ export default {
       this.ctx.arc(this.ox,this.oy,this.or,0,Math.PI,true)//半圆
       // this.ctx.arc(ox,oy,or,0,2*Math.PI,true);//整圆
       this.ctx.stroke()
-      this.ctx.strokeStyle = "#E7BB6A"
+      if(this.deviceAttrs.switch_status=="on") {
+        this.ctx.strokeStyle = "#E7BB6A"
+      } else {
+        this.ctx.strokeStyle = "transparent"
+      }
       this.ctx.lineWidth = 5
       this.ctx.beginPath()
       this.ctx.arc(this.ox,this.oy,this.or,Math.PI,(n*2+0.5)*Math.PI,false)
       this.ctx.stroke()
-      this.ctx.fillStyle = "#E7BB6A"
+      this.ctx.fillStyle = "transparent"
       this.ctx.font = "80px Arial"
       this.ctx.textAlign = "center"
       this.ctx.textBaseline = "middle"
@@ -217,7 +231,13 @@ export default {
       this.ctx.fillStyle = "#E7BB6A"
       this.ctx.beginPath()
       var d =  this.offset(n*2*Math.PI,this.or)
-      this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
+      // 开机显示
+      if (this.deviceAttrs.switch_status == 'on' && !this.isOffline) {
+        this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
+      }else{
+        //关机显示
+        this.ctx.arc(0,0,0,0,0,true)
+      }
       this.ctx.fill()
     },
     getXY(e,obj) {
@@ -295,6 +315,7 @@ export default {
 @imgPath1: "base/blend/assets";
 @imgPath2: "base/air_cleaner/assets/new-air";
 @imgPath3: 'base/honghan_switch/assets';
+@imgPath4: 'base/oakes_air_condition/assets';
 @keyframes rotate {
     from {
       transform:rotate(0deg);
@@ -304,19 +325,32 @@ export default {
     }
 }
 .page{
-  height:100vh;
-  background: url('~@lib/@{imgPath3}/bg02.png');
-  background-size: 100% 100%;
+  // height:100vh;
+  // background: url('~@lib/@{imgPath3}/bg02.png');
+  // background-size: 100% 100%;
+  &::before{
+    content: "";
+    background-image: url('~@lib/@{imgPath3}/bg02.png');
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
 }
 .main{
-  // margin-top: 10vh;
+  margin-top: 85px;
   // position: relative;
   height: 400px;
+  margin-bottom: 470px;
 }
 .wrap-circle {
   position: relative;
   left: 36%;
-  top: 30%;
+  top: 35%;
   // position: absolute;
   // margin-top: 60px;
   // width: 320px;
@@ -359,7 +393,7 @@ export default {
   }
 }
 .tips {
-  margin-top: 12%;
+  margin-top: 18%;
   padding-bottom: 40px;
   position: absolute;
   text-align: center;
@@ -399,6 +433,9 @@ export default {
   top: 11%;
   right: -123%;
 }
+.none {
+  background: none;
+}
 .scale {
   // position: absolute;
   position: relative;
@@ -413,11 +450,14 @@ export default {
   background: url("~@lib/@{imgPath3}/btn_ac_dengguanghui@2x.png") no-repeat;
   background-size: 100% 100%;
 }
+.scale-none {
+  background: none;
+}
  .tips-btn{
    position: fixed;
     // margin-top: 100px;
-    bottom: 20%;
-    margin: 0 auto;
+    bottom: 0;
+    margin: 0 auto 96px;
     width: 100%;
     text-align: center;
     font-size: 36px;
@@ -490,14 +530,16 @@ export default {
   background-size: 100% 100%;
 }
 .panel-btn {
-  position: fixed;
+  // position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 40px 30px 30px;
+  // padding: 40px 30px 30px;
+  margin-top: 66px;
+  padding: 0 30px 96px;
   z-index: 9999;
   width: 100%;
-  height: 306px;
+  // height: 306px;
   // background: #ffffff;
   // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
   border-radius: 42px 42px 0px 0px;
@@ -540,7 +582,7 @@ export default {
   opacity: 0.2;
 }
 .btn-wrap {
-  margin: 0 24px 24px;
+  margin: 0 24px;
   &.up-index {
     position: relative;
     z-index: 9999;
@@ -657,12 +699,12 @@ export default {
       display: block;
       width: 48px;
       height: 48px;
-      background-image: url("~@lib/@{imgPath2}/swich-black.png");
+      background-image: url("~@lib/@{imgPath4}/dakai3@2x.png");
       background-size: 100% 100%;
     }
     &.active {
       &::before {
-        background-image: url("~@lib/@{imgPath2}/swich-black.png");
+        background-image: url("~@lib/@{imgPath4}/dakai3@2x.png");
       }
     }
   }

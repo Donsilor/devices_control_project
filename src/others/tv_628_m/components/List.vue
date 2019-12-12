@@ -625,12 +625,13 @@ export default {
       
   },
   deactivated(){
-       window.removeEventListener("scroll", this.loadMore)
+    window.removeEventListener("scroll", this.loadMore)
     removeEventListener("scroll", this.scrollfn)
   },
  
   //在页面离开时记录滚动位置
   beforeRouteLeave(to, from, next) {
+    console.log('离开了')
     this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
     console.log(to,from,next)
     if(to.name==='detail'){
@@ -638,16 +639,21 @@ export default {
           from.meta.keepAlive=true//当我们进入到detail时开启list的缓存
       }
       next()
-      }else{
+    }else{
           from.meta.keepAlive=false
-          this.$destroy()//销毁B的实例
+          this.scrollTop = 0
+          // this.$destroy()//销毁B的实例
           next()//当我们前进的不是detail时我们让list页面刷新
-      }
+    }
     next()
   },
   //进入该页面时，用之前保存的滚动位置赋值
   beforeRouteEnter(to, from, next) {
+    console.log('进入了')
+
     next(vm => {
+      console.log(vm.scrollTop,'vm.scrollTop')
+      
       document.body.scrollTop = vm.scrollTop
     })
   },
@@ -844,7 +850,7 @@ export default {
     },
     onPageInit() {
       this.loadState = "LOADING"
-      service.getChannelData(this.channelId, (err, data) => {
+      service.getChannelData({channelId:this.channelId,pageSize:21}, (err, data) => {
         this.loadState = "LOADED"
         if (err) {
           service.RemoteController({ 'show': false })

@@ -66,7 +66,7 @@
         <div
           v-show="deviceAttrs.mode == 'timer'"
           class="subscribe-chronography"
-          @click="showTime">{{ deviceAttrs.reserve | closeTime }} </div>
+          @click="showTime">{{ deviceAttrs.remaining | closeTime }} </div>
           <!-- <div
           v-show="deviceAttrs.mode == 'hot'"
           class="inverted-chronography">45分钟后跳到即热模式</div> -->
@@ -229,7 +229,7 @@ export default {
       let h = parseInt(time[0].split(':')[0])
       let m = parseInt(time[0].split(':')[1])
       let val = h * 60 + m
-      this.controlDevice('reserve', val)
+      this.controlDevice('remaining', val)
     },
     showTime() {
       this.$refs.time.show = true
@@ -781,17 +781,17 @@ export default {
   }
   &.close,
   &.offline {
-    &:before {
-      // content: "";
-      // position: fixed;
-      // top: 64px;
-      // left: 0;
-      // bottom: 0;
-      // right: 0;
-      // z-index: 999;
-      // width: 100%;
-      // background: rgba(0, 0, 0, 0.1);
-    }
+    // &:before {
+    //   content: "";
+    //   position: fixed;
+    //   top: 64px;
+    //   left: 0;
+    //   bottom: 0;
+    //   right: 0;
+    //   z-index: 999;
+    //   width: 100%;
+    //   background: rgba(0, 0, 0, 0.1);
+    // }
     &.page {
       // background: #fff;
       .cover {

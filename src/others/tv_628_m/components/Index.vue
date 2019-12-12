@@ -132,12 +132,12 @@
             <div class="name">{{ item.title }}</div>
             <div class="bottom">
               <span 
-                v-if="item.channelId=='002'" 
+                v-show="item.channelId=='002'" 
                 class="text">
                 {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
               </span>
               <span 
-                v-if="item.channelId=='001'" 
+                v-show="item.channelId=='001'" 
                 class="text score" >{{ item.score }}</span>
               <p 
                 class="play" 
@@ -530,17 +530,19 @@
   // }
   .bottom{
     width: 100%;
-    height:36px;
+    height:56px;
     position: absolute;
-    bottom: 86px;
+    bottom: 60px;
     display: flex;
     justify-content: space-between;
     padding: 0 12px;
     align-items: center;
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.5));
     .text{
       font-family: PingFangSC-Regular;
       font-size: 20px;
       color: #FFFFFF;
+      font-weight: lighter;
     }
     .score{
        color: #E1B96E;
@@ -794,6 +796,8 @@
 <script>
 import { mapState } from 'vuex'
 import * as service from '../service'
+console.log(service,'service----------------')
+
 import _ from "../util"
 import Icon from '@lib/components/SettingIconMobile.vue'
 let infoCache = []
@@ -999,21 +1003,25 @@ export default {
     // }
   },
   watch: {
-    activeIndex(v){
-  
-        console.log(this.scrollToList[v],'-11111111111111111111111111')
-        console.log(this.pageNoList)
-        
-      
+    activeIndex(n){
+        let bStop = false
+        for(let key in this.scrollToList){
+          if(this.scrollToList[key]>=44){
+            bStop = true
+            break
+          }
+        }
+        if(bStop&&this.scrollToList[n]<44){
+             window.scrollTo(0,44)
+             return
+        } 
       this.$nextTick(()=>{
-       
-      window.scrollTo(0,this.scrollToList[v])
-   
+         if(bStop&&this.scrollToList[n]<44){
+             window.scrollTo(0,44)
+        } else{
+            window.scrollTo(0,this.scrollToList[n])
+        }    
       })
-     
-      console.log(this.scrollToList,'------------------------------')
-      
-
     }
     // detailVisible(visible) {
     //   if (visible) {
@@ -1382,7 +1390,7 @@ export default {
       // })
     },
     getinitData(channelId){
-         service.getChannelData(channelId, (err, data) => {
+         service.getChannelData({channelId,pageSize:21}, (err, data) => {
         console.log('data',data)
        this.loadState = "LOADED"
 
@@ -1458,9 +1466,12 @@ export default {
     },
     toPage(item) {
 
+console.log(item,'vm.scrollTopvm.scrollTop')
+
       // let name = encodeURIComponent(item.channel)
 
-
+      console.log(this.$route.meta.keepAlive,'444444444444444')
+      
       //  window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
        this.$router.push({
          path:"/list",

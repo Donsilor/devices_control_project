@@ -5,6 +5,7 @@
       <NewTopBar
         :title="device.device_name"
         :room="device.room_name"
+        :scroll="true"
         bak-color="#000" />
       <!-- tab切换栏 -->
       <!-- <mt-datetime-picker
@@ -20,7 +21,15 @@
         style="margin-top:52px"> -->
       <div
         class="main center">
-        <div class="bg"><div class="circle"><div class="status">{{ switchValue=='open'?'通电中':'断电中' }}</div></div></div>
+        <div :class="['bg', {'move': switchValue=='open'}]">
+          <div class="circle">
+
+            <div class="dianL"/>
+          </div>
+          <div class="dianW"/>
+          <!-- <i><span/></i> -->
+        </div>
+        <div class="status">{{ switchValue=='open'?'通电中':'断电中' }}</div>
       </div>
       <!-- <div
         v-if="delayClose.countdownClose && delayClose.closeEnable=='y'"
@@ -28,10 +37,9 @@
       <div
         v-else-if="delayOpen.countdownOpen && delayOpen.openEnable=='y'"
         class="status1">{{ delayOpen.countdownOpen | delayTime }}后延时通电</div> -->
+      <!-- <div
+        class="status1">&nbsp;</div> -->
       <div
-        class="status1">&nbsp;</div>
-      <div
-        v-show="!isOffline"
         class="panel-btn center">
         <div
           class="btn-wrap"
@@ -81,10 +89,10 @@
           <div>取消延迟</div>
           <div
             v-if="delayClose.countdownClose && delayClose.closeEnable=='y'"
-            class="timing-right">{{ delayClose.countdownClose | delayTime }}后延时断电 ＞ </div>
+            class="timing-right">{{ delayClose.countdownClose | delayTime }}后延时断电 </div>
           <div
             v-else-if="delayOpen.countdownOpen && delayOpen.openEnable=='y'"
-            class="timing-right">{{ delayOpen.countdownOpen | delayTime }}后延时通电 ＞ </div>
+            class="timing-right">{{ delayOpen.countdownOpen | delayTime }}后延时通电 </div>
         </div>
         <div
           v-else-if="switchValue=='open'"
@@ -92,7 +100,7 @@
           @click="showTime('设置延时断电')">
           <div>延时断电</div>
           <div
-            class="timing-right">＞ </div>
+            class="timing-right"/>
         </div>
         <div
           v-else-if="switchValue == 'close'"
@@ -100,12 +108,12 @@
           @click="showTime('设置延时通电')">
           <div>延时通电</div>
           <div
-            class="timing-right">＞ </div>
+            class="timing-right"/>
         </div>
       </div>
 
       <div class="bottom margin-none">
-        <div
+        <!-- <div
           v-if="switchValue=='open'"
           class="timing"
           @click="showTime('设置断电时间')">
@@ -120,7 +128,7 @@
           <div>定时</div>
           <div
             class="timing-right">{{ timer.openEnable == 'y'?timer.openTime + ' 通电':'' }}＞ </div>
-        </div>
+        </div> -->
         <!-- <div class="timing">
           <div>定时</div>
           <div
@@ -784,7 +792,16 @@ export default {
 @imgPath1: 'base/dishwasher/assets';
 @imgPath2: 'base/kongke_plug/assets';
 @imgPath3: 'base/honghan_switch/assets';
+@imgPath4: 'base/oakes_air_condition/assets';
 * { touch-action: pan-y; }
+@keyframes circleRoate{
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 @keyframes progress-bar{
   0% {
       transform: rotate(260deg);
@@ -795,16 +812,28 @@ export default {
       border: 3px solid rgba(0, 0, 0, 1);
   }
 }
-.body {
-  min-height: 100%;
-}
+// .body {
+  // min-height: 100%;
+// }
 .page {
-  height: 100vh;
-  min-height: 550px;
-  overflow-x: hidden;
-  position: relative;
-  background-image: url('~@lib/@{imgPath3}/bg02.png');
-  background-size: 100% 100%;
+  // height: 100vh;
+  // min-height: 550px;
+  // overflow-x: hidden;
+  // position: relative;
+  // background-image: url('~@lib/@{imgPath3}/bg02.png');
+  // background-size: 100% 100%;
+  &::before{
+    content: "";
+    background-image: url('~@lib/@{imgPath3}/bg02.png');
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
   .switch {
     width: 74px;
     height: 28px;
@@ -857,9 +886,11 @@ export default {
   .bottom{
     width: 100%;
     z-index: 999;
-    margin-top: 40px;
+    margin-top: 60px;
     &.margin-none {
+      height: 20px;
       margin-top: 0;
+      margin-bottom: 20px;
       .timing {
         border-top: none;
       }
@@ -876,16 +907,44 @@ export default {
       line-height: 120px;
       border-top: 1px rgba(0, 0, 0, .1) solid;
       border-bottom: 1px rgba(0, 0, 0, .1) solid;
+      font-weight: lighter;
     }
 
   }
   .main {
+    margin-top: 63px;
+    position: relative;
     .bg{
       width: 580px;
       height: 580px;
       border-radius: 50%;
       border: 1px solid rgba(0, 0, 0, 0.1);
       position: relative;
+      &.move {
+        animation:circleRoate 3s infinite linear;
+      }
+      .dianW {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background:#CCCCCC;
+        margin: -10px auto 0px;
+      }
+      // i {
+      //   width: 580px;
+      //   height: 580px;
+      //   position: absolute;
+      //   animation:circleRoate 5s infinite linear;
+      //   span {
+      //     position: absolute;
+      //     left: 280px;
+      //     top: -10px;
+      //     width: 20px;
+      //     height: 20px;
+      //     border-radius: 50%;
+      //     background:#ff6200;
+      //   }
+      // }
       .circle{
         width: 500px;
         height: 500px;
@@ -896,8 +955,34 @@ export default {
         left: 50%;
         margin-left: -250px ;
         margin-top: -250px ;
+        .dianL {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background:#CCCCCC;
+          margin: -10px auto 0px;
+          position: absolute;
+          bottom: -10px;
+          left: 48%;
+        }
       }
-      .status{
+      // .status{
+      //   width: 420px;
+      //   height: 420px;
+      //   border-radius: 50%;
+      //   // border: 1px solid rgba(0, 0, 0, 0.1);
+      //   position: absolute;
+      //   top: 50%;
+      //   left: 50%;
+      //   margin-left: -210px ;
+      //   margin-top: -210px ;
+      //   font-size: 100px;
+      //   text-align: center;
+      //   line-height: 420px;
+      //   font-weight: lighter;
+      // }
+    }
+    .status{
         width: 420px;
         height: 420px;
         border-radius: 50%;
@@ -907,11 +992,11 @@ export default {
         left: 50%;
         margin-left: -210px ;
         margin-top: -210px ;
-        font-size: 80px;
+        font-size: 100px;
         text-align: center;
         line-height: 420px;
+        font-weight: lighter;
       }
-    }
   }
   .status1{
     font-size: 28px;
@@ -1002,16 +1087,16 @@ export default {
   .panel-btn {
     height: auto;
     width: 100%;
-    margin-top: 100px;
+    margin-top: 232px;
     position:relative;
     z-index: 99999;
   .btn-wrap {
-    margin: 0 24px 24px;
+    margin: 0 24px 0;
     .btn {
       box-sizing: border-box;
       margin: 0 auto;
-      width: 120px;
-      height: 120px;
+      width: 132px;
+      height: 132px;
       // border: 1px solid #818181;
       border-radius: 50%;
       display: flex;
@@ -1026,12 +1111,12 @@ export default {
           position: absolute;
           left: 50%;
           top: 50%;
-          margin-left: -22px;
-          margin-top: -22px;
-          background-image: url('~@lib/base/air_cleaner/assets/new-air/swich-black.png');
+          margin-left: -24px;
+          margin-top: -24px;
+          background-image: url('~@lib/@{imgPath4}/dakai3@2x.png');
           background-size: 100% 100%;
-          width: 44px;
-          height: 44px;
+          width: 48px;
+          height: 48px;
         }
       }
       &.btn-over{
@@ -1041,12 +1126,12 @@ export default {
           position: absolute;
           left: 50%;
           top: 50%;
-          margin-left: -22px;
-          margin-top: -22px;
-          background-image: url('~@lib/base/air_cleaner/assets/new-air/swich-black.png');
+          margin-left: -24px;
+          margin-top: -24px;
+          background-image: url('~@lib/@{imgPath4}/dakai3@2x.png');
           background-size: 100% 100%;
-          width: 44px;
-          height: 44px;
+          width: 48px;
+          height: 48px;
         }
       }
        &.btn-delay{
@@ -1055,19 +1140,19 @@ export default {
           position: absolute;
           left: 50%;
           top: 50%;
-          margin-left: -22px;
-          margin-top: -22px;
+          margin-left: -24px;
+          margin-top: -24px;
           background-image: url('~@lib/@{imgPath2}/yanshi.png');
           background-size: 100% 100%;
-          width: 44px;
-          height: 44px;
+          width: 48px;
+          height: 48px;
         }
       }
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
       }
       &.active {
         background: #000;
@@ -1122,8 +1207,8 @@ export default {
       &::before {
         content: "";
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
       }
       &.active {
         &.btn-start::before{
@@ -1210,9 +1295,20 @@ export default {
 
       }
     }
-    .timing-right{
+
+  }
+  .timing-right{
       position: relative;
       z-index: 999;
+      &::after {
+        content: "";
+        display: inline-block;
+        background-image: url('~@lib/@{imgPath3}/arrow_in.png');
+        background-size: 100% 100%;
+        width: 32px;
+        height: 32px;
+        position: relative;
+        top: 2px;
+      }
     }
-  }
 </style>

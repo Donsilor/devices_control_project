@@ -516,6 +516,26 @@ export function getChannelData(data) {
           ispay: '5',
           states: '1',
           hasPart: true
+        },
+        {
+          title: '伪装大师（下）',
+          pictureUrl:
+            'http://i.gtimg.cn/qqlive/img/jpgcache/files/qqvideo/k/kh8ot2r3vbmd8mb.jpg',
+          starring: '陈启杰;高雨儿;张炜迅;夏星;张惠程;杨静;闫锐',
+          director: '',
+          region: '内地',
+          year: '2017',
+          vid: 'kh8ot2r3vbmd8mb',
+          channelId: '001',
+          channel: '电影',
+          cate: '冒险',
+          duration: '00:58:49',
+          sourceId: '9',
+          site:
+            'cover_id=kh8ot2r3vbmd8mb|version=1|episode_idx=-1|channel_code=1|video_id=|video_name=伪装大师（下）|topic_id=|showtype=100',
+          ispay: '5',
+          states: '1',
+          hasPart: true
         }
       ]
     }
@@ -911,6 +931,16 @@ export function getDetaileData() {
             },
             {
               index: '37',
+              name: '第7期预告：男人帮与夏雨空降三星堆，变三千年前部落勇士',
+              pictureUrl:
+                'http://puui.qpic.cn/qqvideo_ori/0/s0024xlb7ym_228_128/0',
+              duration: '00:03:26',
+              states: '1',
+              link:
+                'tenvideo2://?action=7&video_id=s0024xlb7ym&video_name=第7期预告：男人帮与夏雨空降三星堆，变三千年前部落勇士&cover_id=k30wb9haj8060ba'
+            },
+            {
+              index: '38',
               name: '第7期预告：男人帮与夏雨空降三星堆，变三千年前部落勇士',
               pictureUrl:
                 'http://puui.qpic.cn/qqvideo_ori/0/s0024xlb7ym_228_128/0',

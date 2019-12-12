@@ -69,10 +69,11 @@
         padding: 0 40px;
         align-items: center;
         height: 122px;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
+        border-bottom: 0.5px solid rgba(0,0,0,0.1);
         .title{
-          font-size: 40px;
+          font-size: 32px;
           color: #000;
+          font-weight: lighter;
         }
         .canceltime{
           font-size: 32px;
@@ -92,9 +93,10 @@
         font-size: 32px;
         // color: #fff;
         text-align: center;
-        width: 650px;
+        width: 670px;
         height: 100px;
         margin: auto;
+        font-weight: lighter;
       }
       .cancel{
         margin-top: 32px;
@@ -102,6 +104,7 @@
         font-size: 32px;
         line-height: 44px;
         color: #000;
+        font-weight: lighter;
       }
     }
   }

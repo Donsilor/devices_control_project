@@ -7,6 +7,8 @@
       <!-- <div
         :style="{ top: 1.5 +'rem' }"
         class="noplay"/> -->
+      <div class="line-top"/>
+      <div class="line-bottom"/>
       <div class="box">
         <ul
           :style="{ top: hTop+0.85 +'rem' }"
@@ -22,7 +24,7 @@
                      'current':hIndex===idx}">{{ +idx > 9 ? idx : '0' + idx }}</li>
         </ul>
       </div>
-      <div class="unit">小时</div>
+      <div class="unit unit-right">小时</div>
       <div class="box">
         <ul
           :style="{ top: mTop+0.85 +'rem' }"
@@ -162,8 +164,26 @@
   //   width: 80%;
   //   height: 114px;
   // }
+  .line-top {
+    // height: 0.5px;
+    width: 100%;
+    // background: rgba(0, 0, 0, 0.1);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+    position: absolute;
+    margin-top: -48px;
+    padding: 0.5px;
+  }
+  .line-bottom {
+    // height: 0.5px;
+    width: 100%;
+    // background: rgba(0, 0, 0, 0.1);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+    position: absolute;
+    margin-top: 48px;
+    padding: 0.5px;
+  }
   .box {
-    flex: 1;
+    // flex: 1;
     // height: 260px;
     height: 380px;
     overflow: hidden;
@@ -178,17 +198,20 @@
       box-sizing: border-box;
       user-select: none;
       transform-origin: center center;
-      font-size: 32px;
+      font-size: 30px;
+      font-weight: lighter;
       color: #888;
     }
     /*滚动样式*/
 
     li.current {
-      font-size: 40px;
-      color: #FFC600;
+      font-size: 36px;
+      // color: #FFC600;
+      color: #000000;
       height: 114px;
       line-height: 114px;
       transform: translateZ(0px) rotateX(0deg);
+      font-weight: lighter;
       // border-top: 1px solid rgba(.0, .0, .0, .1);
       // border-bottom: 1px solid rgba(.0, .0, .0, .1)
     }
@@ -212,9 +235,14 @@
     // flex: 1;
     height: 114px;
     line-height: 114px;
-    font-size: 34px;
-    color: #FFC600;
+    font-size: 24px;
+    // color: #FFC600;
+    color: #000000;
     text-align: center;
+    margin-left: 22px;
+  }
+  .unit-right {
+    margin-right: 138px;
   }
 
 </style>

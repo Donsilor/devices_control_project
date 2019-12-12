@@ -2,8 +2,10 @@
   <div class="body">
     <div :class="[{'offline': isOffline }, {'close': isClose}, 'page']">
       <!-- 顶部 -->
-      <topbar
+      <NewTopBar
         :title="device.device_name"
+        :room="device.room_name"
+        :scroll="true"
         bak-color="#000" />
       <!-- 灯 -->
       <div class="main center">
@@ -11,7 +13,7 @@
 
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
-            :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}]"
+            :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}, 'panel-left']"
             @click="setSwitch2"
           >
             <div class="panel-btn center">
@@ -29,7 +31,7 @@
           <!-- 配置开关 -->
           <div
             v-else
-            :class="['panel']"
+            :class="['panel', 'panel-left']"
           >
             <div
               class="panel-btn center">
@@ -41,7 +43,7 @@
           </div>
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
-            :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}]"
+            :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}, 'panel-left']"
             @click="setSwitch3"
           >
             <div class="panel-btn center">
@@ -59,7 +61,7 @@
           <!-- 配置开关 -->
           <div
             v-else
-            :class="['panel']"
+            :class="['panel', 'panel-left']"
           >
             <div
               class="panel-btn center">
@@ -72,7 +74,7 @@
 
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
-            :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}]"
+            :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}, 'panel-left']"
             @click="setSwitch1"
           >
             <div
@@ -91,7 +93,7 @@
           <!-- 配置开关 -->
           <div
             v-else
-            :class="['panel']"
+            :class="['panel', 'panel-left']"
           >
             <div
               class="panel-btn center">
@@ -104,7 +106,7 @@
 
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
-            :class="['panel', {'panelActive': deviceAttrs.list[3].chan_status == 'on'}]"
+            :class="['panel', {'panelActive': deviceAttrs.list[3].chan_status == 'on'}, 'panel-left']"
             @click="setSwitch4"
           >
             <div class="panel-btn center">
@@ -122,7 +124,7 @@
           <!-- 配置开关 -->
           <div
             v-else
-            :class="['panel']"
+            :class="['panel', 'panel-left']"
           >
             <div
               class="panel-btn center">
@@ -338,20 +340,32 @@ export default {
 
 <style lang="less" scoped>
 @imgPath: 'base/honghan_switch/assets';
+@imgPath1: 'base/oakes_air_condition/assets';
 @100: 100% 100%;
-.body {
-  min-height: 100%;
-  height: 100vh;
-  touch-action: manipulation;
-  // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
-  background: url('~@lib/@{imgPath}/bg02.png');
-  background-size: 100% 100%;
-}
+// .body {
+  // min-height: 100%;
+  // height: 100vh;
+  // touch-action: manipulation;
+  // background: url('~@lib/@{imgPath}/bg02.png');
+  // background-size: 100% 100%;
+// }
 .page {
-  height: 100vh;
-  overflow-x: hidden;
-  position: relative;
+  // height: 100vh;
+  // overflow-x: hidden;
+  // position: relative;
   // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
+  &::before{
+    content: "";
+    background-image: url('~@lib/@{imgPath1}/img_bg_01@2x.png');
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
 
   &.filter {
     filter: blur(12px);
@@ -372,8 +386,9 @@ export default {
   //   line-height: 24px;
   // }
   .main {
-    margin-top: 10%;
+    margin-top: 65px;
     position: relative;
+    margin-bottom: 212px;
     .bg {
       display: flex;
       // justify-content: space-evenly;
@@ -427,10 +442,14 @@ export default {
   .panel {
     background: rgba(255, 255, 255, 0.5);
     width: 294px;
-    height: 337px;
+    height: 412px;
     display: flex;
     margin-bottom: 14px;
-    margin-right: 14px;
+    margin-right: 7px;
+    border-radius: 4px;
+  }
+  .panel-left {
+    margin-left: 7px;
   }
   .panelActive {
     background: #fff;
@@ -440,8 +459,8 @@ export default {
     // bottom: 0;
     // left: 0;
     // right: 0;
-    padding: 38px 0;
-    z-index: 9999;
+    padding: 40px 0;
+    z-index: 999;
 
     background: transparent;
     // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
@@ -455,7 +474,7 @@ export default {
       width: 100%;
       border-radius: 40px 40px 0 0;
       // background: #ffffff;
-      background: rgba(0,0,0,0.15);
+      background: rgba(0,0,0,0.05);
       // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
       display: flex;
       // justify-content: space-evenly;
@@ -489,8 +508,15 @@ export default {
     .btn-name-top {
       margin-bottom: 60px;
     }
+    .btn-name {
+      text-align: center;
+      color: #000;
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: lighter;
+    }
     .tis {
-      margin: 0 auto 147px;
+      margin: 0 auto 222px;
       width: 48px;
       height: 8px;
       border-radius: 5px;
@@ -499,12 +525,7 @@ export default {
     .tisActive {
       background: #E9BE6E;
     }
-    .btn-name {
-      text-align: center;
-      color: #000;
-      margin-top: 16px;
-      font-size: 24px;
-    }
+
     .btn-switch {
       &::before {
         content: "";
@@ -590,8 +611,12 @@ export default {
   }
   .panel-btn-bottom {
     width: 100%;
-    position: fixed;
-    bottom: 0;
+    // position: fixed;
+    // bottom: 0;
+    .panel-btn {
+      padding-top: 0;
+      padding-bottom: 96px;
+    }
   }
 }
 .btn-add {
