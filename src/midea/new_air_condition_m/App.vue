@@ -355,7 +355,7 @@ export default {
       this.ctx.arc(this.ox,this.oy,this.or,1/4 * Math.PI,3/4 * Math.PI,true)//半圆(逆时针)
       // this.ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true);//整圆
       this.ctx.stroke()
-      if (this.deviceAttrs.switchStatus=='on') {
+      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline) {
           if (this.deviceAttrs.mode == 'heat') {
             console.log('heat111')
             this.ctx.strokeStyle = "#DA6C00"
@@ -882,7 +882,6 @@ export default {
     width: 100%;
     margin-top: 10px;
     margin: 10px 0 90px 0;
-    margin-bottom: 1000px;
     font-family: PingFangSC-Light;
     .option{
       width: 100%;
@@ -1050,14 +1049,6 @@ export default {
         // background: #fff;
         .reduce,.add {
           opacity: .4;
-        }
-      }
-      .cover {
-        background: #fff;
-        .point {
-          &.left {
-            background: #d8d8d8;
-          }
         }
       }
     }

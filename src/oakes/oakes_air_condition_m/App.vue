@@ -37,8 +37,8 @@
           <canvas
             ref="canvas"
             class="canvas"
-            width="280"
-            height="280"
+            width="560"
+            height="560"
           />
         </div>
         <div
@@ -62,7 +62,7 @@
       <div
         class="starting">
         <div
-          :class="[{'active': loaclAttr.switchStatus == 'on'},'btn btn-start']"
+          :class="[{'active': loaclAttr.switchStatus == 'on'&&!isOffline},'btn btn-start']"
           @click="setSwitch" />
       </div>
       <div
@@ -70,32 +70,32 @@
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div :class="[{ 'active': loaclAttr.mode == 'cold' && loaclAttr.switchStatus == 'on' }, 'btn btn-cold center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'cold' && loaclAttr.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" />
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div :class="[ { 'active': loaclAttr.mode == 'heat' && loaclAttr.switchStatus == 'on' }, 'btn btn-heat center']" />
+          <div :class="[ { 'active': loaclAttr.mode == 'heat' && loaclAttr.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" />
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('auto')">
-          <div :class="[ { 'active': loaclAttr.mode == 'auto' && loaclAttr.switchStatus == 'on' }, 'btn btn-auto center']" />
+          <div :class="[ { 'active': loaclAttr.mode == 'auto' && loaclAttr.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" />
           <div
             class="btn-name" >智能</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div :class="[{ 'active': loaclAttr.mode == 'wind' && loaclAttr.switchStatus == 'on' }, 'btn btn-wind center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'wind' && loaclAttr.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" />
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': loaclAttr.mode == 'dehumidify' && loaclAttr.switchStatus == 'on' }, 'btn btn-dehumidify center']" />
+          <div :class="[{ 'active': loaclAttr.mode == 'dehumidify' && loaclAttr.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" />
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -239,6 +239,9 @@ export default {
     isClose(){
       return this.loaclAttr.switchStatus == 'on'?false:true
     },
+    isOffline(){
+      return this.loaclAttr.connectivity == 'online'?false:true
+    },
     modeIsActive() {
       return this.loaclAttr.mode == 'auto' || this.loaclAttr.mode == 'dehumidify' || this.loaclAttr.mode == 'wind'
     },
@@ -317,6 +320,7 @@ export default {
   },
   mounted(){
     this.ctx = this.$refs.canvas.getContext("2d")
+    this.ctx.scale(2,2)
     this.$nextTick(() => {
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
@@ -383,13 +387,18 @@ export default {
     },
     draw(n) {
       this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
-      this.ctx.strokeStyle = "rgba(0,0,0,0.1)"
+      this.ctx.strokeStyle = "rgba(0,0,0,0.05)"
       this.ctx.lineWidth = 7
       this.ctx.beginPath()
+      this.ctx.shadowColor =  "none"
+      this.ctx.shadowOffsetX = 0
+      this.ctx.shadowOffsetY = 0
+      this.ctx.shadowBlur = 0
+      this.ctx.lineCap = 'round'
       this.ctx.arc(this.ox,this.oy,this.or,1/4 * Math.PI,3/4 * Math.PI,true)//半圆(逆时针)
       // this.ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true);//整圆
       this.ctx.stroke()
-      if (this.loaclAttr.switchStatus=='on') {
+      if (this.loaclAttr.switchStatus=='on'&&!this.isOffline) {
           if (this.loaclAttr.mode == 'heat') {
             console.log('heat111')
             this.ctx.strokeStyle = "#DA6C00"
@@ -406,6 +415,10 @@ export default {
 
       this.ctx.lineWidth = 7
       this.ctx.beginPath()
+      this.ctx.shadowColor =  "none"
+      this.ctx.shadowOffsetX = 0
+      this.ctx.shadowOffsetY = 0
+      this.ctx.shadowBlur = 0
       this.ctx.arc(this.ox,this.oy,this.or,3/4 *Math.PI,(n*2+0.5)*Math.PI,false)
       // this.ctx.arc(this.ox,this.oy,this.or,0.5*Math.PI,(n*2+0.5)*Math.PI,false);
       this.ctx.stroke()
@@ -419,6 +432,10 @@ export default {
       this.centigrade = Math.round((n*(16/0.75))+(16-((16*0.125)/0.75)))*10
       this.ctx.fillStyle = "#fff"
       this.ctx.beginPath()
+      this.ctx.shadowOffsetX = 0
+      this.ctx.shadowOffsetY = 2
+      this.ctx.shadowBlur = 4
+      this.ctx.shadowColor = "rgba(0, 0, 0, 0.1)"
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
       // 关机显示
@@ -464,21 +481,6 @@ export default {
     //    })
     // },
     // 开关机
-    // shutdowncallback(val){
-    //   if (this.isOffline) return
-    //   this.controlDevice('switch',val)
-    //   .then((res) => {
-    //      if(res.code == 0) {
-    //        this.loaclAttr.switchStatus = val
-    //      } else {
-    //        HdSmart.UI.toast('操作失败')
-    //      }
-    //    })
-    //    .catch(() => {
-    //      HdSmart.UI.toast('操作失败')
-    //    })
-    // },
-    // 开关机
     setSwitch(){
       if (this.isOffline) return
       let switchstatus = ''
@@ -501,7 +503,7 @@ export default {
     },
     // 设置模式
     setMode(val) {
-      if (val == this.loaclAttr.mode || this.isClose) return
+      if (val == this.loaclAttr.mode || this.isClose||this.isOffline) return
       this.controlDevice('mode', val)
       .then((res) => {
          if(res.code == 0) {
@@ -621,7 +623,7 @@ export default {
     //   })
     // },
     showSwing() {
-      if (this.isClose) return
+      if (this.isClose||this.isOffline) return
       this.$refs.swing.show = true
     },
     showMode() {
@@ -679,7 +681,7 @@ export default {
 .page {
   &::before{
     content: "";
-    background-image: url('~@lib/@{imgPath1}/img_bg_01@2x.png');
+    background-image: url('~@lib/@{imgPath1}/img_bg.png');
     background-repeat:no-repeat;
     background-size: 100% 100%;
     position: fixed;
@@ -718,7 +720,7 @@ export default {
       border: none;
       width: 72px;
       height: 72px;
-      background: rgba(0,0,0,0.04);
+      background: rgba(0,0,0,0.05);
       border-radius: 50%;
       &.add{
          width: 72px;
@@ -744,6 +746,7 @@ export default {
     }
     .wrap-circle{
       position: relative;
+      zoom: 0.5;
        .showtemp{
         position: absolute;
         top: 49%;
@@ -758,15 +761,16 @@ export default {
           // margin-top: 60PX;
           position: relative;
           font-size: 144px;
-          color: #20282B;
+          color: #000;
           text-align: center;
+          transform: scale(2);
           sup{
-            opacity: .5;
             position: absolute;
-            top: 15px;
-            right: -20px;
+            top: -5px;
+            right: -22px;
             font-size: 24px;
-            color: #20282B;
+            color: #000;
+            transform: scale(0.5);
           }
         }
         .c-mode{
@@ -804,11 +808,11 @@ export default {
         width: 132px;
         height: 132px;
         // border: 1px solid #818181;
-        background: rgba(0, 0, 0, 0.1);
+        background: rgba(0, 0, 0, 0.05);
         border-radius: 50%;
         position: relative;
         &.active{
-          background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+          background-image: linear-gradient(to right, #F1CB85, #E1B96E);
         }
         &::before{
           content: "";
@@ -828,6 +832,7 @@ export default {
         color: #000;
         margin-top: 16px;
         font-size: 24px;
+        font-family: PingFangSC-Light;
       }
   }
   .panel-btn {
@@ -857,7 +862,7 @@ export default {
       width: 120px;
       height: 120px;
       // border: 1px solid #818181;
-      background: rgba(0,0,0,0.1);
+      background: rgba(0,0,0,0.05);
       border-radius: 50%;
 
       display: flex;
@@ -869,7 +874,7 @@ export default {
         height: 44px;
       }
       &.active {
-        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        background-image: linear-gradient(to right, #F1CB85, #E1B96E);
       }
     }
     .btn-name {
@@ -995,7 +1000,8 @@ export default {
   .optionbox{
     width: 100%;
     margin-top: 10px;
-    margin: 10px 0 30px 0;
+    margin: 10px 0 90px 0;
+    font-family: PingFangSC-Light;
     .option{
       width: 100%;
       height: 120px;
@@ -1049,11 +1055,11 @@ export default {
               height: 64px;
               text-align: center;
               line-height: 64px;
-              font-family: PingFangSC-Light;
               font-size: 32px;
               margin-right: 20px;
               color: #000;
               opacity: .5;
+              font-family: PingFangSC-Light;
               &:last-of-type{
                 margin-right: 0px;
               }
@@ -1168,14 +1174,6 @@ export default {
         // background: #fff;
         .reduce,.add {
           opacity: .4;
-        }
-      }
-      .cover {
-        background: #fff;
-        .point {
-          &.left {
-            background: #d8d8d8;
-          }
         }
       }
     }

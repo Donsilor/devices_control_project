@@ -37,8 +37,8 @@
           <canvas 
             ref="canvas"
             class="canvas" 
-            width="280" 
-            height="280"
+            width="560" 
+            height="560"
           />
         </div>
         <div
@@ -62,40 +62,41 @@
       <div
         class="starting">
         <div
-          :class="[{'active': deviceAttrs.switchStatus == 'on'},'btn btn-start']"
-          @click="setSwitch" />
+        ref="switchStatus"
+          :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn btn-start']"
+          @click="setSwitch" @touchend="touchend('switchStatus')" />
       </div>
       <div
         class="panel-btn center">
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-cold center']" />
+          <div ref="cold" :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" @touchend="touchend('cold')"/>
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-heat center']" />
+          <div ref="heat" :class="[ { 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" @touchend="touchend('heat')"/>
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('auto')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-auto center']" />
+          <div ref="auto" :class="[ { 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" @touchend="touchend('auto')"/>
           <div
             class="btn-name" >智能</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-wind center']" />
+          <div ref="wind" :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" @touchend="touchend('wind')"/>
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on' }, 'btn btn-dehumidify center']" />
+          <div ref="dehumidify" :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" @touchend="touchend('dehumidify')"/>
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -286,6 +287,7 @@ export default {
   },
   mounted(){
     this.ctx = this.$refs.canvas.getContext("2d")
+    this.ctx.scale(2,2)
     this.$nextTick(() => {
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
@@ -336,19 +338,28 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    touchend(val){
+      console.log(val,'=============');
+      
+      this.$refs[val].classList.add('animate')
+    },
     offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
     },
     draw(n) {
-      
       this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
-      this.ctx.strokeStyle = "rgba(0,0,0,0.1)"
+      this.ctx.strokeStyle = "rgba(0,0,0,0.05)"
       this.ctx.lineWidth = 7
       this.ctx.beginPath()
+      this.ctx.shadowColor =  "none"
+      this.ctx.shadowOffsetX = 0
+      this.ctx.shadowOffsetY = 0
+      this.ctx.shadowBlur = 0
+      this.ctx.lineCap = 'round'
       this.ctx.arc(this.ox,this.oy,this.or,1/4 * Math.PI,3/4 * Math.PI,true)//半圆(逆时针)
       // this.ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true);//整圆
       this.ctx.stroke()
-      if (this.deviceAttrs.switchStatus=='on') {
+      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline) {
           if (this.deviceAttrs.mode == 'heat') {
             console.log('heat111')
             this.ctx.strokeStyle = "#DA6C00"
@@ -365,6 +376,10 @@ export default {
       
       this.ctx.lineWidth = 7
       this.ctx.beginPath()
+      this.ctx.shadowColor =  "none"
+      this.ctx.shadowOffsetX = 0
+      this.ctx.shadowOffsetY = 0
+      this.ctx.shadowBlur = 0
       this.ctx.arc(this.ox,this.oy,this.or,3/4 *Math.PI,(n*2+0.5)*Math.PI,false)
       // this.ctx.arc(this.ox,this.oy,this.or,0.5*Math.PI,(n*2+0.5)*Math.PI,false);
       this.ctx.stroke()
@@ -378,6 +393,10 @@ export default {
       this.centigrade = Math.round((n*(14/0.75))+(16-((14*0.125)/0.75)))*10
       this.ctx.fillStyle = "#fff"
       this.ctx.beginPath()
+      this.ctx.shadowOffsetX = 0
+      this.ctx.shadowOffsetY = 2
+      this.ctx.shadowBlur = 4
+      this.ctx.shadowColor = "rgba(0, 0, 0, 0.1)"
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
       // 关机显示
@@ -548,6 +567,20 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/air_condition/assets/new-air';
 @imgPath1: 'base/oakes_air_condition/assets';
+.animate::before{
+  animation: scale 0.5s;
+}
+@keyframes scale {
+  0%{
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(0.3);
+  }
+    100%{
+    transform: scale(1.3);
+  }
+}
   // 定时展示
   .timeShow {
     text-align: center;
@@ -566,7 +599,7 @@ export default {
 .page {
   &::before{
     content: "";
-    background-image: url('~@lib/@{imgPath1}/img_bg_01@2x.png');
+    background-image: url('~@lib/@{imgPath1}/img_bg.png');
     background-repeat:no-repeat;
     background-size: 100% 100%;
     position: fixed;
@@ -606,7 +639,7 @@ export default {
       border: none;
       width: 72px;
       height: 72px;
-      background: rgba(0,0,0,0.04);
+      background: rgba(0,0,0,0.05);
       border-radius: 50%;
       &.add{
          width: 72px;
@@ -632,6 +665,7 @@ export default {
     }
     .wrap-circle{
       position: relative;
+      zoom: 0.5;
       .showtemp{
         position: absolute;
         top: 49%;
@@ -646,15 +680,16 @@ export default {
           // margin-top: 60PX;
           position: relative;
           font-size: 144px;
-          color: #20282B;
+          color: #000;
           text-align: center;
+          transform: scale(2);
           sup{
-            opacity: .5;
             position: absolute;
-            top: 15px;
+            top: -5px;
             right: -20px;
             font-size: 24px;
-            color: #20282B;
+            color: #000;
+            transform: scale(0.5);
           }
         }
         .c-mode{
@@ -692,11 +727,11 @@ export default {
         width: 132px;
         height: 132px;
         // border: 1px solid #818181;
-        background: rgba(0, 0, 0, 0.1);
+        background: rgba(0, 0, 0, 0.05);
         border-radius: 50%;
         position: relative;
         &.active{
-          background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+          background-image: linear-gradient(to right, #F1CB85, #E1B96E);
         }
         &::before{
           content: "";
@@ -716,6 +751,7 @@ export default {
         color: #000;
         margin-top: 16px;
         font-size: 24px;
+        font-family: PingFangSC-Light;
       }
   }
   .panel-btn {
@@ -745,7 +781,7 @@ export default {
       width: 120px;
       height: 120px;
       // border: 1px solid #818181;
-      background: rgba(0,0,0,0.1);
+      background: rgba(0,0,0,0.05);
       border-radius: 50%;
 
       display: flex;
@@ -757,7 +793,7 @@ export default {
         height: 44px;
       }
       &.active {
-        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        background-image: linear-gradient(to right, #F1CB85, #E1B96E);
       }
     }
     .btn-name {
@@ -863,7 +899,8 @@ export default {
   .optionbox{
     width: 100%;
     margin-top: 10px;
-    margin: 10px 0 30px 0;
+    margin: 10px 0 90px 0;
+    font-family: PingFangSC-Light;
     .option{
       width: 100%;
       height: 120px;
@@ -1016,7 +1053,7 @@ export default {
     &:before {
       content: "";
       position: fixed;
-      top: 64PX;
+      top: 0;
       left: 0;
       bottom: 0;
       right: 0;
@@ -1030,14 +1067,6 @@ export default {
         // background: #fff;
         .reduce,.add {
           opacity: .4;
-        }
-      }
-      .cover {
-        background: #fff;
-        .point {
-          &.left {
-            background: #d8d8d8;
-          }
         }
       }
     }

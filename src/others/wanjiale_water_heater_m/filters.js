@@ -6,8 +6,8 @@ export function toThousandFilter(num) {
 export function closeTime(val) {
   if(val){
     let h = Math.floor(val/60)
-    let m = val%60
-    return h+'小时'+m+'分钟后加热 '
+    // let m = val%60
+    return h+'小时后加热完成 '
   }else{
     return  ''
   }

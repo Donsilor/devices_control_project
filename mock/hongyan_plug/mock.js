@@ -24,7 +24,7 @@ var res = {
         order_mode:'on',//定时开关
         type:2, //通电
         order_time: 0,//定时
-        child: 'off',//童锁
+        child: 'on',//童锁
         deviceModel: 'KFRd-26GW/FE22BpA',
         manufactureId: 'tcl',
         deviceCategory: 'airconditioner.new',
