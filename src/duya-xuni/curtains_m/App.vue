@@ -95,7 +95,10 @@ export default {
       myMove:false,
       curtainWidth:0,
       curtainStatusText:'',
-      count: 0
+      count: 0,
+      open_percentage: 60,
+      timehander: null,
+      timehander2: null
     }
   },
   computed: {
@@ -106,14 +109,10 @@ export default {
     }
   },
   watch:{
-    "device.stateChange"(){
-      if (this.myMove==false) {
-          this.newRatio()
-      }
-      // if (this.btnActive === 'open') {
-      //     this.curtainStatusText='正在打开窗帘'
-      // } else if (this.btnActive === 'close') {
-      //     this.curtainStatusText='正在关闭窗帘'
+    "device.stateChange"(val){
+      console.log('stateChange改变中', val)
+      // if (this.myMove==false) {
+      //     this.newRatio()
       // }
       console.log(this.curtainStatusText,'curtainStatusText')
       console.log(this.btnActive,'btnActive')
@@ -186,10 +185,10 @@ export default {
       this.getDeviceInfo()
       .then(()=>{
         this.newRatio()
-        if (this.deviceAttrs.open_percentage=='100') {
+        if (this.open_percentage=='100') {
           this.curtainStatusText = '窗帘已打开'
         }
-        if (this.deviceAttrs.open_percentage=='0') {
+        if (this.open_percentage=='0') {
           this.curtainStatusText = '窗帘已关闭'
         }
       })
@@ -213,6 +212,10 @@ export default {
       this.myMove = false
       this.controlDevice('switch', 'on')
       .then((res)=>{
+        if (this.myMove==false) {
+          this.open_percentage = 100
+          this.newRatio()
+        }
         if (res.code==-90004) {
           return HdSmart.UI.toast('网络超时，请重试')
         }
@@ -229,6 +232,10 @@ export default {
       this.myMove = false
       this.controlDevice('switch', 'off')
       .then((res)=>{
+        if (this.myMove==false) {
+          this.open_percentage = 0
+          this.newRatio()
+        }
         if (res.code==-90004) {
           return HdSmart.UI.toast('网络超时，请重试')
         }
@@ -243,12 +250,8 @@ export default {
       setTimeout(()=>{
         this.$refs['btn-pause'].classList.remove('active')
       },500)
-      this.controlDevice('switch', 'pause')
-      .then((res)=>{
-        if (res.code==-90004) {
-          return HdSmart.UI.toast('网络超时，请重试')
-        }
-      })
+      clearInterval(this.timehander)
+      clearInterval(this.timehander2)
     },
     // clear
     // 滑动窗帘
@@ -291,23 +294,21 @@ export default {
     },
     //根据后台返回数据得出窗帘的宽度
     newRatio(){
-      if(this.myMove)return
+      console.log('newRatio被调用')
       let circle = this.$refs.right.offsetHeight
       let maxWidth = this.$refs.imgBox.offsetWidth*0.5
-      let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
+      let width = (100-this.open_percentage)/100*(maxWidth-circle)+circle
       console.log(width,'width')
       console.log(circle)
       let leftCurtainBox = this.$refs.leftCurtainBox
       let rightCurtainBox = this.$refs.rightCurtainBox
-      this.animate(leftCurtainBox,{
+      this.timehander = this.animate(leftCurtainBox,{
         width:Math.round(width)
-      },30)
-      this.animate(rightCurtainBox,{
+      },100)
+      this.timehander2 = this.animate(rightCurtainBox,{
         width:Math.round(width)
-      },50)
-      // leftCurtainBox.style.width =width +"px"
-      // // console.log(width)
-      // rightCurtainBox.style.width = leftCurtainBox.style.width
+      },100)
+      this.open_percentage = width
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
@@ -332,7 +333,7 @@ export default {
 	speedTime = speedTime ? speedTime : 10
 	//console.log(speedTime);
 	clearInterval(ele.timer)
-	ele.timer = setInterval(()=>{
+	return ele.timer = setInterval(()=>{
 		var flag = true//表示所有的属性都到达了目标 值
 		for(var attr in param){
 			if(attr === "zIndex"){

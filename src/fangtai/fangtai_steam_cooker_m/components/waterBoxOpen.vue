@@ -8,7 +8,7 @@
       <!--模式-->
       <div class="main center">
         <div class="status">
-<!--          <p>水箱已打开</p>-->
+          <!--          <p>水箱已打开</p>-->
           <p>{{ deviceAttrs.PushRod == 0 ? '水箱已关闭' : deviceAttrs.PushRod == 1 ? '水箱已打开' : '' }}</p>
           <p v-if="deviceAttrs.PushRod == 1">关闭水箱后可以继续使用</p>
         </div>
@@ -18,19 +18,28 @@
         <ul>
           <li style="padding-top: 12px;">
             <div>
-              <p class="water-box btn-style" @click="closeWaterBox"></p>
+              <p
+                class="water-box btn-styl"
+                @click="closeWaterBox"
+                @touchstart="touchstart"
+                @touchend="touchend"
+              />
               <p>{{ deviceAttrs.PushRod == 0 ? '开水箱' : deviceAttrs.PushRod == 1 ? '关水箱' : '' }}</p>
             </div>
           </li>
           <li>
             <div>
-              <p class="pause btn-style" @click="continueCook"></p>
+              <p
+                class="pause btn-style"
+                @click="continueCook"/>
               <p>继续</p>
             </div>
           </li>
           <li style="padding-top: 12px;">
             <div>
-              <p :class="['light', {'btn-style': deviceAttrs.Light == 0}, {'open-light': deviceAttrs.Light == 1}]" @click="light"></p>
+              <p
+                :class="['light', {'btn-style': deviceAttrs.Light == 0}, {'open-light': deviceAttrs.Light == 1}]"
+                @click="light"/>
               <p>照明</p>
             </div>
           </li>
@@ -112,6 +121,20 @@
     mounted() {
     },
     methods: {
+      touchstart(e) {
+        e.target.classList.add('test')
+        e.target.classList.add('yellowExtend')
+        setTimeout(() => {
+          e.target.classList.remove('yellowExtend')
+        }, 400)
+        console.log('start', e)
+      },
+      touchend(e) {
+        setTimeout(() => {
+          e.target.classList.remove('test')
+          // e.target.classList.remove('yellowExtend')
+        }, 500)
+      },
       ...mapActions(['getDeviceInfo', 'doControlDevice']),
       setRangWidth(val) {
         document.querySelector('.rang_width').style.width = val+"%"
@@ -183,6 +206,7 @@
   @imgPath1: 'base/oakes_air_condition/assets';
   .body {
     min-height: 100%;
+    touch-action: none;
   }
   .page {
     height: 100vh;
@@ -354,5 +378,36 @@
       opacity: 0.2;
     }
   }
-
+  .test {
+    animation: iconScale .5s;
+    animation-timing-function: ease;
+  }
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .5s 1;
+      z-index: -99;
+    }
+  }
+  @keyframes iconScale {
+    0% {background-size: 48px 48px;}
+    15% {background-size: 22px 22px;}
+    50% {background-size: 48px 48px;}
+    95% {background-size: 56px 56px;}
+    100% {background-size: 60px 60px;}
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 80%;height: 80%;}
+    50% {width: 90%;height: 90%;}
+    100% {width: 100%;height: 100%;}
+  }
 </style>
