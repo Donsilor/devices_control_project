@@ -44,23 +44,23 @@
             index:'1'
           },
           {
-           speed:'中低风',
+           speed:'中风',
             index:'2'
           },
           {
-           speed:'中风',
+           speed:'高风',
             index:'3'
           },
           {
-           speed:'中高风',
+           speed:'强风',
             index:'4'
           },
           {
-           speed:'高风',
+           speed:'超强风',
             index:'5'
           },
           {
-           speed:'强风',
+           speed:'停风',
             index:'6'
           },
         ],

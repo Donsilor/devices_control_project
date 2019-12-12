@@ -191,7 +191,7 @@ getStyle(obj,attr){
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
 .setOpen{
-  animation: open 1s linear;
+  animation: open 5s linear;
   animation-fill-mode:forwards;
 }
 @keyframes open {
@@ -203,7 +203,7 @@ getStyle(obj,attr){
   }
 }
 .setClose{
-  animation: close 1s linear;
+  animation: close 5s linear;
   animation-fill-mode : forwards;
 }
 @keyframes close {

@@ -181,11 +181,15 @@ export default {
     }
   },
   created() {
-    
-    HdSmart.ready(() => {
+
+  },
+  mounted(){
+      HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
-        this.newRatio()
+        this.$nextTick(()=>{
+          this.newRatio()
+        })
         if (this.deviceAttrs.open_percentage=='100') {
           this.curtainStatusText = '窗帘已打开'
         }
@@ -195,10 +199,9 @@ export default {
       })
       HdSmart.UI.setStatusBarColor(2)
     })
-  },
-  mounted(){
-        console.log(this.animate,'4444444444')
-        
+    // this.$nextTick(()=>{
+    //   // this.newRatio()
+    // })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
@@ -213,6 +216,11 @@ export default {
       this.myMove = false
       this.controlDevice('switch', 'on')
       .then((res)=>{
+        if (res.code==-90004) {
+          return HdSmart.UI.toast('网络超时，请重试')
+        }
+      })
+      .catch((res) => {
         if (res.code==-90004) {
           return HdSmart.UI.toast('网络超时，请重试')
         }
@@ -233,6 +241,11 @@ export default {
           return HdSmart.UI.toast('网络超时，请重试')
         }
       })
+      .catch((res) => {
+        if (res.code==-90004) {
+          return HdSmart.UI.toast('网络超时，请重试')
+        }
+      })
     },
     //暂停
     setPause(){
@@ -245,6 +258,11 @@ export default {
       },500)
       this.controlDevice('switch', 'pause')
       .then((res)=>{
+        if (res.code==-90004) {
+          return HdSmart.UI.toast('网络超时，请重试')
+        }
+      })
+      .catch((res) => {
         if (res.code==-90004) {
           return HdSmart.UI.toast('网络超时，请重试')
         }
@@ -288,26 +306,31 @@ export default {
           return HdSmart.UI.toast('网络超时，请重试')
         }
       })
+      .catch((res) => {
+        if (res.code==-90004) {
+          return HdSmart.UI.toast('网络超时，请重试')
+        }
+      })
     },
     //根据后台返回数据得出窗帘的宽度
     newRatio(){
-      if(this.myMove)return
-      let circle = this.$refs.right.offsetHeight
-      let maxWidth = this.$refs.imgBox.offsetWidth*0.5
-      let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
-      console.log(width,'width')
-      console.log(circle)
-      
-      
-      let leftCurtainBox = this.$refs.leftCurtainBox
-      let rightCurtainBox = this.$refs.rightCurtainBox
-      this.animate(leftCurtainBox,{
-        width:Math.round(width)
-      })
-      this.animate(rightCurtainBox,{
-        width:Math.round(width)
-      }
-      )
+        if(this.myMove)return
+        let circle = this.$refs.right.height
+        let maxWidth = this.$refs.imgBox.offsetWidth*0.5
+        let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
+        console.log(width,'width')
+        console.log(circle)
+        
+        
+        let leftCurtainBox = this.$refs.leftCurtainBox
+        let rightCurtainBox = this.$refs.rightCurtainBox
+        this.animate(leftCurtainBox,{
+          width:Math.round(width)
+        })
+        this.animate(rightCurtainBox,{
+          width:Math.round(width)
+        }
+        )
       // leftCurtainBox.style.width =width +"px"
       // // console.log(width)
       // rightCurtainBox.style.width = leftCurtainBox.style.width
@@ -396,7 +419,7 @@ getStyle(obj,attr){
   background-size: 100% 100%;
   .main {
     position: relative;
-    margin-top: 100px;
+    margin-top: 80px;
     .stick{
       width: 80%;
       // height: 20px;
@@ -481,7 +504,7 @@ getStyle(obj,attr){
     height: auto;
     width: 100%;
     position: fixed;
-    bottom: 130px;
+    bottom: 50px;
     z-index: 99999;
     .btn {
       margin-top: 24px;

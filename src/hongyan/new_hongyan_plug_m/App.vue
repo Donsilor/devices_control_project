@@ -3,10 +3,8 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose},'page']">
       <NewTopBar
         :title="device.device_name"
-        :shutdown="true"
         :scroll="true"
-        bak-color="#000"
-        @shutdownCallback="shutdowncallback('switchStatus')" />
+        bak-color="#000"/>
       <div class="main center">
         <div class="bg">
           <div class="circle">
@@ -37,13 +35,22 @@
           </div>
         </div>
       </div>
+      <!-- 开关 -->
+      <div
+        class="starting">
+        <div
+          :class="[{'active': deviceAttrs.switch == 'on'&&!isOffline},'btn btn-start']"
+          @click="setSwitch" />
+      </div>
       <div class="bottom">
         <div class="Charging-protection">
           <div>童锁</div>
           <div
             style="z-index: 999;">
             <input
-              class="switch switch-anim"
+              :class="['switch switch-anim']"
+              :checked="lockVal"
+              :disabled="disabledLock"
               type="checkbox"
               @click="childLockSwitch">
           </div>
@@ -62,6 +69,8 @@ export default {
   data() {
     return {
       timeShow: false,
+      lockVal: false,
+      disabledLock: false,
     }
   },
   computed: {
@@ -71,6 +80,16 @@ export default {
       return this.deviceAttrs.switch === 'on' || this.deviceAttrs.usb === 'on'? false : true
     },
   },
+  watch:{
+    'deviceAttrs.child'() {
+      this.disabledLock = false
+      if(this.deviceAttrs.child == 'on') {
+        this.lockVal = true
+      } else {
+        this.lockVal = false
+      }
+    }
+  },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
@@ -79,30 +98,6 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    // setSwitch(switchStatus) {
-    //   if (this.isOffline) return
-    //   if (this.deviceAttrs.child == 'on') {
-    //      return HdSmart.UI.toast('请先关闭童锁')
-    //   }
-    //   if (this.deviceAttrs.switch == 'on') {
-    //     switchStatus = 'off'
-    //   } else {
-    //     switchStatus = 'on'
-    //   }
-    //   this.controlDevice("switch", switchStatus)
-    // },
-     shutdowncallback(switchStatus){
-      if (this.isOffline) return
-      if (this.deviceAttrs.child == 'on') {
-         return HdSmart.UI.toast('请先关闭童锁')
-      }
-      if (this.deviceAttrs.switch == 'on') {
-        switchStatus = 'off'
-      } else {
-        switchStatus = 'on'
-      }
-      this.controlDevice("switch", switchStatus)
-    },
     // usbSwitch(){
     //   if (this.isOffline) return
     //   if (this.deviceAttrs.child == 'on') {
@@ -116,8 +111,23 @@ export default {
     //   }
     //   this.controlDevice("usb", usbStatus)
     // },
+    setSwitch(){
+      if (this.isOffline) return
+      if (this.deviceAttrs.child == 'on') {
+         return HdSmart.UI.toast('请先关闭童锁')
+      }
+      let switchstatus = ''
+      if (this.deviceAttrs.switch=='on') {
+        switchstatus = 'off'
+      }else{
+        switchstatus = 'on'
+      }
+      this.controlDevice('switch',switchstatus)
+    },
     // 童锁
     childLockSwitch() {
+      // console.log(e.target.checked)
+      this.disabledLock = true
       let childLockStatus = ''
       if (this.deviceAttrs.child == 'on') {
         childLockStatus = 'off'
@@ -125,6 +135,12 @@ export default {
         childLockStatus = 'on'
       }
       this.controlDevice("child", childLockStatus)
+      .then(() => {
+        this.disabledLock = false
+      })
+      .catch(() => {
+        this.disabledLock = false
+      })
     },
     // setTime(){
     //   if (this.isClose) return
@@ -290,10 +306,39 @@ export default {
   .switch.switch-anim:checked:before {
       transition: left 0.3s;
   };
+    .starting{
+    margin-top: 100px;
+     .btn-start{
+        z-index: 999;
+        box-sizing: border-box;
+        margin: 0 auto;
+        width: 132px;
+        height: 132px;
+        // border: 1px solid #818181;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 50%;
+        position: relative;
+        &.active{
+          background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+        }
+        &::before{
+          content: "";
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          margin-left: -24px;
+          margin-top: -24px;
+          background-image: url('~@lib/@{imgPath}/dakai3@2x.png');
+          background-size: 100% 100%;
+          width: 48px;
+          height: 48px;
+        }
+     }
+  }
   .bottom{
     width: 100%;
 
-    margin-top: 300px;
+    margin-top: 50px;
     .timing,.Charging-protection{
        padding: 0 40px;
       display: flex;

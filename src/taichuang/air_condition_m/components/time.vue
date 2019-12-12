@@ -105,7 +105,7 @@
         outline: none;
         background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
         font-size: 32px;
-        color: #fff;
+        color: #000;
         text-align: center;
         width: 650px;
         height: 100px;
