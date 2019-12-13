@@ -272,6 +272,7 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setReserve(time) {
+      HdSmart.UI.vibrate()
       console.log(time)
       let h = parseInt(time[0].split(':')[0]) + 1
       // let m = parseInt(time[0].split(':')[1])
@@ -280,6 +281,9 @@ export default {
         val = (this.getDateTime(new Date(), 'h') * 60) + (h * 60)
       } else {
         val = (this.getDateTime(new Date(), 'h') * 60) + (h * 60) + 60
+      }
+      if(val > 1440) {
+        val = val - 1440
       }
       this.controlDevice('remaining', val)
       .then((res) => {
@@ -302,6 +306,7 @@ export default {
         val = 'free'
       }
       if (this.isClose) return
+      HdSmart.UI.vibrate()
       this.controlDevice('mode', val)
       .then((res) => {
         if(res.code != 0) {
@@ -313,6 +318,7 @@ export default {
       })
     },
     setSwitch() {
+      HdSmart.UI.vibrate()
       let switchStatus = ''
       if (this.deviceAttrs.switch == 'on') {
         switchStatus = 'off'
@@ -331,6 +337,7 @@ export default {
     },
     setTemperature(step) {
       if(this.disabledVal == true) return
+      HdSmart.UI.vibrate()
       this.disabledVal = true
       let val = +this.deviceAttrs.temperature + step
       if (val > 75) {
