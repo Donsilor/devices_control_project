@@ -65,7 +65,7 @@
         class="starting">
         <div
           ref="switchStatus"
-          :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn btn-start']"
+          :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn-start']"
           @click="setSwitch" 
           @touchstart ="touchstart()"
           @touchend="touchend('switchStatus')" />
@@ -98,7 +98,7 @@
           <div 
             ref="auto" 
             :class="[ 'btn btn-auto center']" 
-            @touchstart ="touchstart('auto',$event)"
+            @touchstart ="touchstart('auto')"
             @touchend="touchend('auto',$event)"/>
           <div
             class="btn-name" >智能</div>
@@ -109,6 +109,7 @@
           <div 
             ref="wind" 
             :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" 
+            @touchstart ="touchstart('auto')"
             @touchend="touchend('wind')"/>
           <div class="btn-name">送风</div>
         </div>
@@ -118,6 +119,7 @@
           <div 
             ref="dehumidify" 
             :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" 
+            @touchstart ="touchstart('auto')"
             @touchend="touchend('dehumidify')"/>
           <div class="btn-name">除湿</div>
         </div>
@@ -361,19 +363,14 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    touchstart(val) {
+    touchstart() {
       let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
         btn[i].classList.remove('active')
-
         btn[i].classList.remove('animate')
         btn[i].classList.remove('yellowExtend')
-
-      }
-
-        
-      },
-  
+      }  
+    },
     touchend(val){ 
       if (val == 'switchStatus') {
         if (this.isOffline) return
@@ -735,7 +732,7 @@ export default {
           font-size: 24px;
           text-align: center;
           line-height: 48px;
-          zoom:1;
+          zoom:2;
         }
       }
       .cover{
@@ -1154,6 +1151,9 @@ export default {
   }
 }
 
+.canvas {
+  width: 560px;
+}
 .animate::before{
   animation: scale 0.4s;
 }
@@ -1172,7 +1172,9 @@ export default {
   }
 }
 
-
+.canvas {
+  width: 560px;
+}
   .yellowExtend{
     position: relative;
     &::after{
