@@ -293,7 +293,9 @@ export default {
       }
       this.controlDevice('remaining', val)
       .then((res) => {
-        if(res.code != 0) {
+        if( !(res&&res.code == 0)) {
+          console.log(res,'res==============')
+          
           HdSmart.UI.toast('操作失败，请确认设备状态')
         }
       })
@@ -315,7 +317,8 @@ export default {
       HdSmart.UI.vibrate()
       this.controlDevice('mode', val)
       .then((res) => {
-        if(res.code != 0) {
+        console.log(res,'res==============')
+        if( !(res&&res.code == 0)) {
           HdSmart.UI.toast('操作失败，请确认设备状态')
         }
       })
@@ -333,7 +336,9 @@ export default {
       }
       this.controlDevice("switch", switchStatus)
        .then((res) => {
-        if(res.code != 0) {
+       if( !(res&&res.code == 0)) {
+          console.log(res,'res==============')
+
           HdSmart.UI.toast('操作失败，请确认设备状态')
         }
       })
@@ -357,10 +362,10 @@ export default {
       }
       this.controlDevice('temperature', val)
       .then((res) => {
-        if(res.code == 0) {
-          // this.disabledVal = false
-        }  else {
-          this.disabledVal = false
+          console.log(res,'res==============')
+
+        this.disabledVal = false
+        if( !(res&&res.code == 0)) {
           HdSmart.UI.toast('操作失败，请确认设备状态')
         }
       })
@@ -457,7 +462,7 @@ export default {
 }
 .bgc{
   position: fixed;
-  z-index:99999;
+  z-index:10000;
       top: 0;
       left: 0;
       bottom: 0;
@@ -1478,7 +1483,7 @@ export default {
     }
   }
 .chronography {
-  font-size: 12px;
+  font-size: 24px;
   color: #000000;
   display: flex;
   justify-content: center;
