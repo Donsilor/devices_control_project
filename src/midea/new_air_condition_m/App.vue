@@ -44,9 +44,11 @@
         <div
           class="control-tm center">
           <button
+          :disabled="setTemperatureDis"
             class="control reduce"
             @click="setTemperature(-10)"/>
           <button
+          :disabled="setTemperatureDis"
             class="control add"
             @click="setTemperature(10)"/>
         </div>
@@ -204,7 +206,9 @@ export default {
       centigrade:0,//摄氏度
       ctx: '',
       //记录温度
-      thermography:17
+      thermography:17,
+      setTemperatureDis:false,
+      moveEnd:false,
     }
   },
 
@@ -450,8 +454,9 @@ export default {
       if (this.isOffline||this.isClose) return
       // 送风模式不能设置温度
         this.moveEnd = false
-
+        this.setTemperatureDis = true
       if (this.deviceAttrs.mode === 'wind') {
+        this.setTemperatureDis = false
         return HdSmart.UI.toast('送风模式不支持温度调节')
       }
       let temp = +this.deviceAttrs.temperature + step
@@ -475,6 +480,7 @@ export default {
         .then((res) => {
           if(res.code == 0) {
             this.deviceAttrs.temperature = temp
+            this.setTemperatureDis = false
           }
           // this.reset()
         })
@@ -670,7 +676,7 @@ export default {
             right: -22px;
             font-size: 24px;
             color: #000;
-            transform: scale(0.5);
+            transform: scale(1);
           }
         }
          .c-mode{
@@ -685,6 +691,7 @@ export default {
           line-height: 48px;
           font-family: PingFangSC-Light;
           color: #000;
+          zoom:1;
         }
       }
          .cover{
@@ -1053,7 +1060,7 @@ export default {
       }
     }
     .btn-wrap {
-      opacity: .2;
+      opacity: .3;
       &.up-index {
         opacity: 1;
       }
@@ -1065,7 +1072,7 @@ export default {
       }
     }
     .optionbox{
-      opacity: .2;
+      opacity: .3;
     }
   }
 }

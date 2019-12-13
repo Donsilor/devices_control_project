@@ -241,6 +241,7 @@ export default {
       minTemp:'',
       maxTemp:'',
       stepLength:0,//步长
+      moveEnd:false,
     }
   },
 
@@ -464,6 +465,8 @@ export default {
             console.log('else')
             this.ctx.strokeStyle = "#E1B96E"
           }
+      }else if (this.deviceAttrs.switchStatus=='off'||this.isOffline) {
+        this.ctx.strokeStyle = "transparent"
       }else{
         this.ctx.strokeStyle = "transparent"
       }
@@ -783,6 +786,7 @@ export default {
           font-size: 24px;
           text-align: center;
           line-height: 48px;
+          zoom:1;
         }
       }
       .cover{
@@ -1151,7 +1155,7 @@ export default {
     &:before {
       content: "";
       position: fixed;
-      top: 64PX;
+      top: 0;
       left: 0;
       bottom: 0;
       right: 0;
@@ -1164,12 +1168,12 @@ export default {
       .control-tm{
         // background: #fff;
         .reduce,.add {
-          opacity: .4;
+          opacity: .3;
         }
       }
     }
     .btn-wrap {
-      opacity: .2;
+      opacity: .3;
       &.up-index {
         opacity: 1;
       }
@@ -1181,9 +1185,12 @@ export default {
       }
     }
     .optionbox{
-      opacity: .2;
+      opacity: .3;
     }
   }
+}
+.canvas {
+  // width: 560px;
 }
 
 </style>

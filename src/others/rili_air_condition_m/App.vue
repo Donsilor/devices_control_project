@@ -159,6 +159,7 @@ export default {
       ctx: '',
       //记录温度
       thermography:16,
+      moveEnd:false,
     }
   },
 
@@ -630,7 +631,7 @@ export default {
             right: -22px;
             font-size: 24px;
             color: #000;
-            transform: scale(0.5);
+            transform: scale(1);
           }
         }
         .c-mode{
@@ -643,6 +644,7 @@ export default {
           font-size: 24px;
           text-align: center;
           line-height: 48px;
+          zoom:1;
         }
       }
     }
@@ -1031,7 +1033,7 @@ export default {
       }
     }
     .btn-wrap {
-      opacity: .2;
+      opacity: .3;
       &.up-index {
         opacity: 1;
       }
@@ -1043,7 +1045,7 @@ export default {
       }
     }
     .optionbox{
-      opacity: .2;
+      opacity: .3;
     }
   }
 }

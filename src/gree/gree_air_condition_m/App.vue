@@ -24,7 +24,7 @@
           </div>
           <!-- 当不可调节温度时，显示这个盒子，可以挡着canvas，使它不能滑动 -->
           <div
-            v-show="loaclAttr.mode=='auto'||loaclAttr.mode=='wind'"
+            v-if="loaclAttr.mode=='auto'||loaclAttr.mode=='wind'"
             class="cover"
             @touchmove.prevent/>
           <canvas
@@ -496,10 +496,12 @@ export default {
       console.log(this.loaclAttr.mode,'--------------11')
 
       if(this.loaclAttr.mode == 'auto') {
+        this.setTemperatureDis = false
         return HdSmart.UI.toast('自动模式不支持温度调节')
       }
       // 送风模式不能设置温度
       if (this.loaclAttr.mode === 'wind') {
+        this.setTemperatureDis = false
         return HdSmart.UI.toast('送风模式不支持温度调节')
       }
       let temp = +this.loaclAttr.temperature + step
@@ -721,7 +723,7 @@ export default {
             right: -22px;
             font-size: 24px;
             color: #000;
-            transform: scale(0.5);
+            transform: scale(1);
           }
         }
         .c-mode{
@@ -738,6 +740,7 @@ export default {
           border-radius: 24px;
           text-align: center;
           line-height: 48px;
+          zoom:1;
         }
       }
        .cover{
@@ -1099,7 +1102,7 @@ export default {
       }
     }
     .btn-wrap {
-      opacity: .2;
+      opacity: .3;
       &.up-index {
         opacity: 1;
       }
@@ -1111,7 +1114,7 @@ export default {
       }
     }
     .optionbox{
-      opacity: .2;
+      opacity: .3;
     }
   }
 }

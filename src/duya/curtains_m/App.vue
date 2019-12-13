@@ -4,6 +4,7 @@
     <div class="page">
       <NewTopBar
         :scroll="true"
+        :room="device.room_name"
         :title="device.device_name"
         bak-color="#000"/>
       <div class="main center">
@@ -216,13 +217,9 @@ export default {
       this.myMove = false
       this.controlDevice('switch', 'on')
       .then((res)=>{
-        if (res.code==-90004) {
-          return HdSmart.UI.toast('网络超时，请重试')
-        }
-      })
-      .catch((res) => {
-        if (res.code==-90004) {
-          return HdSmart.UI.toast('网络超时，请重试')
+        console.log(res,'===============');
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
         }
       })
     },
@@ -237,13 +234,9 @@ export default {
       this.myMove = false
       this.controlDevice('switch', 'off')
       .then((res)=>{
-        if (res.code==-90004) {
-          return HdSmart.UI.toast('网络超时，请重试')
-        }
-      })
-      .catch((res) => {
-        if (res.code==-90004) {
-          return HdSmart.UI.toast('网络超时，请重试')
+        console.log(res,'===============');
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
         }
       })
     },
@@ -258,13 +251,9 @@ export default {
       },500)
       this.controlDevice('switch', 'pause')
       .then((res)=>{
-        if (res.code==-90004) {
-          return HdSmart.UI.toast('网络超时，请重试')
-        }
-      })
-      .catch((res) => {
-        if (res.code==-90004) {
-          return HdSmart.UI.toast('网络超时，请重试')
+        console.log(res,'===============');
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
         }
       })
     },
@@ -302,20 +291,16 @@ export default {
       console.log(this.range)
       this.controlDevice('open_percentage',this.range)
       .then((res)=>{
-        if (res.code==-90004) {
-          return HdSmart.UI.toast('网络超时，请重试')
-        }
-      })
-      .catch((res) => {
-        if (res.code==-90004) {
-          return HdSmart.UI.toast('网络超时，请重试')
+        console.log(res,'===============');
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
         }
       })
     },
     //根据后台返回数据得出窗帘的宽度
     newRatio(){
         if(this.myMove)return
-        let circle = this.$refs.right.height
+        let circle = this.$refs.right.offsetHeight
         let maxWidth = this.$refs.imgBox.offsetWidth*0.5
         let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
         console.log(width,'width')
