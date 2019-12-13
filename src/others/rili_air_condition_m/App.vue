@@ -435,11 +435,17 @@ export default {
       this.moveEnd = false
       this.controlDevice('mode', val)
         .then((res) => {
-          if(res.code == 0) {
-            this.deviceAttrs.mode = val
+          if (res) {
+            if(res.code == 0) {
+              this.deviceAttrs.mode = val
+                        // this.reset()
+              this.hide()
+             }
           }
-          // this.reset()
-          this.hide()
+          if (res == null) {
+            console.log(res,val,'res val=========');
+            this.$refs[val].classList.remove('yellowExtend')
+        }
         })
     },
     setTemperature(step) {
@@ -1123,7 +1129,7 @@ export default {
       position: absolute;
       width: 70%;
       height: 70%;
-      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      background-image: linear-gradient(to right, #F1CB85, #E1B96E);
       top: 50%;
       left: 50%;
       border-radius: 50%;

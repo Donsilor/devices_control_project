@@ -422,10 +422,7 @@ export default {
 
         btn[i].classList.remove('animate')
         btn[i].classList.remove('yellowExtend')
-
-      }
-
-        
+      } 
       },
   
     touchend(val){ 
@@ -571,17 +568,25 @@ export default {
       if (val == this.deviceAttrs.mode) return
       this.controlDevice('mode', val)
         .then((res) => {
-          if(res.code == 0) {
-            this.deviceAttrs.mode = val
-          }
-          if (this.deviceAttrs.mode=='wind') {
-            // this.progress = 70 /(30 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
-            // this.$refs.$canvas.init()
+          if (res) {
+            if(res.code == 0) {
+              console.log(res,'code0=========');
+              this.deviceAttrs.mode = val
+            }
+            if (this.deviceAttrs.mode=='wind') {
+              // this.progress = 70 /(30 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
+              // this.$refs.$canvas.init()
+              this.hide()
+              return
+            }
+            // this.reset()
             this.hide()
-            return
           }
-          // this.reset()
-          this.hide()
+          if (res == null) {
+            console.log(res,'null=========');
+            console.log(val,'val=========');
+            this.$refs[val].classList.remove('yellowExtend')
+          }
         })
     },
     setTemperature(step) {
@@ -1267,7 +1272,7 @@ export default {
       position: absolute;
       width: 70%;
       height: 70%;
-      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      background-image: linear-gradient(to right, #F1CB85, #E1B96E);
       top: 50%;
       left: 50%;
       border-radius: 50%;
