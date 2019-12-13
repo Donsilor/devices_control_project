@@ -52,7 +52,7 @@
           <i class="arrow"/>
         </div>
         <div
-          v-if="tvStatus.tvOnlineStatus==-3"      
+          v-if="tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==2"      
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">

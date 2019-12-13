@@ -4,6 +4,7 @@
       <!-- 顶部 -->
       <topbar
         :title="device.device_name"
+        :room="device.room_name"
         bak-color="#000" />
       <!-- 灯 -->
       <div class="main center">

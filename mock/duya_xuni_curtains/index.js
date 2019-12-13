@@ -5,10 +5,9 @@ import on from '../app'
 import {apiList} from '../app/constant'
 import * as mockData from './mock'
 
-if (location.search.indexOf('env=desktop') != -1) {
+if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
 
-    window.device_name = '热水器'
-    window.status_bar_height = 50
+    window.device_name = '客厅的窗帘'
 
     on(apiList.device_getsnapshot, function(data, done){
         done(mockData.generateSnapShot())

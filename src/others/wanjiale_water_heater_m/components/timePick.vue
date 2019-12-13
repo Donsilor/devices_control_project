@@ -19,7 +19,7 @@
             v-for="(it, idx) in dataList.hours"
             :key="idx"
             :class="{'current-pre': hIndex!==idx,
-                     'current':hIndex===idx}">{{ +idx > 9 ? idx : '0' + idx }}</li>
+                     'current':hIndex===idx}">{{ +idx > 8 ? Number(idx+1) : '0' + Number(idx+1) }}</li>
         </ul>
       </div>
       <div class="unit">小时</div>

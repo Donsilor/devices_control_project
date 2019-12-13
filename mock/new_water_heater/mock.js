@@ -13,7 +13,9 @@ var res = {
   "manufactureId": "Whirlpool",
   "deviceCategory": "water_heater.sn",
   "deviceSubCategory": 0,
-  "connectivity": "online"
+  "connectivity": "online",
+  "currenttemperature":85,
+  "error":"running"
 }
 export function generateSnapShot() {
   return Mock.mock({
