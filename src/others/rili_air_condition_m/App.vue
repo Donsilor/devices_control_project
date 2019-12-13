@@ -59,33 +59,33 @@
         class="starting">
         <div
         ref="switchStatus"
-          :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn btn-start']"
-          @click="setSwitch" @touchend="touchend('switchStatus')"/>
+          :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn-start']"
+          @click="setSwitch" @touchstart ="touchstart()" @touchend="touchend('switchStatus')"/>
       </div>
       <div
         class="panel-btn center">
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div ref="cold" :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" @touchend="touchend('cold')"/>
+          <div ref="cold" :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" @touchstart ="touchstart()" @touchend="touchend('cold')"/>
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div ref="heat" :class="[ { 'active': deviceAttrs.mode == 'heat' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-heat center']" @touchend="touchend('heat')"/>
+          <div ref="heat" :class="[ { 'active': deviceAttrs.mode == 'heat' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-heat center']" @touchstart ="touchstart()" @touchend="touchend('heat')"/>
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div ref="wind" :class="[{ 'active': deviceAttrs.mode == 'wind' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-wind center']" @touchend="touchend('wind')"/>
+          <div ref="wind" :class="[{ 'active': deviceAttrs.mode == 'wind' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-wind center']" @touchstart ="touchstart()" @touchend="touchend('wind')"/>
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div ref="dehumidify" :class="[{ 'active': deviceAttrs.mode == 'dehumidify' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-dehumidify center']" @touchend="touchend('dehumidify')"/>
+          <div ref="dehumidify" :class="[{ 'active': deviceAttrs.mode == 'dehumidify' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-dehumidify center']" @touchstart ="touchstart()" @touchend="touchend('dehumidify')"/>
           <div class="btn-name">除湿</div>
         </div>
       </div>
@@ -305,10 +305,27 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-        touchend(val){
-      console.log(val,'=============');
-      
-      this.$refs[val].classList.add('animate')
+    touchstart(val) {
+      let btn = document.querySelectorAll('.btn')
+      for(let i=0;i<btn.length;i++){
+        btn[i].classList.remove('active')
+
+        btn[i].classList.remove('animate')
+        btn[i].classList.remove('yellowExtend')
+
+      }
+
+        
+      },
+  
+    touchend(val){ 
+      if (val == 'switchStatus') {
+        if (this.isOffline) return
+      }else{
+        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+      }
+        this.$refs[val].classList.add('animate')
+        this.$refs[val].classList.add('yellowExtend')
     },
     offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
@@ -673,7 +690,7 @@ export default {
           font-size: 24px;
           text-align: center;
           line-height: 48px;
-          zoom:1;
+          zoom:2;
         }
       }
     }
@@ -709,6 +726,7 @@ export default {
           background-size: 100% 100%;
           width: 48px;
           height: 48px;
+          z-index:100;
         }
      }
       .btn-name{
@@ -752,6 +770,7 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
+        z-index:100;
       }
       &.active {
          background-image: linear-gradient(to right, #F1CB85, #E1B96E);
@@ -1078,6 +1097,48 @@ export default {
     }
   }
 }
+.animate::before{
+  animation: scale 0.4s;
+}
+@keyframes scale {
+  0%{
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(0.6);
+  }
+  90%{
+    transform: scale(1.3);
+  }
+    100%{
+    transform: scale(1);
+  }
+}
+
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .1s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 50%;height: 50%;}
+    
+    100% {width: 100%;height: 100%;}
+  }
 .canvas {
   width: 560px;
 }
