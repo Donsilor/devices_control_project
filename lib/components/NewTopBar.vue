@@ -178,6 +178,8 @@ export default {
       status_bar_height: 25,
       navigation_bar_height: 44,
       scrollTop:0,
+      clientHeight:0,
+      scrollHeight:0,
       rightSearch:false
     }
   },
@@ -192,6 +194,9 @@ export default {
     })
   },
   mounted(){
+     this.clientHeight = document.documentElement.clientHeight || document.body.clientHeight
+      this.scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      console.log(this.clientHeight, this.scrollHeight,'1111')
     if(this.scroll){
        addEventListener('scroll',this.scrollfn)
     }
@@ -255,6 +260,11 @@ export default {
       this.$refs.title.style.bottom = b + 'px'
       this.$refs.title.style.left = l + 'px'
       this.$refs.title.style.fontSize = f + 'px'
+      if(this.clientHeight+this.scrollTop == this.scrollHeight){
+        this.$refs.title.style.bottom = (h/44)*h+ 'px'
+        this.$refs.title.style.left = (w/44)*h + 'px'
+        this.$refs.title.style.fontSize = (-6/44)*h+24 + 'px'
+      }
       if( this.scrollTop>=h ){
         pageClass.classList.add('scroll44')
         status_bar_fixed&&(status_bar_fixed.style.top  =fixedTop +"px")

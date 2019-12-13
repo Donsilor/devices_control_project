@@ -150,7 +150,7 @@
             <div class="name">{{ item.director&&'导演：'+item.director }}</div>
             <div class="name starring">{{ item.director&&'主演：'+item.starring }}</div>
             <div 
-              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0}" 
+              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0||tvStatus.tvOnlineStatus==2}" 
               class="playstate playstate_unplay" >
               <a
                 href="#"

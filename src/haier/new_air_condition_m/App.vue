@@ -1,7 +1,7 @@
 <template>
   <div class="body">
     <div 
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']" 
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover']" 
     >
       <NewTopBar
         :title="device.device_name"
@@ -44,11 +44,11 @@
         <div
           class="control-tm center">
           <button
-          :disabled="setTemperatureDis"
+            :disabled="setTemperatureDis"
             class="control reduce"
             @click="setTemperature(-10)"/>
           <button
-          :disabled="setTemperatureDis"
+            :disabled="setTemperatureDis"
             class="control add"
             @click="setTemperature(10)"/>
         </div>
@@ -64,41 +64,61 @@
       <div
         class="starting">
         <div
-        ref="switchStatus"
+          ref="switchStatus"
           :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn btn-start']"
-          @click="setSwitch" @touchend="touchend('switchStatus')" />
+          @click="setSwitch" 
+          @touchstart ="touchstart()"
+          @touchend="touchend('switchStatus')" />
       </div>
       <div
         class="panel-btn center">
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div ref="cold" :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" @touchend="touchend('cold')"/>
+          <div 
+            ref="cold" 
+            :class="[ { 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline },'btn btn-cold center']" 
+            @touchstart ="touchstart('cold',$event)"
+            @touchend="touchend('cold',$event)"/>
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div ref="heat" :class="[ { 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" @touchend="touchend('heat')"/>
+          <div 
+            ref="heat" 
+            :class="[{ 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" 
+            @touchstart ="touchstart('heat',$event)"
+            @touchend="touchend('heat',$event)"/>
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('auto')">
-          <div ref="auto" :class="[ { 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" @touchend="touchend('auto')"/>
+          <div 
+            ref="auto" 
+            :class="[ 'btn btn-auto center']" 
+            @touchstart ="touchstart('auto',$event)"
+            @touchend="touchend('auto',$event)"/>
           <div
             class="btn-name" >智能</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div ref="wind" :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" @touchend="touchend('wind')"/>
+          <div 
+            ref="wind" 
+            :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" 
+            @touchend="touchend('wind')"/>
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div ref="dehumidify" :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" @touchend="touchend('dehumidify')"/>
+          <div 
+            ref="dehumidify" 
+            :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" 
+            @touchend="touchend('dehumidify')"/>
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -341,9 +361,27 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    touchend(val){
-      console.log(val,'=============');
-      this.$refs[val].classList.add('animate')
+    touchstart(val) {
+      let btn = document.querySelectorAll('.btn')
+      for(let i=0;i<btn.length;i++){
+        btn[i].classList.remove('active')
+
+        btn[i].classList.remove('animate')
+        btn[i].classList.remove('yellowExtend')
+
+      }
+
+        
+      },
+  
+    touchend(val){ 
+      if (val == 'switchStatus') {
+        if (this.isOffline) return
+      }else{
+        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+      }
+        this.$refs[val].classList.add('animate')
+        this.$refs[val].classList.add('yellowExtend')
     },
     offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
@@ -494,6 +532,7 @@ export default {
           // this.reset()
         })
     },
+
     // 设置摆风
     setWind(attr) {
       if (this.isOffline||this.isClose) return
@@ -575,20 +614,6 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/air_condition/assets/new-air';
 @imgPath1: 'base/oakes_air_condition/assets';
-.animate::before{
-  animation: scale 0.4s;
-}
-@keyframes scale {
-  0%{
-    transform: scale(1);
-  }
-  50%{
-    transform: scale(0.6);
-  }
-    100%{
-    transform: scale(1.3);
-  }
-}
   // 定时展示
   .timeShow {
     text-align: center;
@@ -745,6 +770,7 @@ export default {
         &::before{
           content: "";
           position: absolute;
+          z-index: 100;
           left: 50%;
           top: 50%;
           margin-left: -24px;
@@ -814,36 +840,48 @@ export default {
 
     .btn-swich {
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath}/swich-black.png');
         background-size: 100% 100%;
       }
     }
     .btn-cold {
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath1}/cold.png');
         background-size: 100% 100%;
       }
     }
     .btn-heat {
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath1}/heat.png');
         background-size: 100% 100%;
       }
     }
     .btn-mode {
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath}/mode.png');
         background-size: 100% 100%;
       }
     }
      .btn-time {
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath}/time-black.png');
         background-size: 100% 100%;
       }
     }
     .btn-menu {
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath}/more-black.png');
         background-size: 100% 100%;
       }
@@ -851,6 +889,8 @@ export default {
 
     .btn-wind {
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath1}/wind.png');
         background-size: 100% 100%;
       }
@@ -858,48 +898,64 @@ export default {
 
     .btn-dehumidify {
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath1}/dehumidify.png');
         background-size: 100% 100%;
       }
     }
     .btn-low{
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath}/speed3.png');
         background-size: 100% 100%;
       }
     }
     .btn-normal{
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath}/speed4.png');
         background-size: 100% 100%;
       }
     }
     .btn-normal{
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath}/speed4.png');
         background-size: 100% 100%;
       }
     }
     .btn-high{
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath}/speed5.png');
         background-size: 100% 100%;
       }
     }
     .btn-auto{
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath1}/auto.png');
         background-size: 100% 100%;
       }
     }
     .btn-left{
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath}/left.png');
         background-size: 100% 100%;
       }
     }
     .btn-up{
       &::before {
+        position: relative;
+        z-index: 100;
         background-image: url('~@lib/@{imgPath}/up.png');
         background-size: 100% 100%;
       }
@@ -1058,7 +1114,7 @@ export default {
   //   }
   // }
   &.close,
-  &.offline {
+  &.offline.cover {
     &:before {
       content: "";
       position: fixed;
@@ -1068,10 +1124,11 @@ export default {
       right: 0;
       // z-index: 999;
       width: 100%;
-      // background: rgba(0, 0, 0, 0.1);
+      // background: transparent;
     }
     &.page {
       // background: #fff;
+  
       .control-tm{
         // background: #fff;
         .reduce,.add {
@@ -1096,7 +1153,58 @@ export default {
     }
   }
 }
-.canvas {
-  width: 560px;
+
+.animate::before{
+  animation: scale 0.4s;
 }
+@keyframes scale {
+  0%{
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(0.6);
+  }
+  90%{
+    transform: scale(1.3);
+  }
+    100%{
+    transform: scale(1);
+  }
+}
+
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .1s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 50%;height: 50%;}
+    
+    100% {width: 100%;height: 100%;}
+  }
+
+
+
+
+
+
+
+
+
+
+
 </style>

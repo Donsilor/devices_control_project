@@ -49,7 +49,7 @@
               ><span>简介：{{ cur.desc }}</span> </p>
             </div>
             <div 
-              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0}" 
+              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0||tvStatus.tvOnlineStatus==2}" 
               class="playstate playstate_unplay">
               <a
                 href="#"
@@ -171,7 +171,7 @@
             <li
               v-for="(item, num) in cur.playlist2.list"
               :key="item.index"
-              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0,'active':activeIndex==num}"
+              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0||tvStatus.tvOnlineStatus==2,'active':activeIndex==num}"
               class="item-num" 
               @click="play(item,num)">
               {{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}         
