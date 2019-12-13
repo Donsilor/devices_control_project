@@ -255,11 +255,17 @@ export default {
             }
         },
         immediate: true
+    },
+    'deviceAttrs.temperature'() {
+      if(this.deviceAttrs.temperature) {
+        this.disabledVal = false
+      }
     }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
+      HdSmart.UI.setStatusBarColor(2)
        if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
@@ -352,7 +358,7 @@ export default {
       this.controlDevice('temperature', val)
       .then((res) => {
         if(res.code == 0) {
-          this.disabledVal = false
+          // this.disabledVal = false
         }  else {
           this.disabledVal = false
           HdSmart.UI.toast('操作失败，请确认设备状态')
@@ -988,20 +994,20 @@ export default {
     //   width: 100%;
     //   background: rgba(0, 0, 0, 0.1);
     // }
-    &.page {
+    // &.page {
       // background: #fff;
-      .cover {
+      // .cover {
         // background: #fff;
-        .point {
-          &.left {
+        // .point {
+          // &.left {
             // background: #d8d8d8;
-          }
-        }
-      }
-    }
-    .panel-btn {
+          // }
+        // }
+      // }
+    // }
+    // .panel-btn {
       // background: #efefef;
-    }
+    // }
     .btn-wrap {
       opacity: 0.5;
       &.up-index {

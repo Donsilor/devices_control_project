@@ -253,25 +253,25 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     setSwitchOn(val) {
-      HdSmart.UI.vibrate()
       if(this.isOffline) return
       if(this.flagOn == false) return
       if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') return
+      HdSmart.UI.vibrate()
       this.flagOn = false
       this.controlDevice("switch_chan", val)
     },
     setSwitchOff(val) {
-      HdSmart.UI.vibrate()
       if(this.isOffline) return
       if(this.flagOff == false) return
       if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') return
+      HdSmart.UI.vibrate()
       this.flagOff = false
       this.controlDevice("switch_chan", val)
     },
     setSwitch1() {
-      HdSmart.UI.vibrate()
       if(this.isOffline) return
       if(this.flagOn == false || this.flagOff == false) return
+      HdSmart.UI.vibrate()
       let switchStatus = ''
       if (this.deviceAttrs.list[0].chan_status == 'on') {
         switchStatus = 'off'
@@ -281,9 +281,9 @@ export default {
       this.controlDevice("switch_chan0", switchStatus)
     },
     setSwitch2() {
-      HdSmart.UI.vibrate()
       if(this.isOffline) return
       if(this.flagOn == false || this.flagOff == false) return
+      HdSmart.UI.vibrate()
       let switchStatus = ''
       if (this.deviceAttrs.list[1].chan_status == 'on') {
         switchStatus = 'off'
@@ -293,9 +293,9 @@ export default {
       this.controlDevice("switch_chan1", switchStatus)
     },
     setSwitch3() {
-      HdSmart.UI.vibrate()
       if(this.isOffline) return
       if(this.flagOn == false || this.flagOff == false) return
+      HdSmart.UI.vibrate()
       let switchStatus = ''
       if (this.deviceAttrs.list[2].chan_status == 'on') {
         switchStatus = 'off'
@@ -305,9 +305,9 @@ export default {
       this.controlDevice("switch_chan2", switchStatus)
     },
     setSwitch4() {
-      HdSmart.UI.vibrate()
       if(this.isOffline) return
       if(this.flagOn == false || this.flagOff == false) return
+      HdSmart.UI.vibrate()
       let switchStatus = ''
       if (this.deviceAttrs.list[3].chan_status == 'on') {
         switchStatus = 'off'
