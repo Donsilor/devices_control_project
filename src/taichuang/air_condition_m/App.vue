@@ -44,9 +44,11 @@
         <div
           class="control-tm center">
           <button
+          :disabled="setTemperatureDis"
             class="control reduce"
             @click="setTemperature(-10)"/>
           <button
+          :disabled="setTemperatureDis"
             class="control add"
             @click="setTemperature(10)"/>
         </div>
@@ -62,8 +64,9 @@
       <div
         class="starting">
         <div
+        ref="switchStatus"
           :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn btn-start']"
-          @click="setSwitch" />
+          @click="setSwitch" @touchend="touchend('switchStatus')" />
       </div>
       <!-- 模式 -->
       <div
@@ -72,21 +75,21 @@
           v-show="modeType.indexOf(2)!==-1"
           class="btn-wrap"
           @click="setMode('cold')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" />
+          <div ref="cold" :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" @touchend="touchend('cold')" />
           <div class="btn-name">制冷</div>
         </div>
         <div
           v-show="modeType.indexOf(1)!==-1"
           class="btn-wrap"
           @click="setMode('heat')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" />
+          <div ref="heat" :class="[ { 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" @touchend="touchend('heat')" />
           <div class="btn-name">制热</div>
         </div>
         <div
           v-show="modeType.indexOf(0)!==-1"
           class="btn-wrap"
           @click="setMode('auto')">
-          <div :class="[ { 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" />
+          <div ref="auto" :class="[ { 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" @touchend="touchend('auto')" />
           <div
             class="btn-name" >智能</div>
         </div>
@@ -94,35 +97,35 @@
           v-show="modeType.indexOf(3)!==-1"
           class="btn-wrap"
           @click="setMode('wind')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" />
+          <div ref="wind" :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" @touchend="touchend('wind')" />
           <div class="btn-name">通风</div>
         </div>
         <div
           v-show="modeType.indexOf(4)!==-1"
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" />
+          <div ref="dehumidify" :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" @touchend="touchend('dehumidify')" />
           <div class="btn-name">除湿</div>
         </div>
         <div
           v-show="modeType.indexOf(5)!==-1"
           class="btn-wrap"
           @click="setMode('breath')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'breath'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-breath center']" />
+          <div ref="breath" :class="[{ 'active': deviceAttrs.mode == 'breath'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-breath center']" @touchend="touchend('breath')" />
           <div class="btn-name">换气</div>
         </div>
         <div
           v-show="modeType.indexOf(6)!==-1"
           class="btn-wrap"
           @click="setMode('sleep')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'sleep'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-sleep center']" />
+          <div ref="sleep" :class="[{ 'active': deviceAttrs.mode == 'sleep'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-sleep center']" @touchend="touchend('sleep')" />
           <div class="btn-name">睡眠</div>
         </div>
         <div
           v-show="modeType.indexOf(7)!==-1"
           class="btn-wrap"
           @click="setMode('fresh')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'fresh'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-fresh center']" />
+          <div ref="fresh" :class="[{ 'active': deviceAttrs.mode == 'fresh'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-fresh center']" @touchend="touchend('fresh')" />
           <div class="btn-name">清爽</div>
         </div>
         <!-- <div
@@ -242,6 +245,7 @@ export default {
       maxTemp:'',
       stepLength:0,//步长
       moveEnd:false,
+      setTemperatureDis:false,
     }
   },
 
@@ -411,6 +415,11 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    touchend(val){
+      console.log(val,'=============');
+      
+      this.$refs[val].classList.add('animate')
+    },
         // 设置关机时间
     setReserve(speed) {
       console.log(speed)
@@ -527,6 +536,7 @@ export default {
     // 开关机
     setSwitch(){
       if (this.isOffline) return
+      HdSmart.UI.vibrate()
         this.moveEnd = false
       let switchstatus = ''
       if (this.deviceAttrs.switchStatus=='on') {
@@ -538,8 +548,10 @@ export default {
     },
     // 设置模式
     setMode(val) {
+       if (this.isClose||this.isOffline) return
+      HdSmart.UI.vibrate()
       this.moveEnd = false
-      if (val == this.deviceAttrs.mode || this.isClose||this.isOffline) return
+      if (val == this.deviceAttrs.mode) return
       this.controlDevice('mode', val)
         .then((res) => {
           if(res.code == 0) {
@@ -557,6 +569,8 @@ export default {
     },
     setTemperature(step) {
       if (this.isOffline||this.isClose) return
+      HdSmart.UI.vibrate()
+      this.setTemperatureDis = true
       this.moveEnd = false
       // 送风模式不能设置温度
       // if (this.deviceAttrs.mode === 'wind') {
@@ -583,6 +597,7 @@ export default {
         .then((res) => {
           if(res.code==0){
             this.deviceAttrs.temperature = temp
+            this.setTemperatureDis = false
           }
           // this.reset()
         })
@@ -606,6 +621,7 @@ export default {
     // 设置风速
     setSpeed(speed, val) {
       if (this.isOffline||this.isClose) return
+      HdSmart.UI.vibrate()
       this.moveEnd = false
       this.typeVal = val
       if (this.deviceAttrs.mode=='wind'&&val=='auto') {
@@ -665,6 +681,20 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/air_condition/assets/new-air';
 @imgPath1: 'base/oakes_air_condition/assets';
+.animate::before{
+  animation: scale 0.4s;
+}
+@keyframes scale {
+  0%{
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(0.6);
+  }
+    100%{
+    transform: scale(1.3);
+  }
+}
   // 定时展示
   .timeShow {
     text-align: center;
@@ -742,7 +772,7 @@ export default {
     }
   }
   .main {
-    margin-top: 2vh;
+    margin-top: 5vh;
     position: relative;
     &.center {
       flex-direction: column;
@@ -1190,7 +1220,7 @@ export default {
   }
 }
 .canvas {
-  // width: 560px;
+  width: 560px;
 }
 
 </style>

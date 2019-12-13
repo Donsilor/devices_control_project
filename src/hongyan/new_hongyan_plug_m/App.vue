@@ -3,6 +3,7 @@
     <div :class="[{ 'offline': isOffline }, {'close': isClose},'page']">
       <NewTopBar
         :title="device.device_name"
+        :room="device.room_name"
         :scroll="true"
         bak-color="#000"/>
       <div class="main center">
@@ -113,6 +114,7 @@ export default {
     // },
     setSwitch(){
       if (this.isOffline) return
+      HdSmart.UI.vibrate()
       if (this.deviceAttrs.child == 'on') {
          return HdSmart.UI.toast('请先关闭童锁')
       }

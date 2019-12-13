@@ -64,40 +64,41 @@
       <div
         class="starting">
         <div
+        ref="switchStatus"
           :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn btn-start']"
-          @click="setSwitch" />
+          @click="setSwitch"  @touchend="touchend('switchStatus')"/>
       </div>
       <div
         class="panel-btn center">
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" />
+          <div ref="cold" :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']"  @touchend="touchend('cold')"/>
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" />
+          <div ref="heat" :class="[{ 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']"  @touchend="touchend('heat')"/>
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('auto')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" />
+          <div ref="auto" :class="[{ 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']"  @touchend="touchend('auto')"/>
           <div
             class="btn-name" >智能</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" />
+          <div ref="wind" :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']"  @touchend="touchend('wind')"/>
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" />
+          <div ref="dehumidify" :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']"  @touchend="touchend('dehumidify')"/>
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -338,6 +339,11 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+        touchend(val){
+      console.log(val,'=============');
+      
+      this.$refs[val].classList.add('animate')
+    },
     offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
     },
@@ -416,6 +422,7 @@ export default {
     // 开关机
     setSwitch(){
       if (this.isOffline) return
+      HdSmart.UI.vibrate()
         this.moveEnd = false
       let switchstatus = ''
       if (this.deviceAttrs.switchStatus=='on') {
@@ -427,7 +434,9 @@ export default {
     },
     // 设置模式
     setMode(val) {
-      if (val == this.deviceAttrs.mode || this.isOffline||this.isClose) return
+      if (this.isOffline||this.isClose) return
+      HdSmart.UI.vibrate()
+      if (val == this.deviceAttrs.mode) return
         this.moveEnd = false
       this.controlDevice('mode', val)
         .then((res) => {
@@ -446,6 +455,7 @@ export default {
     },
     setTemperature(step) {
       if (this.isOffline||this.isClose) return
+      HdSmart.UI.vibrate()
       // 送风模式不能设置温度
         this.moveEnd = false
         this.setTemperatureDis = true
@@ -499,6 +509,7 @@ export default {
     // 设置风速
     setSpeed(speed) {
       if (this.isOffline||this.isClose) return
+      HdSmart.UI.vibrate()
         this.moveEnd = false
       if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
         return HdSmart.UI.toast('送风模式不能设置自动风速')
@@ -572,6 +583,20 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/air_condition/assets/new-air';
 @imgPath1: 'base/oakes_air_condition/assets';
+.animate::before{
+  animation: scale 0.4s;
+}
+@keyframes scale {
+  0%{
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(0.6);
+  }
+    100%{
+    transform: scale(1.3);
+  }
+}
   // 定时展示
   .timeShow {
     text-align: center;
@@ -648,7 +673,7 @@ export default {
     }
   }
   .main {
-    margin-top: 2vh;
+    margin-top: 5vh;
     position: relative;
     &.center {
       flex-direction: column;
@@ -711,7 +736,7 @@ export default {
     color: #20282B;
   }
   .starting{
-    margin-top: 158px;
+    margin-top: 0;
      .btn-start{
         z-index: 999;
         box-sizing: border-box;
@@ -1079,5 +1104,7 @@ export default {
     }
   }
 }
-
+.canvas {
+  width: 560px;
+}
 </style>

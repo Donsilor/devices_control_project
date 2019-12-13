@@ -343,7 +343,6 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     touchend(val){
       console.log(val,'=============');
-      
       this.$refs[val].classList.add('animate')
     },
     offset(r,d) {//根据弧度与距离计算偏移坐标
@@ -428,6 +427,7 @@ export default {
     // 开关机
     setSwitch(){
       if (this.isOffline) return
+      HdSmart.UI.vibrate()
         this.moveEnd = false
       let switchstatus = ''
       if (this.deviceAttrs.switchStatus=='on') {
@@ -440,6 +440,7 @@ export default {
     // 设置模式
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose ||this.isOffline) return
+      HdSmart.UI.vibrate()
       this.moveEnd = false
       this.controlDevice('mode', val)
         .then((res) => {
@@ -459,6 +460,7 @@ export default {
     },
     setTemperature(step) {
       if (this.isOffline||this.isClose) return
+      HdSmart.UI.vibrate()
         this.moveEnd = false
         this.setTemperatureDis = true
       // 送风模式不能设置温度
@@ -511,6 +513,7 @@ export default {
     // 设置风速
     setSpeed(speed, val) {
       if (this.isOffline||this.isClose) return
+      HdSmart.UI.vibrate()
         this.moveEnd = false
 
       this.typeVal = val
@@ -573,14 +576,14 @@ export default {
 @imgPath: 'base/air_condition/assets/new-air';
 @imgPath1: 'base/oakes_air_condition/assets';
 .animate::before{
-  animation: scale 0.5s;
+  animation: scale 0.4s;
 }
 @keyframes scale {
   0%{
     transform: scale(1);
   }
   50%{
-    transform: scale(0.3);
+    transform: scale(0.6);
   }
     100%{
     transform: scale(1.3);
@@ -663,7 +666,7 @@ export default {
     }
   }
   .main {
-    margin-top: 2vh;
+    margin-top: 5vh;
     position: relative;
     &.center {
       flex-direction: column;
@@ -725,7 +728,7 @@ export default {
     color: #20282B;
   }
   .starting{
-    margin-top: 158px;
+    margin-top: 0;
      .btn-start{
         z-index: 999;
         box-sizing: border-box;
@@ -1093,5 +1096,7 @@ export default {
     }
   }
 }
-
+.canvas {
+  width: 560px;
+}
 </style>

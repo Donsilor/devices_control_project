@@ -4,6 +4,7 @@
     <div :class="[{ 'offline': isOffline }, 'page']">
       <NewTopBar
         :title="device.device_name"
+        :room="device.room_name"
         :scroll="true"
         bak-color="#000"/>
       <div class="top">
@@ -210,6 +211,7 @@ export default {
     },
     // 设置布防/撤防
     lock(){
+      HdSmart.UI.vibrate()
      if (this.lockStatus=='1') {
        this.setLock = 0
      } else{
