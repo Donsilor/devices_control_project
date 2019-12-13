@@ -44,11 +44,11 @@
         <div
           class="control-tm center">
           <button
-          :disabled="setTemperatureDis"
+            :disabled="setTemperatureDis"
             class="control reduce"
             @click="setTemperature(-10)"/>
           <button
-          :disabled="setTemperatureDis"
+            :disabled="setTemperatureDis"
             class="control add"
             @click="setTemperature(10)"/>
         </div>
@@ -64,41 +64,66 @@
       <div
         class="starting">
         <div
-        ref="switchStatus"
-          :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn btn-start']"
-          @click="setSwitch" @touchend="touchend('switchStatus')"/>
+          ref="switchStatus"
+          :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn-start']"
+          @click="setSwitch" 
+          @touchstart ="touchstart('')"
+          @touchend="touchend('switchStatus')"/>
       </div>
       <div
         class="panel-btn center">
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div ref="cold" :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn', 'btn-cold', 'center']" @touchend="touchend('cold')"/>
+          <div 
+            ref="cold" 
+            :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn', 'btn-cold', 'center']" 
+            @touchstart ="touchstart('')"
+            @touchend="touchend('cold')"/>
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div ref="heat" :class="[ { 'active': deviceAttrs.mode == 'heat'&&deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" @touchend="touchend('heat')"/>
+          <div 
+            ref="heat" 
+            :class="[ { 'active': deviceAttrs.mode == 'heat'&&deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']"
+            @touchstart ="touchstart('')"
+            @touchend="touchend('heat')"/>
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('auto')">
-          <div ref="auto" :class="[ { 'active': deviceAttrs.mode == 'auto'&&deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" @touchend="touchend('auto')"/>
+          <div 
+            ref="auto" 
+            :class="[ { 'active': deviceAttrs.mode == 'auto'&&deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" 
+            @touchstart ="touchstart('')"
+            
+            @touchend="touchend('auto')"/>
           <div
             class="btn-name" >智能</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div ref="wind" :class="[{ 'active': deviceAttrs.mode == 'wind'&&deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" @touchend="touchend('wind')"/>
+          <div 
+            ref="wind" 
+            :class="[{ 'active': deviceAttrs.mode == 'wind'&&deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" 
+            @touchstart ="touchstart('')"
+            
+            @touchend="touchend('wind')"/>
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div ref="dehumidify" :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&&deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-dehumidify center']" @touchend="touchend('dehumidify')"/>
+          <div 
+            ref="dehumidify" 
+            :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&&deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-dehumidify center']" 
+            
+            @touchstart ="touchstart('')"
+            @touchend="touchend('dehumidify')"/>
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -343,10 +368,22 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-        touchend(val){
-      console.log(val,'=============');
-      
-      this.$refs[val].classList.add('animate')
+  touchstart() {
+      let btn = document.querySelectorAll('.btn')
+      for(let i=0;i<btn.length;i++){
+        btn[i].classList.remove('active')
+        btn[i].classList.remove('animate')
+        btn[i].classList.remove('yellowExtend')
+      }  
+    },
+    touchend(val){ 
+      if (val == 'switchStatus') {
+        if (this.isOffline) return
+      }else{
+        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+      }
+        this.$refs[val].classList.add('animate')
+        this.$refs[val].classList.add('yellowExtend')
     },
     offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
@@ -716,7 +753,7 @@ export default {
           line-height: 48px;
           font-family: PingFangSC-Light;
           color: #000;
-          zoom:1;
+          zoom:2;
         }
       }
          .cover{
@@ -751,6 +788,7 @@ export default {
         &::before{
           content: "";
           position: absolute;
+          z-index: 100;
           left: 50%;
           top: 50%;
           margin-left: -24px;
@@ -801,6 +839,8 @@ export default {
       display: flex;
       flex-direction: column;
       &::before {
+        position: relative;
+        z-index: 100;
         content: "";
         display: block;
         width: 44px;
@@ -1104,4 +1144,30 @@ export default {
 .canvas {
   width: 560px;
 }
+
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .1s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 50%;height: 50%;}
+    
+    100% {width: 100%;height: 100%;}
+  }
+
 </style>
