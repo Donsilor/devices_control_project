@@ -248,6 +248,11 @@ export default {
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
+      .catch((err) => {
+        if(err.code == -90004) {
+          HdSmart.UI.toast('网络超时，请重试')
+        }
+      })
       HdSmart.UI.setStatusBarColor(2)
     })
   },
@@ -260,6 +265,11 @@ export default {
       HdSmart.UI.vibrate()
       this.flagOn = false
       this.controlDevice("switch_chan", val)
+      .then((res) => {
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
+        }
+      })
     },
     setSwitchOff(val) {
       if(this.isOffline) return
@@ -268,6 +278,11 @@ export default {
       HdSmart.UI.vibrate()
       this.flagOff = false
       this.controlDevice("switch_chan", val)
+      .then((res) => {
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
+        }
+      })
     },
     setSwitch1() {
       if(this.isOffline) return
@@ -280,6 +295,11 @@ export default {
         switchStatus = 'on'
       }
       this.controlDevice("switch_chan0", switchStatus)
+      .then((res) => {
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
+        }
+      })
     },
     setSwitch2() {
       if(this.isOffline) return
@@ -292,6 +312,11 @@ export default {
         switchStatus = 'on'
       }
       this.controlDevice("switch_chan1", switchStatus)
+      .then((res) => {
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
+        }
+      })
     },
     setSwitch3() {
       if(this.isOffline) return
@@ -304,6 +329,11 @@ export default {
         switchStatus = 'on'
       }
       this.controlDevice("switch_chan2", switchStatus)
+      .then((res) => {
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
+        }
+      })
     },
     setSwitch4() {
       if(this.isOffline) return
@@ -316,6 +346,11 @@ export default {
         switchStatus = 'on'
       }
       this.controlDevice("switch_chan3", switchStatus)
+      .then((res) => {
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
+        }
+      })
     },
     controlDevice(attr, value, param) {
       return this.doControlDevice({
