@@ -18,24 +18,24 @@ var res = {
     default_device_name: '挂式空调',
     attribute: {
         // selection:"17,31;0,2,3,5;1,2,3,4,5,7",
-        // switchStatus: "on",
+        switchStatus: "on",
         temperature: 280.0,
-        // env_temperature: 200,
-        // mode: 'cold',
-        // order_time:0,
-        // speed: 'normal',
-        // wind_up_down: 'off',
-        // wind_left_right: 'off',
-        // sleep_mode: 'on',
-        // deviceModel: 'KFRd-26GW/FE22BpA',
-        // manufactureId: 'tcl',
-        // deviceCategory: 'airconditioner.new',
-        // deviceSubCategory: 0,
+        env_temperature: 200,
+        mode: 'cold',
+        order_time:0,
+        speed: 'normal',
+        wind_up_down: 'off',
+        wind_left_right: 'off',
+        sleep_mode: 'on',
+        deviceModel: 'KFRd-26GW/FE22BpA',
+        manufactureId: 'tcl',
+        deviceCategory: 'airconditioner.new',
+        deviceSubCategory: 0,
         connectivity: 'online',
-        // timer_switch:'off',
-        // timer_value:0,
-        // wind_up:'off',
-        // wind_down:'off',
+        timer_switch:'off',
+        timer_value:0,
+        wind_up:'off',
+        wind_down:'off',
     },
     third_attribute:{
       "selection":"16,30;1,2,3;0,1,2,3,4",
@@ -86,6 +86,6 @@ export function set(data) {
       res.attribute = Object.assign({}, res.attribute, attr)
     }
     return Mock.mock({
-        code: 0
+        code: -90004
     })
 }

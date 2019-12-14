@@ -49,7 +49,7 @@
               ><span>简介：{{ cur.desc }}</span> </p>
             </div>
             <div 
-              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0||tvStatus.tvOnlineStatus==2}" 
+              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0||tvStatus.tvOnlineStatus==2||tvStatus.tvOnlineStatus==-2}" 
               class="playstate playstate_unplay">
               <a
                 href="#"
@@ -148,16 +148,17 @@
           <ul
             v-if="channelId==='001' || channelId==='004'"
         
-            class="bd">
+            class="bd clearfix">
             <li
-              v-for="item in cur.playlist2.list"
-              :key="item.index"
+              v-for="(item,index) in cur.playlist2.list"
+              :key="item.index+index"
               class="item-haspic"
               @click="play(item)">
               <img
                 v-lazy="item.pictureUrl"
                 :key="item.pictureUrl">
-              <p>{{ item.name }}</p>
+              <p class="palyimg"/>
+              <p class="palyname">{{ item.name }}</p>
               <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
               <span
                 v-show="item.drm && item.drm!='0'"
@@ -171,7 +172,7 @@
             <li
               v-for="(item, num) in cur.playlist2.list"
               :key="item.index"
-              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0||tvStatus.tvOnlineStatus==2,'active':activeIndex==num}"
+              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0||tvStatus.tvOnlineStatus==2||tvStatus.tvOnlineStatus==-2,'active':activeIndex==num}"
               class="item-num" 
               @click="play(item,num)">
               {{ item.set ? item.set : ( item.index=='0' ? num+1 : item.index ) }}         
@@ -203,15 +204,15 @@
             style="clear:both">相关视频</div>
           <ul class="bd" >
             <li
-              v-for="item in cur.playlist2.list2"
-              :key="item.index"
+              v-for="(item,index) in cur.playlist2.list2"
+              :key="item.index+index"
               class="item-haspic"
               @click="play(item)">
               <img
                 v-lazy="item.pictureUrl"
                 :key="item.pictureUrl">
               <p class="palyimg"/>
-              <p>{{ item.name }}</p>
+              <p class="palyname">{{ item.name }}</p>
               <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
               <span
                 v-show="item.drm && item.drm!='0'"
@@ -709,7 +710,7 @@
       right: 12px;
       width: 36px;
       height: 36px;
-      background:  url('~@lib/base/tv/assets/new/tv_icn_play.png');
+      background:  url('~@lib/base/tv/assets/new/tv_btn_play.png');
       background-size:100% 100%; 
     }
   }
@@ -870,12 +871,13 @@
       margin-bottom: 12px;
     }
     p {
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+      // text-overflow: ellipsis;
+      // display: -webkit-box;
+      // -webkit-line-clamp: 2;
+      // -webkit-box-orient: vertical;
       overflow: hidden;
       line-height: 36px;
+      // height: 72px;
       // height: 3em;
       font-size:24px;
       font-weight: lighter;
@@ -951,6 +953,14 @@
   // line-height: 32px;
   // padding: 0 6px;
 }
+
+.clearfix:after{
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
 </style>
 
 <script>
@@ -1120,7 +1130,9 @@ export default {
             // this.close()
             return
           }
+          console.log(data,'4444444444444')
 
+          
           var temp = data.data
           var playlist = temp.playlist[0]
           temp.playlist2 = {}
@@ -1149,12 +1161,8 @@ export default {
              if(!this.cur.starring){
               num +=1
             }
-            console.log(num,'---------')
-            
-            
             let synopsis = document.querySelector('.synopsis')
             synopsis.style.height = 20*(2+num)+'px'
-            
             let synopsisSpan = document.querySelector('.synopsis>span')
             let synopsisH = synopsis.offsetHeight
             let synopsisSpanH = synopsisSpan.offsetHeight
@@ -1164,14 +1172,24 @@ export default {
               synopsisSpan.innerText+='...'
               synopsisSpanH = synopsisSpan.offsetHeight
             }
-             console.log(synopsis,synopsisSpan)
-             
-            // synopsis.innerText = 'aaaaa' +  synopsis.innerText
-          
+            let palynameList = document.querySelectorAll('.palyname')
+            for(let i=0;i<palynameList.length;i++){
+              let synopsisSpanH = palynameList[i].offsetHeight
+              console.log(palynameList[i])
+
+              console.log(synopsisSpanH)
+              
+              if(synopsisSpanH<=36) continue
+              console.log(palynameList[i])
+              
+              palynameList[i].innerText+='...' 
+                while (synopsisSpanH>36){
+                 palynameList[i].innerText =  palynameList[i].innerText.substr(0,palynameList[i].innerText.length-4)
+                  palynameList[i].innerText+='...'
+                 synopsisSpanH = palynameList[i].offsetHeight
+                }
+              }    
           })
-      
-         
-          
         }
       )
     },

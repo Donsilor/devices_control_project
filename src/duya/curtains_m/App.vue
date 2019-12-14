@@ -185,6 +185,8 @@ export default {
 
   },
   mounted(){
+    console.log($,'111')
+    
       HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
@@ -217,7 +219,7 @@ export default {
       this.myMove = false
       this.controlDevice('switch', 'on')
       .then((res)=>{
-        console.log(res,'===============');
+        console.log(res,'===============')
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
         }
@@ -234,7 +236,7 @@ export default {
       this.myMove = false
       this.controlDevice('switch', 'off')
       .then((res)=>{
-        console.log(res,'===============');
+        console.log(res,'===============')
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
         }
@@ -251,7 +253,7 @@ export default {
       },500)
       this.controlDevice('switch', 'pause')
       .then((res)=>{
-        console.log(res,'===============');
+        console.log(res,'===============')
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
         }
@@ -291,7 +293,7 @@ export default {
       console.log(this.range)
       this.controlDevice('open_percentage',this.range)
       .then((res)=>{
-        console.log(res,'===============');
+        console.log(res,'===============')
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
         }
@@ -303,21 +305,14 @@ export default {
         let circle = this.$refs.right.offsetHeight
         let maxWidth = this.$refs.imgBox.offsetWidth*0.5
         let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
-        console.log(width,'width')
-        console.log(circle)
-        
-        
-        let leftCurtainBox = this.$refs.leftCurtainBox
-        let rightCurtainBox = this.$refs.rightCurtainBox
-        this.animate(leftCurtainBox,{
-          width:Math.round(width)
+        $('.leftCurtainBox').animate({
+            width:Math.round(width)
         })
-        this.animate(rightCurtainBox,{
-          width:Math.round(width)
-        }
-        )
+        $('.rightCurtainBox').animate({
+            width:Math.round(width)
+        })
       // leftCurtainBox.style.width =width +"px"
-      // // console.log(width)
+      // console.log(width)
       // rightCurtainBox.style.width = leftCurtainBox.style.width
     },
     controlDevice(attr, value,params) {
@@ -330,62 +325,7 @@ export default {
           }
         }
       })
-    },
-    animate(ele,param,callBack,speedTime){
-	//callBack没有传递时
-	//如果想要传递speedTime
-	//这里callBack就是时间
-	if(!!callBack && !(callBack instanceof Function)){//!!callBack表示存在并且不是一个函数
-		//执行这里说明callBack是一个时间
-		speedTime = callBack
-		callBack = undefined
-	}
-	speedTime = speedTime ? speedTime : 10
-	//console.log(speedTime);
-	clearInterval(ele.timer)
-	ele.timer = setInterval(()=>{
-		var flag = true//表示所有的属性都到达了目标 值
-		for(var attr in param){
-			if(attr === "zIndex"){
-				//zIndex不需要做任何动画，直接赋值就可以 了
-				ele.style[attr] = param[attr]
-			}else{
-				var current = 0
-				if(attr === "opacity"){
-					current = this.getStyle(ele,attr)*100
-				}else{
-					current = parseInt(this.getStyle(ele,attr))
-				}
-				var speed = (param[attr] - current)/10
-				speed = speed > 0 ?  Math.ceil(speed) : Math.floor(speed)
-				if(current != param[attr]){
-          // console.log(current,param[attr],speed,'222222222')
-          
-					//属性没有到达 目标 值
-					flag = false//最少有一个属性没有到达目标 值
-					if(attr === "opacity"){
-						ele.style[attr] = (current + speed)/100
-					}else{
-						ele.style[attr] = (current*100 + speed*100)/100 + "px"
-					}
-				}
-			}
     }
-    // console.log(flag,'flag')
-    
-		if(flag){
-			clearInterval(ele.timer)
-			//到达了目标值。
-			if(callBack){
-				callBack()
-			}
-		}
-	},speedTime)
-},
-//兼容ie8获取元素对应浏览器渲染后的样式值。这个值是一个带单位的字符串
-getStyle(obj,attr){
-	return window.getComputedStyle ? window.getComputedStyle(obj,null)[attr] : obj.currentStyle[attr]
-}
   }
 }
 </script>

@@ -150,7 +150,7 @@
             <div class="name">{{ item.director&&'导演：'+item.director }}</div>
             <div class="name starring">{{ item.director&&'主演：'+item.starring }}</div>
             <div 
-              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0||tvStatus.tvOnlineStatus==2}" 
+              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0||tvStatus.tvOnlineStatus==2||tvStatus.tvOnlineStatus==-2}" 
               class="playstate playstate_unplay" >
               <a
                 href="#"
@@ -424,6 +424,11 @@
   }
 }
 .search_suggest {
+    position: absolute;
+  top: 150px;
+  bottom: 0;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   padding-left: 32px;
   background-color: transparent;
   /*border-bottom: 1px solid rgba(216, 216, 216, .7);*/
@@ -1048,23 +1053,11 @@ export default {
       if (this.curpage !== 3) {
         return
       }
-        console.log(this.pageNo,'this.pageNo')
-
-      var scrollTop =
-        document.documentElement.scrollTop ||
-        window.pageYOffset ||
-        document.body.scrollTop
-        console.log(
-        scrollTop + window.innerHeight >=
-        document.documentElement.scrollHeight - 15)
-        
+      var scrollTop = this.$refs['search_result'].scrollTop 
       if (
-        scrollTop + window.innerHeight >=
-        document.documentElement.scrollHeight - 15
-      ) {
+        scrollTop>0&&(scrollTop + this.$refs['search_result'].clientHeight >= this.$refs['search_result'].scrollHeight - 15)) {
         if (this.$store.state.detailVisible) {
           console.log(this.$store.state.detailVisible)
-          
           return
         }
         if (
