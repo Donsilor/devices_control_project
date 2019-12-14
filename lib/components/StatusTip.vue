@@ -55,7 +55,7 @@
           <i class="arrow"/>
         </div> -->
         <div
-          v-if="8"      
+          v-if="isOffline"      
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">
@@ -225,7 +225,8 @@
 
 <script>
 // import * as service from "../service"
-import {mapState} from 'vuex'
+import { mapGetters, mapState, mapActions } from 'vuex'
+
 let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
 
 export default {
@@ -239,6 +240,8 @@ export default {
     },
    
     computed: {
+    ...mapGetters(['isClose', 'isOffline']),
+
         // tvStatus() {
         //     return this.$store.state.tvStatus
         // },
