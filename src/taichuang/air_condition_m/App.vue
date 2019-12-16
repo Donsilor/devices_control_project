@@ -44,11 +44,11 @@
         <div
           class="control-tm center">
           <button
-          :disabled="setTemperatureDis"
+            :disabled="setTemperatureDis"
             class="control reduce"
             @click="setTemperature(-10)"/>
           <button
-          :disabled="setTemperatureDis"
+            :disabled="setTemperatureDis"
             class="control add"
             @click="setTemperature(10)"/>
         </div>
@@ -64,9 +64,11 @@
       <div
         class="starting">
         <div
-        ref="switchStatus"
+          ref="switchStatus"
           :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},' btn-start']"
-          @click="setSwitch" @touchstart ="touchstart()" @touchend="touchend('switchStatus')" />
+          @click="setSwitch" 
+          @touchstart ="touchstart()" 
+          @touchend="touchend('switchStatus')" />
       </div>
       <!-- 模式 -->
       <div
@@ -75,21 +77,33 @@
           v-show="modeType.indexOf(2)!==-1"
           class="btn-wrap"
           @click="setMode('cold')">
-          <div ref="cold" :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']"  @touchstart ="touchstart()" @touchend="touchend('cold')" />
+          <div 
+            ref="cold" 
+            :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" 
+            @touchstart ="touchstart()" 
+            @touchend="touchend('cold')" />
           <div class="btn-name">制冷</div>
         </div>
         <div
           v-show="modeType.indexOf(1)!==-1"
           class="btn-wrap"
           @click="setMode('heat')">
-          <div ref="heat" :class="[ { 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" @touchstart ="touchstart()" @touchend="touchend('heat')" />
+          <div 
+            ref="heat" 
+            :class="[ { 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" 
+            @touchstart ="touchstart()" 
+            @touchend="touchend('heat')" />
           <div class="btn-name">制热</div>
         </div>
         <div
           v-show="modeType.indexOf(0)!==-1"
           class="btn-wrap"
           @click="setMode('auto')">
-          <div ref="auto" :class="[ { 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" @touchstart ="touchstart()" @touchend="touchend('auto')" />
+          <div 
+            ref="auto" 
+            :class="[ { 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" 
+            @touchstart ="touchstart()" 
+            @touchend="touchend('auto')" />
           <div
             class="btn-name" >智能</div>
         </div>
@@ -97,35 +111,55 @@
           v-show="modeType.indexOf(3)!==-1"
           class="btn-wrap"
           @click="setMode('wind')">
-          <div ref="wind" :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" @touchstart ="touchstart()" @touchend="touchend('wind')" />
+          <div 
+            ref="wind" 
+            :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" 
+            @touchstart ="touchstart()" 
+            @touchend="touchend('wind')" />
           <div class="btn-name">通风</div>
         </div>
         <div
           v-show="modeType.indexOf(4)!==-1"
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div ref="dehumidify" :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" @touchstart ="touchstart()" @touchend="touchend('dehumidify')" />
+          <div 
+            ref="dehumidify" 
+            :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" 
+            @touchstart ="touchstart()" 
+            @touchend="touchend('dehumidify')" />
           <div class="btn-name">除湿</div>
         </div>
         <div
           v-show="modeType.indexOf(5)!==-1"
           class="btn-wrap"
           @click="setMode('breath')">
-          <div ref="breath" :class="[{ 'active': deviceAttrs.mode == 'breath'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-breath center']" @touchstart ="touchstart()" @touchend="touchend('breath')" />
+          <div 
+            ref="breath" 
+            :class="[{ 'active': deviceAttrs.mode == 'breath'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-breath center']" 
+            @touchstart ="touchstart()" 
+            @touchend="touchend('breath')" />
           <div class="btn-name">换气</div>
         </div>
         <div
           v-show="modeType.indexOf(6)!==-1"
           class="btn-wrap"
           @click="setMode('sleep')">
-          <div ref="sleep" :class="[{ 'active': deviceAttrs.mode == 'sleep'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-sleep center']" @touchstart ="touchstart()" @touchend="touchend('sleep')" />
+          <div 
+            ref="sleep" 
+            :class="[{ 'active': deviceAttrs.mode == 'sleep'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-sleep center']" 
+            @touchstart ="touchstart()" 
+            @touchend="touchend('sleep')" />
           <div class="btn-name">睡眠</div>
         </div>
         <div
           v-show="modeType.indexOf(7)!==-1"
           class="btn-wrap"
           @click="setMode('fresh')">
-          <div ref="fresh" :class="[{ 'active': deviceAttrs.mode == 'fresh'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-fresh center']" @touchstart ="touchstart()" @touchend="touchend('fresh')" />
+          <div 
+            ref="fresh" 
+            :class="[{ 'active': deviceAttrs.mode == 'fresh'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-fresh center']" 
+            @touchstart ="touchstart()" 
+            @touchend="touchend('fresh')" />
           <div class="btn-name">清爽</div>
         </div>
         <!-- <div
@@ -570,7 +604,7 @@ export default {
         .then((res) => {
           if (res) {
             if(res.code == 0) {
-              console.log(res,'code0=========');
+              console.log(res,'code0=========')
               this.deviceAttrs.mode = val
             }
             if (this.deviceAttrs.mode=='wind') {
@@ -583,8 +617,8 @@ export default {
             this.hide()
           }
           if (res == null) {
-            console.log(res,'null=========');
-            console.log(val,'val=========');
+            console.log(res,'null=========')
+            console.log(val,'val=========')
             this.$refs[val].classList.remove('yellowExtend')
           }
         })
