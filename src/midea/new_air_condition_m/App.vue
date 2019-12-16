@@ -335,21 +335,12 @@ export default {
         }else{
             e.returnValue = false
         }
-        console.log('move')
-        // console.log(111111111,'222222')
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
-              // console.log(e)
-
-              // console.log(k.x-this.ox)
               var r = Math.atan2(k.x-this.ox, this.oy-k.y)
               var hd = (Math.PI+r)/(2*Math.PI)
-              console.log('k', k)
-              console.log('r', r)
-              console.log('hd', hd)
               // 半圆的滑动范围判断
               if (hd <= 0.875 && hd >= 0.125) {
-                  console.log('开始运动')
                   this.draw(hd)
               }else{
                 return
@@ -404,13 +395,10 @@ export default {
       this.ctx.stroke()
       if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline) {
           if (this.deviceAttrs.mode == 'heat') {
-            console.log('heat111')
             this.ctx.strokeStyle = "#DA6C00"
           }else if(this.deviceAttrs.mode == 'cold'){
-            console.log('cold111')
             this.ctx.strokeStyle = "#008CDA"
           }else{
-            console.log('else')
             this.ctx.strokeStyle = "#E1B96E"
           }
       }else{
@@ -497,7 +485,7 @@ export default {
               this.hide()
           }
         if (res == null) {
-            console.log(res,val,'res val=========');
+            console.log(res,val,'res val=========')
             this.$refs[val].classList.remove('yellowExtend')
         }
         })

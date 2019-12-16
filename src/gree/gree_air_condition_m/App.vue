@@ -345,6 +345,7 @@ export default {
     this.ctx = this.$refs.canvas.getContext("2d")
     this.ctx.scale(2,2)
     this.$nextTick(() => {
+      let isMove = false
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
       } : {
@@ -352,8 +353,6 @@ export default {
       }
         this.$refs.canvas.addEventListener(on.start,(e)=> {
           this.moveFlag = true
-          // console.log(e.targetTouches[0].clientX ,'鼠标的X')
-          // console.log(e.targetTouches[0].clientY ,'鼠标的Y')
       },false)
 
       this.$refs.canvas.addEventListener(on.move, (e)=> {
@@ -362,21 +361,13 @@ export default {
         }else{
             e.returnValue = false
         }
-        console.log('move')
-        // console.log(111111111,'222222')
+        isMove = true
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
-              // console.log(e)
-
-              // console.log(k.x-this.ox)
               var r = Math.atan2(k.x-this.ox, this.oy-k.y)
               var hd = (Math.PI+r)/(2*Math.PI)
-              console.log('k', k)
-              console.log('r', r)
-              console.log('hd', hd)
               // 半圆的滑动范围判断
               if (hd <= 0.875 && hd >= 0.125) {
-                  console.log('开始运动')
                   this.draw(hd)
               }else{
                 return
@@ -388,25 +379,23 @@ export default {
         if (this.isOffline||this.isClose) return
         this.moveEnd = true
         this.moveFlag = false
-        this.controlDevice('temperature',this.centigrade)
+        if (isMove) {
+          this.controlDevice('temperature',this.centigrade)
+        }
+        isMove = false
       }, false)
     })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    touchstart(val) {
+    touchstart() {
       let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
         btn[i].classList.remove('active')
-
         btn[i].classList.remove('animate')
         btn[i].classList.remove('yellowExtend')
-
       }
-
-
       },
-
     touchend(val){
       if (val == 'switchStatus') {
         if (this.isOffline) return
@@ -435,13 +424,10 @@ export default {
       this.ctx.stroke()
       if (this.loaclAttr.switchStatus=='on'&&!this.isOffline) {
           if (this.loaclAttr.mode == 'heat') {
-            console.log('heat111')
             this.ctx.strokeStyle = "#DA6C00"
           }else if(this.loaclAttr.mode == 'cold'){
-            console.log('cold111')
             this.ctx.strokeStyle = "#008CDA"
           }else{
-            console.log('else')
             this.ctx.strokeStyle = "#E1B96E"
           }
       }else{
@@ -472,7 +458,6 @@ export default {
       this.ctx.shadowBlur = 4
       this.ctx.shadowColor = "rgba(0, 0, 0, 0.1)"
       let d =  this.offset(n*2*Math.PI,this.or)
-      // console.log('d', d)
       // 关机显示
       if (this.loaclAttr.switchStatus=='on'&&!this.isOffline) {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
@@ -503,14 +488,14 @@ export default {
       }
       this.controlDevice('switch',switchstatus)
       .then((res) => {
-         if(res.code == 0) {
-           this.loaclAttr.switchStatus = val
-         } else {
+        if (res) {     
+           if(res.code == 0) {
+              this.loaclAttr.switchStatus = switchstatus
+           }
+        }
+        if(res == null){
            HdSmart.UI.toast('操作失败')
-         }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
+        }
        })
     },
     // 设置模式
@@ -521,27 +506,28 @@ export default {
       if (val == this.loaclAttr.mode) return
       this.controlDevice('mode', val)
         .then((res) => {
-         if(res.code == 0) {
+         if (res) {
+           if(res.code == 0) {
             this.loaclAttr.mode = val
             // this.reset()
             this.hide()
-         } else {
-           HdSmart.UI.toast('操作失败')
+           } 
          }
+        if(res == null){
+           HdSmart.UI.toast('操作失败')
+        }
        })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
-       })
+      //  .catch(() => {
+      //    HdSmart.UI.toast('操作失败')
+      //  })
     },
     setTemperature(step) {
       if (this.isOffline||this.isClose) return
       HdSmart.UI.vibrate()
-      console.log('点击了')
         this.moveEnd = false
 
 
       this.setTemperatureDis = true
-      console.log(this.loaclAttr.mode,'--------------11')
 
       if(this.loaclAttr.mode == 'auto') {
         this.setTemperatureDis = false
@@ -571,18 +557,15 @@ export default {
       }
       this.controlDevice('temperature', temp)
         .then((res) => {
-         if(res.code == 0) {
-            this.loaclAttr.temperature = temp
-            this.setTemperatureDis = false
-            //  this.reset()
-         } else {
+          if (res) {
+            if(res.code == 0) {
+              this.loaclAttr.temperature = temp
+              this.setTemperatureDis = false
+            } 
+          }
+        if(res == null){
            HdSmart.UI.toast('操作失败')
-           this.setTemperatureDis = false
-         }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
-         this.setTemperatureDis = false
+        }
        })
     },
     // 设置风速
@@ -596,15 +579,15 @@ export default {
       // }
       this.controlDevice('speed', speed)
         .then((res) => {
-         if(res.code == 0) {
+         if (res) {
+           if(res.code == 0) {
             this.loaclAttr.speed = speed
             this.hide()
-         } else {
-           HdSmart.UI.toast('操作失败')
+           }
          }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
+        if(res == null){
+           HdSmart.UI.toast('操作失败')
+        }
        })
     },
     controlDevice(attr, value) {

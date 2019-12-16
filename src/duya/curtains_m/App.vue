@@ -429,7 +429,7 @@ export default {
     height: auto;
     width: 100%;
     position: fixed;
-    bottom: 50px;
+    bottom: 90px;
     z-index: 99999;
     .btn {
       margin-top: 24px;

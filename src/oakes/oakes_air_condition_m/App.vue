@@ -349,6 +349,7 @@ export default {
     this.ctx = this.$refs.canvas.getContext("2d")
     this.ctx.scale(2,2)
     this.$nextTick(() => {
+      let isMove = false
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
       } : {
@@ -356,8 +357,6 @@ export default {
       }
         this.$refs.canvas.addEventListener(on.start,(e)=> {
           this.moveFlag = true
-          // console.log(e.targetTouches[0].clientX ,'鼠标的X')
-          // console.log(e.targetTouches[0].clientY ,'鼠标的Y')
       },false)
 
       this.$refs.canvas.addEventListener(on.move, (e)=> {
@@ -366,18 +365,11 @@ export default {
         }else{
             e.returnValue = false
         }
-        console.log('move')
-        // console.log(111111111,'222222')
+        isMove = true
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
-              // console.log(e)
-
-              // console.log(k.x-this.ox)
               var r = Math.atan2(k.x-this.ox, this.oy-k.y)
               var hd = (Math.PI+r)/(2*Math.PI)
-              console.log('k', k)
-              console.log('r', r)
-              console.log('hd', hd)
               // 半圆的滑动范围判断
               if (hd <= 0.875 && hd >= 0.125) {
                   console.log('开始运动')
@@ -390,20 +382,22 @@ export default {
 
       this.$refs.canvas.addEventListener(on.end,()=> {
         if (this.isOffline||this.isClose) return
-        // console.log(111111111,'3333333')
           this.moveFlag = false
-          this.controlDevice('temperature',this.centigrade)
-          .then((res) => {
-            if(res.code == 0) {
-            this.loaclAttr.temperature = this.centigrade
-            this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
-            } else {
-            HdSmart.UI.toast('操作失败')
-            }
-          })
-          .catch(() => {
-            HdSmart.UI.toast('操作失败')
-          })
+          if (isMove) {
+            this.controlDevice('temperature',this.centigrade)
+            .then((res) => {
+              if (res) {
+                if(res.code == 0) {
+                  this.loaclAttr.temperature = this.centigrade
+                  this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
+                } 
+                if (res == null) {
+                  HdSmart.UI.toast('操作失败')
+                }
+              }
+            })
+          }
+        isMove = false
       }, false)
     })
   },
@@ -541,15 +535,15 @@ export default {
       }
       this.controlDevice('switch',switchstatus)
       .then((res) => {
-         if(res.code == 0) {
-           this.loaclAttr.switchStatus = val
-         } else {
-           HdSmart.UI.toast('操作失败')
-         }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
-       })
+          if (res) {     
+            if(res.code == 0) {
+                this.loaclAttr.switchStatus = switchstatus
+            }
+          }
+          if(res == null){
+            HdSmart.UI.toast('操作失败')
+          }
+        })
     },
     // 设置模式
     setMode(val) {
@@ -557,16 +551,17 @@ export default {
       HdSmart.UI.vibrate()
       if (val == this.loaclAttr.mode ) return
       this.controlDevice('mode', val)
-      .then((res) => {
-         if(res.code == 0) {
+       .then((res) => {
+         if (res) {
+           if(res.code == 0) {
             this.loaclAttr.mode = val
+            // this.reset()
             this.hide()
-         } else {
-           HdSmart.UI.toast('操作失败')
+           } 
          }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
+        if(res == null){
+           HdSmart.UI.toast('操作失败')
+        }
        })
     },
     setTemperature(step) {
@@ -600,19 +595,16 @@ export default {
         }
       }
       this.controlDevice('temperature', temp)
-        .then((res) => {
-         if(res.code == 0) {
-            this.loaclAttr.temperature = temp
-            this.setTemperatureDis = false
-            //  this.reset()
-         } else {
+       .then((res) => {
+          if (res) {
+            if(res.code == 0) {
+              this.loaclAttr.temperature = temp
+              this.setTemperatureDis = false
+            } 
+          }
+        if(res == null){
            HdSmart.UI.toast('操作失败')
-           this.setTemperatureDis = false
-         }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
-         this.setTemperatureDis = false
+        }
        })
     },
     // 设置摆风
@@ -629,15 +621,15 @@ export default {
 
       this.controlDevice(attr, val)
         .then((res) => {
-         if(res.code == 0) {
+         if (res) {
+           if(res.code == 0) {
             this.loaclAttr[attr] = val
             this.hide()
-         } else {
+           } 
+         }
+         if(res == null){
            HdSmart.UI.toast('操作失败')
          }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
        })
     },
     // 设置风速

@@ -8,7 +8,7 @@
         :room="device.room_name"
         :scroll="true"
         bak-color="#000"
-        page-class=".page"/>
+      />
       <StatusTip/>
       <div class="main center">
         <div class="wrap-circle">
