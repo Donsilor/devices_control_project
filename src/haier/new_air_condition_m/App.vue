@@ -8,6 +8,7 @@
         :room="device.room_name"
         :scroll="true"
         bak-color="#000"
+        page-class=".page"
       />
       <StatusTip/>
       <div class="main center">
@@ -322,6 +323,7 @@ export default {
     this.ctx = this.$refs.canvas.getContext("2d")
     this.ctx.scale(2,2)
     this.$nextTick(() => {
+      let isMove = false
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
       } : {
@@ -338,8 +340,7 @@ export default {
         }else{
             e.returnValue = false
         }
-        console.log('move')
-        // console.log(111111111,'222222')
+       isMove = true
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
               // console.log(e)
@@ -365,7 +366,9 @@ export default {
         this.moveEnd = true
         // console.log(111111111,'3333333')
           this.moveFlag = false
-          this.controlDevice('temperature',this.centigrade)
+          if (isMove) {
+            this.controlDevice('temperature',this.centigrade)
+          }
       }, false)
     })
   },
@@ -391,7 +394,7 @@ export default {
       }
        let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
-        // btn[i].classList.remove('active')
+        btn[i].classList.remove('active')
         btn[i].classList.remove('animateEnd')
         btn[i].classList.remove('bgcEnd')
 
@@ -761,7 +764,6 @@ export default {
     }
   }
   .main {
-    // margin-top: 5vh;
     position: relative;
     &.center {
       flex-direction: column;
@@ -823,7 +825,7 @@ export default {
     color: #20282B;
   }
   .starting{
-    margin-top: 0;
+    margin-top: 120px;
      .btn-start{
         z-index: 999;
         box-sizing: border-box;
@@ -1225,7 +1227,7 @@ export default {
 }
 
 .canvas {
-  width: 560px;
+  width: 560PX;
 }
 
 .animateStart1{
