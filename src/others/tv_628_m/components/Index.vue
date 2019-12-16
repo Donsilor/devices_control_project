@@ -393,7 +393,8 @@
     font-size: 32px !important;
     font-weight: 500;
     position:relative;
-    font-weight:normal;
+    font-weight:normal!important;
+    
     &::before{
       content: '';
       width: 0.5rem;
@@ -409,6 +410,7 @@
     }
   }
   .item {
+    font-weight: lighter;
     font-family: PingFangSC-Medium;
     position: relative;
     color: #000000;

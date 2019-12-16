@@ -210,7 +210,7 @@
   // background: rgba(255, 255, 255, 1);
   /**box-shadow: inset 0 -1px 0 0 #dbdbdb;**/
   position: fixed;
-  height:88px;
+  // height:88px;
   left: 0;
   top: 65px;
   width: 100%;
@@ -224,7 +224,7 @@
   }
   .toggle {
     width: 100%;
-    height: 100%;
+    height:88px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -717,6 +717,7 @@ export default {
       // this.a = scrollTop
       let topbar_fixed = document.querySelector('.topbar-fixed')
       if(scrollTop>=10){
+        this.$refs.filters.style.position = 'fixed'
         this.$refs.filters.style.background = '#fff'
         topbar_fixed.style.background = '#fff'
         this.filterVisible = false
@@ -727,6 +728,15 @@ export default {
       }
     },
     toggleFilter() {
+      let topbar_fixed = document.querySelector('.topbar-fixed')
+
+       if(!this.filterVisible){
+        this.$refs.filters.style.background = '#fff'
+        topbar_fixed.style.background = '#fff'
+      }else{
+         this.$refs.filters.style.background = ''
+        topbar_fixed.style.background = ''
+      }
       this.filterVisible = !this.filterVisible
       window.removeEventListener("scroll", this.loadMore)
       removeEventListener("scroll", this.scrollfn)

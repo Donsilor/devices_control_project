@@ -194,9 +194,6 @@ export default {
     })
   },
   mounted(){
-     this.clientHeight = document.documentElement.clientHeight || document.body.clientHeight
-      this.scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-      console.log(this.clientHeight, this.scrollHeight,'1111')
     if(this.scroll){
        addEventListener('scroll',this.scrollfn)
     }
@@ -214,9 +211,7 @@ export default {
   },
   methods: {
     goBack() {
-      console.log('goBack')
       if (typeof this.onBack === 'function') {
-        console.log('goBack123123')
         this.onBack()
       } else if (argv_is_mock) {
         let t = new Date().getTime()
@@ -240,6 +235,8 @@ export default {
 
     scrollfn(){
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      this.clientHeight = document.documentElement.clientHeight || document.body.clientHeight
+      this.scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       let pageClass
       if(this.pageClass){
         pageClass = document.querySelector(this.pageClass)
@@ -251,7 +248,7 @@ export default {
       let h = this.$refs['header-bottom'].offsetHeight
       let b = (h/44)*this.scrollTop
       let f = (-6/44)*this.scrollTop+24
-      let w = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2   //如果标题要居中
+      let w = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2-20   //标题居中
       let l = (w/44)*this.scrollTop
       b = b>=h?h:b
       // w2 =  this.scrollTop *24/44+20
@@ -260,7 +257,8 @@ export default {
       this.$refs.title.style.bottom = b + 'px'
       this.$refs.title.style.left = l + 'px'
       this.$refs.title.style.fontSize = f + 'px'
-      if(this.clientHeight+this.scrollTop == this.scrollHeight){
+      
+      if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
         this.$refs.title.style.bottom = (h/44)*h+ 'px'
         this.$refs.title.style.left = (w/44)*h + 'px'
         this.$refs.title.style.fontSize = (-6/44)*h+24 + 'px'
@@ -397,7 +395,7 @@ export default {
 .header-bottom{
   display: flex;
   justify-content: space-between;
-  margin: 0 40px;
+  padding: 0 40px;
   align-items: center;
  .title {
    position: relative;
@@ -444,7 +442,7 @@ export default {
   }
   .right{
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
     p{
       background: url('../base/img/btn_ac_seting@2x.png');
@@ -500,7 +498,7 @@ export default {
     display: flex;
     width: 36PX;
     height: 36PX;
-   justify-content: center;
+   justify-content: flex-end;
    align-items: center;
     border: transparent;
    background: transparent;

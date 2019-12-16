@@ -2,6 +2,9 @@
   <div
     class="status_bar">
     <!-- <div class="status_bar_block"/> -->
+    <div 
+      :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
+      class="bac_fiexd"/>
     <div
       ref="status_bar_fixed"
       :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}"
@@ -62,7 +65,6 @@
             <p class="offline_bar_p">
               <i class="error"/>
             </p>
-           
             <span class="link">设备已离线,查看帮助</span>
           </div>
           <i class="arrow"/>
@@ -86,9 +88,10 @@
     left: 0;
     top: 69PX;
     width: 100%;
-    z-index: 999;
+    z-index: 10001;
     /* border-bottom:1px solid rgba(45,45,45,0.20); */
 }
+
 .sp_status_bar {
     /* background: #f7f8fa; */
     text-align: center;
@@ -138,6 +141,7 @@
 }
 
 .offline_bar {
+  position: relative;
     background: rgba(0, 0, 0, .3);
     width: 100%;
     height: 44PX;
@@ -191,6 +195,17 @@
       height: 20PX;
       background: url('~@lib/base/tv/assets/new/tv_arrow_lixian.png');
       background-size: 100% 100%;
+    }
+    &::after{
+      content: '';
+      position: absolute;
+      top: 44PX;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2000px;
+      background: transparent;
+      z-index: 10000;
     }
 }
 .offline_bar.offline_bar_wifi{
@@ -285,6 +300,8 @@ export default {
         //     service.onClickEvent("screenProjectionStatusClick")
         // },
         goToOfflineHelpPage() {
+          console.log('点击了')
+          
             // service.onClickEvent("tvOnlineStatusClick", {
             //     tvOnlineStatus: this.tvStatus.tvOnlineStatus
             // })
