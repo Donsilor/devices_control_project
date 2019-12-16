@@ -58,8 +58,7 @@
             :disabled="setTemperatureDis"
             class="control add btn"
             @touchstart ="touchstart('add')"
-            @touchend="touchend('add',10)" 
-          />
+            @touchend="touchend('add',10)" />
         </div>
       </div>
       <!-- 当前状态 -->
@@ -369,24 +368,13 @@ export default {
           if (isMove) {
             this.controlDevice('temperature',this.centigrade)
           }
+          isMove =false
       }, false)
     })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    touchstartControl(val){
-      console.log(val)
-      this.$refs[val].classList.add('animateStart')
-      
-    },
-    touchendControl(val){
-      console.log(val)
-      this.$refs[val].classList.add('animateEnd')
-
-      
-    },
     touchstart(val) {
-
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
