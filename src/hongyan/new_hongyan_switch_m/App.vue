@@ -5,7 +5,9 @@
       <topbar
         :title="device.device_name"
         :room="device.room_name"
-        bak-color="#000" />
+        bak-color="#000"
+        page-class=".page" />
+      <StatusTip v-if="isOffline"/>
       <!-- 灯 -->
       <div class="main center">
         <div class="bg center">
@@ -13,7 +15,8 @@
           <div
             v-if="deviceAttrs.list"
             :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}, {'panelOne': deviceAttrs.chan_num == 1 && deviceAttrs.list && deviceAttrs.list.length == 1}, 'panel-left']"
-            @click="setSwitch1"
+            @touchstart ="touchstart('one')"
+            @touchend="touchend('one')"
           >
             <div
               class="panel-btn center">
@@ -23,6 +26,7 @@
                   :class="['btn-name', 'tis', {'tisActive': deviceAttrs.list[0].chan_status == 'on'}]"
                 />
                 <div
+                  ref="one"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[0].chan_status == 'on'}]"
                 />
                 <div class="btn-name">{{ deviceAttrs.list[0].chan_name?deviceAttrs.list[0].chan_name:'开关1' }}</div>
@@ -45,7 +49,8 @@
           <div
             v-if="deviceAttrs.chan_num != 1 && deviceAttrs.list && deviceAttrs.list[1]"
             :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}, 'panel-left']"
-            @click="setSwitch2"
+            @touchstart ="touchstart('two')"
+            @touchend="touchend('two')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -53,6 +58,7 @@
                   :class="['btn-name', 'tis', {'tisActive': deviceAttrs.list[1].chan_status == 'on'}]"
                 />
                 <div
+                  ref="two"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[1].chan_status == 'on'}]"
                 />
                 <div class="btn-name">{{ deviceAttrs.list[1].chan_name?deviceAttrs.list[1].chan_name:'开关2' }}</div>
@@ -75,7 +81,8 @@
           <div
             v-if="deviceAttrs.chan_num != 1 && deviceAttrs.chan_num != 2 && deviceAttrs.list && deviceAttrs.list[2]"
             :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}, 'panel-left']"
-            @click="setSwitch3"
+            @touchstart ="touchstart('three')"
+            @touchend="touchend('three')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -83,6 +90,7 @@
                   :class="['btn-name', 'tis', {'tisActive': deviceAttrs.list[2].chan_status == 'on'}]"
                 />
                 <div
+                  ref="three"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[2].chan_status == 'on'}]"
                 />
                 <div class="btn-name">{{ deviceAttrs.list[2].chan_name?deviceAttrs.list[2].chan_name:'开关3' }}</div>
@@ -258,11 +266,35 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    touchstart(val) {
+      if(this.isOffline) return
+      this.$refs[val].classList.remove('animate')
+      this.$refs[val].classList.add('animate1')
+      this.$refs[val].classList.add('bgcStart')
+      if(val == 'SwitchOn') {
+        this.$refs[val].classList.add('yellowExtend')
+      }
+      if(val == 'SwitchOff') {
+        this.$refs[val].classList.add('yellowExtend')
+      }
+      HdSmart.UI.vibrate()
+    },
+    touchend(val){
+      if(this.isOffline) return
+      this.$refs[val].classList.remove('animate1')
+      this.$refs[val].classList.add('animate')
+      this.$refs[val].classList.remove('bgcStart')
+      if(val == 'one') return this.setSwitch1()
+      if(val == 'two') return this.setSwitch2()
+      if(val == 'three') return this.setSwitch3()
+      if(val == 'four') return this.setSwitch4()
+      if(val == 'SwitchOn') return this.setSwitchOn('on')
+      if(val == 'SwitchOff') return this.setSwitchOff('off')
+    },
     setSwitchOn(val) {
       if(this.isOffline) return
       if(this.flagOn == false) return
       if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') return
-      HdSmart.UI.vibrate()
       this.flagOn = false
       this.controlDevice("switch_chan", val)
       .then((res) => {
@@ -275,7 +307,6 @@ export default {
       if(this.isOffline) return
       if(this.flagOff == false) return
       if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') return
-      HdSmart.UI.vibrate()
       this.flagOff = false
       this.controlDevice("switch_chan", val)
       .then((res) => {
@@ -287,7 +318,6 @@ export default {
     setSwitch1() {
       if(this.isOffline) return
       if(this.flagOn == false || this.flagOff == false) return
-      HdSmart.UI.vibrate()
       let switchStatus = ''
       if (this.deviceAttrs.list[0].chan_status == 'on') {
         switchStatus = 'off'
@@ -304,7 +334,6 @@ export default {
     setSwitch2() {
       if(this.isOffline) return
       if(this.flagOn == false || this.flagOff == false) return
-      HdSmart.UI.vibrate()
       let switchStatus = ''
       if (this.deviceAttrs.list[1].chan_status == 'on') {
         switchStatus = 'off'
@@ -321,7 +350,6 @@ export default {
     setSwitch3() {
       if(this.isOffline) return
       if(this.flagOn == false || this.flagOff == false) return
-      HdSmart.UI.vibrate()
       let switchStatus = ''
       if (this.deviceAttrs.list[2].chan_status == 'on') {
         switchStatus = 'off'
@@ -338,7 +366,6 @@ export default {
     setSwitch4() {
       if(this.isOffline) return
       if(this.flagOn == false || this.flagOff == false) return
-      HdSmart.UI.vibrate()
       let switchStatus = ''
       if (this.deviceAttrs.list[3].chan_status == 'on') {
         switchStatus = 'off'
@@ -574,6 +601,9 @@ export default {
     }
 
     .btn-switch {
+      width: 48px;
+      height: 48px;
+      margin:  0 auto;
       &::before {
         content: "";
         display: block;
@@ -683,4 +713,77 @@ export default {
   color: #000000;
   text-align: center;
 }
+.animate::before{
+  animation: scale 0.3s;
+}
+.animate1::before{
+  animation: scale1 0.15s;
+  animation-fill-mode : forwards;
+}
+@keyframes scale1 {
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(0.6);
+  }
+}
+@keyframes scale {
+  0%{
+    transform: scale(0.6);
+  }
+  66%{
+    transform: scale(1.2);
+  }
+  100%{
+  transform: scale(1);
+  }
+}
+
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .15s 1;
+      animation-fill-mode: forwards;
+      animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 0%;height: 0%;}
+
+    100% {width: 100%;height: 100%;}
+  }
+  .bgcStart{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.1);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: bgcStart .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes bgcStart {
+    0% {width: 100%;height: 100%;}
+    100% {width: 170%;height: 170%;}
+  }
 </style>

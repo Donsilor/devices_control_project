@@ -11,11 +11,12 @@ import '@lib/base/common.less'
 import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
 import NewTopBar from '@lib/components/NewTopBar.vue'
+import StatusTip from '@lib/components/StatusTip.vue'
 
-import { DatetimePicker } from 'mint-ui'
+// import { DatetimePicker } from 'mint-ui'
 import 'mint-ui/lib/style.css'
-Vue.component(DatetimePicker.name, DatetimePicker)
-
+// Vue.component(DatetimePicker.name, DatetimePicker)
+Vue.component('StatusTip', StatusTip)
 Vue.component('NewTopBar', NewTopBar)
 FastClick.attach(document.body)
 import * as filters from './filters' // global filters

@@ -7,7 +7,9 @@
         :room="device.room_name"
         :scroll="true"
         bak-color="#000"
+        page-class=".page"
       />
+      <StatusTip v-if="isOffline"/>
       <div
         v-if="toogleSpeed"
         class="main center"
@@ -60,9 +62,10 @@
         <div
           :class="[{'up-index': !isOffline }, 'btn-wrap']">
           <div
-
+            ref="switch"
             :class="[{ 'active': !isClose }, 'btn-swich btn center']"
-            @click="setSwitch" />
+            @touchstart ="touchstart('switch')"
+            @touchend="touchend('switch')" />
             <!-- <div class="btn-name">{{ isClose||isOffline?'开灯':'关灯' }}</div> -->
         </div>
         <!-- <span v-if="!isClose">亮度 {{ ratio }}%</span> -->
@@ -78,20 +81,29 @@
         </div> -->
         <div
           class="btn-wrap"
-          @click="setSpeed(370)">
-          <div :class="[ { 'active': deviceAttrs.temperature == 370 && deviceAttrs.switch_status == 'on' && !isOffline }, 'btn btn-bc center']" />
+          @touchstart ="touchstart('bc')"
+          @touchend="touchend('bc')">
+          <div
+            ref="bc"
+            :class="[ { 'active': deviceAttrs.temperature == 370 && deviceAttrs.switch_status == 'on' && !isOffline }, 'btn btn-bc center']" />
           <div class="btn-name">暖光</div>
         </div>
         <div
           class="btn-wrap"
-          @click="setSpeed(240)">
-          <div :class="[ { 'active': deviceAttrs.temperature == 240 && deviceAttrs.switch_status == 'on' && !isOffline }, 'btn btn-gs center']" />
+          @touchstart ="touchstart('gs')"
+          @touchend="touchend('gs')">
+          <div
+            ref="gs"
+            :class="[ { 'active': deviceAttrs.temperature == 240 && deviceAttrs.switch_status == 'on' && !isOffline }, 'btn btn-gs center']" />
           <div class="btn-name">自然光</div>
         </div>
         <div
           class="btn-wrap"
-          @click="setSpeed(167)">
-          <div :class="[{ 'active': deviceAttrs.temperature == 167 && deviceAttrs.switch_status == 'on' && !isOffline }, 'btn btn-rs center']" />
+          @touchstart ="touchstart('rs')"
+          @touchend="touchend('rs')">
+          <div
+            ref="rs"
+            :class="[{ 'active': deviceAttrs.temperature == 167 && deviceAttrs.switch_status == 'on' && !isOffline }, 'btn btn-rs center']" />
           <div class="btn-name">白光</div>
         </div>
       </div>
@@ -151,6 +163,9 @@ export default {
   watch: {
     'device.stateChange'() {
       this.draw(`${((this.deviceAttrs.level/2.55)+50)/200}`)
+    },
+    'brightness'() {
+      HdSmart.UI.vibrate()
     }
   },
   created() {
@@ -207,6 +222,35 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    touchstart(val) {
+      if(this.isClose && val=='switch') {
+        this.$refs[val].classList.remove('animate')
+        this.$refs[val].classList.add('animate1')
+        this.$refs[val].classList.add('yellowExtend')
+        HdSmart.UI.vibrate()
+        return
+      }
+      if(this.isClose||this.isOffline) return
+      this.$refs[val].classList.remove('animate')
+      this.$refs[val].classList.add('animate1')
+      this.$refs[val].classList.add('yellowExtend')
+      HdSmart.UI.vibrate()
+    },
+    touchend(val){
+      if(this.isClose && val=='switch') {
+        this.$refs[val].classList.remove('animate1')
+        this.$refs[val].classList.add('animate')
+        this.setSwitch()
+        return
+      }
+      if(this.isClose||this.isOffline) return
+      this.$refs[val].classList.remove('animate1')
+      this.$refs[val].classList.add('animate')
+      if(val == 'bc') return this.setSpeed(370)
+      if(val == 'gs') return this.setSpeed(240)
+      if(val == 'rs') return this.setSpeed(167)
+      if(val == 'switch') return this.setSwitch()
+    },
     offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
     },
@@ -615,6 +659,10 @@ export default {
     display: flex;
     flex-direction: column;
     background: rgba(0, 0, 0, 0.1);
+    &::before {
+      position: relative;
+      z-index: 100;
+    }
     &.active {
       // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
       // border-color: #ffbf00;
@@ -774,12 +822,12 @@ export default {
   // }
   .btn-wrap {
     opacity: .2;
-    .btn {
-      &.active {
-        background: #fff;
-        border: 1px solid #818181;
-      }
-    }
+    // .btn {
+    //   &.active {
+    //     background: #fff;
+    //     border: 1px solid #818181;
+    //   }
+    // }
   }
   .btn-wrap-light{
     opacity: 1;
@@ -813,6 +861,57 @@ export default {
     background: rgba(255 ,255, 255, 0.6)
   }
 }
+.animate::before{
+  animation: scale 0.3s;
+}
+.animate1::before{
+  animation: scale1 0.15s;
+  animation-fill-mode : forwards;
+}
+@keyframes scale1 {
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(0.6);
+  }
+}
+@keyframes scale {
+  0%{
+    transform: scale(0.6);
+  }
+  66%{
+    transform: scale(1.2);
+  }
+  100%{
+  transform: scale(1);
+  }
+}
+
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .15s 1;
+      animation-fill-mode: forwards;
+      animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 0%;height: 0%;}
+
+    100% {width: 100%;height: 100%;}
+  }
 </style>
 
 
