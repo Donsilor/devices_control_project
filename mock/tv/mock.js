@@ -557,7 +557,7 @@ export function getDetaileData() {
       year: '',
       desc:
         '《极限挑战第5季》2019年5月12日起每周日晚爱奇艺全网首播。《极限挑战第5季》东方卫视推出的互动励志体验节目，本季固定成员是罗志祥、张艺兴、王迅、迪丽热巴、岳云鹏、雷佳音。成员们从上海出发一路沿江体验，在长江这条黄金水道上迎接一个又一个“挑战”，展现沿线各地的文化之美、建设之美、生态之美，携手沿途美好生活的创造者、守护者，在奋斗中收获更多自信和勇气。',
-      cate: '明星真人秀',
+      cate: '明星真人秀1',
       score: '',
       quality: '超清',
       language: '',
@@ -571,7 +571,7 @@ export function getDetaileData() {
           list: [
             {
               index: '1',
-              name: '第6期：男人帮五美玩狼人杀，颜王姚晨牵手结盟',
+              name: '第6期：男人帮五美玩狼人杀，颜王姚晨牵手结盟第6期：男人帮五美玩狼人杀，颜王姚晨牵手结盟第6期：男人帮五美玩狼人杀，颜王姚晨牵手结盟',
               pictureUrl:
                 'http://puui.qpic.cn/qqvideo_ori/0/n0024ah3pwt_228_128/0',
               duration: '01:37:22',
@@ -590,12 +590,84 @@ export function getDetaileData() {
                 'tenvideo2://?action=7&video_id=c00240oq2om&video_name=未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服&cover_id=k30wb9haj8060ba'
             },
             {
+              index: '2',
+              name: '未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服',
+              pictureUrl:
+                'http://puui.qpic.cn/qqvideo_ori/0/c00240oq2om_228_128/0',
+              duration: '00:02:05',
+              states: '1',
+              link:
+                'tenvideo2://?action=7&video_id=c00240oq2om&video_name=未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服&cover_id=k30wb9haj8060ba'
+            },
+            {
+              index: '2',
+              name: '未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服',
+              pictureUrl:
+                'http://puui.qpic.cn/qqvideo_ori/0/c00240oq2om_228_128/0',
+              duration: '00:02:05',
+              states: '1',
+              link:
+                'tenvideo2://?action=7&video_id=c00240oq2om&video_name=未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服&cover_id=k30wb9haj8060ba'
+            },
+            {
+              index: '2',
+              name: '未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服',
+              pictureUrl:
+                'http://puui.qpic.cn/qqvideo_ori/0/c00240oq2om_228_128/0',
+              duration: '00:02:05',
+              states: '2',
+              link:
+                'tenvideo2://?action=7&video_id=c00240oq2om&video_name=未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服&cover_id=k30wb9haj8060ba'
+            },
+
+            {
+              index: '2',
+              name: '未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服',
+              pictureUrl:
+                'http://puui.qpic.cn/qqvideo_ori/0/c00240oq2om_228_128/0',
+              duration: '00:02:05',
+              states: '2',
+              link:
+                'tenvideo2://?action=7&video_id=c00240oq2om&video_name=未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服&cover_id=k30wb9haj8060ba'
+            },
+            {
+              index: '2',
+              name: '未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服',
+              pictureUrl:
+                'http://puui.qpic.cn/qqvideo_ori/0/c00240oq2om_228_128/0',
+              duration: '00:02:05',
+              states: '',
+              link:
+                'tenvideo2://?action=7&video_id=c00240oq2om&video_name=未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服&cover_id=k30wb9haj8060ba'
+            },
+            {
+              index: '2',
+              name: '未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服',
+              pictureUrl:
+                'http://puui.qpic.cn/qqvideo_ori/0/c00240oq2om_228_128/0',
+              duration: '00:02:05',
+              states: '2',
+              link:
+                'tenvideo2://?action=7&video_id=c00240oq2om&video_name=未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服&cover_id=k30wb9haj8060ba'
+            },
+            {
+              index: '2',
+              name: '未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服',
+              pictureUrl:
+                'http://puui.qpic.cn/qqvideo_ori/0/c00240oq2om_228_128/0',
+              duration: '00:02:05',
+              states: '2',
+              link:
+                'tenvideo2://?action=7&video_id=c00240oq2om&video_name=未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服&cover_id=k30wb9haj8060ba'
+            },
+
+            {
               index: '3',
-              name: '未播：黄磊神逻辑上线！算猜拳牌机智提示罗志祥',
+              name: '未播：黄磊神逻辑上线！算猜拳牌机智提示罗志祥未播：黄磊神逻辑上线！算猜拳牌机智提示罗志祥',
               pictureUrl:
                 'http://puui.qpic.cn/qqvideo_ori/0/g0024cnw1sp_228_128/0',
               duration: '00:03:19',
-              states: '1',
+              states: '2',
               link:
                 'tenvideo2://?action=7&video_id=g0024cnw1sp&video_name=未播：黄磊神逻辑上线！算猜拳牌机智提示罗志祥&cover_id=k30wb9haj8060ba'
             },

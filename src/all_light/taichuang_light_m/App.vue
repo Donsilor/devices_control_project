@@ -35,7 +35,9 @@
           width="240"
           height="240"
         /> -->
-        <div class="mask"/>
+        <div class="mask1"/>
+        <div class="mask2"/>
+        <div class="mask3"/>
         <div class="tips">
           <span
             v-if="!isClose && ThirddeviceAttrs.sub_device_category != '01'"
@@ -159,7 +161,12 @@ export default {
       .then(()=>{
         this.draw(`${((this.deviceAttrs.level/2.55)+50)/200}`)
       })
-      HdSmart.UI.setStatusBarColor(1)
+      .catch((err) => {
+        if(err.code == -90004) {
+          HdSmart.UI.toast('网络超时，请重试')
+        }
+      })
+      HdSmart.UI.setStatusBarColor(2)
     })
   },
   mounted(){
@@ -406,13 +413,31 @@ export default {
   z-index: 2;
   position: absolute;
   width: 460px;
+  border-radius: 50%;
 }
-.mask {
+// .mask1 {
+//   position: absolute;
+//   margin-top: 13%;
+//   width: 300px;
+//   height: 300px;
+//   z-index: 3;
+//   border-radius: 50%;
+// }
+.mask2 {
   position: absolute;
-  margin-top: 13%;
-  width: 300px;
+  margin-top: 40%;
+  width: 100%;
   height: 300px;
   z-index: 3;
+  // background: #000;
+}
+.mask3 {
+  position: absolute;
+  margin-top: 19%;
+  width: 394px;
+  height: 394px;
+  z-index: 3;
+  // background: #000;
   border-radius: 50%;
 }
 .small {

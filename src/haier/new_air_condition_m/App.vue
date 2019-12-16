@@ -7,7 +7,9 @@
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
-        bak-color="#000"/>
+        bak-color="#000"
+        page-class=".page"/>
+      <StatusTip/>
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
@@ -494,7 +496,7 @@ export default {
           this.hide()
           }
         if (res == null) {
-            console.log(res,val,'res val=========');
+            console.log(res,val,'res val=========')
             this.$refs[val].classList.remove('yellowExtend')
         }
         })
