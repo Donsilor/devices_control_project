@@ -194,8 +194,6 @@ export default {
     })
   },
   mounted(){
-     this.clientHeight = document.documentElement.clientHeight || document.body.clientHeight
-      this.scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
     if(this.scroll){
        addEventListener('scroll',this.scrollfn)
     }
@@ -237,6 +235,8 @@ export default {
 
     scrollfn(){
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      this.clientHeight = document.documentElement.clientHeight || document.body.clientHeight
+      this.scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       let pageClass
       if(this.pageClass){
         pageClass = document.querySelector(this.pageClass)
@@ -257,7 +257,7 @@ export default {
       this.$refs.title.style.bottom = b + 'px'
       this.$refs.title.style.left = l + 'px'
       this.$refs.title.style.fontSize = f + 'px'
-
+      
       if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
         this.$refs.title.style.bottom = (h/44)*h+ 'px'
         this.$refs.title.style.left = (w/44)*h + 'px'
