@@ -328,6 +328,7 @@
     top: 0;
     width: 40px;
     height: 60px;
+    margin-right:20px; 
     // color: #d8d8d8;
     // font-size: 35px;
     // line-height: 35px;

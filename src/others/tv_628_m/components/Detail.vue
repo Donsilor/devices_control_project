@@ -161,7 +161,7 @@
               <p class="palyname">{{ item.name }}</p>
               <!--<span class="play" v-show="item.playstate===2"><i></i>当前播放</span>-->
               <span
-                v-show="item.drm && item.drm!='0'"
+                v-show="item.drm && item.drm!='0'||5"
                 class="tag_pay">付费</span>
             </li>
           </ul>
@@ -260,24 +260,23 @@
   border-bottom: 1px solid #dbdbdb;
 
   .isvip {
+      // position: absolute;
+    // width:56px;
+    padding: 0 4px;
+    height:32px;
+    right: 8px;
+    top:0;
     background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
-    font-family: PingFangSC-Regular;
+    // width: 48px;
+    line-height: 32px;
+    // border-radius: 4px;
     font-size: 20px;
-    color: #000000;
-    letter-spacing: 0;
     text-align: center;
-    padding:4px 10px;
-
-    // background: #f26161;
-    // width: 60px;
-    // line-height: 32px;
-    // border-radius: 3px;
-    // font-size: 24px;
-    // text-align: center;
-    // color: #fff;
+    color: #000;
     // opacity: 0.9;
-    // display: inline-block;
-    // vertical-align: 4px;
+    display: inline-block;
+    margin-bottom: 5px;
+    font-weight: lighter;
   }
   .back {
     width: 100px;
@@ -303,6 +302,7 @@
     overflow: hidden;
     width: 75%;
     margin: 0 auto;
+ 
   }
 }
 .detail-bd {
@@ -907,18 +907,23 @@
   }
   .tag_new,
   .tag_pay {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 48px;
-    height: 32px;
-    line-height: 32px;
+        position: absolute;
+    // width:56px;
+    padding: 0 4px;
+    height:32px;
+    right: 8px;
+    top:0;
     background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
-    font-family: PingFangSC-Regular;
-    font-size: 16px;
-    color: #000000;
-    // letter-spacing: 0;
+    // width: 48px;
+    line-height: 32px;
+    // border-radius: 4px;
+    font-size: 20px;
     text-align: center;
+    color: #000;
+    // opacity: 0.9;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: lighter;
   }
 
   .tag_new {
@@ -939,19 +944,24 @@
 }
 
 .isvip {
-     background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
-    font-family: PingFangSC-Regular;
+      // position: absolute;
+    // width:56px;
+    display: inline-block;
+
+    padding: 0 4px;
+    height:32px;
+    right: 8px;
+    top:0;
+    background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
+    // width: 48px;
+    line-height: 32px;
+    // border-radius: 4px;
     font-size: 20px;
-    color: #000000;
-    letter-spacing: 0;
     text-align: center;
-    padding:4px 10px;
-  // background-color: #f26161;
-  // color: #fff;
-  // font-size: 28px;
-  // border-radius: 4px;
-  // line-height: 32px;
-  // padding: 0 6px;
+    color: #000;
+    // opacity: 0.9;
+    margin-left: 12px;
+    font-weight: lighter;
 }
 
 .clearfix:after{
@@ -960,6 +970,11 @@
         height: 0;
         clear: both;
         visibility: hidden;
+    }
+
+     .title{
+      display: flex;
+      align-items: center;
     }
 </style>
 
