@@ -394,10 +394,11 @@ export default {
       }
        let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
-        btn[i].classList.remove('active')
+        if(val!='add'&&val!="reduce"){
+          btn[i].classList.remove('active')
+        }
         btn[i].classList.remove('animateEnd')
         btn[i].classList.remove('bgcEnd')
-
       }  
       this.$refs[val].classList.add('animateStart')
       if(val=='add'||val=="reduce"){
@@ -1230,44 +1231,6 @@ export default {
   width: 560PX;
 }
 
-.animateStart1{
-  animation: scaleStart 0.15s;
-       animation-fill-mode : forwards;
-
-}
-@keyframes scaleStart {
-  0%{
-    transform: scale(1);
-  }
-  100%{
-    transform: scale(0.6);
-  }
-  // 90%{
-  //   transform: scale(1.3);
-  // }
-  //   100%{
-  //   transform: scale(1);
-  // }
-}
-
-.animateEnd1{
-  animation: scaleEnd 0.3s;
-       animation-fill-mode : forwards;
-
-}
-@keyframes scaleEnd {
-  0%{
-    transform: scale(0.6);
-  }
-  66%{
-    transform: scale(1.2);
-  }
-  100%{
-    transform: scale(1);
-  }
-}
-
-
 .animateStart::before{
   animation: scaleStart 0.15s;
        animation-fill-mode : forwards;
@@ -1280,12 +1243,6 @@ export default {
   100%{
     transform: scale(0.6);
   }
-  // 90%{
-  //   transform: scale(1.3);
-  // }
-  //   100%{
-  //   transform: scale(1);
-  // }
 }
 
 .animateEnd::before{
@@ -1352,50 +1309,5 @@ export default {
     0% {width: 100%;height: 100%;}
     100% {width: 110%;height: 110%;}
   }
-
-
-  // .bgcEnd{
-  //   position: relative;
-  //   &::after{
-  //     content: '';
-  //     position: absolute;
-  //     width: 110%;
-  //     height: 110%;
-  //     background: rgba(0,0,0,0.05);
-  //     top: 50%;
-  //     left: 50%;
-  //     border-radius: 50%;
-  //     transform: translate(-50%, -50%);
-  //     animation: bgcEnd 15s 1;
-  //      animation-fill-mode : forwards;
-  //      animation-timing-function: ease-out;
-  //     z-index: 99
-  //   }
-  // }
-  // @keyframes bgcEnd {
-  //   0% {width: 110%;height: 110%;}
-  //   100% {width: 110%;height: 100%;}
-  // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </style>
