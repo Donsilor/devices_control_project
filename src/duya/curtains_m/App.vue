@@ -6,7 +6,9 @@
         :scroll="true"
         :room="device.room_name"
         :title="device.device_name"
+        page-class=".page"
         bak-color="#000"/>
+      <StatusTip/>
       <div class="main center">
         <div 
           ref="stick" 
@@ -191,6 +193,17 @@ export default {
       this.getDeviceInfo()
       .then(()=>{
         this.$nextTick(()=>{
+          let btnHeight = document.documentElement.clientHeight
+          let panelBtn = document.querySelectorAll('.panel-btn')[0]
+          if (btnHeight>=812) {
+            panelBtn.style.bottom = '100px'
+          }else if(btnHeight>=667){
+            panelBtn.style.bottom = '90px'
+          }else if(btnHeight>=568){
+            panelBtn.style.bottom = '30px'
+          }else{
+            panelBtn.style.bottom = '0'
+          }
           this.newRatio()
         })
         if (this.deviceAttrs.open_percentage=='100') {
@@ -331,7 +344,6 @@ export default {
 </script>
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
-
 .body {
   min-height: 100%;
 }
@@ -344,7 +356,7 @@ export default {
   background-size: 100% 100%;
   .main {
     position: relative;
-    margin-top: 80px;
+    margin-top: 14px;
     .stick{
       width: 80%;
       // height: 20px;

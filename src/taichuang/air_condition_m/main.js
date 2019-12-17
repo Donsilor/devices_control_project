@@ -11,12 +11,14 @@ import '@lib/base/common.less'
 import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
 import NewTopBar from '@lib/components/NewTopBar.vue'
-// import Swiper from 'swiper'
-// import 'swiper/dist/css/swiper.css'
+import StatusTip from '@lib/components/StatusTip.vue'
+
+
 FastClick.attach(document.body)
 import * as filters from './filters' // global filters
-// import hSdrop from './hSdrop'
 Vue.component('NewTopBar', NewTopBar)
+Vue.component('StatusTip', StatusTip)
+
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

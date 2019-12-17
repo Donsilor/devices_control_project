@@ -7,7 +7,9 @@
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
+        page-class=".page"
         bak-color="#000"/>
+      <StatusTip/>
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
@@ -44,13 +46,19 @@
         <div
           class="control-tm center">
           <button
+            ref="reduce"
             :disabled="setTemperatureDis"
-            class="control reduce"
-            @click="setTemperature(-10)"/>
+            class="control reduce btn"
+            @touchstart ="touchstart('reduce')"
+            @touchend="touchend('reduce',-10)" 
+          />
           <button
+            ref="add"
             :disabled="setTemperatureDis"
-            class="control add"
-            @click="setTemperature(10)"/>
+            class="control add btn"
+            @touchstart ="touchstart('add')"
+            @touchend="touchend('add',10)" 
+          />
         </div>
       </div>
       <!-- 当前状态 -->
@@ -67,7 +75,7 @@
           ref="switchStatus"
           :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn-start']"
           @click="setSwitch" 
-          @touchstart ="touchstart()"
+          @touchstart ="touchstart('switchStatus')"
           @touchend="touchend('switchStatus')"/>
       </div>
       <div
@@ -78,7 +86,7 @@
           <div 
             ref="cold" 
             :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" 
-            @touchstart ="touchstart()"
+            @touchstart ="touchstart('cold')"
 
             @touchend="touchend('cold')"/>
           <div class="btn-name">制冷</div>
@@ -89,7 +97,7 @@
           <div 
             ref="heat" 
             :class="[{ 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" 
-            @touchstart ="touchstart()"
+            @touchstart ="touchstart('heat')"
             @touchend="touchend('heat')"/>
           <div class="btn-name">制热</div>
         </div>
@@ -99,7 +107,7 @@
           <div 
             ref="auto" 
             :class="[{ 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" 
-            @touchstart ="touchstart()"
+            @touchstart ="touchstart('auto')"
             @touchend="touchend('auto')"/>
           <div
             class="btn-name" >智能</div>
@@ -110,7 +118,7 @@
           <div 
             ref="wind" 
             :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" 
-            @touchstart ="touchstart()"
+            @touchstart ="touchstart('wind')"
 
             @touchend="touchend('wind')"/>
           <div class="btn-name">送风</div>
@@ -121,7 +129,7 @@
           <div 
             ref="dehumidify" 
             :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" 
-            @touchstart ="touchstart()"
+            @touchstart ="touchstart('dehumidify')"
 
             @touchend="touchend('dehumidify')"/>
           <div class="btn-name">除湿</div>
@@ -315,6 +323,7 @@ export default {
     this.ctx = this.$refs.canvas.getContext("2d")
     this.ctx.scale(2,2)
     this.$nextTick(() => {
+      let isMove = false
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
       } : {
@@ -322,8 +331,6 @@ export default {
       }
       this.$refs.canvas.addEventListener(on.start,(e)=> {
           this.moveFlag = true
-          // console.log(e.targetTouches[0].clientX ,'鼠标的X')
-          // console.log(e.targetTouches[0].clientY ,'鼠标的Y')
       },false)
 
       this.$refs.canvas.addEventListener(on.move, (e)=> {
@@ -333,7 +340,7 @@ export default {
             e.returnValue = false
         }
         console.log('move')
-        // console.log(111111111,'222222')
+        isMove = true
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
               // console.log(e)
@@ -358,29 +365,61 @@ export default {
           if (this.isOffline||this.isClose) return
           this.moveEnd = true
           this.moveFlag = false
-          this.controlDevice('temperature',this.centigrade)
+          if (isMove) {
+            this.controlDevice('temperature',this.centigrade)
+          }
+          isMove = false
       }, false)
     })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    touchstart() {
-      let btn = document.querySelectorAll('.btn')
-      for(let i=0;i<btn.length;i++){
-        btn[i].classList.remove('active')
-        btn[i].classList.remove('animate')
-        btn[i].classList.remove('yellowExtend')
-      }       
-      this.$refs['switchStatus'].classList.add('active')
-    },
-    touchend(val){ 
+    touchstart(val) {
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
         if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
       }
-        this.$refs[val].classList.add('animate')
+       let btn = document.querySelectorAll('.btn')
+      for(let i=0;i<btn.length;i++){
+        if (val!=='add'&&val!=='reduce') {
+          btn[i].classList.remove('active')
+        }
+        btn[i].classList.remove('animateEnd')
+        btn[i].classList.remove('bgcEnd')
+
+      }  
+      this.$refs[val].classList.add('animateStart')
+      if(val=='add'||val=="reduce"){
+        this.$refs[val].classList.add('bgcStart')
+      }else{
         this.$refs[val].classList.add('yellowExtend')
+      }
+    },
+    touchend(val,step){ 
+      if (val == 'switchStatus') {
+        if (this.isOffline) return
+      }else{
+        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+      }
+      let btn = document.querySelectorAll('.btn')
+      for(let i=0;i<btn.length;i++){
+        // btn[i].classList.remove('active')
+        btn[i].classList.remove('animateStart')
+        btn[i].classList.remove('bgcStart')
+        // btn[i].classList.remove('yellowExtend')
+      }  
+      // this.$refs[val].classList.add('bgcEnd')
+      this.$refs[val].classList.add('animateEnd')
+
+      if(val=='switchStatus'){
+        this.setSwitch()
+      }else if(val=='add'||val=='reduce'){
+        this.setTemperature(step)
+      }else{
+        this.setMode(val)
+      }
+      // this.$refs[val].classList.add('yellowExtend')
     },
     offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
@@ -492,7 +531,7 @@ export default {
               this.hide()
             }
             if (res == null) {
-              console.log(res,val,'res val=========');
+              console.log(res,val,'res val=========')
               this.$refs[val].classList.remove('yellowExtend')
             }
         })
@@ -693,7 +732,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .control{
+  .control{
       outline: none;
       border: none;
       width: 72px;
@@ -703,21 +742,37 @@ export default {
       &.add{
          width: 72px;
          height: 72px;
+         &::before{
+           position: relative;
+           z-index: 100;
+          content: "";
+          display: block;
+          width: 72px;
+          height: 72px;
           background-image: url('~@lib/@{imgPath1}/up.png');
           background-size: 70% 70%;
           background-position: center;
+         }
       }
       &.reduce{
         width: 72px;
          height: 72px;
+         &::before{
+                      position: relative;
+           z-index: 100;
+          content: "";
+          display: block;
+          width: 72px;
+          height: 72px;
           background-image: url('~@lib/@{imgPath1}/down.png');
           background-size: 70% 70%;
           background-position: center;
+         }
+
       }
-    }
+  }
   }
   .main {
-    margin-top: 5vh;
     position: relative;
     &.center {
       flex-direction: column;
@@ -780,7 +835,7 @@ export default {
     color: #20282B;
   }
   .starting{
-    margin-top: 0;
+    margin-top: 120px;
      .btn-start{
         z-index: 999;
         box-sizing: border-box;
@@ -1186,20 +1241,33 @@ export default {
 }
 
 
-.animate::before{
-  animation: scale 0.4s;
+.animateStart::before{
+  animation: scaleStart 0.15s;
+       animation-fill-mode : forwards;
+
 }
-@keyframes scale {
+@keyframes scaleStart {
   0%{
     transform: scale(1);
   }
-  50%{
+  100%{
     transform: scale(0.6);
   }
-  90%{
-    transform: scale(1.3);
+}
+
+.animateEnd::before{
+  animation: scaleEnd 0.3s;
+       animation-fill-mode : forwards;
+
+}
+@keyframes scaleEnd {
+  0%{
+    transform: scale(0.6);
   }
-    100%{
+  66%{
+    transform: scale(1.2);
+  }
+  100%{
     transform: scale(1);
   }
 }
@@ -1217,16 +1285,38 @@ export default {
       left: 50%;
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      animation: yellowExtendAnimate .1s 1;
+      animation: yellowExtendAnimate .15s 1;
        animation-fill-mode : forwards;
        animation-timing-function: ease-out;
       z-index: 99
     }
   }
   @keyframes yellowExtendAnimate {
-    0% {width: 50%;height: 50%;}
-    
+    0% {width: 0%;height: 0%;}
     100% {width: 100%;height: 100%;}
   }
 
+
+  .bgcStart{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: bgcStart .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes bgcStart {
+    0% {width: 100%;height: 100%;}
+    100% {width: 110%;height: 110%;}
+  }
 </style>

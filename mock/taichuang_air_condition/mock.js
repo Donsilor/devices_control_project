@@ -86,6 +86,6 @@ export function set(data) {
       res.attribute = Object.assign({}, res.attribute, attr)
     }
     return Mock.mock({
-        code: -90004
+        code: 0
     })
 }

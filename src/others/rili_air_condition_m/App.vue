@@ -5,7 +5,9 @@
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
+        page-class=".page"
         bak-color="#000"/>
+      <StatusTip/>
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
@@ -37,14 +39,20 @@
         </div>
         <div 
           class="control-tm center">
-          <button 
-          :disabled="setTemperatureDis"
-            class="control reduce" 
-            @click="setTemperature(-10)"/>
           <button
-          :disabled="setTemperatureDis"
-            class="control add"
-            @click="setTemperature(10)"/>
+            ref="reduce"
+            :disabled="setTemperatureDis"
+            class="control reduce btn"
+            @touchstart ="touchstart('reduce')"
+            @touchend="touchend('reduce',-10)" 
+          />
+          <button
+            ref="add"
+            :disabled="setTemperatureDis"
+            class="control add btn"
+            @touchstart ="touchstart('add')"
+            @touchend="touchend('add',10)" 
+          />
         </div>
       </div>
       <!-- 当前状态 -->
@@ -58,34 +66,52 @@
       <div
         class="starting">
         <div
-        ref="switchStatus"
+          ref="switchStatus"
           :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn-start']"
-          @click="setSwitch" @touchstart ="touchstart()" @touchend="touchend('switchStatus')"/>
+          @click="setSwitch" 
+          @touchstart ="touchstart('switchStatus')" 
+          @touchend="touchend('switchStatus')"/>
       </div>
       <div
         class="panel-btn center">
         <div
           class="btn-wrap"
           @click="setMode('cold')">
-          <div ref="cold" :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" @touchstart ="touchstart()" @touchend="touchend('cold')"/>
+          <div 
+            ref="cold" 
+            :class="[{ 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']" 
+            @touchstart ="touchstart('cold')" 
+            @touchend="touchend('cold')"/>
           <div class="btn-name">制冷</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div ref="heat" :class="[ { 'active': deviceAttrs.mode == 'heat' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-heat center']" @touchstart ="touchstart()" @touchend="touchend('heat')"/>
+          <div 
+            ref="heat" 
+            :class="[ { 'active': deviceAttrs.mode == 'heat' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-heat center']" 
+            @touchstart ="touchstart('heat')" 
+            @touchend="touchend('heat')"/>
           <div class="btn-name">制热</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('wind')">
-          <div ref="wind" :class="[{ 'active': deviceAttrs.mode == 'wind' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-wind center']" @touchstart ="touchstart()" @touchend="touchend('wind')"/>
+          <div 
+            ref="wind" 
+            :class="[{ 'active': deviceAttrs.mode == 'wind' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-wind center']" 
+            @touchstart ="touchstart('wind')" 
+            @touchend="touchend('wind')"/>
           <div class="btn-name">送风</div>
         </div>
         <div
           class="btn-wrap"
           @click="setMode('dehumidify')">
-          <div ref="dehumidify" :class="[{ 'active': deviceAttrs.mode == 'dehumidify' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-dehumidify center']" @touchstart ="touchstart()" @touchend="touchend('dehumidify')"/>
+          <div 
+            ref="dehumidify" 
+            :class="[{ 'active': deviceAttrs.mode == 'dehumidify' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-dehumidify center']" 
+            @touchstart ="touchstart('dehumidify')" 
+            @touchend="touchend('dehumidify')"/>
           <div class="btn-name">除湿</div>
         </div>
       </div>
@@ -258,6 +284,7 @@ export default {
     this.ctx = this.$refs.canvas.getContext("2d")
     this.ctx.scale(2,2)
     this.$nextTick(() => {
+      let isMove = false
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
       } : {
@@ -273,7 +300,7 @@ export default {
         }else{
             e.returnValue = false
         }
-        console.log('move')
+        isMove = true
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
               // console.log(e)
@@ -296,36 +323,63 @@ export default {
 
       this.$refs.canvas.addEventListener(on.end,()=> {
         if (this.isOffline||this.isClose) return
-        // console.log(111111111,'3333333')
-          this.moveFlag = false
-          this.controlDevice('temperature',this.centigrade)
           this.moveEnd = true
+          this.moveFlag = false
+          if (isMove) {
+            this.controlDevice('temperature',this.centigrade)
+          }
+          isMove = false
       }, false)
     })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     touchstart(val) {
-      let btn = document.querySelectorAll('.btn')
-      for(let i=0;i<btn.length;i++){
-        btn[i].classList.remove('active')
-
-        btn[i].classList.remove('animate')
-        btn[i].classList.remove('yellowExtend')
-
-      }
-
-        
-      },
-  
-    touchend(val){ 
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
         if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
       }
-        this.$refs[val].classList.add('animate')
+       let btn = document.querySelectorAll('.btn')
+      for(let i=0;i<btn.length;i++){
+        if (val!=='add'&&val!=='reduce') {
+          btn[i].classList.remove('active')
+        }
+        btn[i].classList.remove('animateEnd')
+        btn[i].classList.remove('bgcEnd')
+
+      }  
+      this.$refs[val].classList.add('animateStart')
+      if(val=='add'||val=="reduce"){
+        this.$refs[val].classList.add('bgcStart')
+      }else{
         this.$refs[val].classList.add('yellowExtend')
+      }
+    },
+    touchend(val,step){ 
+      if (val == 'switchStatus') {
+        if (this.isOffline) return
+      }else{
+        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+      }
+      let btn = document.querySelectorAll('.btn')
+      for(let i=0;i<btn.length;i++){
+        // btn[i].classList.remove('active')
+        btn[i].classList.remove('animateStart')
+        btn[i].classList.remove('bgcStart')
+        // btn[i].classList.remove('yellowExtend')
+      }  
+      // this.$refs[val].classList.add('bgcEnd')
+      this.$refs[val].classList.add('animateEnd')
+
+      if(val=='switchStatus'){
+        this.setSwitch()
+      }else if(val=='add'||val=='reduce'){
+        this.setTemperature(step)
+      }else{
+        this.setMode(val)
+      }
+      // this.$refs[val].classList.add('yellowExtend')
     },
     offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
@@ -443,7 +497,7 @@ export default {
              }
           }
           if (res == null) {
-            console.log(res,val,'res val=========');
+            console.log(res,val,'res val=========')
             this.$refs[val].classList.remove('yellowExtend')
         }
         })
@@ -628,7 +682,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-     .control{
+      .control{
       outline: none;
       border: none;
       width: 72px;
@@ -638,21 +692,37 @@ export default {
       &.add{
          width: 72px;
          height: 72px;
+         &::before{
+           position: relative;
+           z-index: 100;
+          content: "";
+          display: block;
+          width: 72px;
+          height: 72px;
           background-image: url('~@lib/@{imgPath1}/up.png');
           background-size: 70% 70%;
           background-position: center;
+         }
       }
       &.reduce{
         width: 72px;
          height: 72px;
+         &::before{
+                      position: relative;
+           z-index: 100;
+          content: "";
+          display: block;
+          width: 72px;
+          height: 72px;
           background-image: url('~@lib/@{imgPath1}/down.png');
           background-size: 70% 70%;
           background-position: center;
+         }
+
       }
-    }
+  }
   }
   .main {
-    margin-top: 5vh;
     position: relative;
     &.center {
       flex-direction: column;
@@ -707,7 +777,7 @@ export default {
     color: #20282B;
   }
   .starting{
-    margin-top: 0;
+    margin-top: 120px;
      .btn-start{
         z-index: 999;
         box-sizing: border-box;
@@ -1148,4 +1218,83 @@ export default {
 .canvas {
   width: 560px;
 }
+
+.animateStart::before{
+  animation: scaleStart 0.15s;
+       animation-fill-mode : forwards;
+
+}
+@keyframes scaleStart {
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(0.6);
+  }
+}
+
+.animateEnd::before{
+  animation: scaleEnd 0.3s;
+       animation-fill-mode : forwards;
+
+}
+@keyframes scaleEnd {
+  0%{
+    transform: scale(0.6);
+  }
+  66%{
+    transform: scale(1.2);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 0%;height: 0%;}
+    100% {width: 100%;height: 100%;}
+  }
+
+
+  .bgcStart{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: bgcStart .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes bgcStart {
+    0% {width: 100%;height: 100%;}
+    100% {width: 110%;height: 110%;}
+  }
 </style>

@@ -369,24 +369,13 @@ export default {
           if (isMove) {
             this.controlDevice('temperature',this.centigrade)
           }
+           isMove = false
       }, false)
     })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    touchstartControl(val){
-      console.log(val)
-      this.$refs[val].classList.add('animateStart')
-      
-    },
-    touchendControl(val){
-      console.log(val)
-      this.$refs[val].classList.add('animateEnd')
-
-      
-    },
     touchstart(val) {
-
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
@@ -877,7 +866,14 @@ export default {
 	}
   /*********** 按钮 ***********/
   .btn-wrap {
-    margin: 0 24px 24px;
+    // margin: 0 24px 24px;
+    width: 168px;
+    height: 200px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     &:last-of-type{
       width: 30px;
       height: 120px;
@@ -1352,50 +1348,4 @@ export default {
     0% {width: 100%;height: 100%;}
     100% {width: 110%;height: 110%;}
   }
-
-
-  // .bgcEnd{
-  //   position: relative;
-  //   &::after{
-  //     content: '';
-  //     position: absolute;
-  //     width: 110%;
-  //     height: 110%;
-  //     background: rgba(0,0,0,0.05);
-  //     top: 50%;
-  //     left: 50%;
-  //     border-radius: 50%;
-  //     transform: translate(-50%, -50%);
-  //     animation: bgcEnd 15s 1;
-  //      animation-fill-mode : forwards;
-  //      animation-timing-function: ease-out;
-  //     z-index: 99
-  //   }
-  // }
-  // @keyframes bgcEnd {
-  //   0% {width: 110%;height: 110%;}
-  //   100% {width: 110%;height: 100%;}
-  // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </style>
