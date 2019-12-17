@@ -11,8 +11,10 @@ import '@lib/base/common.less'
 import store from '@lib/store/index.js'
 // import Topbar from '@lib/components/Topbar.vue'
 import NewTopbar from '@lib/components/NewTopBar.vue'
+import StatusTip from '@lib/components/StatusTip.vue'
 
 Vue.component('new-topbar', NewTopbar)
+Vue.component('StatusTip', StatusTip)
 new Vue({
     el: '#app',
     store,

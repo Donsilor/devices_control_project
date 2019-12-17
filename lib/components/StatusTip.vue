@@ -65,9 +65,11 @@
             <p class="offline_bar_p">
               <i class="error"/>
             </p>
-            <span class="link">设备已离线,查看帮助</span>
+            <!-- <span class="link">设备已离线,查看帮助</span> -->
+            <span class="link">设备已离线</span>
+
           </div>
-          <i class="arrow"/>
+          <!-- <i class="arrow"/> -->
         </div>
       </div>
     </div>

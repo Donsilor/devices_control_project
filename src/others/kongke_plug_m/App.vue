@@ -6,7 +6,9 @@
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
-        bak-color="#000" />
+        bak-color="#000"
+        page-class=".page" />
+      <StatusTip v-if="isOffline"/>
       <!-- tab切换栏 -->
       <!-- <mt-datetime-picker
         ref="picker"
@@ -43,9 +45,13 @@
         class="panel-btn center">
         <div
           class="btn-wrap"
-          @click="setSwitch">
-          <div :class="[{ 'btn-source': switchValue == 'close' },{ 'btn-over': switchValue == 'open' } ,'btn btn-source center']" />
-          <!-- <div class="btn-name">{{ switchValue=='open'?'断电':'通电' }}</div> -->
+          @click="setSwitch"
+          @touchstart ="touchstart('switch')"
+          @touchend="touchend('switch')">
+          <div
+            ref="switch"
+            :class="[{ 'btn-source': switchValue == 'close' },{ 'btn-over': switchValue == 'open' } ,'btn btn-source center']" />
+            <!-- <div class="btn-name">{{ switchValue=='open'?'断电':'通电' }}</div> -->
         </div>
         <!-- <div
           v-if="(delayOpen.openEnable=='y' && switchValue == 'close') || (delayClose.closeEnable=='y' && switchValue == 'open')"
@@ -397,6 +403,31 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    touchstart(val) {
+      if(this.isClose && val=='switch') {
+        this.$refs[val].classList.add('yellowExtend')
+        this.$refs[val].classList.remove('animate')
+        this.$refs[val].classList.add('animate1')
+        HdSmart.UI.vibrate()
+        return
+      }
+      if(this.isClose||this.isOffline) return
+      this.$refs[val].classList.remove('animate')
+      this.$refs[val].classList.add('animate1')
+      HdSmart.UI.vibrate()
+    },
+    touchend(val){
+      if(this.isClose && val=='switch') {
+        this.$refs[val].classList.remove('animate1')
+        this.$refs[val].classList.add('animate')
+        this.setSwitch()
+        return
+      }
+      if(this.isClose||this.isOffline) return
+      this.$refs[val].classList.remove('animate1')
+      this.$refs[val].classList.add('animate')
+      if(val == 'switch') return this.setSwitch()
+    },
     showMode() {
       this.$refs.swing.show = true
     },
@@ -1103,7 +1134,10 @@ export default {
       justify-content: space-around;
       flex-direction: column;
       position: relative;
-
+      &::before {
+        position: relative;
+        z-index: 100;
+      }
       &.btn-source{
         background: rgba(0,0,0,0.05);
         &::before{
@@ -1311,4 +1345,55 @@ export default {
         top: 2px;
       }
     }
+.animate::before{
+  animation: scale 0.3s;
+}
+.animate1::before{
+  animation: scale1 0.15s;
+  animation-fill-mode : forwards;
+}
+@keyframes scale1 {
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(0.6);
+  }
+}
+@keyframes scale {
+  0%{
+    transform: scale(0.6);
+  }
+  66%{
+    transform: scale(1.2);
+  }
+  100%{
+  transform: scale(1);
+  }
+}
+
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .15s 1;
+      animation-fill-mode: forwards;
+      animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 0%;height: 0%;}
+
+    100% {width: 100%;height: 100%;}
+  }
 </style>
