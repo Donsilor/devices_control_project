@@ -96,7 +96,7 @@ export default {
       curtainWidth:0,
       curtainStatusText:'',
       count: 0,
-      open_percentage: 60,
+      open_percentage: 0,
       timehander: null,
       timehander2: null
     }
@@ -184,7 +184,7 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
-        this.newRatio()
+        // this.newRatio()
         if (this.open_percentage=='100') {
           this.curtainStatusText = '窗帘已打开'
         }
@@ -259,6 +259,8 @@ export default {
       this.myMove = true
       this.curtainStatusText = ''
       this.btnActive = ''
+      clearInterval(this.timehander)
+      clearInterval(this.timehander2)
       console.log(e)
     },
     touchMove(e,val){

@@ -133,7 +133,7 @@
           @touchend="touchend('instant')">
           <div
             ref="instant"
-            :class="[{ 'active': deviceAttrs.mode == 'instant' && !isClose }, 'btn btn-heat center']" />
+            :class="[{ 'active': deviceAttrs.mode == 'instant' && !isClose }, 'btn btn-heat center btnTouch']" />
           <div class="btn-name">即热模式</div>
         </div>
         <div
@@ -142,7 +142,7 @@
           @touchend="touchend('timer')">
           <div
             ref="timer"
-            :class="[ { 'active': deviceAttrs.mode == 'timer' && !isClose }, 'btn btn-znsw center']" />
+            :class="[ { 'active': deviceAttrs.mode == 'timer' && !isClose }, 'btn btn-znsw center btnTouch']" />
           <div class="btn-name">预约模式</div>
         </div>
         <div
@@ -151,7 +151,7 @@
           @touchend="touchend('autodown')">
           <div
             ref="autodown"
-            :class="[ { 'active': deviceAttrs.mode == 'autodown' && !isClose }, 'btn btn-auto center']" />
+            :class="[ { 'active': deviceAttrs.mode == 'autodown' && !isClose }, 'btn btn-auto center btnTouch']" />
           <div class="btn-name">自动关机</div>
         </div>
         <div
@@ -160,7 +160,7 @@
           @touchend="touchend('hot')">
           <div
             ref="hot"
-            :class="[ { 'active': deviceAttrs.mode == 'hot' && !isClose }, 'btn btn-znyj center']" />
+            :class="[ { 'active': deviceAttrs.mode == 'hot' && !isClose }, 'btn btn-znyj center btnTouch']" />
           <div class="btn-name">高温抑菌 </div>
         </div>
 
@@ -218,7 +218,8 @@ export default {
       isOpen: false,
       disabledVal: false,
       status_bar_height:25,
-      errorText:""
+      errorText:"",
+      disabledMode: false
     }
   },
   computed: {
@@ -270,6 +271,9 @@ export default {
     },
   },
   watch: {
+    "device.stateChange"() {
+      this.disabledMode = false
+    },
    'deviceAttrs.error':{
         handler:function(newValue){
             switch(newValue){
@@ -290,7 +294,12 @@ export default {
       if(this.deviceAttrs.temperature) {
         this.disabledVal = false
       }
-    }
+    },
+    'deviceAttrs.mode'() {
+      if(this.deviceAttrs.mode) {
+        this.disabledMode = false
+      }
+    },
   },
   created() {
     HdSmart.ready(() => {
@@ -324,9 +333,18 @@ export default {
         HdSmart.UI.vibrate()
         return
       }
-      this.$refs[val].classList.add('yellowExtend')
-      this.$refs[val].classList.remove('animate')
+      if(val != 'setSwitch') {
+        if(this.disabledMode == true) return
+      }
       this.$refs[val].classList.add('animate1')
+      this.$refs[val].classList.remove('animate')
+      if (val == this.deviceAttrs.mode) return
+      let btn = document.querySelectorAll('.btnTouch')
+      for(let i=0;i<btn.length;i++){
+        btn[i].classList.remove('yellowExtend')
+        btn[i].classList.remove('active')
+      }
+      this.$refs[val].classList.add('yellowExtend')
       HdSmart.UI.vibrate()
     },
     touchend(val){
@@ -337,6 +355,7 @@ export default {
         return
       }
       if(this.isClose||this.isOffline) return
+
       if(val == 'add' || val == 'reduce') {
         if(this.disabledVal == true) return
         this.$refs[val].classList.add('animate')
@@ -345,8 +364,16 @@ export default {
         if(val == 'add') return this.setTemperature(1)
         if(val == 'reduce') return this.setTemperature(-1)
       }
+      let btn = document.querySelectorAll('.btnTouch')
+      for(let i=0;i<btn.length;i++){
+        btn[i].classList.remove('yellowExtend')
+      }
       this.$refs[val].classList.remove('animate1')
+      if(val != 'setSwitch') {
+        if(this.disabledMode == true) return
+      }
       this.$refs[val].classList.add('animate')
+      if(val == this.deviceAttrs.mode) return
       if(val == 'instant') return this.setMode('instant')
       if(val == 'timer') return this.setMode('timer')
       if(val == 'autodown') return this.setMode('autodown')
@@ -354,19 +381,23 @@ export default {
       if(val == 'setSwitch') return this.setSwitch()
     },
     setReserve(time) {
-      HdSmart.UI.vibrate()
       console.log(time)
       let h = parseInt(time[0].split(':')[0]) + 1
       // let m = parseInt(time[0].split(':')[1])
       var val = 0
       if(this.getDateTime(new Date(), 'm') < 30) {
-        val = (this.getDateTime(new Date(), 'h') * 60) + (h * 60)
+        // val = (this.getDateTime(new Date(), 'h') * 60) + (h * 60)
+        val = h * 60
       } else {
-        val = (this.getDateTime(new Date(), 'h') * 60) + (h * 60) + 60
+        // val = (this.getDateTime(new Date(), 'h') * 60) + (h * 60) + 60
+        val = h * 60 + 60
       }
-      if(val > 1440) {
-        val = val - 1440
+      if(h == 24) {
+        val = 1440
       }
+      // if(val > 1440) {
+      //   val = val - 1440
+      // }
       this.controlDevice('remaining', val)
       .then((res) => {
         if( !(res&&res.code == 0)) {
@@ -386,24 +417,26 @@ export default {
       this.isOpen = !this.isOpen
     },
     setMode(val) {
-      if (val == this.deviceAttrs.mode) {
-        val = 'free'
-      }
+      if(this.disabledMode == true) return
+      if (val == this.deviceAttrs.mode) return
       if (this.isClose || this.isOffline) return
-      HdSmart.UI.vibrate()
+      this.disabledMode = true
       this.controlDevice('mode', val)
       .then((res) => {
-        console.log(res,'res==============')
+        if(res.code == 0) {
+          this.disabledMode == false
+        }
         if( !(res&&res.code == 0)) {
+          this.disabledMode == false
           HdSmart.UI.toast('操作失败，请确认设备状态')
         }
       })
       .catch(() => {
+        this.disabledMode == false
         HdSmart.UI.toast('操作失败，请确认设备状态')
       })
     },
     setSwitch() {
-      HdSmart.UI.vibrate()
       let switchStatus = ''
       if (this.deviceAttrs.switch == 'on') {
         switchStatus = 'off'
@@ -425,7 +458,6 @@ export default {
     setTemperature(step) {
       if (this.isClose || this.isOffline) return
       if(this.disabledVal == true) return
-      HdSmart.UI.vibrate()
       this.disabledVal = true
       let val = +this.deviceAttrs.temperature + step
       if (val > 75) {
@@ -439,10 +471,11 @@ export default {
       }
       this.controlDevice('temperature', val)
       .then((res) => {
-          console.log(res,'res==============')
-
-        this.disabledVal = false
+        // if(res.code == 0) {
+        //   this.disabledVal = false
+        // }
         if( !(res&&res.code == 0)) {
+          this.disabledVal = false
           HdSmart.UI.toast('操作失败，请确认设备状态')
         }
       })
@@ -571,6 +604,7 @@ export default {
   }
   &.close,
   &.offline {
+    overflow: hidden;
     &:before {
       content: "";
       position: fixed;
