@@ -1,5 +1,6 @@
 <template>
   <div
+    v-show="device.device_uuid" 
     class="status_bar">
     <!-- <div class="status_bar_block"/> -->
     <div 
@@ -258,6 +259,7 @@ export default {
    
     computed: {
     ...mapGetters(['isClose', 'isOffline']),
+    ...mapState(['device', 'deviceAttrs']),
 
         // tvStatus() {
         //     return this.$store.state.tvStatus
