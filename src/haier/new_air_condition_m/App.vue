@@ -10,7 +10,7 @@
         bak-color="#000"
         page-class=".page"
       />
-      <StatusTip/>
+      <StatusTip v-show="device.device_uuid"/>
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
@@ -241,12 +241,14 @@ export default {
       thermography:16,
       moveEnd:false,
       setTemperatureDis:false,
+      device_uuid: window.device_uuid||'',
     }
   },
 
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    
     modeIsActive() {
       return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
     },
@@ -286,20 +288,6 @@ export default {
           break
         default:
           return 'btn-low'
-      }
-    },
-    getBarColor() {
-      if(this.isClose || this.isOffline) return '#D8D8D8'
-            /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
-        case 'cold':
-          return '#008CDA '
-          break
-        case 'heat':
-          return ' #DA6C00'
-          break
-        default:
-          return '#E1B96E'
       }
     },
   },
@@ -375,7 +363,7 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    touchstart(val) {
+   touchstart(val) {
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
@@ -383,7 +371,9 @@ export default {
       }
        let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
-        btn[i].classList.remove('active')
+        if (val!=='add'&&val!=='reduce') {
+          btn[i].classList.remove('active')
+        }
         btn[i].classList.remove('animateEnd')
         btn[i].classList.remove('bgcEnd')
 
@@ -738,8 +728,8 @@ export default {
         width: 72px;
          height: 72px;
          &::before{
-                      position: relative;
-           z-index: 100;
+          position: relative;
+          z-index: 100;
           content: "";
           display: block;
           width: 72px;
@@ -826,7 +816,8 @@ export default {
         border-radius: 50%;
         position: relative;
         &.active{
-          background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+          // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+          background: #E1B96E;
         }
         &::before{
           content: "";
@@ -896,7 +887,8 @@ export default {
         height: 44px;
       }
       &.active {
-        background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+        // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+        background: #E1B96E;
       }
     }
     .btn-name {
@@ -1223,7 +1215,7 @@ export default {
 }
 
 .canvas {
-  width: 560PX;
+  width: 560px;
 }
 
 .animateStart1{
@@ -1309,7 +1301,8 @@ export default {
       position: absolute;
       width: 70%;
       height: 70%;
-      background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+      // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+      background: #E1B96E;
       top: 50%;
       left: 50%;
       border-radius: 50%;

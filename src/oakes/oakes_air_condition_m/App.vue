@@ -9,7 +9,7 @@
         :scroll="true"
         page-class=".page"
         bak-color="#000"/>
-      <StatusTip/>
+      <StatusTip v-show="device.device_uuid"/>
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
@@ -316,20 +316,6 @@ export default {
           break
         default:
           return 'btn-low'
-      }
-    },
-    getBarColor() {
-      if(this.isClose || this.isOffline) return '#D8D8D8'
-            /* eslint-disable no-unreachable */
-      switch (this.loaclAttr.mode) {
-        case 'cold':
-          return '#008CDA '
-          break
-        case 'heat':
-          return ' #DA6C00'
-          break
-        default:
-          return '#E1B96E'
       }
     },
   },
@@ -928,7 +914,8 @@ export default {
         border-radius: 50%;
         position: relative;
         &.active{
-          background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+          // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+          background: #E1B96E;
         }
         &::before{
           content: "";
@@ -992,7 +979,8 @@ export default {
         height: 44px;
       }
       &.active {
-        background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+        // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+        background: #E1B96E;
       }
     }
     .btn-name {
@@ -1358,7 +1346,8 @@ export default {
       position: absolute;
       width: 70%;
       height: 70%;
-      background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+      // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+      background: #E1B96E;
       top: 50%;
       left: 50%;
       border-radius: 50%;
