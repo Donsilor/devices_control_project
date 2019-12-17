@@ -190,6 +190,9 @@
 <style lang="less" scoped>
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
+ *{
+   -webkit-tap-highlight-color:transparent;
+  }
 .gray{
   opacity: 0.2;
 }
