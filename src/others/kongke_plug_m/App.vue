@@ -1,14 +1,14 @@
 /* eslint-disable vue/no-unused-vars */
 <template>
   <div class="body">
-    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
+    <div :class="[{ 'offline': isOffline || networkStatus == -1 }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
         bak-color="#000"
         page-class=".page" />
-      <StatusTip v-if="isOffline"/>
+      <StatusTip/>
       <!-- tab切换栏 -->
       <!-- <mt-datetime-picker
         ref="picker"
@@ -23,7 +23,7 @@
         style="margin-top:52px"> -->
       <div
         class="main center">
-        <div :class="['bg', {'move': switchValue=='open'}]">
+        <div :class="['bg', {'move': switchValue=='open' && !isOffline && networkStatus != -1}]">
           <div class="circle">
 
             <div class="dianL"/>
@@ -50,7 +50,7 @@
           @touchend="touchend('switch')">
           <div
             ref="switch"
-            :class="[{ 'btn-source': switchValue == 'close' },{ 'btn-over': switchValue == 'open' } ,'btn btn-source center']" />
+            :class="[{ 'btn-source': switchValue == 'close' },{ 'btn-over': switchValue == 'open' && !isOffline && networkStatus != -1} ,'btn btn-source center']" />
             <!-- <div class="btn-name">{{ switchValue=='open'?'断电':'通电' }}</div> -->
         </div>
         <!-- <div
@@ -206,7 +206,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isOffline']),
+    ...mapGetters(['isOffline', 'networkStatus', 'networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
     isClose(){
       return this.switchValue=='close'?true:false
@@ -411,7 +411,7 @@ export default {
         HdSmart.UI.vibrate()
         return
       }
-      if(this.isClose||this.isOffline) return
+      if(this.isClose||this.isOffline|| this.networkStatus == -1) return
       this.$refs[val].classList.remove('animate')
       this.$refs[val].classList.add('animate1')
       HdSmart.UI.vibrate()
@@ -423,7 +423,7 @@ export default {
         this.setSwitch()
         return
       }
-      if(this.isClose||this.isOffline) return
+      if(this.isClose||this.isOffline|| this.networkStatus == -1) return
       this.$refs[val].classList.remove('animate1')
       this.$refs[val].classList.add('animate')
       if(val == 'switch') return this.setSwitch()
@@ -442,7 +442,7 @@ export default {
     // },
     // 开关机
     setSwitch(){
-      if (this.isOffline) return
+      if (this.isOffline|| this.networkStatus == -1) return
       let switchStatus = {}
       if (this.switchValue=='close') {
         switchStatus = {
@@ -1120,7 +1120,7 @@ export default {
     width: 100%;
     margin-top: 232px;
     position:relative;
-    z-index: 99999;
+    z-index: 9999;
   .btn-wrap {
     margin: 0 24px 0;
     .btn {
@@ -1286,6 +1286,20 @@ export default {
     }
     }
   }
+  &.offline {
+    overflow: hidden;
+     &:before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      // z-index: 999;
+      width: 100%;
+      opacity: 0.5;
+    }
+  }
   &.close,
   &.offline {
     // &:before {
@@ -1316,7 +1330,7 @@ export default {
       &.up-index {
         opacity: 1;
         .btn-open{
-          z-index:999999;
+          z-index:9999;
         }
       }
       .btn {

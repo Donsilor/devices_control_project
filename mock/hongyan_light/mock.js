@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 
 let res = {
-    "connectivity": "online", //l
+    "connectivity": "offline", //l
     "switch_status": 'on', //开关
     "temperature":167 , //暖光3000K  自然光5000K  白光6000K
     "level":80
@@ -14,7 +14,7 @@ export function generateSnapShot() {
             "device_name": "智能筒灯",
             "device_uuid":43434,
             "room_name": "卧室",
-           
+
             "attribute": res,
             "third_attribute": {
               "sub_device_category": "01"

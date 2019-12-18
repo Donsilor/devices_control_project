@@ -7,11 +7,14 @@
         :shutdown="deviceAttrs.switch_status == 'on' || isOffline == true"
         bak-color="#000"
         @shutdownCallback="shutdowncallback('off')" />
-      <color-picker
+      <!-- <color-picker
         :rgb-val="getRgb"
         :class="{'off': deviceAttrs.switch_status == 'off'}"
         style="margin: 0 auto"
         @rgb="rgb"
+      /> -->
+      <draw
+        style="textAlign: center"
       />
       <!-- 开关 -->
       <div
@@ -49,9 +52,10 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
 import colorPicker from './components/color-picker/index.vue'
+import draw from './components/draw.vue'
 
 export default {
-  components: { colorPicker },
+  components: { colorPicker, draw },
   data() {
     return {
       rangeColor: 'on',
