@@ -190,6 +190,9 @@
 <style lang="less" scoped>
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
+ *{
+   -webkit-tap-highlight-color:transparent;
+  }
 .gray{
   opacity: 0.2;
 }
@@ -218,6 +221,7 @@
 }
 .statusbar {
   position: relative;
+  z-index: 10000;
   top: 0;
   left: 0;
   width: 100%;
@@ -240,7 +244,7 @@
     width: 100%;
     height: 44px;
     background: transparent;
-    z-index: 999
+    z-index: 999999
   }
 }
 .page-search{

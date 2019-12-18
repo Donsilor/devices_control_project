@@ -36,7 +36,7 @@ let res = {
         "chan_avatar": "123dfafga "
       }
     ],
-    "connectivity": "online"
+    "connectivity": "offline"
 }
 
 export function generateSnapShot() {
@@ -45,6 +45,7 @@ export function generateSnapShot() {
         code: 0,
         result: {
             "device_name": "智能开关",
+            "device_uuid":3434,
             "attribute": res
         }
     })

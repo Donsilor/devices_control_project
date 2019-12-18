@@ -7,7 +7,7 @@
         :room="device.room_name"
         bak-color="#000"
         page-class=".page" />
-      <StatusTip v-if="isOffline"/>
+      <StatusTip/>
       <!-- 灯 -->
       <div class="main center">
         <div class="bg center">
@@ -652,6 +652,7 @@ export default {
     }
   }
   &.offline {
+    overflow: hidden;
     &:before {
       content: "";
       position: fixed;

@@ -229,7 +229,9 @@
 // .gray{
 //   opacity: 0.2;
 // }
-
+ *{
+   -webkit-tap-highlight-color:transparent;
+  }
 .page-detail {
   color: #75787a;
   // /*background: #fafafa;*/

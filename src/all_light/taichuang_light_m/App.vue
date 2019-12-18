@@ -9,7 +9,7 @@
         bak-color="#000"
         page-class=".page"
       />
-      <StatusTip v-if="isOffline"/>
+      <StatusTip/>
       <div
         v-if="toogleSpeed"
         class="main center"
@@ -164,7 +164,8 @@ export default {
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
-      .then(()=>{
+      .then((res)=>{
+        console.log('apa  getDeviceInfo',res)
         this.draw(`${((this.deviceAttrs.level/2.55)+50)/200}`)
       })
       .catch((err) => {
