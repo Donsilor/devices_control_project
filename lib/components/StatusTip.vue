@@ -104,11 +104,9 @@ export default {
     },
    
     computed: {
-    ...mapGetters(['isClose', 'isOffline']),
+    ...mapGetters(['isClose', 'isOffline','networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
-      networkStatus() {
-            return this.$store.state.networkStatus
-        },
+
 
         // tvStatus() {
         //     return this.$store.state.tvStatus
