@@ -98,6 +98,7 @@
             ref="heat" 
             :class="[{ 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" 
             @touchstart ="touchstart('heat')"
+            @touchmove ="touchmove('$event')"
             @touchend="touchend('heat')"/>
           <div class="btn-name">制热</div>
         </div>
@@ -242,6 +243,10 @@ export default {
       moveEnd:false,
       setTemperatureDis:false,
       device_uuid: window.device_uuid||'',
+      flag:false,
+      oldScrollTop: 0, //记录上一次滚动结束后的滚动距离
+                scrollTop: 0 // 记录当前的滚动距离
+
     }
   },
 
@@ -300,7 +305,26 @@ export default {
       if(this.deviceAttrs.temperature) {
         this.setTemperatureDis = false
       }
-    }
+    },
+     scrollTop(newValue, oldValue) {
+        setTimeout(() => {
+          console.log(newValue);
+          
+            if(newValue == window.scrollY) { //延时执行后当newValue等于window.scrollY，代表滚动结束
+                console.log('滚动结束');
+                this.oldScrollTop = newValue; //每次滚动结束后都要给oldScrollTop赋值
+                this.flag = false
+                console.log(this.flag,'结束');
+            };
+        }, 300); //必须使用延时器，否则每次newValue和window.scrollY都相等，无法判断，20ms刚好大于watch的侦听周期，故延时20ms
+        setTimeout(() => {
+          if(this.oldScrollTop == oldValue) { //每次滚动开始时oldScrollTop与oldValue相等
+            console.log('滚动开始');
+            this.flag = true
+            console.log(this.flag,'开始');
+        }
+        }, 100)
+     }
   },
   created() {
     HdSmart.ready(() => {
@@ -324,8 +348,6 @@ export default {
       }
         this.$refs.canvas.addEventListener(on.start,(e)=> {
           this.moveFlag = true
-          // console.log(e.targetTouches[0].clientX ,'鼠标的X')
-          // console.log(e.targetTouches[0].clientY ,'鼠标的Y')
       },false)
       this.$refs.canvas.addEventListener(on.move, (e)=> {
         if(e.preventDefault){
@@ -336,14 +358,8 @@ export default {
        isMove = true
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
-              // console.log(e)
-              
-              // console.log(k.x-this.ox)
               var r = Math.atan2(k.x-this.ox, this.oy-k.y)
               var hd = (Math.PI+r)/(2*Math.PI)
-              console.log('k', k)
-              console.log('r', r)
-              console.log('hd', hd)
               // 半圆的滑动范围判断
               if (hd <= 0.875 && hd >= 0.125) {
                   console.log('开始运动')
@@ -367,36 +383,57 @@ export default {
           }
            isMove = false
       }, false)
+      this.handleScroll();
     })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-   touchstart(val) {
-      if (val == 'switchStatus') {
-        if (this.isOffline) return
-      }else{
-        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
-      }
-      if (this.deviceAttrs.temperature== 300 && this.deviceAttrs.speed == 'low'&&val == 'cold') {
-        return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
-      }
-       let btn = document.querySelectorAll('.btn')
-      for(let i=0;i<btn.length;i++){
-        if (val!=='add'&&val!=='reduce') {
-          btn[i].classList.remove('active')
-        }
-        btn[i].classList.remove('animateEnd')
-        btn[i].classList.remove('bgcEnd')
+    // 滚动事件
+    handleScroll() {
+      window.addEventListener('scroll', () => {
+          this.scrollTop = window.scrollY;
+          // e.stopPropagation()
+          // event.stopImmediatePropagation();
+      })
+    },
+    touchstart(val) {
+      setTimeout (() => {
+          if (this.flag == true) return
+          console.log(this.flag,'是否触发');
+          if (val == 'switchStatus') {
+            if (this.isOffline) return
+          }else{
+            if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+          }
+          if (this.deviceAttrs.temperature== 300 && this.deviceAttrs.speed == 'low'&&val == 'cold') {
+            return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
+          }
+          let btn = document.querySelectorAll('.btn')
+          for(let i=0;i<btn.length;i++){
+            if (val!=='add'&&val!=='reduce') {
+              btn[i].classList.remove('active')
+            }
+            btn[i].classList.remove('animateEnd')
+            btn[i].classList.remove('bgcEnd')
 
-      }  
-      this.$refs[val].classList.add('animateStart')
-      if(val=='add'||val=="reduce"){
-        this.$refs[val].classList.add('bgcStart')
-      }else{
-        this.$refs[val].classList.add('yellowExtend')
-      }
+          }  
+          this.$refs[val].classList.add('animateStart')
+          if(val=='add'||val=="reduce"){
+            this.$refs[val].classList.add('bgcStart')
+          }else{
+            this.$refs[val].classList.add('yellowExtend')
+          } 
+      }, 200)  
+      
+     
+    },
+    touchmove(e){
+
     },
     touchend(val,step){ 
+      setTimeout(() => {
+          console.log('end结束')
+      if (this.flag == true) return
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
@@ -421,7 +458,9 @@ export default {
         this.setTemperature(step)
       }else{
         this.setMode(val)
-      }
+      }  
+      }, 200)
+    
       // this.$refs[val].classList.add('yellowExtend')
     },
     offset(r,d) {//根据弧度与距离计算偏移坐标
@@ -669,7 +708,11 @@ export default {
       // 计算温度进度条
       // return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
     }
-  }
+  },
+   beforeDestroy() {
+      window.removeEventListener('scroll'); //离开当前组件别忘记移除事件监听哦
+   }
+
 }
 </script>
 <style lang="less" scoped>
