@@ -16,7 +16,7 @@
       </div>
       <div>
         <div
-          v-if="tvStatus.tvOnlineStatus==0" 
+          v-if="tvStatus.tvOnlineStatus===0" 
           class="offline_bar">
           <div class="offline_bar_div">
             <p class="offline_bar_p">
