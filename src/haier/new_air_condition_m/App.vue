@@ -295,6 +295,11 @@ export default {
     "device.stateChange"(){
       if(!this.moveEnd)
       this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
+    },
+       'deviceAttrs.temperature'() {
+      if(this.deviceAttrs.temperature) {
+        this.setTemperatureDis = false
+      }
     }
   },
   created() {
@@ -352,9 +357,12 @@ export default {
       this.$refs.canvas.addEventListener(on.end,()=> {
         if (this.isOffline||this.isClose) return
         this.moveEnd = true
-        // console.log(111111111,'3333333')
           this.moveFlag = false
           if (isMove) {
+            if (this.thermography == 30 && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
+              this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
+              return HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
+            }
             this.controlDevice('temperature',this.centigrade)
           }
            isMove = false
@@ -368,6 +376,9 @@ export default {
         if (this.isOffline) return
       }else{
         if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+      }
+      if (this.deviceAttrs.temperature== 300 && this.deviceAttrs.speed == 'low'&&val == 'cold') {
+        return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
       }
        let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
@@ -390,6 +401,9 @@ export default {
         if (this.isOffline) return
       }else{
         if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+      }
+      if (this.deviceAttrs.temperature== 300 && this.deviceAttrs.speed == 'low'&&val == 'cold') {
+        return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
       }
       let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
@@ -506,6 +520,9 @@ export default {
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose ||this.isOffline) return
       HdSmart.UI.vibrate()
+      if (this.deviceAttrs.temperature == 300 && this.deviceAttrs.speed == 'low' && val == 'cold') {
+        return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
+      }
       this.moveEnd = false
       this.controlDevice('mode', val)
         .then((res) => {
@@ -545,6 +562,7 @@ export default {
       // 最小温度
       if (temp < MIN_TEMP) {
         if (this.deviceAttrs.temperature == MIN_TEMP) {
+          this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最低')
         } else {
           temp = MIN_TEMP
@@ -553,15 +571,20 @@ export default {
       // 最大温度
       if (temp > MAX_TEMP) {
         if (this.deviceAttrs.temperature == MAX_TEMP) {
+          this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最高')
         } else {
           temp = MAX_TEMP
         }
       }
+      if (temp == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
+        return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
+      }
       this.controlDevice('temperature', temp)
         .then((res) => {
           if (res.code == 0) {
-            this.deviceAttrs.temperature = temp
+            // this.deviceAttrs.temperature = temp
+          }else{
             this.setTemperatureDis = false
           }
           // this.reset()
@@ -593,6 +616,9 @@ export default {
       this.typeVal = val
       if (this.deviceAttrs.mode=='wind'&&val=='auto') {
         this.typeVal = 'hand'
+      }
+      if (this.deviceAttrs.temperature == 300 && speed == 'low' && this.deviceAttrs.mode == 'cold') {
+        return HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
       }
       if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
         return HdSmart.UI.toast('送风模式不能设置自动风速')

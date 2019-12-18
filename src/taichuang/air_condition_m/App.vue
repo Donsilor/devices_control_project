@@ -351,6 +351,11 @@ export default {
         }
       }
     },
+    'deviceAttrs.temperature'() {
+      if(this.deviceAttrs.temperature) {
+        this.setTemperatureDis = false
+      }
+    }
   },
   created() {
     HdSmart.ready(() => {
@@ -662,6 +667,7 @@ export default {
       // 最小温度
       if (temp < this.MIN_TEMP) {
         if (this.deviceAttrs.temperature == this.MIN_TEMP) {
+          this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最低')
         } else {
           temp = this.MIN_TEMP
@@ -670,6 +676,7 @@ export default {
       // 最大温度
       if (temp > this.MAX_TEMP) {
         if (this.deviceAttrs.temperature == this.MAX_TEMP) {
+          this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最高')
         } else {
           temp = this.MAX_TEMP
@@ -678,7 +685,8 @@ export default {
       this.controlDevice('temperature', temp)
         .then((res) => {
           if(res.code==0){
-            this.deviceAttrs.temperature = temp
+            // this.deviceAttrs.temperature = temp
+          } else {
             this.setTemperatureDis = false
           }
           // this.reset()

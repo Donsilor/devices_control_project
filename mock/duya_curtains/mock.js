@@ -11,6 +11,7 @@ export function generateSnapShot() {
         code: 0,
         result: {
             "device_name": "客厅的窗帘",
+            "device_uuid": 1222222,
             "attribute": res
         }
     })

@@ -287,6 +287,11 @@ export default {
       "device.stateChange"(){
       if(!this.moveEnd)
       this.draw(`${0.125+0.75/13*(this.deviceAttrs.temperature/10-17)}`)
+    },
+      'deviceAttrs.temperature'() {
+      if(this.deviceAttrs.temperature) {
+        this.setTemperatureDis = false
+      }
     }
   },
   created() {
@@ -523,6 +528,7 @@ export default {
       // 最小温度
       if (temp < MIN_TEMP) {
         if (this.deviceAttrs.temperature == MIN_TEMP) {
+          this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最低')
         } else {
           temp = MIN_TEMP
@@ -531,6 +537,7 @@ export default {
       // 最大温度
       if (temp > MAX_TEMP) {
         if (this.deviceAttrs.temperature == MAX_TEMP) {
+          this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最高')
         } else {
           temp = MAX_TEMP
@@ -539,7 +546,8 @@ export default {
       this.controlDevice('temperature', temp)
         .then((res) => {
           if(res.code == 0) {
-            this.deviceAttrs.temperature = temp
+            // this.deviceAttrs.temperature = temp
+          }else{
             this.setTemperatureDis = false
           }
           // this.reset()

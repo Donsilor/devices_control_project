@@ -8,7 +8,7 @@
         :title="device.device_name"
         page-class=".page"
         bak-color="#000"/>
-      <StatusTip/>
+      <StatusTip v-show="device.device_uuid"/>
       <div class="main center">
         <div 
           ref="stick" 
@@ -59,23 +59,29 @@
           class="btn-wrap"
         >
           <div
-            ref="btn-close"
+            ref="close"
             class="btn btn-close center"
-            @click="setClose" />
+            @click="setClose" 
+            @touchstart ="touchstart('close')"
+            @touchend="touchend('close')"/>
           <div class="btn-name">全关</div>
         </div>
         <div class="btn-wrap">
           <div
-            ref="btn-pause"
+            ref="pause"
             class="btn-pause btn center"
-            @click="setPause" />
+            @click="setPause" 
+            @touchstart ="touchstart('pause')"
+            @touchend="touchend('pause')"/>
           <div class="btn-name">暂停</div>
         </div>
         <div class="btn-wrap">
           <div
-            ref="btn-open"
+            ref="open"
             class="btn-open btn center"
-            @click="setOpen" />
+            @click="setOpen" 
+            @touchstart ="touchstart('open')"
+            @touchend="touchend('open')"/>
           <div class="btn-name">全开</div>
         </div>
       </div>
@@ -113,43 +119,21 @@ export default {
       if (this.myMove==false) {
           this.newRatio()
       }
-      // if (this.btnActive === 'open') {
-      //     this.curtainStatusText='正在打开窗帘'
-      // } else if (this.btnActive === 'close') {
-      //     this.curtainStatusText='正在关闭窗帘'
-      // }
-      console.log(this.curtainStatusText,'curtainStatusText')
-      console.log(this.btnActive,'btnActive')
     },
     'deviceAttrs.open_percentage'(newValue, oldValue) {
       this.count = this.count + 1
-      console.log("count数", this.count)
-      // var _this = this
-      // (function(num) {
-      //   setTimeout(() => {
-      //     console.log("定时检索num", num)
-      //     console.log("定时检索count", _this.count)
-      //     if (num === _this.count) {
-      //        console.log('暂停了') 
-      //     }
-      //   }, 2000)  
-      // })(this.count)
       var _that = this
       function a(num) {
         setTimeout(() => {
-            console.log("定时检索num", num)
-            console.log("定时检索count", _that.count)
-            if (num === _that.count) {
-              console.log('暂停了') 
-              if (_that.curtainStatusText=='正在关闭窗帘'||_that.curtainStatusText=='正在打开窗帘') {
-                _that.curtainStatusText=''
-              }
+          if (num === _that.count) {
+            console.log('暂停了') 
+            if (_that.curtainStatusText=='正在关闭窗帘'||_that.curtainStatusText=='正在打开窗帘') {
+              _that.curtainStatusText=''
             }
-          }, 2000)
+          }
+        }, 2000)
       }
       a(this.count)
-      console.log(newValue,oldValue,'打印新旧值111111111111111111111')
-      
       if(this.btnActive == 'open'||this.btnActive == 'close'||this.myMove==true) {
         if(newValue > oldValue) {
           this.curtainStatusText = '正在打开窗帘'
@@ -170,17 +154,13 @@ export default {
       }
       if (oldValue-newValue<0&&this.deviceAttrs.open_percentage=='100') {
         this.curtainStatusText = '窗帘已打开'
+        this.$refs['open'].classList.remove('yellowExtend')
         this.btnActive = ''
       }else if (this.deviceAttrs.open_percentage=='0') {
         this.curtainStatusText = '窗帘已关闭'
+        this.$refs['close'].classList.remove('yellowExtend')
         this.btnActive = ''
       }
-      // if(this.deviceAttrs.open_percentage == 100) {
-      //   this.curtainStatusText = ''
-      // }
-      // if(this.deviceAttrs.open_percentage == 0) {
-      //   this.curtainStatusText = ''
-      // }
     }
   },
   created() {
@@ -193,6 +173,7 @@ export default {
       this.getDeviceInfo()
       .then(()=>{
         this.$nextTick(()=>{
+          // 针对不同手机调整按钮的位置
           let btnHeight = document.documentElement.clientHeight
           let panelBtn = document.querySelectorAll('.panel-btn')[0]
           if (btnHeight>=812) {
@@ -203,9 +184,12 @@ export default {
             panelBtn.style.bottom = '30px'
           }else{
             panelBtn.style.bottom = '0'
-          }
-          this.newRatio()
+          }  
         })
+         setTimeout(() => {
+            console.log('图片加载完成')
+            this.newRatio()
+          }, 500)
         if (this.deviceAttrs.open_percentage=='100') {
           this.curtainStatusText = '窗帘已打开'
         }
@@ -215,20 +199,35 @@ export default {
       })
       HdSmart.UI.setStatusBarColor(2)
     })
-    // this.$nextTick(()=>{
-    //   // this.newRatio()
-    // })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+      touchstart(val) {
+        this.$refs[val].classList.remove('animateStart','animateEnd')
+        this.$refs[val].classList.add('animateStart')
+        this.$refs[val].classList.add('yellowExtend')
+    },
+    touchend(val){ 
+      // this.$refs[val].classList.remove('animateStart')
+      this.$refs[val].classList.add('animateEnd')
+      if(val=='open'){
+        this.setOpen()
+      }else if(val=='close'){
+        this.setClose()
+      }else{
+        this.setPause()
+      }
+    },
     // 全开
     setOpen(){
-      this.$refs['btn-open'].classList.add('active')
-      setTimeout(()=>{
-        this.$refs['btn-open'].classList.remove('active')
-      },500)
+      // this.$refs['open'].classList.add('active')
+      // setTimeout(()=>{
+      //   this.$refs['open'].classList.remove('active')
+      // },500)
+      if (this.deviceAttrs.open_percentage == 100) {
+        this.$refs['open'].classList.remove('yellowExtend')
+      }
       this.btnActive = 'open'
-      // this.curtainStatusText = '正在打开窗帘'
       this.myMove = false
       this.controlDevice('switch', 'on')
       .then((res)=>{
@@ -240,12 +239,10 @@ export default {
     },
     //全关
     setClose(){
-      this.$refs['btn-close'].classList.add('active')
-      setTimeout(()=>{
-        this.$refs['btn-close'].classList.remove('active')
-      },500)
+      if (this.deviceAttrs.open_percentage == 0) {
+        this.$refs['close'].classList.remove('yellowExtend')
+      }
       this.btnActive = 'close'
-      // this.curtainStatusText = '正在关闭窗帘'
       this.myMove = false
       this.controlDevice('switch', 'off')
       .then((res)=>{
@@ -260,13 +257,21 @@ export default {
       this.btnActive = 'pause'
       this.curtainStatusText = ''
       this.myMove = false
-      this.$refs['btn-pause'].classList.add('active')
-      setTimeout(()=>{
-        this.$refs['btn-pause'].classList.remove('active')
+      this.$refs['close'].classList.remove('yellowExtend')
+      this.$refs['open'].classList.remove('yellowExtend')
+       setTimeout(()=>{
+        this.$refs['pause'].classList.remove('yellowExtend','animateStart','animateEnd')
       },500)
       this.controlDevice('switch', 'pause')
       .then((res)=>{
-        console.log(res,'===============')
+        if (res) {
+          if (res.code == 0) {
+            $('.leftCurtainBox').stop()
+            $('.rightCurtainBox').stop()
+            console.log('停止了=========')
+            
+          }
+        }
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
         }
@@ -278,7 +283,8 @@ export default {
       this.myMove = true
       this.curtainStatusText = ''
       this.btnActive = ''
-      console.log(e)
+      this.$refs['close'].classList.remove('yellowExtend')
+      this.$refs['open'].classList.remove('yellowExtend')
     },
     touchMove(e,val){
       //除了自己的手机，其他手机都要监听
@@ -320,12 +326,12 @@ export default {
         let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
         $('.leftCurtainBox').animate({
             width:Math.round(width)
-        })
+        },200)
         $('.rightCurtainBox').animate({
             width:Math.round(width)
-        })
+        },200)
       // leftCurtainBox.style.width =width +"px"
-      // console.log(width)
+      // console.log(width,'=-=------------')
       // rightCurtainBox.style.width = leftCurtainBox.style.width
     },
     controlDevice(attr, value,params) {
@@ -344,6 +350,89 @@ export default {
 </script>
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
+.animateStart::before{
+  animation: scaleStart 0.15s;
+  animation-fill-mode : forwards;
+}
+@keyframes scaleStart {
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(0.6);
+  }
+  // 90%{
+  //   transform: scale(1.3);
+  // }
+  //   100%{
+  //   transform: scale(1);
+  // }
+}
+
+.animateEnd::before{
+  animation: scaleEnd 0.3s;
+  animation-fill-mode : forwards;
+}
+@keyframes scaleEnd {
+  0%{
+    transform: scale(0.6);
+  }
+  66%{
+    transform: scale(1.2);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+      background: #E1B96E;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 0%;height: 0%;}
+    100% {width: 100%;height: 100%;}
+  }
+
+
+  .bgcStart{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: bgcStart .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes bgcStart {
+    0% {width: 100%;height: 100%;}
+    100% {width: 110%;height: 110%;}
+  }
 .body {
   min-height: 100%;
 }
@@ -477,9 +566,11 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
+        z-index: 999;
       }
       &.active {
-        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        background: #E1B96E;
         &.btn-open::before{
           background-image: url('~@lib/@{imgPath}/off.png');
           background-size: 100% 100%;

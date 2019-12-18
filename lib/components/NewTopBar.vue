@@ -286,7 +286,8 @@ export default {
     display: none
   }
 .newNavbar,.statusbar{
-    background: #fff
+    // background: #fff
+    background: rgba(255,255,255,.98);
 }
 // .topbar-fixed{
 //   &::before{

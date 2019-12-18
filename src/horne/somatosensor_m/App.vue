@@ -6,7 +6,9 @@
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
+        page-class=".page"
         bak-color="#000"/>
+      <StatusTip v-show="device.device_uuid"/>
       <div class="top">
         <div class="node">
           <div>今日记录次数</div>
