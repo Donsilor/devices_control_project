@@ -1,17 +1,18 @@
 <template>
-  <div
-    v-show="device.device_uuid" 
-    class="status_bar">
-
-    <!-- <div class="status_bar_block"/> -->
-    <div 
-      :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
-      class="bac_fiexd"/>
+  <div class="status_box">
     <div
-      ref="status_bar_fixed"
-      :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}"
-      class="status_bar_fixed">
-      <!-- <div
+      v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1"
+      class="status_bar">
+      <!-- v-show="device.device_uuid"  -->
+      <!-- <div class="status_bar_block"/> -->
+      <div 
+        :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
+        class="bac_fiexd"/>
+      <div
+        ref="status_bar_fixed"
+        :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}"
+        class="status_bar_fixed">
+        <!-- <div
         v-if="spVisible"
         class="sp_status_bar"
         @click="goToScreenProjectionPage">
@@ -19,8 +20,8 @@
         <span class="text">{{ tvStatus.screenProjectTitle }}</span>
         <i class="icon-arrow"/>
       </div> -->
-      <div>
-        <!-- <div
+        <div>
+          <!-- <div
           v-if="tvStatus.tvOnlineStatus==0" 
           class="offline_bar">
           <div class="offline_bar_div">
@@ -32,20 +33,21 @@
 
           </div>
         </div> -->
-        <div
-          v-if="networkStatus==-1" 
-          class="offline_bar offline_bar_wifi"
-          @click="goToOfflineHelpPage">
-          <div class="offline_bar_div">
-            <p class="offline_bar_p">
-              <i class="wifi"/>
-            </p>
-            <span class="link">当前网络不可用</span> 
+          <!-- {{ networkStatus }} -->
+          <div
+            v-show="networkStatus==-1" 
+            class="offline_bar offline_bar_wifi"
+            @click="goToOfflineHelpPage">
+            <div class="offline_bar_div">
+              <p class="offline_bar_p">
+                <i class="wifi"/>
+              </p>
+              <span class="link">当前网络不可用</span> 
 
+            </div>
           </div>
-        </div>
 
-        <!-- <div
+          <!-- <div
           v-if="tvStatus.tvOnlineStatus==-2"
           class="offline_bar"
           @click="goToOfflineHelpPage">
@@ -57,26 +59,28 @@
           </div>
           <i class="arrow"/>
         </div> -->
-        <div
-          v-if="isOffline"      
-          class="offline_bar"
-          @click="goToOfflineHelpPage">
-          <div class="offline_bar_div">
-            <p class="offline_bar_p">
-              <i class="error"/>
-            </p>
-            <!-- <span class="link">设备已离线,查看帮助</span> -->
-            <span class="link">设备已离线</span>
+          <div
+            v-if="deviceAttrs.connectivity==='offline'"      
+            class="offline_bar"
+            @click="goToOfflineHelpPage">
+            <div class="offline_bar_div">
+              <p class="offline_bar_p">
+                <i class="error"/>
+              </p>
+              <!-- <span class="link">设备已离线,查看帮助</span> -->
+              <span class="link">设备已离线</span>
 
-          </div>
+            </div>
           <!-- <i class="arrow"/> -->
+          </div>
         </div>
       </div>
-    </div>
     <!-- <div
       v-if="tvStatus.tvOnlineStatus < 0 && !ios"
       class="offline_bar_blank"/> -->
+    </div>
   </div>
+  
 </template>
 
 
@@ -100,11 +104,9 @@ export default {
     },
    
     computed: {
-    ...mapGetters(['isClose', 'isOffline']),
+    ...mapGetters(['isClose', 'isOffline','networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
-      networkStatus() {
-            return this.$store.state.networkStatus
-        },
+
 
         // tvStatus() {
         //     return this.$store.state.tvStatus
@@ -132,18 +134,23 @@ export default {
           this.status_bar_height = window.status_bar_height / dpr
         }
           // setTimeout(() => {
-        console.log(this)
+        // console.log(this)
+        // console.log('statuTip里面的方法触发了')
+
         this.getNetworkInfo()
         .then((res)=>{
-            console.log('getNetworkInfo111',res)
+        // console.log('请求成功，获的值是'+res)
+          
+        //   console.log('getNetworkInfo111',res)
           
             this.setNetworkStatus(res)
         })
         // }, 150)
-
-        window.onDeviceChanged = function(data) {
-          console.log("onDeviceChanged",data)
-            this.setNetworkStatus(res)
+        window.onNetworkStatusChange = (data)=> {
+          // console.log('网络改变了，app调用方法data:'+data)
+          
+          // console.log("onNetworkStatusChange",data)
+            this.setNetworkStatus(data)
           
           // store.commit('setScreenProjectionStatus', data)
         }
@@ -185,6 +192,9 @@ export default {
 // .status_bar_block{
 //     height: 0;
 // }
+.status_box{
+
+}
 .status_bar_fixed{
     // position:fixed;
     left: 0;

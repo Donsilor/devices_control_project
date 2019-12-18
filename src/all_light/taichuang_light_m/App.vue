@@ -790,6 +790,7 @@ export default {
 }
 &.close,
 &.offline {
+  overflow: hidden;
   // background-image: url("~@lib/@{imgPath}/beij@3x.png");
   //   background-size: 100% 100%;
   // &:before {
