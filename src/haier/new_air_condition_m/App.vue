@@ -1,7 +1,7 @@
 <template>
   <div class="body">
-    <div
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover']"
+    <div 
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover']" 
     >
       <NewTopBar
         :title="device.device_name"
@@ -33,14 +33,14 @@
               :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
           </div>
           <!-- 当不可调节温度时，显示这个盒子，可以挡着canvas，使它不能滑动 -->
-          <div
-            v-if="deviceAttrs.mode=='wind'"
+          <div 
+            v-if="deviceAttrs.mode=='wind'" 
             class="cover"
             @touchmove.prevent/>
-          <canvas
+          <canvas 
             ref="canvas"
-            class="canvas"
-            width="560"
+            class="canvas" 
+            width="560" 
             height="560"
           />
         </div>
@@ -51,14 +51,14 @@
             :disabled="setTemperatureDis"
             class="control reduce btn"
             @touchstart ="touchstart('reduce')"
-            @touchend="touchend('reduce',-10)"
+            @touchend="touchend('reduce',-10)" 
           />
           <button
             ref="add"
             :disabled="setTemperatureDis"
             class="control add btn"
             @touchstart ="touchstart('add')"
-            @touchend="touchend('add',10)"
+            @touchend="touchend('add',10)" 
           />
         </div>
       </div>
@@ -75,7 +75,7 @@
         <div
           ref="switchStatus"
           :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn-start']"
-
+          
           @touchstart ="touchstart('switchStatus')"
           @touchend="touchend('switchStatus')" />
       </div>
@@ -84,9 +84,9 @@
         <div
           class="btn-wrap"
         >
-          <div
-            ref="cold"
-            :class="[ { 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline },'btn btn-cold center']"
+          <div 
+            ref="cold" 
+            :class="[ { 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline },'btn btn-cold center']" 
             @touchstart ="touchstart('cold')"
             @touchend="touchend('cold')"/>
           <div class="btn-name">制冷</div>
@@ -94,9 +94,9 @@
         <div
           class="btn-wrap"
           @click="setMode('heat')">
-          <div
-            ref="heat"
-            :class="[{ 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']"
+          <div 
+            ref="heat" 
+            :class="[{ 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" 
             @touchstart ="touchstart('heat')"
             @touchmove ="touchmove('$event')"
             @touchend="touchend('heat')"/>
@@ -105,9 +105,9 @@
         <div
           class="btn-wrap"
         >
-          <div
-            ref="auto"
-            :class="[ { 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']"
+          <div 
+            ref="auto" 
+            :class="[ { 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" 
             @touchstart ="touchstart('auto')"
             @touchend="touchend('auto')"/>
           <div
@@ -116,9 +116,9 @@
         <div
           class="btn-wrap"
         >
-          <div
-            ref="wind"
-            :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']"
+          <div 
+            ref="wind" 
+            :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" 
             @touchstart ="touchstart('wind')"
             @touchend="touchend('wind')"/>
           <div class="btn-name">送风</div>
@@ -126,9 +126,9 @@
         <div
           class="btn-wrap"
         >
-          <div
-            ref="dehumidify"
-            :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']"
+          <div 
+            ref="dehumidify" 
+            :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" 
             @touchstart ="touchstart('dehumidify')"
             @touchend.prevent="touchend('dehumidify')"/>
           <div class="btn-name">除湿</div>
@@ -144,20 +144,20 @@
         <div class="option1">
           <div class="check">
             <span>风速</span>
-            <div
+            <div 
               class="checkBox">
-              <div
-                :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']"
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']" 
                 @click="setSpeed('low')">低</div>
-              <div
-                :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']"
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']" 
                 @click="setSpeed('normal')">中</div>
-              <div
-                :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']"
+              <div 
+                :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']" 
                 @click="setSpeed('high')">高</div>
-              <div
+              <div 
                 v-show="deviceAttrs.mode!=='wind'"
-                :class="[{ 'active': deviceAttrs.speed == 'auto'},'speedBtn']"
+                :class="[{ 'active': deviceAttrs.speed == 'auto'},'speedBtn']" 
                 @click="setSpeed('auto')">自动</div>
             </div>
           </div>
@@ -166,10 +166,10 @@
         <div class="option">
           <div>
             <span>摆风</span>
-            <span
-              class="check"
+            <span 
+              class="check" 
               @click="showSwing">{{ deviceAttrs.wind_up_down=='on'?'上下风 ':'' }}{{ deviceAttrs.wind_left_right=='on'?'左右风':'' }}{{ deviceAttrs.wind_up_down=='off'&&deviceAttrs.wind_left_right=='off'?'设置':'' }}
-              <img
+              <img 
                 src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
             </span>
           </div>
@@ -243,9 +243,6 @@ export default {
       moveEnd:false,
       setTemperatureDis:false,
       device_uuid: window.device_uuid||'',
-      flag:false,
-      oldScrollTop: 0, //记录上一次滚动结束后的滚动距离
-                scrollTop: 0 // 记录当前的滚动距离
 
     }
   },
@@ -253,7 +250,7 @@ export default {
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-
+    
     modeIsActive() {
       return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
     },
@@ -306,24 +303,6 @@ export default {
         this.setTemperatureDis = false
       }
     },
-     scrollTop(newValue, oldValue) {
-        setTimeout(() => {
-          console.log(newValue)
-            if(newValue == window.scrollY) { //延时执行后当newValue等于window.scrollY，代表滚动结束
-                console.log('滚动结束')
-                this.oldScrollTop = newValue //每次滚动结束后都要给oldScrollTop赋值
-                this.flag = false
-                console.log(this.flag,'结束')
-            }
-        }, 600) //必须使用延时器，否则每次newValue和window.scrollY都相等，无法判断，20ms刚好大于watch的侦听周期，故延时20ms
-        // setTimeout(() => {
-        //   if(this.oldScrollTop == oldValue) { //每次滚动开始时oldScrollTop与oldValue相等
-        //     console.log('滚动开始')
-        //     this.flag = true
-        //     console.log(this.flag,'开始')
-        // }
-        // }, 100)
-     }
   },
   created() {
     HdSmart.ready(() => {
@@ -382,63 +361,37 @@ export default {
           }
            isMove = false
       }, false)
-      this.handleScroll()
     })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     // 滚动事件
-    handleScroll() {
-      window.addEventListener('scroll', () => {
-        setTimeout(() => {
-          console.log('有滚动')
-          this.flag = true
-          this.scrollTop = window.scrollY
-        }, 50)
-
-          // e.stopPropagation()
-          // event.stopImmediatePropagation();
-      })
-    },
     touchstart(val) {
-      setTimeout (() => {
-          console.log('touchstart的flag', this.flag)
-          if (this.flag == true) return
-          console.log(this.flag,'是否触发')
-          if (val == 'switchStatus') {
-            if (this.isOffline) return
-          }else{
-            if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
-          }
-          if (this.deviceAttrs.temperature== 300 && this.deviceAttrs.speed == 'low'&&val == 'cold') {
-            return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
-          }
-          let btn = document.querySelectorAll('.btn')
-          for(let i=0;i<btn.length;i++){
-            if (val!=='add'&&val!=='reduce') {
-              btn[i].classList.remove('active')
-            }
-            btn[i].classList.remove('animateEnd')
-            btn[i].classList.remove('bgcEnd')
+      if (val == 'switchStatus') {
+        if (this.isOffline) return
+      }else{
+        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+      }
+      if (this.deviceAttrs.temperature== 300 && this.deviceAttrs.speed == 'low'&&val == 'cold') {
+        return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
+      }
+       let btn = document.querySelectorAll('.btn')
+      for(let i=0;i<btn.length;i++){
+        if (val!=='add'&&val!=='reduce') {
+          btn[i].classList.remove('active')
+        }
+        btn[i].classList.remove('animateEnd')
+        btn[i].classList.remove('bgcEnd')
 
-          }
-          this.$refs[val].classList.add('animateStart')
-          if(val=='add'||val=="reduce"){
-            this.$refs[val].classList.add('bgcStart')
-          }else{
-            this.$refs[val].classList.add('yellowExtend')
-          }
-      }, 500)
-
-
+      }  
+      this.$refs[val].classList.add('animateStart')
+      if(val=='add'||val=="reduce"){
+        this.$refs[val].classList.add('bgcStart')
+      }else{
+        this.$refs[val].classList.add('yellowExtend')
+      }
     },
-    touchmove(e){
-
-    },
-    touchend(val,step){
-      setTimeout(() => {
-          console.log('end结束')
-      if (this.flag == true) return
+    touchend(val,step){ 
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
@@ -453,7 +406,7 @@ export default {
         btn[i].classList.remove('animateStart')
         btn[i].classList.remove('bgcStart')
         // btn[i].classList.remove('yellowExtend')
-      }
+      }  
       // this.$refs[val].classList.add('bgcEnd')
       this.$refs[val].classList.add('animateEnd')
 
@@ -464,8 +417,6 @@ export default {
       }else{
         this.setMode(val)
       }
-      }, 200)
-
       // this.$refs[val].classList.add('yellowExtend')
     },
     offset(r,d) {//根据弧度与距离计算偏移坐标
@@ -498,7 +449,7 @@ export default {
       }else{
         this.ctx.strokeStyle = "transparent"
       }
-
+      
       this.ctx.lineWidth = 7
       this.ctx.beginPath()
       this.ctx.shadowColor =  "none"
@@ -574,7 +525,7 @@ export default {
             if (res.code==0) {
             this.deviceAttrs.mode = val
           }
-
+          
           if (this.deviceAttrs.mode=='wind') {
             this.progress = 70 /(30 - 16) * (this.deviceAttrs.env_temperature / 10 - 16)
             // this.$refs.$canvas.init()
@@ -592,7 +543,7 @@ export default {
     },
     setTemperature(step) {
       console.log(step,'温度')
-
+      
       if (this.isOffline||this.isClose) return
       HdSmart.UI.vibrate()
         this.moveEnd = false
@@ -715,7 +666,7 @@ export default {
     }
   },
    beforeDestroy() {
-      window.removeEventListener('scroll') //离开当前组件别忘记移除事件监听哦
+      window.removeEventListener('scroll'); //离开当前组件别忘记移除事件监听哦
    }
 
 }
@@ -746,7 +697,7 @@ export default {
     background-size: 100% 100%;
     position: fixed;
     top:0;
-    left: 0;
+    left: 0; 
     right: 0;
     bottom: 0;
     z-index: -1;
@@ -1262,7 +1213,7 @@ export default {
     }
     &.page {
       // background: #fff;
-
+  
       .control-tm{
         // background: #fff;
         .reduce,.add {
