@@ -1191,20 +1191,28 @@ export default {
             }
             let palynameList = document.querySelectorAll('.palyname')
             for(let i=0;i<palynameList.length;i++){
-              let synopsisSpanH = palynameList[i].offsetHeight
+              let synopsisH = palynameList[i].offsetHeight
               console.log(palynameList[i])
 
-              console.log(synopsisSpanH)
+              console.log(synopsisH)
               
-              if(synopsisSpanH<=36) continue
+              if(synopsisH<=38){
+                palynameList[i].style.height = 36 + 'PX'
+                continue
+              } 
               console.log(palynameList[i])
               
               palynameList[i].innerText+='...' 
-                while (synopsisSpanH>36){
-                 palynameList[i].innerText =  palynameList[i].innerText.substr(0,palynameList[i].innerText.length-4)
+                while (synopsisH>38){
+                  console.log( palynameList[i].innerText)
+                  
+                  palynameList[i].innerText =  palynameList[i].innerText.substr(0,palynameList[i].innerText.length-4)
                   palynameList[i].innerText+='...'
-                 synopsisSpanH = palynameList[i].offsetHeight
+                  synopsisH = palynameList[i].offsetHeight
+                  console.log(synopsisH)
+                  
                 }
+                palynameList[i].style.height = 36 + 'PX'
               }    
           })
         }

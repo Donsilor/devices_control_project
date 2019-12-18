@@ -622,7 +622,8 @@ export function getDetaileData() {
 
             {
               index: '2',
-              name: '未播：姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服',
+              name: '未播：',
+              // 姚晨王珞丹模仿孙红雷跳舞，黄渤创意裁剪燕尾服
               pictureUrl:
                 'http://puui.qpic.cn/qqvideo_ori/0/c00240oq2om_228_128/0',
               duration: '00:02:05',

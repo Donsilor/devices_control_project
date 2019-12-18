@@ -18,9 +18,9 @@
       switchimg="tv"
       @shutdownCallback="cmd('rcPower')"
     />
+    <!-- v-show="device_uuid"   -->
     <!--    -->
     <status-tip
-      v-show="device_uuid"  
       type="首页"/>
     <div 
       :class="{'search-screen-bg_mt':device_uuid}" 

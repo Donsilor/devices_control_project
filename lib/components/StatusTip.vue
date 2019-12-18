@@ -1,18 +1,19 @@
 <template>
-  <div class="status_box">
+
+  <div
+    v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1"
+    :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
+    class="status_bar">
+    <!-- v-show="device.device_uuid"  -->
+    <!-- <div class="status_bar_block"/> -->
+    <div 
+      :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
+      class="bac_fiexd"/>
     <div
-      v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1"
-      class="status_bar">
-      <!-- v-show="device.device_uuid"  -->
-      <!-- <div class="status_bar_block"/> -->
-      <div 
-        :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
-        class="bac_fiexd"/>
-      <div
-        ref="status_bar_fixed"
-        :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}"
-        class="status_bar_fixed">
-        <!-- <div
+      ref="status_bar_fixed"
+      :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}"
+      class="status_bar_fixed">
+      <!-- <div
         v-if="spVisible"
         class="sp_status_bar"
         @click="goToScreenProjectionPage">
@@ -20,8 +21,8 @@
         <span class="text">{{ tvStatus.screenProjectTitle }}</span>
         <i class="icon-arrow"/>
       </div> -->
-        <div>
-          <!-- <div
+      <div>
+        <!-- <div
           v-if="tvStatus.tvOnlineStatus==0" 
           class="offline_bar">
           <div class="offline_bar_div">
@@ -33,21 +34,21 @@
 
           </div>
         </div> -->
-          <!-- {{ networkStatus }} -->
-          <div
-            v-show="networkStatus==-1" 
-            class="offline_bar offline_bar_wifi"
-            @click="goToOfflineHelpPage">
-            <div class="offline_bar_div">
-              <p class="offline_bar_p">
-                <i class="wifi"/>
-              </p>
-              <span class="link">当前网络不可用</span> 
+        <!-- {{ networkStatus }} -->
+        <div
+          v-show="networkStatus==-1" 
+          class="offline_bar offline_bar_wifi"
+          @click="goToOfflineHelpPage">
+          <div class="offline_bar_div">
+            <p class="offline_bar_p">
+              <i class="wifi"/>
+            </p>
+            <span class="link">当前网络不可用</span> 
 
-            </div>
           </div>
+        </div>
 
-          <!-- <div
+        <!-- <div
           v-if="tvStatus.tvOnlineStatus==-2"
           class="offline_bar"
           @click="goToOfflineHelpPage">
@@ -59,27 +60,27 @@
           </div>
           <i class="arrow"/>
         </div> -->
-          <div
-            v-if="deviceAttrs.connectivity==='offline'"      
-            class="offline_bar"
-            @click="goToOfflineHelpPage">
-            <div class="offline_bar_div">
-              <p class="offline_bar_p">
-                <i class="error"/>
-              </p>
-              <!-- <span class="link">设备已离线,查看帮助</span> -->
-              <span class="link">设备已离线</span>
+        <div
+          v-if="deviceAttrs.connectivity==='offline'"      
+          class="offline_bar"
+          @click="goToOfflineHelpPage">
+          <div class="offline_bar_div">
+            <p class="offline_bar_p">
+              <i class="error"/>
+            </p>
+            <!-- <span class="link">设备已离线,查看帮助</span> -->
+            <span class="link">设备已离线</span>
 
-            </div>
-          <!-- <i class="arrow"/> -->
           </div>
+          <!-- <i class="arrow"/> -->
         </div>
       </div>
+    </div>
     <!-- <div
       v-if="tvStatus.tvOnlineStatus < 0 && !ios"
       class="offline_bar_blank"/> -->
-    </div>
   </div>
+
   
 </template>
 
@@ -224,7 +225,7 @@ export default {
     white-space: nowrap;
 }
 .status_bar {
-    // position: absolute;
+    position: fixed;
 
     width: 100%;
     z-index: 10000;
