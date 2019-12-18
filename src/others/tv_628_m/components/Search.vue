@@ -221,6 +221,7 @@
 }
 .statusbar {
   position: relative;
+  z-index: 10000;
   top: 0;
   left: 0;
   width: 100%;
@@ -243,7 +244,7 @@
     width: 100%;
     height: 44px;
     background: transparent;
-    z-index: 999
+    z-index: 999999
   }
 }
 .page-search{

@@ -12,7 +12,9 @@ export function generateSnapShot() {
         code: 0,
         result: {
             "device_name": "智能筒灯",
+            "device_uuid":43434,
             "room_name": "卧室",
+           
             "attribute": res,
             "third_attribute": {
               "sub_device_category": "01"

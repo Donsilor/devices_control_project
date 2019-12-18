@@ -2,6 +2,7 @@
   <div
     v-show="device.device_uuid" 
     class="status_bar">
+
     <!-- <div class="status_bar_block"/> -->
     <div 
       :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
@@ -19,7 +20,6 @@
         <i class="icon-arrow"/>
       </div> -->
       <div>
-
         <!-- <div
           v-if="tvStatus.tvOnlineStatus==0" 
           class="offline_bar">
@@ -32,9 +32,8 @@
 
           </div>
         </div> -->
-
-        <!-- <div
-          v-if="tvStatus.tvOnlineStatus==-1" 
+        <div
+          v-if="networkStatus==-1" 
           class="offline_bar offline_bar_wifi"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">
@@ -44,7 +43,7 @@
             <span class="link">当前网络不可用</span> 
 
           </div>
-        </div> -->
+        </div>
 
         <!-- <div
           v-if="tvStatus.tvOnlineStatus==-2"
@@ -79,6 +78,106 @@
       class="offline_bar_blank"/> -->
   </div>
 </template>
+
+
+
+
+<script>
+// import * as service from "../service"
+import { mapGetters, mapState, mapActions } from 'vuex'
+
+let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
+
+export default {
+    props: ["barHeight","type"],
+    data() {
+        return {
+          ...mapState,
+          status_bar_height: 25,
+          navigation_bar_height: 44,
+          ios: /iPad|iPhone|iPod/.test(navigator.userAgent)
+        }
+    },
+   
+    computed: {
+    ...mapGetters(['isClose', 'isOffline']),
+    ...mapState(['device', 'deviceAttrs']),
+      networkStatus() {
+            return this.$store.state.networkStatus
+        },
+
+        // tvStatus() {
+        //     return this.$store.state.tvStatus
+        // },
+        // spStatusText() {
+        //     return ["", "图片", "视频", "音乐"][
+        //         this.tvStatus.screenProjectType
+        //     ]
+        // },
+        // spVisible() {
+        //     return (
+        //         this.tvStatus.tvOnlineStatus == 1 &&
+        //         this.tvStatus.screenProjectType != 0 &&
+        //         this.$route.name != "search"
+        //     )
+        // },
+        // visible() {
+        //     return this.tvStatus.tvOnlineStatus != 1 || this.spVisible
+        // },
+        // ...mapState([ 'isStatusBarShow'])
+    },
+    created() {
+      HdSmart.ready(() => {
+        if (window.status_bar_height) {
+          this.status_bar_height = window.status_bar_height / dpr
+        }
+          // setTimeout(() => {
+        console.log(this)
+        this.getNetworkInfo()
+        .then((res)=>{
+            console.log('getNetworkInfo111',res)
+          
+            this.setNetworkStatus(res)
+        })
+        // }, 150)
+
+        window.onDeviceChanged = function(data) {
+          console.log("onDeviceChanged",data)
+            this.setNetworkStatus(res)
+          
+          // store.commit('setScreenProjectionStatus', data)
+        }
+
+        // if (window.navigation_bar_height) {
+        //   this.navigation_bar_height = window.navigation_bar_height / dpr
+        // }
+      })
+    },
+    // mounted() {
+    //   console.log(this.type)
+    //   if(this.type==='首页'&& this.$refs.status_bar_fixed){
+    //     this.$refs.status_bar_fixed.style.position="absolute"
+    //     this.$refs.status_bar_fixed.style.top="0"
+        
+    //   }
+    // },
+    methods: {
+      ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus']),
+        // goToScreenProjectionPage() {
+        //     service.onClickEvent("screenProjectionStatusClick")
+        // },
+        goToOfflineHelpPage() {
+          console.log('点击了')
+          
+            // service.onClickEvent("tvOnlineStatusClick", {
+            //     tvOnlineStatus: this.tvStatus.tvOnlineStatus
+            // })
+        }
+    },
+}
+</script>
+
+
 
 <style lang="less" scoped>
 @status_bar_height: 25PX;
@@ -239,77 +338,3 @@
 		}
 
 </style>
-
-
-<script>
-// import * as service from "../service"
-import { mapGetters, mapState, mapActions } from 'vuex'
-
-let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
-
-export default {
-    props: ["barHeight","type"],
-    data() {
-        return {
-          status_bar_height: 25,
-          navigation_bar_height: 44,
-          ios: /iPad|iPhone|iPod/.test(navigator.userAgent)
-        }
-    },
-   
-    computed: {
-    ...mapGetters(['isClose', 'isOffline']),
-    ...mapState(['device', 'deviceAttrs']),
-
-        // tvStatus() {
-        //     return this.$store.state.tvStatus
-        // },
-        // spStatusText() {
-        //     return ["", "图片", "视频", "音乐"][
-        //         this.tvStatus.screenProjectType
-        //     ]
-        // },
-        // spVisible() {
-        //     return (
-        //         this.tvStatus.tvOnlineStatus == 1 &&
-        //         this.tvStatus.screenProjectType != 0 &&
-        //         this.$route.name != "search"
-        //     )
-        // },
-        // visible() {
-        //     return this.tvStatus.tvOnlineStatus != 1 || this.spVisible
-        // },
-        // ...mapState([ 'isStatusBarShow'])
-    },
-    created() {
-      HdSmart.ready(() => {
-        if (window.status_bar_height) {
-          this.status_bar_height = window.status_bar_height / dpr
-        }
-        // if (window.navigation_bar_height) {
-        //   this.navigation_bar_height = window.navigation_bar_height / dpr
-        // }
-      })
-    },
-    // mounted() {
-    //   console.log(this.type)
-    //   if(this.type==='首页'&& this.$refs.status_bar_fixed){
-    //     this.$refs.status_bar_fixed.style.position="absolute"
-    //     this.$refs.status_bar_fixed.style.top="0"
-        
-    //   }
-    // },
-    methods: {
-        // goToScreenProjectionPage() {
-        //     service.onClickEvent("screenProjectionStatusClick")
-        // },
-        goToOfflineHelpPage() {
-          console.log('点击了')
-          
-            // service.onClickEvent("tvOnlineStatusClick", {
-            //     tvOnlineStatus: this.tvStatus.tvOnlineStatus
-            // })
-        }
-    },
-}
-</script>

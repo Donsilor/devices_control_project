@@ -5,6 +5,9 @@ import * as mockData from './mock'
 if (location.search.indexOf('env=desktop') != -1) {
 
     window.device_name = '智能筒灯'
+    window.networkStatus = -1
+    window.device_uuid = 545454
+
 
     on(apiList.device_getsnapshot, function(data, done){
         done(mockData.generateSnapShot())
