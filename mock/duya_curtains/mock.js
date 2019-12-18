@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 
 let res = {
-    "connectivity": "online", //l
+    "connectivity": "offline", //l
     "switch": 'off', //开关
     "open_percentage":100  , 
 }
