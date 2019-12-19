@@ -744,7 +744,7 @@ export default {
     }
   }
   .main {
-    // margin-top: 5vh;
+    margin-top:44px;
     position: relative;
     &.center {
       flex-direction: column;
