@@ -17,6 +17,11 @@ export function generateSnapShot() {
     })
 }
 
+
+export function generateNetwork() {
+  return Mock.mock(0)
+}
+
 export function set(data){
     var attr = data.params.attribute
     if(attr.negative_ion_switch){
