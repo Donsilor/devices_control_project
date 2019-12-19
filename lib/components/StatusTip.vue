@@ -1,7 +1,8 @@
 <template>
+  <!-- v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1" -->
 
   <div
-    v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1"
+    v-if="false"
     :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
@@ -107,8 +108,6 @@ export default {
     computed: {
     ...mapGetters(['isClose', 'isOffline','networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
-
-
         // tvStatus() {
         //     return this.$store.state.tvStatus
         // },
@@ -129,7 +128,40 @@ export default {
         // },
         // ...mapState([ 'isStatusBarShow'])
     },
+    watch:{
+      networkStatus(n,v){
+        console.log(n,v)
+      switch (n) {
+        case -1:
+          this.prohibitmove()
+          break
+       case 0:
+          this.allowmove()
+          break
+        default:
+          break
+      }
+        
+      },
+      'deviceAttrs.connectivity'(n,v){
+        console.log(n,v,3434)
+        switch (n) {
+        case 'offline':
+          this.prohibitmove()
+          break
+       case 'online':
+          this.allowmove()
+          break
+        default:
+          break
+      }
+      
+        console.log(n,v,54665)
+      }
+    },
     created() {
+
+
       HdSmart.ready(() => {
         if (window.status_bar_height) {
           this.status_bar_height = window.status_bar_height / dpr
@@ -170,16 +202,33 @@ export default {
     //   }
     // },
     methods: {
-      ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus']),
+      ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice']),
         // goToScreenProjectionPage() {
         //     service.onClickEvent("screenProjectionStatusClick")
         // },
         goToOfflineHelpPage() {
           console.log('点击了')
-          
+         
+
+          // window.onNetworkStatusChange(0)
+          this.doControlDevice({connectivity:'online'})
             // service.onClickEvent("tvOnlineStatusClick", {
             //     tvOnlineStatus: this.tvStatus.tvOnlineStatus
             // })
+        },
+
+        prohibitmove(){
+          console.log('z执行了')
+          
+          document.body.addEventListener('touchmove', this.touchmovefn, { passive: false }) 
+        },
+        allowmove(){
+         document.body.removeEventListener('touchmove',this.touchmovefn) 
+        },
+        touchmovefn(e){
+          console.log('组长')
+          
+          e.preventDefault()
         }
     },
 }

@@ -19,7 +19,7 @@ export function generateSnapShot() {
 
 
 export function generateNetwork() {
-  return Mock.mock(0)
+  return Mock.mock(-1)
 }
 
 export function set(data){
