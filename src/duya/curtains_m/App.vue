@@ -531,7 +531,7 @@ export default {
     width: 100%;
     position: fixed;
     bottom: 90px;
-    z-index: 99999;
+    z-index: 9999;
     .btn {
       margin-top: 24px;
       width: 100%;
