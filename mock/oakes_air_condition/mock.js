@@ -31,7 +31,7 @@ var res = {
         manufactureId: 'tcl',
         deviceCategory: 'airconditioner.new',
         deviceSubCategory: 0,
-        connectivity: 'online',
+        connectivity: 'offline',
         timer_switch:'off',
         timer_value:0,
         wind_up:'off',
@@ -52,6 +52,10 @@ export function generateSnapShot() {
         result: res
         // result: null
     })
+}
+
+export function generateNetwork() {
+  return Mock.mock(-1)
 }
 
 export function set(data) {
