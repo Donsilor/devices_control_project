@@ -1,7 +1,7 @@
 <template class="a">
   <div class="body">
     <div
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']" >
+      :class="[{ 'offline': isOffline || networkStatus == -1 }, {'close': isClose}, 'page']" >
       <new-topbar
         :title="device.device_name"
         :room="device.room_name"
@@ -61,7 +61,7 @@
       <div
         class="tips-btn">
         <div
-          :class="[{'up-index': !isOffline }, 'btn-wrap']">
+          :class="[{'up-index': !isOffline && networkStatus != -1 }, 'btn-wrap']">
           <div
             ref="switch"
             :class="[{ 'active': !isClose }, 'btn-swich btn center']"
@@ -122,7 +122,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isClose', 'isOffline']),
+    ...mapGetters(['isClose', 'isOffline', 'networkStatus']),
     ...mapState(['device', 'deviceAttrs', 'ThirddeviceAttrs']),
     rotateClass() {
       /* eslint-disable no-unreachable */
@@ -208,7 +208,7 @@ export default {
           }
       }, false)
       this.$refs.canvas.addEventListener(on.end,()=> {
-          if (this.isOffline||this.isClose) return
+          if (this.isOffline||this.isClose|| this.networkStatus == -1) return
           this.moveFlag = false
           this.controlDevice('level',parseInt(this.brightness*2.55))
       }, false)
@@ -224,7 +224,7 @@ export default {
         HdSmart.UI.vibrate()
         return
       }
-      if(this.isClose||this.isOffline) return
+      if(this.isClose||this.isOffline|| this.networkStatus == -1) return
       this.$refs[val].classList.add('yellowExtend')
       this.$refs[val].classList.remove('animate')
       this.$refs[val].classList.add('animate1')
@@ -237,7 +237,7 @@ export default {
         this.setSwitch()
         return
       }
-      if(this.isClose||this.isOffline) return
+      if(this.isClose||this.isOffline|| this.networkStatus == -1) return
       this.$refs[val].classList.remove('animate1')
       this.$refs[val].classList.add('animate')
       if(val == 'bc') return this.setSpeed(167)
@@ -275,7 +275,7 @@ export default {
       this.ctx.beginPath()
       var d =  this.offset(n*2*Math.PI,this.or)
       // 开机显示
-      if (this.deviceAttrs.switch_status == 'on' && !this.isOffline) {
+      if (this.deviceAttrs.switch_status == 'on' && !this.isOffline&& this.networkStatus != -1) {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
       }else{
         //关机显示
@@ -308,11 +308,11 @@ export default {
     newLevel(){
     },
     setSpeed(val) {
-      if (this.isClose||this.isOffline) return
+      if (this.isClose||this.isOffline|| this.networkStatus == -1) return
       this.controlDevice('temperature', val)
     },
     setSwitch() {
-      if (this.isOffline) return false
+      if (this.isOffline|| this.networkStatus == -1) return false
       let switchStatus = ''
       if (this.deviceAttrs.switch_status == 'on') {
         switchStatus = 'off'
@@ -782,6 +782,7 @@ export default {
   }
 }
 &.offline {
+  overflow: hidden;
   .btn-wrap {
     &.up-index{
       opacity: .2;
@@ -790,7 +791,6 @@ export default {
 }
 &.close,
 &.offline {
-  overflow: hidden;
   // background-image: url("~@lib/@{imgPath}/beij@3x.png");
   //   background-size: 100% 100%;
   // &:before {

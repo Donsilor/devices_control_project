@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <div :class="[{'offline': isOffline }, {'close': isClose}, 'page']">
+    <div :class="[{'offline': isOffline || networkStatus == -1}, {'close': isClose}, 'page']">
       <!-- 顶部 -->
       <NewTopBar
         :title="device.device_name"
@@ -8,7 +8,7 @@
         :scroll="true"
         bak-color="#000"
         page-class=".page" />
-      <StatusTip v-if="isOffline"/>
+      <StatusTip/>
       <!-- 灯 -->
       <div class="main center">
         <div class="bg center">
@@ -242,7 +242,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isClose', 'isOffline']),
+    ...mapGetters(['isClose', 'isOffline', 'networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
   },
   watch: {
@@ -273,7 +273,7 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     touchstart(val) {
-      if(this.isOffline) return
+      if(this.isOffline|| this.networkStatus == -1) return
       this.$refs[val].classList.remove('animate')
       this.$refs[val].classList.add('animate1')
       if(val == 'one' || val == 'two' || val == 'three' || val == 'four') {
@@ -293,7 +293,7 @@ export default {
       HdSmart.UI.vibrate()
     },
     touchend(val){
-      if(this.isOffline) return
+      if(this.isOffline|| this.networkStatus == -1) return
       this.$refs[val].classList.remove('animate1')
       this.$refs[val].classList.add('animate')
       this.$refs[val].classList.remove('bgcStart')
@@ -305,7 +305,7 @@ export default {
       if(val == 'SwitchOff') return this.setSwitchOff('off')
     },
     setSwitchOn(val) {
-      if(this.isOffline) return
+      if(this.isOffline|| this.networkStatus == -1) return
       if(this.flagOn == false) return
       if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') return
       this.flagOn = false
@@ -317,7 +317,7 @@ export default {
       })
     },
     setSwitchOff(val) {
-      if(this.isOffline) return
+      if(this.isOffline|| this.networkStatus == -1) return
       if(this.flagOff == false) return
       if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') return
       this.flagOff = false
@@ -329,7 +329,7 @@ export default {
       })
     },
     setSwitch1() {
-      if(this.isOffline) return
+      if(this.isOffline|| this.networkStatus == -1) return
       if(this.flagOn == false || this.flagOff == false) return
       let switchStatus = ''
       if (this.deviceAttrs.list[0].chan_status == 'on') {
@@ -345,7 +345,7 @@ export default {
       })
     },
     setSwitch2() {
-      if(this.isOffline) return
+      if(this.isOffline|| this.networkStatus == -1) return
       if(this.flagOn == false || this.flagOff == false) return
       let switchStatus = ''
       if (this.deviceAttrs.list[1].chan_status == 'on') {
@@ -361,7 +361,7 @@ export default {
       })
     },
     setSwitch3() {
-      if(this.isOffline) return
+      if(this.isOffline|| this.networkStatus == -1) return
       if(this.flagOn == false || this.flagOff == false) return
       let switchStatus = ''
       if (this.deviceAttrs.list[2].chan_status == 'on') {
@@ -377,7 +377,7 @@ export default {
       })
     },
     setSwitch4() {
-      if(this.isOffline) return
+      if(this.isOffline|| this.networkStatus == -1) return
       if(this.flagOn == false || this.flagOff == false) return
       let switchStatus = ''
       if (this.deviceAttrs.list[3].chan_status == 'on') {
@@ -425,6 +425,9 @@ export default {
 @imgPath: 'base/honghan_switch/assets';
 @imgPath1: 'base/oakes_air_condition/assets';
 @100: 100% 100%;
+body {
+  position: fixed;
+}
 // .body {
   // min-height: 100%;
   // height: 100vh;
@@ -665,14 +668,15 @@ export default {
     }
   }
   &.offline {
+    overflow: hidden;
     &:before {
       content: "";
       position: fixed;
-      top: 64px;
+      top: 0;
       left: 0;
       bottom: 0;
       right: 0;
-      z-index: 999;
+      // z-index: 999;
       width: 100%;
       // background: rgba(255, 255, 255,0.1);
     }
@@ -685,12 +689,12 @@ export default {
     }
     .btn-wrap {
       opacity: 0.2;
-      .btn {
-        &.active {
-          background: #fff;
-          border: 1px solid rgba(32,40,43,0.5);
-        }
-      }
+      // .btn {
+        // &.active {
+        //   background: #fff;
+        //   border: 1px solid rgba(32,40,43,0.5);
+        // }
+      // }
     }
     .up-index {
       opacity: 1;

@@ -12,14 +12,14 @@
       v-show="deviceAttrs.error=='overheaterro'||deviceAttrs.error=='burnerro'||deviceAttrs.error=='tsensorerro'"
       :style="{top:status_bar_height+44+'px'}"
       class="bgc"/>
-    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
+    <div :class="[{ 'offline': isOffline || networkStatus == -1 }, {'close': isClose}, 'page']">
       <topbar
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
         bak-color="#000"
         page-class=".page"/>
-      <StatusTip v-if="isOffline"/>
+      <StatusTip/>
       <!-- <div class="c-status">时段预约：6:00-9:00</div> -->
       <div class="main center">
         <div class="wrap-circle">
@@ -33,7 +33,7 @@
           </div>
           <div class="cover">
             <span class="point left" />
-            <span :class="['point', 'right', {'rightRed': deviceAttrs.currenttemperature >= 75 && !isClose && !isOffline}]" />
+            <span :class="['point', 'right', {'rightRed': deviceAttrs.currenttemperature >= 75 && !isClose && !isOffline && networkStatus != -1}]" />
             <span class="txt left">30<sup>°C</sup></span>
             <span class="txt right">{{ deviceAttrs.mode == 'hot' ? 78 : 75 }}<sup>°C</sup></span>
           </div>
@@ -41,7 +41,7 @@
 
         <div class="bg center">
           <div
-            v-if="isClose||isOffline"
+            v-if="isClose||isOffline || networkStatus == -1"
             class="bg2 center">
             <div class="num">--</div>
             <div class="time">--<sup>°C</sup></div>
@@ -223,13 +223,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isClose', 'isOffline']),
+    ...mapGetters(['isClose', 'isOffline', 'networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
     isRun() {
       return this.deviceAttrs.status == 'run'
     },
     cRotate() {
-      if (this.isClose||this.isOffline||this.deviceAttrs.currenttemperature<=30) {
+      if (this.isClose||this.isOffline||this.deviceAttrs.currenttemperature<=30 || this.networkStatus == -1) {
         return -45
       } else if(this.deviceAttrs.currenttemperature>=75){
           return 135
@@ -240,7 +240,7 @@ export default {
       }
     },
     arrowRotate() {
-      if (this.isClose||this.isOffline||this.deviceAttrs.currenttemperature<=30) {
+      if (this.isClose||this.isOffline||this.deviceAttrs.currenttemperature<=30 || this.networkStatus == -1) {
         return 0
       } else if(this.deviceAttrs.currenttemperature>=75){
          return 180
@@ -324,7 +324,7 @@ export default {
         HdSmart.UI.vibrate()
         return
       }
-      if(this.isClose||this.isOffline) return
+      if(this.isClose||this.isOffline || this.networkStatus == -1) return
       if(val == 'add' || val == 'reduce') {
         if(this.disabledVal == true) return
         this.$refs[val].classList.remove('animate')
@@ -354,7 +354,7 @@ export default {
         this.setSwitch()
         return
       }
-      if(this.isClose||this.isOffline) return
+      if(this.isClose||this.isOffline || this.networkStatus == -1) return
 
       if(val == 'add' || val == 'reduce') {
         if(this.disabledVal == true) return
@@ -419,7 +419,7 @@ export default {
     setMode(val) {
       if(this.disabledMode == true) return
       if (val == this.deviceAttrs.mode) return
-      if (this.isClose || this.isOffline) return
+      if (this.isClose || this.isOffline || this.networkStatus == -1) return
       this.disabledMode = true
       this.controlDevice('mode', val)
       .then((res) => {
@@ -456,7 +456,7 @@ export default {
       })
     },
     setTemperature(step) {
-      if (this.isClose || this.isOffline) return
+      if (this.isClose || this.isOffline || this.networkStatus == -1) return
       if(this.disabledVal == true) return
       this.disabledVal = true
       let val = +this.deviceAttrs.temperature + step
