@@ -5,7 +5,9 @@
       <NewTopBar
         :scroll="true"
         :title="device.device_name"
+        page-class=".page"
         bak-color="#000"/>
+        <StatusTip v-show="device.device_uuid"/>
       <div class="main center">
         <div 
           ref="stick" 
