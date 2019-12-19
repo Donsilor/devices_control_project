@@ -445,7 +445,7 @@ export default {
   background-size: 100% 100%;
   .main {
     position: relative;
-    margin-top: 58px;
+    margin-top: 90px;
     .stick{
       width: 80%;
       // height: 20px;
