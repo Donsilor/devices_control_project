@@ -44,23 +44,29 @@
           class="btn-wrap"
         >
           <div
-            ref="btn-close"
+            ref="close"
             class="btn btn-close center"
-            @click="setClose" />
+            @click="setClose"
+            @touchstart ="touchstart('close')"
+            @touchend="touchend('close')" />
           <div class="btn-name">全关</div>
         </div>
         <div class="btn-wrap">
           <div
-            ref="btn-pause"
+            ref="pause"
             class="btn-pause btn center"
-            @click="setPause" />
+            @click="setPause"
+            @touchstart ="touchstart('pause')"
+            @touchend="touchend('pause')" />
           <div class="btn-name">暂停</div>
         </div>
         <div class="btn-wrap">
           <div
-            ref="btn-open"
+            ref="open"
             class="btn-open btn center"
-            @click="setOpen" />
+            @click="setOpen" 
+            @touchstart ="touchstart('open')"
+            @touchend="touchend('open')"/>
           <div class="btn-name">全开</div>
         </div>
       </div>
@@ -107,12 +113,28 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    touchstart(val) {
+        this.$refs[val].classList.remove('animateStart','animateEnd')
+        this.$refs[val].classList.add('animateStart')
+        this.$refs[val].classList.add('yellowExtend')
+    },
+    touchend(val){ 
+      // this.$refs[val].classList.remove('animateStart')
+      this.$refs[val].classList.add('animateEnd')
+      if(val=='open'){
+        this.setOpen()
+      }else if(val=='close'){
+        this.setClose()
+      }else{
+        this.setPause()
+      }
+    },
     // 全开
     setOpen(){
-      this.$refs['btn-open'].classList.add('active')
+      // this.$refs['open'].classList.add('active')
       setTimeout(()=>{
-        this.$refs['btn-open'].classList.remove('active')
-      },500)
+        this.$refs['open'].classList.remove('yellowExtend')
+      },600)
       this.btnActive = 'open'
       this.controlDevice('switch', 'on')
       .then((res)=>{
@@ -130,10 +152,10 @@ export default {
     },
     //全关
     setClose(){
-      this.$refs['btn-close'].classList.add('active')
+      // this.$refs['close'].classList.add('active')
       setTimeout(()=>{
-        this.$refs['btn-close'].classList.remove('active')
-      },500)
+        this.$refs['close'].classList.remove('yellowExtend')
+      },600)
       this.btnActive = 'close'
       this.controlDevice('switch', 'off')
       .then((res)=>{
@@ -154,16 +176,15 @@ export default {
     setPause(){
       this.btnActive = 'pause'
       this.curtainStatusText = ''
-      this.$refs['btn-pause'].classList.add('active')
+      // this.$refs['pause'].classList.add('active')
       setTimeout(()=>{
-        this.$refs['btn-pause'].classList.remove('active')
-      },500)
+        this.$refs['pause'].classList.remove('yellowExtend')
+      },600)
       this.controlDevice('switch', 'pause')
       .then((res)=>{
         if (res.code==0) {
           this.leftCurtainBox.classList.add('pause')
           this.rightCurtainBox.classList.add('pause')
-          console.log('99999999')
         }else{
           HdSmart.UI.toast('操作失败')
         }
@@ -190,6 +211,89 @@ getStyle(obj,attr){
 </script>
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
+.animateStart::before{
+  animation: scaleStart 0.15s;
+  animation-fill-mode : forwards;
+}
+@keyframes scaleStart {
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(0.6);
+  }
+  // 90%{
+  //   transform: scale(1.3);
+  // }
+  //   100%{
+  //   transform: scale(1);
+  // }
+}
+
+.animateEnd::before{
+  animation: scaleEnd 0.3s;
+  animation-fill-mode : forwards;
+}
+@keyframes scaleEnd {
+  0%{
+    transform: scale(0.6);
+  }
+  66%{
+    transform: scale(1.2);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+      background: #E1B96E;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 0%;height: 0%;}
+    100% {width: 100%;height: 100%;}
+  }
+
+
+  .bgcStart{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: bgcStart .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes bgcStart {
+    0% {width: 100%;height: 100%;}
+    100% {width: 110%;height: 110%;}
+  }
 .setOpen{
   animation: open 5s linear;
   animation-fill-mode:forwards;
@@ -300,7 +404,7 @@ getStyle(obj,attr){
     width: 100%;
     position: fixed;
     bottom: 130px;
-    z-index: 99999;
+    z-index: 9999;
     .btn {
       margin-top: 24px;
       width: 100%;
@@ -335,6 +439,7 @@ getStyle(obj,attr){
         display: block;
         width: 44px;
         height: 44px;
+        z-index: 999;
       }
       &.active {
         background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
@@ -408,7 +513,7 @@ getStyle(obj,attr){
       &.up-index {
         opacity: 1;
         .btn-open{
-          z-index:999999;
+          z-index:999;
         }
       }
     }

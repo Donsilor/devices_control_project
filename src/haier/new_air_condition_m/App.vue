@@ -50,15 +50,13 @@
             ref="reduce"
             :disabled="setTemperatureDis"
             class="control reduce btn"
-            @touchstart ="touchstart('reduce')"
-            @touchend="touchend('reduce',-10)" 
+            @click="setTemperature('reduce',-10)"
           />
           <button
             ref="add"
             :disabled="setTemperatureDis"
             class="control add btn"
-            @touchstart ="touchstart('add')"
-            @touchend="touchend('add',10)" 
+            @click="setTemperature('add',10)"
           />
         </div>
       </div>
@@ -75,9 +73,8 @@
         <div
           ref="switchStatus"
           :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn-start']"
-          
-          @touchstart ="touchstart('switchStatus')"
-          @touchend="touchend('switchStatus')" />
+          @click="setSwitch('switchStatus')"
+ />
       </div>
       <div
         class="panel-btn center">
@@ -87,19 +84,15 @@
           <div 
             ref="cold" 
             :class="[ { 'active': deviceAttrs.mode == 'cold'&& deviceAttrs.switchStatus == 'on'&&!isOffline },'btn btn-cold center']" 
-            @touchstart ="touchstart('cold')"
-            @touchend="touchend('cold')"/>
+            @click="setMode('cold')"/>
           <div class="btn-name">制冷</div>
         </div>
         <div
-          class="btn-wrap"
-          @click="setMode('heat')">
+          class="btn-wrap">
           <div 
             ref="heat" 
             :class="[{ 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" 
-            @touchstart ="touchstart('heat')"
-            @touchmove ="touchmove('$event')"
-            @touchend="touchend('heat')"/>
+            @click="setMode('heat')" />
           <div class="btn-name">制热</div>
         </div>
         <div
@@ -108,8 +101,7 @@
           <div 
             ref="auto" 
             :class="[ { 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" 
-            @touchstart ="touchstart('auto')"
-            @touchend="touchend('auto')"/>
+            @click="setMode('auto')"/>
           <div
             class="btn-name" >智能</div>
         </div>
@@ -119,8 +111,7 @@
           <div 
             ref="wind" 
             :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" 
-            @touchstart ="touchstart('wind')"
-            @touchend="touchend('wind')"/>
+            @click="setMode('wind')"/>
           <div class="btn-name">送风</div>
         </div>
         <div
@@ -129,8 +120,7 @@
           <div 
             ref="dehumidify" 
             :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" 
-            @touchstart ="touchstart('dehumidify')"
-            @touchend.prevent="touchend('dehumidify')"/>
+            @click="setMode('dehumidify')"/>
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -410,13 +400,13 @@ export default {
       // this.$refs[val].classList.add('bgcEnd')
       this.$refs[val].classList.add('animateEnd')
 
-      if(val=='switchStatus'){
-        this.setSwitch()
-      }else if(val=='add'||val=='reduce'){
-        this.setTemperature(step)
-      }else{
-        this.setMode(val)
-      }
+      // if(val=='switchStatus'){
+      //   this.setSwitch()
+      // }else if(val=='add'||val=='reduce'){
+      //   this.setTemperature(step)
+      // }else{
+      //   this.setMode(val)
+      // }
       // this.$refs[val].classList.add('yellowExtend')
     },
     offset(r,d) {//根据弧度与距离计算偏移坐标
@@ -493,15 +483,15 @@ export default {
             y : y - obj.offsetTop  + (document.body.scrollTop || document.documentElement.scrollTop) -145
         }
     },
-    // reset() {
-    //   this.$nextTick(() => {
-    //     // this.$refs.canvas.init()
-    //   })
-    // },
+
     // 开关机
-    setSwitch(){
+    setSwitch(val){
       if (this.isOffline) return
       HdSmart.UI.vibrate()
+      this.touchstart(val)
+      setTimeout(() => {
+        this.touchend(val)
+      }, 150);
         this.moveEnd = false
       let switchstatus = ''
       if (this.deviceAttrs.switchStatus=='on') {
@@ -515,6 +505,10 @@ export default {
     setMode(val) {
       if (val == this.deviceAttrs.mode || this.isClose ||this.isOffline) return
       HdSmart.UI.vibrate()
+      this.touchstart(val)
+      setTimeout(() => {
+        this.touchend(val)
+      }, 150);
       if (this.deviceAttrs.temperature == 300 && this.deviceAttrs.speed == 'low' && val == 'cold') {
         return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
       }
@@ -541,11 +535,15 @@ export default {
         }
         })
     },
-    setTemperature(step) {
+    setTemperature(val,step) {
       console.log(step,'温度')
       
       if (this.isOffline||this.isClose) return
       HdSmart.UI.vibrate()
+      this.touchstart(val)
+      setTimeout(() => {
+        this.touchend(val,temp)
+      }, 150);
         this.moveEnd = false
         this.setTemperatureDis = true
       // 送风模式不能设置温度

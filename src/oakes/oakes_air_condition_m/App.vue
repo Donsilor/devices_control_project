@@ -49,15 +49,13 @@
             ref="reduce"
             :disabled="setTemperatureDis"
             class="control reduce btn"
-            @touchstart ="touchstart('reduce')"
-            @touchend="touchend('reduce',-10)" 
+             @click="setTemperature('reduce',-10)"
           />
           <button
             ref="add"
             :disabled="setTemperatureDis"
             class="control add btn"
-            @touchstart ="touchstart('add')"
-            @touchend="touchend('add',10)" 
+            @click="setTemperature('add',10)"
           />
         </div>
       </div>
@@ -74,61 +72,49 @@
         <div
           ref="switchStatus"
           :class="[{'active': loaclAttr.switchStatus == 'on'&&!isOffline},'btn-start']"
-          @click="setSwitch"
-          @touchstart ="touchstart('switchStatus')"
-          @touchend="touchend('switchStatus')"/>
+          @click="setSwitch('switchStatus')"/>
       </div>
       <div
         class="panel-btn center">
         <div
-          class="btn-wrap"
-          @click="setMode('cold')">
+          class="btn-wrap">
           <div
             ref="cold"
             :class="[{ 'active': loaclAttr.mode == 'cold' && loaclAttr.switchStatus == 'on'&&!isOffline }, 'btn btn-cold center']"
-            @touchstart ="touchstart('cold')"
-            @touchend="touchend('cold')"/>
+            @click="setMode('cold')"/>
           <div class="btn-name">制冷</div>
         </div>
         <div
-          class="btn-wrap"
-          @click="setMode('heat')">
+          class="btn-wrap">
           <div
             ref="heat"
             :class="[ { 'active': loaclAttr.mode == 'heat' && loaclAttr.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']"
-            @touchstart ="touchstart('heat')"
-            @touchend="touchend('heat')"/>
+            @click="setMode('heat')"/>
           <div class="btn-name">制热</div>
         </div>
         <div
-          class="btn-wrap"
-          @click="setMode('auto')">
+          class="btn-wrap">
           <div
             ref="auto"
             :class="[ { 'active': loaclAttr.mode == 'auto' && loaclAttr.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']"
-            @touchstart ="touchstart('auto')"
-            @touchend="touchend('auto')"/>
+            @click="setMode('auto')"/>
           <div
             class="btn-name" >智能</div>
         </div>
         <div
-          class="btn-wrap"
-          @click="setMode('wind')">
+          class="btn-wrap">
           <div
             ref="wind"
             :class="[{ 'active': loaclAttr.mode == 'wind' && loaclAttr.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']"
-            @touchstart ="touchstart('wind')"
-            @touchend="touchend('wind')"/>
+            @click="setMode('wind')"/>
           <div class="btn-name">送风</div>
         </div>
         <div
-          class="btn-wrap"
-          @click="setMode('dehumidify')">
+          class="btn-wrap">
           <div
             ref="dehumidify"
             :class="[{ 'active': loaclAttr.mode == 'dehumidify' && loaclAttr.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']"
-            @touchstart ="touchstart('dehumidify')"
-            @touchend="touchend('dehumidify')"/>
+            @click="setMode('dehumidify')"/>
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -427,22 +413,10 @@ export default {
       }
       let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
-        // btn[i].classList.remove('active')
         btn[i].classList.remove('animateStart')
         btn[i].classList.remove('bgcStart')
-        // btn[i].classList.remove('yellowExtend')
       }  
-      // this.$refs[val].classList.add('bgcEnd')
       this.$refs[val].classList.add('animateEnd')
-
-      if(val=='switchStatus'){
-        this.setSwitch()
-      }else if(val=='add'||val=='reduce'){
-        this.setTemperature(step)
-      }else{
-        this.setMode(val)
-      }
-      // this.$refs[val].classList.add('yellowExtend')
     },
         offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
@@ -543,9 +517,13 @@ export default {
     //    })
     // },
     // 开关机
-    setSwitch(){
+    setSwitch(val){
       if (this.isOffline) return
       HdSmart.UI.vibrate()
+            this.touchstart(val)
+      setTimeout(() => {
+        this.touchend(val)
+      }, 150);
       let switchstatus = ''
       if (this.loaclAttr.switchStatus=='on') {
         switchstatus = 'off'
@@ -568,6 +546,10 @@ export default {
     setMode(val) {
       if(this.isClose||this.isOffline) return
       HdSmart.UI.vibrate()
+            this.touchstart(val)
+      setTimeout(() => {
+        this.touchend(val)
+      }, 150);
       if (val == this.loaclAttr.mode ) return
       this.controlDevice('mode', val)
        .then((res) => {
@@ -583,9 +565,13 @@ export default {
         }
        })
     },
-    setTemperature(step) {
+    setTemperature(val,step) {
       if (this.isOffline||this.isClose) return
       HdSmart.UI.vibrate()
+            this.touchstart(val)
+      setTimeout(() => {
+        this.touchend(val,temp)
+      }, 150);
       this.setTemperatureDis = true
       if(this.loaclAttr.mode == 'auto') {
         this.setTemperatureDis = false
