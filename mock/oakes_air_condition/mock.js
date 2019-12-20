@@ -31,7 +31,7 @@ var res = {
         manufactureId: 'tcl',
         deviceCategory: 'airconditioner.new',
         deviceSubCategory: 0,
-        connectivity: 'offline',
+        connectivity: 'online',
         timer_switch:'off',
         timer_value:0,
         wind_up:'off',

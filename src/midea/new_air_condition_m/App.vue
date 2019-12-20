@@ -98,7 +98,7 @@
             ref="auto" 
             :class="[ { 'active': deviceAttrs.mode == 'auto'&&deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" 
             @click="setMode('auto')"
-            />
+          />
           <div
             class="btn-name" >智能</div>
         </div>
@@ -107,8 +107,8 @@
           <div 
             ref="wind" 
             :class="[{ 'active': deviceAttrs.mode == 'wind'&&deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" 
-           @click="setMode('wind')"
-            />
+            @click="setMode('wind')"
+          />
           <div class="btn-name">送风</div>
         </div>
         <div
@@ -117,7 +117,7 @@
             ref="dehumidify" 
             :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&&deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-dehumidify center']" 
             @click="setMode('dehumidify')"
-            />
+          />
           <div class="btn-name">除湿</div>
         </div>
         <div
@@ -462,7 +462,7 @@ export default {
             this.touchstart(val)
       setTimeout(() => {
         this.touchend(val)
-      }, 150);
+      }, 150)
         this.moveEnd = false
       let switchstatus = ''
       if (this.deviceAttrs.switchStatus=='on') {
@@ -479,7 +479,7 @@ export default {
             this.touchstart(val)
       setTimeout(() => {
         this.touchend(val)
-      }, 150);
+      }, 150)
       if (val == this.deviceAttrs.mode) return
         this.moveEnd = false
 
@@ -510,7 +510,7 @@ export default {
             this.touchstart(val)
       setTimeout(() => {
         this.touchend(val,temp)
-      }, 150);
+      }, 150)
       // 送风模式不能设置温度
         this.moveEnd = false
         this.setTemperatureDis = true

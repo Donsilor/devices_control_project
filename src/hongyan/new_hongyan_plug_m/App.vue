@@ -7,49 +7,52 @@
         :scroll="true"
         page-class=".page"
         bak-color="#000"/>
-        <StatusTip v-show="device.device_uuid"/>
+      <StatusTip v-show="device.device_uuid"/>
       <div class="main center">
         <div class="bg">
           <div class="circle">
+            <!-- <div class="dotOne"/>
+            <div class="dotTwo"/> -->
             <div class="status">
-              <div class="switchStatus">{{ deviceAttrs.switch=='on'?'通电中':'断电中' }}</div>
-              <div 
-                class="electricity">
-                <div class="electric">
-                  <span>电流</span>
-                  <div 
-                    v-if="!isClose&& deviceAttrs.connectivity == 'online'"
-                    class="current">&nbsp;{{ deviceAttrs.current.toFixed(1) }}A |</div>
-                  <div 
-                    v-else 
-                    class="current1">ㅡㅡA |</div>
-                </div>
-                <div class="electric">
-                  <span> &nbsp;电压</span>
-                  <div 
-                    v-if="!isClose&& deviceAttrs.connectivity == 'online'"
-                    class="current">&nbsp;{{ deviceAttrs.voltage?deviceAttrs.voltage.toFixed(1):220 }}V</div>
-                  <div 
-                    v-else 
-                    class="current1">ㅡㅡV</div>
-                </div>
+              <div class="electric">
+                <span>实时电流</span>
+                <div 
+                  v-if="!isClose&& deviceAttrs.connectivity == 'online'"
+                  class="current">{{ deviceAttrs.current.toFixed(1) }}</div>
+                <div 
+                  v-else 
+                  class="current1">ㅡㅡ</div>
+              </div>
+              <div class="voltage">
+                <span> 实时电压</span>
+                <span 
+                  v-if="!isClose&& deviceAttrs.connectivity == 'online'"
+                  class="current">
+                  {{ deviceAttrs.voltage?deviceAttrs.voltage.toFixed(1):220 }}V
+                </span>
+                <span 
+                  v-else 
+                  class="current1">ㅡㅡV</span>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <!-- 插座状态 -->
+      <div class="switchStatus">{{ deviceAttrs.switch=='on'?'通电中':'已断电' }}</div>
       <!-- 开关 -->
       <div
         class="starting">
         <div
+          ref="starting"
           :class="[{'active': deviceAttrs.switch == 'on'&&!isOffline},'btn btn-start']"
-          @click="setSwitch" />
+          @click="setSwitch('starting')" />
       </div>
       <div class="bottom">
         <div class="Charging-protection">
-          <div>童锁</div>
+          <div>禁用设备开关</div>
           <div
-            style="z-index: 999;">
+            style="z-index: 100;">
             <input
               :class="['switch switch-anim']"
               :checked="lockVal"
@@ -114,12 +117,25 @@ export default {
     //   }
     //   this.controlDevice("usb", usbStatus)
     // },
-    setSwitch(){
+      touchstart(val) {
+       this.$refs[val].classList.remove('active')
+      this.$refs[val].classList.add('animateStart')
+     
+      this.$refs[val].classList.add('yellowExtend')
+    },
+    touchend(val){ 
+      this.$refs[val].classList.add('animateEnd')
+    },
+    setSwitch(val){
       if (this.isOffline) return
       HdSmart.UI.vibrate()
       if (this.deviceAttrs.child == 'on') {
-         return HdSmart.UI.toast('请先关闭童锁')
+         return HdSmart.UI.toast('请停止禁用开关')
       }
+      this.touchstart(val)
+      setTimeout(() => {
+        this.touchend(val)
+      }, 150)
       let switchstatus = ''
       if (this.deviceAttrs.switch=='on') {
         switchstatus = 'off'
@@ -217,6 +233,17 @@ export default {
         left: 50%;
         margin-left: -255px ;
         margin-top: -255px ;
+        // .dotOne,.dotTwo{  
+        //   position: absolute;
+        //   width: 20px;
+        //   height: 20px;
+        //   border-radius: 50%;
+        //   background: rgba(0, 0, 0, .5);
+        // }
+        // .dotOne{
+        //   right: 40px;
+        //   top: 90px;
+        // }
       }
       .status{
         width: 420px;
@@ -231,35 +258,83 @@ export default {
         align-items: center;
         flex-direction: column;
         color: #000;
-        .switchStatus{
-          font-size: 86px;
-          margin-top: 90px;
-        }
-        .electricity {
-          width: 300px;;
-          height:33px;
-          display:flex;
-          justify-content: center;
-          color: #000;
-          text-align: center;
-          // padding: 0 100px;
-          margin-top: 60px;
-          .electric {
+        .electric {
             display:flex;
             justify-content: center;
+            flex-direction: column;
+            font-family: PingFangSC-Light; 
+            color: #000000;
+            text-align: center;
             >span{
               font-size: 24px;
             }
             > div {
               // height: 90px;
-              font-size: 24px;
+              font-size: 77px;
               position: relative;
-              // margin-top: 40px;
+            }
+            .current{
+              margin: 20px 0 40px 0;
+              font-size: 144px;
+              font-family: PingFangSC-Light; 
+              &::before{
+                position: absolute;
+                right: -15px;
+                content: "A";
+                font-size: 12px;
+              }
+            }
+            .current1{
+              margin: 50px 0;
+              &::before{
+                position: absolute;
+                right: -20px;
+                top: -30px;
+                content: "A";
+                font-size: 12px;
+              }
             }
           }
-        }
+          .voltage{
+            font-family: PingFangSC-Light;
+            font-size: 24px;
+            color: #000000;
+            text-align: center;
+          }
+        // .electricity {
+        //   width: 300px;;
+        //   height:33px;
+        //   display:flex;
+        //   justify-content: center;
+        //   color: #000;
+        //   text-align: center;
+        //   // padding: 0 100px;
+        //   margin-top: 60px;
+        //   .electric {
+        //     display:flex;
+        //     justify-content: center;
+        //     >span{
+        //       font-size: 24px;
+        //     }
+        //     > div {
+        //       // height: 90px;
+        //       font-size: 24px;
+        //       position: relative;
+        //       // margin-top: 40px;
+        //     }
+        //   }
+        // }
       }
     }
+  }
+  .switchStatus{
+    font-family: PingFangSC-Light;
+    font-size: 28px;
+    color: #000000;
+    text-align: center;
+    width: 100%;
+    height: 40px;
+    margin-top: 56px;
   }
     .switch {
     width: 74px;
@@ -311,7 +386,7 @@ export default {
       transition: left 0.3s;
   };
     .starting{
-    margin-top: 100px;
+    margin-top: 136px;
      .btn-start{
         z-index: 999;
         box-sizing: border-box;
@@ -323,7 +398,8 @@ export default {
         border-radius: 50%;
         position: relative;
         &.active{
-          background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+          // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+          background: #E1B96E;
         }
         &::before{
           content: "";
@@ -336,6 +412,7 @@ export default {
           background-size: 100% 100%;
           width: 48px;
           height: 48px;
+          z-index: 999;
         }
      }
   }
@@ -367,16 +444,22 @@ export default {
   // }
 }
   /*********** 按钮 ***********/
+  &.close{
+    z-index: 99;
+  }
+  &.offline{
+    z-index: 200;
+  }
   &.close,
   &.offline {
     &:before {
       content: "";
       position: fixed;
-      top: 64PX;
+      top: 0;
       left: 0;
       bottom: 0;
       right: 0;
-      z-index: 999;
+      
       width: 100%;
       // background: rgba(0, 0, 0, 0.1);
     }
@@ -394,6 +477,86 @@ export default {
           }
         }
       }
+  }
+
+.animateStart::before{
+  animation: scaleStart 0.15s;
+       animation-fill-mode : forwards;
+
+}
+@keyframes scaleStart {
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(0.6);
+  }
+}
+
+.animateEnd::before{
+  animation: scaleEnd 0.3s;
+       animation-fill-mode : forwards;
+
+}
+@keyframes scaleEnd {
+  0%{
+    transform: scale(0.6);
+  }
+  66%{
+    transform: scale(1.2);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+      background: #E1B96E;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 0%;height: 0%;}
+    100% {width: 100%;height: 100%;}
+  }
+
+
+  .bgcStart{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: bgcStart .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes bgcStart {
+    0% {width: 100%;height: 100%;}
+    100% {width: 110%;height: 110%;}
   }
 
 
