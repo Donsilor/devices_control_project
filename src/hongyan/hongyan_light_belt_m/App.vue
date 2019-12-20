@@ -1,12 +1,14 @@
 <template>
   <div class="body">
-    <div :class="[{'offline': isOffline }, {'close': deviceAttrs.switch_status == 'off'}, 'page']">
+    <div :class="[{'offline': isOffline || networkStatus == -1 }, {'close': deviceAttrs.switch_status == 'off'}, 'page']">
       <!-- 顶部 -->
-      <topbar
+      <new-topbar
         :title="device.device_name"
-        :shutdown="deviceAttrs.switch_status == 'on' || isOffline == true"
+        :room="device.room_name"
+        :scroll="true"
         bak-color="#000"
-        @shutdownCallback="shutdowncallback('off')" />
+        page-class=".page" />
+      <StatusTip/>
       <!-- <color-picker
         :rgb-val="getRgb"
         :class="{'off': deviceAttrs.switch_status == 'off'}"
@@ -14,27 +16,31 @@
         @rgb="rgb"
       /> -->
       <draw
-        style="textAlign: center"
+        :class="[{'draw': deviceAttrs.switch_status != 'on'}]"
+        style="textAlign: center;marginTop: 8%;"
+        @rgb="rgb"
       />
       <!-- 开关 -->
       <div
-        v-show="deviceAttrs.switch_status == 'off'"
         class="starting">
         <div
-          class="btn btn-start"
-          @click="shutdowncallback('on')" />
-        <div class="btn-name">开机</div>
+          ref="setSwitch"
+          :class="[{ 'active': deviceAttrs.switch_status == 'on' && !isOffline && networkStatus != -1 }, 'btn btn-start']"
+          @click="shutdowncallback"
+          @touchstart ="touchstart('setSwitch')"
+          @touchend="touchend('setSwitch')" />
+          <!-- <div class="btn-name">开机</div> -->
       </div>
       <div
-        v-show="deviceAttrs.switch_status == 'on'"
-        class="footer">
+        :class="['footer', {'footer-close': deviceAttrs.switch_status != 'on'}]">
         <div class="txt">
-          亮度 {{ brightness*10 }}%
+          亮度 <div style="float:right">{{ brightness*10 }}%</div>
         </div>
         <div class="range">
           <input
             :class="[{'range-zero': rangeColor=='on' || doorValue=='off'}]"
             :value="brightness"
+            :disabled="deviceAttrs.switch_status != 'on' || isOffline || networkStatus == -1"
             type="range"
             min="0"
             max="10"
@@ -66,19 +72,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isClose', 'isOffline']),
+    ...mapGetters(['isClose', 'isOffline', 'networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
   },
   watch: {
-    'deviceAttrs.r'() {
-      this.getRgb = `rgba(${this.deviceAttrs.r}, ${this.deviceAttrs.g}, ${this.deviceAttrs.b}, 1)`
-    },
-    'deviceAttrs.g'() {
-      this.getRgb = `rgba(${this.deviceAttrs.r}, ${this.deviceAttrs.g}, ${this.deviceAttrs.b}, 1)`
-    },
-    'deviceAttrs.b'() {
-      this.getRgb = `rgba(${this.deviceAttrs.r}, ${this.deviceAttrs.g}, ${this.deviceAttrs.b}, 1)`
-    },
+    // 'deviceAttrs.r'() {
+    //   this.getRgb = `rgba(${this.deviceAttrs.r}, ${this.deviceAttrs.g}, ${this.deviceAttrs.b}, 1)`
+    // },
+    // 'deviceAttrs.g'() {
+    //   this.getRgb = `rgba(${this.deviceAttrs.r}, ${this.deviceAttrs.g}, ${this.deviceAttrs.b}, 1)`
+    // },
+    // 'deviceAttrs.b'() {
+    //   this.getRgb = `rgba(${this.deviceAttrs.r}, ${this.deviceAttrs.g}, ${this.deviceAttrs.b}, 1)`
+    // },
     'deviceAttrs.level'() {
       this.brightness = this.deviceAttrs.level / 10
       var width = (91.3 / 10 * this.brightness) +"%"
@@ -92,10 +98,27 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    touchstart(val) {
+      this.$refs[val].classList.add('yellowExtend')
+      this.$refs[val].classList.remove('animate')
+      this.$refs[val].classList.add('animate1')
+      HdSmart.UI.vibrate()
+    },
+    touchend(val) {
+      this.$refs[val].classList.remove('animate1')
+      this.$refs[val].classList.add('animate')
+      this.shutdowncallback()
+    },
     // 开关机
-    shutdowncallback(val){
-      if (this.isOffline) return
-      this.controlDevice('switch', val)
+    shutdowncallback(){
+      if (this.isOffline || this.networkStatus == -1) return
+      let switchStatus = ''
+      if (this.deviceAttrs.switch_status == 'on') {
+        switchStatus = 'off'
+      } else {
+        switchStatus = 'on'
+      }
+      this.controlDevice('switch', switchStatus)
     },
     rgb(color){
       this.color = color
@@ -113,6 +136,7 @@ export default {
       this.brightness = e.target.value
     },
     changeSpeed(e) {
+      if(this.deviceAttrs.switch_status != 'on' || this.isOffline || this.networkStatus == -1) return
       this.brightness = e.target.value
       this.controlDevice('level', this.brightness * 10)
     },
@@ -160,20 +184,34 @@ export default {
 @imgPath1: 'base/oakes_air_condition/assets';
 @imgPath: 'base/honghan_switch/assets';
 @100: 100% 100%;
-.body {
-  min-height: 100%;
-  height: 100vh;
-  touch-action: manipulation;
-  background: url('~@lib/@{imgPath}/img_bg_01@2x.png');
-  background-size: 100% 100%;
-}
+// .body {
+//   min-height: 100%;
+//   height: 100vh;
+//   touch-action: manipulation;
+//   background: url('~@lib/@{imgPath}/img_bg_01@2x.png');
+//   background-size: 100% 100%;
+// }
 .page {
-  overflow-x: hidden;
-  height: 100vh;
+  // overflow-x: hidden;
+  // height: 100vh;
   // position: relative;
-
+  &::before{
+    content: "";
+    background-image: url('~@lib/@{imgPath}/bg02.png');
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
   &.filter {
     filter: blur(12px);
+  }
+  .draw {
+    opacity: 0.5;
   }
   .main {
     margin-top: 10%;
@@ -183,33 +221,43 @@ export default {
     }
   }
   &.offline {
+    overflow: hidden;
     &:before {
       content: "";
       position: fixed;
-      top: 64px;
+      top: 0;
       left: 0;
       bottom: 0;
       right: 0;
       z-index: 999;
       width: 100%;
     }
+    .starting {
+      .btn-start {
+        opacity: 0.5;
+      }
+    }
   }
   .footer {
-    position: fixed;
+    // position: fixed;
     width: 100%;
-    bottom: 20%;
+    // bottom: 20%;
+    margin-bottom: 30px;
     .txt {
-      font-size: 28px;
+      font-size: 24px;
       color: #000000;
       letter-spacing: 0;
       width: 80%;
       margin: 40px auto;
     }
   }
+  .footer-close {
+    opacity: 0.2;
+  }
   .starting {
-    margin-top: 15vh;
+    margin-top: 10vh;
      .btn-start{
-        z-index: 999999;
+        z-index: 9999;
         box-sizing: border-box;
         margin: 0 auto;
         width: 120px;
@@ -221,6 +269,7 @@ export default {
         &::before{
           content: "";
           position: absolute;
+          z-index: 100;
           left: 50%;
           top: 50%;
           margin-left: -22px;
@@ -229,6 +278,12 @@ export default {
           background-size: 100% 100%;
           width: 44px;
           height: 44px;
+        }
+        &.active {
+          background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+          &::before {
+            background-image: url('~@lib/@{imgPath1}/dakai3@2x.png');
+          }
         }
      }
       .btn-name{
@@ -259,15 +314,41 @@ export default {
         // background-color: #bdc3c7;
         background: rgba(101,101,101,0.3);
         width: 100%;
-        height: 10px;border-radius: 5px;
+        height: 1px;
+        border-radius: 5px;
         margin: 0 auto;outline: 0;
+        &::before {
+            content: "";
+            position: absolute;
+            top: -24px;
+            left: -50px;
+            display: block;
+            width: 48px;
+            height: 48px;
+            background-image: url("~@lib/@{imgPath}/btn_ac_on_zron@2x.png");
+            background-size: 100% 100%;
+          }
+          &::after {
+            content: "";
+            position: absolute;
+            top: -24px;
+            right: -55px;
+            display: block;
+            width: 48px;
+            height: 48px;
+            background-image: url("~@lib/@{imgPath}/btn_ac_on_oneh@2x.png");
+            background-size: 100% 100%;
+          }
       }
       input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none;
-        background-color: #000;
-        width: 76px;
+        background-color: transparent;
+        border: 1px solid #000;
+        // width: 76px;
+        // height: 52px;
+        width: 52px;
         height: 52px;
-        border-radius: 25px;
+        border-radius: 50%;
         // border: 2px solid white;
         cursor: pointer;
         // transition: 0.3s ease-in-out;
@@ -297,11 +378,101 @@ export default {
         top: 0;
         left: 0;
         background: #000;
-        height: 10px;
+        height: 1px;
         border-radius: 5px 0 0 5px;
         }
         .rang_bak {
           background: #EDEDED;
         }
+        // .range-zero {
+        //   &::before {
+        //     content: "";
+        //     display: block;
+        //     width: 48px;
+        //     height: 48px;
+        //     background-image: url("~@lib/@{imgPath}/btn_ac_on_zron@2x.png");
+        //     background-size: 100% 100%;
+        //   }
+        //   &::after {
+        //     content: "";
+        //     display: block;
+        //     width: 48px;
+        //     height: 48px;
+        //     background-image: url("~@lib/@{imgPath}/btn_ac_on_oneh@2x.png");
+        //     background-size: 100% 100%;
+        //   }
+        // }
+.animate::before{
+  animation: scale 0.3s;
+}
+.animate1::before{
+  animation: scale1 0.15s;
+  animation-fill-mode : forwards;
+}
+@keyframes scale1 {
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(0.6);
+  }
+}
+@keyframes scale {
+  0%{
+    transform: scale(0.6);
+  }
+  66%{
+    transform: scale(1.2);
+  }
+  100%{
+  transform: scale(1);
+  }
+}
 
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .15s 1;
+      animation-fill-mode: forwards;
+      animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 0%;height: 0%;}
+
+    100% {width: 100%;height: 100%;}
+  }
+    .bgcStart{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: bgcStart .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes bgcStart {
+    0% {width: 100%;height: 100%;}
+    100% {width: 110%;height: 110%;}
+  }
 </style>

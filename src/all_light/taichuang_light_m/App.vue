@@ -21,8 +21,12 @@
           <div
             :style="{opacity: brightness/100}"
             :class="[{'animation1': !isClose }, rotateClass, 'bg']" />
-          <div :class="['small', {'none': ThirddeviceAttrs.sub_device_category == '01'}]"/>
-          <div :class="['big', {'none': ThirddeviceAttrs.sub_device_category == '01'}]"/>
+          <div
+            v-show="ThirddeviceAttrs.sub_device_category != '01'"
+            :class="['small', {'none': ThirddeviceAttrs.sub_device_category == '01'}]"/>
+          <div
+            v-show="ThirddeviceAttrs.sub_device_category != '01'"
+            :class="['big', {'none': ThirddeviceAttrs.sub_device_category == '01'}]"/>
         </div>
         <canvas
           v-show="ThirddeviceAttrs.sub_device_category != '01'"
@@ -158,7 +162,9 @@ export default {
       this.draw(`${((this.deviceAttrs.level/2.55)+50)/200}`)
     },
     'brightness'() {
-      HdSmart.UI.vibrate()
+      if(this.ThirddeviceAttrs.sub_device_category != '01') {
+        HdSmart.UI.vibrate()
+      }
     }
   },
   created() {

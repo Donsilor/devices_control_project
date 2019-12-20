@@ -36,7 +36,7 @@ let res = {
         "chan_avatar": "123dfafga "
       }
     ],
-    "connectivity": "offline"
+    "connectivity": "online"
 }
 
 export function generateSnapShot() {

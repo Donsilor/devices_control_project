@@ -1,9 +1,13 @@
 <template>
   <div class="body">
-    <div :class="[{ 'offline': isOffline }, 'page']">
+    <div :class="[{ 'offline': isOffline || networkStatus == -1 }, 'page']">
       <newtopbar
         :title="device.device_name"
+        :room="device.room_name"
+        :scroll="true"
+        page-class=".page"
         bak-color="#000" />
+      <StatusTip/>
       <!-- 主体部分 -->
       <div class="main">
         <div class="line"/>
@@ -271,7 +275,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isOffline']),
+    ...mapGetters(['isOffline', 'networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
     progress1() {
       let x = +this.deviceAttrs.temperature_container
@@ -574,6 +578,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@imgPath3: 'base/honghan_switch/assets';
 .body {
   min-height: 100%;
   touch-action: none;
@@ -584,7 +589,7 @@ export default {
   overflow-x: hidden;
   position: relative;
   // background: #e5faff;
-  background-image: url(~@lib/base/fridge/assets/img_bg_01@2x.png);
+  background-image: url('~@lib/@{imgPath3}/bg02.png');
   background-size: 100% 100%;
   .main{
     // margin: 40px 80px;

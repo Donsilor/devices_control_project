@@ -14,7 +14,7 @@
         ref="statusbar"
         :style="{height:status_bar_height+'px'}"
         class="statusbar" />
-      <!-- <div 
+      <!-- <div
         ref="statusbarBg"
         :style="{height:status_bar_height+navigation_bar_height+'px'}"
         class="statusbarBg"/> -->
@@ -74,11 +74,11 @@
           :class="['header-bottom-right', styleName]"
           :disabled="(styleName && Object.keys(styleName).indexOf('no-work') > -1) ? true : false"
           @click="shutdownCallback">
-          <p 
-            v-if="!switchimg" 
+          <p
+            v-if="!switchimg"
             class="header-bottom-right-p"/>
-          <p 
-            v-if="switchimg=='tv'" 
+          <p
+            v-if="switchimg=='tv'"
             class="header-bottom-right-tvimg"/>
         </button>
         <!-- <slot /> -->
@@ -234,6 +234,7 @@ export default {
     },
 
     scrollfn(){
+      let _this = this
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       this.clientHeight = document.documentElement.clientHeight || document.body.clientHeight
       this.scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
@@ -257,12 +258,14 @@ export default {
       this.$refs.title.style.bottom = b + 'px'
       this.$refs.title.style.left = l + 'px'
       this.$refs.title.style.fontSize = f + 'px'
-      
+
       if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
         this.$refs.title.style.bottom = (h/44)*h+ 'px'
         this.$refs.title.style.left = (w/44)*h + 'px'
         this.$refs.title.style.fontSize = (-6/44)*h+24 + 'px'
       }
+      _this.$emit('hscroll', h)
+      _this.$emit('hscrolltop', _this.scrollTop)
       if( this.scrollTop>=h ){
         pageClass.classList.add('scroll44')
         status_bar_fixed&&(status_bar_fixed.style.top  =fixedTop +"px")

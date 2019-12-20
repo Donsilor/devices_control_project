@@ -12,6 +12,7 @@
 </template>
 
 <script>
+    import { mapGetters, mapState } from 'vuex'
     export default {
         name: "Draw",
         data() {
@@ -44,11 +45,17 @@
                       color: '#ff6b2d'
                   }
               ],
-              selectColor: 'rgba(255, 0, 0)'
+              selectColor: 'rgba(255, 0, 0)',
+              rgbValue: ''
           }
+        },
+        computed: {
+          ...mapGetters(['isClose', 'isOffline', 'networkStatus']),
+          ...mapState(['device', 'deviceAttrs']),
         },
         mounted() {
             let _this = this
+            let isMove = false
             this.canvas = document.getElementById("canvasId")
             this.ctx = this.canvas.getContext("2d")
             let width = this.canvas.width
@@ -73,34 +80,48 @@
                 start: "mousedown", move: "mousemove", end: "mouseup"
             }
             this.canvas.addEventListener(on.start, function(e) {
+                if(_this.deviceAttrs.switch_status != 'on') return
                 _this.moveFlag = true
             }, false)
 
             this.canvas.addEventListener(on.move, function(e) {
+              if(e.preventDefault){
+                  e.preventDefault()
+              }else{
+                  e.returnValue = false
+              }
+              if(_this.deviceAttrs.switch_status != 'on') return
+              isMove = true
                 if (_this.moveFlag) {
                     var k = _this.getXY(e,_this.canvas)
                     var r = Math.atan2(k.x-_this.ox, _this.oy-k.y)
                     var hd = (Math.PI+r)/(2*Math.PI)
-                    console.log('k', k)
-                    console.log('r', r)
-                    console.log('hd', hd)
+                    // console.log('k', k)
+                    // console.log('r', r)
+                    // console.log('hd', hd)
                     _this.draw(hd)
                 }
             }, false)
 
             this.canvas.addEventListener(on.end, function(e) {
+              if(_this.deviceAttrs.switch_status != 'on') return
                 _this.moveFlag = false
+                if (isMove) {
+                  _this.$emit('rgb', _this.rgbValue)
+                }
+              isMove = false
             }, false)
             this.draw(0.125)
+
         },
         methods: {
             getXY(e,obj) {
                 var et = e.touches? e.touches[0] : e
-                console.log('et', et)
+                // console.log('et', et)
                 var x = et.clientX
                 var y = et.clientY
-                console.log('x', x)
-                console.log('y', y)
+                // console.log('x', x)
+                // console.log('y', y)
                 return {
                     x : x - obj.offsetLeft + (document.body.scrollLeft || document.documentElement.scrollLeft),
                     y : y - obj.offsetTop  + (document.body.scrollTop || document.documentElement.scrollTop),
@@ -108,7 +129,7 @@
                 }
             },
             draw(n) {
-                console.log('draw的参数n', n)
+                // console.log('draw的参数n', n)
                 this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height)
                 this.ctx.strokeStyle = "#99a"
                 this.ctx.lineWidth = 20
@@ -130,15 +151,16 @@
 
 
                 var d =  this.offset(n*2*Math.PI,this.or)
-                console.log('d', d)
+                // console.log('d', d)
                 let getColor = this.ctx.getImageData((this.ox+d.x)*window.devicePixelRatio, (this.oy+d.y)*window.devicePixelRatio, 1, 1).data
                 // let getColor = this.ctx.getImageData((200+d.x), (200+d.y), 1, 1).data
                 this.selectColor = `rgba(${getColor[0]}, ${getColor[1]}, ${getColor[2]})` //
-                console.log('选中的颜色', getColor)
+                this.rgbValue = `${getColor[0]},${getColor[1]},${getColor[2]}`
+                // console.log('选中的颜色', getColor)
 
                 this.ctx.beginPath()
                 this.ctx.fillStyle = 'rgba(0, 0, 0, 0.02)'
-                this.ctx.arc(this.ox, this.oy, 106, 0, 2*Math.PI)
+                this.ctx.arc(this.ox, this.oy, 80, 0, 2*Math.PI)
                 this.ctx.fill()
                 this.ctx.fillStyle = this.selectColor //内部的灰色圆形
 
@@ -164,15 +186,15 @@
                 this.ctx.fill()
                 // 随滑动的两个圆
                 this.ctx.beginPath()
-                this.ctx.arc(this.ox + (d.x*(0.76)), this.oy +  (d.y*(0.76)) ,this.br - 8, 0, 2*Math.PI, true)
+                this.ctx.arc(this.ox + (d.x*(0.76)), this.oy +  (d.y*(0.76)) ,this.br - 12, 0, 2*Math.PI, true)
                 this.ctx.fill()
 
                 this.ctx.beginPath()
-                this.ctx.arc(this.ox + (d.x*(0.6)), this.oy +  (d.y*(0.6)) ,this.br - 14, 0, 2*Math.PI, true)
+                this.ctx.arc(this.ox + (d.x*(0.6)), this.oy +  (d.y*(0.6)) ,this.br - 16, 0, 2*Math.PI, true)
                 this.ctx.fill()
              },
             offset(r,d) {//根据弧度与距离计算偏移坐标
-                console.log('offset传入的d', d)
+                // console.log('offset传入的d', d)
                 return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
             }
         }
@@ -184,7 +206,7 @@
     /*zoom: 0.5;*/
     /* width: 300PX !important;
     height: 300PX !important; */
-    width: 600px !important;
-    height: 600px !important;
+    width: 550px !important;
+    height: 550px !important;
  }
 </style>

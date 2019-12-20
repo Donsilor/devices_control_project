@@ -1,14 +1,16 @@
 <template>
   <div class="body">
     <div
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']"
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page', {'scroll44': classTrue}]"
     >
       <NewTopBar
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
         page-class=".page"
-        bak-color="#000"/>
+        bak-color="#000"
+        @hscroll="hscroll"
+        @hscrolltop="hscrolltop"/>
       <StatusTip v-show="device.device_uuid"/>
       <div class="main center">
         <div class="wrap-circle">
@@ -49,7 +51,7 @@
             ref="reduce"
             :disabled="setTemperatureDis"
             class="control reduce btn"
-             @click="setTemperature('reduce',-10)"
+            @click="setTemperature('reduce',-10)"
           />
           <button
             ref="add"
@@ -251,6 +253,9 @@ export default {
       thermography:16,
       setTemperatureDis:false,
       moveEnd:false,
+      hscrolll: 0,
+      hscrolltopp: 0,
+      classTrue: false
     }
   },
 
@@ -313,6 +318,13 @@ export default {
     },
     "device.stateChange"(){
         this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
+    },
+    "hscrolltopp"() {
+      if(this.hscrolltopp >= this.hscrolll) {
+        this.classTrue = true
+      } else {
+        this.classTrue = false
+      }
     }
   },
   created() {
@@ -370,7 +382,7 @@ export default {
                 if(res.code == 0) {
                   this.loaclAttr.temperature = this.centigrade
                   this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
-                } 
+                }
                 if (res == null) {
                   HdSmart.UI.toast('操作失败')
                 }
@@ -383,6 +395,12 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    hscroll(val) {
+      this.hscrolll = val
+    },
+    hscrolltop(val) {
+      this.hscrolltopp = val
+    },
     touchstart(val) {
       if (val == 'switchStatus') {
         if (this.isOffline) return
@@ -397,7 +415,7 @@ export default {
         btn[i].classList.remove('animateEnd')
         btn[i].classList.remove('bgcEnd')
 
-      }  
+      }
       this.$refs[val].classList.add('animateStart')
       if(val=='add'||val=="reduce"){
         this.$refs[val].classList.add('bgcStart')
@@ -405,7 +423,7 @@ export default {
         this.$refs[val].classList.add('yellowExtend')
       }
     },
-    touchend(val,step){ 
+    touchend(val,step){
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
@@ -415,7 +433,7 @@ export default {
       for(let i=0;i<btn.length;i++){
         btn[i].classList.remove('animateStart')
         btn[i].classList.remove('bgcStart')
-      }  
+      }
       this.$refs[val].classList.add('animateEnd')
     },
         offset(r,d) {//根据弧度与距离计算偏移坐标
@@ -518,12 +536,14 @@ export default {
     // },
     // 开关机
     setSwitch(val){
+      // console.log(document.documentElement.scrollTop,'===========')
+
       if (this.isOffline) return
       HdSmart.UI.vibrate()
             this.touchstart(val)
       setTimeout(() => {
         this.touchend(val)
-      }, 150);
+      }, 150)
       let switchstatus = ''
       if (this.loaclAttr.switchStatus=='on') {
         switchstatus = 'off'
@@ -532,7 +552,7 @@ export default {
       }
       this.controlDevice('switch',switchstatus)
       .then((res) => {
-          if (res) {     
+          if (res) {
             if(res.code == 0) {
                 this.loaclAttr.switchStatus = switchstatus
             }
@@ -549,7 +569,7 @@ export default {
             this.touchstart(val)
       setTimeout(() => {
         this.touchend(val)
-      }, 150);
+      }, 150)
       if (val == this.loaclAttr.mode ) return
       this.controlDevice('mode', val)
        .then((res) => {
@@ -558,7 +578,7 @@ export default {
             this.loaclAttr.mode = val
             // this.reset()
             this.hide()
-           } 
+           }
          }
         if(res == null){
            HdSmart.UI.toast('操作失败')
@@ -571,7 +591,7 @@ export default {
             this.touchstart(val)
       setTimeout(() => {
         this.touchend(val,temp)
-      }, 150);
+      }, 150)
       this.setTemperatureDis = true
       if(this.loaclAttr.mode == 'auto') {
         this.setTemperatureDis = false
@@ -605,7 +625,7 @@ export default {
             if(res.code == 0) {
               this.loaclAttr.temperature = temp
               this.setTemperatureDis = false
-            } 
+            }
           }
         if(res == null){
            HdSmart.UI.toast('操作失败')
@@ -630,7 +650,7 @@ export default {
            if(res.code == 0) {
             this.loaclAttr[attr] = val
             this.hide()
-           } 
+           }
          }
          if(res == null){
            HdSmart.UI.toast('操作失败')

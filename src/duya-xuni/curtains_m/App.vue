@@ -5,6 +5,7 @@
       <NewTopBar
         :scroll="true"
         :title="device.device_name"
+        :show-right="false"
         bak-color="#000"/>
       <div class="main center">
         <div
@@ -58,21 +59,24 @@
           <div
             ref="btn-close"
             class="btn btn-close center"
-            @click="setClose" />
+            @touchstart ="touchstartNEW('btn-close')"
+            @touchend="touchendNEW('btn-close')" />
           <div class="btn-name">全关</div>
         </div>
         <div class="btn-wrap">
           <div
             ref="btn-pause"
             class="btn-pause btn center"
-            @click="setPause" />
+            @touchstart ="touchstartNEW('btn-pause')"
+            @touchend="touchendNEW('btn-pause')" />
           <div class="btn-name">暂停</div>
         </div>
         <div class="btn-wrap">
           <div
             ref="btn-open"
             class="btn-open btn center"
-            @click="setOpen" />
+            @touchstart ="touchstartNEW('btn-open')"
+            @touchend="touchendNEW('btn-open')" />
           <div class="btn-name">全开</div>
         </div>
       </div>
@@ -201,6 +205,21 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    touchstartNEW(val) {
+      this.$refs[val].classList.add('yellowExtend')
+      this.$refs[val].classList.remove('animate')
+      this.$refs[val].classList.add('animate1')
+      HdSmart.UI.vibrate()
+    },
+    touchendNEW(val){
+      this.$refs[val].classList.remove('animate1')
+      this.$refs[val].classList.add('animate')
+      this.$refs[val].classList.remove('bgcStart')
+      this.$refs[val].classList.remove('yellowExtend')
+      if(val == 'btn-close') return this.setClose()
+      if(val == 'btn-pause') return this.setPause()
+      if(val == 'btn-open') return this.setOpen()
+    },
     // 全开
     setOpen(){
       this.$refs['btn-open'].classList.add('active')
@@ -514,6 +533,8 @@ getStyle(obj,attr){
       flex-direction: column;
       &::before {
         content: "";
+        z-index: 100;
+        position: relative;
         display: block;
         width: 44px;
         height: 44px;
@@ -594,5 +615,78 @@ getStyle(obj,attr){
         }
       }
     }
+  }
+.animate::before{
+  animation: scale 0.3s;
+}
+.animate1::before{
+  animation: scale1 0.15s;
+  animation-fill-mode : forwards;
+}
+@keyframes scale1 {
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(0.6);
+  }
+}
+@keyframes scale {
+  0%{
+    transform: scale(0.6);
+  }
+  66%{
+    transform: scale(1.2);
+  }
+  100%{
+  transform: scale(1);
+  }
+}
+
+
+  .yellowExtend{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: yellowExtendAnimate .15s 1;
+      animation-fill-mode: forwards;
+      animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes yellowExtendAnimate {
+    0% {width: 0%;height: 0%;}
+
+    100% {width: 100%;height: 100%;}
+  }
+  .bgcStart{
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.1);
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: bgcStart .15s 1;
+       animation-fill-mode : forwards;
+       animation-timing-function: ease-out;
+      z-index: 99
+    }
+  }
+  @keyframes bgcStart {
+    0% {width: 100%;height: 100%;}
+    100% {width: 170%;height: 170%;}
   }
 </style>
