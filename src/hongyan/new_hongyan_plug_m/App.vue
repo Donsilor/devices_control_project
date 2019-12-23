@@ -16,22 +16,22 @@
             <div class="status">
               <div class="electric">
                 <span>实时电流</span>
-                <div 
+                <div
                   v-if="!isClose&& deviceAttrs.connectivity == 'online'"
                   class="current">{{ deviceAttrs.current.toFixed(1) }}</div>
-                <div 
-                  v-else 
+                <div
+                  v-else
                   class="current1">ㅡㅡ</div>
               </div>
               <div class="voltage">
                 <span> 实时电压</span>
-                <span 
+                <span
                   v-if="!isClose&& deviceAttrs.connectivity == 'online'"
                   class="current">
                   {{ deviceAttrs.voltage?deviceAttrs.voltage.toFixed(1):220 }}V
                 </span>
-                <span 
-                  v-else 
+                <span
+                  v-else
                   class="current1">ㅡㅡV</span>
               </div>
             </div>
@@ -48,7 +48,7 @@
           :class="[{'active': deviceAttrs.switch == 'on'&&!isOffline},'btn btn-start']"
           @click="setSwitch('starting')" />
       </div>
-      <div class="bottom">
+      <div class="bottom" style="position: fixed;bottom: 0;">
         <div class="Charging-protection">
           <div>禁用设备开关</div>
           <div
@@ -120,10 +120,10 @@ export default {
       touchstart(val) {
        this.$refs[val].classList.remove('active')
       this.$refs[val].classList.add('animateStart')
-     
+
       this.$refs[val].classList.add('yellowExtend')
     },
-    touchend(val){ 
+    touchend(val){
       this.$refs[val].classList.add('animateEnd')
     },
     setSwitch(val){
@@ -233,7 +233,7 @@ export default {
         left: 50%;
         margin-left: -255px ;
         margin-top: -255px ;
-        // .dotOne,.dotTwo{  
+        // .dotOne,.dotTwo{
         //   position: absolute;
         //   width: 20px;
         //   height: 20px;
@@ -262,7 +262,7 @@ export default {
             display:flex;
             justify-content: center;
             flex-direction: column;
-            font-family: PingFangSC-Light; 
+            font-family: PingFangSC-Light;
             color: #000000;
             text-align: center;
             >span{
@@ -276,7 +276,7 @@ export default {
             .current{
               margin: 20px 0 40px 0;
               font-size: 144px;
-              font-family: PingFangSC-Light; 
+              font-family: PingFangSC-Light;
               &::before{
                 position: absolute;
                 right: -15px;
@@ -386,7 +386,7 @@ export default {
       transition: left 0.3s;
   };
     .starting{
-    margin-top: 136px;
+    margin-top: 90px;
      .btn-start{
         z-index: 999;
         box-sizing: border-box;
@@ -459,7 +459,7 @@ export default {
       left: 0;
       bottom: 0;
       right: 0;
-      
+
       width: 100%;
       // background: rgba(0, 0, 0, 0.1);
     }
