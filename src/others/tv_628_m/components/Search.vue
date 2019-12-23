@@ -59,6 +59,7 @@
     <!-- 搜索建议 -->
     <div
       v-show="curpage===2"
+      ref="search_suggest"
       class="search_suggest">
       <ul>
         <li
@@ -71,6 +72,7 @@
     <!-- 搜搜历史 -->
     <div
       v-show="curpage===1&&loadState !== 'NO_DATA' " 
+      ref="search_history"
       class="search_history"
       @touchmove.prevent>
       <div class="hd">
@@ -303,7 +305,7 @@
     border: 0;
     background: rgba(0, 0, 0, 0.04);
     color: rgba(0, 0, 0, 0.5);
-    height: 30PX;
+    height: 60px;
     border-radius: 3px;
     width: 100%;
     box-sizing: border-box;
@@ -430,6 +432,7 @@
 }
 .search_suggest {
     position: absolute;
+    width: 100%;
   top: 150px;
   bottom: 0;
   overflow: scroll;
@@ -879,6 +882,12 @@ export default {
         el.onerror = null
       }
     })
+    let searchTop = this.$refs.statusbar_fexid.offsetHeight + this.$refs.search_fexid.offsetHeight + 'px'
+    this.$refs.search_result.style.top = searchTop
+    this.$refs.search_suggest.style.top = searchTop
+    this.$refs.search_history.style.top = searchTop
+
+
    
     // window.onresize = function() { // 如果当前窗口小于一开始记录的窗口高度，那就让当前窗口等于一开始窗口的高度
     //     alert('1')

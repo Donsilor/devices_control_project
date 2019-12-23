@@ -72,8 +72,11 @@
             v-if="deviceAttrs.list"
             :class="['btn-wrap', 'btn-wrap-four']"
           >
+<!--            <div-->
+<!--              :class="[{ 'active': deviceAttrs.list[0].chan_status == 'on' && deviceAttrs.list[1].chan_status == 'on' && deviceAttrs.list[2].chan_status == 'on' && deviceAttrs.list[3].chan_status == 'on' }, 'btn btn-start center']"-->
+<!--              @click="setSwitchOn('on')"/>-->
             <div
-              :class="[{ 'active': deviceAttrs.list[0].chan_status == 'on' && deviceAttrs.list[1].chan_status == 'on' && deviceAttrs.list[2].chan_status == 'on' && deviceAttrs.list[3].chan_status == 'on' }, 'btn btn-start center']"
+              :class="['btn btn-start center']"
               @click="setSwitchOn('on')"/>
             <div class="btn-name">全开</div>
           </div>
@@ -81,8 +84,11 @@
             v-if="deviceAttrs.list"
             :class="['btn-wrap', 'btn-wrap-four']"
           >
+<!--            <div-->
+<!--              :class="[{ 'active': deviceAttrs.list[0].chan_status == 'off' && deviceAttrs.list[1].chan_status == 'off' && deviceAttrs.list[2].chan_status == 'off' && deviceAttrs.list[3].chan_status == 'off' }, 'btn btn-close center']"-->
+<!--              @click="setSwitchOff('off')"/>-->
             <div
-              :class="[{ 'active': deviceAttrs.list[0].chan_status == 'off' && deviceAttrs.list[1].chan_status == 'off' && deviceAttrs.list[2].chan_status == 'off' && deviceAttrs.list[3].chan_status == 'off' }, 'btn btn-close center']"
+              :class="['btn btn-close center']"
               @click="setSwitchOff('off')"/>
             <div class="btn-name">全关</div>
           </div>

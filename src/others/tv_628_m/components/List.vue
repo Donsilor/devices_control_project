@@ -706,6 +706,7 @@ export default {
 
         window.addEventListener("scroll", this.loadMore)
         addEventListener("scroll", this.scrollfn)
+        
         // filters
     },
     scrollfn(){
@@ -718,12 +719,12 @@ export default {
       let topbar_fixed = document.querySelector('.topbar-fixed')
       if(scrollTop>=10){
         this.$refs.filters.style.position = 'fixed'
-        this.$refs.filters.style.background = '#fff'
-        topbar_fixed.style.background = '#fff'
+        this.$refs.filters.style.background = 'rgba(255,255,255,.98)'
+        topbar_fixed.style.background = 'rgba(255,255,255,.98)'
         this.filterVisible = false
       }else{
         this.filterVisible = true
-         this.$refs.filters.style.background = ''
+        this.$refs.filters.style.background = ''
         topbar_fixed.style.background = ''
       }
     },
@@ -731,8 +732,8 @@ export default {
       let topbar_fixed = document.querySelector('.topbar-fixed')
 
        if(!this.filterVisible){
-        this.$refs.filters.style.background = '#fff'
-        topbar_fixed.style.background = '#fff'
+        this.$refs.filters.style.background = 'rgba(255,255,255,.98)'
+        topbar_fixed.style.background = 'rgba(255,255,255,.98)'
       }else{
          this.$refs.filters.style.background = ''
         topbar_fixed.style.background = ''

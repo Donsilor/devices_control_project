@@ -3,7 +3,7 @@ import { apiList } from '../app/constant'
 import * as mockData from './mock'
 
 if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
-  window.device_name = '电视'
+  window.device_name = '电视发第三方士椅枯要要厅'
   window.room_name = '客厅'
   window.status_bar_height = 40
   window.navigation_bar_height = 44

@@ -15,7 +15,7 @@ const store = new Vuex.Store({
     activeDetail: {},
     device_name: '',
     tvStatus: {
-      tvOnlineStatus: '',
+      tvOnlineStatus: 2,
       screenProjectType: 0,
       screenProjectTitle: ``
     },

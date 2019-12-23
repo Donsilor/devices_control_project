@@ -15,6 +15,7 @@
       :room="room_name"
       page-class=".page-index"
       bak-color="#000"
+      bg-color = "#fff"
       switchimg="tv"
       @shutdownCallback="cmd('rcPower')"
     />
@@ -885,7 +886,7 @@ export default {
           channel: '电影',
           list:[]
         },
-        {
+           {
           channelId: '002',
           channel: '电视剧',
           list:[]
@@ -1141,7 +1142,7 @@ export default {
             if((this.scrollTop)>= 44){
         icon_grid.style.position = 'fixed'
         icon_grid.style.top = statusbarH+newNavbarH + 'px'
-         icon_grid.style.background= '#fff'
+         icon_grid.style.background= 'rgba(255,255,255,.98)'
       }else{
         icon_grid.style.position = ''
          icon_grid.style.background = ''
@@ -1551,31 +1552,19 @@ console.log(item,'vm.scrollTopvm.scrollTop')
       console.log('11111111')
     },
     touchstart(e){
-      console.log(this.activeIndex)
       this.starX = e.changedTouches[0].clientX
-      this.starY = e.changedTouches[0].clientY
-      
+      this.starY = e.changedTouches[0].clientY  
     },
     touchend(e){
       this.endX = e.changedTouches[0].clientX
       this.endY = e.changedTouches[0].clientY
       if(Math.abs(this.endY-this.starY)>30) return
-      console.log(this.starX,this.endX)
-      if(this.endX-this.starX>50){
-        if(this.activeIndex==4){
-          this.activeIndex=0
-        }else{
-          this.activeIndex+=1
-        }
-      }
-      if(this.endX-this.starX<-50){
-           if(this.activeIndex==0){
-          this.activeIndex=4
-        }else{
+      if((this.endX-this.starX>50)&&this.activeIndex!=0){
           this.activeIndex-=1
-        }
       }
-      
+      if((this.endX-this.starX<-50)&&this.activeIndex!=4){
+          this.activeIndex+=1
+      } 
     }
   }
 }
