@@ -494,6 +494,7 @@ export default {
         this.touchend(val)
       }, 150);
       if (this.deviceAttrs.temperature == 320 && this.deviceAttrs.speed == 'low' && val == 'cold') {
+        this.setTemperatureDis = false
         return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
       }
       if (val == this.deviceAttrs.mode) return
@@ -553,6 +554,7 @@ export default {
         }
       }
       if (temp == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
+        this.setTemperatureDis = false
         return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
       }
       this.controlDevice('temperature', temp)

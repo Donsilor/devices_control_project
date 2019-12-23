@@ -1241,7 +1241,7 @@ export default {
 }
 
 .canvas {
-  width: 560PX;
+  width: 560px;
 }
 
 .animateStart1{
