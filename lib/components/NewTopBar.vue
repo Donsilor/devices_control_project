@@ -234,9 +234,6 @@ export default {
     },
 
     scrollfn(){
-      console.log(this.$refs['header-bottom'].offsetWidth/2,'w1')
-      console.log(this.$refs.title.offsetWidth/2,'w2')
-      console.log(this.$refs['header-bottom'].offsetWidth/375*20,'p')
       let _this = this
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       this.clientHeight = document.documentElement.clientHeight || document.body.clientHeight
@@ -254,8 +251,6 @@ export default {
       let fontSize = (-6/44)*this.scrollTop+24
       let headerBottomCenter = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2-(this.$refs['header-bottom'].offsetWidth/375*20)  //标题居中
       let titleLeft = (headerBottomCenter/44)*this.scrollTop
-      console.log(titleLeft,'titleLeft');
-      
       let titleMaxWidth = (-19/44)*this.scrollTop+281
       headerBottom = headerBottom>=headerBottomHeight?headerBottomHeight:headerBottom
       // titleMaxWidth =  this.scrollTop *24/44+20
