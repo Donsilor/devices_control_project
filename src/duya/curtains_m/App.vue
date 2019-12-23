@@ -203,7 +203,12 @@ export default {
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
       touchstart(val) {
-        this.$refs[val].classList.remove('animateStart','animateEnd')
+        // this.$refs[val].classList.remove('animateStart','animateEnd')
+        let btn = document.querySelectorAll('.btn')
+        for(let i=0;i<btn.length;i++){
+          btn[i].classList.remove('yellowExtend')
+          btn[i].classList.remove('animateStart','animateEnd')
+        } 
         this.$refs[val].classList.add('animateStart')
         this.$refs[val].classList.add('yellowExtend')
     },
@@ -474,8 +479,10 @@ export default {
         .leftCurtainBox{
           position: absolute;
           top: 0;
-          left: 1%;
-          width: 49%;
+          // left: 1%;
+          // width: 49%;
+          left:0;
+          width:50%;
           height: 500px;
           overflow: hidden;
           .curtainLeft{
@@ -483,6 +490,7 @@ export default {
             left: 0;
             width: 100%;
             height: 500px;
+            margin-left:1%;
             position: absolute;
           }
           .left{ 
@@ -497,14 +505,18 @@ export default {
         .rightCurtainBox{
            position: absolute;
            top: 0;
-           width: 49%;
+          //  right: 1%;
+          //  width: 49%;
+          right:0;
+          width:50%;
            height: 500px;
-           right: 1%;
            overflow: hidden;
           .curtainRight{
             top: 0;
+            right:0;
             width: 100%;
             height: 500px;
+            margin-right:1%;
             position: absolute;
           }
           .right{ 

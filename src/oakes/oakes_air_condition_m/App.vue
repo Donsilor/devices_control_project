@@ -459,7 +459,7 @@ export default {
           }else if(this.loaclAttr.mode == 'cold'){
             console.log('cold111')
             this.ctx.strokeStyle = "#008CDA"
-          }else{
+          }else if(this.deviceAttrs.mode=='dehumidify'){
             console.log('else')
             this.ctx.strokeStyle = "#E1B96E"
           }
@@ -493,7 +493,7 @@ export default {
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
       // 关机显示
-      if (this.loaclAttr.switchStatus=='on'&&!this.isOffline) {
+      if (this.loaclAttr.switchStatus=='on'&&!this.isOffline&&this.deviceAttrs.mode!=='wind'&&this.deviceAttrs.mode!=='auto') {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
       }else{
         //开机显示
@@ -606,6 +606,7 @@ export default {
       // 最小温度
       if (temp < MIN_TEMP) {
         if (this.loaclAttr.temperature == MIN_TEMP) {
+          this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最低')
         } else {
           temp = MIN_TEMP
@@ -614,6 +615,7 @@ export default {
       // 最大温度
       if (temp > MAX_TEMP) {
         if (this.loaclAttr.temperature == MAX_TEMP) {
+          this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最高')
         } else {
           temp = MAX_TEMP
