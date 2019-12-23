@@ -35,10 +35,19 @@ export default {
 
     }
   },
+  mounted(){
+     window.addEventListener("popstate", this.goback, false)
+  },
+  destroyed(){
+    window.removeEventListener("popstate", this.goback)
+  },
   methods:{
     cmd(name) {
       service.onClickEvent(name)
     },
+    goback(){
+       HdSmart.UI.popWindow()
+    }
     // fn(){
     //    let obj = this.$store.state.tvStatus
     //   obj.tvOnlineStatus = 1
