@@ -819,8 +819,8 @@ export default {
             position: absolute;
             top: 0;
             left: 0;
-            width: 560PX;
-            height: 560PX;
+            width: 560px;
+            height: 560px;
         }
     }
   }
@@ -1234,7 +1234,7 @@ export default {
   }
 }
 .canvas {
-  width: 560PX;
+  width: 560px;
 }
 
 

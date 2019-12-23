@@ -14,7 +14,7 @@ var res = {
     device_category_id: 1,
     created_at: 1516349498,
     updated_at: 1516349498,
-    device_name: '我的挂式空调厉害吗哈哈哈哈哈',
+    device_name: '挂式空调',
     room_name: '客厅',
     default_device_name: '挂式空调',
     attribute: {
