@@ -368,23 +368,31 @@
   .bottom{
     width: 100%;
     height:56px;
+    line-height: 56px;
     position: absolute;
-    bottom: 76px;
-    display: flex;
-    justify-content: space-between;
+    bottom: 60px;
+    // display: flex;
+    // justify-content: space-between;
     padding: 0 12px;
-    align-items: center;
+    // align-items: center;
     background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.5));
     .text{
       font-family: PingFangSC-Regular;
       font-size: 20px;
       color: #FFFFFF;
       font-weight: lighter;
+      float: left;
     }
     .score{
        color: #E1B96E;
+       float: left;
     }
     .play{
+      position: absolute;
+      float: right;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
       width: 36px;
       height: 36px;
       background:  url('~@lib/base/tv/assets/new/tv_btn_play.png');

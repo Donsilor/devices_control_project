@@ -263,7 +263,7 @@ export default {
       this.$refs.title.style.maxWidth = titleMaxWidth/37.5 + 'rem'
       if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
         this.$refs.title.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
-        this.$refs.title.style.left = ((headerBottomCenter/44)*headerBottomHeight)/37.5 + 'rem'
+        this.$refs.title.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
         this.$refs.title.style.fontSize = ((-6/44)*headerBottomHeight+24)/37.5 + 'rem'
       }
       _this.$emit('hscroll', headerBottomHeight)
