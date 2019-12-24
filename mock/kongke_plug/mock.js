@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 
 let res = {
-    "connectivity": "offline", //l
+    "connectivity": "online", //l
     "switch": 'open', //开关
     'openTime': 0,//预约开机时间
     'countdownOpen':'0',//延时开机时间

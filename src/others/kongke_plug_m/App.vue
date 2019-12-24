@@ -45,9 +45,8 @@
         class="panel-btn center">
         <div
           class="btn-wrap"
-          @click="setSwitch"
-          @touchstart ="touchstart('switch')"
-          @touchend="touchend('switch')">
+          @touchstart ="touchstartBtn('switch')"
+          @touchend="touchendBtn('switch')">
           <div
             ref="switch"
             :class="[{ 'btn-source': switchValue == 'close' },{ 'btn-over': switchValue == 'open' && !isOffline && networkStatus != -1} ,'btn btn-source center']" />
@@ -202,7 +201,8 @@ export default {
       openPickerH: 0,
       closeLocalTime: '',
       openLocalTime: '',
-      timeValue: ''
+      timeValue: '',
+      fastOK: false
     }
   },
   computed: {
@@ -327,10 +327,15 @@ export default {
   },
   created() {
     HdSmart.ready(() => {
+    HdSmart.UI.showLoading()
       this.getDeviceInfo()
       .then(() => {
+        HdSmart.UI.hideLoading()
+        this.fastOK = true
+        console.log(this.fastOK,'=================')
+
         this.timer = this.deviceAttrs.timer
-        console.log(this.timer)
+        // console.log(this.timer)
         this.closeLocalTime = this.deviceAttrs.timer.closeTime
         this.openLocalTime = this.deviceAttrs.timer.openTime
         if(this.deviceAttrs.delayClose) {
@@ -398,12 +403,16 @@ export default {
           }
         }
       })
+      .catch(() => {
+        HdSmart.UI.hideLoading()
+      })
       HdSmart.UI.setStatusBarColor(2)
     })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    touchstart(val) {
+    touchstartBtn(val) {
+      if(this.fastOK == false) return
       if(this.isClose && val=='switch') {
         this.$refs[val].classList.add('yellowExtend')
         this.$refs[val].classList.remove('animate')
@@ -416,7 +425,8 @@ export default {
       this.$refs[val].classList.add('animate1')
       HdSmart.UI.vibrate()
     },
-    touchend(val){
+    touchendBtn(val){
+      if(this.fastOK == false) return
       if(this.isClose && val=='switch') {
         this.$refs[val].classList.remove('animate1')
         this.$refs[val].classList.add('animate')
@@ -1297,10 +1307,9 @@ export default {
       right: 0;
       // z-index: 999;
       width: 100%;
-      opacity: 0.5;
+      // opacity: 0.5;
     }
   }
-  &.close,
   &.offline {
     // &:before {
     //   content: "";

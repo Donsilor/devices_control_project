@@ -281,6 +281,7 @@ export default {
 
 
 <style lang="less">
+*{-webkit-tap-highlight-color:transparent;}
 .scroll44{
   .status_bar_fixed{
     position: fixed

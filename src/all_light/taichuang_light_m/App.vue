@@ -22,18 +22,18 @@
             :style="{opacity: brightness/100}"
             :class="[{'animation1': !isClose }, rotateClass, 'bg']" />
           <div
-            v-show="ThirddeviceAttrs.sub_device_category != '01'"
-            :class="['small', {'none': ThirddeviceAttrs.sub_device_category == '01'}]"/>
+            v-show="modeVal != '01'"
+            :class="['small', {'none': modeVal == '01'}]"/>
           <div
-            v-show="ThirddeviceAttrs.sub_device_category != '01'"
-            :class="['big', {'none': ThirddeviceAttrs.sub_device_category == '01'}]"/>
+            v-show="modeVal != '01'"
+            :class="['big', {'none': modeVal == '01'}]"/>
         </div>
         <canvas
-          v-show="ThirddeviceAttrs.sub_device_category != '01'"
+          v-show="modeVal != '01'"
           ref="canvas"
           class="canvas"
-          width="280"
-          height="280"
+          width="480"
+          height="480"
         />
         <!-- <canvas
           v-show="isClose"
@@ -46,13 +46,13 @@
         <div class="mask3"/>
         <div class="tips">
           <span
-            v-if="!isClose && ThirddeviceAttrs.sub_device_category != '01'"
+            v-if="!isClose && modeVal != '01'"
             class="txt"
           >{{ brightness }}%</span>
         </div>
         <div
           :style="{opacity: brightness/100}"
-          :class="['scale', {'scale-close': isClose}, {'scale-none': ThirddeviceAttrs.sub_device_category == '01'}]" />
+          :class="['scale', {'scale-close': isClose}, {'scale-none': modeVal == '01'}]" />
 
       </div>
       <!-- <canvas
@@ -123,6 +123,7 @@ export default {
       br: 10,
       moveFlag: false,
       brightness: 100,
+      modeVal: '01',
     }
   },
   computed: {
@@ -163,7 +164,14 @@ export default {
     },
     'brightness'() {
       if(this.ThirddeviceAttrs.sub_device_category != '01') {
-        HdSmart.UI.vibrate()
+        if(this.deviceAttrs.switch_status == 'on' && !this.isOffline&& this.networkStatus != -1) {
+          HdSmart.UI.vibrate()
+        }
+      }
+    },
+    'ThirddeviceAttrs.sub_device_category'() {
+      if(this.ThirddeviceAttrs.sub_device_category) {
+        this.modeVal = this.ThirddeviceAttrs.sub_device_category
       }
     }
   },

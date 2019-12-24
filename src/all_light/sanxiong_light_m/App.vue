@@ -151,7 +151,9 @@ export default {
       this.draw(`${((this.deviceAttrs.level/2.55)+50)/200}`)
     },
     'brightness'() {
-      HdSmart.UI.vibrate()
+      if(this.deviceAttrs.switch_status == 'on' && !this.isOffline&& this.networkStatus != -1) {
+        HdSmart.UI.vibrate()
+      }
     }
   },
   created() {
