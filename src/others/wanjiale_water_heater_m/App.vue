@@ -537,6 +537,7 @@ export default {
 <style lang="less" scoped>
 @imgPath3: 'base/honghan_switch/assets';
 @imgPath4: 'base/oakes_air_condition/assets';
+*{ -webkit-tap-highlight-color:transparent; }
 .offline_bar {
     background: rgba(0, 0, 0, .3);
     position: fixed;

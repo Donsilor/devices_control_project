@@ -579,6 +579,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @imgPath3: 'base/honghan_switch/assets';
+*{ -webkit-tap-highlight-color:transparent; }
 .body {
   min-height: 100%;
   touch-action: none;

@@ -742,6 +742,7 @@ export default {
 <style lang="less" scoped>
 @imgPath: 'base/air_condition/assets/new-air';
 @imgPath1: 'base/oakes_air_condition/assets';
+*{ -webkit-tap-highlight-color:transparent; }
 .animate::before{
   animation: scale 0.4s;
 }
