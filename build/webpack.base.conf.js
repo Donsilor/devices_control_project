@@ -14,12 +14,14 @@ var app = util.getInputName()
 
 module.exports = {
   entry: {
+    vendor: './src/vendor.js',
     sdk: './lib/hdsmart.js',
     app: [`./src/${app}/main.js`]
   },
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
+    chunkFilename: '[id].js?[chunkhash]',
     publicPath: isProduction ? config.build.assetsPublicPath : config.dev.assetsPublicPath
   },
   resolve: {

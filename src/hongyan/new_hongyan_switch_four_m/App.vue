@@ -127,7 +127,7 @@
                   ref="four"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[3].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[3].chan_name?deviceAttrs.list[3].chan_name:'开关3' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[3].chan_name?deviceAttrs.list[3].chan_name:'开关4' }}</div>
               </div>
             </div>
           </div>
@@ -205,9 +205,15 @@
             v-if="deviceAttrs.list"
             :class="['btn-wrap', 'btn-wrap-four']"
           >
-            <div
+            <!-- <div
               ref="SwitchOn"
               :class="[{ 'active': deviceAttrs.list[0].chan_status == 'on' && deviceAttrs.list[1].chan_status == 'on' && deviceAttrs.list[2].chan_status == 'on' && deviceAttrs.list[3].chan_status == 'on' }, 'btn btn-start center']"
+              @touchstart ="touchstart('SwitchOn')"
+              @touchend="touchend('SwitchOn')"
+            /> -->
+            <div
+              ref="SwitchOn"
+              :class="['btn btn-start center']"
               @touchstart ="touchstart('SwitchOn')"
               @touchend="touchend('SwitchOn')"
             />
@@ -217,9 +223,15 @@
             v-if="deviceAttrs.list"
             :class="['btn-wrap', 'btn-wrap-four']"
           >
-            <div
+            <!-- <div
               ref="SwitchOff"
               :class="[{ 'active': deviceAttrs.list[0].chan_status == 'off' && deviceAttrs.list[1].chan_status == 'off' && deviceAttrs.list[2].chan_status == 'off' && deviceAttrs.list[3].chan_status == 'off' }, 'btn btn-close center']"
+              @touchstart ="touchstart('SwitchOff')"
+              @touchend="touchend('SwitchOff')"
+            /> -->
+            <div
+              ref="SwitchOff"
+              :class="['btn btn-close center']"
               @touchstart ="touchstart('SwitchOff')"
               @touchend="touchend('SwitchOff')"
             />
@@ -295,6 +307,7 @@ export default {
     touchend(val){
       if(this.isOffline|| this.networkStatus == -1) return
       this.$refs[val].classList.remove('animate1')
+      this.$refs[val].classList.remove('yellowExtend')
       this.$refs[val].classList.add('animate')
       this.$refs[val].classList.remove('bgcStart')
       if(val == 'one') return this.setSwitch1()
@@ -442,7 +455,7 @@ body {
   // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
   &::before{
     content: "";
-    background-image: url('~@lib/@{imgPath1}/img_bg_01@2x.png');
+    background-image: url('~@lib/@{imgPath1}/img_bg.png');
     background-repeat:no-repeat;
     background-size: 100% 100%;
     position: fixed;

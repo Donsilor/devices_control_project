@@ -110,91 +110,72 @@ export default {
     ...mapState(['device', 'deviceAttrs']),
     bakColor(){
       return this.isClose ? '#000' : '#fff'
-    }
-  },
-  watch:{
-    "device.stateChange"(val){
-      console.log('stateChange改变中', val)
-      // if (this.myMove==false) {
-      //     this.newRatio()
-      // }
-      console.log(this.curtainStatusText,'curtainStatusText')
-      console.log(this.btnActive,'btnActive')
     },
-    'deviceAttrs.open_percentage'(newValue, oldValue) {
-      this.count = this.count + 1
-      console.log("count数", this.count)
-      // var _this = this
-      // (function(num) {
-      //   setTimeout(() => {
-      //     console.log("定时检索num", num)
-      //     console.log("定时检索count", _this.count)
-      //     if (num === _this.count) {
-      //        console.log('暂停了')
-      //     }
-      //   }, 2000)
-      // })(this.count)
-      var _that = this
-      function a(num) {
-        setTimeout(() => {
-            console.log("定时检索num", num)
-            console.log("定时检索count", _that.count)
-            if (num === _that.count) {
-              console.log('暂停了')
-              if (_that.curtainStatusText=='正在关闭窗帘'||_that.curtainStatusText=='正在打开窗帘') {
-                _that.curtainStatusText=''
-              }
-            }
-          }, 2000)
-      }
-      a(this.count)
-      console.log(newValue,oldValue,'打印新旧值111111111111111111111')
-
-      if(this.btnActive == 'open'||this.btnActive == 'close'||this.myMove==true) {
-        if(newValue > oldValue) {
-          this.curtainStatusText = '正在打开窗帘'
-        }
-        if(newValue < oldValue) {
-          this.curtainStatusText = '正在关闭窗帘'
-        }
-        if(newValue == oldValue) {
-          this.curtainStatusText = ''
-        }
-      }else{
-        this.curtainStatusText = ''
-        this.btnActive='pause'
-      }
-      if(this.deviceAttrs.open_percentage == this.range) {
-        this.curtainStatusText = ''
-        this.myMove = false
-      }
-      if (oldValue-newValue<0&&this.deviceAttrs.open_percentage=='100') {
-        this.curtainStatusText = '窗帘已打开'
-        this.btnActive = ''
-      }else if (this.deviceAttrs.open_percentage=='0') {
-        this.curtainStatusText = '窗帘已关闭'
-        this.btnActive = ''
-      }
-      // if(this.deviceAttrs.open_percentage == 100) {
-      //   this.curtainStatusText = ''
-      // }
-      // if(this.deviceAttrs.open_percentage == 0) {
-      //   this.curtainStatusText = ''
-      // }
-    }
   },
+  // watch:{
+  //   "device.stateChange"(val){
+  //     console.log('stateChange改变中', val)
+  //     console.log(this.curtainStatusText,'curtainStatusText')
+  //     console.log(this.btnActive,'btnActive')
+  //   },
+  //   'deviceAttrs.open_percentage'(newValue, oldValue) {
+  //     this.count = this.count + 1
+  //     console.log("count数", this.count)
+  //     var _that = this
+  //     function a(num) {
+  //       setTimeout(() => {
+  //           console.log("定时检索num", num)
+  //           console.log("定时检索count", _that.count)
+  //           if (num === _that.count) {
+  //             console.log('暂停了')
+  //             if (_that.curtainStatusText=='正在关闭窗帘'||_that.curtainStatusText=='正在打开窗帘') {
+  //               _that.curtainStatusText=''
+  //             }
+  //           }
+  //         }, 2000)
+  //     }
+  //     a(this.count)
+  //     console.log(newValue,oldValue,'打印新旧值111111111111111111111')
+
+  //     if(this.btnActive == 'open'||this.btnActive == 'close'||this.myMove==true) {
+  //       if(newValue > oldValue) {
+  //         this.curtainStatusText = '正在打开窗帘'
+  //       }
+  //       if(newValue < oldValue) {
+  //         this.curtainStatusText = '正在关闭窗帘'
+  //       }
+  //       if(newValue == oldValue) {
+  //         this.curtainStatusText = ''
+  //       }
+  //     }else{
+  //       this.curtainStatusText = ''
+  //       this.btnActive='pause'
+  //     }
+  //     if(this.deviceAttrs.open_percentage == this.range) {
+  //       this.curtainStatusText = ''
+  //       this.myMove = false
+  //     }
+  //     if (oldValue-newValue<0&&this.deviceAttrs.open_percentage=='100') {
+  //       this.curtainStatusText = '窗帘已关闭'
+  //       this.btnActive = ''
+  //     }else if (this.deviceAttrs.open_percentage=='0') {
+  //       this.curtainStatusText = '窗帘已打开'
+  //       this.btnActive = ''
+  //     }
+  //   }
+  // },
   created() {
 
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
         // this.newRatio()
-        if (this.open_percentage=='100') {
-          this.curtainStatusText = '窗帘已打开'
-        }
-        if (this.open_percentage=='0') {
-          this.curtainStatusText = '窗帘已关闭'
-        }
+        // if (this.open_percentage=='100') {
+        //   this.curtainStatusText = '窗帘已打开'
+        // }
+        // if (this.open_percentage=='0') {
+        //   this.curtainStatusText = '窗帘已关闭'
+        // }
       })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -227,7 +208,7 @@ export default {
         this.$refs['btn-open'].classList.remove('active')
       },500)
       this.btnActive = 'open'
-      // this.curtainStatusText = '正在打开窗帘'
+      this.curtainStatusText = '正在打开窗帘'
       this.myMove = false
       this.controlDevice('switch', 'on')
       .then((res)=>{
@@ -247,7 +228,7 @@ export default {
         this.$refs['btn-close'].classList.remove('active')
       },500)
       this.btnActive = 'close'
-      // this.curtainStatusText = '正在关闭窗帘'
+      this.curtainStatusText = '正在关闭窗帘'
       this.myMove = false
       this.controlDevice('switch', 'off')
       .then((res)=>{
@@ -306,6 +287,12 @@ export default {
       let maxWidth = this.$refs.imgBox.offsetWidth*0.5
       this.range = 100-Math.round((this.curtainWidth-circle) / (maxWidth-circle) * 100)
       console.log(this.range)
+      if(this.range == 100) {
+        this.curtainStatusText = '窗帘已打开'
+      }
+      if(this.range == 0) {
+        this.curtainStatusText = '窗帘已关闭'
+      }
       this.controlDevice('open_percentage',this.range)
       .then((res)=>{
         if (res.code==-90004) {
@@ -315,12 +302,12 @@ export default {
     },
     //根据后台返回数据得出窗帘的宽度
     newRatio(){
-      console.log('newRatio被调用')
+      // console.log('newRatio被调用')
       let circle = this.$refs.right.offsetHeight
       let maxWidth = this.$refs.imgBox.offsetWidth*0.5
       let width = (100-this.open_percentage)/100*(maxWidth-circle)+circle
-      console.log(width,'width')
-      console.log(circle)
+      // console.log(width,'width')
+      // console.log(circle)
       let leftCurtainBox = this.$refs.leftCurtainBox
       let rightCurtainBox = this.$refs.rightCurtainBox
       this.timehander = this.animate(leftCurtainBox,{
@@ -343,6 +330,7 @@ export default {
       })
     },
     animate(ele,param,callBack,speedTime){
+      var _this = this
 	//callBack没有传递时
 	//如果想要传递speedTime
 	//这里callBack就是时间
@@ -382,15 +370,24 @@ export default {
 				}
 			}
     }
-    // console.log(flag,'flag')
+    console.log(flag,'flag',param[attr])
 
 		if(flag){
-			clearInterval(ele.timer)
+      clearInterval(ele.timer)
+      if(param[attr] > 100) {
+        _this.curtainStatusText = '窗帘已关闭'
+      } else {
+        _this.curtainStatusText = '窗帘已打开'
+      }
+      // _this.curtainStatusText = ''
 			//到达了目标值。
 			if(callBack){
-				callBack()
+        callBack()
+        // if(this.open_percentage == 0 || this.open_percentage == 100) {
+        // _this.curtainStatusText = ''
+      // }
 			}
-		}
+    }
 	},speedTime)
 },
 //兼容ie8获取元素对应浏览器渲染后的样式值。这个值是一个带单位的字符串
@@ -402,6 +399,7 @@ getStyle(obj,attr){
 </script>
 <style lang="less" scoped>
 @imgPath: 'base/new_curtains/assets';
+*{-webkit-tap-highlight-color:transparent; }
 
 .body {
   min-height: 100%;

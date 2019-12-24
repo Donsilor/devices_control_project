@@ -33,6 +33,9 @@ var webpackConfig = merge(baseWebpackConfig, {
     chunkFilename: 'js/[id].[chunkhash].js'
   },
   plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['vendor']
+    }),
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': config.build.env,

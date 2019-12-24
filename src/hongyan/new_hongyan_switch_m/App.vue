@@ -426,7 +426,7 @@ export default {
   // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
   &::before{
     content: "";
-    background-image: url('~@lib/@{imgPath1}/img_bg_01@2x.png');
+    background-image: url('~@lib/@{imgPath1}/img_bg.png');
     background-repeat:no-repeat;
     background-size: 100% 100%;
     position: fixed;

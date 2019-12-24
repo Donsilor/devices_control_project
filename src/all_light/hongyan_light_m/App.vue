@@ -165,7 +165,9 @@ export default {
       this.draw(`${((this.deviceAttrs.level/2.55)+50)/200}`)
     },
     'brightness'() {
-      HdSmart.UI.vibrate()
+      if(this.deviceAttrs.switch_status == 'on' && !this.isOffline&& this.networkStatus != -1) {
+        HdSmart.UI.vibrate()
+      }
     }
   },
   created() {
@@ -281,7 +283,7 @@ export default {
       this.ctx.beginPath()
       var d =  this.offset(n*2*Math.PI,this.or)
       // 开机显示
-      if (this.deviceAttrs.switch_status == 'on' && !this.isOffline|| this.networkStatus != -1) {
+      if (this.deviceAttrs.switch_status == 'on' && !this.isOffline&&this.networkStatus != -1) {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
       }else{
         //关机显示
