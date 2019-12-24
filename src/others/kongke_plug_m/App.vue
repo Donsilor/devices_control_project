@@ -218,6 +218,12 @@ export default {
   },
   watch: {
     'device.stateChange'(){
+      if(this.deviceAttrs.switch == 'open') {
+        this.switchValue = 'open'
+      }
+      if(this.deviceAttrs.switch == 'close') {
+        this.switchValue = 'close'
+      }
       this.$nextTick(()=>{
         //  this.newRatio()
       })
