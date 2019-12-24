@@ -11,6 +11,7 @@ import '@lib/base/common.less'
 import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
 import NewTopBar from '@lib/components/NewTopBar.vue'
+import StatusTip from '@lib/components/StatusTip.vue'
 import * as filters from './filters' // global filters
 
 // register global utility filters.
@@ -19,6 +20,7 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.component('NewTopBar', NewTopBar)
+Vue.component('StatusTip', StatusTip)
 FastClick.attach(document.body)
 
 new Vue({

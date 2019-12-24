@@ -5,11 +5,14 @@
       <NewTopBar
         :title="device.device_name"
         :scroll="true"
+        :room="device.room_name"
+        page-class=".page"
         bak-color="#000"/>
+        <StatusTip v-show="device.device_uuid"/>
       <div class="top">
         <div class="node">
           <div>今日记录次数</div>
-          <div class="num">{{ todayNum.result.list.length }}</div>
+          <div class="num">{{ todayNum.result.total }}</div>
         </div>
       </div>
       <div class="main">
@@ -45,7 +48,8 @@ export default {
       // 今日记录次数
       todayNum:{
         result: {
-          list: []
+          // list: []
+          total:""
         }
       },
       // 时间记录
