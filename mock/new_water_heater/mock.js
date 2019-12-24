@@ -13,7 +13,7 @@ var res = {
   "manufactureId": "Whirlpool",
   "deviceCategory": "water_heater.sn",
   "deviceSubCategory": 0,
-  "connectivity": "offline",
+  "connectivity": "online",
   "currenttemperature":85,
   "error":"running"
 }

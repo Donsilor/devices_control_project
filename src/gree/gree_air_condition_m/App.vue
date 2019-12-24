@@ -92,8 +92,7 @@
           <div class="btn-name">制热</div>
         </div>
         <div
-          class="btn-wrap"
-          @click="setMode('auto')">
+          class="btn-wrap">
           <div
             ref="auto"
             :class="[ { 'active': loaclAttr.mode == 'auto' && loaclAttr.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']"
@@ -382,7 +381,7 @@ export default {
         }
         btn[i].classList.remove('animateEnd')
         btn[i].classList.remove('bgcEnd')
-
+        btn[i].classList.remove('yellowExtend')
       }  
       this.$refs[val].classList.add('animateStart')
       if(val=='add'||val=="reduce"){
@@ -426,11 +425,11 @@ export default {
             this.ctx.strokeStyle = "#DA6C00"
           }else if(this.loaclAttr.mode == 'cold'){
             this.ctx.strokeStyle = "#008CDA"
-          }else{
+          }else if(this.loaclAttr.mode == 'dehumidify'){
             this.ctx.strokeStyle = "#E1B96E"
           }
       }else{
-        this.ctx.strokeStyle = "transparent"
+        this.ctx.strokeStyle = "none"
       }
 
       this.ctx.lineWidth = 7
@@ -457,11 +456,11 @@ export default {
       this.ctx.shadowBlur = 4
       this.ctx.shadowColor = "rgba(0, 0, 0, 0.1)"
       let d =  this.offset(n*2*Math.PI,this.or)
-      // 关机显示
-      if (this.loaclAttr.switchStatus=='on'&&!this.isOffline) {
+      // 开机显示
+      if (this.loaclAttr.switchStatus=='on'&&!this.isOffline&&this.loaclAttr.mode!=='auto'&&this.loaclAttr.mode!=='wind') {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
       }else{
-        //开机显示
+        //关机显示
         this.ctx.arc(0,0,0,0,0,true)
       }
       this.ctx.fill()
@@ -551,6 +550,7 @@ export default {
       // 最小温度
       if (temp < MIN_TEMP) {
         if (this.loaclAttr.temperature == MIN_TEMP) {
+          this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最低')
         } else {
           temp = MIN_TEMP
@@ -559,6 +559,7 @@ export default {
       // 最大温度
       if (temp > MAX_TEMP) {
         if (this.loaclAttr.temperature == MAX_TEMP) {
+          this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最高')
         } else {
           temp = MAX_TEMP

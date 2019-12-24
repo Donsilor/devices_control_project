@@ -417,7 +417,7 @@ export default {
           }else if(this.deviceAttrs.mode == 'cold'){
             console.log('cold111')
             this.ctx.strokeStyle = "#008CDA"
-          }else{
+          }else if(this.deviceAttrs.mode == 'auto'||this.deviceAttrs.mode=='dehumidify'){
             console.log('else')
             this.ctx.strokeStyle = "#E1B96E"
           }
@@ -451,7 +451,7 @@ export default {
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
       // 关机显示
-      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline) {
+      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline&&this.deviceAttrs.mode!=='wind') {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
       }else{
         //开机显示
@@ -494,6 +494,7 @@ export default {
         this.touchend(val)
       }, 150);
       if (this.deviceAttrs.temperature == 320 && this.deviceAttrs.speed == 'low' && val == 'cold') {
+        this.setTemperatureDis = false
         return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
       }
       if (val == this.deviceAttrs.mode) return
@@ -553,6 +554,7 @@ export default {
         }
       }
       if (temp == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
+        this.setTemperatureDis = false
         return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
       }
       this.controlDevice('temperature', temp)

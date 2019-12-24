@@ -246,27 +246,29 @@ export default {
       }
       let fixedTop =  this.$refs.statusbar.offsetHeight+this.$refs.newNavbar.offsetHeight
       let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
-      let h = this.$refs['header-bottom'].offsetHeight
-      let b = (h/44)*this.scrollTop
-      let f = (-6/44)*this.scrollTop+24
-      let w = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2-20   //标题居中
-      let l = (w/44)*this.scrollTop
-      b = b>=h?h:b
-      // w2 =  this.scrollTop *24/44+20
-      f = f<=18?18:f
-      l = l<=w?l :w
-      this.$refs.title.style.bottom = b + 'px'
-      this.$refs.title.style.left = l + 'px'
-      this.$refs.title.style.fontSize = f + 'px'
-
+      let headerBottomHeight = this.$refs['header-bottom'].offsetHeight
+      let headerBottom = (headerBottomHeight/44)*this.scrollTop
+      let fontSize = (-6/44)*this.scrollTop+24
+      let headerBottomCenter = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2-(this.$refs['header-bottom'].offsetWidth/375*20)  //标题居中
+      let titleLeft = (headerBottomCenter/44)*this.scrollTop
+      let titleMaxWidth = (-19/44)*this.scrollTop+281
+      headerBottom = headerBottom>=headerBottomHeight?headerBottomHeight:headerBottom
+      // titleMaxWidth =  this.scrollTop *24/44+20
+      fontSize = fontSize<=18?18:fontSize
+      titleLeft = titleLeft<=headerBottomCenter?titleLeft :headerBottomCenter
+      titleMaxWidth = titleMaxWidth<=262?262 :titleMaxWidth
+      this.$refs.title.style.bottom = headerBottom + 'px'
+      this.$refs.title.style.left = titleLeft + 'px'
+      this.$refs.title.style.fontSize = fontSize/37.5 + 'rem'
+      this.$refs.title.style.maxWidth = titleMaxWidth/37.5 + 'rem'
       if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
-        this.$refs.title.style.bottom = (h/44)*h+ 'px'
-        this.$refs.title.style.left = (w/44)*h + 'px'
-        this.$refs.title.style.fontSize = (-6/44)*h+24 + 'px'
+        this.$refs.title.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
+        this.$refs.title.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
+        this.$refs.title.style.fontSize = ((-6/44)*headerBottomHeight+24)/37.5 + 'rem'
       }
-      _this.$emit('hscroll', h)
+      _this.$emit('hscroll', headerBottomHeight)
       _this.$emit('hscrolltop', _this.scrollTop)
-      if( this.scrollTop>=h ){
+      if( this.scrollTop>=headerBottomHeight ){
         pageClass.classList.add('scroll44')
         status_bar_fixed&&(status_bar_fixed.style.top  =fixedTop +"px")
         this.search&&(this.rightSearch = true)
@@ -281,7 +283,7 @@ export default {
 
 
 <style lang="less">
-*{-webkit-tap-highlight-color:transparent;}
+*{ -webkit-tap-highlight-color:transparent; }
 .scroll44{
   .status_bar_fixed{
     position: fixed
@@ -403,11 +405,16 @@ export default {
   padding: 0 40px;
   align-items: center;
  .title {
-   position: relative;
+    position: relative;
     text-align: center;
+    max-width: 562px;
+    overflow: hidden;
+      white-space: nowrap;
+  text-overflow: ellipsis;
+
     // font-size: 17PX;
     // font-family: PingFangSC-Medium;
-    font-size: 46px;
+    font-size: 48px;
     color: #000000;
     // font-weight: bold;
     // line-height: 48px;

@@ -404,7 +404,7 @@ export default {
             this.ctx.strokeStyle = "#DA6C00"
           }else if(this.deviceAttrs.mode == 'cold'){
             this.ctx.strokeStyle = "#008CDA"
-          }else{
+          }else if(this.deviceAttrs.mode == 'auto'||this.deviceAttrs.mode=='dehumidify'){
             this.ctx.strokeStyle = "#E1B96E"
           }
       }else{
@@ -437,11 +437,11 @@ export default {
       this.ctx.shadowColor = "rgba(0, 0, 0, 0.1)"
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
-      // 关机显示
-      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline) {
+      // 开机显示
+      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline&&this.deviceAttrs.mode!=='wind') {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
       }else{
-        //开机显示
+        //关机显示
         this.ctx.arc(0,0,0,0,0,true)
       }
       this.ctx.fill()

@@ -9,34 +9,35 @@
         bak-color="#000"/>
       <StatusTip v-show="device.device_uuid"/>
       <div class="main center">
-        <div class="bg">
+        <div :class="['bg',{'move': deviceAttrs.switch=='on' && !isOffline}]">
+          <div class="dianW"/>
           <div class="circle">
-            <!-- <div class="dotOne"/>
-            <div class="dotTwo"/> -->
-            <div class="status">
+            <div class="dianL"/>
+            
+          </div>
+        </div>
+        <div class="status">
               <div class="electric">
                 <span>实时电流</span>
-                <div
+                <div 
                   v-if="!isClose&& deviceAttrs.connectivity == 'online'"
                   class="current">{{ deviceAttrs.current.toFixed(1) }}</div>
-                <div
-                  v-else
+                <div 
+                  v-else 
                   class="current1">ㅡㅡ</div>
               </div>
               <div class="voltage">
                 <span> 实时电压</span>
-                <span
+                <span 
                   v-if="!isClose&& deviceAttrs.connectivity == 'online'"
                   class="current">
                   {{ deviceAttrs.voltage?deviceAttrs.voltage.toFixed(1):220 }}V
                 </span>
-                <span
-                  v-else
+                <span 
+                  v-else 
                   class="current1">ㅡㅡV</span>
               </div>
             </div>
-          </div>
-        </div>
       </div>
       <!-- 插座状态 -->
       <div class="switchStatus">{{ deviceAttrs.switch=='on'?'通电中':'已断电' }}</div>
@@ -48,7 +49,7 @@
           :class="[{'active': deviceAttrs.switch == 'on'&&!isOffline},'btn btn-start']"
           @click="setSwitch('starting')" />
       </div>
-      <div class="bottom" style="position: fixed;bottom: 0;">
+      <div class="bottom">
         <div class="Charging-protection">
           <div>禁用设备开关</div>
           <div
@@ -120,10 +121,10 @@ export default {
       touchstart(val) {
        this.$refs[val].classList.remove('active')
       this.$refs[val].classList.add('animateStart')
-
+     
       this.$refs[val].classList.add('yellowExtend')
     },
-    touchend(val){
+    touchend(val){ 
       this.$refs[val].classList.add('animateEnd')
     },
     setSwitch(val){
@@ -185,7 +186,24 @@ export default {
 </script>
 <style lang="less" scoped>
 @imgPath: 'base/hongyan_plug/assets';
-
+@keyframes circleRoate{
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes progress-bar{
+  0% {
+      transform: rotate(260deg);
+      border: 3px solid transparent;
+  }
+  100% {
+      transform: rotate(358deg);
+      border: 3px solid rgba(0, 0, 0, 1);
+  }
+}
 .body {
   min-height: 100%;
 }
@@ -223,6 +241,16 @@ export default {
       border-radius: 50%;
       border: 1px solid rgba(0, 0, 0, 0.1);
       position: relative;
+      &.move {
+        animation:circleRoate 3s infinite linear;
+      }
+      .dianW {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background:#CCCCCC;
+        margin: -10px auto 0px;
+      }
       .circle{
         width: 510px;
         height: 510px;
@@ -233,7 +261,17 @@ export default {
         left: 50%;
         margin-left: -255px ;
         margin-top: -255px ;
-        // .dotOne,.dotTwo{
+        .dianL {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background:#CCCCCC;
+          margin: -10px auto 0px;
+          position: absolute;
+          bottom: -10px;
+          left: 48%;
+        }
+        // .dotOne,.dotTwo{  
         //   position: absolute;
         //   width: 20px;
         //   height: 20px;
@@ -262,7 +300,7 @@ export default {
             display:flex;
             justify-content: center;
             flex-direction: column;
-            font-family: PingFangSC-Light;
+            font-family: PingFangSC-Light; 
             color: #000000;
             text-align: center;
             >span{
@@ -276,7 +314,7 @@ export default {
             .current{
               margin: 20px 0 40px 0;
               font-size: 144px;
-              font-family: PingFangSC-Light;
+              font-family: PingFangSC-Light; 
               &::before{
                 position: absolute;
                 right: -15px;
@@ -386,7 +424,7 @@ export default {
       transition: left 0.3s;
   };
     .starting{
-    margin-top: 90px;
+    margin-top: 136px;
      .btn-start{
         z-index: 999;
         box-sizing: border-box;
@@ -459,7 +497,7 @@ export default {
       left: 0;
       bottom: 0;
       right: 0;
-
+      
       width: 100%;
       // background: rgba(0, 0, 0, 0.1);
     }
@@ -560,4 +598,85 @@ export default {
   }
 
 
+
+.status{
+        width: 420px;
+        height: 420px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -210px ;
+        margin-top: -210px ;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: #000;
+        .electric {
+            display:flex;
+            justify-content: center;
+            flex-direction: column;
+            font-family: PingFangSC-Light; 
+            color: #000000;
+            text-align: center;
+            >span{
+              font-size: 24px;
+            }
+            > div {
+              // height: 90px;
+              font-size: 77px;
+              position: relative;
+            }
+            .current{
+              margin: 20px 0 40px 0;
+              font-size: 144px;
+              font-family: PingFangSC-Light; 
+              &::before{
+                position: absolute;
+                right: -15px;
+                content: "A";
+                font-size: 12px;
+              }
+            }
+            .current1{
+              margin: 50px 0;
+              &::before{
+                position: absolute;
+                right: -20px;
+                top: -30px;
+                content: "A";
+                font-size: 12px;
+              }
+            }
+          }
+          .voltage{
+            font-family: PingFangSC-Light;
+            font-size: 24px;
+            color: #000000;
+            text-align: center;
+          }
+        // .electricity {
+        //   width: 300px;;
+        //   height:33px;
+        //   display:flex;
+        //   justify-content: center;
+        //   color: #000;
+        //   text-align: center;
+        //   // padding: 0 100px;
+        //   margin-top: 60px;
+        //   .electric {
+        //     display:flex;
+        //     justify-content: center;
+        //     >span{
+        //       font-size: 24px;
+        //     }
+        //     > div {
+        //       // height: 90px;
+        //       font-size: 24px;
+        //       position: relative;
+        //       // margin-top: 40px;
+        //     }
+        //   }
+        // }
+      }
 </style>
