@@ -629,7 +629,8 @@ export default {
         background-size: @100;
       }
       &.active {
-        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        background: #E1B96E;
         &::before {
           background-image: url('~@lib/@{imgPath}/kg_btn_quankai.png')
         }
@@ -645,7 +646,8 @@ export default {
         background-size: @100;
       }
       &.active {
-        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        background: #E1B96E;
         &::before {
           background-image: url('~@lib/@{imgPath}/kg_btn_quanguan.png')
         }
@@ -750,7 +752,8 @@ export default {
       position: absolute;
       width: 70%;
       height: 70%;
-      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      background: #E1B96E;
       top: 50%;
       left: 50%;
       border-radius: 50%;

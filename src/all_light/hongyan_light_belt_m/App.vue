@@ -211,8 +211,10 @@ export default {
               // 半圆的滑动范围判断
               if (hd <= 0.75 && hd >= 0.25) {
                   this.draw(hd)
-              }else{
-                return
+              }else if (hd > 0.75) {
+                this.draw(0.75)
+              } else if (hd < 0.25) {
+                this.draw(0.25)
               }
           }
       }, false)
@@ -462,6 +464,7 @@ export default {
   position: absolute;
   width: 460px;
   border-radius: 50%;
+  // background: red;
 }
 // .mask1 {
 //   position: absolute;
@@ -674,7 +677,8 @@ export default {
       // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
       // border-color: #ffbf00;
       // background: #000;
-      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      background: #E1B96E;
     }
   }
   .btn-name {
@@ -841,8 +845,9 @@ export default {
     opacity: 1;
     .btn {
       &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
         border-color: #ffbf00;
+        background: #E1B96E;
       }
     }
   }
@@ -904,7 +909,8 @@ export default {
       position: absolute;
       width: 70%;
       height: 70%;
-      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      background: #E1B96E;
       top: 50%;
       left: 50%;
       border-radius: 50%;

@@ -81,7 +81,7 @@
 
         <div class="btn-wrap">
           <div
-            :class="[{'active': model.speed == 'sleep' },'btn btn-mode center']"
+            :class="[{'active': model.speed == 'sleep' && !isClose && !isOffline },'btn btn-mode center']"
             @click="setSleep()" />
           <div class="btn-name">睡眠</div>
         </div>
