@@ -218,6 +218,12 @@ export default {
   },
   watch: {
     'device.stateChange'(){
+      if(this.deviceAttrs.switch == 'open') {
+        this.switchValue = 'open'
+      }
+      if(this.deviceAttrs.switch == 'close') {
+        this.switchValue = 'close'
+      }
       this.$nextTick(()=>{
         //  this.newRatio()
       })
@@ -853,6 +859,7 @@ export default {
       border: 3px solid rgba(0, 0, 0, 1);
   }
 }
+*{ -webkit-tap-highlight-color:transparent; }
 // .body {
   // min-height: 100%;
 // }

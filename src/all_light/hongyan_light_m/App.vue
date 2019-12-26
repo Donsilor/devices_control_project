@@ -375,6 +375,7 @@ export default {
       transform:rotate(360deg);
     }
 }
+*{ -webkit-tap-highlight-color:transparent; }
 .page{
   // height:100vh;
   // background: url('~@lib/@{imgPath3}/bg02.png');

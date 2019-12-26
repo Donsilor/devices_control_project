@@ -412,6 +412,7 @@ export default {
 @imgPath: 'base/honghan_switch/assets';
 @imgPath1: 'base/oakes_air_condition/assets';
 @100: 100% 100%;
+*{ -webkit-tap-highlight-color:transparent; }
 // .body {
 //   min-height: 100%;
 //   height: 100vh;
