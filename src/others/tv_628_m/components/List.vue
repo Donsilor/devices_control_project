@@ -370,7 +370,7 @@
     height:56px;
     line-height: 56px;
     position: absolute;
-    bottom: 60px;
+    bottom: 76px;
     // display: flex;
     // justify-content: space-between;
     padding: 0 12px;
