@@ -341,7 +341,11 @@ export default {
           time:41,
           english:'snails'
         }
-      ]
+      ],
+      startX:0,
+      startY:0,
+      endX:0,
+      endY:0,
     }
   },
   computed: {
@@ -483,15 +487,21 @@ export default {
     }),
     // 长按事件
     touchStart(e){
-      console.log(e)
+      this.startX = e.targetTouches[0].pageX
+      this.startY = e.targetTouches[0].pageY
       this.timeOutEvent=setTimeout(() => {
         this.longPress()
-      }, 1000)
+      }, 1300)
     },
     //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
     touchMove(e){
-      clearTimeout(this.timeOutEvent)
-      this.timeOutEvent=0
+      this.endX = e.targetTouches[0].pageX
+      this.endY = e.targetTouches[0].pageY
+      console.log(this.endX-this.startX,'MOVE')
+      if (this.endX-this.startX > 48||this.endY - this.startY > 48) {
+        clearTimeout(this.timeOutEvent)
+        this.timeOutEvent=0
+      }
     },
     touchEnd(e){
       clearTimeout(this.timeOutEvent)//清除定时器

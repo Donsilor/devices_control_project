@@ -7,11 +7,10 @@
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
-        page-class=".page"
         bak-color="#000"
         @hscroll="hscroll"
         @hscrolltop="hscrolltop"/>
-      <StatusTip v-show="device.device_uuid"/>
+      <!-- <StatusTip v-show="device.device_uuid"/> -->
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
