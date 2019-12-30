@@ -409,8 +409,8 @@ export default {
   },
   methods: {
     showModelPanel() {
-      if (this.isRun || this.isPause) {
-        HdSmart.UI.toast('运行或者暂停，无法切换模式')
+      if (this.isRun) {
+        HdSmart.UI.toast('运行中无法切换模式')
         return
       }
       if(!this.isClose) this.modeModalVisible = true
@@ -494,11 +494,11 @@ export default {
       if (this.model.mode == mode) {
         return
       }
-      if (this.isRun || this.isPause) {
-        return HdSmart.UI.toast('运行或者暂停，无法切换模式')
+      if (this.isRun) {
+        return HdSmart.UI.toast('运行中无法切换模式')
       }
       this.controlDevice('mode', mode, () => {
-        this.model.mode = mode
+        // this.model.mode = mode
       })
     },
     setChildLock(val, callback) {

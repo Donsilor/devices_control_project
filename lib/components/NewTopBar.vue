@@ -266,6 +266,7 @@ export default {
         titleDom.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
         titleDom.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
         titleDom.style.fontSize = ((-6/44)*headerBottomHeight+24)/37.5 + 'rem'
+        pageClass.classList.add('scroll44')
       }
       _this.$emit('hscroll', headerBottomHeight)
       _this.$emit('hscrolltop', _this.scrollTop)
