@@ -262,12 +262,6 @@ export default {
       titleDom.style.left = titleLeft + 'px'
       titleDom.style.fontSize = fontSize/37.5 + 'rem'
       titleDom.style.maxWidth = titleMaxWidth/37.5 + 'rem'
-      if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
-        titleDom.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
-        titleDom.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
-        titleDom.style.fontSize = ((-6/44)*headerBottomHeight+24)/37.5 + 'rem'
-        pageClass.classList.add('scroll44')
-      }
       _this.$emit('hscroll', headerBottomHeight)
       _this.$emit('hscrolltop', _this.scrollTop)
       if( this.scrollTop>=headerBottomHeight ){
@@ -277,6 +271,12 @@ export default {
       }else{
         pageClass.classList.remove('scroll44')
         this.search&&(this.rightSearch = false)
+      }
+       if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
+        titleDom.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
+        titleDom.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
+        titleDom.style.fontSize = ((-6/44)*headerBottomHeight+24)/37.5 + 'rem'
+        pageClass.classList.add('scroll44')
       }
     }
   }
