@@ -1,0 +1,380 @@
+.canvas {
+  width: 560px;
+}
+.page {
+  /*隐藏掉滚动条*/
+  /*********** 按钮 ***********/
+}
+.page::before {
+  content: "";
+  background-image: url('~@lib/base/oakes_air_condition/assets/img_bg.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+.page::-webkit-scrollbar {
+  display: none;
+}
+.page.filter {
+  filter: blur(12px);
+}
+.page .progress {
+  transform: rotate(-126deg);
+  position: relative;
+}
+.page .c-status {
+  margin-top: 30px;
+  font-size: 24px;
+  color: #35353d;
+  text-align: center;
+}
+.page .control-tm {
+  position: relative;
+  top: -40px;
+  z-index: 9;
+  width: 430px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.page .control-tm .control {
+  outline: none;
+  border: none;
+  width: 72px;
+  height: 72px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+}
+.page .control-tm .control.add {
+  width: 72px;
+  height: 72px;
+}
+.page .control-tm .control.add::before {
+  position: relative;
+  z-index: 100;
+  content: "";
+  display: block;
+  width: 72px;
+  height: 72px;
+  background-image: url('~@lib/base/oakes_air_condition/assets/up.png');
+  background-size: 70% 70%;
+  background-position: center;
+}
+.page .control-tm .control.reduce {
+  width: 72px;
+  height: 72px;
+}
+.page .control-tm .control.reduce::before {
+  position: relative;
+  z-index: 100;
+  content: "";
+  display: block;
+  width: 72px;
+  height: 72px;
+  background-image: url('~@lib/base/oakes_air_condition/assets/down.png');
+  background-size: 70% 70%;
+  background-position: center;
+}
+.page .main {
+  position: relative;
+  margin-top: 44px;
+}
+.page .main.center {
+  flex-direction: column;
+}
+.page .main .wrap-circle {
+  position: relative;
+  zoom: 0.5;
+}
+.page .main .wrap-circle .showtemp {
+  position: absolute;
+  top: 49%;
+  left: 49.5%;
+  width: 280px;
+  height: 280px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.page .main .wrap-circle .showtemp .tm {
+  position: relative;
+  font-size: 144px;
+  color: #000;
+  text-align: center;
+  transform: scale(2);
+}
+.page .main .wrap-circle .showtemp .tm sup {
+  position: absolute;
+  top: -5px;
+  right: -22px;
+  font-size: 24px;
+  color: #000;
+  transform: scale(1);
+}
+.page .main .wrap-circle .showtemp .c-mode {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 95%;
+  left: 50%;
+  width: 216px;
+  height: 48px;
+  font-size: 24px;
+  text-align: center;
+  line-height: 48px;
+  zoom: 2;
+}
+.page .main .wrap-circle .cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 560px;
+  height: 560px;
+}
+.page .status {
+  text-align: center;
+  font-size: 24px;
+  color: #20282B;
+}
+.page .starting {
+  margin-top: 120px;
+}
+.page .starting .btn-start {
+  z-index: 999;
+  box-sizing: border-box;
+  margin: 0 auto;
+  width: 132px;
+  height: 132px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  position: relative;
+}
+.page .starting .btn-start.active {
+  background: #E1B96E;
+}
+.page .starting .btn-start::before {
+  content: "";
+  position: absolute;
+  z-index: 100;
+  left: 50%;
+  top: 50%;
+  margin-left: -24px;
+  margin-top: -24px;
+  background-image: url('~@lib/base/oakes_air_condition/assets/dakai3@2x.png');
+  background-size: 100% 100%;
+  width: 48px;
+  height: 48px;
+}
+.page .starting .btn-name {
+  text-align: center;
+  color: #000;
+  margin-top: 16px;
+  font-size: 24px;
+  font-family: PingFangSC-Light;
+}
+.page .panel-btn {
+  overflow-x: auto;
+  display: -webkit-box;
+  z-index: 9999;
+  margin-top: 60px;
+  /*适应苹果*/
+  -webkit-overflow-scrolling: touch;
+}
+.page .panel-btn::-webkit-scrollbar {
+  display: none;
+}
+.page .btn-wrap {
+  margin: 0 24px 24px;
+}
+.page .btn-wrap:last-of-type {
+  width: 30px;
+  height: 120px;
+}
+.page .btn-wrap .btn {
+  box-sizing: border-box;
+  margin: 0 auto;
+  width: 120px;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+}
+.page .btn-wrap .btn::before {
+  position: relative;
+  z-index: 100;
+  content: "";
+  display: block;
+  width: 44px;
+  height: 44px;
+}
+.page .btn-wrap .btn.active {
+  background: #E1B96E;
+}
+.page .btn-wrap .btn-name {
+  text-align: center;
+  color: #000;
+  margin-top: 16px;
+  font-size: 24px;
+}
+.page .btn-wrap .btn-cold::before {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/oakes_air_condition/assets/cold.png');
+  background-size: 100% 100%;
+}
+.page .btn-wrap .btn-heat::before {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/oakes_air_condition/assets/heat.png');
+  background-size: 100% 100%;
+}
+.page .btn-wrap .btn-time::before {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/air_condition/assets/new-air/time-black.png');
+  background-size: 100% 100%;
+}
+.page .btn-wrap .btn-wind::before {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/oakes_air_condition/assets/wind.png');
+  background-size: 100% 100%;
+}
+.page .btn-wrap .btn-dehumidify::before {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/oakes_air_condition/assets/dehumidify.png');
+  background-size: 100% 100%;
+}
+.page .btn-wrap .btn-auto::before {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/oakes_air_condition/assets/auto.png');
+  background-size: 100% 100%;
+}
+.page .optionbox {
+  width: 100%;
+  margin-top: 10px;
+  margin: 10px 0 90px 0;
+  font-family: PingFangSC-Light;
+}
+.page .optionbox .option {
+  width: 100%;
+  height: 120px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0 40px;
+}
+.page .optionbox .option > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 32px;
+  color: #000;
+}
+.page .optionbox .option > div > span {
+  display: inline-block;
+  line-height: 120px;
+  height: 120px;
+}
+.page .optionbox .option > div > span:last-of-type {
+  color: rgba(0, 0, 0, 0.5);
+}
+.page .optionbox .option > div > span.check {
+  display: flex;
+  align-items: center;
+}
+.page .optionbox .option > div > span.check > img {
+  width: 32px;
+}
+.page .optionbox .option1 {
+  padding: 0 40px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.page .optionbox .option1 .check {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 32px;
+  color: #000;
+}
+.page .optionbox .option1 .check > span {
+  display: inline-block;
+  line-height: 120px;
+  height: 120px;
+  font-size: 32px;
+  color: #000;
+}
+.page .optionbox .option1 .check .checkBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.page .optionbox .option1 .check .checkBox .speedBtn {
+  width: 96px;
+  height: 64px;
+  text-align: center;
+  line-height: 64px;
+  font-family: PingFangSC-Light;
+  font-size: 32px;
+  margin-right: 20px;
+  color: #000;
+  opacity: 0.5;
+}
+.page .optionbox .option1 .check .checkBox .speedBtn:last-of-type {
+  margin-right: 0px;
+}
+.page .optionbox .option1 .check .checkBox .speedBtn.active {
+  opacity: 1;
+  position: relative;
+}
+.page .optionbox .option1 .check .checkBox .speedBtn.active::before {
+  display: block;
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #000;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-left: -4px;
+}
+.page.close:before,
+.page.offline.cover:before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+}
+.page.close.page .control-tm .reduce,
+.page.offline.cover.page .control-tm .reduce,
+.page.close.page .control-tm .add,
+.page.offline.cover.page .control-tm .add {
+  opacity: 0.4;
+}
+.page.close .btn-wrap,
+.page.offline.cover .btn-wrap {
+  opacity: 0.3;
+}
+.page.close .btn-wrap.up-index,
+.page.offline.cover .btn-wrap.up-index {
+  opacity: 1;
+}
+.page.close .btn-wrap .btn.active,
+.page.offline.cover .btn-wrap .btn.active {
+  background: #fff;
+  border: 1px solid #818181;
+}
+.page.close .optionbox,
+.page.offline.cover .optionbox {
+  opacity: 0.3;
+}

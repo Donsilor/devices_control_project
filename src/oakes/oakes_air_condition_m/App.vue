@@ -413,7 +413,7 @@ export default {
         }
         btn[i].classList.remove('animateEnd')
         btn[i].classList.remove('bgcEnd')
-
+        btn[i].classList.remove('yellowExtend')
       }
       this.$refs[val].classList.add('animateStart')
       if(val=='add'||val=="reduce"){
@@ -422,7 +422,7 @@ export default {
         this.$refs[val].classList.add('yellowExtend')
       }
     },
-    touchend(val,step){
+    touchend(val){
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
@@ -435,7 +435,7 @@ export default {
       }
       this.$refs[val].classList.add('animateEnd')
     },
-        offset(r,d) {//根据弧度与距离计算偏移坐标
+    offset(r,d) {//根据弧度与距离计算偏移坐标
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
     },
     draw(n) {
@@ -565,7 +565,7 @@ export default {
     setMode(val) {
       if(this.isClose||this.isOffline) return
       HdSmart.UI.vibrate()
-            this.touchstart(val)
+      this.touchstart(val)
       setTimeout(() => {
         this.touchend(val)
       }, 150)
@@ -581,6 +581,8 @@ export default {
          }
         if(res == null){
            HdSmart.UI.toast('操作失败')
+           this.$refs[val].classList.remove('yellowExtend')
+           this.$refs[this.loaclAttr.mode].classList.add('active')
         }
        })
     },

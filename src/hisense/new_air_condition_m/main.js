@@ -7,6 +7,8 @@ import App from './App.vue'
 
 import '@lib/base/reset.less'
 import '@lib/base/common.less'
+import '@lib/base/animation.less'
+import '@lib/base/air_condition.less'
 
 import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
