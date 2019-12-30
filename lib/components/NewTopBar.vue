@@ -244,12 +244,13 @@ export default {
       }else{
         pageClass = this.$refs.topbar
       }
+      let titleDom = this.$refs.title
       let fixedTop =  this.$refs.statusbar.offsetHeight+this.$refs.newNavbar.offsetHeight
       let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
       let headerBottomHeight = this.$refs['header-bottom'].offsetHeight
       let headerBottom = (headerBottomHeight/44)*this.scrollTop
       let fontSize = (-6/44)*this.scrollTop+24
-      let headerBottomCenter = this.$refs['header-bottom'].offsetWidth/2-this.$refs.title.offsetWidth/2-(this.$refs['header-bottom'].offsetWidth/375*20)  //标题居中
+      let headerBottomCenter = this.$refs['header-bottom'].offsetWidth/2-titleDom.offsetWidth/2-(this.$refs['header-bottom'].offsetWidth/375*20)  //                                                                                                                                                                                                                                                                                                                                                                                                                                                       
       let titleLeft = (headerBottomCenter/44)*this.scrollTop
       let titleMaxWidth = (-19/44)*this.scrollTop+281
       headerBottom = headerBottom>=headerBottomHeight?headerBottomHeight:headerBottom
@@ -257,14 +258,15 @@ export default {
       fontSize = fontSize<=18?18:fontSize
       titleLeft = titleLeft<=headerBottomCenter?titleLeft :headerBottomCenter
       titleMaxWidth = titleMaxWidth<=262?262 :titleMaxWidth
-      this.$refs.title.style.bottom = headerBottom + 'px'
-      this.$refs.title.style.left = titleLeft + 'px'
-      this.$refs.title.style.fontSize = fontSize/37.5 + 'rem'
-      this.$refs.title.style.maxWidth = titleMaxWidth/37.5 + 'rem'
+      titleDom.style.bottom = headerBottom + 'px'
+      titleDom.style.left = titleLeft + 'px'
+      titleDom.style.fontSize = fontSize/37.5 + 'rem'
+      titleDom.style.maxWidth = titleMaxWidth/37.5 + 'rem'
       if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
-        this.$refs.title.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
-        this.$refs.title.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
-        this.$refs.title.style.fontSize = ((-6/44)*headerBottomHeight+24)/37.5 + 'rem'
+        titleDom.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
+        titleDom.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
+        titleDom.style.fontSize = ((-6/44)*headerBottomHeight+24)/37.5 + 'rem'
+        pageClass.classList.add('scroll44')
       }
       _this.$emit('hscroll', headerBottomHeight)
       _this.$emit('hscrolltop', _this.scrollTop)

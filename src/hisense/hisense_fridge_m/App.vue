@@ -3,6 +3,8 @@
     <div :class="[{ 'offline': isOffline }, 'page']">
       <newtopbar
         :title="device.device_name"
+        :room="device.room_name"
+        :scroll="true"
         bak-color="#000" />
       <!-- 主体部分 -->
       <div class="main">
@@ -534,18 +536,31 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@imgPath3: 'base/honghan_switch/assets';
 .body {
-  min-height: 100%;
+  // min-height: 100%;
   touch-action: none;
 }
 .page {
-  height: 100vh;
-  min-height: 550px;
-  overflow-x: hidden;
-  position: relative;
+  // height: 100vh;
+  // min-height: 550px;
+  // overflow-x: hidden;
+  // position: relative;
   // background: #e5faff;
-  background-image: url(~@lib/base/fridge/assets/img_bg_01@2x.png);
-  background-size: 100% 100%;
+  // background-image: url(~@lib/base/fridge/assets/img_bg_01@2x.png);
+  // background-size: 100% 100%;
+  &::before{
+    content: "";
+    background-image: url('~@lib/@{imgPath3}/bg02.png');
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
   .main{
     // margin: 40px 80px;
     margin-top: 60px;

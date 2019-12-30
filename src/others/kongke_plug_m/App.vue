@@ -1171,7 +1171,8 @@ export default {
         }
       }
       &.btn-over{
-        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        background: #E1B96E;
         &::before{
           content: "";
           position: absolute;
@@ -1352,7 +1353,8 @@ export default {
       .btn {
         &.active {
            &.active {
-        background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
+        background: #E1B96E;
         border-color: #ffbf00;
       }
         }
@@ -1410,7 +1412,8 @@ export default {
       position: absolute;
       width: 70%;
       height: 70%;
-      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+      background: #E1B96E;
       top: 50%;
       left: 50%;
       border-radius: 50%;
