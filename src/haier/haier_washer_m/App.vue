@@ -119,7 +119,7 @@
               <div class="btn-name">混合</div>
             </div>
 
-            <div
+            <!-- <div
               class="btn-wrap"
               @click="setMode('cotton')">
               <div :class="[{ 'active': model.mode == 'cotton' }, 'btn btn-ms center']"/>
@@ -131,7 +131,7 @@
               @click="setMode('synthetic')">
               <div :class="[{ 'active': model.mode == 'synthetic' }, 'btn btn-hq center']" />
               <div class="btn-name">化纤</div>
-            </div>
+            </div> -->
 
             <div
               class="btn-wrap"
@@ -139,18 +139,18 @@
               <div :class="[{ 'active': model.mode == 'cardigan' }, 'btn btn-ym center']"/>
               <div class="btn-name">羊毛</div>
             </div>
-            <div
+            <!-- <div
               class="btn-wrap"
               @click="setMode('cowboy_suit')">
               <div :class="[{ 'active': model.mode == 'cowboy_suit' }, 'btn btn-nz center']"/>
               <div class="btn-name">牛仔</div>
-            </div>
+            </div> -->
 
             <div
               class="btn-wrap"
               @click="setMode('down_coat')">
               <div :class="[{ 'active': model.mode == 'down_coat' }, 'btn btn-ylf center']"/>
-              <div class="btn-name">羽绒服</div>
+              <div class="btn-name">羽绒</div>
             </div>
           </div>
         </div>

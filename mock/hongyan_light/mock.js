@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 
 let res = {
-    "connectivity": "online", //l
+    "connectivity": "offline", //l
     "switch_status": 'on', //开关
     "temperature":167 , //暖光3000K  自然光5000K  白光6000K
     "level":80
@@ -22,7 +22,12 @@ export function generateSnapShot() {
         }
     })
 }
-
+export function generateNetwork() {
+  return Mock.mock(0)
+}
+export function generateViewHelp() {
+  return Mock.mock('撒旦撒旦撒的撒的撒大苏打撒旦撒')
+}
 export function set(data){
     var attr = data.params.attribute
     if(attr.negative_ion_switch){

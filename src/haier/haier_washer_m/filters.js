@@ -20,30 +20,30 @@ export function modeType(type) {
     case 'spin':
       return '单脱水'
       break;
-    case 'odor_removal':
-      return '简自洁'
-      break;
+    // case 'odor_removal':
+    //   return '简自洁'
+    //   break;
 
     case 'mix':
         return '混合'
         break;
-    case 'cotton':
-        return '棉麻'
-        break;
-      case 'synthetic':
-        return '化纤'
-        break;
+    // case 'cotton':
+    //     return '棉麻'
+    //     break;
+    //   case 'synthetic':
+    //     return '化纤'
+    //     break;
       case 'cardigan':
         return '羊毛'
         break;
-      case 'cowboy_suit':
-        return '牛仔'
-        break;
+      // case 'cowboy_suit':
+      //   return '牛仔'
+      //   break;
       case 'down_coat':
-        return '羽绒服'
+        return '羽绒'
         break;
       default:
-        return '其他'
+        return '其它'
   } 
 }
 
