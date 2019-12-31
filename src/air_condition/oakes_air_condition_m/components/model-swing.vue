@@ -27,6 +27,7 @@
 </template>
 <style lang="less" scoped>
 @imgPath: 'base/air_condition/assets/new-air';
+
 @keyframes show {
     0% {
       bottom:-380px;
@@ -50,7 +51,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
     &:before{
       position: absolute;
       top: 0;

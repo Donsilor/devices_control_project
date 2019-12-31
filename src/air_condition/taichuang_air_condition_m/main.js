@@ -1,12 +1,14 @@
 console.log(`argv_is_mock: ${argv_is_mock}`)
 if (argv_is_mock || process.env.NODE_ENV == 'development') {
-  require('@mock/oakes_air_condition/index.js')
+  require('@mock/taichuang_air_condition/index.js')
 }
 import Vue from 'vue'
 import App from './App.vue'
 
 import '@lib/base/reset.less'
 import '@lib/base/common.less'
+import '@lib/base/animation.less'
+import '@lib/base/air_condition.less'
 
 import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
