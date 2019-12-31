@@ -13,6 +13,13 @@ if (location.search.indexOf('env=desktop') != -1) {
         done(mockData.generateSnapShot())
     })
 
+    on(apiList.device_getnetwork, function(data, done){
+      done(mockData.generateNetwork())
+    })
+    // on(apiList.device_getviewhelp, function(data, done){
+    //   done(mockData.generateViewHelp())
+    // })
+
     on(apiList.device_control, function(data, done){
         done(mockData.set(data))
         setTimeout(function(){

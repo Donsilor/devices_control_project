@@ -1,8 +1,7 @@
 <template>
-  <!-- v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1" -->
 
   <div
-    v-if="false"
+    v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1"
     :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
@@ -49,8 +48,8 @@
           </div>
         </div>
 
-        <!-- <div
-          v-if="tvStatus.tvOnlineStatus==-2"
+        <div
+          v-if="networkStatus==-2"
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">
@@ -60,7 +59,7 @@
             <span class="link">路由器已离线,查看帮助</span>
           </div>
           <i class="arrow"/>
-        </div> -->
+        </div>
         <div
           v-if="deviceAttrs.connectivity==='offline'&&networkStatus!=-1"      
           class="offline_bar"
@@ -69,11 +68,9 @@
             <p class="offline_bar_p">
               <i class="error"/>
             </p>
-            <!-- <span class="link">设备已离线,查看帮助</span> -->
-            <span class="link">设备已离线</span>
-
+            <span class="link">设备已离线,查看帮助</span>
           </div>
-          <!-- <i class="arrow"/> -->
+          <i class="arrow"/>
         </div>
       </div>
     </div>
