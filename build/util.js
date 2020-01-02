@@ -7,6 +7,10 @@ try {
 console.log('process.env.npm_config_argv')
 console.log(process.env.npm_config_argv)
 var product = argv.slice(2)[0]
+let reg = /.*src(\/|\\)/
+let reg1 = /\\/g
+product=product.replace(reg,'')
+product=product.replace(reg1,'/')
 // var params = require('minimist')(argv.slice(3))
 var isMock = false
 if (argv.indexOf('-mock') > -1) {
@@ -17,12 +21,14 @@ var debug = false
 if (argv.indexOf('-debug') > -1) {
   debug = true
 }
-
 // if (params.m || params.mobile) {
 //   product += '_m'
 // }
-if (argv.indexOf('-m') > -1) {
-  product += '_m'
+if (argv.indexOf('-m') > -1 ) {
+  let regmobile = /_m$/
+  if (!regmobile.test(product)) {
+    product += '_m'
+  }
 }
 
 function fillz(num) {
