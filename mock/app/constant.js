@@ -5,6 +5,8 @@ export const apiList = {
     device_control: 'Device.control',
     device_getsnapshot: 'Device.getSnapShot',
     device_getnetwork: 'Device.getNetworkStatus',
+    device_getviewhelp: 'Device.getViewHelp',
+
 
     device_postrequest: 'Device.postRequest',
 

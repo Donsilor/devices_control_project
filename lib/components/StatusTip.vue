@@ -1,7 +1,8 @@
 <template>
-<!-- v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1" -->
+  <!-- v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1" -->
   <div
     v-if="false"
+
     :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
@@ -74,7 +75,11 @@
         </div>
       </div>
     </div>
-    <!-- <div
+    <OfflineHelpPage 
+      v-if="OfflineHelpPageView" 
+      @goBack="OfflineHelpPageView=false"/>
+
+      <!-- <div
       v-if="tvStatus.tvOnlineStatus < 0 && !ios"
       class="offline_bar_blank"/> -->
   </div>
@@ -88,20 +93,24 @@
 <script>
 // import * as service from "../service"
 import { mapGetters, mapState, mapActions } from 'vuex'
+import OfflineHelpPage from './OfflineHelpPage.vue'
 
 let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
 
 export default {
+    components:{
+      OfflineHelpPage
+    },
     props: ["barHeight","type"],
     data() {
         return {
           ...mapState,
+          OfflineHelpPageView:false,
           status_bar_height: 25,
           navigation_bar_height: 44,
           ios: /iPad|iPhone|iPod/.test(navigator.userAgent)
         }
     },
-   
     computed: {
     ...mapGetters(['isClose', 'isOffline','networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
@@ -205,10 +214,11 @@ export default {
         // },
         goToOfflineHelpPage() {
           console.log('点击了')
+          this.OfflineHelpPageView = true
          
 
           // window.onNetworkStatusChange(0)
-          this.doControlDevice({connectivity:'online'})
+          // this.doControlDevice({connectivity:'online'})
             // service.onClickEvent("tvOnlineStatusClick", {
             //     tvOnlineStatus: this.tvStatus.tvOnlineStatus
             // })
@@ -365,6 +375,7 @@ export default {
       height: 2000px;
       background: transparent;
       z-index: 10000;
+      pointer-events:none;
     }
 }
 .offline_bar.offline_bar_wifi{
