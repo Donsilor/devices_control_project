@@ -388,6 +388,10 @@
 .page.offline.cover .optionbox {
   opacity: 0.3;
 }
+.page.close .bottom,
+.page.offline.cover .bottom {
+  opacity: 0.3;
+}
 .bottom {
   width: 100%;
 }

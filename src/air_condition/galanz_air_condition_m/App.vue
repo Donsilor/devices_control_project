@@ -15,16 +15,16 @@
         <div class="wrap-circle">
           <div class="showtemp">
             <div
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'"
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'"
               class="tm">-- <sup>°C</sup></div>
             <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
               class="tm">{{ thermography }}<sup>°C</sup>
             </div>
-            <div
+            <!-- <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
               class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
-            </div>
+            </div> -->
             <div
               v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
               :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
@@ -504,7 +504,7 @@ export default {
           }else if(this.deviceAttrs.mode == 'cold'){
             this.ctx.strokeStyle = "#008CDA"
           
-          }else if(this.deviceAttrs.mode == 'auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind'){
+          }else if(this.deviceAttrs.mode == 'auto'||this.deviceAttrs.mode=='dehumidify'){
             this.ctx.strokeStyle = "#E1B96E"
           }
       }else{
@@ -538,7 +538,7 @@ export default {
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
       // 开机显示
-      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline) {
+      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline&&this.deviceAttrs.mode!=='wind') {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
       }else{
         //关机显示
@@ -559,7 +559,7 @@ export default {
     setSwitch(val){
       if (this.isOffline) return
       HdSmart.UI.vibrate()
-            this.touchstart(val)
+      this.touchstart(val)
       setTimeout(() => {
         this.touchend(val)
       }, 150)
@@ -710,6 +710,7 @@ export default {
     checkSwitch(val) {
       // console.log(e.target.checked)
       this.disabledLock = true
+      if (this.isOffline||this.isClose) return
       let checkSwitchStatus = ''
       if (this.deviceAttrs[val] == 'on') {
         checkSwitchStatus = 'off'
