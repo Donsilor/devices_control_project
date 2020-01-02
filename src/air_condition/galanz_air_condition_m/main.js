@@ -20,7 +20,6 @@ FastClick.attach(document.body)
 import * as filters from './filters' // global filters
 Vue.component('NewTopBar', NewTopBar)
 Vue.component('StatusTip', StatusTip)
-
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

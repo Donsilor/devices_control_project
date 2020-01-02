@@ -4,18 +4,34 @@
     class="model"
     @click.self="show = false"
     @touchmove.prevent>
-    <div
+    <div 
       v-if="show"
       class="main show">
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
         <div 
           class="btn" 
-          @click="setWind('wind_up_down')">上下风
+          @click="setWind('wind_up')">向上
         </div>
         <div 
           class="btn"
-          @click="setWind('wind_left_right')">左右风
+          @click="setWind('wind_mid_up')">中上
+        </div>
+        <div 
+          class="btn"
+          @click="setWind('wind_middle')">正中
+        </div>
+        <div 
+          class="btn"
+          @click="setWind('wind_mid_down')">中下
+        </div>
+        <div 
+          class="btn"
+          @click="setWind('wind_down')">向下
+        </div>
+        <div 
+          class="btn"
+          @click="setWind('wind_auto')">自动
         </div>
       </div>
       <div 
@@ -64,9 +80,9 @@
       bottom: 0;
       z-index: 999999999999;
       width: 100%;
-      height: 381px;
+      height: 862px;
       color: #20282B;
-      background: #eee;
+      background: #f0f2f4;
       // border: 1px solid #DDDDDD;
       .btns{
         display: flex;
@@ -80,9 +96,10 @@
           line-height: 120px;
           text-align: center;
           font-size:32px;
-          &:first-of-type{
-            border-bottom:1px solid #F0F2F4;
-          }
+          border-bottom:1px solid #F0F2F4;
+          // &:first-of-type{
+          //   border-bottom:1px solid #F0F2F4;
+          // }
         }
       }
       .hide{
@@ -100,7 +117,7 @@
 </style>
 <script>
 export default {
-  props: ['wind_up_down', 'wind_left_right', 'btn_wind_up_down', 'btn_wind_left_right'],
+  props: ['swing_wind'],
   data() {
     return {
       show: false

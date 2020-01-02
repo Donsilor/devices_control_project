@@ -233,7 +233,7 @@ export default {
          document.body.removeEventListener('touchmove',this.touchmovefn) 
         },
         touchmovefn(e){
-          console.log('组长')
+          // console.log('组长')
           
           e.preventDefault()
         }

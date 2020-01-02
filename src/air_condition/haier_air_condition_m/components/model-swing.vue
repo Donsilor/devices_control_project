@@ -4,7 +4,7 @@
     class="model"
     @click.self="show = false"
     @touchmove.prevent>
-    <div
+    <div 
       v-if="show"
       class="main show">
       <!-- <p class="title">选择摆风</p> -->
@@ -67,7 +67,7 @@
       height: 381px;
       color: #20282B;
       background: #eee;
-      // border: 1px solid #DDDDDD;
+      border: 1px solid #DDDDDD;
       .btns{
         display: flex;
         align-items: center;

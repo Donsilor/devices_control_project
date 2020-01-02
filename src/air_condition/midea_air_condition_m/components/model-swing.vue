@@ -4,7 +4,7 @@
     class="model"
     @click.self="show = false"
     @touchmove.prevent>
-    <div
+    <div 
       v-if="show"
       class="main show">
       <!-- <p class="title">选择摆风</p> -->

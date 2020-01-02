@@ -192,6 +192,31 @@
                 this.ctx.beginPath()
                 this.ctx.arc(this.ox + (d.x*(0.6)), this.oy +  (d.y*(0.6)) ,this.br - 16, 0, 2*Math.PI, true)
                 this.ctx.fill()
+
+                // var imageData = this.ctx.getImageData(0,0,this.canvas.width, this.canvas.height)
+                // console.log(imageData, '==============')
+                // var data = imageData.data
+
+                // // 求出每个像素的灰色，然后把改变后的像素信息重新添加到canvas中
+                // // var grayscale = function() {
+                //   for (var i = 0; i < data.length; i += 4) {
+                //     // var avg = (data[i] + data[i +1] + data[i +2]) / 3
+                //     // data[i]     = avg // red
+                //     // data[i + 1] = avg // green
+                //     // data[i + 2] = avg // blue
+                //     var r = data[i],
+                //             g = data[i+1],
+                //             b = data[i+2],
+                //             a = data[i+3]
+                //   }
+                // console.log(r,g,b,a, '-----------------------')
+                // //   this.ctx.putImageData(imageData, 0, 0)
+                // // }
+                // let data2 = this.canvas.toDataURL()
+                // console.log(data2)
+                // let img = document.createElement('img')
+                // img.src = data2
+                // document.body.appendChild(img)
              },
             offset(r,d) {//根据弧度与距离计算偏移坐标
                 // console.log('offset传入的d', d)

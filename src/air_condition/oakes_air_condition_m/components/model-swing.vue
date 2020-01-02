@@ -1,31 +1,33 @@
 <template>
-  <div
-    v-if="show"
-    class="model"
-    @click.self="show = false"
-    @touchmove.prevent>
+  <div>
     <div
       v-if="show"
-      class="main show">
+      class="model"
+      @click.self="show = false"
+      @touchmove.prevent/>
+    <div
+      v-if="show"
+      class="main show" >
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
-        <div 
-          class="btn" 
+        <div
+          class="btn"
           @click="setWind('wind_up_down')">上下风
         </div>
-        <div 
+        <div
           class="btn"
           @click="setWind('wind_left_right')">左右风
         </div>
       </div>
-      <div 
-        class="hide" 
+      <div
+        class="hide"
         @click.self="show = false">取消</div>
     </div>
   </div>
 </template>
 <style lang="less" scoped>
 @imgPath: 'base/air_condition/assets/new-air';
+
 @keyframes show {
     0% {
       bottom:-380px;
@@ -49,7 +51,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
     &:before{
       position: absolute;
       top: 0;
@@ -59,15 +60,17 @@
       height: 100%;
       background: rgba(0,0,0,0.8);
     }
-    .main{
-      position: absolute;
+  }
+     .main{
+      position: fixed;
       bottom: 0;
+      left: 0;
       z-index: 999999999999;
       width: 100%;
       height: 381px;
       color: #20282B;
       background: #eee;
-      // border: 1px solid #DDDDDD;
+      border: 1px solid #DDDDDD;
       .btns{
         display: flex;
         align-items: center;
@@ -96,7 +99,6 @@
         background: #fff;
       }
     }
-  }
 </style>
 <script>
 export default {

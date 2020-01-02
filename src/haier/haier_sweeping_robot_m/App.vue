@@ -147,7 +147,7 @@
         <div 
           :class="[{ 'item3': animation }, {' btn-current': model.mode === 'edge_clean' }, {' btn-loading': btnLoading.edge_clean },'btn edge_clean center']"
           @click.stop="setMode('edge_clean')">
-          <div class="name">沿边</div>
+          <div class="name">沿墙</div>
         </div>
         <div 
           :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' },{' btn-loading': btnLoading.design_clean },{'disable': model.status == 'charging'||model.status == 'charge_completed'},'btn design_clean center']"
@@ -258,7 +258,7 @@ export default {
           return '单间'
           break
         case 'edge_clean':
-          return '沿边'
+          return '沿墙'
           break
         case 'design_clean':
           return '定点'

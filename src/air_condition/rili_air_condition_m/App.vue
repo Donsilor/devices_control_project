@@ -1,8 +1,6 @@
 <template>
   <div class="body">
-    <div 
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']" 
-    >
+    <div :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']">
       <NewTopBar
         :title="device.device_name"
         :room="device.room_name"
@@ -13,29 +11,25 @@
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
-            <div
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'"
+            <div 
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'" 
               class="tm">-- <sup>°C</sup></div>
-            <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
+            <!-- 如果模式是从制热模式最低17度切换模式,温度应该展示为19 -->
+            <div 
+              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='heat'" 
+              class="tm">{{ (centigrade < 190 ? 190: centigrade) | filterTm }}<sup>°C</sup></div>
+
+            <div 
+              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='heat'"
               class="tm">{{ thermography }}<sup>°C</sup>
             </div>
-            <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
-              class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
-            </div>
-            <div
-              v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
+            <div 
+              v-show="!isOffline&& deviceAttrs.switchStatus == 'on'" 
               :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
             <div
               v-show="isOffline||deviceAttrs.switchStatus == 'off'"
               :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
           </div>
-          <!-- 当不可调节温度时，显示这个盒子，可以挡着canvas，使它不能滑动 -->
-          <div 
-            v-show="deviceAttrs.mode=='wind'" 
-            class="cover" 
-            @touchmove.prevent/>
           <canvas 
             ref="canvas"
             class="canvas" 
@@ -43,7 +37,7 @@
             height="560"
           />
         </div>
-        <div
+        <div 
           class="control-tm center">
           <button
             ref="reduce"
@@ -85,40 +79,33 @@
           <div class="btn-name">制冷</div>
         </div>
         <div
-          class="btn-wrap">
+          class="btn-wrap"
+        >
           <div 
             ref="heat" 
-            :class="[{ 'active': deviceAttrs.mode == 'heat'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-heat center']" 
+            :class="[ { 'active': deviceAttrs.mode == 'heat' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-heat center']" 
             @click="setMode('heat')"/>
           <div class="btn-name">制热</div>
         </div>
         <div
-          class="btn-wrap">
-          <div 
-            ref="auto" 
-            :class="[{ 'active': deviceAttrs.mode == 'auto'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-auto center']" 
-            @click="setMode('auto')"/>
-          <div
-            class="btn-name" >智能</div>
-        </div>
-        <div
-          class="btn-wrap">
+          class="btn-wrap"
+        >
           <div 
             ref="wind" 
-            :class="[{ 'active': deviceAttrs.mode == 'wind'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-wind center']" 
+            :class="[{ 'active': deviceAttrs.mode == 'wind' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-wind center']" 
             @click="setMode('wind')"/>
           <div class="btn-name">送风</div>
         </div>
         <div
-          class="btn-wrap">
+          class="btn-wrap"
+        >
           <div 
             ref="dehumidify" 
-            :class="[{ 'active': deviceAttrs.mode == 'dehumidify'&& deviceAttrs.switchStatus == 'on'&&!isOffline }, 'btn btn-dehumidify center']" 
+            :class="[{ 'active': deviceAttrs.mode == 'dehumidify' && deviceAttrs.switchStatus == 'on'&&!isOffline}, 'btn btn-dehumidify center']" 
             @click="setMode('dehumidify')"/>
           <div class="btn-name">除湿</div>
         </div>
         <div
-          style="visibility:hidden"
           class="btn-wrap"/>
       </div>
       <!-- 规格选择 -->
@@ -139,43 +126,15 @@
               <div 
                 :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']" 
                 @click="setSpeed('high')">高</div>
-              <div 
-                v-show="deviceAttrs.mode!=='wind'"
-                :class="[{ 'active': deviceAttrs.speed == 'auto'},'speedBtn']" 
-                @click="setSpeed('auto')">自动</div>
             </div>
           </div>
         </div>
-        <!-- 摆风 -->
-        <div class="option">
-          <div>
-            <span>摆风</span>
-            <span 
-              class="check" 
-              @click="showSwing">{{ deviceAttrs.wind_up_down=='on'?'上下风 ':'' }}{{ deviceAttrs.wind_left_right=='on'?'左右风':'' }}{{ deviceAttrs.wind_up_down=='off'&&deviceAttrs.wind_left_right=='off'?'设置':'' }}
-              <img 
-                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
-            </span>
-          </div>
-        </div>
       </div>
-
-      <!--选择摆风-->
-      <model-swing
-        ref="swing"
-        :wind_up_down="deviceAttrs.wind_up_down"
-        :wind_left_right="deviceAttrs.wind_left_right"
-        @setWind="setWind" />
       <!--选择模式-->
       <model-mode
         ref="mode"
         :mode="deviceAttrs.mode"
         @setMode="setMode" />
-      <!--选择风速-->
-      <model-speed
-        ref="speed"
-        :speed="deviceAttrs.speed"
-        @setSpeed="setSpeed" />
     </div>
   </div>
 </template>
@@ -187,7 +146,7 @@ import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
 import SelectTime from './components/time.vue'
-const [MIN_TEMP, MAX_TEMP] = [180, 320]
+const [MIN_TEMP, MAX_TEMP] = [170, 300]
 export default {
   components: {
     circleProgress,
@@ -200,7 +159,7 @@ export default {
     return {
       isOpen: false,
       isShow: true,
-      width: 250,
+      width: 230,
       radius: 8,
       progress: 30, // 0~70
       duration: 0,
@@ -215,13 +174,13 @@ export default {
             //圆的数据
       ox:140,
       oy:140,
-      or:127,
+      or:130,
       br:10,
       moveFlag:false,
       centigrade:0,//摄氏度
       ctx: '',
       //记录温度
-      thermography:18,
+      thermography:16,
       moveEnd:false,
       setTemperatureDis:false,
     }
@@ -231,10 +190,10 @@ export default {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
     modeIsActive() {
-      return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
+      return this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
     },
     windIsActive() {
-      return this.deviceAttrs.wind_up_down == 'on' || this.deviceAttrs.wind_left_right == 'on'
+      return this.deviceAttrs.wind_up == 'on'
     },
     modeClass() {
       /* eslint-disable no-unreachable */
@@ -271,13 +230,38 @@ export default {
           return 'btn-low'
       }
     },
+    getBarColor() {
+      if(this.isClose || this.isOffline) return '#D8D8D8'
+            /* eslint-disable no-unreachable */
+      switch (this.deviceAttrs.mode) {
+        case 'cold':
+          return '#00A3FF'
+          break
+        case 'heat':
+          return '#FF5F00'
+          break
+        default:
+          return '#000'
+      }
+    },
   },
   watch: {
     "device.stateChange"(){
-      if(!this.moveEnd)
-      this.draw(`${0.125+0.75/14*(this.deviceAttrs.temperature/10-18)}`)
+      if (this.moveEnd == false) {
+        if (this.deviceAttrs.mode == 'heat') {
+        this.draw(`${0.125+0.0577*(this.deviceAttrs.temperature/10-17)}`)
+        // console.log(0.125+0.0577*(this.deviceAttrs.temperature/10-17),'11111111111')//0.125
+        }else{
+          if (0.125+0.0682*(this.deviceAttrs.temperature/10-19)<0.125) {
+            this.draw(0.125)
+          }else{
+            this.draw(`${0.125+0.0682*(this.deviceAttrs.temperature/10-19)}`)
+          }
+          // console.log(0.125+0.0682*(this.deviceAttrs.temperature/10-19),'22222222222')//假设温度是17，结果是个负数  
+        }
+      }
     },
-    'deviceAttrs.temperature'() {
+     'deviceAttrs.temperature'() {
       if(this.deviceAttrs.temperature) {
         this.setTemperatureDis = false
       }
@@ -287,7 +271,8 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-          this.draw(`${0.125+0.75/14*(this.deviceAttrs.temperature/10-18)}`)
+          this.draw(`${0.125+0.0577*(this.deviceAttrs.temperature/10-17)}`)
+          // console.log(`${0.125+0.0577*(this.deviceAttrs.temperature/10-17)}`,'000000000')//0.125
           // this.reset()
         })
       HdSmart.UI.setStatusBarColor(2)
@@ -303,7 +288,7 @@ export default {
       } : {
           start: "mousedown", move: "mousemove", end: "mouseup"
       }
-      this.$refs.canvas.addEventListener(on.start,(e)=> {
+        this.$refs.canvas.addEventListener(on.start,(e)=> {
           this.moveFlag = true
       },false)
 
@@ -313,7 +298,6 @@ export default {
         }else{
             e.returnValue = false
         }
-        console.log('move')
         isMove = true
           if (this.moveFlag) {
               var k = this.getXY(e,this.$refs.canvas)
@@ -336,14 +320,10 @@ export default {
       }, false)
 
       this.$refs.canvas.addEventListener(on.end,()=> {
-          if (this.isOffline||this.isClose) return
+        if (this.isOffline||this.isClose) return
           this.moveEnd = true
           this.moveFlag = false
           if (isMove) {
-            if (this.thermography == 32 && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
-              this.draw(`${0.125+0.75/14*(this.deviceAttrs.temperature/10-18)}`)
-              return HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
-            }
             this.controlDevice('temperature',this.centigrade)
           }
           isMove = false
@@ -357,9 +337,6 @@ export default {
         if (this.isOffline) return
       }else{
         if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
-      }
-       if (this.deviceAttrs.temperature== 320 && this.deviceAttrs.speed == 'low'&&val == 'cold') {
-        return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
       }
        let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
@@ -383,9 +360,6 @@ export default {
       }else{
         if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
       }
-      if (this.deviceAttrs.temperature== 320 && this.deviceAttrs.speed == 'low'&&val == 'cold') {
-        return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
-      }
       let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
         btn[i].classList.remove('animateStart')
@@ -397,12 +371,13 @@ export default {
       return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
     },
     draw(n) {
+      console.log(n,'nnnnnnnnnnnn')
       
       this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
       this.ctx.strokeStyle = "rgba(0,0,0,0.05)"
       this.ctx.lineWidth = 7
       this.ctx.beginPath()
-      this.ctx.shadowColor =  "none"
+            this.ctx.shadowColor =  "none"
       this.ctx.shadowOffsetX = 0
       this.ctx.shadowOffsetY = 0
       this.ctx.shadowBlur = 0
@@ -417,7 +392,7 @@ export default {
           }else if(this.deviceAttrs.mode == 'cold'){
             console.log('cold111')
             this.ctx.strokeStyle = "#008CDA"
-          }else if(this.deviceAttrs.mode == 'auto'||this.deviceAttrs.mode=='dehumidify'){
+          }else{
             console.log('else')
             this.ctx.strokeStyle = "#E1B96E"
           }
@@ -427,10 +402,11 @@ export default {
       
       this.ctx.lineWidth = 7
       this.ctx.beginPath()
-      this.ctx.shadowColor =  "none"
+            this.ctx.shadowColor =  "none"
       this.ctx.shadowOffsetX = 0
       this.ctx.shadowOffsetY = 0
       this.ctx.shadowBlur = 0
+      this.ctx.lineCap = 'round'
       this.ctx.arc(this.ox,this.oy,this.or,3/4 *Math.PI,(n*2+0.5)*Math.PI,false)
       // this.ctx.arc(this.ox,this.oy,this.or,0.5*Math.PI,(n*2+0.5)*Math.PI,false);
       this.ctx.stroke()
@@ -438,20 +414,30 @@ export default {
       this.ctx.font = "70px PingFangSC-Light"
       this.ctx.textAlign = "center"
       this.ctx.textBaseline = "middle"
-      this.ctx.fillText(Math.round((n*(14/0.75))+(18-((14*0.125)/0.75)))+"℃",this.ox,this.oy)
-      console.log( Math.round((n*(14/0.75))+(18-((14*0.125)/0.75)))+"℃",'温度')
-      this.thermography = Math.round((n*(14/0.75))+(18-((14*0.125)/0.75)))
-      this.centigrade = Math.round((n*(14/0.75))+(18-((14*0.125)/0.75)))*10
+      // 制热模式最低温度为17，其他模式最低19
+      if (this.deviceAttrs.mode == 'heat') {
+         this.ctx.fillText(Math.round((n*(13/0.75))+(17-((13*0.125)/0.75)))+"℃",this.ox,this.oy)
+        this.thermography = Math.round((n*(13/0.75))+(17-((13*0.125)/0.75)))
+        console.log('3333333333333')
+        
+      }else{
+       this.ctx.fillText(Math.round((n*(11/0.75))+(19-((11*0.125)/0.75)))+"℃",this.ox,this.oy)
+        this.thermography = Math.round((n*(11/0.75))+(19-((11*0.125)/0.75)))
+        console.log('44444444444444')
+        
+      }
+
+      this.centigrade = this.thermography*10
       this.ctx.fillStyle = "#fff"
       this.ctx.beginPath()
-      this.ctx.shadowOffsetX = 0
+            this.ctx.shadowOffsetX = 0
       this.ctx.shadowOffsetY = 2
       this.ctx.shadowBlur = 4
       this.ctx.shadowColor = "rgba(0, 0, 0, 0.1)"
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
       // 关机显示
-      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline&&this.deviceAttrs.mode!=='wind') {
+      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline) {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
       }else{
         //开机显示
@@ -472,7 +458,7 @@ export default {
     setSwitch(val){
       if (this.isOffline) return
       HdSmart.UI.vibrate()
-      this.touchstart(val)
+            this.touchstart(val)
       setTimeout(() => {
         this.touchend(val)
       }, 150)
@@ -487,54 +473,57 @@ export default {
     },
     // 设置模式
     setMode(val) {
-      if (this.isOffline||this.isClose) return
+      if (this.isClose||this.isOffline) return
       HdSmart.UI.vibrate()
-      this.touchstart(val)
+            this.touchstart(val)
       setTimeout(() => {
         this.touchend(val)
       }, 150)
-      if (this.deviceAttrs.temperature == 320 && this.deviceAttrs.speed == 'low' && val == 'cold') {
-        this.setTemperatureDis = false
-        return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
-      }
       if (val == this.deviceAttrs.mode) return
-        this.moveEnd = false
+      this.moveEnd = false
       this.controlDevice('mode', val)
         .then((res) => {
-            if (res) {
-                if(res.code == 0) {
-                this.deviceAttrs.mode = val
-              }
-              if (this.deviceAttrs.mode=='wind') {
-                this.progress = 70 /(30 - 17) * (this.deviceAttrs.env_temperature / 10 - 17)
-                // this.$refs.$circle.init()
-                this.hide()
-                return
-              }
-              // this.reset()
+          if (res) {
+            if(res.code == 0) {
+              this.deviceAttrs.mode = val
+                        // this.reset()
               this.hide()
-            }
-            if (res == null) {
-              console.log(res,val,'res val=========')
-              this.$refs[val].classList.remove('yellowExtend')
-            }
+             }
+          }
+          if (res == null) {
+            console.log(res,val,'res val=========')
+            this.$refs[val].classList.remove('yellowExtend')
+        }
         })
     },
     setTemperature(val,step) {
       if (this.isOffline||this.isClose) return
       HdSmart.UI.vibrate()
-      this.touchstart(val)
+            this.touchstart(val)
       setTimeout(() => {
         this.touchend(val,temp)
       }, 150)
-      // 送风模式不能设置温度
-        this.moveEnd = false
-        this.setTemperatureDis = true
-      if (this.deviceAttrs.mode === 'wind') {
-        this.setTemperatureDis = false
-        return HdSmart.UI.toast('送风模式不支持温度调节')
-      }
+      this.setTemperatureDis = true
+      this.moveEnd = false
       let temp = +this.deviceAttrs.temperature + step
+      if (step== 10) {
+        if (this.deviceAttrs.mode!=='heat'&&this.deviceAttrs.temperature == 170) {
+         temp = +this.deviceAttrs.temperature + step + 20
+        }
+        if (this.deviceAttrs.mode!=='heat'&&this.deviceAttrs.temperature == 180) {
+          temp = +this.deviceAttrs.temperature + step + 10
+        }
+      }else{
+        if (this.deviceAttrs.mode!=='heat'&&this.deviceAttrs.temperature == 200) {
+           temp = +this.deviceAttrs.temperature + step - 20
+        }
+        if (this.deviceAttrs.mode!=='heat'&&this.deviceAttrs.temperature == 190) {
+           temp = +this.deviceAttrs.temperature + step - 30
+        }
+        if (this.deviceAttrs.mode!=='heat'&&this.deviceAttrs.temperature == 180) {
+           temp = +this.deviceAttrs.temperature + step - 40
+        }
+      }
       // 最小温度
       if (temp < MIN_TEMP) {
         if (this.deviceAttrs.temperature == MIN_TEMP) {
@@ -553,62 +542,28 @@ export default {
           temp = MAX_TEMP
         }
       }
-      if (temp == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
-        this.setTemperatureDis = false
-        return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
-      }
       this.controlDevice('temperature', temp)
         .then((res) => {
-          if (res.code == 0) {
+          if(res.code == 0) {
             // this.deviceAttrs.temperature = temp
           }else{
             this.setTemperatureDis = false
           }
-        })
-    },
-    // 设置摆风
-    setWind(attr) {
-      if (this.isOffline||this.isClose) return
-        this.moveEnd = false
-
-      var val = this.deviceAttrs[attr] === 'on' ? 'off' : 'on'
-      // if (this.deviceAttrs.wind_up_down=='on') {
-      //   this.controlDevice('wind_left_right','off')
-      // }
-      // if (this.deviceAttrs.wind_left_right=='on') {
-      //    this.controlDevice('wind_up_down','off')
-      // }
-      this.controlDevice(attr, val)
-        .then(() =>{
-          this.hide()
+          // this.reset()
         })
     },
     // 设置风速
     setSpeed(speed) {
       if (this.isOffline||this.isClose) return
       HdSmart.UI.vibrate()
-        this.moveEnd = false
-      if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
-        return HdSmart.UI.toast('送风模式不能设置自动风速')
-      }
-      if(this.deviceAttrs.mode == 'dehumidify') {
-        return HdSmart.UI.toast('除湿模式下无法设定风速')
-      }
-      // console.log(speed, val)
-      // this.typeVal = val
-      if (this.deviceAttrs.temperature == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
-        return HdSmart.UI.toast('低风、制冷模式下不支持此温度')
-      }
+      this.moveEnd = false
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
+          // this.setRangWidth(93)
         })
     },
-    controlDevice(attr, value) {
-      let param = {}
-      // if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
-      //   param = { 'speed': 'low'}
-      // }
+    controlDevice(attr, value,param) {
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {
@@ -619,14 +574,6 @@ export default {
         }
       })
     },
-    // 重置动画
-    // reset() {
-    //   // this.barColor = this.getBarColor()
-    //   this.progress = this.getProgress()
-    //   this.$nextTick(() => {
-    //     // this.$refs.$circle.init()
-    //   })
-    // },
     showSwing() {
       if (this.isClose) return
       this.$refs.swing.show = true
@@ -635,25 +582,42 @@ export default {
       if (this.isClose) return
       this.$refs.mode.show = true
     },
-    showSpeed() {
-      if (this.isClose) return
-      this.$refs.speed.show = true
-       
-    },
+    // showSpeed() {
+    //   if (this.isClose) return
+    //   this.$refs.speed.show = true
+    // },
     showTime() {
       if (this.isClose) return
       this.$refs.time.show = true
     },
     hide(){
-      if(this.$refs.swing.show) this.$refs.swing.show = false
-      if(this.$refs.mode.show) this.$refs.mode.show = false
-      if(this.$refs.speed.show) this.$refs.speed.show = false
+      // if(this.$refs.swing.show) this.$refs.swing.show = false
+      // if(this.$refs.mode.show) this.$refs.mode.show = false
+      // if(this.$refs.speed.show) this.$refs.speed.show = false
     },
 
-    getProgress() {
-      // 计算温度进度条
-      return 70 /(30 - 17) * (this.deviceAttrs.temperature / 10 - 17)
-    }
+    // getProgress() {
+    //   // 计算温度进度条
+    //   if (this.deviceAttrs.temperature > MAX_TEMP) {
+    //     return 70 /(30 - 19) * (MAX_TEMP / 10 - 19)
+    //   }
+    //   if (this.deviceAttrs.mode=='heat') {
+    //     return 70 /(30 - 17) * (this.deviceAttrs.temperature / 10 - 17)
+    //   }else{
+    //     let wendu = this.deviceAttrs.temperature
+    //     if (wendu < 190) {
+    //       wendu = 190
+    //     }
+    //      return 70 /(30 - 19) * (wendu / 10 - 19)
+    //   }  
+    // }
   }
 }
 </script>
+<style lang="less" scoped>
+  .btn-wrap{
+    &:last-of-type{
+      display: none;
+    }
+  }
+</style>

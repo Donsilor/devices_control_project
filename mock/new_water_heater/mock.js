@@ -14,7 +14,7 @@ var res = {
   "deviceCategory": "water_heater.sn",
   "deviceSubCategory": 0,
   "connectivity": "online",
-  "currenttemperature":85,
+  "currenttemperature":90,
   "error":"running"
 }
 export function generateSnapShot() {

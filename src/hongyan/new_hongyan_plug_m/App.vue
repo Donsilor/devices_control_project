@@ -17,27 +17,27 @@
           </div>
         </div>
         <div class="status">
-              <div class="electric">
-                <span>实时电流</span>
-                <div 
-                  v-if="!isClose&& deviceAttrs.connectivity == 'online'"
-                  class="current">{{ deviceAttrs.current.toFixed(1) }}</div>
-                <div 
-                  v-else 
-                  class="current1">ㅡㅡ</div>
-              </div>
-              <div class="voltage">
-                <span> 实时电压</span>
-                <span 
-                  v-if="!isClose&& deviceAttrs.connectivity == 'online'"
-                  class="current">
-                  {{ deviceAttrs.voltage?deviceAttrs.voltage.toFixed(1):220 }}V
-                </span>
-                <span 
-                  v-else 
-                  class="current1">ㅡㅡV</span>
-              </div>
-            </div>
+          <div class="electric">
+            <span>实时电流</span>
+            <div 
+              v-if="!isClose&& deviceAttrs.connectivity == 'online'"
+              class="current">{{ deviceAttrs.current.toFixed(1) }}</div>
+            <div 
+              v-else 
+              class="current1">ㅡㅡ</div>
+          </div>
+          <div class="voltage">
+            <span> 实时电压</span>
+            <span 
+              v-if="!isClose&& deviceAttrs.connectivity == 'online'"
+              class="current">
+              {{ deviceAttrs.voltage?deviceAttrs.voltage.toFixed(1):220 }}V
+            </span>
+            <span 
+              v-else 
+              class="current1">ㅡㅡV</span>
+          </div>
+        </div>
       </div>
       <!-- 插座状态 -->
       <div class="switchStatus">{{ deviceAttrs.switch=='on'?'通电中':'已断电' }}</div>
