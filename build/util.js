@@ -24,8 +24,11 @@ if (argv.indexOf('-debug') > -1) {
 // if (params.m || params.mobile) {
 //   product += '_m'
 // }
-if (argv.indexOf('-m') > -1) {
-  product += '_m'
+if (argv.indexOf('-m') > -1 ) {
+  let regmobile = /_m$/
+  if (!regmobile.test(product)) {
+    product += '_m'
+  }
 }
 
 function fillz(num) {
