@@ -33,7 +33,7 @@
           </div>
           <div class="cover">
             <span class="point left" />
-            <span :class="['point', 'right', {'rightRed': deviceAttrs.currenttemperature >= 75 && !isClose && !isOffline && networkStatus != -1}]" />
+            <span :class="['point', 'right', {'rightRed': deviceAttrs.currenttemperature >= 75 && !isClose && !isOffline && networkStatus != -1 && deviceAttrs.mode != 'hot' || deviceAttrs.currenttemperature >= 78}]" />
             <span class="txt left">30<sup>°C</sup></span>
             <span class="txt right">{{ deviceAttrs.mode == 'hot' ? 78 : 75 }}<sup>°C</sup></span>
           </div>
@@ -231,8 +231,10 @@ export default {
     cRotate() {
       if (this.isClose||this.isOffline||this.deviceAttrs.currenttemperature<=30 || this.networkStatus == -1) {
         return -45
-      } else if(this.deviceAttrs.currenttemperature>=75){
+      } else if(this.deviceAttrs.currenttemperature>=75 && this.deviceAttrs.mode != 'hot'){
           return 135
+      }else if(this.deviceAttrs.currenttemperature>=78) {
+        return 135
       }else if(this.deviceAttrs.mode == 'hot') {
         return (+this.deviceAttrs.currenttemperature - 30) * 3.75 - 45
       } else {
@@ -242,8 +244,10 @@ export default {
     arrowRotate() {
       if (this.isClose||this.isOffline||this.deviceAttrs.currenttemperature<=30 || this.networkStatus == -1) {
         return 0
-      } else if(this.deviceAttrs.currenttemperature>=75){
+      } else if(this.deviceAttrs.currenttemperature>=75 && this.deviceAttrs.mode != 'hot'){
          return 180
+      }else if(this.deviceAttrs.currenttemperature>=78) {
+        return 180
       }else if(this.deviceAttrs.mode == 'hot') {
         return (+this.deviceAttrs.currenttemperature - 30) * 3.75
       } else {

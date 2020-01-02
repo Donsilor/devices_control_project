@@ -3,15 +3,18 @@
     <div :class="[{ 'offline': isOffline }, 'page']">
       <newtopbar
         :title="device.device_name"
-        bak-color="#000" />
+        :room="device.room_name"
+        :scroll="true"
+        bak-color="#000"
+        page-class=".page" />
       <!-- 主体部分 -->
       <div class="main">
         <div class="headline">准备就绪</div>
-        <!-- <div class="subheading">
+        <div class="subheading">
           <div class="subheading_tips">风温 | 低</div>
           <div class="subheading_tips margin-tips">水温 | 中</div>
           <div class="subheading_tips">座温 | 中</div>
-        </div> -->
+        </div>
         <!-- <div class="subheading">
           <div class="subheading_tips">妇洗</div>
           <div class="subheading_tips tips-margin">——</div>
@@ -19,9 +22,9 @@
           <div class="subheading_tips tips-margin">——</div>
           <div class="subheading_tips"> 烘干</div>
         </div> -->
-        <div class="subheading">
+        <!-- <div class="subheading">
           <div class="subheading_tips-big">正在烘干</div>
-        </div>
+        </div> -->
       </div>
 
       <!-- 当前型号暂不支持以下功能，注释处理 -->
@@ -81,7 +84,7 @@
         <div class="footer-line">
           <div class="footer-title">风温</div>
           <div class="footer-nav">
-            <div class="footer-nav-btn">关</div>
+            <div class="footer-nav-btn active">关</div>
             <div class="footer-nav-btn">低</div>
             <div class="footer-nav-btn">中</div>
             <div class="footer-nav-btn">高</div>
@@ -111,18 +114,18 @@
         <div class="footer-line">
           <div class="footer-title">清洗水压</div>
           <div class="footer-nav">
-            <div class="footer-nav-btn very-width">弱</div>
-            <div class="footer-nav-btn very-width">中</div>
-            <div class="footer-nav-btn very-width">强</div>
+            <div class="footer-nav-btn">弱</div>
+            <div class="footer-nav-btn">中</div>
+            <div class="footer-nav-btn">强</div>
           </div>
         </div>
         <div class="line"/>
         <div class="footer-line">
           <div class="footer-title">出水位置</div>
           <div class="footer-nav">
-            <div class="footer-nav-btn very-width">前</div>
-            <div class="footer-nav-btn very-width">中</div>
-            <div class="footer-nav-btn very-width">后</div>
+            <div class="footer-nav-btn">前</div>
+            <div class="footer-nav-btn">中</div>
+            <div class="footer-nav-btn">后</div>
           </div>
         </div>
         <div class="line"/>
@@ -520,18 +523,30 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.body {
-  min-height: 100%;
-  touch-action: none;
-}
+@imgPath3: 'base/honghan_switch/assets';
+// .body {
+  // min-height: 100%;
+  // touch-action: none;
+// }
 .page {
-  height: 100vh;
-  min-height: 550px;
-  overflow-x: hidden;
-  position: relative;
-  // background: #e5faff;
-  background-image: url(~@lib/base/fridge/assets/img_bg_01@2x.png);
-  background-size: 100% 100%;
+  // height: 100vh;
+  // min-height: 550px;
+  // overflow-x: hidden;
+  // position: relative;
+  // background-image: url(~@lib/base/fridge/assets/img_bg_01@2x.png);
+  // background-size: 100% 100%;
+  &::before{
+    content: "";
+    background-image: url('~@lib/@{imgPath3}/bg02.png');
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
   .main{
       margin-top: 60px;
     .headline {
@@ -726,17 +741,32 @@ export default {
       }
       .footer-nav {
         display: flex;
-        width: 480px;
+        // width: 480px;
         .footer-nav-btn {
-          width: 120px;
+          // width: 120px;
           height: 64px;
           line-height: 64px;
-          background: rgba(0,0,0,0.04);
+          // background: rgba(0,0,0,0.04);
           font-size: 28px;
           color: #000000;
           text-align: center;
-          &.very-width {
-            width: 160px;
+          margin-left: 64px;
+          opacity: 0.5;
+          &.active {
+            opacity: 1;
+            position: relative;
+            &::before{
+              display: block;
+              content: "";
+              width: 8px;
+              height: 8px;
+              border-radius: 50%;
+              background: #000;
+              position: absolute;
+              bottom: 0;
+              left: 50%;
+              margin-left: -4px;
+            }
           }
         }
       }
@@ -766,11 +796,11 @@ export default {
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
             background: #000;
         }
-        // .switch:checked {
-            // border-color: #64bd63;
-            // box-shadow: #64bd63 0 0 0 16px inset;
-            // background-color: #64bd63;
-        // }
+        .switch:checked {
+            border-color: #E1B96E;
+            box-shadow: #E1B96E 0 0 0 16px inset;
+            background-color: #E1B96E;
+        }
         .switch:checked:before {
             left: 30px;
             background: #000000;

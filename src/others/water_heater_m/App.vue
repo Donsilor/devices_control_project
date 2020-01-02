@@ -14,7 +14,8 @@
             class="circle" />
           <div class="cover">
             <span class="point left" />
-            <span class="point right" />
+            <span
+              :class="['point', 'right', {'rightRed': deviceAttrs.temperature >= 75 && !isClose && !isOffline && deviceAttrs.mode != 'sterilization' || deviceAttrs.temperature >= 80}]" />
             <span class="txt left">35<sup>°C</sup></span>
             <span class="txt right">{{ deviceAttrs.mode == 'sterilization' ? 80 : 75 }}<sup>°C</sup></span>
           </div>
@@ -47,15 +48,15 @@
         <div
           v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
           class="reduce"
-          @click="setTemperature(-1)" ><img 
-            src="~@lib/base/fridge/assets/reduce.png" 
+          @click="setTemperature(-1)" ><img
+            src="~@lib/base/fridge/assets/reduce.png"
             alt=""></div>
         <div class="main-control"><i class="icon" /> 预设温度 {{ deviceAttrs.set_temperature }}°C</div>
         <div
           v-show="!deviceAttrs.mode || deviceAttrs.mode == 'free'"
           class="add"
-          @click="setTemperature(1)" ><img 
-            src="~@lib/base/fridge/assets/add.png" 
+          @click="setTemperature(1)" ><img
+            src="~@lib/base/fridge/assets/add.png"
             alt=""></div>
       </div>
 
@@ -147,15 +148,37 @@ export default {
       return this.deviceAttrs.status == 'run'
     },
     cRotate() {
-      if (this.isClose) {
+      // if (this.isClose) {
+      //   return -45
+      // } else {
+      //   return (+this.deviceAttrs.temperature - 35) * 4.5 - 45
+      // }
+      if (this.isClose||this.isOffline||this.deviceAttrs.temperature<=35) {
         return -45
+      } else if(this.deviceAttrs.temperature>=75 && this.deviceAttrs.mode != 'sterilization'){
+          return 135
+      }else if(this.deviceAttrs.temperature>=80) {
+        return 135
+      }else if(this.deviceAttrs.mode == 'sterilization') {
+        return (+this.deviceAttrs.temperature - 35) * 4 - 45
       } else {
         return (+this.deviceAttrs.temperature - 35) * 4.5 - 45
       }
     },
     arrowRotate() {
-      if (this.isClose) {
+      // if (this.isClose) {
+      //   return 0
+      // } else {
+      //   return (+this.deviceAttrs.temperature - 35) * 4.5
+      // }
+      if (this.isClose||this.isOffline||this.deviceAttrs.temperature<=35) {
         return 0
+      } else if(this.deviceAttrs.temperature>=75 && this.deviceAttrs.mode != 'sterilization'){
+         return 180
+      }else if(this.deviceAttrs.temperature>=80) {
+        return 180
+      }else if(this.deviceAttrs.mode == 'sterilization') {
+        return (+this.deviceAttrs.temperature - 35) * 4
       } else {
         return (+this.deviceAttrs.temperature - 35) * 4.5
       }
@@ -321,6 +344,9 @@ export default {
             top: -8px;
             right: -5px;
             background: #d8d8d8;
+          }
+          &.rightRed {
+            background: #ff210e;
           }
         }
         .txt {
