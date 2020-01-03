@@ -10,42 +10,42 @@
         bak-color="#000"/>
       <StatusTip v-show="device.device_uuid"/>
       <div class="main center">
-        <div 
-          ref="stick" 
+        <div
+          ref="stick"
           class="stick" >
           <div class="Pole"/>
-          <div 
-            ref="imgBox" 
+          <div
+            ref="imgBox"
             class="imgBox">
-            <div 
-              ref="leftCurtainBox" 
+            <div
+              ref="leftCurtainBox"
               class="leftCurtainBox"
               @touchstart="touchStart($event)"
               @touchmove="touchMove($event,'left')"
               @touchend="touchEnd($event)">
-              <img 
+              <img
                 ref="curtainLeft"
-                class="curtainLeft" 
+                class="curtainLeft"
                 src="../../../lib/base/new_curtains/assets/single.png">
-              <img 
+              <img
                 ref="left"
-                class="left" 
+                class="left"
                 src="../../../lib/base/new_curtains/assets/left.png"
               >
             </div>
-            <div 
-              ref="rightCurtainBox" 
+            <div
+              ref="rightCurtainBox"
               class="rightCurtainBox"
               @touchstart="touchStart($event)"
               @touchmove="touchMove($event,'right')"
               @touchend="touchEnd($event)">
-              <img 
+              <img
                 ref="curtainRight"
-                class="curtainRight" 
+                class="curtainRight"
                 src="../../../lib/base/new_curtains/assets/single.png">
-              <img 
+              <img
                 ref="right"
-                class="right" 
+                class="right"
                 src="../../../lib/base/new_curtains/assets/right.png"
               >
             </div>
@@ -61,7 +61,7 @@
           <div
             ref="close"
             class="btn btn-close center"
-            @click="setClose" 
+            @click="setClose"
             @touchstart ="touchstart('close')"
             @touchend="touchend('close')"/>
           <div class="btn-name">全关</div>
@@ -70,7 +70,7 @@
           <div
             ref="pause"
             class="btn-pause btn center"
-            @click="setPause" 
+            @click="setPause"
             @touchstart ="touchstart('pause')"
             @touchend="touchend('pause')"/>
           <div class="btn-name">暂停</div>
@@ -79,7 +79,7 @@
           <div
             ref="open"
             class="btn-open btn center"
-            @click="setOpen" 
+            @click="setOpen"
             @touchstart ="touchstart('open')"
             @touchend="touchend('open')"/>
           <div class="btn-name">全开</div>
@@ -126,7 +126,7 @@ export default {
       function a(num) {
         setTimeout(() => {
           if (num === _that.count) {
-            console.log('暂停了') 
+            console.log('暂停了')
             if (_that.curtainStatusText=='正在关闭窗帘'||_that.curtainStatusText=='正在打开窗帘') {
               _that.curtainStatusText=''
             }
@@ -168,7 +168,7 @@ export default {
   },
   mounted(){
     console.log($,'111')
-    
+
       HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
@@ -184,7 +184,7 @@ export default {
             panelBtn.style.bottom = '30px'
           }else{
             panelBtn.style.bottom = '0'
-          }  
+          }
         })
          setTimeout(() => {
             console.log('图片加载完成')
@@ -208,11 +208,11 @@ export default {
         for(let i=0;i<btn.length;i++){
           btn[i].classList.remove('yellowExtend')
           btn[i].classList.remove('animateStart','animateEnd')
-        } 
+        }
         this.$refs[val].classList.add('animateStart')
         this.$refs[val].classList.add('yellowExtend')
     },
-    touchend(val){ 
+    touchend(val){
       // this.$refs[val].classList.remove('animateStart')
       this.$refs[val].classList.add('animateEnd')
       if(val=='open'){
@@ -274,7 +274,7 @@ export default {
             $('.leftCurtainBox').stop()
             $('.rightCurtainBox').stop()
             console.log('停止了=========')
-            
+
           }
         }
         if(res == null){
@@ -299,9 +299,9 @@ export default {
       let leftCurtainBox = this.$refs.leftCurtainBox
       let rightCurtainBox = this.$refs.rightCurtainBox
       let maxWidth = this.$refs.imgBox.offsetWidth*0.5
-      this.curtainWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft - this.$refs.stick.offsetLeft +circle/2 
+      this.curtainWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft - this.$refs.stick.offsetLeft +circle/2
       if(val=='right'){
-        this.curtainWidth-=maxWidth 
+        this.curtainWidth-=maxWidth
         this.curtainWidth=maxWidth-this.curtainWidth+circle
       }
       this.curtainWidth = this.curtainWidth <= circle ? circle : this.curtainWidth
@@ -493,7 +493,7 @@ export default {
             margin-left:1%;
             position: absolute;
           }
-          .left{ 
+          .left{
             position: absolute;
             top: 50%;
             right: 1px;
@@ -519,7 +519,7 @@ export default {
             margin-right:1%;
             position: absolute;
           }
-          .right{ 
+          .right{
             position: absolute;
             top: 50%;
             left: 1px;

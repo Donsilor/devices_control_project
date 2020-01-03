@@ -517,6 +517,9 @@ export default {
     },
     setMode(val, param) {
       if (this.isClose) return
+      if(val == 'preheat') {
+        if(this.deviceAttrs.mode == 'defrost') return HdSmart.UI.toast('解冻模式不支持快速预热', 1000)
+      }
       if(param) this.btnLoading['D_hotwind'] = true
       // if(param) {
       //   if(this.deviceAttrs.convection == param && this.deviceAttrs.mode == val) return

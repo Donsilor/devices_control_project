@@ -10,18 +10,18 @@
       <!-- 主体部分 -->
       <div class="main">
         <div class="headline">准备就绪</div>
-        <div class="subheading">
+        <!-- <div class="subheading">
           <div class="subheading_tips">风温 | 低</div>
           <div class="subheading_tips margin-tips">水温 | 中</div>
           <div class="subheading_tips">座温 | 中</div>
-        </div>
-        <!-- <div class="subheading">
+        </div> -->
+        <div class="subheading">
           <div class="subheading_tips">妇洗</div>
           <div class="subheading_tips tips-margin">——</div>
           <div class="subheading_tips"> 冲水</div>
           <div class="subheading_tips tips-margin">——</div>
           <div class="subheading_tips"> 烘干</div>
-        </div> -->
+        </div>
         <!-- <div class="subheading">
           <div class="subheading_tips-big">正在烘干</div>
         </div> -->
@@ -74,7 +74,7 @@
         <div
           class="btn-wrap-ellipse"
         >
-          <div :class="['btn-ellipse']" />
+          <div :class="['btn-ellipse icon']" />
           <div class="btn-name">妇洗烘干</div>
         </div>
       </div>
@@ -94,7 +94,7 @@
         <div class="footer-line">
           <div class="footer-title">水温</div>
           <div class="footer-nav">
-            <div class="footer-nav-btn">关</div>
+            <div class="footer-nav-btn active">关</div>
             <div class="footer-nav-btn">低</div>
             <div class="footer-nav-btn">中</div>
             <div class="footer-nav-btn">高</div>
@@ -104,7 +104,7 @@
         <div class="footer-line">
           <div class="footer-title">座温</div>
           <div class="footer-nav">
-            <div class="footer-nav-btn">关</div>
+            <div class="footer-nav-btn active">关</div>
             <div class="footer-nav-btn">低</div>
             <div class="footer-nav-btn">中</div>
             <div class="footer-nav-btn">高</div>
@@ -114,7 +114,7 @@
         <div class="footer-line">
           <div class="footer-title">清洗水压</div>
           <div class="footer-nav">
-            <div class="footer-nav-btn">弱</div>
+            <div class="footer-nav-btn active">弱</div>
             <div class="footer-nav-btn">中</div>
             <div class="footer-nav-btn">强</div>
           </div>
@@ -123,7 +123,7 @@
         <div class="footer-line">
           <div class="footer-title">出水位置</div>
           <div class="footer-nav">
-            <div class="footer-nav-btn">前</div>
+            <div class="footer-nav-btn active">前</div>
             <div class="footer-nav-btn">中</div>
             <div class="footer-nav-btn">后</div>
           </div>
@@ -612,7 +612,7 @@ export default {
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      border: 1px solid rgba(0,0,0,0.04);
+      // border: 1px solid rgba(0,0,0,0.04);
       border-radius: 50%;
 
       display: flex;
@@ -627,32 +627,32 @@ export default {
       &.active {
         // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
         // border-color: #ffbf00;
-        background: #000000;
-        border-color: #000;
-        &.btn-energy {
-          &::before {
-            background-image: url(~@lib/base/fridge/assets/bx_mode_jieneng_selected.png);
-            background-size: 100% 100%;
-          }
-        }
-        &.btn-auto {
-          &::before {
-            background-image: url(~@lib/base/fridge/assets/bx_mode_auto_selected.png);
-            background-size: 100% 100%;
-          }
-        }
-        &.btn-holiday {
-          &::before {
-            background-image: url(~@lib/base/fridge/assets/bx_mode_jiari_selected.png);
-            background-size: 100% 100%;
-          }
-        }
-        &.btn-baoxian {
-          &::before {
-            background-image: url(~@lib/base/fridge/assets/bx_mode_baoxian.png);
-            background-size: 100% 100%;
-          }
-        }
+        // background: #000000;
+        // border-color: #000;
+        // &.btn-energy {
+        //   &::before {
+        //     background-image: url(~@lib/base/fridge/assets/bx_mode_jieneng_selected.png);
+        //     background-size: 100% 100%;
+        //   }
+        // }
+        // &.btn-auto {
+        //   &::before {
+        //     background-image: url(~@lib/base/fridge/assets/bx_mode_auto_selected.png);
+        //     background-size: 100% 100%;
+        //   }
+        // }
+        // &.btn-holiday {
+        //   &::before {
+        //     background-image: url(~@lib/base/fridge/assets/bx_mode_jiari_selected.png);
+        //     background-size: 100% 100%;
+        //   }
+        // }
+        // &.btn-baoxian {
+        //   &::before {
+        //     background-image: url(~@lib/base/fridge/assets/bx_mode_baoxian.png);
+        //     background-size: 100% 100%;
+        //   }
+        // }
       }
     }
     .btn-name {
@@ -664,25 +664,25 @@ export default {
 
     .btn-freeze {
       &::before {
-        background-image: url(~@lib/base/fridge/assets/freeze-black.png);
+        background-image: url(~@lib/base/closestool/assets/mt_btn_fuxi.png);
         background-size: 100% 100%;
       }
     }
     .btn-cold {
       &::before {
-        background-image: url(~@lib/base/fridge/assets/cold-black.png);
+        background-image: url(~@lib/base/closestool/assets/mt_btn_xibian.png);
         background-size: 100% 100%;
       }
     }
     .btn-auto {
       &::before {
-        background-image: url(~@lib/base/fridge/assets/bx_mode_auto.png);
+        background-image: url(~@lib/base/closestool/assets/mt_btn_honggan.png);
         background-size: 100% 100%;
       }
     }
     .btn-holiday {
       &::before {
-        background-image: url(~@lib/base/fridge/assets/bx_mode_jiari.png);
+        background-image: url(~@lib/base/closestool/assets/mt_btn_chongshui.png);
         background-size: 100% 100%;
       }
     }
@@ -704,7 +704,7 @@ export default {
     margin: 40px auto 0;
     width: 314px;
     height: 120px;
-    border: 1px solid rgba(0,0,0,0.04);
+    // border: 1px solid rgba(0,0,0,0.04);
     border-radius: 60px;
     background: rgba(0,0,0,0.04);
     display: flex;
@@ -713,8 +713,12 @@ export default {
     .btn-ellipse {
       width: 48px;
       height: 48px;
-      background: url(~@lib/base/arrow_closestool/assets/mt_btn_xibianhonggan.png);
+      background: url(~@lib/base/closestool/assets/mt_btn_xibianhonggan.png);
       background-size: 100% 100%;
+      &.icon {
+        background: url(~@lib/base/closestool/assets/mt_btn_fuxihonggan.png);
+        background-size: 100% 100%;
+      }
     }
     .btn-name {
       font-size: 24px;
