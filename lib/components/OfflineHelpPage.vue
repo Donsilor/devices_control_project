@@ -31,15 +31,20 @@
             href="javascript:void(0);"
             class="icon-return" /> -->
           </div>
+          <div
+            class="title">离线帮助</div>
     
     
 
         </div>
       
       </div>
+      <h3 class="viewHelpH3">设备离线</h3>
 
+      <div 
+        class="viewHelpstatus" 
+        v-html="viewHelpstatus"/>
     </div>
-    {{ viewHelpstatus }}
   </div>
  
 </template>
@@ -69,8 +74,10 @@ export default {
       console.log('获取帮助文字')
       this.getViewHelpInfo()
       .then((res)=>{
-        this.setViewHelpInfo(res)
-        // console.log(res,'sdsds')
+        console.log(res.content,'sdsds')
+
+        let str = res.content.replace(/\n/g,"<br/>")
+        this.setViewHelpInfo(str)
         
       })
     })
@@ -191,9 +198,11 @@ export default {
 
   }
   .left{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    // display: flex;
+    // justify-content: flex-start;
+    // align-items: center;
+    position: absolute;
+    left: 40px;
     p{
         background: url('../base/img/btn_ac_close@2x.png');
         background-size: 100% 100%;
@@ -220,5 +229,20 @@ export default {
   
 }
 
+.viewHelpstatus{
+  font-size: 28px;
+  padding: 0 40px;
+  line-height: 42px;
+  font-weight: lighter;
+}
+  .title {
+    text-align: center;
+    font-size: 17PX;
+    width: 100%;
+  }
+  .viewHelpH3{
+  padding: 20px 40px;
+  font-size: 16PX;
 
+  }
 </style>
