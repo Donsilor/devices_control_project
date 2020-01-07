@@ -2,7 +2,6 @@
   <!-- v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1" -->
   <div
     v-if="false"
-
     :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->

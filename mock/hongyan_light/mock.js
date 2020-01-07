@@ -26,7 +26,9 @@ export function generateNetwork() {
   return Mock.mock(0)
 }
 export function generateViewHelp() {
-  return Mock.mock('撒旦撒旦撒的撒的撒大苏打撒旦撒')
+  return Mock.mock({
+    "content":"请依次尝试以下操作：\n1. 请检查开关电源指示灯是否开启，或是否能通过物理按键直接操控设备，确保设备供电正常。\n2. 若5分钟后仍未恢复上线状态，请前往设备管理，删除该设备后，再重新添加。"
+  })
 }
 export function set(data){
     var attr = data.params.attribute

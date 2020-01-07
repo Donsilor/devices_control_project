@@ -13,6 +13,12 @@ if (location.search.indexOf('env=desktop') != -1) {
     on(apiList.device_getsnapshot, function(data, done){
         done(mockData.generateSnapShot())
     })
+    on(apiList.device_getnetwork, function(data, done){
+      done(mockData.generateNetwork())
+    })
+    on(apiList.device_getviewhelp, function(data, done){
+      done(mockData.generateViewHelp())
+    })
 
     on(apiList.device_control, function(data, done){
         done(mockData.set(data))
@@ -20,5 +26,6 @@ if (location.search.indexOf('env=desktop') != -1) {
             onDeviceChange(mockData.generateSnapShot())
         },1000)
     })
+
 
 }
