@@ -25,11 +25,12 @@
         <div
           class="left"
           @click.prevent="goBack">
-          <p/>
-          <!-- <a
+          <p v-if="returnBack"/>
+          <a
+            v-if="!returnBack"
             :style="{ 'border-color': bakColor }"
             href="javascript:void(0);"
-            class="icon-return" /> -->
+            class="icon-return" />
         </div>
         <div
           v-if="showRight&&!rightSearch"
@@ -103,6 +104,10 @@ export default {
     onBack: {
       type: Function,
       default: null
+    },
+    returnBack:{
+      type: Boolean,
+      default: true
     },
     showRight:{
       type: Boolean,
@@ -492,20 +497,16 @@ export default {
     }
   }
   .left a.icon-return {
-    // position: absolute;
-    // top: 50%;
+    position: absolute;
+    top: 55%;
+    margin-left:8px;
     display: inline-block;
-    width: 24PX;
-    height: 24PX;
-    border: 0;
-    background: url('~@lib/base/assets/cha.png');
-    background-size: 100% 100%;
-
-    // border: solid #000;
-    // border-width: 2PX 2PX 0 0;
-    // transform: translate(0, -50%) rotate(225deg);
+    width: 12PX;
+    height: 12PX;
+    border: solid #000;
+    border-width: 1PX 1PX 0 0;
+    transform: translate(0, -50%) rotate(225deg);
   }
-
 }
 .header-bottom-right{
 

@@ -10,42 +10,42 @@
         bak-color="#000"/>
       <StatusTip v-show="device.device_uuid"/>
       <div class="main center">
-        <div
-          ref="stick"
+        <div 
+          ref="stick" 
           class="stick" >
           <div class="Pole"/>
-          <div
-            ref="imgBox"
+          <div 
+            ref="imgBox" 
             class="imgBox">
-            <div
-              ref="leftCurtainBox"
+            <div 
+              ref="leftCurtainBox" 
               class="leftCurtainBox"
               @touchstart="touchStart($event)"
               @touchmove="touchMove($event,'left')"
               @touchend="touchEnd($event)">
-              <img
+              <img 
                 ref="curtainLeft"
-                class="curtainLeft"
+                class="curtainLeft" 
                 src="../../../lib/base/new_curtains/assets/single.png">
-              <img
+              <img 
                 ref="left"
-                class="left"
+                class="left" 
                 src="../../../lib/base/new_curtains/assets/left.png"
               >
             </div>
-            <div
-              ref="rightCurtainBox"
+            <div 
+              ref="rightCurtainBox" 
               class="rightCurtainBox"
               @touchstart="touchStart($event)"
               @touchmove="touchMove($event,'right')"
               @touchend="touchEnd($event)">
-              <img
+              <img 
                 ref="curtainRight"
-                class="curtainRight"
+                class="curtainRight" 
                 src="../../../lib/base/new_curtains/assets/single.png">
-              <img
+              <img 
                 ref="right"
-                class="right"
+                class="right" 
                 src="../../../lib/base/new_curtains/assets/right.png"
               >
             </div>
@@ -61,7 +61,6 @@
           <div
             ref="close"
             class="btn btn-close center"
-            @click="setClose"
             @touchstart ="touchstart('close')"
             @touchend="touchend('close')"/>
           <div class="btn-name">全关</div>
@@ -70,7 +69,6 @@
           <div
             ref="pause"
             class="btn-pause btn center"
-            @click="setPause"
             @touchstart ="touchstart('pause')"
             @touchend="touchend('pause')"/>
           <div class="btn-name">暂停</div>
@@ -79,7 +77,6 @@
           <div
             ref="open"
             class="btn-open btn center"
-            @click="setOpen"
             @touchstart ="touchstart('open')"
             @touchend="touchend('open')"/>
           <div class="btn-name">全开</div>
@@ -92,6 +89,46 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
 // import './animate8.0.js'
+/**
+ * 创建并返回一个像节流阀一样的函数，当重复调用函数的时候，最多每隔 wait毫秒调用一次该函数
+ * @param func 执行函数
+ * @param wait 时间间隔
+ * @param options 如果你想禁用第一次首先执行的话，传递{leading: false}，
+ *                如果你想禁用最后一次执行的话，传递{trailing: false}
+ * @returns {Function}
+ */
+function throttle(func, wait, options) {
+    var context, args, result
+    var timeout = null
+    var previous = 0
+    if (!options) options = {}
+    var later = function() {
+        previous = options.leading === false ? 0 : new Date().getTime()
+        timeout = null
+        result = func.apply(context, args)
+        if (!timeout) context = args = null
+    }
+    var wait = wait || 10000
+    return function() {
+        var now = new Date().getTime()
+        if (!previous && options.leading === false) previous = now
+        var remaining = wait - (now - previous)
+        context = this
+        args = arguments
+        if (remaining <= 0 || remaining > wait) {
+            if (timeout) {
+                clearTimeout(timeout)
+                timeout = null
+            }
+            previous = now
+            result = func.apply(context, args)
+            if (!timeout) context = args = null
+        } else if (!timeout && options.trailing !== false) {
+            timeout = setTimeout(later, remaining)
+        }
+        return result
+    }
+}
 export default {
   data() {
     return {
@@ -126,7 +163,7 @@ export default {
       function a(num) {
         setTimeout(() => {
           if (num === _that.count) {
-            console.log('暂停了')
+            console.log('暂停了') 
             if (_that.curtainStatusText=='正在关闭窗帘'||_that.curtainStatusText=='正在打开窗帘') {
               _that.curtainStatusText=''
             }
@@ -167,8 +204,6 @@ export default {
 
   },
   mounted(){
-    console.log($,'111')
-
       HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
@@ -184,10 +219,9 @@ export default {
             panelBtn.style.bottom = '30px'
           }else{
             panelBtn.style.bottom = '0'
-          }
+          }  
         })
          setTimeout(() => {
-            console.log('图片加载完成')
             this.newRatio()
           }, 500)
         if (this.deviceAttrs.open_percentage=='100') {
@@ -202,17 +236,17 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-      touchstart(val) {
+      touchstart:function(val) {
         // this.$refs[val].classList.remove('animateStart','animateEnd')
         let btn = document.querySelectorAll('.btn')
         for(let i=0;i<btn.length;i++){
           btn[i].classList.remove('yellowExtend')
           btn[i].classList.remove('animateStart','animateEnd')
-        }
+        } 
         this.$refs[val].classList.add('animateStart')
         this.$refs[val].classList.add('yellowExtend')
     },
-    touchend(val){
+    touchend:throttle(function(val){ 
       // this.$refs[val].classList.remove('animateStart')
       this.$refs[val].classList.add('animateEnd')
       if(val=='open'){
@@ -222,7 +256,7 @@ export default {
       }else{
         this.setPause()
       }
-    },
+    }),
     // 全开
     setOpen(){
       // this.$refs['open'].classList.add('active')
@@ -236,7 +270,7 @@ export default {
       this.myMove = false
       this.controlDevice('switch', 'on')
       .then((res)=>{
-        console.log(res,'===============')
+        // console.log(res,'===============')
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
         }
@@ -251,7 +285,7 @@ export default {
       this.myMove = false
       this.controlDevice('switch', 'off')
       .then((res)=>{
-        console.log(res,'===============')
+        // console.log(res,'===============')
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
         }
@@ -274,7 +308,7 @@ export default {
             $('.leftCurtainBox').stop()
             $('.rightCurtainBox').stop()
             console.log('停止了=========')
-
+            
           }
         }
         if(res == null){
@@ -299,9 +333,9 @@ export default {
       let leftCurtainBox = this.$refs.leftCurtainBox
       let rightCurtainBox = this.$refs.rightCurtainBox
       let maxWidth = this.$refs.imgBox.offsetWidth*0.5
-      this.curtainWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft - this.$refs.stick.offsetLeft +circle/2
+      this.curtainWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft - this.$refs.stick.offsetLeft +circle/2 
       if(val=='right'){
-        this.curtainWidth-=maxWidth
+        this.curtainWidth-=maxWidth 
         this.curtainWidth=maxWidth-this.curtainWidth+circle
       }
       this.curtainWidth = this.curtainWidth <= circle ? circle : this.curtainWidth
@@ -493,7 +527,7 @@ export default {
             margin-left:1%;
             position: absolute;
           }
-          .left{
+          .left{ 
             position: absolute;
             top: 50%;
             right: 1px;
@@ -519,7 +553,7 @@ export default {
             margin-right:1%;
             position: absolute;
           }
-          .right{
+          .right{ 
             position: absolute;
             top: 50%;
             left: 1px;

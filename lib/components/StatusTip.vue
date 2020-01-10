@@ -2,7 +2,6 @@
   <!-- v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1" -->
   <div
     v-if="false"
-
     :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
@@ -76,22 +75,16 @@
       </div>
     </div>
     <OfflineHelpPage 
-      v-if="OfflineHelpPageView" 
-      @goBack="OfflineHelpPageView=false"/>
-
-      <!-- <div
-      v-if="tvStatus.tvOnlineStatus < 0 && !ios"
-      class="offline_bar_blank"/> -->
+      v-show="OfflineHelpPageView" 
+      ref="OfflineHelpPageView"/>
   </div>
 
-  
 </template>
 
 
 
 
 <script>
-// import * as service from "../service"
 import { mapGetters, mapState, mapActions } from 'vuex'
 import OfflineHelpPage from './OfflineHelpPage.vue'
 
@@ -114,25 +107,6 @@ export default {
     computed: {
     ...mapGetters(['isClose', 'isOffline','networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
-        // tvStatus() {
-        //     return this.$store.state.tvStatus
-        // },
-        // spStatusText() {
-        //     return ["", "图片", "视频", "音乐"][
-        //         this.tvStatus.screenProjectType
-        //     ]
-        // },
-        // spVisible() {
-        //     return (
-        //         this.tvStatus.tvOnlineStatus == 1 &&
-        //         this.tvStatus.screenProjectType != 0 &&
-        //         this.$route.name != "search"
-        //     )
-        // },
-        // visible() {
-        //     return this.tvStatus.tvOnlineStatus != 1 || this.spVisible
-        // },
-        // ...mapState([ 'isStatusBarShow'])
     },
     watch:{
       networkStatus(n,v){
@@ -141,7 +115,7 @@ export default {
         case -1:
           this.prohibitmove()
           break
-       case 0:
+        case 0:
           this.allowmove()
           break
         default:
@@ -166,75 +140,33 @@ export default {
       }
     },
     created() {
-
-
       HdSmart.ready(() => {
         if (window.status_bar_height) {
           this.status_bar_height = window.status_bar_height / dpr
         }
-          // setTimeout(() => {
-        // console.log(this)
-        // console.log('statuTip里面的方法触发了')
-
         this.getNetworkInfo()
         .then((res)=>{
-        // console.log('请求成功，获的值是'+res)
-          
-        //   console.log('getNetworkInfo111',res)
-          
-            this.setNetworkStatus(res)
+          this.setNetworkStatus(res)
         })
-        // }, 150)
         window.onNetworkStatusChange = (data)=> {
-          // console.log('网络改变了，app调用方法data:'+data)
-          
-          // console.log("onNetworkStatusChange",data)
             this.setNetworkStatus(data)
-          
-          // store.commit('setScreenProjectionStatus', data)
         }
-
-        // if (window.navigation_bar_height) {
-        //   this.navigation_bar_height = window.navigation_bar_height / dpr
-        // }
       })
     },
-    // mounted() {
-    //   console.log(this.type)
-    //   if(this.type==='首页'&& this.$refs.status_bar_fixed){
-    //     this.$refs.status_bar_fixed.style.position="absolute"
-    //     this.$refs.status_bar_fixed.style.top="0"
-        
-    //   }
-    // },
     methods: {
       ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice']),
-        // goToScreenProjectionPage() {
-        //     service.onClickEvent("screenProjectionStatusClick")
-        // },
         goToOfflineHelpPage() {
-          console.log('点击了')
           this.OfflineHelpPageView = true
-         
-
-          // window.onNetworkStatusChange(0)
-          // this.doControlDevice({connectivity:'online'})
-            // service.onClickEvent("tvOnlineStatusClick", {
-            //     tvOnlineStatus: this.tvStatus.tvOnlineStatus
-            // })
+          this.$refs.OfflineHelpPageView.moveOut = false
+          this.$refs.OfflineHelpPageView.moveIn = true
         },
-
         prohibitmove(){
-          console.log('z执行了')
-          
           document.body.addEventListener('touchmove', this.touchmovefn, { passive: false }) 
         },
         allowmove(){
          document.body.removeEventListener('touchmove',this.touchmovefn) 
         },
         touchmovefn(e){
-          // console.log('组长')
-          
           e.preventDefault()
         }
     },
@@ -246,12 +178,6 @@ export default {
 <style lang="less" scoped>
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
-// .status_bar_block{
-//     height: 0;
-// }
-.status_box{
-
-}
 .status_bar_fixed{
     // position:fixed;
     left: 0;

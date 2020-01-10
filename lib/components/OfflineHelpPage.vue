@@ -1,5 +1,7 @@
 <template>
-  <div class="page">
+  <div 
+    ref="page" 
+    :class="['page',{'moveIn':moveIn},{'moveOut':moveOut}]">
     <div
       ref="topbar"
       class="topbar">
@@ -26,22 +28,26 @@
             class="left"
             @click.prevent="goBack">
             <p/>
-          <!-- <a
+            <!-- <a
             :style="{ 'border-color': bakColor }"
             href="javascript:void(0);"
             class="icon-return" /> -->
           </div>
+          <div
+            class="title">离线帮助</div>
     
     
 
         </div>
       
       </div>
+      <h3 class="viewHelpH3">设备离线</h3>
 
+      <div 
+        class="viewHelpstatus" 
+        v-html="viewHelpstatus"/>
     </div>
-    {{ viewHelpstatus }}
   </div>
- 
 </template>
 
 <script>
@@ -53,41 +59,69 @@ export default {
   data(){
     return{
       status_bar_height:25,
-      navigation_bar_height:44
-
+      navigation_bar_height:44,
+      moveOut:false,
+      moveIn:true
     }
   },
     computed:{
     ...mapGetters(['isClose', 'isOffline','networkStatus','viewHelpstatus']),
     ...mapState(['device', 'deviceAttrs']),
+   
   },
    created() {
     HdSmart.ready(() => {
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
-      console.log('获取帮助文字')
       this.getViewHelpInfo()
       .then((res)=>{
-        this.setViewHelpInfo(res)
-        // console.log(res,'sdsds')
-        
+        let str = res.content.replace(/\n/g,"<br/>")
+        this.setViewHelpInfo(str)
       })
     })
   },
-
   methods:{
     ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice','getViewHelpInfo','setViewHelpInfo']),
 
     goBack(){
-      this.$emit('goBack')
+      this.moveIn = false
+      this.moveOut = true
     }
   }
 }
 </script>
 
 <style scoped lang="less">
+@keyframes moveIn {
+    0% {
+      left: 100%;
+    }
+  
+    100% {
+      left:0;
+    }
+}
+.moveIn{
+   animation: moveIn 0.6s linear;
+}
+
+
+@keyframes moveOut {
+    0% {
+      left: 0%;
+    }
+  
+    100% {
+      left:100%;
+    }
+}
+.moveOut{
+   animation: moveOut 0.6s linear;
+   animation-fill-mode:forwards
+}
 .page {
+  width: 100%;
   position: fixed;
   top: 0;
   left: 0;
@@ -120,7 +154,7 @@ export default {
     height: @status_bar_height+@navigation_bar_height;
   }
   .topbar-fixed {
-    position: fixed;
+    position: absolute;
     left: 0;
     top: 0;
     z-index: 100;
@@ -191,11 +225,13 @@ export default {
 
   }
   .left{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    // display: flex;
+    // justify-content: flex-start;
+    // align-items: center;
+    position: absolute;
+    left: 40px;
     p{
-        background: url('../base/img/btn_ac_close@2x.png');
+        background: url('../base/img/tv_arrow_back.png');
         background-size: 100% 100%;
 
     }
@@ -220,5 +256,20 @@ export default {
   
 }
 
+.viewHelpstatus{
+  font-size: 28px;
+  padding: 0 40px;
+  line-height: 42px;
+  font-weight: lighter;
+}
+  .title {
+    text-align: center;
+    font-size: 17PX;
+    width: 100%;
+  }
+  .viewHelpH3{
+  padding: 20px 40px;
+  font-size: 16PX;
 
+  }
 </style>
