@@ -50,11 +50,11 @@
           <div class="range">
             <input
               :class="[{'range-zero': rangeColor || doorValue=='off'}]"
-              :value="brightness"
-              :disabled="isClose || isOffline || networkStatus == -1"
+              :value="localBrightness"
+              :disabled="isClose || isOffline || networkStatus == -1 || rangeDisabled"
               type="range"
-              min="0"
-              max="10"
+              min="1"
+              max="100"
               step="1"
               @input="changeSpeedMove"
               @touchend="changeSpeed">
@@ -161,7 +161,10 @@ export default {
       custom: false,
       vibrate: 0,
       lockCloseVal: false,
-      lockOpenVal: false
+      lockOpenVal: false,
+      rangeDisabled: false,
+      speedDisabled: false,
+      localBrightness: 0
     }
   },
   computed: {
@@ -220,23 +223,22 @@ export default {
   },
   watch: {
     'device.stateChange'() {
-
-    },
-    'vibrate'() {
-      if(this.deviceAttrs.switch_status == 'on' && !this.isOffline&& this.networkStatus != -1) {
-        HdSmart.UI.vibrate()
-      }
+      this.rangeDisabled = false
+      this.speedDisabled = false
     },
     'deviceAttrs.level'() {
-      this.brightness = this.deviceAttrs.level / 25.5
-      var width = (91.3 / 10 * this.brightness) +"%"
-      document.querySelector('.rang_width').style.width = width
+      // this.brightness = this.deviceAttrs.level / 2.55
+      // var width = (91.3 / 100 * this.brightness) +"%"
+      // document.querySelector('.rang_width').style.width = width
     }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(()=>{
+        this.localBrightness = this.deviceAttrs.level / 2.55
+        var width = (91.3 / 100 * this.localBrightness) +"%"
+        document.querySelector('.rang_width').style.width = width
       })
       .catch((err) => {
         if(err.code == -90004) {
@@ -309,6 +311,8 @@ export default {
       this.lockOpenVal = e.target.checked
     },
     changeSpeedMove(e) {
+      if(this.rangeDisabled == true) return
+      HdSmart.UI.vibrate()
       var max = e.target.getAttribute("max")
       var width = (91.3 / max * e.target.value) +"%"
       document.querySelector('.rang_width').style.width = width
@@ -318,23 +322,26 @@ export default {
         this.rangeColor = 'off'
       }
       this.brightness = e.target.value
-      this.vibrate = e.target.value
+      this.localBrightness = e.target.value
     },
     changeSpeed(e) {
+      if(this.rangeDisabled == true) return
+      this.rangeDisabled = true
       if(this.deviceAttrs.switch_status != 'on' || this.isOffline || this.networkStatus == -1) return
       var lowLevel = 0
       this.brightness = e.target.value
+      this.localBrightness = e.target.value
       if(this.brightness == 0) {
         lowLevel = 2
+      } else if(this.brightness == 100) {
+        lowLevel = 255
       }
-      this.controlDevice('level', lowLevel ? lowLevel : this.brightness * 25.5)
-    },
-    // 亮度
-    moveLight(val){
-      this.ratio = 100-val
+      this.controlDevice('level', lowLevel ? lowLevel : parseInt(this.brightness * 2.55))
     },
     setSpeed(val) {
       if (this.isClose||this.isOffline|| this.networkStatus == -1) return
+      if(this.speedDisabled == true) return
+      this.speedDisabled = true
       HdSmart.UI.vibrate()
       this.controlDevice('temperature', val)
     },
