@@ -15,9 +15,9 @@
         <div
           class="wrap-circle center">
           <div
-            :class="[{'animation': !isClose }, {'greycircle': isClose }, rotateClass, 'bg']" />
+            :class="[{'animation': !isClose }, {'greycircle': isClose }, 'bg']" />
           <div
-            :class="[{'animation1': !isClose }, rotateClass, 'bg']" />
+            :class="[{'animation1': !isClose }, 'bg']" />
         </div>
       </div>
       <!-- 开关按钮 -->
@@ -133,6 +133,8 @@
       <!--模式选择-->
       <model-swing
         ref="swing"
+        :mode="deviceAttrs.mode"
+        :custom="custom"
         @setWind="setWind" />
     </div>
   </div>
@@ -147,14 +149,6 @@ export default {
   },
   data() {
     return {
-      isOpen: false,
-      ratio:100,
-      ctx: '',
-      ox: 120,
-      oy: 120,
-      or: 110,
-      br: 10,
-      moveFlag: false,
       brightness: 0,
       rangeColor: 'on',
       doorValue: 'on',
@@ -192,31 +186,6 @@ export default {
           return ''
       }
     },
-    rotateClass() {
-      /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.temperature) {
-        case 'low':
-          return 'rotate-low'
-          break
-        case 'overlow':
-          return 'rotate-overlow'
-          break
-        case 'normal':
-          return 'rotate-normal'
-          break
-        case 'overnormal':
-          return 'rotate-overnormal'
-          break
-        case 'high':
-          return 'rotate-high'
-          break
-        case 'auto':
-          return 'rotate-low'
-          break
-        default:
-          return ''
-      }
-    },
     isClose(){
       return this.deviceAttrs.switch_status=="on"?false:true
     },
@@ -225,6 +194,9 @@ export default {
     'device.stateChange'() {
       this.rangeDisabled = false
       this.speedDisabled = false
+      if(this.deviceAttrs.mode == '0') {
+        this.custom = true
+      }
     },
     'deviceAttrs.level'() {
       // this.brightness = this.deviceAttrs.level / 2.55
@@ -287,13 +259,12 @@ export default {
     // 模式选择
     setWind(attr) {
       HdSmart.UI.vibrate()
-      this.deviceAttrs.mode = ''
+      // this.deviceAttrs.mode = ''
       if(!attr) {
         if(this.$refs.swing.show) this.$refs.swing.show = false
         this.custom = true
         return
       }
-
       if(attr) return this.controlDevice("mode", attr)
       .then((res) => {
         if(res.code == 0) {
@@ -477,79 +448,6 @@ export default {
     font-size: 32px;
   }
 }
-.tips {
-  margin-top: 18%;
-  padding-bottom: 40px;
-  position: absolute;
-  text-align: center;
-  font-size: 46px;
-  display: flex;
-  justify-content: center;
-}
-.canvas {
-  margin-top: 19%;
-  z-index: 2;
-  position: absolute;
-  width: 460px;
-  border-radius: 50%;
-}
-// .mask1 {
-//   position: absolute;
-//   margin-top: 13%;
-//   width: 300px;
-//   height: 300px;
-//   z-index: 3;
-//   border-radius: 50%;
-// }
-.mask2 {
-  position: absolute;
-  margin-top: 40%;
-  width: 100%;
-  height: 300px;
-  z-index: 3;
-  // background: #000;
-}
-.mask3 {
-  position: absolute;
-  margin-top: 19%;
-  width: 394px;
-  height: 394px;
-  z-index: 3;
-  // background: #000;
-  border-radius: 50%;
-}
-.small {
-  background: url("~@lib/@{imgPath3}/btn_ac_on_zron@2x.png") no-repeat;
-  background-size: 100% 100%;
-  height: 26px;
-  width: 26px;
-  position: relative;
-  top: 20%;
-  left: -115%;
-}
-.big {
-  background: url("~@lib/@{imgPath3}/btn_ac_on_oneh@2x.png") no-repeat;
-  background-size: 100% 100%;
-  height: 26px;
-  width: 26px;
-  position: relative;
-  top: 11%;
-  right: -123%;
-}
-.scale {
-  // position: absolute;
-  position: relative;
-  // top: -40px;
-  left: -13%;
-  background: url("~@lib/@{imgPath3}/btn_ac_dengguang@2x.png") no-repeat;
-  background-size: 100% 100%;
-  width: 568px;
-  height: 290px;
-}
-.scale-close {
-  background: url("~@lib/@{imgPath3}/btn_ac_dengguanghui@2x.png") no-repeat;
-  background-size: 100% 100%;
-}
  .tips-btn{
   //  position: fixed;
     // margin-top: 100px;
@@ -561,42 +459,6 @@ export default {
     // color: #fff;
     display: flex;
     justify-content: center;
-    .ratiobg{
-      position: absolute;
-      width: 600px;
-      height: 10px;
-      background: #ccc;
-      top: 160px;
-      // left: 50%;
-      // transform: translateX(-50%);
-      border-radius: 60px;
-      .ratiobg2{
-        width: 0px;
-        height: 100%;
-        background:aqua;
-        border-radius: 60px;
-      }
-      .circle{
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background:aqua;
-        position: absolute;
-        top: -14px;
-        left: 0px;
-      }
-      .an{
-        position: absolute;
-        top: 20px;
-        left: -30px;
-      }
-      .liang{
-        position: absolute;
-        top: 20px;
-        right: -30px;;
-      }
-    }
-
   }
   .footer {
     margin-top: 60px;
@@ -794,24 +656,8 @@ export default {
   background: url("~@lib/@{imgPath3}/btn_ac_lampnuan@2x.png") no-repeat;
   background-size: 100% 100%;
 }
-.coverlight{
-  position:absolute;
-  width: 320px;
-  height: 450px;
-  clip:rect(80px 320px 450px 0px);
-}
 .greycircle {
   background: url("~@lib/@{imgPath3}/btn_ac_lamp@2x.png") no-repeat;
-  background-size: 100% 100%;
-}
-.lianggang{
-  width: 74px;
-  height: 16px;
-  position: absolute;
-  top: 0;
-  left: 50%;
-    transform: translateX(-50%);
-   background: url("~@lib/@{imgPath}/btn_ac_on_lianggang@2x.png") no-repeat;
   background-size: 100% 100%;
 }
 .panel-btn {
@@ -831,26 +677,6 @@ export default {
 
   flex-wrap: wrap;
   justify-content: center;
-
-  .more {
-    width: 750px;
-    color: #9e9e9e;
-    font-size: 24px;
-    text-align: center;
-    position: absolute;
-    left: 0;
-    top: -75px;
-    .arrow {
-      display: inline-block;
-      font-size: 32px;
-      &.up {
-        transform: rotate(90deg);
-      }
-      &.down {
-        transform: rotate(-90deg);
-      }
-    }
-  }
 
   .btn {
     margin-top: 24px;
@@ -900,32 +726,6 @@ export default {
     color: #000;
     margin-top: 16px;
     font-size: 24px;
-  }
-  // .btn-start {
-  //   &::before {
-  //     content: "";
-  //     display: block;
-  //     width: 44px;
-  //     height: 44px;
-  //     background-image: url("~@lib/@{imgPath1}/btn_ac_on_cd@2x.png");
-  //     background-size: 100% 100%;
-  //   }
-  //   &.active {
-  //     &::before {
-  //       background-image: url("~@lib/@{imgPath1}/start.png");
-  //     }
-  //   }
-  // }
-
-  .btn-zm {
-    &::before {
-      content: "";
-      display: block;
-      width: 44px;
-      height: 44px;
-      background-image: url("~@lib/@{imgPath}/btn_ac_on_cd@2x.png");
-      background-size: 100% 100%;
-    }
   }
   .btn-rs {
     &::before {
@@ -1067,26 +867,6 @@ export default {
   }
 
 
-}
-.ratiobg111{
-  position: fixed;
-  right: 100px;
-  top: 200px;
-  height: 500px;
-  width: 10px;
-  background: #ccc;
-  .circle{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #fff;
-    position: absolute;
-    left: -15px;
-  }
-  .ratiobg2{
-    // border-radius: 50%;
-    background: rgba(255 ,255, 255, 0.6)
-  }
 }
 .animate::before{
   animation: scale 0.3s;

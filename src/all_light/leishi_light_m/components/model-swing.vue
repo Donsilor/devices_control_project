@@ -15,6 +15,9 @@
           class="btn"
           @click="setWind()">自定义
         </div>
+        <div
+          v-show="custom||mode=='0'"
+          class="img"/>
       </div>
       <div class="line"/>
       <div class="items btns">
@@ -22,6 +25,9 @@
           class="btn"
           @click="setWind('3')">阅读
         </div>
+        <div
+          v-show="!custom&&mode=='3'"
+          class="img"/>
       </div>
       <div class="line"/>
       <div class="items btns">
@@ -29,6 +35,9 @@
           class="btn"
           @click="setWind('5')">温暖
         </div>
+        <div
+          v-show="!custom&&mode=='5'"
+          class="img"/>
       </div>
       <div class="line"/>
       <div class="items btns">
@@ -36,6 +45,9 @@
           class="btn"
           @click="setWind('6')">夜灯
         </div>
+        <div
+          v-show="!custom&&mode=='6'"
+          class="img"/>
       </div>
       <div class="line"/>
       <div class="items btns">
@@ -43,6 +55,9 @@
           class="btn"
           @click="setWind('4')">影院
         </div>
+        <div
+          v-show="!custom&&mode=='4'"
+          class="img"/>
       </div>
       <!-- <div
         class="hide"
@@ -52,6 +67,7 @@
 </template>
 <style lang="less" scoped>
 @imgPath: 'base/air_condition/assets/new-air';
+@imgPath1: "base/hongyan_light/assets";
 
 @keyframes show {
     0% {
@@ -107,7 +123,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-direction: column;
+        // flex-direction: column;
         background: #fff;
         .btn{
           padding: 0px 60px;
@@ -122,6 +138,13 @@
           &.title {
             font-size: 40px;
           }
+        }
+        .img {
+          margin: 0 60px 0 0;
+          width: 48px;
+          height: 48px;
+          background: url("~@lib/@{imgPath1}/btn_ac_rihgt.png") no-repeat;
+          background-size: 100% 100%;
         }
       }
       .hide{
@@ -139,7 +162,7 @@
 </style>
 <script>
 export default {
-  props: ['wind_up_down', 'wind_left_right', 'btn_wind_up_down', 'btn_wind_left_right'],
+  props: ['mode', 'custom'],
   data() {
     return {
       show: false
