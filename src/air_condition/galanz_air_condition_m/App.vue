@@ -61,7 +61,7 @@
       </div>
       <!-- 当前状态 -->
       <div
-        v-show="deviceAttrs.timer_switch == 'on'&& deviceAttrs.timer_value >0"
+        v-show="deviceAttrs.timer_switch == 'on'&& deviceAttrs.timer_value >0 &&!isClose"
         class="status">
         {{ deviceAttrs.timer_value | closeTime }}
       </div>
@@ -128,25 +128,22 @@
       <!-- 风速 -->
       <div
         class="optionbox">
-        <div class="option1">
+        <div class="option1" v-show="deviceAttrs.mode!=='dehumidify'">
           <div class="check">
             <span>风速</span>
             <div
               class="checkBox">
               <div
-                v-show="deviceAttrs.mode!=='auto'&&deviceAttrs.mode!=='dehumidify'"
                 :class="[{ 'active': deviceAttrs.speed == 'low'},'speedBtn']"
                 @click="setSpeed('low')">低</div>
               <div
-                v-show="deviceAttrs.mode!=='auto'&&deviceAttrs.mode!=='dehumidify'"
                 :class="[{ 'active': deviceAttrs.speed == 'normal'},'speedBtn']"
                 @click="setSpeed('normal')">中</div>
               <div
-                v-show="deviceAttrs.mode!=='auto'&&deviceAttrs.mode!=='dehumidify'"
                 :class="[{ 'active': deviceAttrs.speed == 'high'},'speedBtn']"
                 @click="setSpeed('high')">高</div>
               <div
-                :class="[{ 'active': deviceAttrs.speed == 'auto'&&deviceAttrs.mode!=='auto'&&deviceAttrs.mode!=='dehumidify'},'speedBtn']"
+                :class="[{ 'active': deviceAttrs.speed == 'auto'},'speedBtn']"
                 @click="setSpeed('auto')">自动</div>
             </div>
           </div>
@@ -717,6 +714,16 @@ export default {
       } else {
         checkSwitchStatus = 'on'
       }
+      if (val=='auxiliary_heating_mode') {
+         this.controlDevice('auxiliary_heating_mode', checkSwitchStatus,{'digital_display':this.deviceAttrs.digital_display})
+        .then(() => {
+          this.disabledLock = false
+        })
+        .catch(() => {
+          this.disabledLock = false
+        })
+        return
+      }
       this.controlDevice(val, checkSwitchStatus)
       .then(() => {
         this.disabledLock = false
@@ -727,9 +734,6 @@ export default {
     },
     controlDevice(attr, value) {
       let param = {}
-      // if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
-      //   param = { 'speed': 'low'}
-      // }
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {
@@ -751,15 +755,6 @@ export default {
     showSwing() {
       if (this.isClose) return
       this.$refs.swing.show = true
-    },
-    showMode() {
-      if (this.isClose) return
-      this.$refs.mode.show = true
-    },
-    showSpeed() {
-      if (this.isClose) return
-      this.$refs.speed.show = true
-
     },
     showTime() {
       if (this.isClose) return
