@@ -74,8 +74,7 @@
       </div>
     </div>
     <div 
-      class="mask" 
-      @click="fn" />
+      class="mask"/>
     <OfflineHelpPage 
       v-show="OfflineHelpPageView" 
       ref="OfflineHelpPageView"/>
@@ -148,8 +147,6 @@ export default {
         }
         this.getNetworkInfo()
         .then((res)=>{
-          console.log(res,'res')
-          
           this.setNetworkStatus(res)
         })
         window.onNetworkStatusChange = (data)=> {
@@ -158,12 +155,6 @@ export default {
       })
     },
     methods: {
-      fn(){
-        console.log(this.deviceAttrs.connectivity,'deviceAttrs.connectivity')
-        console.log(this.networkStatus,'networkStatus')
-        
-        
-      },
       ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice']),
         goToOfflineHelpPage() {
           this.OfflineHelpPageView = true
