@@ -1,7 +1,7 @@
 <template>
   <div 
     ref="page" 
-    :class="['page',{'moveIn':moveIn},{'moveOut':moveOut}]">
+    :class="['OfflineHelpPage',{'moveIn':moveIn},{'moveOut':moveOut}]">
     <div
       ref="topbar"
       class="topbar">
@@ -120,7 +120,7 @@ export default {
    animation: moveOut 0.2s linear;
    animation-fill-mode:forwards
 }
-.page {
+.OfflineHelpPage {
   width: 100%;
   position: fixed;
   top: 0;
