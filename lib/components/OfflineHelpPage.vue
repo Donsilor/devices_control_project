@@ -1,5 +1,7 @@
 <template>
-  <div class="page">
+  <div 
+    ref="page" 
+    :class="['page',{'moveIn':moveIn},{'moveOut':moveOut}]">
     <div
       ref="topbar"
       class="topbar">
@@ -26,7 +28,7 @@
             class="left"
             @click.prevent="goBack">
             <p/>
-          <!-- <a
+            <!-- <a
             :style="{ 'border-color': bakColor }"
             href="javascript:void(0);"
             class="icon-return" /> -->
@@ -46,7 +48,6 @@
         v-html="viewHelpstatus"/>
     </div>
   </div>
- 
 </template>
 
 <script>
@@ -58,43 +59,69 @@ export default {
   data(){
     return{
       status_bar_height:25,
-      navigation_bar_height:44
-
+      navigation_bar_height:44,
+      moveOut:false,
+      moveIn:true
     }
   },
     computed:{
     ...mapGetters(['isClose', 'isOffline','networkStatus','viewHelpstatus']),
     ...mapState(['device', 'deviceAttrs']),
+   
   },
    created() {
     HdSmart.ready(() => {
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
-      console.log('获取帮助文字')
       this.getViewHelpInfo()
       .then((res)=>{
-        console.log(res.content,'sdsds')
-
         let str = res.content.replace(/\n/g,"<br/>")
         this.setViewHelpInfo(str)
-        
       })
     })
   },
-
   methods:{
     ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice','getViewHelpInfo','setViewHelpInfo']),
 
     goBack(){
-      this.$emit('goBack')
+      this.moveIn = false
+      this.moveOut = true
     }
   }
 }
 </script>
 
 <style scoped lang="less">
+@keyframes moveIn {
+    0% {
+      left: 100%;
+    }
+  
+    100% {
+      left:0;
+    }
+}
+.moveIn{
+   animation: moveIn 0.6s linear;
+}
+
+
+@keyframes moveOut {
+    0% {
+      left: 0%;
+    }
+  
+    100% {
+      left:100%;
+    }
+}
+.moveOut{
+   animation: moveOut 0.6s linear;
+   animation-fill-mode:forwards
+}
 .page {
+  width: 100%;
   position: fixed;
   top: 0;
   left: 0;
@@ -127,7 +154,7 @@ export default {
     height: @status_bar_height+@navigation_bar_height;
   }
   .topbar-fixed {
-    position: fixed;
+    position: absolute;
     left: 0;
     top: 0;
     z-index: 100;
@@ -204,7 +231,7 @@ export default {
     position: absolute;
     left: 40px;
     p{
-        background: url('../base/img/btn_ac_close@2x.png');
+        background: url('../base/img/tv_arrow_back.png');
         background-size: 100% 100%;
 
     }

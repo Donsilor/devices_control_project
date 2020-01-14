@@ -1,3 +1,9 @@
+/*
+ * @Author: Hykleri
+ * @Date: 2020-01-06 10:25:00
+ * @Last Modified by: Hykleri
+ * @Last Modified time: 2020-01-07 15:18:28
+ */
 <template>
   <div class="body">
     <div :class="[{ 'offline': isOffline }, 'page']">
@@ -27,10 +33,28 @@
         </div> -->
       </div>
 
-      <!-- 当前型号暂不支持以下功能，注释处理 -->
+      <!-- 冲水动画 -->
+      <div class="box center">
+        <div class="wave wave1"/>
+        <div class="wave wave2"/>
+        <div class="wave wave3"/>
+      </div>
+
+      <!-- 停止按钮 -->
+      <div class="panel-btn center stop">
+        <div
+          class="btn-wrap"
+          @click="setMode('cool')">
+          <div
+            :class="[{ 'active': deviceAttrs.mode == 'frozen' }, 'btn-cold btn center']"/>
+          <div class="btn-name">停止</div>
+        </div>
+      </div>
 
       <!-- 按钮 -->
-      <div class="panel-btn center">
+      <div
+        class="panel-btn center"
+        style="display: none">
         <div
           class="btn-wrap"
           @click="setMode('cool')">
@@ -62,7 +86,9 @@
       </div>
 
       <!-- 当前型号暂不支持以下功能，注释处理 -->
-      <div class="panel-btn center">
+      <div
+        class="panel-btn center"
+        style="display: none">
         <div
           class="btn-wrap-ellipse"
         >
@@ -79,7 +105,9 @@
         </div>
       </div>
 
-      <div class="footer">
+      <div
+        class="footer"
+        style="display: none">
         <div class="line"/>
         <div class="footer-line">
           <div class="footer-title">风温</div>
@@ -524,6 +552,22 @@ export default {
 </script>
 <style lang="less" scoped>
 @imgPath3: 'base/honghan_switch/assets';
+@keyframes wave1 {
+    from {
+        background-position-x: 0;
+    }
+    to {
+        background-position-x: -600px;
+    }
+}
+@keyframes wave2 {
+    from {
+        background-position-x: -600px;
+    }
+    to {
+        background-position-x: 0;
+    }
+}
 // .body {
   // min-height: 100%;
   // touch-action: none;
@@ -588,6 +632,52 @@ export default {
     font-size: 24px;
     color: #20282B;
   }
+  .box {
+    position: relative;
+    width: 410px;
+    height: 410px;
+    // opacity: 0.05;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 50%;
+    margin: 0 auto;
+    overflow: hidden;
+    .wave {
+      position: absolute;
+      left: 0;
+      top: 90px;
+      width: 1004px;
+      height: 320px;
+      // background-image: url(~@lib/base/closestool/assets/mt_img_03.png);
+      background-size: 100% 100%;
+      background-repeat: repeat-x;
+      background-position-y: bottom;
+      // background-size: 885px 258px;
+    }
+    .wave1 {
+      background-image: url(~@lib/base/closestool/assets/mt_img_03.png);
+      background-size: 1004px 350px;
+      background-position-x: 0px;
+      animation: wave1 2s linear infinite;
+      animation-direction:alternate;
+      -webkit-animation-direction:alternate;
+    }
+    .wave2 {
+      background-image: url(~@lib/base/closestool/assets/mt_img_02.png);
+      background-size: 1004px 200px;
+      background-position-x: 0px;
+      animation: wave2 2s linear infinite;
+      animation-direction:alternate;
+      -webkit-animation-direction:alternate;
+    }
+    .wave3 {
+      background-image: url(~@lib/base/closestool/assets/mt_img_01.png);
+      background-size: 1004px 250px;
+      background-position-x: 0px;
+      animation: wave1 1.5s linear infinite;
+      animation-direction:alternate;
+      -webkit-animation-direction:alternate;
+    }
+  }
   .panel-btn {
     // position: fixed;
     // bottom: 0;
@@ -603,6 +693,12 @@ export default {
     flex-wrap: wrap;
     // justify-content: flex-start;
     justify-content: space-around;
+    &.stop {
+      position: fixed;
+      bottom: 90px;
+      left: 0;
+      right: 0;
+    }
   }
   /*********** 按钮 ***********/
   .btn-wrap {
@@ -624,7 +720,7 @@ export default {
         width: 48px;
         height: 48px;
       }
-      &.active {
+      // &.active {
         // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
         // border-color: #ffbf00;
         // background: #000000;
@@ -653,7 +749,7 @@ export default {
         //     background-size: 100% 100%;
         //   }
         // }
-      }
+      // }
     }
     .btn-name {
       text-align: center;
