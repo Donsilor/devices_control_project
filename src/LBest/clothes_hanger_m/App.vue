@@ -10,11 +10,11 @@
         bak-color="#000"
         page-class=".page"
       />
-      <StatusTip v-show="device.device_uuid"/>
+      <StatusTip/>
       <div class="main center"> 
-        <div class="box">上升</div>
-        <div class="box">暂停</div>
-        <div class="box">下降</div>
+        <div class="box box-s">上升</div>
+        <div class="box box-z">暂停</div>
+        <div class="box box-x">下降</div>
       </div>
       <div class="bottom">
         <div class="light">
@@ -174,14 +174,19 @@ export default {
   .main {
     margin-top:100px;
     .box{
-      width: 192px;
-      height: 192px;
-      background: rgba(0,0,0,0.04);
-      border-radius: 50%;
+      width: 252px;
+      height: 240px;
+      background: rgba(0,0,0,0.05);
+      // border-radius: 50%;
       text-align: center;
-      line-height: 192px;
+      line-height:240px;
       font-size: 64px;
-      margin-bottom: 20px
+    }
+    .box-s{
+      border-radius: 200px 200px 0 0;
+    }
+    .box-x{
+      border-radius:  0 0 200px 200px;
     }
     &.center{
       display: flex;
