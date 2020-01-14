@@ -88,47 +88,7 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
-// import './animate8.0.js'
-/**
- * 创建并返回一个像节流阀一样的函数，当重复调用函数的时候，最多每隔 wait毫秒调用一次该函数
- * @param func 执行函数
- * @param wait 时间间隔
- * @param options 如果你想禁用第一次首先执行的话，传递{leading: false}，
- *                如果你想禁用最后一次执行的话，传递{trailing: false}
- * @returns {Function}
- */
-function throttle(func, wait, options) {
-    var context, args, result
-    var timeout = null
-    var previous = 0
-    if (!options) options = {}
-    var later = function() {
-        previous = options.leading === false ? 0 : new Date().getTime()
-        timeout = null
-        result = func.apply(context, args)
-        if (!timeout) context = args = null
-    }
-    var wait = wait || 10000
-    return function() {
-        var now = new Date().getTime()
-        if (!previous && options.leading === false) previous = now
-        var remaining = wait - (now - previous)
-        context = this
-        args = arguments
-        if (remaining <= 0 || remaining > wait) {
-            if (timeout) {
-                clearTimeout(timeout)
-                timeout = null
-            }
-            previous = now
-            result = func.apply(context, args)
-            if (!timeout) context = args = null
-        } else if (!timeout && options.trailing !== false) {
-            timeout = setTimeout(later, remaining)
-        }
-        return result
-    }
-}
+import _ from './utils'
 export default {
   data() {
     return {
@@ -236,7 +196,7 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-      touchstart:function(val) {
+      touchstart(val) {
         // this.$refs[val].classList.remove('animateStart','animateEnd')
         let btn = document.querySelectorAll('.btn')
         for(let i=0;i<btn.length;i++){
@@ -246,7 +206,7 @@ export default {
         this.$refs[val].classList.add('animateStart')
         this.$refs[val].classList.add('yellowExtend')
     },
-    touchend:throttle(function(val){ 
+    touchend(val){ 
       // this.$refs[val].classList.remove('animateStart')
       this.$refs[val].classList.add('animateEnd')
       if(val=='open'){
@@ -256,9 +216,9 @@ export default {
       }else{
         this.setPause()
       }
-    }),
+    },
     // 全开
-    setOpen(){
+    setOpen: _.debounce(function(){
       // this.$refs['open'].classList.add('active')
       // setTimeout(()=>{
       //   this.$refs['open'].classList.remove('active')
@@ -275,9 +235,9 @@ export default {
            HdSmart.UI.toast('请求超时，请重试')
         }
       })
-    },
+    },300),
     //全关
-    setClose(){
+    setClose:_.debounce(function(){
       if (this.deviceAttrs.open_percentage == 0) {
         this.$refs['close'].classList.remove('yellowExtend')
       }
@@ -290,9 +250,9 @@ export default {
            HdSmart.UI.toast('请求超时，请重试')
         }
       })
-    },
+    },300),
     //暂停
-    setPause(){
+    setPause:_.debounce(function(){
       this.btnActive = 'pause'
       this.curtainStatusText = ''
       this.myMove = false
@@ -315,7 +275,7 @@ export default {
            HdSmart.UI.toast('请求超时，请重试')
         }
       })
-    },
+    },300),
     // clear
     // 滑动窗帘
     touchStart(e){

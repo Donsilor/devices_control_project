@@ -10,18 +10,28 @@
         bak-color="#000"/>
       <StatusTip v-show="device.device_uuid"/>
       <div class="top">
-        <div class="sideCicle">
+        <div :class="[{'sideCicle':lockStatus =='1'},{'withdrawal':lockStatus != '1'}]">
           <div class="innerCicle">
             <div class="protectImg">
               <div 
+                v-show="lockStatus =='1'" 
                 class="protect"/>
             </div>
             <div class="node">
               <div>今日记录次数</div>
               <div class="num">{{ todayNum.result.total }}</div>
             </div>
-            <div class="status">防护中</div>
+            <div class="status">{{ lockStatus=='1'?'防护中':'已撤防' }}</div>
           </div>
+        </div>
+      </div>
+      <!-- 按钮 -->
+      <div class="panel-btn center">
+        <div class="btn-wrap">
+          <div
+            :class="[{'active':lockStatus=='1'},'btn-open btn center']"
+            @click="lock" />
+          <div class="btn-name">{{ lockStatus=='1'?'撤防':'布防' }}</div>
         </div>
       </div>
       <div class="main">
@@ -91,6 +101,9 @@ export default {
           ]
         }
       },
+      lockData:{},
+      lockStatus:'',
+      setLock:''
     }
   },
   computed: {
@@ -116,11 +129,13 @@ export default {
           }
           this.currentdate=date.getFullYear() + fillz(date.getMonth() + 1) + fillz(date.getDate())
           this.currentdate1=date.getFullYear() + fillz(date.getMonth() ) + fillz(date.getDate())
+          this.getOne()
+          .then(() =>{
             this.getTwo()
             .then(() => {
               this.getThree()
             })
-          
+          })
         })
         HdSmart.UI.setStatusBarColor(2)
     })
@@ -128,6 +143,31 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    getOne() {
+      return new Promise((resolve, reject) => {
+        // 获取设备布防/撤防状态
+        HdSmart.Device.control({
+          'list':[{
+            'device_id':this.device.device_id,
+            'device_category_id':this.device.device_category_id
+          }]
+        },(data)=>{
+          console.log('===================status  data',data)
+          if (typeof data.result === 'string') {
+              this.lockData.result = JSON.parse(data.result)
+            } else if (typeof data.result === 'object') {
+              this.lockData.result = data.result
+            }
+            this.lockStatus = this.lockData.result.list.length > 0 ? this.lockData.result.list[0].status : ''
+            console.log(this.lockStatus,'1111111')
+            
+          resolve()
+        },(err)=>{
+          reject(err)
+        },'da_get_alert_status')
+        
+      })
+    },
     getTwo() {
       return new Promise((resolve, reject) => {
         // 获取今日记录次数
@@ -206,6 +246,29 @@ export default {
       } {
         return year + '-' + month + '-' + day
       }
+    },
+    // 设置布防/撤防
+    lock(){
+      HdSmart.UI.vibrate()
+     if (this.lockStatus=='1') {
+       this.setLock = 0
+     } else{
+       this.setLock = 1
+     }
+      HdSmart.Device.control({
+        'family_id':this.device.family_id,
+        'device_id':this.device.device_id,
+        'status':this.setLock,
+        },(data)=>{
+          console.log('=====================setLock',data)
+          if (data.code=='0') {
+            this.lockStatus=this.setLock
+            console.log(this.lockStatus,'状态-------')
+            
+          }
+        },()=>{
+
+        },'da_set_alert_status')
     },
     controlDevice(attr, value,params) {
       return this.doControlDevice({
@@ -421,7 +484,6 @@ export default {
   }
   .main{
     font-family: PingFangSC-Light;
-    margin-top:160px;
       .title{
         height: 100px;
         border-top: 1px solid rgba(0, 0, 0, 0.1);

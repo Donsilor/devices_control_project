@@ -37,7 +37,7 @@ var res = {
         digital_display:'off',//数显
         sleep_mode: 'on',
         deviceSubCategory: 0,
-        connectivity: 'online',
+        connectivity: 'offline',
         timer_switch:'on',
         timer_value:8.4,
         close_time:'false'

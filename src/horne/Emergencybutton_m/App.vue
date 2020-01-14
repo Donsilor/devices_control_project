@@ -4,15 +4,19 @@
     <div :class="[{ 'offline': isOffline }, 'page']">
       <NewTopBar
         :title="device.device_name"
-        :scroll="true"
         :room="device.room_name"
+        :scroll="true"
         page-class=".page"
         bak-color="#000"/>
       <StatusTip v-show="device.device_uuid"/>
       <div class="top">
-        <div class="node">
-          <div>今日记录次数</div>
-          <div class="num">{{ todayNum.result.total }}</div>
+        <div class="sideCicle">
+          <div class="innerCicle">
+            <div class="node">
+              <div>今日记录次数</div>
+              <div class="num">{{ todayNum.result.total }}32</div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="main">
@@ -20,7 +24,7 @@
           v-show="timeList.result.list&&timeList.result.list.length!==0" 
           class="timeBox">
           <div class="title">
-            <span>起始时间</span>
+            <span>侦测时间</span>
             <span>事件</span>
           </div>
           <ul>
@@ -44,26 +48,56 @@ export default {
     return {
       currentdate:'',
       currentdate1:'',
-      today:'',
       // 今日记录次数
       todayNum:{
         result: {
-          // list: []
+          // list: [],
           total:""
         }
       },
       // 时间记录
       timeList:{
         result: {
-          list: []
+          list: [
+            {
+              title:'除味',
+              updated_at:3748481,
+            },
+            {
+              title:'密胺',
+              updated_at:1048486,
+            },
+            {
+              title:'除味',
+              updated_at:3748481,
+            },
+            {
+              title:'密胺',
+              updated_at:1048486,
+            },
+            {
+              title:'除味',
+              updated_at:3748481,
+            },
+            {
+              title:'密胺',
+              updated_at:1048486,
+            },
+          ]
         }
       },
-      lockStatus:'',
     }
   },
   computed: {
     ...mapGetters(['isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+  },
+  watch: {
+    'device.stateChange'(){
+      this.$nextTick(()=>{
+        //  this.newRatio()
+      })
+    },
   },
   created() {
     HdSmart.ready(() => {
@@ -77,10 +111,11 @@ export default {
           }
           this.currentdate=date.getFullYear() + fillz(date.getMonth() + 1) + fillz(date.getDate())
           this.currentdate1=date.getFullYear() + fillz(date.getMonth() ) + fillz(date.getDate())
-          this.getTwo()
-          .then(() =>{
-            this.getThree()
-          })
+            this.getTwo()
+            .then(() => {
+              this.getThree()
+            })
+          
         })
         HdSmart.UI.setStatusBarColor(2)
     })
@@ -184,23 +219,22 @@ export default {
 <style lang="less" scoped>
 // @imgPath: 'base/new_curtains/assets';
 @imgPath: 'base/somatosensor/assets';
-
+// .body {
+//   min-height: 100%;
+// }
   .panel-btn {
     height: auto;
     width: 100%;
-    // position: fixed;
-    // bottom: 130px;
-    z-index: 99999;
+    z-index: 999;
+    margin-top: 156px;
     .btn {
       margin-top: 24px;
       width: 100%;
       height: 306px;
       border-radius: 40px 40px 0 0;
-      // background: rgba(136, 138, 137,.4);
-      background: rgba(0, 0, 0, 0.1);
+      background: rgba(0,0,0,0.05);
       overflow: hidden;
       display: flex;
-      // justify-content: space-evenly;
       align-items: center;
     }
     &.center{
@@ -210,12 +244,12 @@ export default {
   }
   /*********** 按钮 ***********/
   .btn-wrap {
-    margin: 0 34px 40px;
+    margin: 0 34px 49px;
     .btn {
       box-sizing: border-box;
       margin: 0px auto;
-      width: 120px;
-      height: 120px;
+      width: 132px;
+      height: 132px;
       border-radius: 50%;
 
       display: flex;
@@ -225,12 +259,12 @@ export default {
         display: block;
         width: 44px;
         height: 44px;
-        background-image: url('~@lib/@{imgPath}/chefang.png');
+        background-image: url('~@lib/@{imgPath}/anfang3.png');
           background-size: 100% 100%;
       }
       &.active {
         &.btn-open::before{
-          background-image: url('~@lib/@{imgPath}/bufang.png');
+          background-image: url('~@lib/@{imgPath}/anfang4.png');
           background-size: 100% 100%;
         }
       }
@@ -245,9 +279,10 @@ export default {
     }
   }
 .page {
-   &::before{
+  // padding-bottom: 324px;
+  &::before{
     content: "";
-    background-image: url('~@lib/@{imgPath}/img_bg_01.png');
+    background-image: url('~@lib/@{imgPath}/img_bg.png');
     background-repeat:no-repeat;
     background-size: 100% 100%;
     position: fixed;
@@ -258,81 +293,157 @@ export default {
     z-index: -1;
   }
   .top{
+    width: 520px;
+    height: 520px;
+    margin: 0 auto;
+    position: relative;
+     .innerCicle{
+        width: 464px;
+        height: 464px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        .protectImg{
+          width: 64px;
+          height: 132px;
+          position: relative;
+          .protect{
+            width: 64px;
+            height: 70px;
+            &::before{
+              position: absolute;
+              left: 0;
+              top: 50%;
+              margin-top: -50%;
+              content: "";
+              width: 64px;
+              height: 70px;
+              background-image: url('~@lib/@{imgPath}/protect.png');
+              background-size: 100% 100%;
+            }
+          }
+        }
+      }
+    .sideCicle{
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 110px auto 156px;
+      background: rgba(255,255,255,0.3);
+      &::before{
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('~@lib/@{imgPath}/anfang1.png');
+        background-size: 100% 100%;
+        animation: 1.8s roate infinite linear;
+      }
+      @keyframes roate {
+        0%{transform: rotate(0);}
+        100%{transform: rotate(360deg);}
+      }
+      @keyframes roate1 {
+        0%{transform: rotate(0);}
+        100%{transform: rotate(-360deg);}
+      }
+      .innerCicle{
+        width: 464px;
+        height: 464px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        &::before{
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-image: url('~@lib/@{imgPath}/anfang2.png');
+          background-size: 100% 100%;
+          animation: 1.8s roate1 infinite linear;
+        }
+      }
+    }
+    .withdrawal{
+       width: 100%;
+       height: 100%;
+       border-radius: 50%;
+       margin: 110px auto 156px;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+      //  background-image: linear-gradient(transparent, rgba(255,255,255,0.3));
+      background: rgba(255,255,255,0.3);
+       &::before{
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('~@lib/@{imgPath}/anfang5.png');
+        background-size: 100% 100%;
+      }
+    }
     .node{
       width: 100%;
-      height: auto;
-      opacity: 0.5;
-      font-family: PingFangSC-Regular;
+      height: 100%;
+      font-family: PingFangSC-Light;
       font-size: 24px;
       color: #000000;
       display: flex;
       align-items: center;
       flex-direction: column;
-      margin-top: 10vh;
+      justify-content: center;
       .num{
-        font-size: 172px;
-        opacity: 1;
-        margin: 10px 0 100px 0;
+        font-size: 144px;
+        margin-top:30px;
+        font-family: PingFangSC-Light;
       }
     }
       .status{
-        font-family: PingFangSC-Regular;
-        font-size: 48px;
-        color: #000000;
+        font-family: PingFangSC-Light;
+        font-size: 46px;
         text-align: center;
-        margin-bottom: 150px;
       }
   }
   .main{
-      margin-top: 12vh;
+    font-family: PingFangSC-Light;
+    margin-top:160px;
       .title{
+        height: 100px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
         display: flex;
         justify-content: space-between;
         align-items: center;
         font-size: 26px;
-        color: #808080;
-        margin-bottom: 30px;
+        color: rgba(0,0,0,0.5);
         padding: 0 40px;
       }
       ul{
         .list{
-          border-top: 1px solid rgba(0, 0, 0, 0.12);
+          border-top: 1px solid rgba(0, 0, 0, 0.1);
           font-size: 28px;
           display: flex;
           align-items: center;
           justify-content: space-between;
           color: #000;
-          height: 102px;
+          height: 100px;
           padding: 0 40px;
           &:last-of-type{
-            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
           }
           .isgray{
             color: rgba(0, 0, 0, 0.5);
           }
-        }
-      }
-      .picBox{
-        width: 264px;
-        height: 250px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-left: -132px;
-        margin-top: -125px;
-        img{
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          margin-left: -46px;
-          margin-top: -210px;
-          width: 92px;
-          height: 116px;
-        }
-        p{
-          font-size: 24px;
-          margin-top: 80px;
-          color: rgba(0, 0, 0, 0.39);
         }
       }
     }
