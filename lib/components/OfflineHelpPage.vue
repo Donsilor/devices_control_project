@@ -103,7 +103,7 @@ export default {
     }
 }
 .moveIn{
-   animation: moveIn 0.6s linear;
+   animation: moveIn 0.2s linear;
 }
 
 
@@ -117,7 +117,7 @@ export default {
     }
 }
 .moveOut{
-   animation: moveOut 0.6s linear;
+   animation: moveOut 0.2s linear;
    animation-fill-mode:forwards
 }
 .page {
