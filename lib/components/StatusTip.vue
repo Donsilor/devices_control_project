@@ -1,7 +1,6 @@
 <template>
-  <!-- v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1" -->
   <div
-    v-if="false"
+    v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1"
     :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
@@ -61,7 +60,7 @@
           <i class="arrow"/>
         </div>
         <div
-          v-if="deviceAttrs.connectivity==='offline'&&networkStatus!=-1"      
+          v-if="deviceAttrs.connectivity==='offline'&&networkStatus!=-1&&networkStatus!=-2"      
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">
@@ -74,11 +73,13 @@
         </div>
       </div>
     </div>
+    <div 
+      class="mask" />
     <OfflineHelpPage 
       v-show="OfflineHelpPageView" 
       ref="OfflineHelpPageView"/>
   </div>
-
+  
 </template>
 
 
@@ -291,18 +292,7 @@ export default {
       background: url('~@lib/base/tv/assets/new/tv_arrow_lixian.png');
       background-size: 100% 100%;
     }
-    &::after{
-      content: '';
-      position: absolute;
-      top: 44PX;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 2000px;
-      background: transparent;
-      z-index: 10000;
-      pointer-events:none;
-    }
+   
 }
 .offline_bar.offline_bar_wifi{
     justify-content: left;
@@ -330,5 +320,15 @@ export default {
 				transform: rotate(360deg);
 			}
 		}
-
+.mask{
+      position: absolute;
+      top: 44PX;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2000px;
+      background: transparent;
+      z-index: 10000;
+   
+}
 </style>
