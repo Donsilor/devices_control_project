@@ -4,8 +4,8 @@ let res = {
     "connectivity": "online", //l
     "switch_status": 'on', //开关
     "temperature":167 , //暖光3000K  自然光5000K  白光6000K
-    "level":255,
-    "mode": '0'
+    "level":175,
+    "mode": '2'
 }
 export function generateSnapShot() {
     return Mock.mock({

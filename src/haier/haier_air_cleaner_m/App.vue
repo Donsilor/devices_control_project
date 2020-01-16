@@ -81,8 +81,15 @@
 
         <div class="btn-wrap">
           <div
-            :class="[{'active': model.speed == 'sleep' && !isClose && !isOffline },'btn btn-mode center']"
-            @click="setSleep()" />
+            :class="[{'active': model.control_status == 'auto' && !isClose && !isOffline },'btn btn-auto center']"
+            @click="setMode('auto')" />
+          <div class="btn-name">自动</div>
+        </div>
+
+        <div class="btn-wrap">
+          <div
+            :class="[{'active': model.control_status == 'sleep' && !isClose && !isOffline },'btn btn-sleep center']"
+            @click="setMode('sleep')" />
           <div class="btn-name">睡眠</div>
         </div>
 
@@ -103,22 +110,27 @@
       @click="hide">
       <div class="items btns">
         <div
-          :class="[{ 'item1': animation }, {' btn-loading': btnLoading.wind }, 'btn btn-low center']"
+          :class="[{ 'item1': animation }, {' btn-loading': btnLoading.wind }, 'btn btn-mute center']"
+          @click.stop="setSpeed('sleep')">
+          <div class="name">静音</div>
+        </div>
+        <div
+          :class="[{ 'item2': animation }, {' btn-loading': btnLoading.heat },'btn btn-low center']"
           @click.stop="setSpeed('low')">
           <div class="name">低挡</div>
         </div>
         <div
-          :class="[{ 'item2': animation }, {' btn-loading': btnLoading.heat },'btn btn-middle center']"
+          :class="[{ 'item3': animation }, {' btn-loading': btnLoading.dehumidify }, 'btn btn-middle center']"
           @click.stop="setSpeed('middle')">
           <div class="name">中档</div>
         </div>
         <div
-          :class="[{ 'item3': animation }, {' btn-loading': btnLoading.dehumidify }, 'btn btn-high center']"
+          :class="[{ 'item4': animation }, {' btn-loading': btnLoading.cold },'btn btn-high center']"
           @click.stop="setSpeed('high')">
           <div class="name">高档</div>
         </div>
         <div
-          :class="[{ 'item4': animation }, {' btn-loading': btnLoading.cold },'btn btn-very_high center']"
+          :class="[{ 'item5': animation }, {' btn-loading': btnLoading.cold },'btn btn-very_high center']"
           @click.stop="setSpeed('very_high')">
           <div class="name">超高档</div>
         </div>
@@ -253,7 +265,7 @@ export default {
           return 'btn-super_high'
           break
         case 'sleep':
-          return 'btn-low'
+          return 'btn-mute'
           break
       }
     },
@@ -290,7 +302,7 @@ export default {
           return '极速挡'
           break
         case 'sleep':
-          return '低挡'
+          return '静音'
           break
       }
     }
@@ -401,14 +413,11 @@ export default {
         this.model.control_status = val
       })
     },
-    setSleep() {
-      let speed = ''
-      if(this.model.speed == 'sleep'){
-        speed = 'low'
-      } else {
-         speed = 'sleep'
-      }
-      this.setSpeed(speed)
+    setMode(val) {
+      this.controlDevice('control', val, {}, () => {
+        this.hide()
+        this.model.control_status = val
+      })
     },
     setSpeed(val) {
       this.controlDevice("speed", val, {}, () => {
@@ -709,7 +718,17 @@ export default {
         }
       }
     }
-    .btn-mode {
+    .btn-auto {
+      &::before {
+        content: "";
+        display: block;
+        width: 48px;
+        height: 48px;
+        background-image: url('~@lib/@{imgPath}/speed-black.png');
+        background-size: 100% 100%;
+      }
+    }
+    .btn-sleep {
       &::before {
         content: "";
         display: block;
@@ -726,6 +745,16 @@ export default {
         width: 44px;
         height: 44px;
         background-image: url('~@lib/@{imgPath}/speed1.png');
+        background-size: 100% 100%;
+      }
+    }
+    .btn-mute {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url('~@lib/@{imgPath}/bx_mode_jieneng.png');
         background-size: 100% 100%;
       }
     }
@@ -881,11 +910,11 @@ export default {
     }
     .item4 {
       top: 155px;
-      left: -94px;
+      left: -76px;
     }
     .item5 {
-      top: 150px;
-      left: 50px;
+      top: 155px;
+      left: 88px;
     }
   }
   &.more {
@@ -945,6 +974,21 @@ export default {
       &.active {
         &::before {
           background-image: url('~@lib/@{imgPath}/speed1.png');
+        }
+      }
+    }
+    .btn-mute {
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        background-image: url('~@lib/@{imgPath}/bx_mode_jieneng_selected.png');
+        background-size: 100% 100%;
+      }
+      &.active {
+        &::before {
+          background-image: url('~@lib/@{imgPath}/bx_mode_jieneng.png');
         }
       }
     }

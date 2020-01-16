@@ -83,17 +83,25 @@
         <div
           v-show="custom || deviceAttrs.mode == '0'"
           class="line"/>
-        <div class="footer-line">
+        <div
+          v-show="deviceAttrs.switch_status == 'on'"
+          class="footer-line">
           <div class="footer-title">关灯时缓慢变暗</div>
           <input
+            :checked="lockCloseVal"
             class="switch switch-anim"
             type="checkbox"
             @click="lockClose">
         </div>
-        <div class="line"/>
-        <div class="footer-line">
+        <!-- <div
+          v-show="deviceAttrs.switch_status == 'on'"
+          class="line"/> -->
+        <div
+          v-show="deviceAttrs.switch_status == 'off'"
+          class="footer-line">
           <div class="footer-title">开灯时缓慢变亮</div>
           <input
+            :checked="lockOpenVal"
             class="switch switch-anim"
             type="checkbox"
             @click="lockOpen">
@@ -194,14 +202,16 @@ export default {
     'device.stateChange'() {
       this.rangeDisabled = false
       this.speedDisabled = false
-      if(this.deviceAttrs.mode == '0') {
+      if(this.deviceAttrs.mode == '0' || this.deviceAttrs.mode == '1' || this.deviceAttrs.mode == '2') {
         this.custom = true
+      } else {
+        this.custom = false
       }
     },
     'deviceAttrs.level'() {
-      // this.brightness = this.deviceAttrs.level / 2.55
-      // var width = (91.3 / 100 * this.brightness) +"%"
-      // document.querySelector('.rang_width').style.width = width
+      this.localBrightness = this.deviceAttrs.level / 2.55
+      var width = (91.3 / 100 * this.localBrightness) +"%"
+      document.querySelector('.rang_width').style.width = width
     }
   },
   created() {
@@ -211,6 +221,14 @@ export default {
         this.localBrightness = this.deviceAttrs.level / 2.55
         var width = (91.3 / 100 * this.localBrightness) +"%"
         document.querySelector('.rang_width').style.width = width
+        if(this.deviceAttrs.mode == '1') {
+          this.lockOpenVal = true
+          this.custom = true
+        }
+        if(this.deviceAttrs.mode == '2') {
+          this.lockCloseVal = true
+          this.custom = true
+        }
       })
       .catch((err) => {
         if(err.code == -90004) {
@@ -371,14 +389,6 @@ export default {
 @imgPath2: "base/air_cleaner/assets/new-air";
 @imgPath3: 'base/honghan_switch/assets';
 @imgPath4: 'base/oakes_air_condition/assets';
-@keyframes rotate {
-    from {
-      transform:rotate(0deg);
-    }
-    to {
-      transform:rotate(360deg);
-    }
-}
 *{ -webkit-tap-highlight-color:transparent; }
 .page{
   // height:100vh;
