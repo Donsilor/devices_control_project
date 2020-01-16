@@ -12,7 +12,8 @@ let res = {
   timeleft: 30,
   drying_remain: 120,
   air_drying_remain: 120,
-  sterilization_remain: 20
+  sterilization_remain: 20,
+  connectivity: "online",
 }
 
 export function generateSnapShot() {
@@ -21,6 +22,7 @@ export function generateSnapShot() {
     code: 0,
     result: {
       device_name: '智能晾衣架',
+      room_name:"客厅",
       attribute: res
     }
   })

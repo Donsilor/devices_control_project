@@ -1,6 +1,6 @@
 console.log(`argv_is_mock: ${argv_is_mock}`)
 if (argv_is_mock || process.env.NODE_ENV == 'development') {
-  require('@mock/konka_tv/index.js')
+  require('@mock/clothes_hanger/index.js')
 }
 import Vue from 'vue'
 import App from './App.vue'
@@ -16,11 +16,16 @@ import StatusTip from '@lib/components/StatusTip.vue'
 
 
 FastClick.attach(document.body)
-// import * as filters from './filters' // global filters
+import * as filters from './filters' // global filters
+console.log(filters,'filters')
+
 Vue.component('NewTopBar', NewTopBar)
 Vue.component('StatusTip', StatusTip)
 
 // register global utility filters.
+for (const key in filters) {
+  Vue.filter(key, filters[key])
+}
 // Object.keys(filters).forEach(key => {
 //   Vue.filter(key, filters[key])
 // })

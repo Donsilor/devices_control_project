@@ -36,8 +36,7 @@
         <!-- {{ networkStatus }} -->
         <div
           v-show="networkStatus==-1" 
-          class="offline_bar offline_bar_wifi"
-          @click="goToOfflineHelpPage">
+          class="offline_bar offline_bar_wifi">
           <div class="offline_bar_div">
             <p class="offline_bar_p">
               <i class="wifi"/>
