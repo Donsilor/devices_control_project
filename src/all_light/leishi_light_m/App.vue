@@ -343,10 +343,16 @@ export default {
         switchStatus = 'on'
       }
       if(switchStatus == 'off') {
-        if(this.lockCloseVal) return this.controlDevice("mode", '2')
+        if(this.lockCloseVal) {
+          if(this.deviceAttrs.mode == '2') return HdSmart.UI.toast('关灯中，立刻关灯需取消缓慢模式')
+          return this.controlDevice("mode", '2')
+        }
       }
       if(switchStatus == 'on') {
-        if(this.lockOpenVal) return this.controlDevice("mode", '1')
+        if(this.lockOpenVal) {
+          if(this.deviceAttrs.mode == '1') return
+          return this.controlDevice("mode", '1')
+        }
       }
       if(this.deviceAttrs.mode == '1' || this.deviceAttrs.mode == '2') {
         return this.controlDevice("switch", switchStatus, {'level': this.deviceAttrs.level})
