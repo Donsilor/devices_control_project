@@ -1,7 +1,6 @@
 <template>
   <div
-    v-if="deviceAttrs.connectivity==='offline'||networkStatus===-1"
-    :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
+    v-if="deviceAttrs.connectivity==='offline'||networkStatus==-1||networkStatus==-2"
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
     <!-- <div class="status_bar_block"/> -->
@@ -207,7 +206,7 @@ export default {
     white-space: nowrap;
 }
 .status_bar {
-    position: fixed;
+    position: relative;
 
     width: 100%;
     z-index: 10000;
@@ -237,7 +236,8 @@ export default {
 
 .offline_bar {
   position: relative;
-    background: rgba(0, 0, 0, .3);
+    background: #a1a1a1;
+    opacity: 0.9;
     width: 100%;
     height: 44PX;
     line-height: 44PX;
