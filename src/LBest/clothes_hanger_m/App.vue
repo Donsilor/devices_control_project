@@ -10,29 +10,69 @@
         bak-color="#000"
         page-class=".page"
       />
-      <StatusTip v-show="device.device_uuid"/>
+      <StatusTip/>
       <div class="main center"> 
-        <div class="box">上升</div>
-        <div class="box">暂停</div>
-        <div class="box">下降</div>
-      </div>
-      <div class="bottom">
-        <div class="light">
-          <div class="light_left">照明</div>
-          <div class="light_right">
-            <input
-              :checked="checkboxVal"
-              class="switch switch-anim"
-              type="checkbox"
-              @click="lock">
+        <div class="control">
+          <div 
+            :class="['box' ,'box-s',{'active':deviceAttrs.control=='up'}]" 
+            @touchstart ="touchstart('control','up')"
+            @touchend="touchend('control','up')">
+            <div class="box-s-img"/>
+            <span>上升</span>  
+          </div>
+          <div 
+            :class="['box' ,'box-z',{'active':deviceAttrs.control=='down'}]" 
+            @touchstart ="touchstart('control','down')"
+            @touchend="touchend('control','down')">
+            <div class="box-z-img"/>
+            <span>暂停</span>  
+          </div>
+
+          <div 
+            :class="['box' ,'box-x',{'active':deviceAttrs.control=='pause'}]" 
+            @touchstart ="touchstart('control','pause')"
+            @touchend="touchend('control','pause')">
+            <div class="box-x-img"/>
+            <span>下降</span>  
           </div>
         </div>
-        <div class="air_drying">2</div>
-        <div class="sterilization">3</div>
+
+        <div class="status">{{ deviceAttrs.status|statusText }}</div>
       </div>
+      <div class="panel-btn center">
+        <div
+          class="btn-wrap"
+        >
+          <div
+            ref="light"
+            class="btn btn-close center"
+            @touchstart ="touchstart('light')"
+            @touchend="touchend('light')"/>
+          <div class="btn-name">照明</div>
+          <div class="btn-name">次日13:25结束</div>
+        </div>
+        <div class="btn-wrap">
+          <div
+            ref="pause"
+            class="btn-pause btn center"
+            @touchstart ="touchstart('pause')"
+            @touchend="touchend('pause')"/>
+          <div class="btn-name">风干</div>
+          <div class="btn-name">次日13:25结束</div>
+        </div>
+        <div class="btn-wrap">
+          <div
+            ref="open"
+            class="btn-open btn center"
+            @touchstart ="touchstart('open')"
+            @touchend="touchend('open')"/>
+          <div class="btn-name">杀菌</div>
+          <div class="btn-name">次日13:25结束</div>
+        </div>
+      </div>
+
     </div>
-  </div>
-</template>
+</div></template>
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
@@ -53,91 +93,68 @@ export default {
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
-        .then(() => {
+        .then((res) => {
+          console.log(res,'aaa')
+          
         })
       HdSmart.UI.setStatusBarColor(2)
     })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    // 滚动事件
-    touchstart(val) {
-      if (val == 'switchStatus') {
-        if (this.isOffline) return
-      }else{
-        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
-      }
-      this.$refs[val].classList.add('animateStart')
+    touchstart(attr) {
+      console.log(this.deviceAttrs,'sdsd')
+      
+      if(this.isOffline)return   
+     
+      if(attr!='control'){
+        this.$refs[attr].classList.add('animateStart')
+      }     
+      
     },
-    touchend(val){ 
-      if (val == 'switchStatus') {
-        if (this.isOffline) return
-      }else{
-        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+    touchend(attr,val){ 
+      // if (val == 'switchStatus') {
+      //   if (this.isOffline) return
+      // }else{
+      //   if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+      // }
+      let btn = document.querySelectorAll('.btn')
+
+       for(let i=0;i<btn.length;i++){
+        btn[i].classList.remove('yellowExtend')
+      } 
+      if(attr!='control'){
+        this.$refs[attr].classList.add('animateEnd')
+        this.$refs[attr].classList.add('yellowExtend')
+        this.$refs[attr].classList.remove('animateStart')
+        setTimeout(() => {
+          this.$refs[attr].classList.remove('animateEnd')
+        }, 300)
       }
-      this.$refs[val].classList.add('animateEnd')
-      this.$refs[val].classList.remove('animateStart')
-      setTimeout(() => {
-         this.$refs[val].classList.remove('animateEnd')
-      }, 300)
-      if(val=='switchStatus'){
-        this.setSwitch()
-      }else if(val=='increase'||val=='decrease'){
-        this.setVoice(val)
-      }else{
-        this.setBack(val)
+    
+      switch (attr) {
+        case 'control':
+          this.controlDevice('control',val)
+          break
+      
+        default:
+          break
       }
+    
+  
     },
     // 返回主页
     setBack(val){
       HdSmart.UI.vibrate()
       this.controlDevice('button',val)
     },
-    // 开关机
-    setSwitch(){
-      if (this.isOffline) return
-      HdSmart.UI.vibrate()
-      let switchstatus = ''
-      if (this.deviceAttrs.switchStatus=='on') {
-        switchstatus = 'off'
-      }else{
-        switchstatus = 'on'
-      }
-      this.controlDevice('switch',switchstatus)
-    },
-    // 方向盘
-    controlStart(val){
-      HdSmart.UI.vibrate()
-      if (val=='centerbox') {
-        this.$refs.centerbox.classList.add('active')
-      }else{
-        this.$refs[val+"Btn"].classList.add('active')
-      }
-    },
-    controlMove(){
-    },
-    lock(e) {
-      HdSmart.UI.vibrate()
-      console.log(e.target.checked, '==========')
-    },
-    controlEnd(val){
-      if (val== 'centerbox') {
-        this.$refs.centerbox.classList.remove('active')
-        this.controlDevice('button','confirm')
-      }else{
-        this.$refs[val+"Btn"].classList.remove('active')
-        this.controlDevice('point_move',val)
-      }
-    },
-    // 音量加减
-    setVoice(val){
-      HdSmart.UI.vibrate()
-      this.controlDevice('voice',val)
+    getToggle(val) {
+      return val === "on" ? "off" : "on"
     },
     controlDevice(attr, value) {
       let param = {}
       return this.doControlDevice({
-        nodeid: `airconditioner.main.${attr}`,
+        nodeid: `clothes_hanger.main.${attr}`,
         params: {
           attribute: {
             [attr]: value,
@@ -150,12 +167,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@imgPath:"base/konka_tv/assets";
+@imgPath:"base/clothes_hanger/new";
   .page {
     height: 100vh;
   &::before{
     content: "";
-    background-image: url('~@lib/@{imgPath}/img_bg.png');
+    background-image: url('~@lib/base/konka_tv/assets/img_bg.png');
     background-repeat:no-repeat;
     background-size: 100% 100%;
     position: fixed;
@@ -172,16 +189,72 @@ export default {
     filter: blur(12px);
   }
   .main {
-    margin-top:100px;
+    margin-top:95px;
+    .control{
+      background: rgba(0,0,0,0.05);
+      border-radius: 200px;
+    }
     .box{
-      width: 192px;
-      height: 192px;
-      background: rgba(0,0,0,0.04);
-      border-radius: 50%;
+      width: 252px;
+      height: 240px;
       text-align: center;
-      line-height: 192px;
-      font-size: 64px;
-      margin-bottom: 20px
+      font-family: PingFangSC-Light;
+      font-size: 24px;
+      color: #000000;
+      text-align: center;
+       display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      &.active{
+        background: rgba(0,0,0,0.05);
+      }
+      span{
+        margin-top: 10px;
+      }
+      .box-s-img{
+        width: 36px;
+        height: 28px;
+        background-image: url('~@lib/@{imgPath}/lyj_btn_sheng.png');
+        background-size: 100% 100%;
+      }
+      .box-z-img{
+        width: 36px;
+        height: 28px;
+        background-image: url('~@lib/@{imgPath}/lyj_btn_zanting.png');
+        background-size: 100% 100%;
+      }
+      .box-x-img{
+        width: 36px;
+        height: 28px;
+        background-image: url('~@lib/@{imgPath}/lyj_btn_jiang.png');
+        background-size: 100% 100%;
+      }
+    }
+    .box-s{
+      border-radius: 200px 200px 0 0;
+    }
+    .box-z{
+      position: relative;
+      &::before{
+        content: "";
+        width: 204px;
+        height: 1px;
+        position: absolute;
+        top: 0;
+        background: rgba(0,0,0,0.10);
+      }
+      &::after{
+        content: "";
+        width: 204px;
+        height: 1px;
+        position: absolute;
+        bottom: 0;
+        background: rgba(0,0,0,0.10);
+      }
+    }
+    .box-x{
+      border-radius:  0 0 200px 200px;
     }
     &.center{
       display: flex;
@@ -189,69 +262,104 @@ export default {
       align-items: center;
       flex-direction: column;
     }
+    .status{
+      font-family: PingFangSC-Light;
+      font-size: 32px;
+      color: #000000;
+      text-align: center;
+      margin: 48px 0 167px 0;
+    }
       /*********** 按钮 ***********/
   }
 }
-  .bottom{
-  
-      padding: 0 40px;
 
-    .light{
+.panel-btn {
+    height: auto;
+    width: 100%;
+    // position: fixed;
+    bottom: 40px;
+    z-index: 9999;
+    .btn {
+      margin-top: 24px;
+      width: 100%;
+      height: 306px;
+      border-radius: 40px 40px 0 0;
+      // background: rgba(136, 138, 137,.4);
+      background: rgba(0, 0, 0, 0.1);
+      overflow: hidden;
       display: flex;
-      justify-content: space-between
+      // justify-content: space-evenly;
+      align-items: center;
+    }
+    &.center{
+      display: flex;
+      align-items: center;
     }
   }
+  /*********** 按钮 ***********/
+  .btn-wrap {
+    margin: 0 34px 40px;
+    .btn {
+      box-sizing: border-box;
+      margin: 0px auto;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
 
+      display: flex;
+      flex-direction: column;
+      &::before {
+        content: "";
+        display: block;
+        width: 44px;
+        height: 44px;
+        z-index: 999;
+      }
+      &.active {
+        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        // background: #E1B96E;
+        &.btn-open::before{
+          background-image: url('~@lib/@{imgPath}/lyj_btn_shajun.png');
+          background-size: 100% 100%;
+        }
+        &.btn-pause::before{
+          background-image: url('~@lib/@{imgPath}/lyj_btn_fenggan.png');
+          background-size: 100% 100%;
+        }
+        &.btn-close::before{
+          background-image: url('~@lib/@{imgPath}/lyj_btn_zhaoming.png');
+          background-size: 100% 100%;
+        }
+      }
+    }
+    .btn-name {
+      text-align: center;
+      color: #000;
+      margin-top: 16px;
+      font-size: 24px;
+      line-height: 40px;
+      height: 40px;;
+      // opacity: .5;
+    }
 
-
-
-  .switch {
-            width: 74px;
-            height: 28px;
-            position: relative;
-            border: 1px solid transparent;
-            // background-color: #fdfdfd;
-            box-shadow: #dfdfdf 0 0 0 0 inset;
-            border-radius: 20px;
-            background-clip: content-box;
-            display: inline-block;
-            -webkit-appearance: none;
-            user-select: none;
-            outline: none;
-            background-color: rgba(0, 0, 0, 0.1);
-        }
-        .switch:before {
-            content: '';
-            width: 40px;
-            height: 40px;
-            position: absolute;
-            top: -8px;
-            left: 0;
-            border-radius: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-            background: #000;
-        }
-        .switch:checked {
-            border-color: #E1B96E;
-            box-shadow: #E1B96E 0 0 0 16px inset;
-            background-color: #E1B96E;
-        }
-        .switch:checked:before {
-            left: 30px;
-            background: #000000;
-        }
-        .switch.switch-anim {
-            transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
-        }
-        .switch.switch-anim:before {
-            transition: left 0.3s;
-        }
-        .switch.switch-anim:checked {
-            // box-shadow: #64bd63 0 0 0 16px inset;
-            // background-color: #64bd63;
-            transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
-        }
-        .switch.switch-anim:checked:before {
-            transition: left 0.3s;
-        }
+    .btn-open {
+      &::before {
+        background-image: url('~@lib/@{imgPath}/lyj_btn_shajun.png');
+        background-size: 100% 100%;
+      }
+    }
+    .btn-pause {
+      &::before {
+        background-image: url('~@lib/@{imgPath}/lyj_btn_fenggan.png');
+        background-size: 100% 100%;
+      }
+    }
+    .btn-close {
+      &::before {
+        background-image: url('~@lib/@{imgPath}/lyj_btn_zhaoming.png');
+        background-size: 100% 100%;
+      }
+    }
+  }
+  
 </style>
