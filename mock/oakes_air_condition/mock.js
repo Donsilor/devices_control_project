@@ -33,13 +33,13 @@ var res = {
         wind_mid_down: 'off',
         wind_auto: 'off',
         strong_wind:'off',//强力
-        auxiliary_heating_mode:'off',//电加热
-        digital_display:'off',//数显
+        auxiliary_heating_mode:'on',//电加热
+        digital_display:'on',//数显
         sleep_mode: 'on',
         deviceSubCategory: 0,
         connectivity: 'online',
         timer_switch:'on',
-        timer_value:8.4,
+        time_value:8.4,
         close_time:'false'
     },
     third_attribute:{
@@ -59,7 +59,7 @@ export function generateSnapShot() {
 }
 
 export function generateNetwork() {
-  return Mock.mock(-1)
+  return Mock.mock(0)
 }
 
 export function set(data) {
@@ -117,14 +117,14 @@ export function set(data) {
 
     if (attr.close_time) {
       if (attr.close_time == 'true') {
-          res.attribute.timer_value = 0
+          res.attribute.time_value = 0
       }
     }
     if (attr.time) {
-      if (attr.time.timer_value>0) {
-        res.attribute.timer_value=attr.time.timer_value
+      if (attr.time.time_value>0) {
+        res.attribute.time_value=attr.time.time_value
       }else{
-        res.attribute.timer_value=0
+        res.attribute.time_value=0
       }
       if (attr.time.timer_switch=='on') {
         res.attribute.timer_switch=attr.time.timer_switch

@@ -1,6 +1,6 @@
 <template>
   <div
-    v-show="deviceAttrs.connectivity==='offline'||networkStatus===-1"
+    v-if="deviceAttrs.connectivity==='offline'||networkStatus===-1"
     :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
@@ -74,7 +74,7 @@
       </div>
     </div>
     <div 
-      class="mask" />
+      class="mask"/>
     <OfflineHelpPage 
       v-show="OfflineHelpPageView" 
       ref="OfflineHelpPageView"/>

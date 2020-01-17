@@ -9,6 +9,7 @@
       <div class="opacity1"/>
       <div class="box">
         <ul 
+          v-if="modeType=='cold'||modeType=='heat'"
           :style="{ top: hTop+0.85 +'rem' }" 
           class="list" 
           @touchstart="touchStart($event,'hours')" 
@@ -16,48 +17,93 @@
           @touchend="touchEnd($event, 'hours')">
           <li class="current-pre"/>
           <li 
-            v-for="(it, idx) in dataList.hours"
+            v-for="(it, idx) in dataList"
             :key="idx"
             :class="{'current-pre': hIndex!==idx,
-                     'current':hIndex===idx}">{{ +idx+1 > 9 ? idx+1 : '0' + (idx+1) }}</li>
+                     'current':hIndex===idx}">{{ it.speed }}</li>
         </ul>
-        <div class="time">小时</div>
-      </div>
-      <!-- <div class="box">
         <ul 
-          :style="{ top: mTop+0.85 +'rem' }" 
+          v-if="modeType=='wind'||modeType=='auto'"
+          :style="{ top: hTop+0.85 +'rem' }" 
           class="list" 
-          @touchstart="touchStart($event,'minute')" 
-          @touchmove="touchMove($event,'minute')" 
-          @touchend="touchEnd($event,'minute')">
+          @touchstart="touchStart($event,'hours')" 
+          @touchmove="touchMove($event,'hours')" 
+          @touchend="touchEnd($event, 'hours')">
           <li class="current-pre"/>
-          <li 
-            v-for="(it, idx) in dataList.minute"
+           <li 
+            v-for="(it, idx) in dataList1"
             :key="idx"
-            :class="{'current-pre': mIndex!==idx,
-                     'current':mIndex===idx}">{{ it == 1 ? '00': '30' }}</li>
+            :class="{'current-pre': hIndex!==idx,
+                     'current':hIndex===idx}">{{ it.speed }}</li>
         </ul>
-        <div class="time1">分钟</div>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   export default {
+    props: {
+      modeType:{type: String}//0,1,2,3,4,5,6
+    },
     data() {
       return {
         fontSize: 75,
         liheight: 50,
-        dataList: {
-          hours: 24,
-          minute: 2,
-        },
-
+        dataList: [
+          {
+           speed:'低风',
+           english:'low',
+           index:'0'
+          },
+          {
+           speed:'中风',
+           english:'normal',
+            index:'1'
+          },
+          {
+           speed:'高风',
+           english:'high',
+            index:'2'
+          },
+          {
+            speed:'自动',
+            english:'auto',
+            index: '3'
+          },
+          {
+           speed:'强力',
+           english:'strong',
+            index:'4'
+          },
+        ],
+        dataList1: [
+          {
+           speed:'低风',
+           english:'low',
+           index:'0'
+          },
+          {
+           speed:'中风',
+           english:'normal',
+            index:'1'
+          },
+          {
+           speed:'高风',
+           english:'high',
+            index:'2'
+          },
+          {
+            speed:'自动',
+            english:'auto',
+            index: '3'
+          },
+        ],
+        newDataList:[],
         hIndex: 0, // 小时选中下标
         mIndex: 0,
 
-        selectedValue: '00:00', //选中值
+        selectedValue: '0', //选中值
         oldTop: null,  // 单位为px
         top1: null, //从touchstart到touchmove记忆top位置 单位为px
         hTop: 0, //用于ul列表定位 单位为rem
@@ -70,12 +116,18 @@
       }
     },
     mounted() {
+        //    let num11 = this.speedType.split(',')
+        // console.log(num11,'555555')
+        
+        // this.newDataList = this.dataList.filter( item =>{
+        //    return num11.indexOf(item.index) > -1
+        // })
+        // console.log(this.newDataList,'ddddd')
       this.$nextTick(() =>{
         this.fontSize = document.documentElement.style.fontSize.replace('px', '')
-        console.log(this.dataList,'数组');
-        console.log(this.hIndex,'数组');
-        
       })
+      
+      
     },
     methods: {
       touchStart(e, type) {
@@ -94,48 +146,41 @@
           this.top1 = this.hTop * this.fontSize // 转换成px
         }
       },
-      touchMove(e, type) {
+      touchMove(e) {
         e.stopPropagation()
         e.preventDefault()
         if(event.targetTouches.length == 1) {
           var touch = event.targetTouches[0]
           let distance = touch.pageY - this.oldTop + this.top1 // 滑动距离 + 选中的top
-
-          if(type === 'minute'){
-            this.mIndex = Math.floor(-distance / this.liheight)
-            this.mTop = distance / this.fontSize // 转换成 rem
-          } else {
             this.hIndex = Math.floor(-distance / this.liheight)
             this.hTop = distance / this.fontSize // 转换成 rem
-          }
+          
           this.selectedValue = this.hIndex + ':' + this.mIndex
         }
       },
-      touchEnd(e, type) {
+      touchEnd(e) {
         e.stopPropagation() //阻止冒泡
         e.preventDefault() //阻止默认行为
-        let max = this.dataList[type]
+        let max
+        if (this.modeType=='cold'||this.modeType=='heat') {
+           max = this.dataList.length
+        }else{
+           max = this.dataList1.length
+        } 
         console.log('-----touchEnd-----')
-        if(type === 'minute'){
-          if(this.mIndex < 0 ){
-            this.mIndex = 0
-          } else if(this.mIndex > max -1){
-            this.mIndex = max -1
-          }
-          this.mTop = - (this.mIndex * this.liheight) / this.fontSize
-        } else {
           if(this.hIndex < 0 ){
             this.hIndex = 0
-          } else if(this.hIndex > max-1){
-            this.hIndex = max-1
+          } else if(this.hIndex > max -1){
+            this.hIndex = max - 1
           }
           this.hTop = - (this.hIndex * this.liheight) / this.fontSize
-          console.log(this.hTop)
-          
-        }
-        this.selectedValue = this.hIndex+1
-        console.log(this.selectedValue)
-        
+        // this.selectedValue = this.hIndex 
+        if (this.modeType=='cold'||this.modeType=='heat') {
+           this.selectedValue = this.dataList[this.hIndex].english
+        }else{
+           this.selectedValue = this.dataList1[this.hIndex].english
+        } 
+        console.log(this.selectedValue,'选中的值')    
       },
     }
   }
@@ -188,8 +233,7 @@
     .time{
       position: fixed;
       bottom: 312px;
-      left: 50%;
-      margin-left: -24px;
+      left: 206px;
       font-size: 24px;
       color: #000;
     }
@@ -215,12 +259,12 @@
     /*滚动样式*/
     
     li.current {
-      font-size: 40px;
-      color: #E1B96E;
+      font-size: 36px;
+      color: #000;
       height: 114px;
       line-height: 114px;
       transform: translateZ(0px) rotateX(0deg);
-      font-family: PingFangSC-Medium;
+      font-family: PingFangSC-Light;
     }
     li.current-pre{
       // background-image: linear-gradient(-180deg, rgba(55,62,65,0.00) 0%, #373E41 100%);
@@ -228,8 +272,8 @@
       height: 70px;
       line-height: 70px;
       color: #808080;
-      font-family: PingFangSC-Regular;
-      font-size: 32px;
+      font-family: PingFangSC-Light;
+      font-size: 30px;
       transform: translateZ(-20px) rotateX(40deg);
     }
     li.up-pre{

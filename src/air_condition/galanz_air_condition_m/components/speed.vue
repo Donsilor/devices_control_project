@@ -9,12 +9,10 @@
       v-if="show"
       class="main show">
       <div class="overtime">
-        <span class="title">设置关机时间</span>
-        <span
-          class="canceltime"
-          @click="canceltime">取消定时</span>
+        <span class="title">选择风速</span>
       </div>
-      <time-pick
+      <speed-pick
+        :mode-type="modeType"
         class="pickTime"
         @selectedchange="selectedchange" />
 
@@ -102,9 +100,9 @@
       .submit{
         margin-top: 50px;
         outline: none;
-        background: #000;
+        background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
         font-size: 32px;
-        color: #fff;
+        color: #000;
         text-align: center;
         width: 650px;
         height: 100px;
@@ -121,32 +119,32 @@
     }
 </style>
 <script>
-import timePick from './timePick.vue'
+import speedPick from './speedPick.vue'
 
 export default {
   components: {
-    'time-pick': timePick
+    'speed-pick': speedPick
   },
   props: {
-    // orderTime:{type: Number}
+    modeType:{type: String}
   },
 
   data() {
     return {
       show: false,
-      time: ''
+      speed: ''
     }
   },
   mounted() {
   },
   methods: {
     selectedchange(val) {
-      this.time = val
+      this.speed = val
     },
     submit() {
-      let val = [this.time || '1']
-      this.$emit('selectedTime', val) //自定义事件，暴露值
-      this.time = '1'
+      let val = this.speed || 'low'
+      this.$emit('selectedSpeed', val) //自定义事件，暴露值
+      this.speed = 'low'
       this.show = false
     },
     canceltime(){

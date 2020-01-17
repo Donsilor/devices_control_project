@@ -8,24 +8,31 @@
         :room="device.room_name"
         :scroll="true"
         :return-back="false"
-        :show-right="false"
+
         bak-color="#000"
         page-class=".page"
       />
       <!-- <StatusTip v-show="device.device_uuid"/> -->
       <div class="main center">
         <div class="btn-wrap">
-          <div 
+        <!-- 返回主页 -->
+          <!-- <div 
             ref="home"
             class="btn-home btn" 
             @touchstart="touchstart('home')"
             @touchend="touchend('home')"
-          />
+          /> -->
+          <!-- 关机 -->
           <div 
             ref="switchStatus"
             class="btn-off btn" 
             @touchstart="touchstart('switchStatus')"
             @touchend="touchend('switchStatus')"/>
+          <div 
+            ref="mute"
+            class="btn-mute btn" 
+            @touchstart="touchstart('mute')"
+            @touchend="touchend('mute')"/>
         </div>
         <!-- 外层圆 -->
         <div class="cicleBox center">
@@ -77,6 +84,25 @@
         </div>
       </div>
       <div class="bootom">
+        <!-- 返回上一页 -->
+        <div class="btn-wrap">
+          <div 
+            ref="menu"
+            class="btn-menu btn" 
+            @touchstart="touchstart('menu')"
+            @touchend="touchend('menu')"/>
+          <div 
+            ref="home"
+            class="btn-home btn" 
+            @touchstart="touchstart('home')"
+            @touchend="touchend('home')"
+          />
+          <div
+            ref="back" 
+            class="btn-back btn"
+            @touchstart="touchstart('back')"
+            @touchend="touchend('back')"/>
+        </div>
         <!-- 音量加减 -->
         <div
           class="voice bottomBtn">
@@ -93,12 +119,6 @@
             @touchend="touchend('increase')"
           />
         </div>
-        <!-- 返回上一页 -->
-        <div
-          ref="back" 
-          class="back bottomBtn"
-          @touchstart="touchstart('back')"
-          @touchend="touchend('back')"/>
       </div>
     </div>
   </div>
@@ -160,22 +180,28 @@ export default {
     // 返回主页
     setBack(val){
       HdSmart.UI.vibrate()
+      console.log('55555');
+      if (val=='mute') {
+        let mutestatus = ''
+        if (this.deviceAttrs.mute=='true') {
+          mutestatus = 'false'
+        }else{
+          mutestatus = 'true'
+        }
+       return this.controlDevice('mute',mutestatus)
+      }
+      return HdSmart.UI.toast('该功能尚未开放')
       this.controlDevice('button',val)
     },
     // 开关机
     setSwitch(){
       if (this.isOffline) return
       HdSmart.UI.vibrate()
-      let switchstatus = ''
-      if (this.deviceAttrs.switchStatus=='on') {
-        switchstatus = 'off'
-      }else{
-        switchstatus = 'on'
-      }
-      this.controlDevice('switch',switchstatus)
+      this.controlDevice('switch','off')
     },
     // 方向盘
     controlStart(val){
+      if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
       HdSmart.UI.vibrate()
       if (val=='centerbox') {
         this.$refs.centerbox.classList.add('active')
@@ -186,11 +212,14 @@ export default {
     controlMove(){
     },
     controlEnd(val){
+       if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
       if (val== 'centerbox') {
         this.$refs.centerbox.classList.remove('active')
+        return HdSmart.UI.toast('该功能尚未开放')
         this.controlDevice('button','confirm')
       }else{
         this.$refs[val+"Btn"].classList.remove('active')
+        return HdSmart.UI.toast('该功能尚未开放')
         this.controlDevice('point_move',val)
       }
     },
@@ -236,16 +265,7 @@ export default {
   &.filter {
     filter: blur(12px);
   }
-  .main {
-    margin-top:100px;
-    &.center{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-      /*********** 按钮 ***********/
-    .btn-wrap {
+      .btn-wrap {
       width: 100%;
       display: flex;
       justify-content: space-between;
@@ -288,7 +308,15 @@ export default {
           background-size: 100% 100%;
         }
       }
-      .btn-time {
+      .btn-mute {
+        &::before {
+          position: relative;
+          z-index: 100;
+          background-image: url('~@lib/@{imgPath}/mute.png');
+          background-size: 100% 100%;
+        }
+      }
+      .btn-back {
         &::before {
           position: relative;
           z-index: 100;
@@ -296,15 +324,24 @@ export default {
           background-size: 100% 100%;
         }
       }
-      .btn-wind {
+      .btn-menu {
         &::before {
           position: relative;
           z-index: 100;
-          background-image: url('~@lib/@{imgPath}/back.png');
+          background-image: url('~@lib/@{imgPath}/menu.png');
           background-size: 100% 100%;
         }
       }
     }
+  .main {
+    margin-top:100px;
+    &.center{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+      /*********** 按钮 ***********/
     .cicleBox{
       width: 534px;
       height: 534px;
@@ -387,8 +424,9 @@ export default {
       }
     }
   }
-  .bootom{
-      .bottomBtn{
+.bootom{
+  margin-top:64px;
+  .bottomBtn{
     background: rgba(0,0,0,0.05);
     border-radius: 60px;
     width: 590px;

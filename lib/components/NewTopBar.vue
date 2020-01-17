@@ -25,12 +25,13 @@
         <div
           class="left"
           @click.prevent="goBack">
-          <p v-if="returnBack"/>
-          <a
+          <p v-if="returnBack" class="close"/>
+          <p v-if="!returnBack" class="back"/>
+          <!-- <a
             v-if="!returnBack"
             :style="{ 'border-color': bakColor }"
             href="javascript:void(0);"
-            class="icon-return" />
+            class="icon-return" /> -->
         </div>
         <div
           v-if="showRight&&!rightSearch"
@@ -453,10 +454,13 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    p{
+    .close{
         background: url('../base/img/btn_ac_close@2x.png');
         background-size: 100% 100%;
-
+    }
+    .back{
+        background: url('../base/img/tv_arrow_back.png');
+        background-size: 100% 100%;
     }
   }
   .right{
@@ -500,6 +504,7 @@ export default {
     position: absolute;
     top: 55%;
     margin-left:8px;
+    margin-bottom:4px;
     display: inline-block;
     width: 12PX;
     height: 12PX;

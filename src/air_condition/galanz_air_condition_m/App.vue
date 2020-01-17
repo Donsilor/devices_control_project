@@ -61,9 +61,9 @@
       </div>
       <!-- 当前状态 -->
       <div
-        v-show="deviceAttrs.timer_switch == 'on'&& deviceAttrs.timer_value >0 &&!isClose"
+        v-show="deviceAttrs.timer_switch == 'on'&& deviceAttrs.time_value >0 &&!isClose"
         class="status">
-        {{ deviceAttrs.timer_value | closeTime }}
+        {{ deviceAttrs.time_value | closeTime }}
       </div>
       <!-- 底部按钮 -->
       <!-- 开关 -->
@@ -128,7 +128,19 @@
       <!-- 风速 -->
       <div
         class="optionbox">
-        <div class="option1" v-show="deviceAttrs.mode!=='dehumidify'">
+        <div class="option" v-show="deviceAttrs.mode!=='dehumidify'">
+          <div>
+            <span>风速</span>
+            <span
+              class="check"
+              @click="showSpeed">{{speedFilters}}
+              <img
+                src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
+            </span>
+          </div>
+        </div>
+        <!-- 风速 -->
+        <!-- <div class="option1" v-show="deviceAttrs.mode=='auto'||deviceAttrs.mode=='wind'">
           <div class="check">
             <span>风速</span>
             <div
@@ -147,7 +159,7 @@
                 @click="setSpeed('auto')">自动</div>
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- 摆风 -->
         <div class="option">
           <div>
@@ -165,9 +177,9 @@
           <div>
             <span>定时</span>
             <span
-              v-if="deviceAttrs.timer_switch=='on'&&deviceAttrs.timer_value>0"
+              v-if="deviceAttrs.timer_switch=='on'&&deviceAttrs.time_value>0"
               class="check"
-              @click="showTime">{{ deviceAttrs.timer_value | closeTime }}
+              @click="showTime">{{ deviceAttrs.time_value | closeTime }}
               <img
                 src="../../../lib/base/oakes_air_condition/assets/arrow_in.png">
             </span>
@@ -182,7 +194,7 @@
         </div>
       </div>
       <!-- 强力开关 -->
-      <div
+      <!-- <div
         v-if="deviceAttrs.mode=='cold'||deviceAttrs.mode=='heat'" 
         class="bottom">
         <div class="Charging-protection">
@@ -191,13 +203,13 @@
             style="z-index: 100;">
             <input
               :class="['switch switch-anim']"
-              :checked="strongVal"
+              :checked="deviceAttrs.strong_wind=='on'"
               :disabled="disabledLock"
               type="checkbox"
               @click="checkSwitch('strong_wind')">
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- 数显开关 -->
       <div class="bottom">
         <div class="Charging-protection">
@@ -206,7 +218,7 @@
             style="z-index: 100;">
             <input
               :class="['switch switch-anim']"
-              :checked="displayVal"
+              :checked="deviceAttrs.digital_display=='on'"
               :disabled="disabledLock"
               type="checkbox"
               @click="checkSwitch('digital_display')">
@@ -223,7 +235,7 @@
             style="z-index: 100;">
             <input
               :class="['switch switch-anim']"
-              :checked="auxiliaryVal"
+              :checked="deviceAttrs.auxiliary_heating_mode=='on'"
               :disabled="disabledLock"
               type="checkbox"
               @click="checkSwitch('auxiliary_heating_mode')">
@@ -241,10 +253,11 @@
         :mode="deviceAttrs.mode"
         @setMode="setMode" />
       <!--选择风速-->
-      <model-speed
+      <SelectSpeed
         ref="speed"
-        :speed="deviceAttrs.speed"
-        @setSpeed="setSpeed" />
+        :mode-type="deviceAttrs.mode"
+        @selectedSpeed="speedFunc"
+        @canceltime="canceltime" />
       <!-- 时间选择 -->
       <SelectTime
         ref="time"
@@ -259,7 +272,7 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 import circleProgress from './components/circle-progress'
 import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
-import modelSpeed from './components/model-speed'
+import SelectSpeed from './components/speed.vue'
 import SelectTime from './components/time.vue'
 // const [MIN_TEMP, MAX_TEMP] = [170, 300]
 const [MIN_TEMP, MAX_TEMP] = [160, 310]
@@ -268,7 +281,7 @@ export default {
     circleProgress,
     modelSwing,
     modelMode,
-    modelSpeed,
+    SelectSpeed,
     SelectTime
   },
   data() {
@@ -303,51 +316,33 @@ export default {
       auxiliaryVal: false,
       displayVal: false,
       disabledLock: false,
+      speedVal:''
     }
   },
 
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-    modeIsActive() {
-      return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
-    },
-    windIsActive() {
-      return this.deviceAttrs.wind_up_down == 'on' || this.deviceAttrs.wind_left_right == 'on'
-    },
-    modeClass() {
-      /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
-        case 'auto':
-          return 'btn-auto'
-          break
-        case 'dehumidify':
-          return 'btn-dehumidify'
-          break
-        case 'wind':
-          return 'btn-wind'
-          break
-        default:
-          return 'btn-wind'
-      }
-    },
-    speedClass() {
+    speedFilters() {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.speed) {
         case 'low':
-          return 'btn-low'
+          return '低风'
           break
         case 'normal':
-          return 'btn-normal'
+          return '中风'
           break
         case 'high':
-          return 'btn-high'
+          return '高风'
           break
         case 'auto':
-          return 'btn-auto'
+          return '自动'
+          break
+        case 'strong':
+          return '强力'
           break
         default:
-          return 'btn-low'
+          return '低风'
       }
     },
   },
@@ -356,22 +351,22 @@ export default {
       if(!this.moveEnd)
       this.draw(`${0.125+0.75/15*(this.deviceAttrs.temperature/10-16)}`)
       // 切换按钮
-      this.disabledLock = false
-      if(this.deviceAttrs.strong_wind == 'on') {
-        this.strongVal = true
-      } else {
-        this.strongVal = false
-      }
-      if(this.deviceAttrs.auxiliary_heating_mode == 'on') {
-        this.auxiliaryVal = true
-      } else {
-        this.auxiliaryVal = false
-      }
-      if(this.deviceAttrs.digital_display == 'on') {
-        this.displayVal = true
-      } else {
-        this.displayVal = false
-      }
+      // this.disabledLock = false
+      // if(this.deviceAttrs.strong_wind == 'on') {
+      //   this.strongVal = true
+      // } else {
+      //   this.strongVal = false
+      // }
+      // if(this.deviceAttrs.auxiliary_heating_mode == 'on') {
+      //   this.auxiliaryVal = true
+      // } else {
+      //   this.auxiliaryVal = false
+      // }
+      // if(this.deviceAttrs.digital_display == 'on') {
+      //   this.displayVal = true
+      // } else {
+      //   this.displayVal = false
+      // }
     },
       'deviceAttrs.temperature'() {
       if(this.deviceAttrs.temperature) {
@@ -680,13 +675,17 @@ export default {
           this.hide()
         })
     },
+    speedFunc(val) {
+      this.speedVal = val
+        this.controlDevice('speed', val)
+    },
     // 设置关机时间
     setReserve(time) {
       console.log(time,'888888')
       
         this.controlDevice('time',{
-            timer_value:time*2,
-            timer_switch:'on'
+            timer_switch:'on',
+            time_value:time*2
         })
     },
     // 取消定时
@@ -714,6 +713,16 @@ export default {
       } else {
         checkSwitchStatus = 'on'
       }
+      if (val=='digital_display'&&this.deviceAttrs.mode=='heat') {
+        this.controlDevice('digital_display', checkSwitchStatus,{'auxiliary_heating_mode':this.deviceAttrs.auxiliary_heating_mode})
+        .then(() => {
+          this.disabledLock = false
+        })
+        .catch(() => {
+          this.disabledLock = false
+        })
+        return
+      }
       if (val=='auxiliary_heating_mode') {
          this.controlDevice('auxiliary_heating_mode', checkSwitchStatus,{'digital_display':this.deviceAttrs.digital_display})
         .then(() => {
@@ -732,8 +741,7 @@ export default {
         this.disabledLock = false
       })
     },
-    controlDevice(attr, value) {
-      let param = {}
+    controlDevice(attr, value,param) {
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {
@@ -755,6 +763,10 @@ export default {
     showSwing() {
       if (this.isClose) return
       this.$refs.swing.show = true
+    },
+    showSpeed() {
+      if (this.isClose) return
+      this.$refs.speed.show = true
     },
     showTime() {
       if (this.isClose) return
