@@ -691,16 +691,13 @@ export default {
     // 取消定时
     canceltime(){
        this.controlDevice('close_time','true')
-       .then((res) => {
-         if(res.code == 0) {
-           this.loaclAttr.close_time = true
-         } else {
-           HdSmart.UI.toast('操作失败')
-         }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
-       })
+      //  .then((res) => {
+      //    if(res.code == 0) {
+      //      this.loaclAttr.close_time = true
+      //    } else {
+      //      HdSmart.UI.toast('操作失败')
+      //    }
+      //  })
     },
     // check开关切换
     checkSwitch(val) {

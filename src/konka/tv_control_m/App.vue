@@ -8,7 +8,6 @@
         :room="device.room_name"
         :scroll="true"
         :return-back="false"
-
         bak-color="#000"
         page-class=".page"
       />
@@ -126,6 +125,7 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
+import _ from './utils'
 export default {
   data() {
     return {
@@ -137,6 +137,11 @@ export default {
   },
   watch: {
     "device.stateChange"(){
+    },
+    'deviceAttrs.voice'() {
+      if(this.deviceAttrs.voice) {
+        this.setVoiceDis = false
+      }
     },
   },
   created() {
@@ -168,7 +173,7 @@ export default {
       this.$refs[val].classList.remove('animateStart')
       setTimeout(() => {
          this.$refs[val].classList.remove('animateEnd')
-      }, 300)
+      }, 500)
       if(val=='switchStatus'){
         this.setSwitch()
       }else if(val=='increase'||val=='decrease'){
@@ -183,10 +188,10 @@ export default {
       console.log('55555');
       if (val=='mute') {
         let mutestatus = ''
-        if (this.deviceAttrs.mute=='true') {
-          mutestatus = 'false'
+        if (this.deviceAttrs.mute==true) {
+          mutestatus = false
         }else{
-          mutestatus = 'true'
+          mutestatus = true
         }
        return this.controlDevice('mute',mutestatus)
       }
@@ -224,10 +229,15 @@ export default {
       }
     },
     // 音量加减
-    setVoice(val){
+    setVoice: _.debounce(function(val){
       HdSmart.UI.vibrate()
-      this.controlDevice('voice',val)
-    },
+      if (val=='increase') {
+        this.controlDevice('voice',+this.deviceAttrs.voice+1)
+      }else{
+        this.controlDevice('voice',+this.deviceAttrs.voice-1)
+      }
+      
+    },500),
     controlDevice(attr, value) {
       let param = {}
       return this.doControlDevice({
