@@ -10,7 +10,7 @@
         bak-color="#000"
         page-class=".page"
       />
-      <!-- <StatusTip v-show="device.device_uuid"/> -->
+      <StatusTip/>
       <div class="main">
         <h3>按键配置</h3>
         <div class="collocation">

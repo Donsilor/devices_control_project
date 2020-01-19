@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 
 let res = {
-    "connectivity": "offline", //l
+    "connectivity": "online", //l
     "switch": 'off', //开关
     "open_percentage":100  , 
 }
@@ -22,6 +22,7 @@ export function generateNetwork() {
 }
 export function generateViewHelp() {
   return Mock.mock({
+    "router_content":"请依次尝试以下操作：\n1.请检查路由器指示灯是否亮起，确保路由器供电正常。\n2.检查路由器是否网络通畅，您可依次检查：\n  2.1 路由器网线是否插好；\n  2.2 请在我的家庭菜单中进入家庭路由器管理，在上                  网方式设置中检查您的宽带账号及密码是否与运营商提供的账号密码一致，若您忘记密码请联系运营商。",
     "content":"请依次尝试以下操作：\n1. 请检查开关电源指示灯是否开启，或是否能通过物理按键直接操控设备，确保设备供电正常。\n2. 若5分钟后仍未恢复上线状态，请前往设备管理，删除该设备后，再重新添加。"
   })
 }

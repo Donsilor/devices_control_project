@@ -45,7 +45,7 @@
         >
           <div
             ref="light"
-            class="btn btn-close center"
+            :class="['btn', 'btn-light' ,'center',{'active':deviceAttrs.light=='on'}]"
             @touchstart ="touchstart('light')"
             @touchend="touchend('light')"/>
           <div class="btn-name">照明</div>
@@ -53,23 +53,40 @@
         </div>
         <div class="btn-wrap">
           <div
-            ref="pause"
-            class="btn-pause btn center"
-            @touchstart ="touchstart('pause')"
-            @touchend="touchend('pause')"/>
-          <div class="btn-name">风干</div>
+            ref="dryingAll"
+            :class="['btn', 'btn-dryingAll' ,'center',{'active':deviceAttrs.drying=='on'||deviceAttrs.air_drying=='on'}]"
+            @touchstart ="touchstart('dryingAll')"
+            @touchend="touchend('dryingAll')"/>
+          <div class="btn-name">{{ deviceAttrs|dryingText }}</div>
           <div class="btn-name">次日13:25结束</div>
         </div>
         <div class="btn-wrap">
           <div
-            ref="open"
-            class="btn-open btn center"
-            @touchstart ="touchstart('open')"
-            @touchend="touchend('open')"/>
+            ref="sterilization"
+            :class="['btn', 'btn-sterilization' ,'center',{'active':deviceAttrs.sterilization=='on'}]"
+            @touchstart ="touchstart('sterilization')"
+            @touchend="touchend('sterilization')"/>
           <div class="btn-name">杀菌</div>
           <div class="btn-name">次日13:25结束</div>
         </div>
       </div>
+      <div 
+        ref="synopsisD" 
+        class="synopsisD">
+        <div 
+          class="drying" 
+          @click="setDrying('drying')">热风干</div>
+        <div 
+          class="air_drying" 
+          @click="setDrying('air_drying')">冷风干</div>
+        <div 
+          class="rest" 
+          @click="synopsisResetFn">取消</div>
+      </div>
+      <div 
+        v-show="maskShow" 
+        class="mask" 
+        @click="synopsisResetFn"/>
 
     </div>
 </div></template>
@@ -79,7 +96,8 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   data() {
     return {
-      checkboxVal: true
+      checkboxVal: true,
+      maskShow:false
     }
   },
   computed: {
@@ -123,21 +141,36 @@ export default {
        for(let i=0;i<btn.length;i++){
         btn[i].classList.remove('yellowExtend')
       } 
-      if(attr!='control'){
+      this.$refs[attr].classList.remove('animateStart')
+
+      if(attr!='control'&&attr!='dryingAll'){
+        console.log(attr,';e')
+        
         this.$refs[attr].classList.add('animateEnd')
         this.$refs[attr].classList.add('yellowExtend')
-        this.$refs[attr].classList.remove('animateStart')
         setTimeout(() => {
           this.$refs[attr].classList.remove('animateEnd')
+        // this.$refs[attr].classList.remove('yellowExtend')
+
         }, 300)
       }
+    console.log(attr,'atrr11111')
     
       switch (attr) {
         case 'control':
+          console.log(1)
+          
           this.controlDevice('control',val)
           break
-      
+        case 'dryingAll':
+          console.log(2)
+          
+          this.synopsisFn()
+          break
         default:
+          console.log(3)
+          
+          this.controlDevice(attr,this.getToggle(this.deviceAttrs[attr]))
           break
       }
     
@@ -148,8 +181,35 @@ export default {
       HdSmart.UI.vibrate()
       this.controlDevice('button',val)
     },
+    setDrying(attr){
+      this.controlDevice(attr,'on')
+      this.synopsisResetFn()
+      this.$refs['dryingAll'].classList.add('animateEnd')
+      this.$refs['dryingAll'].classList.add('yellowExtend')
+    },
     getToggle(val) {
       return val === "on" ? "off" : "on"
+    },
+    synopsisFn(){
+      if(this.deviceAttrs.drying == 'on'){
+        this.controlDevice('drying','off')
+      }else if(this.deviceAttrs.air_drying == 'on'){
+        this.controlDevice('air_drying','off')
+      }else{
+        this.$refs.synopsisD.classList.remove('b')
+        this.$refs.synopsisD.classList.add('a')
+        this.maskShow = true
+      }
+      console.log('点击了')
+    
+    },
+    synopsisResetFn(){
+
+      this.maskShow = false
+      this.$refs.synopsisD.classList.remove('a')
+      this.$refs.synopsisD.classList.add('b')
+      // this.isShowAll=false
+
     },
     controlDevice(attr, value) {
       let param = {}
@@ -168,6 +228,64 @@ export default {
 </script>
 <style lang="less" scoped>
 @imgPath:"base/clothes_hanger/new";
+.mask{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+}
+.synopsisD{
+  width: 100%;
+  height: 380px;
+  position:fixed;
+  bottom: -380px;
+  left: 0;
+  z-index: 10000;
+  background: #F8F8F8;
+  div{
+    height: 120px;
+    background: #fff;
+    font-family: PingFangSC-Light;
+    font-size: 32px;
+    color: #000000;
+    text-align: center;
+    line-height:  120px;
+  }
+  .air_drying{
+    margin: 2px 0 18px 0
+  }
+}
+ .a{
+    animation: bottom .2s linear;
+    animation-fill-mode : forwards
+  }
+   @keyframes bottom {
+      from {
+            bottom: -1010px;
+      }
+      to {
+            bottom: 0;
+      }
+  }
+  .b{
+    animation: bottomReset .2s linear;
+    animation-fill-mode : forwards
+
+  }
+   @keyframes bottomReset {
+      from {
+            bottom: 0;
+      }
+      to {
+            bottom: -1010px;
+      }
+      //  from {
+      //       bottom: -966px;
+      // }
+  }
   .page {
     height: 100vh;
   &::before{
@@ -318,15 +436,15 @@ export default {
       &.active {
         background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
         // background: #E1B96E;
-        &.btn-open::before{
+        &.btn-sterilization::before{
           background-image: url('~@lib/@{imgPath}/lyj_btn_shajun.png');
           background-size: 100% 100%;
         }
-        &.btn-pause::before{
+        &.btn-dryingAll::before{
           background-image: url('~@lib/@{imgPath}/lyj_btn_fenggan.png');
           background-size: 100% 100%;
         }
-        &.btn-close::before{
+        &.btn-light::before{
           background-image: url('~@lib/@{imgPath}/lyj_btn_zhaoming.png');
           background-size: 100% 100%;
         }
@@ -342,19 +460,19 @@ export default {
       // opacity: .5;
     }
 
-    .btn-open {
+    .btn-sterilization {
       &::before {
         background-image: url('~@lib/@{imgPath}/lyj_btn_shajun.png');
         background-size: 100% 100%;
       }
     }
-    .btn-pause {
+    .btn-dryingAll {
       &::before {
         background-image: url('~@lib/@{imgPath}/lyj_btn_fenggan.png');
         background-size: 100% 100%;
       }
     }
-    .btn-close {
+    .btn-light {
       &::before {
         background-image: url('~@lib/@{imgPath}/lyj_btn_zhaoming.png');
         background-size: 100% 100%;

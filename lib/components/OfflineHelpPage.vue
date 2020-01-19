@@ -41,11 +41,20 @@
         </div>
       
       </div>
-      <h3 class="viewHelpH3">设备离线</h3>
-
+      <h3 
+        v-if="networkStatus=='-2'" 
+        class="viewHelpH3">路由器离线</h3>
+      <h3 
+        v-else 
+        class="viewHelpH3">设备离线</h3>
       <div 
+        v-if="networkStatus=='-2'"
         class="viewHelpstatus" 
-        v-html="viewHelpstatus"/>
+        v-html="viewHelpstatus.router_content"/>
+      <div 
+        v-else
+        class="viewHelpstatus" 
+        v-html="viewHelpstatus.content"/>
     </div>
   </div>
 </template>
@@ -76,8 +85,10 @@ export default {
       }
       this.getViewHelpInfo()
       .then((res)=>{
-        let str = res.content.replace(/\n/g,"<br/>")
-        this.setViewHelpInfo(str)
+        let obj = {}
+        obj.content = res.content.replace(/\n/g,"<br/>").replace(/(\d+)/g,'<span style="font-weight:normal">$1</span>')
+        obj.router_content = res.router_content.replace(/\n/g,"<br/>").replace(/(\d+)/g,'<span style="font-weight:normal">$1</span>')
+        this.setViewHelpInfo(obj)
       })
     })
   },
@@ -259,8 +270,9 @@ export default {
 .viewHelpstatus{
   font-size: 28px;
   padding: 0 40px;
-  line-height: 42px;
+  line-height: 1.5em;
   font-weight: lighter;
+  color: rgba(0, 0, 0, .5);
 }
   .title {
     text-align: center;
