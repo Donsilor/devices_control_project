@@ -41,20 +41,7 @@
         </div>
       
       </div>
-      <h3 
-        v-if="networkStatus=='-2'" 
-        class="viewHelpH3">路由器离线</h3>
-      <h3 
-        v-else 
-        class="viewHelpH3">设备离线</h3>
-      <div 
-        v-if="networkStatus=='-2'"
-        class="viewHelpstatus" 
-        v-html="viewHelpstatus.router_content"/>
-      <div 
-        v-else
-        class="viewHelpstatus" 
-        v-html="viewHelpstatus.content"/>
+      
     </div>
   </div>
 </template>
@@ -105,33 +92,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-// @keyframes moveIn {
-//     0% {
-//       left: 100%;
-//     }
-  
-//     100% {
-//       left:0;
-//     }
-// }
-// .moveIn{
-//    animation: moveIn 0.2s linear;
-// }
-
-
-// @keyframes moveOut {
-//     0% {
-//       left: 0%;
-//     }
-  
-//     100% {
-//       left:100%;
-//     }
-// }
-// .moveOut{
-//    animation: moveOut 0.2s linear;
-//    animation-fill-mode:forwards
-// }
 .OfflineHelpPage {
   width: 100%;
   height: 100vh;
@@ -291,5 +251,4 @@ export default {
   font-size: 16PX;
 
   }
-}
 </style>
