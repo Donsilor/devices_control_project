@@ -1,7 +1,7 @@
 <template>
   <div 
     ref="page" 
-    :class="['OfflineHelpPage',{'moveIn':moveIn},{'moveOut':moveOut}]">
+    class="OfflineHelpPage">
     <div
       ref="topbar"
       class="topbar">
@@ -96,41 +96,42 @@ export default {
     ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice','getViewHelpInfo','setViewHelpInfo']),
 
     goBack(){
-      this.moveIn = false
-      this.moveOut = true
+      this.$router.go(-1)
+      // this.moveIn = false
+      // this.moveOut = true
     }
   }
 }
 </script>
 
 <style scoped lang="less">
-@keyframes moveIn {
-    0% {
-      left: 100%;
-    }
+// @keyframes moveIn {
+//     0% {
+//       left: 100%;
+//     }
   
-    100% {
-      left:0;
-    }
-}
-.moveIn{
-   animation: moveIn 0.2s linear;
-}
+//     100% {
+//       left:0;
+//     }
+// }
+// .moveIn{
+//    animation: moveIn 0.2s linear;
+// }
 
 
-@keyframes moveOut {
-    0% {
-      left: 0%;
-    }
+// @keyframes moveOut {
+//     0% {
+//       left: 0%;
+//     }
   
-    100% {
-      left:100%;
-    }
-}
-.moveOut{
-   animation: moveOut 0.2s linear;
-   animation-fill-mode:forwards
-}
+//     100% {
+//       left:100%;
+//     }
+// }
+// .moveOut{
+//    animation: moveOut 0.2s linear;
+//    animation-fill-mode:forwards
+// }
 .OfflineHelpPage {
   width: 100%;
   position: fixed;
