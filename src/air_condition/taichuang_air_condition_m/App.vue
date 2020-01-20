@@ -319,6 +319,7 @@ export default {
         if (0.125+(0.75/this.stepLength)*(this.deviceAttrs.temperature/10-this.MIN_TEMP/10)) {
           this.draw(`${0.125+(0.75/this.stepLength)*(this.deviceAttrs.temperature/10-this.MIN_TEMP/10)}`)
         }
+        this.moveEnd = false
       }
     },
     'deviceAttrs.temperature'() {

@@ -276,6 +276,7 @@ export default {
     "device.stateChange"(){
       if(!this.moveEnd)
       this.draw(`${0.125+0.75/14*(this.deviceAttrs.temperature/10-18)}`)
+      this.moveEnd = false
     },
     'deviceAttrs.temperature'() {
       if(this.deviceAttrs.temperature) {

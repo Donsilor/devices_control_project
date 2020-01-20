@@ -15,22 +15,12 @@
         <div class="wrap-circle">
           <div class="showtemp">
             <div
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'||deviceAttrs.mode=='wind'"
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'"
               class="tm">-- <sup>°C</sup></div>
             <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
+              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'"
               class="tm">{{ thermography }}<sup>°C</sup>
             </div>
-            <!-- <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
-              class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
-            </div> -->
-            <div
-              v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
-              :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
-            <div
-              v-show="isOffline||deviceAttrs.switchStatus == 'off'"
-              :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
           </div>
           <!-- 当不可调节温度时，显示这个盒子，可以挡着canvas，使它不能滑动 -->
           <!-- <div
@@ -348,8 +338,11 @@ export default {
   },
   watch: {
       "device.stateChange"(){
-      if(!this.moveEnd)
-      this.draw(`${0.125+0.75/15*(this.deviceAttrs.temperature/10-16)}`)
+      if(this.moveEnd == false){
+        console.log('是否进来了');
+        this.draw(`${0.125+0.75/15*(this.deviceAttrs.temperature/10-16)}`)
+      }
+      this.moveEnd = false
       // 切换按钮
       // this.disabledLock = false
       // if(this.deviceAttrs.strong_wind == 'on') {
@@ -496,7 +489,7 @@ export default {
           }else if(this.deviceAttrs.mode == 'cold'){
             this.ctx.strokeStyle = "#008CDA"
           
-          }else if(this.deviceAttrs.mode == 'auto'||this.deviceAttrs.mode=='dehumidify'){
+          }else if(this.deviceAttrs.mode == 'auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind'){
             this.ctx.strokeStyle = "#E1B96E"
           }
       }else{
@@ -530,7 +523,7 @@ export default {
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
       // 开机显示
-      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline&&this.deviceAttrs.mode!=='wind') {
+      if (this.deviceAttrs.switchStatus=='on'&&!this.isOffline) {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
       }else{
         //关机显示

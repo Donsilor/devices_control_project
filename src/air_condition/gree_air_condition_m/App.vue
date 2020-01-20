@@ -265,8 +265,8 @@ export default {
     "device.stateChange"(){
        if(!this.moveEnd){
             this.draw(`${0.125+0.75/14*(this.loaclAttr.temperature/10-16)}`)
-
        }
+       this.moveEnd = false
     }
   },
   created() {

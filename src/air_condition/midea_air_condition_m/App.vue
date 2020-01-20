@@ -279,8 +279,8 @@ export default {
   },
   watch: {
       "device.stateChange"(){
-      if(!this.moveEnd)
-      this.draw(`${0.125+0.75/13*(this.deviceAttrs.temperature/10-17)}`)
+      if(!this.moveEnd) this.draw(`${0.125+0.75/13*(this.deviceAttrs.temperature/10-17)}`)
+      this.moveEnd = false
     },
       'deviceAttrs.temperature'() {
       if(this.deviceAttrs.temperature) {

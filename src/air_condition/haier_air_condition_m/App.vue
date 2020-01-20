@@ -10,7 +10,7 @@
         bak-color="#000"
         page-class=".page"
       />
-      <!-- <StatusTip v-show="device.device_uuid"/> -->
+      <StatusTip />
       <div class="main center">
         <div class="wrap-circle">
           <div class="showtemp">
@@ -285,8 +285,8 @@ export default {
   },
   watch: {
     "device.stateChange"(){
-      if(!this.moveEnd)
-      this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
+      if(!this.moveEnd) this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
+      this.moveEnd = false
     },
        'deviceAttrs.temperature'() {
       if(this.deviceAttrs.temperature) {

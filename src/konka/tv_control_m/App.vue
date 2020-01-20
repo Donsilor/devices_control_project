@@ -14,22 +14,16 @@
       <!-- <StatusTip v-show="device.device_uuid"/> -->
       <div class="main center">
         <div class="btn-wrap">
-        <!-- 返回主页 -->
-          <!-- <div 
-            ref="home"
-            class="btn-home btn" 
-            @touchstart="touchstart('home')"
-            @touchend="touchend('home')"
-          /> -->
           <!-- 关机 -->
           <div 
             ref="switchStatus"
             class="btn-off btn" 
             @touchstart="touchstart('switchStatus')"
             @touchend="touchend('switchStatus')"/>
+          <!-- 静音 -->
           <div 
             ref="mute"
-            class="btn-mute btn" 
+            :class="[{'active':deviceAttrs.mute==true},'btn-mute btn']" 
             @touchstart="touchstart('mute')"
             @touchend="touchend('mute')"/>
         </div>
@@ -129,6 +123,7 @@ import _ from './utils'
 export default {
   data() {
     return {
+      loaclVoice:''
     }
   },
   computed: {
@@ -136,7 +131,9 @@ export default {
     ...mapState(['device', 'deviceAttrs']),
   },
   watch: {
-    "device.stateChange"(){
+    "deviceAttrs"(){
+      // 获取刚进入页面时的音量
+      this.loaclVoice = this.deviceAttrs.voice
     },
     'deviceAttrs.voice'() {
       if(this.deviceAttrs.voice) {
@@ -159,7 +156,7 @@ export default {
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
-        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+        if (this.isOffline) return
       }
       this.$refs[val].classList.add('animateStart')
     },
@@ -167,7 +164,7 @@ export default {
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
-        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+        if (this.isOffline) return
       }
       this.$refs[val].classList.add('animateEnd')
       this.$refs[val].classList.remove('animateStart')
@@ -185,7 +182,6 @@ export default {
     // 返回主页
     setBack(val){
       HdSmart.UI.vibrate()
-      console.log('55555');
       if (val=='mute') {
         let mutestatus = ''
         if (this.deviceAttrs.mute==true) {
@@ -193,6 +189,8 @@ export default {
         }else{
           mutestatus = true
         }
+        if (this.isClose) return
+        
        return this.controlDevice('mute',mutestatus)
       }
       return HdSmart.UI.toast('该功能尚未开放')
@@ -206,7 +204,7 @@ export default {
     },
     // 方向盘
     controlStart(val){
-      if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+      if (this.isOffline) return
       HdSmart.UI.vibrate()
       if (val=='centerbox') {
         this.$refs.centerbox.classList.add('active')
@@ -217,7 +215,7 @@ export default {
     controlMove(){
     },
     controlEnd(val){
-       if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+       if (this.isOffline) return
       if (val== 'centerbox') {
         this.$refs.centerbox.classList.remove('active')
         return HdSmart.UI.toast('该功能尚未开放')
@@ -229,15 +227,28 @@ export default {
       }
     },
     // 音量加减
-    setVoice: _.debounce(function(val){
+    setVoice:_.debounce(function(val){
       HdSmart.UI.vibrate()
       if (val=='increase') {
-        this.controlDevice('voice',+this.deviceAttrs.voice+1)
+        console.log(this.deviceAttrs.voice,'数字');
+        if (this.isClose) return
+        this.controlDevice('voice',+this.loaclVoice+1)
+        .then((res)=>{
+          if (res.code==0) {
+            this.loaclVoice = +this.loaclVoice+1
+          }
+        })
       }else{
-        this.controlDevice('voice',+this.deviceAttrs.voice-1)
+        if (this.isClose) return
+        this.controlDevice('voice',+this.loaclVoice-1)
+        .then((res)=>{
+          if (res.code==0) {
+            this.loaclVoice = +this.loaclVoice-1
+          }
+        })
       }
       
-    },500),
+    },300),
     controlDevice(attr, value) {
       let param = {}
       return this.doControlDevice({
@@ -299,7 +310,15 @@ export default {
           height: 48px;
         }
         &.active {
-          background: #E1B96E;
+          // background: #E1B96E;
+          &.btn-mute{
+            &::before {
+              position: relative;
+              z-index: 100;
+              background-image: url('~@lib/@{imgPath}/jingyin.png');
+              background-size: 100% 100%;
+            }
+          }
         }
       }
       .btn-home {
