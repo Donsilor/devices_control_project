@@ -109,7 +109,7 @@ export default {
     },
     watch:{
       networkStatus(n,v){
-        console.log(n,v)
+        console.log(n,v) 
       switch (n) {
         case -1:
           this.prohibitmove()
@@ -155,9 +155,10 @@ export default {
     methods: {
       ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice']),
         goToOfflineHelpPage() {
-          this.OfflineHelpPageView = true
-          this.$refs.OfflineHelpPageView.moveOut = false
-          this.$refs.OfflineHelpPageView.moveIn = true
+          this.$emit('OfflineHelpPage')
+          // this.OfflineHelpPageView = true
+          // this.$refs.OfflineHelpPageView.moveOut = false
+          // this.$refs.OfflineHelpPageView.moveIn = true
         },
         prohibitmove(){
           document.body.addEventListener('touchmove', this.touchmovefn, { passive: false }) 

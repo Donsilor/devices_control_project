@@ -14,6 +14,32 @@ import FastClick from 'fastclick'
 import NewTopBar from '@lib/components/NewTopBar.vue'
 import StatusTip from '@lib/components/StatusTip.vue'
 
+import Router from 'vue-router'
+Vue.use(Router)
+import Index from './components/Index.vue'
+import Allocation from './components/allocation.vue'
+import OfflineHelpPage from '@lib/components/OfflineHelpPage.vue'
+
+
+
+const router = new Router({
+  routes: [{
+    path: '/',
+    name: 'index',
+    component: Index,
+  },
+  {
+    path: '/Allocation',
+    name: 'Allocation',
+    component: Allocation,
+  },
+  {
+    path: '/OfflineHelpPage',
+    name: 'OfflineHelpPage',
+    component: OfflineHelpPage,
+  }
+  ]
+})
 
 FastClick.attach(document.body)
 // import * as filters from './filters' // global filters
@@ -28,5 +54,6 @@ Vue.component('StatusTip', StatusTip)
 new Vue({
     el: '#app',
     store,
+    router,
     render: h => h(App)
 })

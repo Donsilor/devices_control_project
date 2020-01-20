@@ -1047,7 +1047,7 @@ export default {
             }
         },
         immediate: true
-    }
+    },
     // detailVisible(visible) {
     //   if (visible) {
     //     this.$refs.swiper.swiper.autoplay.stop()
@@ -1059,7 +1059,10 @@ export default {
     //   if(this.homePageInfo.length == 0) {
     //     this.pageInit()
     //   }
-    // }
+    // },
+    'window.room_name'(n){
+        console.log(n,'window.room_name------------------------------------')
+    }
   },
   created() {   
     //  this.$router.push('/NoNetwork') 
@@ -1071,6 +1074,13 @@ export default {
     }
   },
   mounted() {
+    Object.defineProperty(window,'room_name',{
+      set:(newValue)=>{
+        console.log(newValue,'room_name----------------------------------------------')
+        
+        this.room_name = newValue
+      }
+    })
     this.maxh = this.$refs.icon_grid.offsetTop    
     setTimeout(()=>{
       window.scrollTo(0,1)
