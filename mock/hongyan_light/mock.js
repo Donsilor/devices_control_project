@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 
 let res = {
-    "connectivity": "offline", //l
+    "connectivity": "online", //l
     "switch_status": 'on', //开关
     "temperature":167 , //暖光3000K  自然光5000K  白光6000K
     "level":175,

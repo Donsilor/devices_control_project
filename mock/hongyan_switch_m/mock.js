@@ -14,19 +14,19 @@ let res = {
       {
         "chan_index": 0,
         "chan_status": "off",
-        "chan_name": "卧室筒灯",
+        "chan_name": "卧室筒a1~啊",
         "chan_avatar": "123dfafga "
       },
       {
         "chan_index": 1,
         "chan_status": "off",
-        "chan_name": "",
+        "chan_name": "123123123123123",
         "chan_avatar": "123dfafga "
       },
       {
         "chan_index": 2,
         "chan_status": "off",
-        "chan_name": "",
+        "chan_name": "/*- ``@",
         "chan_avatar": "123dfafga "
       },
       {
@@ -36,7 +36,7 @@ let res = {
         "chan_avatar": "123dfafga "
       }
     ],
-    "connectivity": "offline"
+    "connectivity": "online"
 }
 
 export function generateSnapShot() {
@@ -89,6 +89,18 @@ export function set(data){
       } else {
         res.list[3].chan_status = 'off'
       }
+    }
+    if(attr.chan0_name) {
+      res.list[0].chan_name = attr.chan0_name
+    }
+    if(attr.chan1_name) {
+      res.list[1].chan_name = attr.chan1_name
+    }
+    if(attr.chan2_name) {
+      res.list[2].chan_name = attr.chan2_name
+    }
+    if(attr.chan3_name) {
+      res.list[3].chan_name = attr.chan3_name
     }
     if(attr.switch_chan){
       if(attr.switch_chan == 'on'){
