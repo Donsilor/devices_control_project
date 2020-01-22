@@ -1,7 +1,7 @@
 <template>
   <div 
     ref="page" 
-    class="OfflineHelpPage">
+    :class="['OfflineHelpPage',{'moveIn':moveIn},{'moveOut':moveOut}]">
     <div
       ref="topbar"
       class="topbar">
@@ -96,57 +96,50 @@ export default {
     ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice','getViewHelpInfo','setViewHelpInfo']),
 
     goBack(){
-      this.$router.go(-1)
-      // this.moveIn = false
-      // this.moveOut = true
+      this.moveIn = false
+      this.moveOut = true
     }
   }
 }
 </script>
 
 <style scoped lang="less">
-// @keyframes moveIn {
-//     0% {
-//       left: 100%;
-//     }
+@keyframes moveIn {
+    0% {
+      left: 100%;
+    }
   
-//     100% {
-//       left:0;
-//     }
-// }
-// .moveIn{
-//    animation: moveIn 0.2s linear;
-// }
+    100% {
+      left:0;
+    }
+}
+.moveIn{
+   animation: moveIn 0.2s linear;
+}
 
 
-// @keyframes moveOut {
-//     0% {
-//       left: 0%;
-//     }
+@keyframes moveOut {
+    0% {
+      left: 0%;
+    }
   
-//     100% {
-//       left:100%;
-//     }
-// }
-// .moveOut{
-//    animation: moveOut 0.2s linear;
-//    animation-fill-mode:forwards
-// }
+    100% {
+      left:100%;
+    }
+}
+.moveOut{
+   animation: moveOut 0.2s linear;
+   animation-fill-mode:forwards
+}
 .OfflineHelpPage {
   width: 100%;
-  height: 100vh;
-  &::before{
-    content: "";
-    width: 100%;
-    background: url('~@lib/base/img/bg02.png') no-repeat;
-    background-repeat:no-repeat;
-    background-size: 100% 100%;
-    position: fixed;
-    top:0;
-    left: 0; 
-    right: 0;
-    bottom: 0;
-    z-index: -1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('~@lib/base/img/bg02.png') no-repeat;
+  background-size: 100% 100%;
 }
 
 *{ -webkit-tap-highlight-color:transparent; }
@@ -291,5 +284,4 @@ export default {
   font-size: 16PX;
 
   }
-}
 </style>

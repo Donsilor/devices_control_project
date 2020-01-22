@@ -37,10 +37,11 @@ var res = {
         digital_display:'on',//数显
         sleep_mode: 'on',
         deviceSubCategory: 0,
-        connectivity: 'offline',
+        connectivity: 'online',
         timer_switch:'on',
         time_value:8.4,
-        close_time:'false'
+        close_time:'false',
+        error:'设备故障啦啦啦啦'
     },
     third_attribute:{
       "selection":"16,30;0,1,2,3,4;0,1,2,3",

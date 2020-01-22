@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="deviceAttrs.connectivity==='offline'||networkStatus==-1||networkStatus==-2"
+    v-if="deviceAttrs.connectivity==='offline'||networkStatus==-1||networkStatus==-2||deviceAttrs.error"
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
     <!-- <div class="status_bar_block"/> -->
@@ -69,9 +69,22 @@
           </div>
           <i class="arrow"/>
         </div>
+        <div
+          v-if="deviceAttrs.error&&networkStatus!=-1&&networkStatus!=-2&&deviceAttrs.connectivity!=='offline'"      
+          class="offline_bar"
+         >
+          <div class="offline_bar_div">
+            <p class="offline_bar_p">
+              <i class="error"/>
+            </p>
+            <span class="link">{{deviceAttrs.error}}</span>
+          </div>
+        </div>
       </div>
     </div>
     <div 
+    :style="{ 'top': status_bar_height+navigation_bar_height*3 + 'px'}" 
+    v-if="!deviceAttrs.error"
       class="mask"/>
     <OfflineHelpPage 
       v-show="OfflineHelpPageView" 
@@ -100,7 +113,8 @@ export default {
           OfflineHelpPageView:false,
           status_bar_height: 25,
           navigation_bar_height: 44,
-          ios: /iPad|iPhone|iPod/.test(navigator.userAgent)
+          ios: /iPad|iPhone|iPod/.test(navigator.userAgent),
+          prohibit:false
         }
     },
     computed: {
@@ -109,12 +123,16 @@ export default {
     },
     watch:{
       networkStatus(n,v){
-        console.log(n,v) 
+        console.log(n,v)
       switch (n) {
         case -1:
           this.prohibitmove()
           break
+        case -2:
+          this.prohibitmove()
+          break
         case 0:
+        if (this.deviceAttrs.connectivity==='offline') return
           this.allowmove()
           break
         default:
@@ -129,6 +147,7 @@ export default {
           this.prohibitmove()
           break
        case 'online':
+       if (this.networkStatus==-1||this.networkStatus==-2)return
           this.allowmove()
           break
         default:
@@ -155,20 +174,24 @@ export default {
     methods: {
       ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice']),
         goToOfflineHelpPage() {
-          this.$emit('OfflineHelpPage')
-          // this.OfflineHelpPageView = true
-          // this.$refs.OfflineHelpPageView.moveOut = false
-          // this.$refs.OfflineHelpPageView.moveIn = true
+          this.OfflineHelpPageView = true
+          this.$refs.OfflineHelpPageView.moveOut = false
+          this.$refs.OfflineHelpPageView.moveIn = true
         },
         prohibitmove(){
-          document.body.addEventListener('touchmove', this.touchmovefn, { passive: false }) 
+          if (!this.prohibit) {
+            document.addEventListener('touchmove', this.touchmovefn, { passive: false }) 
+            this.prohibit = true
+          }
         },
         allowmove(){
-         document.body.removeEventListener('touchmove',this.touchmovefn) 
+         document.removeEventListener('touchmove',this.touchmovefn, { passive: false }) 
+         this.prohibit = false
         },
         touchmovefn(e){
-          e.preventDefault()
-        }
+          e.preventDefault();
+          
+        },
     },
 }
 </script>
@@ -321,12 +344,12 @@ export default {
 			}
 		}
 .mask{
-      position: absolute;
+      position: fixed;
       top: 44PX;
       left: 0;
       right: 0;
       bottom: 0;
-      height: 2000px;
+      // height: 2000px;
       background: transparent;
       z-index: 10000;
    

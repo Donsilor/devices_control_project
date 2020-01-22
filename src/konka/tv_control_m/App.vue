@@ -123,7 +123,7 @@ import _ from './utils'
 export default {
   data() {
     return {
-      loaclVoice:''
+      loaclAttrs:{}
     }
   },
   computed: {
@@ -133,7 +133,7 @@ export default {
   watch: {
     "deviceAttrs"(){
       // 获取刚进入页面时的音量
-      this.loaclVoice = this.deviceAttrs.voice
+      this.loaclAttrs = this.deviceAttrs
     },
     'deviceAttrs.voice'() {
       if(this.deviceAttrs.voice) {
@@ -191,10 +191,21 @@ export default {
         }
         if (this.isClose) return
         
-       return this.controlDevice('mute',mutestatus)
+      this.controlDevice('mute',mutestatus)
+       .then((res)=>{
+          if (res.code==0) {
+            this.loaclAttrs.mute = mutestatus
+          }
+        })
+        return
       }
       return HdSmart.UI.toast('该功能尚未开放')
       this.controlDevice('button',val)
+      .then((res)=>{
+        if (res.code==0) {
+          this.loaclAttrs.button = val
+        }
+      })
     },
     // 开关机
     setSwitch(){
@@ -227,29 +238,30 @@ export default {
       }
     },
     // 音量加减
-    setVoice:_.debounce(function(val){
+    setVoice(val){
       HdSmart.UI.vibrate()
       if (val=='increase') {
         console.log(this.deviceAttrs.voice,'数字');
         if (this.isClose) return
-        this.controlDevice('voice',+this.loaclVoice+1)
+        this.controlDevice('voice',+this.loaclAttrs.voice+1)
         .then((res)=>{
           if (res.code==0) {
-            this.loaclVoice = +this.loaclVoice+1
+            this.loaclAttrs.voice = +this.loaclAttrs.voice+1
           }
         })
       }else{
         if (this.isClose) return
-        this.controlDevice('voice',+this.loaclVoice-1)
+        this.controlDevice('voice',+this.loaclAttrs.voice-1)
         .then((res)=>{
           if (res.code==0) {
-            this.loaclVoice = +this.loaclVoice-1
+             this.loaclAttrs.voice = +this.loaclAttrs.voice-1
           }
         })
       }
-      
-    },300),
+    },
     controlDevice(attr, value) {
+      console.log(attr,value,'ccccccccccc');
+      
       let param = {}
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
@@ -258,7 +270,8 @@ export default {
             [attr]: value,
             ...param
           }
-        }
+        },
+        // hideLoading:true
       })
     },
   },

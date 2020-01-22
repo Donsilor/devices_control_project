@@ -1,6 +1,7 @@
 <template>
   <div class="body">
     <div
+      ref="page"
       :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']"
     >
       <NewTopBar
