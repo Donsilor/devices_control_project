@@ -72,6 +72,7 @@
       </div>
     </div>
     <div 
+      :style="{ 'top': status_bar_height+navigation_bar_height*3 + 'px'}" 
       class="mask"/>
     <OfflineHelpPage 
       v-show="OfflineHelpPageView" 
@@ -100,7 +101,8 @@ export default {
           OfflineHelpPageView:false,
           status_bar_height: 25,
           navigation_bar_height: 44,
-          ios: /iPad|iPhone|iPod/.test(navigator.userAgent)
+          ios: /iPad|iPhone|iPod/.test(navigator.userAgent),
+          prohibit:false
         }
     },
     computed: {
@@ -114,28 +116,30 @@ export default {
         case -1:
           this.prohibitmove()
           break
+        case -2:
+          this.prohibitmove()
+          break
         case 0:
+          if(this.deviceAttrs.connectivity==='offline')return
           this.allowmove()
           break
         default:
           break
-      }
-        
+      }    
       },
       'deviceAttrs.connectivity'(n,v){
-        console.log(n,v,3434)
+        console.log(n,v,34341111)
         switch (n) {
         case 'offline':
           this.prohibitmove()
           break
        case 'online':
+          if(this.networkStatus==-1||this.networkStatus==-2)return
           this.allowmove()
           break
         default:
           break
       }
-      
-        console.log(n,v,54665)
       }
     },
     created() {
@@ -151,6 +155,9 @@ export default {
             this.setNetworkStatus(data)
         }
       })
+      // document.addEventListener('touchmove',function(e){
+      //    e.preventDefault()
+      // }, { passive: false })
     },
     methods: {
       ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice']),
@@ -161,10 +168,14 @@ export default {
           // this.$refs.OfflineHelpPageView.moveIn = true
         },
         prohibitmove(){
-          document.body.addEventListener('touchmove', this.touchmovefn, { passive: false }) 
+          if(!this.prohibit){
+            document.addEventListener('touchmove', this.touchmovefn, { passive: false }) 
+            this.prohibit = true
+          } 
         },
-        allowmove(){
-         document.body.removeEventListener('touchmove',this.touchmovefn) 
+        allowmove(){ 
+         document.removeEventListener('touchmove',this.touchmovefn, { passive: false }) 
+         this.prohibit = false
         },
         touchmovefn(e){
           e.preventDefault()
@@ -321,14 +332,12 @@ export default {
 			}
 		}
 .mask{
-      position: absolute;
+      position: fixed;
       top: 44PX;
       left: 0;
       right: 0;
       bottom: 0;
-      height: 2000px;
       background: transparent;
       z-index: 10000;
-   
 }
 </style>

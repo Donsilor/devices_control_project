@@ -25,9 +25,13 @@
         <div
           class="left"
           @click.prevent="goBack">
-          <p v-if="returnBack" class="close"/>
-          <p v-if="!returnBack" class="back"/>
-          <!-- <a
+          <p 
+            v-if="returnBack" 
+            class="close"/>
+          <p 
+            v-if="!returnBack" 
+            class="back"/>
+            <!-- <a
             v-if="!returnBack"
             :style="{ 'border-color': bakColor }"
             href="javascript:void(0);"
@@ -95,6 +99,7 @@
 <script>
 
 let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -189,6 +194,9 @@ export default {
       rightSearch:false
     }
   },
+  computed:{
+    ...mapGetters(['isOffline']),
+  },
   created() {
     HdSmart.ready(() => {
       if (window.status_bar_height) {
@@ -215,6 +223,7 @@ export default {
   deactivated(){
       removeEventListener('scroll',this.scrollfn)
   },
+  
   methods: {
     goBack() {
       if (typeof this.onBack === 'function') {
@@ -240,6 +249,7 @@ export default {
     },
 
     scrollfn(){
+      if(this. isOffline) return
       let _this = this
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       this.clientHeight = document.documentElement.clientHeight || document.body.clientHeight

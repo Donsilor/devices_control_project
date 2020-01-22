@@ -1,7 +1,7 @@
 <template>
   <div 
     ref="page" 
-    class="OfflineHelpPage">
+    class="Allocation">
     <div
       ref="topbar"
       class="topbar">
@@ -34,7 +34,7 @@
             class="icon-return" /> -->
           </div>
           <div
-            class="title">离线帮助</div>
+            class="title">按键配置</div>
     
     
 
@@ -43,6 +43,56 @@
       </div>
       
     </div>
+    <div class="viewHelpstatus">
+      <div class="Prefabrication">
+        <h3 class="AllocationH3">页面预制配置</h3>
+        <ul class="PrefabricationUl">
+          <li>
+            <p>开灯</p>
+            <p>打开面板面板所在房间的全部灯</p>
+          </li>
+          <li>
+            <p>关灯</p>
+            <p>关闭面板面板所在房间的全部灯</p>
+          </li>
+          <li>
+            <p>打开全部</p>
+            <p>打开面板面板所在房间的全部设备</p>
+          </li>
+          <li>
+            <p>关闭全部</p>
+            <p>关闭面板面板所在房间的全部设备</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <div class="viewHelpstatus">
+      <div class="Prefabrication">
+        <h3 class="AllocationH3">页面预制配置</h3>
+        <ul class="PrefabricationUl">
+          <li>
+            <p>开灯</p>
+            <p>打开面板面板所在房间的全部灯</p>
+          </li>
+          <li>
+            <p>关灯</p>
+            <p>关闭面板面板所在房间的全部灯</p>
+          </li>
+          <li>
+            <p>打开全部</p>
+            <p>打开面板面板所在房间的全部设备</p>
+          </li>
+          <li>
+            <p>关闭全部</p>
+            <p>关闭面板面板所在房间的全部设备</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -70,13 +120,7 @@ export default {
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
-      this.getViewHelpInfo()
-      .then((res)=>{
-        let obj = {}
-        obj.content = res.content.replace(/\n/g,"<br/>").replace(/(\d+)/g,'<span style="font-weight:normal">$1</span>')
-        obj.router_content = res.router_content.replace(/\n/g,"<br/>").replace(/(\d+)/g,'<span style="font-weight:normal">$1</span>')
-        this.setViewHelpInfo(obj)
-      })
+      
     })
   },
   methods:{
@@ -92,7 +136,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-.OfflineHelpPage {
+.Allocation {
   width: 100%;
   height: 100vh;
   &::before{
@@ -107,7 +151,7 @@ export default {
     right: 0;
     bottom: 0;
     z-index: -1;
-}
+  }
 
 *{ -webkit-tap-highlight-color:transparent; }
 
@@ -209,7 +253,7 @@ export default {
     position: absolute;
     left: 40px;
     p{
-        background: url('../base/img/tv_arrow_back.png');
+        background: url('~@lib/base/img/tv_arrow_back.png');
         background-size: 100% 100%;
 
     }
@@ -233,22 +277,52 @@ export default {
   }
   
 }
-
-.viewHelpstatus{
+.title {
+  text-align: center;
+  font-size: 17PX;
+  width: 100%;
+}
+.Allocationstatus{
   font-size: 28px;
   padding: 0 40px;
   line-height: 1.5em;
-  font-weight: lighter;
+
+  // font-weight: lighter;
   color: rgba(0, 0, 0, .5);
+  
 }
-  .title {
-    text-align: center;
-    font-size: 17PX;
-    width: 100%;
-  }
-  .viewHelpH3{
-  padding: 20px 40px;
-  font-size: 16PX;
+
+  .AllocationH3{
+  padding: 12px 40px 24px;
+  font-size: 32px;
+  font-family: PingFangSC-Regular;
+
+color: #000000;
+// margin-bottom:12px;
 
   }
+  .PrefabricationUl{
+    padding: 0 40px 28px;
+    font-size: 32px;
+    li{
+      height: 156px;
+      background:rgba(255, 255, 255, .5);
+      margin-bottom: 12px;
+      padding-left: 40px;
+      p{
+          font-family: PingFangSC-Regular;
+          color: #000000;
+
+
+        &:nth-child(1){
+          font-size: 32px;
+          padding: 40px 0 12px 0;
+        }
+        &:nth-child(2){
+          font-size: 24px;
+        }
+      }
+    }
+  }
+}
 </style>
