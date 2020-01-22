@@ -621,9 +621,9 @@ export default {
       width: 100%;
       // background: rgba(0, 0, 0, 0.1);
     }
-    &.page {
+    // &.page {
       // opacity: .4;
-    }
+    // }
   }
   &.filter {
     filter: blur(12px);

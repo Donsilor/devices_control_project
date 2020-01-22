@@ -29,7 +29,7 @@
                   ref="one"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[0].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[0].chan_name?deviceAttrs.list[0].chan_name:'开关1' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[0].chan_name?switchTitle0:'开关1' }}</div>
               </div>
             </div>
           </div>
@@ -61,7 +61,7 @@
                   ref="two"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[1].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[1].chan_name?deviceAttrs.list[1].chan_name:'开关2' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[1].chan_name?switchTitle1:'开关2' }}</div>
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@
                   ref="three"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[2].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[2].chan_name?deviceAttrs.list[2].chan_name:'开关3' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[2].chan_name?switchTitle2:'开关3' }}</div>
               </div>
             </div>
           </div>
@@ -107,151 +107,79 @@
               <div class="btn-wrap btn-wrap-four">
                 <div class="btn-add center" />
                 <div class="add-name">配置灯</div>
-              </div>
-            </div>
-          </div> -->
-
-
-
-          <!-- <div
-            v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
-            :class="['panel', {'panelActive': deviceAttrs.list[3].chan_status == 'on'}]"
-            @click="setSwitch4"
-          >
-            <div class="panel-btn center">
-              <div class="btn-wrap btn-wrap-four">
-                <div
-                  :class="['btn-name', 'tis', {'tisActive': deviceAttrs.list[3].chan_status == 'on'}]"
-                />
-                <div
-                  :class="['btn-switch', 'center', {'active': deviceAttrs.list[3].chan_status == 'on'}]"
-                />
-                <div class="btn-name">开关4</div>
-              </div>
-            </div>
-          </div> -->
-          <!-- 配置开关 -->
-          <!-- <div
-            v-else
-            :class="['panel']"
-          >
-            <div
-              class="panel-btn center">
-              <div class="btn-wrap btn-wrap-four">
-                <div class="btn-add center" />
-                <div class="add-name">配置灯</div>
-              </div>
-            </div>
-          </div> -->
-          <!-- <div class="panel">
-            <div class="panel-btn center">
-              <div
-                v-if="deviceAttrs.list"
-                :class="['btn-wrap', 'btn-wrap-four']">
-                <div class="btn-name btn-name-top">{{ deviceAttrs.list[0].chan_name?deviceAttrs.list[0].chan_name:'一路开关' }}</div>
-                <div
-                  :class="[{ 'active': deviceAttrs.list[0].chan_status == 'on' }, 'btn btn-switch center']"
-                  @click="setSwitch1"/>
-                <div class="btn-name">{{ deviceAttrs.list[0].chan_status == 'on'? '关灯' : '开灯' }}</div>
-              </div>
-            </div>
-          </div> -->
-          <!-- <div class="panel">
-            <div class="panel-btn center">
-              <div
-                v-if="deviceAttrs.list"
-                :class="['btn-wrap', 'btn-wrap-four']">
-                <div class="btn-name btn-name-top">{{ deviceAttrs.list[1].chan_name?deviceAttrs.list[1].chan_name:'二路开关' }}</div>
-                <div
-                  :class="[{ 'active': deviceAttrs.list[1].chan_status == 'on' }, 'btn btn-switch center']"
-                  @click="setSwitch2"/>
-                <div class="btn-name">{{ deviceAttrs.list[1].chan_status == 'on'? '关灯' : '开灯' }}</div>
-              </div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-btn center">
-              <div
-                v-if="deviceAttrs.list"
-                :class="['btn-wrap', 'btn-wrap-four']">
-                <div class="btn-name btn-name-top">{{ deviceAttrs.list[2].chan_name?deviceAttrs.list[2].chan_name:'三路开关' }}</div>
-                <div
-                  :class="[{ 'active': deviceAttrs.list[2].chan_status == 'on' }, 'btn btn-switch center']"
-                  @click="setSwitch3"/>
-                <div class="btn-name">{{ deviceAttrs.list[2].chan_status == 'on'? '关灯' : '开灯' }}</div>
-              </div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-btn center">
-              <div
-                v-if="deviceAttrs.list"
-                :class="['btn-wrap', 'btn-wrap-four']">
-                <div class="btn-name btn-name-top">{{ deviceAttrs.list[3].chan_name?deviceAttrs.list[3].chan_name:'四路开关' }}</div>
-                <div
-                  :class="[{ 'active': deviceAttrs.list[3].chan_status == 'on' }, 'btn btn-switch center']"
-                  @click="setSwitch4"/>
-                <div class="btn-name">{{ deviceAttrs.list[3].chan_status == 'on'? '关灯' : '开灯' }}</div>
               </div>
             </div>
           </div> -->
         </div>
       </div>
       <!-- 按钮 -->
-      <!-- <div class="panel-btn-bottom">
-        <div class="panel-btn center">
-          <div
-            v-if="deviceAttrs.list"
-            :class="['btn-wrap', 'btn-wrap-four']"
-          >
-            <div
-              :class="[{ 'active': deviceAttrs.list[0].chan_status == 'on' && deviceAttrs.list[1].chan_status == 'on' && deviceAttrs.list[2].chan_status == 'on' && deviceAttrs.list[3].chan_status == 'on' }, 'btn btn-start center']"
-              @click="setSwitchOn('on')"/>
-            <div class="btn-name">全开</div>
-          </div>
-          <div
-            v-if="deviceAttrs.list"
-            :class="['btn-wrap', 'btn-wrap-four']"
-          >
-            <div
-              :class="[{ 'active': deviceAttrs.list[0].chan_status == 'off' && deviceAttrs.list[1].chan_status == 'off' && deviceAttrs.list[2].chan_status == 'off' && deviceAttrs.list[3].chan_status == 'off' }, 'btn btn-close center']"
-              @click="setSwitchOff('off')"
-            />
-            <div class="btn-name">全关</div>
-          </div>
-        </div>
-      </div> -->
+      <!--弹框-->
+      <model-swing
+        ref="swing"
+        :num="num"
+        @setWind="setWind" />
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
+import modelSwing from './components/model-swing'
 
 export default {
+  components: {
+    modelSwing
+  },
   data() {
     return {
       flag: true,
-      flagOff: true
+      flagOff: true,
+      timeOutEvent: '',
+      timeOutEventOK: false,
+      num: ''
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline', 'networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
+    switchTitle0() {
+      if(this.deviceAttrs.list[0].chan_name) {
+        if(this.deviceAttrs.list[0].chan_name.length > 6) {
+          return this.deviceAttrs.list[0].chan_name.slice(0,6) + '...'
+        } else {
+          return this.deviceAttrs.list[0].chan_name
+        }
+      }
+    },
+    switchTitle1() {
+      if(this.deviceAttrs.list[1].chan_name) {
+        if(this.deviceAttrs.list[1].chan_name.length > 6) {
+          return this.deviceAttrs.list[1].chan_name.slice(0,6) + '...'
+        } else {
+          return this.deviceAttrs.list[1].chan_name
+        }
+      }
+    },
+    switchTitle2() {
+      if(this.deviceAttrs.list[2].chan_name) {
+        if(this.deviceAttrs.list[2].chan_name.length > 6) {
+          return this.deviceAttrs.list[2].chan_name.slice(0,6) + '...'
+        } else {
+          return this.deviceAttrs.list[2].chan_name
+        }
+      }
+    },
+    switchTitle3() {
+      if(this.deviceAttrs.list[3].chan_name) {
+        if(this.deviceAttrs.list[3].chan_name.length > 6) {
+          return this.deviceAttrs.list[3].chan_name.slice(0,6) + '...'
+        } else {
+          return this.deviceAttrs.list[3].chan_name
+        }
+      }
+    },
   },
   watch: {
-    // 'deviceAttrs.list'() {
-    //   if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') {
-    //     this.flagOn = true
-    //   } else {
-    //     this.flagOn = true
-    //   }
-    //   if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') {
-    //     this.flagOff = true
-    //   } else {
-    //     this.flagOff = true
-    //   }
-    // }
   },
   created() {
     HdSmart.ready(() => {
@@ -268,6 +196,10 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     touchstart(val) {
       if(this.isOffline|| this.networkStatus == -1) return
+      this.timeOutEvent=setTimeout(() => {
+        // this.timeOutEventOK = true
+        return this.showMode(val)
+      }, 1000)
       this.$refs[val].classList.remove('animate')
       this.$refs[val].classList.add('animate1')
       this.$refs[val].classList.add('bgcStart')
@@ -281,15 +213,61 @@ export default {
     },
     touchend(val){
       if(this.isOffline|| this.networkStatus == -1) return
+      clearTimeout(this.timeOutEvent)
       this.$refs[val].classList.remove('animate1')
       this.$refs[val].classList.add('animate')
       this.$refs[val].classList.remove('bgcStart')
+      // if(this.timeOutEventOK) return
+      if(this.$refs.swing.show == true) return
       if(val == 'one') return this.setSwitch1()
       if(val == 'two') return this.setSwitch2()
       if(val == 'three') return this.setSwitch3()
       if(val == 'four') return this.setSwitch4()
       if(val == 'SwitchOn') return this.setSwitchOn('on')
       if(val == 'SwitchOff') return this.setSwitchOff('off')
+    },
+    showMode(val) {
+      this.num = val
+      this.$refs.swing.show = true
+      // this.timeOutEventOK = false
+    },
+    setWind(val) {
+      if(this.num == 'one') return this.controlDevice("chan0_name", val, 'on')
+      .then((res) => {
+        if(res.code == 0) {
+          this.$refs.swing.show = false
+        }
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
+        }
+      })
+      if(this.num == 'two') return this.controlDevice("chan1_name", val, 'on')
+      .then((res) => {
+        if(res.code == 0) {
+          this.$refs.swing.show = false
+        }
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
+        }
+      })
+      if(this.num == 'three') return this.controlDevice("chan2_name", val, 'on')
+      .then((res) => {
+        if(res.code == 0) {
+          this.$refs.swing.show = false
+        }
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
+        }
+      })
+      if(this.num == 'four') return this.controlDevice("chan3_name", val, 'on')
+      .then((res) => {
+        if(res.code == 0) {
+          this.$refs.swing.show = false
+        }
+        if(res == null){
+           HdSmart.UI.toast('请求超时，请重试')
+        }
+      })
     },
     setSwitchOn(val) {
       if(this.isOffline|| this.networkStatus == -1) return
@@ -380,15 +358,34 @@ export default {
       })
     },
     controlDevice(attr, value, param) {
-      return this.doControlDevice({
-        nodeid: `switch.main.switch`,
-        params: {
-          attribute: {
-            [attr]: value,
-            ...param
+      if(param) {
+        return this.doControlDevice({
+          nodeid: `switch.main.chan_config`,
+          params: {
+            attribute: {
+              [attr]: value
+            }
           }
-        }
-      })
+        })
+      } else {
+        return this.doControlDevice({
+          nodeid: `switch.main.switch`,
+          params: {
+            attribute: {
+              [attr]: value
+            }
+          }
+        })
+      }
+      // return this.doControlDevice({
+      //   nodeid: `switch.main.switch`,
+      //   params: {
+      //     attribute: {
+      //       [attr]: value,
+      //       ...param
+      //     }
+      //   }
+      // })
     },
     touchStart(e) {
       console.log(e, 'start')

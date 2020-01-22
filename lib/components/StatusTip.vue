@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="deviceAttrs.connectivity==='offline'||networkStatus==-1||networkStatus==-2||deviceAttrs.error"
+    v-if="deviceAttrs.connectivity==='offline'||networkStatus==-1||networkStatus==-2"
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
     <!-- <div class="status_bar_block"/> -->
@@ -69,22 +69,10 @@
           </div>
           <i class="arrow"/>
         </div>
-        <div
-          v-if="deviceAttrs.error&&networkStatus!=-1&&networkStatus!=-2&&deviceAttrs.connectivity!=='offline'"      
-          class="offline_bar"
-         >
-          <div class="offline_bar_div">
-            <p class="offline_bar_p">
-              <i class="error"/>
-            </p>
-            <span class="link">{{deviceAttrs.error}}</span>
-          </div>
-        </div>
       </div>
     </div>
     <div 
-    :style="{ 'top': status_bar_height+navigation_bar_height*3 + 'px'}" 
-    v-if="!deviceAttrs.error"
+      :style="{ 'top': status_bar_height+navigation_bar_height*3 + 'px'}" 
       class="mask"/>
     <OfflineHelpPage 
       v-show="OfflineHelpPageView" 
@@ -123,7 +111,7 @@ export default {
     },
     watch:{
       networkStatus(n,v){
-        console.log(n,v)
+        console.log(n,v) 
       switch (n) {
         case -1:
           this.prohibitmove()
@@ -132,29 +120,26 @@ export default {
           this.prohibitmove()
           break
         case 0:
-        if (this.deviceAttrs.connectivity==='offline') return
+          if(this.deviceAttrs.connectivity==='offline')return
           this.allowmove()
           break
         default:
           break
-      }
-        
+      }    
       },
       'deviceAttrs.connectivity'(n,v){
-        console.log(n,v,3434)
+        console.log(n,v,34341111)
         switch (n) {
         case 'offline':
           this.prohibitmove()
           break
        case 'online':
-       if (this.networkStatus==-1||this.networkStatus==-2)return
+          if(this.networkStatus==-1||this.networkStatus==-2)return
           this.allowmove()
           break
         default:
           break
       }
-      
-        console.log(n,v,54665)
       }
     },
     created() {
@@ -170,28 +155,31 @@ export default {
             this.setNetworkStatus(data)
         }
       })
+      // document.addEventListener('touchmove',function(e){
+      //    e.preventDefault()
+      // }, { passive: false })
     },
     methods: {
       ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice']),
         goToOfflineHelpPage() {
-          this.OfflineHelpPageView = true
-          this.$refs.OfflineHelpPageView.moveOut = false
-          this.$refs.OfflineHelpPageView.moveIn = true
+          this.$emit('OfflineHelpPage')
+          // this.OfflineHelpPageView = true
+          // this.$refs.OfflineHelpPageView.moveOut = false
+          // this.$refs.OfflineHelpPageView.moveIn = true
         },
         prohibitmove(){
-          if (!this.prohibit) {
+          if(!this.prohibit){
             document.addEventListener('touchmove', this.touchmovefn, { passive: false }) 
             this.prohibit = true
-          }
+          } 
         },
-        allowmove(){
+        allowmove(){ 
          document.removeEventListener('touchmove',this.touchmovefn, { passive: false }) 
          this.prohibit = false
         },
         touchmovefn(e){
-          e.preventDefault();
-          
-        },
+          e.preventDefault()
+        }
     },
 }
 </script>
@@ -349,9 +337,7 @@ export default {
       left: 0;
       right: 0;
       bottom: 0;
-      // height: 2000px;
       background: transparent;
       z-index: 10000;
-   
 }
 </style>
