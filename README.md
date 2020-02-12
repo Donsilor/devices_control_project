@@ -60,3 +60,35 @@ npm run build 产品名 参数
 - 迁移 sdk
 - 迁移 curtain
 - 迁移 door
+
+
+
+### 设备文件目录
+- 电视  src/other/tv_628_m
+- 方太蒸箱 src/fangtai/fangtai_steam_cooker_m
+- 虚拟体验窗帘
+- 虚拟体验空调
+- 格力空调
+- 海尔洗碗机
+- 箭牌马桶
+- 杜亚窗帘
+- 控客插座
+- 热水器
+...待补充
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
