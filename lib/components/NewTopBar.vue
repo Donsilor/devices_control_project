@@ -143,7 +143,7 @@ export default {
     },
     bgColor: {
       type: String,
-      default: 'transparent'
+      default: '#000'
     },
     bakColor: {
       type: String,
@@ -311,7 +311,7 @@ export default {
   }
 .newNavbar,.statusbar{
     // background: #fff
-    background: rgba(255,255,255,.98);
+    // background: rgba(255,255,255,.98);
 }
 // .topbar-fixed{
 //   &::before{
@@ -465,7 +465,7 @@ export default {
     justify-content: flex-start;
     align-items: center;
     .close{
-        background: url('../base/img/btn_ac_close@2x.png');
+        background: url('../base/img/kt_btn_close.png');
         background-size: 100% 100%;
     }
     .back{
@@ -478,7 +478,7 @@ export default {
       justify-content: flex-end;
       align-items: center;
     p{
-      background: url('../base/img/btn_ac_seting@2x.png');
+      background: url('../base/img/kt_btn_setting.png');
         background-size: 100% 100%;
 
     }
