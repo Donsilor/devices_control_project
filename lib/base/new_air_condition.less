@@ -150,6 +150,31 @@
   }
   .starting{
     margin-top: 120px;
+    .cold{
+        &.switchColor{
+            background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+        }
+    }
+    .heat{
+        &.switchColor{
+            background-image: linear-gradient(270deg, #F9BB6B 0%, #EF6D5E 100%);
+        }
+    }
+    .wind{
+        &.switchColor{
+            background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
+        }
+    }
+    .auto{
+        &.switchColor{
+            background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
+        }
+    }
+    .dehumidify{
+        &.switchColor{
+            background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
+        }
+    }
      .btn-start{
         z-index: 999;
         box-sizing: border-box;
@@ -160,10 +185,10 @@
         background: rgba(0, 0, 0, 0.05);
         border-radius: 50%;
         position: relative;
-        &.active{
-          // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
-          background: #E1B96E;
-        }
+        // &.active{
+        //   // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+        //   background: #E1B96E;
+        // }
         &::before{
           content: "";
           position: absolute;
@@ -246,6 +271,84 @@
           color: #fff;
           margin-top: 16px;
           font-size: 32px;
+        }
+        .cold{
+            &.btn-low{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan01_b.png');
+                background-size: 100% 100%;
+              }
+              &.btn-normal{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan02_b.png');
+                background-size: 100% 100%;
+              }
+              &.btn-high{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan03_b.png');
+                background-size: 100% 100%;
+              }
+              &.btn-auto1{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan04_b.png');
+                background-size: 100% 100%;
+              }
+        }
+        .heat{
+            &.btn-low{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan01_r.png');
+                background-size: 100% 100%;
+              }
+              &.btn-normal{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan02_r.png');
+                background-size: 100% 100%;
+              }
+              &.btn-high{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan03_r.png');
+                background-size: 100% 100%;
+              }
+              &.btn-auto1{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan04_r.png');
+                background-size: 100% 100%;
+              }
+        }
+        .auto,.dehumidify,.wind{
+            &.btn-low{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan01_y.png');
+                background-size: 100% 100%;
+              }
+              &.btn-normal{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan02_y.png');
+                background-size: 100% 100%;
+              }
+              &.btn-high{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan03_y.png');
+                background-size: 100% 100%;
+              }
+              &.btn-auto1{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan04_y.png');
+                background-size: 100% 100%;
+              }
         }
         .btn-cold {
           &::before {

@@ -7,7 +7,6 @@
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
-        bak-color="#000"
         page-class=".page"
       />
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
@@ -72,7 +71,7 @@
         class="starting">
         <div
           ref="switchStatus"
-          :class="[{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'btn-start']"
+          :class="[deviceAttrs.mode,{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'switchColor btn-start']"
           @click="setSwitch('switchStatus')"
         />
       </div>
@@ -82,16 +81,13 @@
         <div class="modespeed">
             <div class="btn-wrap center" @click="showMode">
               <div 
-                ref="cold" 
-                :class="[modeClass,'btn btn-cold center']" 
+                :class="[modeClass,'btn  center']" 
                 />
               <div class="btn-name">{{modeTxt}}</div>
            </div>
-           <div class="btn-wrap center">
+           <div class="btn-wrap center"  @click="showSpeed">
               <div 
-                ref="cold" 
-                :class="[speedClass,'btn btn-cold center']" 
-                @click="setMode('cold')"/>
+                :class="[deviceAttrs.mode,speedClass,'btn center']" />
               <div class="btn-name">{{speedTxt}}</div>
            </div>
         </div>
@@ -225,6 +221,7 @@ export default {
       moveEnd:false,
       setTemperatureDis:false,
       device_uuid: window.device_uuid||'',
+      disabledLock: false,
 
     }
   },
@@ -274,10 +271,10 @@ export default {
           return 'btn-high'
           break
         case 'auto':
-          return 'btn-auto'
+          return 'btn-auto1'
           break
         default:
-          return 'btn-low'
+          return ''
       }
     },
     modeTxt(){
@@ -586,6 +583,45 @@ export default {
         .then(() =>{
           this.hide()
         })
+    },
+        // check开关切换
+    checkSwitch(val) {
+      // console.log(e.target.checked)
+      this.disabledLock = true
+      if (this.isOffline||this.isClose) return
+      let checkSwitchStatus = ''
+      if (this.deviceAttrs[val] == 'on') {
+        checkSwitchStatus = 'off'
+      } else {
+        checkSwitchStatus = 'on'
+      }
+      if (val=='digital_display'&&this.deviceAttrs.mode=='heat') {
+        this.controlDevice('digital_display', checkSwitchStatus,{'auxiliary_heating_mode':this.deviceAttrs.auxiliary_heating_mode})
+        .then(() => {
+          this.disabledLock = false
+        })
+        .catch(() => {
+          this.disabledLock = false
+        })
+        return
+      }
+      if (val=='auxiliary_heating_mode') {
+         this.controlDevice('auxiliary_heating_mode', checkSwitchStatus,{'digital_display':this.deviceAttrs.digital_display})
+        .then(() => {
+          this.disabledLock = false
+        })
+        .catch(() => {
+          this.disabledLock = false
+        })
+        return
+      }
+      this.controlDevice(val, checkSwitchStatus)
+      .then(() => {
+        this.disabledLock = false
+      })
+      .catch(() => {
+        this.disabledLock = false
+      })
     },
     controlDevice(attr, value) {
       let param = {}

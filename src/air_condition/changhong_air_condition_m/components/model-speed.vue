@@ -1,19 +1,41 @@
 <template>
   <div
     v-if="show"
-    class="model"
+    class="speedl"
     @click.self="show = false"
     @touchmove.prevent>
-    <div class="main">
+    <div 
+      v-if="show"
+      class="main show">
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
         <div 
-          class="btn" 
-          @click="setWind('auto', 'auto')">自动
+          class="btn"
+          @click="setSpeed('low')">
+          <div :class="[speed === 'low' ? 'active' : '', 'btn-low center']" />
+          <div 
+            class="name" >低风</div>
         </div>
         <div 
           class="btn"
-          @click="setWind(speed, 'hand')">手动
+          @click="setSpeed('normal')">
+          <div :class="[speed === 'normal' ? 'active' : '', 'btn-normal center']" />
+          <div 
+            class="name" >中风</div>
+        </div>
+        <div 
+          class="btn" 
+          @click="setSpeed('high')">
+          <div :class="[speed === 'high' ? 'active' : '', 'btn-high center']" />
+          <div 
+            class="name" >高风</div>
+        </div>
+         <div 
+          class="btn" 
+          @click="setSpeed('auto')">
+          <div :class="[speed === 'auto' ? 'active' : '', 'btn-auto1 center']" />
+          <div 
+            class="name" >智能</div>
         </div>
       </div>
       <div 
@@ -24,7 +46,18 @@
 </template>
 <style lang="less" scoped>
 @imgPath: 'base/air_condition/assets/new-air';
-  .model{
+@keyframes show {
+    0% {
+      bottom:-380px;
+    }
+    100% {
+       bottom:0;
+    }
+}
+.show{
+  animation: show .2s linear 0s;
+}
+  .speedl{
     position: fixed;
     top: 0;
     right: 0;
@@ -51,16 +84,20 @@
       bottom: 0;
       z-index: 999999999999;
       width: 100%;
-      height: 381px;
-      color: #20282B;
-      background: #eee;
-      border: 1px solid #DDDDDD;
+      // height: 381px;
+      height: auto;
+      font-family: PingFangSC-Light;
+      color: #fff;
+      // background: #eee;
+      // border: 1px solid #DDDDDD;
       .btns{
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        background: #fff;
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        margin: 0 16px 16px 16px;
         .btn{
           width:100%;
           height:120px;
@@ -68,7 +105,7 @@
           text-align: center;
           font-size:32px;
           &:first-of-type{
-            border-bottom:1px solid #F0F2F4;
+            border-bottom: 0.5px solid rgba(255,255,255,.1);
           }
         }
       }
@@ -80,7 +117,10 @@
         letter-spacing: 0;
         text-align: center;
         line-height: 120px;
-        background: #fff;
+        color: #E1B96E;
+        background: rgba(255,255,255,.1);
+        border-radius: 10px;
+        margin: 0 16px 16px 16px;
       }
     }
   }
@@ -90,14 +130,14 @@ export default {
   props: ['speed'],
   data() {
     return {
-      show: false,
+      show: false
     }
   },
   mounted() {
   },
   methods: {
-    setWind(attr, val){
-      this.$emit('setSpeed', attr, val)
+    setSpeed(attr){
+      this.$emit('setSpeed', attr)
     }
   }
 }
