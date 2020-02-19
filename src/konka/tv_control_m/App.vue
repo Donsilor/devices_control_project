@@ -8,7 +8,6 @@
         :room="device.room_name"
         :scroll="true"
         :return-back="false"
-        bak-color="#000"
         page-class=".page"
       />
       <!-- <StatusTip v-show="device.device_uuid"/> -->
@@ -283,9 +282,10 @@ export default {
     height: 100vh;
   &::before{
     content: "";
-    background-image: url('~@lib/@{imgPath}/img_bg.png');
-    background-repeat:no-repeat;
-    background-size: 100% 100%;
+    // background-image: url('~@lib/@{imgPath}/img_bg.png');
+    // background-repeat:no-repeat;
+    // background-size: 100% 100%;
+    background: #000000; 
     position: fixed;
     top:0;
     left: 0; 
@@ -309,7 +309,7 @@ export default {
         width: 120px;
         height: 120px;
         // border: 1px solid #818181;
-        background: rgba(0,0,0,0.05);
+        background: rgba(225,225,225,0.1);
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -338,7 +338,7 @@ export default {
         &::before {
           position: relative;
           z-index: 100;
-          background-image: url('~@lib/@{imgPath}/home.png');
+          background-image: url('~@lib/@{imgPath}/tv_btn_home.png');
           background-size: 100% 100%;
         }
       }
@@ -346,7 +346,7 @@ export default {
         &::before {
           position: relative;
           z-index: 100;
-          background-image: url('~@lib/@{imgPath}/off.png');
+          background-image: url('~@lib/@{imgPath}/tv_btn_switch.png');
           background-size: 100% 100%;
         }
       }
@@ -354,7 +354,7 @@ export default {
         &::before {
           position: relative;
           z-index: 100;
-          background-image: url('~@lib/@{imgPath}/mute.png');
+          background-image: url('~@lib/@{imgPath}/tv_btn_jingyin.png');
           background-size: 100% 100%;
         }
       }
@@ -362,7 +362,7 @@ export default {
         &::before {
           position: relative;
           z-index: 100;
-          background-image: url('~@lib/@{imgPath}/back.png');
+          background-image: url('~@lib/@{imgPath}/tv_btn_back.png');
           background-size: 100% 100%;
         }
       }
@@ -370,7 +370,7 @@ export default {
         &::before {
           position: relative;
           z-index: 100;
-          background-image: url('~@lib/@{imgPath}/menu.png');
+          background-image: url('~@lib/@{imgPath}/tv_btn_menu.png');
           background-size: 100% 100%;
         }
       }
@@ -388,7 +388,7 @@ export default {
       width: 534px;
       height: 534px;
       border-radius: 50%;
-      background: rgba(0,0,0,0.07);
+      background: rgba(225,225,225,0.1);
       margin-top: 48px;
       position: relative;
       overflow: hidden;
@@ -400,10 +400,10 @@ export default {
         transform-origin: 100% 100%;
         border-radius: 50%;
         transform-origin: 0 0;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.06);
         z-index: 999;
         &.active{
-           background: rgba(255, 255, 255, 0.7);
+          //  background: rgba(255, 255, 255, 0.7);
            .btnok{
              color: #E1B96E;
            }
@@ -416,7 +416,7 @@ export default {
           justify-content: center;
           font-family: PingFangSC-Regular;
           font-size: 40px;
-          color: #000000;
+          color: #fff;
           border-radius: 50%;
          }
         }
@@ -427,7 +427,7 @@ export default {
         position: absolute;
         transform-origin: 100% 100%;
         &.active{
-          background: -webkit-radial-gradient(right bottom, transparent 35%, rgba(0,0,0,0.03) 35%);
+          background: -webkit-radial-gradient(right bottom, transparent 35%, rgba(0,0,0,0.2) 35%);
           z-index: 99;
           .dot{
             background-image: linear-gradient(0deg, #E1B96E 0%, #F1CB85 100%);

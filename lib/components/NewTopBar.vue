@@ -451,8 +451,10 @@ export default {
   .right,.right-search {
     // width: 44PX;
     // height: @navigation_bar_height;
-   width: 72px;
-    height: 72px;
+   width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(225, 225, 225, .1);
     p{
         width: 48px;
         height: 48px;
@@ -462,20 +464,20 @@ export default {
   }
   .left{
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     .close{
         background: url('../base/img/kt_btn_close.png');
         background-size: 100% 100%;
     }
     .back{
-        background: url('../base/img/tv_arrow_back.png');
+        background: url('../base/img/arrow_back.png');
         background-size: 100% 100%;
     }
   }
   .right{
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       align-items: center;
     p{
       background: url('../base/img/kt_btn_setting.png');
