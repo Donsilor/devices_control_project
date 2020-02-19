@@ -14,8 +14,8 @@
       :title="device_name"
       :room="room_name"
       page-class=".page-index"
-      bak-color="#000"
-      bg-color = "#fff"
+      bak-color="#fff"
+      bg-color = "#000"
       switchimg="tv"
       @shutdownCallback="cmd('rcPower')"
     />
