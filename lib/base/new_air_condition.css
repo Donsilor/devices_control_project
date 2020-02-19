@@ -1,21 +1,11 @@
 .canvas {
-  width: 560px;
+  width: 560PX;
 }
 .page {
+  background: #000;
+  padding-bottom: 24px;
   /*隐藏掉滚动条*/
   /*********** 按钮 ***********/
-}
-.page::before {
-  content: "";
-  background-image: url('~@lib/base/oakes_air_condition/assets/img_bg.png');
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
 }
 .page::-webkit-scrollbar {
   display: none;
@@ -45,40 +35,42 @@
 .page .control-tm .control {
   outline: none;
   border: none;
-  width: 72px;
-  height: 72px;
-  background: rgba(0, 0, 0, 0.05);
+  width: 88px;
+  height: 88px;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
 }
 .page .control-tm .control.add {
-  width: 72px;
-  height: 72px;
+  width: 88px;
+  height: 88px;
 }
 .page .control-tm .control.add::before {
   position: relative;
   z-index: 100;
   content: "";
   display: block;
-  width: 72px;
-  height: 72px;
-  background-image: url('~@lib/base/oakes_air_condition/assets/up.png');
-  background-size: 70% 70%;
+  width: 88px;
+  height: 88px;
+  background-image: url('~@lib/base/ch_air_condition/assets/up.png');
+  background-size: 50% 50%;
   background-position: center;
+  background-repeat: no-repeat;
 }
 .page .control-tm .control.reduce {
-  width: 72px;
-  height: 72px;
+  width: 88px;
+  height: 88px;
 }
 .page .control-tm .control.reduce::before {
   position: relative;
   z-index: 100;
   content: "";
   display: block;
-  width: 72px;
-  height: 72px;
-  background-image: url('~@lib/base/oakes_air_condition/assets/down.png');
-  background-size: 70% 70%;
+  width: 88px;
+  height: 88px;
+  background-image: url('~@lib/base/ch_air_condition/assets/down.png');
+  background-size: 50% 50%;
   background-position: center;
+  background-repeat: no-repeat;
 }
 .page .main {
   margin-top: 44px;
@@ -164,7 +156,7 @@
   top: 50%;
   margin-left: -24px;
   margin-top: -24px;
-  background-image: url('~@lib/base/oakes_air_condition/assets/dakai3@2x.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_btn_on.png');
   background-size: 100% 100%;
   width: 48px;
   height: 48px;
@@ -177,34 +169,46 @@
   font-family: PingFangSC-Light;
 }
 .page .panel-btn {
-  overflow-x: auto;
-  display: -webkit-box;
+  flex-direction: column;
   z-index: 9999;
   margin-top: 60px;
+  margin: 60px 24px 12px;
+  border-radius: 10px;
+  font-family: PingFangSC-Light;
+  font-size: 32px;
+  color: #fff;
   /*适应苹果*/
   -webkit-overflow-scrolling: touch;
+  background: rgba(255, 255, 255, 0.1);
 }
 .page .panel-btn::-webkit-scrollbar {
   display: none;
 }
-.page .btn-wrap {
-  margin: 0 24px 24px;
+.page .modespeed {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-.page .btn-wrap:last-of-type {
-  width: 30px;
-  height: 120px;
+.page .modespeed .btn-wrap {
+  width: 100%;
+  height: 180px;
+  flex-direction: column;
 }
-.page .btn-wrap .btn {
+.page .modespeed .btn-wrap:first-of-type {
+  border-right: 0.5px solid #000;
+}
+.page .modespeed .btn-wrap .btn {
   box-sizing: border-box;
   margin: 0 auto;
-  width: 120px;
-  height: 120px;
+  width: 44px;
+  height: 44px;
   background: rgba(0, 0, 0, 0.05);
-  border-radius: 50%;
   display: flex;
   flex-direction: column;
 }
-.page .btn-wrap .btn::before {
+.page .modespeed .btn-wrap .btn::before {
   position: relative;
   z-index: 100;
   content: "";
@@ -212,61 +216,58 @@
   width: 44px;
   height: 44px;
 }
-.page .btn-wrap .btn.active {
-  background: #E1B96E;
-}
-.page .btn-wrap .btn-name {
+.page .modespeed .btn-wrap .btn-name {
   text-align: center;
-  color: #000;
+  color: #fff;
   margin-top: 16px;
-  font-size: 24px;
+  font-size: 32px;
 }
-.page .btn-wrap .btn-cold::before {
+.page .modespeed .btn-wrap .btn-cold::before {
   position: relative;
   z-index: 100;
-  background-image: url('~@lib/base/oakes_air_condition/assets/cold.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_cold.png');
   background-size: 100% 100%;
 }
-.page .btn-wrap .btn-heat::before {
+.page .modespeed .btn-wrap .btn-heat::before {
   position: relative;
   z-index: 100;
-  background-image: url('~@lib/base/oakes_air_condition/assets/heat.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_heat.png');
   background-size: 100% 100%;
 }
-.page .btn-wrap .btn-time::before {
+.page .modespeed .btn-wrap .btn-time::before {
   position: relative;
   z-index: 100;
-  background-image: url('~@lib/base/air_condition/assets/new-air/time-black.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_cold.png');
   background-size: 100% 100%;
 }
-.page .btn-wrap .btn-wind::before {
+.page .modespeed .btn-wrap .btn-wind::before {
   position: relative;
   z-index: 100;
-  background-image: url('~@lib/base/oakes_air_condition/assets/wind.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_songfeng.png');
   background-size: 100% 100%;
 }
-.page .btn-wrap .btn-dehumidify::before {
+.page .modespeed .btn-wrap .btn-dehumidify::before {
   position: relative;
   z-index: 100;
-  background-image: url('~@lib/base/oakes_air_condition/assets/dehumidify.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_dry.png');
   background-size: 100% 100%;
 }
-.page .btn-wrap .btn-auto::before {
+.page .modespeed .btn-wrap .btn-auto::before {
   position: relative;
   z-index: 100;
-  background-image: url('~@lib/base/oakes_air_condition/assets/auto.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_auto.png');
   background-size: 100% 100%;
 }
-.page .btn-wrap .btn-breath::before {
-  background-image: url('~@lib/base/oakes_air_condition/assets/huanqi.png');
+.page .modespeed .btn-wrap .btn-breath::before {
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_cold.png');
   background-size: 100% 100%;
 }
-.page .btn-wrap .btn-sleep::before {
-  background-image: url('~@lib/base/oakes_air_condition/assets/sleep.png');
+.page .modespeed .btn-wrap .btn-sleep::before {
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_cold.png');
   background-size: 100% 100%;
 }
-.page .btn-wrap .btn-fresh::before {
-  background-image: url('~@lib/base/oakes_air_condition/assets/fresh.png');
+.page .modespeed .btn-wrap .btn-fresh::before {
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_cold.png');
   background-size: 100% 100%;
 }
 .page .optionbox {
@@ -388,27 +389,30 @@
 .page.offline.cover .optionbox {
   opacity: 0.3;
 }
-.page.close .bottom,
-.page.offline.cover .bottom {
-  opacity: 0.3;
-}
-.bottom {
+.bottom,
+.screen {
   width: 100%;
-}
-.bottom:last-of-type {
-  margin-bottom: 90px;
+  height: 120px;
+  border-top: 0.5px solid #000;
 }
 .bottom .timing,
-.bottom .Charging-protection {
+.screen .timing,
+.bottom .Charging-protection,
+.screen .Charging-protection {
   padding: 0 40px;
   display: flex;
   justify-content: space-between;
   font-family: PingFangSC-Regular;
   font-size: 32px;
-  color: #000000;
   height: 120px;
   line-height: 120px;
   border-top: 1px rgba(0, 0, 0, 0.1) solid;
+}
+.screen {
+  margin: 12px 24px 0 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #fff;
 }
 .switch {
   width: 74px;
