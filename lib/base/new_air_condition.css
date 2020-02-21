@@ -26,6 +26,8 @@
 .page .control-tm {
   position: relative;
   top: -40px;
+  width: 100%;
+  height: 176px;
   z-index: 9;
   width: 430px;
   display: flex;
@@ -79,8 +81,42 @@
   flex-direction: column;
 }
 .page .main .wrap-circle {
+  width: 100%;
   position: relative;
   zoom: 0.5;
+}
+.page .main .wrap-circle .tm {
+  font-family: Rajdhani-Regular;
+  position: relative;
+  width: 100%;
+  font-size: 144px;
+  color: #fff;
+  text-align: center;
+  transform: scale(2);
+  margin: 440px auto 0 auto;
+}
+.page .main .wrap-circle .tm sup {
+  position: absolute;
+  top: -5px;
+  right: -22px;
+  font-size: 24px;
+  color: #fff;
+  transform: scale(1);
+  font-family: PingFangSC-Light;
+}
+.page .main .wrap-circle .c-mode {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  bottom: 0;
+  left: 50%;
+  width: 216px;
+  height: 48px;
+  font-size: 24px;
+  text-align: center;
+  line-height: 48px;
+  zoom: 2;
+  font-family: PingFangSC-Light;
+  color: #fff;
 }
 .page .main .wrap-circle .showtemp {
   position: absolute;
@@ -92,33 +128,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.page .main .wrap-circle .showtemp .tm {
-  position: relative;
-  font-size: 144px;
-  color: #000;
-  text-align: center;
-  transform: scale(2);
-}
-.page .main .wrap-circle .showtemp .tm sup {
-  position: absolute;
-  top: -5px;
-  right: -22px;
-  font-size: 24px;
-  color: #000;
-  transform: scale(1);
-}
-.page .main .wrap-circle .showtemp .c-mode {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 95%;
-  left: 50%;
-  width: 216px;
-  height: 48px;
-  font-size: 24px;
-  text-align: center;
-  line-height: 48px;
-  zoom: 2;
 }
 .page .main .wrap-circle .cover {
   position: absolute;
@@ -234,52 +243,72 @@
   margin-top: 16px;
   font-size: 32px;
 }
-.page .modespeed .btn-wrap .cold.btn-low {
+.page .modespeed .btn-wrap .cold.btn-breeze {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan01_b.png');
   background-size: 100% 100%;
 }
-.page .modespeed .btn-wrap .cold.btn-normal {
+.page .modespeed .btn-wrap .cold.btn-low {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan02_b.png');
   background-size: 100% 100%;
 }
-.page .modespeed .btn-wrap .cold.btn-high {
+.page .modespeed .btn-wrap .cold.btn-normal {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan03_b.png');
   background-size: 100% 100%;
 }
-.page .modespeed .btn-wrap .cold.btn-auto1 {
+.page .modespeed .btn-wrap .cold.btn-high {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan04_b.png');
   background-size: 100% 100%;
 }
-.page .modespeed .btn-wrap .heat.btn-low {
+.page .modespeed .btn-wrap .cold.btn-auto1 {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan05_b.png');
+  background-size: 100% 100%;
+}
+.page .modespeed .btn-wrap .heat.btn-breeze {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan01_r.png');
   background-size: 100% 100%;
 }
-.page .modespeed .btn-wrap .heat.btn-normal {
+.page .modespeed .btn-wrap .heat.btn-low {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan02_r.png');
   background-size: 100% 100%;
 }
-.page .modespeed .btn-wrap .heat.btn-high {
+.page .modespeed .btn-wrap .heat.btn-normal {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan03_r.png');
   background-size: 100% 100%;
 }
-.page .modespeed .btn-wrap .heat.btn-auto1 {
+.page .modespeed .btn-wrap .heat.btn-high {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan04_r.png');
+  background-size: 100% 100%;
+}
+.page .modespeed .btn-wrap .heat.btn-auto1 {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan05_r.png');
+  background-size: 100% 100%;
+}
+.page .modespeed .btn-wrap .auto.btn-breeze,
+.page .modespeed .btn-wrap .dehumidify.btn-breeze,
+.page .modespeed .btn-wrap .wind.btn-breeze {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan01_y.png');
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .auto.btn-low,
@@ -287,7 +316,7 @@
 .page .modespeed .btn-wrap .wind.btn-low {
   position: relative;
   z-index: 100;
-  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan01_y.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan02_y.png');
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .auto.btn-normal,
@@ -295,7 +324,7 @@
 .page .modespeed .btn-wrap .wind.btn-normal {
   position: relative;
   z-index: 100;
-  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan02_y.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan03_y.png');
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .auto.btn-high,
@@ -303,7 +332,7 @@
 .page .modespeed .btn-wrap .wind.btn-high {
   position: relative;
   z-index: 100;
-  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan03_y.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan04_y.png');
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .auto.btn-auto1,
@@ -311,7 +340,7 @@
 .page .modespeed .btn-wrap .wind.btn-auto1 {
   position: relative;
   z-index: 100;
-  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan04_y.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan05_y.png');
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .btn-cold::before {
@@ -362,92 +391,6 @@
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_cold.png');
   background-size: 100% 100%;
 }
-.page .optionbox {
-  width: 100%;
-  margin: 10px 0 90px 0;
-  font-family: PingFangSC-Light;
-}
-.page .optionbox .option {
-  width: 100%;
-  height: 120px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 0 40px;
-}
-.page .optionbox .option > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 32px;
-  color: #000;
-}
-.page .optionbox .option > div > span {
-  display: inline-block;
-  line-height: 120px;
-  height: 120px;
-}
-.page .optionbox .option > div > span:last-of-type {
-  color: rgba(0, 0, 0, 0.5);
-}
-.page .optionbox .option > div > span.check {
-  display: flex;
-  align-items: center;
-}
-.page .optionbox .option > div > span.check > img {
-  width: 32px;
-}
-.page .optionbox .option1 {
-  padding: 0 40px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-.page .optionbox .option1 .check {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 32px;
-  color: #000;
-}
-.page .optionbox .option1 .check > span {
-  display: inline-block;
-  line-height: 120px;
-  height: 120px;
-  font-size: 32px;
-  color: #000;
-}
-.page .optionbox .option1 .check .checkBox {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.page .optionbox .option1 .check .checkBox .speedBtn {
-  width: 96px;
-  height: 64px;
-  text-align: center;
-  line-height: 64px;
-  font-family: PingFangSC-Light;
-  font-size: 32px;
-  margin-right: 20px;
-  color: #000;
-  opacity: 0.5;
-}
-.page .optionbox .option1 .check .checkBox .speedBtn:last-of-type {
-  margin-right: 0px;
-}
-.page .optionbox .option1 .check .checkBox .speedBtn.active {
-  opacity: 1;
-  position: relative;
-}
-.page .optionbox .option1 .check .checkBox .speedBtn.active::before {
-  display: block;
-  content: "";
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #000;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  margin-left: -4px;
-}
 .page.close:before,
 .page.offline.cover:before {
   content: "";
@@ -462,7 +405,33 @@
 .page.offline.cover.page .control-tm .reduce,
 .page.close.page .control-tm .add,
 .page.offline.cover.page .control-tm .add {
-  opacity: 0.4;
+  opacity: 0.6;
+}
+.page.close.page .starting .switchColor,
+.page.offline.cover.page .starting .switchColor {
+  background: rgba(255, 255, 255, 0.1);
+}
+.page.close.page .starting .btn-start::before,
+.page.offline.cover.page .starting .btn-start::before {
+  content: "";
+  position: absolute;
+  z-index: 100;
+  left: 50%;
+  top: 50%;
+  margin-left: -24px;
+  margin-top: -24px;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_btn_off.png');
+  background-size: 100% 100%;
+  width: 48px;
+  height: 48px;
+}
+.page.close.page .bottom,
+.page.offline.cover.page .bottom {
+  opacity: 0.3;
+}
+.page.close.page .screen .Charging-protection,
+.page.offline.cover.page .screen .Charging-protection {
+  opacity: 0.3;
 }
 .page.close .btn-wrap,
 .page.offline.cover .btn-wrap {
@@ -501,44 +470,48 @@
   border-top: 1px rgba(0, 0, 0, 0.1) solid;
 }
 .screen {
-  margin: 12px 24px 0 24px;
+  margin-top: 12px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   color: #fff;
 }
 .switch {
-  width: 74px;
-  height: 28px;
+  width: 70px;
+  height: 40px;
   position: relative;
   border: 1px solid transparent;
-  box-shadow: #dfdfdf 0 0 0 0 inset;
-  border-radius: 20px;
+  border-radius: 10px;
   background-clip: content-box;
   display: inline-block;
   -webkit-appearance: none;
   user-select: none;
   outline: none;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 .switch:before {
   content: '';
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   position: absolute;
-  top: -8px;
+  top: 0;
   left: 0;
-  border-radius: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  background: #000;
+  border-radius: 50%;
+  background: #fff;
 }
-.switch:checked {
-  border-color: #E1B96E;
-  box-shadow: #E1B96E 0 0 0 16px inset;
-  background-color: #E1B96E;
+.cold.switch:checked {
+  background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+}
+.heat.switch:checked {
+  background-image: linear-gradient(270deg, #F9BB6B 0%, #EF6D5E 100%);
+}
+.auto.switch:checked,
+.dehumidify.switch:checked,
+.wind.switch:checked {
+  background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
 }
 .switch:checked:before {
   left: 30px;
-  background: #000000;
+  background: #fff;
 }
 .switch.switch-anim {
   transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;

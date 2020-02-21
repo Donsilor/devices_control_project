@@ -38,6 +38,8 @@
   .control-tm{
     position: relative;
     top: -40px;
+    width: 100%;
+    height: 176px;
     z-index: 9;
 
     width: 430px;
@@ -93,8 +95,44 @@
       flex-direction: column;
     }
     .wrap-circle{
+      width: 100%;
       position: relative;
       zoom: 0.5;
+      .tm{
+        // margin-top: 60PX;
+        font-family: Rajdhani-Regular;
+        position: relative;
+        width: 100%;
+        font-size: 144px;
+        color: #fff;
+        text-align: center;
+        transform: scale(2);
+        margin: 440px auto 0 auto;
+        sup{
+          position: absolute;
+          top: -5px;
+          right: -22px;
+          font-size: 24px;
+          color: #fff;
+          transform: scale(1);
+          font-family: PingFangSC-Light;
+        }
+      }
+      .c-mode{
+        position: absolute;
+        transform: translate(-50%,-50%);
+        //   top: 95%;
+        bottom: 0;
+        left: 50%;
+        width: 216px;
+        height: 48px;
+        font-size: 24px;
+        text-align: center;
+        line-height: 48px;
+        zoom:2;
+        font-family: PingFangSC-Light;
+        color: #fff;
+      }
       .showtemp{
         position: absolute;
         top: 49%;
@@ -105,34 +143,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        .tm{
-          // margin-top: 60PX;
-          position: relative;
-          font-size: 144px;
-          color: #000;
-          text-align: center;
-          transform: scale(2);
-          sup{
-            position: absolute;
-            top: -5px;
-            right: -22px;
-            font-size: 24px;
-            color: #000;
-            transform: scale(1);
-          }
-        }
-        .c-mode{
-          position: absolute;
-          transform: translate(-50%,-50%);
-          top: 95%;
-          left: 50%;
-          width: 216px;
-          height: 48px;
-          font-size: 24px;
-          text-align: center;
-          line-height: 48px;
-          zoom:2;
-        }
       }
       .cover{
         position: absolute;
@@ -273,80 +283,98 @@
           font-size: 32px;
         }
         .cold{
-            &.btn-low{
+            &.btn-breeze{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan01_b.png');
                 background-size: 100% 100%;
               }
-              &.btn-normal{
+              &.btn-low{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan02_b.png');
                 background-size: 100% 100%;
               }
-              &.btn-high{
+              &.btn-normal{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan03_b.png');
                 background-size: 100% 100%;
               }
-              &.btn-auto1{
+              &.btn-high{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan04_b.png');
                 background-size: 100% 100%;
               }
+              &.btn-auto1{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan05_b.png');
+                background-size: 100% 100%;
+              }
         }
         .heat{
-            &.btn-low{
+            &.btn-breeze{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan01_r.png');
                 background-size: 100% 100%;
               }
-              &.btn-normal{
+              &.btn-low{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan02_r.png');
                 background-size: 100% 100%;
               }
-              &.btn-high{
+              &.btn-normal{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan03_r.png');
                 background-size: 100% 100%;
               }
-              &.btn-auto1{
+              &.btn-high{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan04_r.png');
                 background-size: 100% 100%;
               }
+              &.btn-auto1{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan05_r.png');
+                background-size: 100% 100%;
+              }
         }
         .auto,.dehumidify,.wind{
-            &.btn-low{
+            &.btn-breeze{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan01_y.png');
                 background-size: 100% 100%;
               }
-              &.btn-normal{
+              &.btn-low{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan02_y.png');
                 background-size: 100% 100%;
               }
-              &.btn-high{
+              &.btn-normal{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan03_y.png');
                 background-size: 100% 100%;
               }
-              &.btn-auto1{
+              &.btn-high{
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan04_y.png');
+                background-size: 100% 100%;
+              }
+              &.btn-auto1{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan05_y.png');
                 background-size: 100% 100%;
               }
         }
@@ -419,92 +447,6 @@
         }
       }
   }
-  .optionbox{
-    width: 100%;
-    margin: 10px 0 90px 0;
-    font-family: PingFangSC-Light;
-    .option{
-      width: 100%;
-      height: 120px;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-      padding: 0 40px;
-      >div{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 32px;
-        color: #000;
-        >span{
-          display: inline-block;
-          line-height: 120px;
-          height: 120px;
-          &:last-of-type{
-            color: rgba(0, 0, 0, 0.5);
-          }
-          &.check{
-            display: flex;
-            align-items: center;
-            >img{
-              width: 32px;
-            }
-          }
-        }
-      }
-    }
-    .option1{
-      padding: 0 40px;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-            .check{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 32px;
-        color: #000;
-        >span{
-          display: inline-block;
-          line-height: 120px;
-          height: 120px;
-          font-size: 32px;
-          color: #000;
-        }
-        .checkBox{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            .speedBtn{
-              width: 96px;
-              height: 64px;
-              text-align: center;
-              line-height: 64px;
-              font-family: PingFangSC-Light;
-              font-size: 32px;
-              margin-right: 20px;
-              color: #000;
-              opacity: .5;
-              &:last-of-type{
-                margin-right: 0px;
-              }
-              &.active{
-                opacity: 1;
-                position: relative;
-                &::before{
-                  display: block;
-                  content: "";
-                  width: 8px;
-                  height: 8px;
-                  border-radius: 50%;
-                  background: #000;
-                  position: absolute;
-                  bottom: 0;
-                  left: 50%;
-                  margin-left: -4px;
-                }
-              }
-            }
-          }
-      }
-    }
-  }
   &.close,
   &.offline.cover {
     &:before {
@@ -519,8 +461,34 @@
     &.page {
       .control-tm{
         .reduce,.add {
-          opacity: .4;
+          opacity: .6;
         }
+      }
+      .starting{
+          .switchColor{
+            background: rgba(255, 255, 255, .1);
+          }
+          .btn-start::before{
+            content: "";
+            position: absolute;
+            z-index: 100;
+            left: 50%;
+            top: 50%;
+            margin-left: -24px;
+            margin-top: -24px;
+            background-image: url('~@lib/@{imgPath1}/kt_btn_off.png');
+            background-size: 100% 100%;
+            width: 48px;
+            height: 48px;
+          }
+      }
+      .bottom{
+        opacity:.3;
+      }
+      .screen{
+          .Charging-protection{
+              opacity: 0.3;
+          }
       }
     }
     .btn-wrap {
@@ -559,45 +527,59 @@
   }
 }
 .screen{
-    margin: 12px 24px 0 24px;
+    margin-top: 12px;
     background: rgba(255,255,255,.1);
     border-radius: 10px;
     color: #fff;
 }
 .switch {
-  width: 74px;
-  height: 28px;
+  width: 70px;
+  height: 40px;
   position: relative;
   border: 1px solid transparent;
-  // background-color: #fdfdfd;
-  box-shadow: #dfdfdf 0 0 0 0 inset;
-  border-radius: 20px;
+  border-radius: 10px;
   background-clip: content-box;
   display: inline-block;
   -webkit-appearance: none;
   user-select: none;
   outline: none;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.2);
+
 }
 .switch:before {
     content: '';
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     position: absolute;
-    top: -8px;
+    top: 0;
     left: 0;
-    border-radius: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-    background: #000;
+    border-radius: 50%;
+    // box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    background: #fff;
 }
-.switch:checked {
-    border-color: #E1B96E;
-    box-shadow: #E1B96E 0 0 0 16px inset;
-    background-color: #E1B96E;
+.cold{
+    &.switch:checked {
+        background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+    }
 }
+.heat{
+    &.switch:checked {
+        background-image: linear-gradient(270deg, #F9BB6B 0%, #EF6D5E 100%);
+    }
+}
+.auto,.dehumidify,.wind{
+    &.switch:checked {
+        background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
+    }
+}
+// .switch:checked {
+//     border-color: #E1B96E;
+//     box-shadow: #E1B96E 0 0 0 16px inset;
+//     background-color: #E1B96E;
+// }
 .switch:checked:before {
     left: 30px;
-    background: #000000;
+    background: #fff;
 }
 .switch.switch-anim {
     transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
