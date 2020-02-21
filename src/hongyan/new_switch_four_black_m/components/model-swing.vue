@@ -9,8 +9,10 @@
       <div class="txt">
         <input
           type="text"
+          :value="txtVal"
           id="text"
           class="text"
+          maxlength="10"
           @input="txt">
       </div>
       <div
@@ -169,9 +171,19 @@ export default {
   },
   methods: {
     txt(e) {
+      let reg = new RegExp("^[0-9\u4e00-\u9fa5]+$");
+      if(reg.test(e.target.value)) {
+        this.txtVal = e.target.value
+      } else {
+        HdSmart.UI.toast('只支持中文和数字')
+        if(e.target.value.length >= 1) {
+          e.target.value = this.txtVal
+        }
+      }
       this.txtVal = e.target.value
     },
     setWind(){
+      if(!this.txtVal) return HdSmart.UI.toast('请输入开关名称')
       this.$emit('setWind', this.txtVal)
     }
   }

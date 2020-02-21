@@ -19,6 +19,27 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
+// H5路由处理
+import Router from 'vue-router'
+Vue.use(Router)
+import Index from './Index.vue'
+import OfflineHelpPage from '@lib/components/OfflineHelpPage.vue'
+
+
+const router = new Router({
+  routes: [{
+    path: '/',
+    name: 'index',
+    component: Index,
+  },
+  {
+    path: '/OfflineHelpPage',
+    name: 'OfflineHelpPage',
+    component: OfflineHelpPage,
+  }
+  ]
+})
+
 Vue.component('NewTopBar', NewTopBar)
 Vue.component('StatusTip', StatusTip)
 FastClick.attach(document.body)
@@ -26,5 +47,6 @@ FastClick.attach(document.body)
 new Vue({
     el: '#app',
     store,
+    router,
     render: h => h(App)
 })

@@ -1,7 +1,11 @@
 <template>
-  <div 
-    ref="page" 
-    :class="['OfflineHelpPage',{'moveIn':moveIn},{'moveOut':moveOut}]">
+  <!-- 离线帮助移入移出动画，先注释保留 -->
+  <!-- <div
+    ref="page"
+    :class="['OfflineHelpPage',{'moveIn':moveIn},{'moveOut':moveOut}]"> -->
+  <div
+    ref="page"
+    :class="['OfflineHelpPage']">
     <div
       ref="topbar"
       class="topbar">
@@ -35,25 +39,25 @@
           </div>
           <div
             class="title">离线帮助</div>
-    
-    
+
+
 
         </div>
-      
+
       </div>
-      <h3 
-        v-if="networkStatus=='-2'" 
-        class="viewHelpH3">路由器离线</h3>
-      <h3 
-        v-else 
-        class="viewHelpH3">设备离线</h3>
-      <div 
+      <h3
         v-if="networkStatus=='-2'"
-        class="viewHelpstatus" 
-        v-html="viewHelpstatus.router_content"/>
-      <div 
+        class="viewHelpH3">路由器离线</h3>
+      <h3
         v-else
-        class="viewHelpstatus" 
+        class="viewHelpH3">设备离线</h3>
+      <div
+        v-if="networkStatus=='-2'"
+        class="viewHelpstatus"
+        v-html="viewHelpstatus.router_content"/>
+      <div
+        v-else
+        class="viewHelpstatus"
         v-html="viewHelpstatus.content"/>
     </div>
   </div>
@@ -76,7 +80,7 @@ export default {
     computed:{
     ...mapGetters(['isClose', 'isOffline','networkStatus','viewHelpstatus']),
     ...mapState(['device', 'deviceAttrs']),
-   
+
   },
    created() {
     HdSmart.ready(() => {
@@ -96,8 +100,10 @@ export default {
     ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice','getViewHelpInfo','setViewHelpInfo']),
 
     goBack(){
-      this.moveIn = false
-      this.moveOut = true
+      // 离线帮助移入移出的动画控制，先注释保留
+      // this.moveIn = false
+      // this.moveOut = true
+      this.$router.go(-1)
     }
   }
 }
@@ -108,7 +114,7 @@ export default {
     0% {
       left: 100%;
     }
-  
+
     100% {
       left:0;
     }
@@ -122,7 +128,7 @@ export default {
     0% {
       left: 0%;
     }
-  
+
     100% {
       left:100%;
     }
@@ -247,7 +253,7 @@ export default {
 
     }
   }
-  
+
 
 
   .left a,
@@ -264,7 +270,7 @@ export default {
       opacity: 0.8;
     }
   }
-  
+
 }
 
 .viewHelpstatus{
