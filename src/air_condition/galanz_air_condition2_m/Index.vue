@@ -12,36 +12,11 @@
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <div class="main center">
         <div class="wrap-circle">
-          <!-- <div class="showtemp">
-            <div
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switchStatus=='off'"
-              class="tm">-- <sup>°C</sup></div>
-            <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
-              class="tm">{{ thermography }}<sup>°C</sup>
-            </div>
-            <div
-              v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
-              class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
-            </div>
-            <div
-              v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
-              :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
-            <div
-              v-show="isOffline||deviceAttrs.switchStatus == 'off'"
-              :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
-          </div> -->
           <!-- 当不可调节温度时，显示这个盒子，可以挡着canvas，使它不能滑动 -->
           <div 
             v-if="deviceAttrs.mode=='wind'||deviceAttrs.mode=='auto'||deviceAttrs.mode=='dehumidify'" 
             class="cover"
             @touchmove.prevent/>
-          <!-- <canvas 
-            ref="canvas"
-            class="canvas" 
-            width="560" 
-            height="560"
-          /> -->
           <!-- 温度圆环 -->
           <div class="container" @touchmove="touchmove($event)">
             <div class="item-container" v-for="(item, index) in count" :key="index" :style="{transform: `rotate(${7*index-105}deg)`}">
@@ -700,10 +675,12 @@ export default {
         left: 50%;
         top: 100px;
         transform-origin: 50% 100%;
+        z-index: 99;
     }
     .items{
       width: 56px;
       height: 530px;
+      z-index: 99;
     }
     .item {
         width: 22px;
