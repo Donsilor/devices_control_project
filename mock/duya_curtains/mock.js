@@ -10,7 +10,8 @@ export function generateSnapShot() {
         method: 'dr_report_dev_status',
         code: 0,
         result: {
-            "device_name": "客厅的窗帘",
+            "room_name": '客厅',
+            "device_name": "窗帘",
             "device_uuid": 1222222,
             "attribute": res
         }

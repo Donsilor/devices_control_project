@@ -22,12 +22,12 @@
             <div class="item-container" v-for="(item, index) in count" :key="index" :style="{transform: `rotate(${7*index-105}deg)`}">
                 <div ref="items" class="items" :id="(index)+'item'"  @touchstart="touchstart($event)" @touchmove="touchmove($event)" @touchend="touchend($event)">
                 <!-- 小梯形 -->
-                  <div ref="item" class="item" :style="{background: 2*(deviceAttrs.temperature/10)-33>=index?calculateBg(index):'rgba(255,255,255,0.1)'}"></div>
+                  <div ref="item" class="item" :style="{background: 2*(deviceAttrs.temperature/10)-32>=index?calculateBg(index):'rgba(255,255,255,0.1)'}"></div>
                 </div>
             </div>
             
             <div
-              v-if="isOffline|| deviceAttrs.switchStatus == 'off'||deviceAttrs.mode=='wind'"
+              v-if="isOffline|| deviceAttrs.switchStatus == 'off'"
               class="tm">-- <sup>°C</sup></div>
              <div
               v-else
@@ -80,60 +80,33 @@
         class="panel-btn center">
         <!-- 模式和风速 -->
         <div class="modespeed">
+          <!-- 模式 -->
             <div class="btn-wrap center" @click="showMode">
               <div 
                 :class="[modeClass,'btn  center']" 
                 />
               <div class="btn-name">{{modeTxt}}</div>
            </div>
+           <!-- 风速 -->
            <div class="btn-wrap center"  @click="showSpeed">
               <div 
                 :class="[deviceAttrs.mode,speedClass,'btn center']" />
               <div class="btn-name">{{speedTxt}}</div>
            </div>
-        </div>
-        <!-- 强劲 -->
-        <div class="bottom" v-show="deviceAttrs.mode=='cold'||deviceAttrs.mode=='heat'">
-          <div class="Charging-protection">
-            <div>强力</div>
-            <div
-              style="z-index: 100;">
-              <input
-                :class="[deviceAttrs.mode,'switch switch-anim']"
-                :checked="deviceAttrs.strong_wind=='on'"
-                :disabled="disabledLock"
-                type="checkbox"
-                @click="checkSwitch('strong_wind')">
-            </div>
-          </div>
+           <!-- 定时 -->
+           <div class="btn-wrap center" @click="showTime">
+              <div 
+                :class="[deviceAttrs.mode,'clock btn center']" 
+                />
+              <div class="btn-name">定时</div>
+           </div>
         </div>
         <!-- 上下风 -->
-        <div class="bottom">
+        <div class="bottom"  @click="showSwing">
           <div class="Charging-protection">
             <div>上下风</div>
             <div
-              style="z-index: 100;">
-              <input
-                :class="[deviceAttrs.mode,'switch switch-anim']"
-                :checked="deviceAttrs.wind_up_down=='on'"
-                :disabled="disabledLock"
-                type="checkbox"
-                @click="checkSwitch('wind_up_down')">
-            </div>
-          </div>
-        </div>
-        <!-- 左右风 -->
-        <div class="bottom">
-          <div class="Charging-protection">
-            <div>左右风</div>
-            <div
-              style="z-index: 100;">
-              <input
-                :class="[deviceAttrs.mode,'switch switch-anim']"
-                :checked="deviceAttrs.wind_left_right=='on'"
-                :disabled="disabledLock"
-                type="checkbox"
-                @click="checkSwitch('wind_left_right')">
+              style="z-index: 100;" class="showWind">
             </div>
           </div>
         </div>
@@ -175,8 +148,7 @@
       <!--选择摆风-->
       <model-swing
         ref="swing"
-        :wind_up_down="deviceAttrs.wind_up_down"
-        :wind_left_right="deviceAttrs.wind_left_right"
+        :swing_wind="deviceAttrs"
         @setWind="setWind" />
       <!--选择模式-->
       <model-mode
@@ -186,8 +158,15 @@
       <!--选择风速-->
       <model-speed
         ref="speed"
+        :mode="deviceAttrs.mode"
         :speed="deviceAttrs.speed"
         @setSpeed="setSpeed" />
+      <!-- 时间选择 -->
+      <SelectTime
+        ref="time"
+        :deviceAttrs="deviceAttrs"
+        @selectedTime="setReserve"
+        @canceltime="canceltime" />
     </div>
   </div>
 </template>
@@ -199,7 +178,7 @@ import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
 import SelectTime from './components/time.vue'
-const [MIN_TEMP, MAX_TEMP] = [160, 319]
+const [MIN_TEMP, MAX_TEMP] = [160, 310]
 export default {
   components: {
     // circleProgress,
@@ -282,16 +261,16 @@ export default {
     speedClass() {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.speed) {
-        case 'breeze':
+        case 'low':
           return 'btn-breeze'
           break
-        case 'low':
+        case 'normal':
           return 'btn-low'
           break
-        case 'normal':
+        case 'high':
           return 'btn-normal'
           break
-        case 'high':
+        case 'strong':
           return 'btn-high'
           break
         case 'auto':
@@ -340,6 +319,9 @@ export default {
           break
         case 'auto':
           return '自动风'
+          break
+        case 'strong':
+          return '强力'
           break
         default:
           return ''
@@ -391,7 +373,7 @@ export default {
             }else {
                 color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
             }
-            console.log(index,'index00000000');
+            // console.log(index,'index00000000');
             return color
           }else if(this.deviceAttrs.mode=='heat'){
             // 制热模式时的温度颜色
@@ -413,13 +395,12 @@ export default {
             }else {
                 color = `linear-gradient(to right, #E1B96E 0%, #F1CB85 ${200-10*index}%, #F1CB85  100%)`
             }
-            console.log(index,'index00000000');
+            // console.log(index,'index00000000');
             return color
           }
       },
     touchstart(e){
       console.log(e,'eeeeeeeee');
-      
     },
     touchmove(e){
       if(e.preventDefault){
@@ -440,11 +421,19 @@ export default {
       }
       var itemTemp
       if(isNaN(this.idNum)==true){
+        console.log('return掉了');
+        
         return
       }else{
         // 滑动的梯子的index和温度之间的关系式
         itemTemp = (0.5*this.idNum+16)*10
-        console.log(itemTemp,'itemTemp');
+        var num = itemTemp + ""
+        console.log(num);
+        
+        console.log(num.lastIndexOf("5"),num,'itemTemp');
+        if (num.lastIndexOf("5")==2) {
+          itemTemp +=5
+        }
         
         this.controlDevice('temperature',itemTemp)
       }
@@ -467,6 +456,26 @@ export default {
       }
       this.controlDevice('switch',switchstatus)
     },
+        // 设置关机时间
+    setReserve(time) {
+      console.log(time,'888888')
+      
+        this.controlDevice('time',{
+            timer_switch:'on',
+            time_value:time*2
+        })
+    },
+    // 取消定时
+    canceltime(){
+       this.controlDevice('close_time','true')
+      //  .then((res) => {
+      //    if(res.code == 0) {
+      //      this.loaclAttr.close_time = true
+      //    } else {
+      //      HdSmart.UI.toast('操作失败')
+      //    }
+      //  })
+    },
     // 设置模式
     setMode(val) {
       if (this.isClose ||this.isOffline) return
@@ -478,11 +487,7 @@ export default {
     setTemperature(val,step) {
       if(val=='add'){
         console.log(this.deviceAttrs.temperature,'now');
-        
         if (this.deviceAttrs.temperature/10>31) return
-           if(this.deviceAttrs.temperature === 31) {
-              this.deviceAttrs.temperature = 31.9
-           }
       }
       if(val=='reduce'){
         // if (this.deviceAttrs.temperature/10<=16) return
@@ -688,16 +693,17 @@ export default {
         background-color: rgba(255,255,255,0.1);
         -webkit-clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
     }
-    // .control {
-    //     position: absolute;
-    //     left: 50%;
-    //     transform: translateX(-50%);
-    //     bottom: 100px;
-    //     button {
-    //         width: 50px;
-    //         height: 50px;
-    //         font-size: 25px;
-    //         margin-top: 20px;
-    //     }
-    // }
+    .showWind{
+      width: 40px;
+      height: 40px;
+      position: relative;
+      &::before{
+        display: block;
+        content: "";
+        background-image: url('../../../lib/base/oakes_air_condition/assets/arrow_in2.png');
+        background-size: 100% 100%;
+        height: 100%;
+        width: 100%;
+      }
+    }
 </style>

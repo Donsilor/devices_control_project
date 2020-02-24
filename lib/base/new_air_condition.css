@@ -219,6 +219,12 @@
 .page .modespeed .btn-wrap:first-of-type {
   border-right: 0.5px solid #000;
 }
+.page .modespeed .btn-wrap:nth-of-type(2) {
+  border-right: 0.5px solid #000;
+}
+.page .modespeed .btn-wrap:last-of-type {
+  border-right: none;
+}
 .page .modespeed .btn-wrap .btn {
   box-sizing: border-box;
   margin: 0 auto;
@@ -272,6 +278,12 @@
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan05_b.png');
   background-size: 100% 100%;
 }
+.page .modespeed .btn-wrap .cold.clock {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_btn_time_b.png');
+  background-size: 100% 100%;
+}
 .page .modespeed .btn-wrap .heat.btn-breeze {
   position: relative;
   z-index: 100;
@@ -300,6 +312,12 @@
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan05_r.png');
+  background-size: 100% 100%;
+}
+.page .modespeed .btn-wrap .heat.clock {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_btn_time_r.png');
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .auto.btn-breeze,
@@ -340,6 +358,14 @@
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan05_y.png');
+  background-size: 100% 100%;
+}
+.page .modespeed .btn-wrap .auto.clock,
+.page .modespeed .btn-wrap .dehumidify.clock,
+.page .modespeed .btn-wrap .wind.clock {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_btn_time_y.png');
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .btn-cold::before {
@@ -466,6 +492,7 @@
   padding: 0 40px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-family: PingFangSC-Regular;
   font-size: 32px;
   height: 120px;

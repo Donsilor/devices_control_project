@@ -1,33 +1,49 @@
 <template>
-  <div
-    v-if="show"
-    class="model"
-    @click.self="show = false"
-    @touchmove.prevent>
-    <div class="main">
+  <div>
+    <div
+      v-if="show"
+      class="model"
+      @click.self="show = false"
+      @touchmove.prevent/>
+    <div
+      v-if="show"
+      class="main show">
       <div class="overtime">
-        <span class="title">设置关机时间</span>
-        <span 
-          class="canceltime" 
+        <span class="title" v-if="deviceAttrs.timer_switch == 'on'&& deviceAttrs.time_value >0">{{ deviceAttrs.time_value | closeTime }}</span>
+        <span v-else class="title">设置关机时间</span>
+        <span
+          class="canceltime"
+          v-if="deviceAttrs.timer_switch == 'on'&& deviceAttrs.time_value >0"
           @click="canceltime">取消定时</span>
       </div>
-      <time-pick 
+      <time-pick
         class="pickTime"
         @selectedchange="selectedchange" />
 
       <div class="wrap-btns">
-        <button 
-          class="submit" 
+        <button
+          class="submit"
           type="button"
           @click="submit" >确定</button>
-        <div 
-          class="cancel" 
+        <div
+          class="cancel"
           @click=" show = false">取消</div>
       </div>
     </div>
   </div>
 </template>
 <style lang="less" scoped>
+@keyframes show {
+    0% {
+      bottom:-380px;
+    }
+    100% {
+       bottom:0;
+    }
+}
+.show{
+  animation: show .1s linear 0s;
+}
   .model{
     position: fixed;
     top: 0;
@@ -50,28 +66,28 @@
       height: 100%;
       background: rgba(0,0,0,0.8);
     }
-    .main{
-      position: absolute;
+  }
+      .main{
+      position: fixed;
+      left: 0;
       bottom: 0;
       z-index: 999999999999;
       width: 100%;
       height: 896px;
       color: #fff;
-      background: #fff;
-      // background: #373E41;
-      // box-shadow: 0 10px 78px -8px rgba(0,0,0,0.64);
-      // border-radius: 24px;
+      background: #1C1C1E;
+      border-radius: 24px 24px 0 0;
       .overtime{
         width: 100%;
         display: flex;
         justify-content: space-between;
-        padding: 0 40px;
+        padding: 0 24px;
         align-items: center;
         height: 122px;
         border-bottom: 1px solid rgba(0,0,0,0.1);
         .title{
-          font-size: 40px;
-          color: #000;
+          font-size: 32px;
+          color: #fff;
         }
         .canceltime{
           font-size: 32px;
@@ -82,27 +98,28 @@
       .wrap-btns{
         text-align: center;
         margin-top: 100px;
+        padding: 0 24px;
       }
       .submit{
         margin-top: 50px;
         outline: none;
-        background: #000;
+        background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
+        border-radius: 10px;  
         font-size: 32px;
-        color: #fff;
+        color:#000;
         text-align: center;
-        width: 650px;
+        width: 100%;
         height: 100px;
         margin: auto;
+        border: 0;
       }
       .cancel{
         margin-top: 32px;
-        color: #FFC700;
         font-size: 32px;
         line-height: 44px;
-        color: #000;
+        color: #E1B96E;
       }
     }
-  }
 </style>
 <script>
 import timePick from './timePick.vue'
@@ -111,10 +128,7 @@ export default {
   components: {
     'time-pick': timePick
   },
-  props: {
-    // orderTime:{type: Number}
-  },
-  
+  props: ['deviceAttrs'],
   data() {
     return {
       show: false,
@@ -127,10 +141,10 @@ export default {
     selectedchange(val) {
       this.time = val
     },
-    submit() { 
-      let val = [this.time || '0:0', 'time']
+    submit() {
+      let val = [this.time || '1']
       this.$emit('selectedTime', val) //自定义事件，暴露值
-      this.time = '0:0'
+      this.time = '1'
       this.show = false
     },
     canceltime(){

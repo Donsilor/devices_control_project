@@ -39,7 +39,7 @@ var res = {
         deviceSubCategory: 0,
         connectivity: 'online',
         timer_switch:'on',
-        time_value:8.4,
+        time_value:0,
         close_time:'false',
         error:'设备故障啦啦啦啦'
     },

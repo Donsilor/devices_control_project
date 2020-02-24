@@ -328,7 +328,7 @@ export default {
             &::before {
               position: relative;
               z-index: 100;
-              background-image: url('~@lib/@{imgPath}/jingyin.png');
+              background-image: url('~@lib/@{imgPath}/tv_btn_jingyin_pressed.png');
               background-size: 100% 100%;
             }
           }
@@ -388,7 +388,7 @@ export default {
       width: 534px;
       height: 534px;
       border-radius: 50%;
-      background: rgba(225,225,225,0.1);
+      background: rgba(255, 255, 255, 0.06);
       margin-top: 48px;
       position: relative;
       overflow: hidden;
@@ -405,7 +405,9 @@ export default {
         &.active{
           //  background: rgba(255, 255, 255, 0.7);
            .btnok{
-             color: #E1B96E;
+             background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
+             -webkit-background-clip: text;
+             color: transparent;
            }
         }
         .btnok{
@@ -427,21 +429,21 @@ export default {
         position: absolute;
         transform-origin: 100% 100%;
         &.active{
-          background: -webkit-radial-gradient(right bottom, transparent 35%, rgba(0,0,0,0.2) 35%);
+          background: -webkit-radial-gradient(right bottom, transparent 35%, rgba(255,255,255,0.03) 35%);
           z-index: 99;
           .dot{
-            background-image: linear-gradient(0deg, #E1B96E 0%, #F1CB85 100%);
+            background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
           }
         }
         .dot{
-          width: 24px;
-          height: 24px;
+          width: 16px;
+          height: 16px;
           position: absolute;
           left: 50%;
           top: 50%;
           border-radius: 50%;
           transform: translate(-50%, -50%);
-          background: rgba(255,255,255,0.50);
+          background: rgba(255,255,255,0.1);
         }
         &:first-of-type{
           transform: rotate(45deg);
@@ -469,7 +471,7 @@ export default {
 .bootom{
   margin-top:64px;
   .bottomBtn{
-    background: rgba(0,0,0,0.05);
+    background: rgba(255,255,255,0.1);
     border-radius: 60px;
     width: 590px;
     height: 120px;
@@ -495,14 +497,20 @@ export default {
       height: 100%;
       border-right: 1px solid rgba(0,0,0,0.08);
       &::before {
-        background-image: url('~@lib/@{imgPath}/reduce.png');
+        background-image: url('~@lib/@{imgPath}/tv_btn_voicelow.png');
+      }
+      &.animateStart::before,&.animateEnd::before {
+        background-image: url('~@lib/@{imgPath}/tv_btn_voicelow_pressed.png');
       }
     }
     .btn-increase{
       width: 295px;
       height: 100%;
       &::before{
-        background-image: url('~@lib/@{imgPath}/add.png');
+        background-image: url('~@lib/@{imgPath}/tv_btn_voicehigh.png');
+      }
+      &.animateStart::before, &.animateEnd::before{
+        background-image: url('~@lib/@{imgPath}/tv_btn_voicehigh_pressed.png');
       }
     }
   }

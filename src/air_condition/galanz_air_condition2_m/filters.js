@@ -10,8 +10,8 @@ export function filterTm(tm) {
   return tmp
 }
 export function closeTime(val) {
-  let h = Math.floor(val/60)
-  let m = val%60
+  let h = Math.floor(val/2)
+  let m = val%2*30
   // console.log(h+'小时'+m+'分后关机');
   return h+'小时'+m+'分钟后关机' 
 }

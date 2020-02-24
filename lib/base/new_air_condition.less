@@ -254,6 +254,12 @@
         &:first-of-type{
             border-right: 0.5px solid #000;
         }
+        &:nth-of-type(2){
+          border-right: 0.5px solid #000;
+        }
+        &:last-of-type{
+          border-right: none;
+        }
         .btn {
           box-sizing: border-box;
           margin: 0 auto;
@@ -314,6 +320,12 @@
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan05_b.png');
                 background-size: 100% 100%;
               }
+              &.clock{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_btn_time_b.png');
+                background-size: 100% 100%;
+              }
         }
         .heat{
             &.btn-breeze{
@@ -346,6 +358,12 @@
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan05_r.png');
                 background-size: 100% 100%;
               }
+              &.clock{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_btn_time_r.png');
+                background-size: 100% 100%;
+              }
         }
         .auto,.dehumidify,.wind{
             &.btn-breeze{
@@ -376,6 +394,12 @@
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan05_y.png');
+                background-size: 100% 100%;
+              }
+              &.clock{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_btn_time_y.png');
                 background-size: 100% 100%;
               }
         }
@@ -528,6 +552,7 @@
   padding: 0 40px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-family: PingFangSC-Regular;
   font-size: 32px;
   height: 120px;

@@ -71,11 +71,19 @@ npm run build 产品名 参数
 - 格力空调
 - 海尔洗碗机
 - 箭牌马桶
-- 杜亚窗帘
+- 杜亚窗帘  src\duya\new_curtains_m
+- 泰创窗帘  src\taichuang\curtains_m
 - 控客插座
 - 热水器
 ...待补充
 
+
+
+4.2.0版本需要上的设备
+
+格兰仕空调 src\air_condition\galanz_air_condition2_m （后面有个2）
+长虹空调 src\air_condition\changhong_air_condition_m （第一个）
+康佳电视 src\konka\tv_control_m
 
 
 
