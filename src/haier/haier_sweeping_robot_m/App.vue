@@ -463,6 +463,7 @@ export default {
     onSuccess(data) {
       this.status = "success"
       this.model = data.attribute
+      this.$store.commit('setDeviceAttrs', data.attribute)
       if (data.attribute.status == 'charge_completed' || data.attribute.status == 'charging') {
         this.initCharge()
       }
