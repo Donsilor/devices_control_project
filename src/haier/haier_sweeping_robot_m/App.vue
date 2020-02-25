@@ -2,25 +2,26 @@
   <div>
     <div :class="[{ 'offline': isOffline }, {'close': isClose}, {'filter': showModeBtns }, 'page']">
       <!-- 顶部导航菜单 -->
-      <topbar 
+      <topbar
         :title="device_name"
         :bak-color="bakColor" />
+      <StatusTip></StatusTip>
       <!-- 工作状态 -->
-      <div 
+      <div
         v-show="model.switch == 'on' && model.mode !== 'recharge'"
         class="status">{{ model.status | statusType }}</div>
-      <div 
+      <div
         v-show="model.mode == 'recharge' && model.status == 'working'"
         class="status">回充中</div>
       <!-- 回充电池 -->
       <div class="wrap-robot">
-        <img 
+        <img
           class="robot"
           src="../../../lib/base/sweeping_robot/assets/saodirobot@2x.png">
-        <div 
+        <div
           v-show="model.status == 'charging' || model.status == 'charge_completed'"
           class="robot-charging">
-          <div 
+          <div
             v-for="i in 5"
             :key="i"
             :class="[{'item-charging': chargRank < i }, 'none-charging']" />
@@ -28,7 +29,7 @@
         </div>
       </div>
       <!-- 清扫垃圾动画 -->
-      <div 
+      <div
         v-show="model.status == 'working'&&model.mode !== 'recharge'"
         class="huicheng run">
         <i class="img1 sport1" />
@@ -47,7 +48,7 @@
         <i class="img1 sport14" />
       </div>
       <!-- 电量 -->
-      <div 
+      <div
         v-show="model.status == 'charging'"
         class="wrap-filter">
         <div class="filter">
@@ -56,7 +57,7 @@
         </div>
       </div>
 
-      <div 
+      <div
         v-show="model.status != 'charging'"
         class="wrap-filter detail">
         <div class="filter">
@@ -69,18 +70,18 @@
       <div class="panel-btn center">
         <!-- 开关机 -->
         <div :class="[{'up-index': !isOffline }, {'disable': model.status == 'charging' || model.status == 'charge_completed' || model.status == 'working' || model.status == 'recharge'}, 'btn-wrap']">
-          <div 
+          <div
             :class="[{'active': !isClose && !isOffline }, 'btn btn-swich center']"
             @click="setSwitch" />
           <div class="btn-name">开关</div>
         </div>
         <!-- 回充中和充电 -->
         <div :class="['btn-wrap btns']">
-          <!-- <div 
+          <!-- <div
             v-if="model.status !== 'charging' && model.mode == 'recharge'"
             :class="[model.status !== 'charging'&&model.mode == 'recharge' ? 'btn-stop' : 'btn-charging','btn center']"
             @click="setCharging"/> -->
-          <div 
+          <div
             :class="[model.status == 'charging' ? 'charging' : '', model.mode == 'recharge' && model.status == 'working' ? 'btn-stop' : 'btn-charging','btn  center circleProgress_wrapper']"
             @click="handeBtnClick">
             <div class="wrapper right">
@@ -95,30 +96,30 @@
         </div>
         <!-- 清扫和暂停 -->
         <div :class="[{'disable': model.status == 'charging' || model.mode == 'recharge'&& model.status == 'working'}, 'btn-wrap']">
-          <div 
-            v-show="model.mode !== 'recharge' && model.status == 'working'" 
+          <div
+            v-show="model.mode !== 'recharge' && model.status == 'working'"
             :class="['btn-stop', 'btn center']"
             @click="setCommand" />
-          <div 
-            v-show="model.mode == 'recharge' && model.status == 'working'|| model.status !== 'working'" 
+          <div
+            v-show="model.mode == 'recharge' && model.status == 'working'|| model.status !== 'working'"
             :class="['btn-clean', 'btn center']"
             @click="setCommand" />
-          <!-- <div 
-            v-show="model.status !== 'working'" 
+          <!-- <div
+            v-show="model.status !== 'working'"
             :class="['btn-clean', 'btn center']"
             @click="setCommand" /> -->
-          <div 
+          <div
             class="btn-name">{{ model.mode !== 'recharge'&& model.mode !== 'idle' && model.status == 'working' ? '暂停': '清扫' }}</div>
         </div>
         <!-- 切换模式 -->
         <div :class="[{'disable' : model.mode == 'recharge'&& model.status == 'working'},'btn-wrap']">
-          <div 
+          <div
             :class="[btnClass, 'btn center btn-plan']"
             @click="handeModeClick" />
-          <div 
+          <div
             v-show="model.mode !== 'idle'"
             class="btn-name">{{ btnTxt }}</div>
-          <div 
+          <div
             v-show="model.mode == 'idle'"
             class="btn-name">规划</div>
         </div>
@@ -128,38 +129,38 @@
     </div>
 
     <!-- 模式选择弹框 -->
-    <div 
+    <div
       v-show="showModeBtns"
       class="btns-panel center"
       @touchmove.prevent
       @click="hide">
       <div class="items btns">
-        <div 
+        <div
           :class="[{ 'item1': animation }, {' btn-current': model.mode === 'plan_clean' }, {'btn-loading': btnLoading.plan_clean },'btn plan_clean center']"
           @click.stop="setMode('plan_clean')">
           <div class="name">规划</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item2': animation }, {' btn-current': model.mode === 'single_plan' }, {' btn-loading': btnLoading.single_plan },'btn single_plan center']"
           @click.stop="setMode('single_plan')">
           <div class="name">单间</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item3': animation }, {' btn-current': model.mode === 'edge_clean' }, {' btn-loading': btnLoading.edge_clean },'btn edge_clean center']"
           @click.stop="setMode('edge_clean')">
           <div class="name">沿墙</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item4': animation }, {' btn-current': model.mode === 'design_clean' },{' btn-loading': btnLoading.design_clean },{'disable': model.status == 'charging'||model.status == 'charge_completed'},'btn design_clean center']"
           @click.stop="setMode('design_clean')">
           <div class="name">定点</div>
         </div>
-        <div 
+        <div
           :class="[{ 'item5': animation }, {'disable': model.status !== 'charging' || model.status == 'charging'},'btn mop center']"
           @click.stop="setMode('mop')">
           <div class="name">拖地</div>
         </div>
-        <div 
+        <div
           :class="[ { 'item6': animation }, btnClass,'btn btn-plan center active']"
           @click.stop />
       </div>
@@ -462,6 +463,7 @@ export default {
     onSuccess(data) {
       this.status = "success"
       this.model = data.attribute
+      this.$store.commit('setDeviceAttrs', data.attribute)
       if (data.attribute.status == 'charge_completed' || data.attribute.status == 'charging') {
         this.initCharge()
       }

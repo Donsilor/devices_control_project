@@ -538,7 +538,7 @@ getStyle(obj,attr){
         height: 44px;
       }
       &.active {
-        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        background-color:#E1B96E ;
         &.btn-open::before{
           background-image: url('~@lib/@{imgPath}/off.png');
           background-size: 100% 100%;
