@@ -1,27 +1,27 @@
 <!-- 搜索页面 -->
 <template>
-  <div 
-    ref="search" 
+  <div
+    ref="search"
     class="page-search">
-    <!-- 遥控器 --> 
+    <!-- 遥控器 -->
     <!-- <remoteControl/> -->
     <div
       :style="{height:status_bar_height+navigation_bar_height+'PX'}"
-      class="statusbar" 
+      class="statusbar"
       @touchmove.prevent>
-      <div 
+      <div
         ref="statusbar_fexid"
-        :style="{height:status_bar_height+'PX'}" 
+        :style="{height:status_bar_height+'PX'}"
         class="statusbar_fexid"/>
-      <div 
-        ref="search_fexid" 
+      <div
+        ref="search_fexid"
         :search="false"
-        :style="{top:status_bar_height+'PX',height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}" 
+        :style="{top:status_bar_height+'PX',height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
         class="search_fexid">
         <form
           class="search_bar"
-          @submit.prevent="submit" 
-        > 
+          @submit.prevent="submit"
+        >
           <div class="search_input">
             <div class="search">
               <p />
@@ -33,13 +33,13 @@
               @blur="blurfn"
 
               @input="fuzzySearch">
-            <div 
-              v-show="word != ''" 
-              class="del1" 
+            <div
+              v-show="word != ''"
+              class="del1"
               @click.prevent="clearWord">
               <p/>
             </div>
-         
+
           </div>
           <!-- <input
           type="submit"
@@ -48,12 +48,12 @@
           <input
             type="button"
             value="取消"
-            class="search_submit" 
+            class="search_submit"
             @click="goBack">
         </form>
       </div>
     </div>
-   
+
 
     <!-- <status-tip /> -->
     <!-- 搜索建议 -->
@@ -71,7 +71,7 @@
     </div>
     <!-- 搜搜历史 -->
     <div
-      v-show="curpage===1&&loadState !== 'NO_DATA' " 
+      v-show="curpage===1&&loadState !== 'NO_DATA' "
       ref="search_history"
       class="search_history"
       @touchmove.prevent>
@@ -81,7 +81,7 @@
           href="#"
           class="del"
           @click.prevent="clearHistory" />
-        
+
       </div>
       <ul class="bd clearfix">
         <li
@@ -126,7 +126,7 @@
         </div>
       </div> -->
 
-      
+
       <ul class="vlist list-m60">
         <li
           v-for="(item,index) in resultData"
@@ -139,20 +139,20 @@
               v-lazy="getThumbPic(item.pictureUrl)"
               :data-src1="item.pictureUrl"
               alt="">
-            <div 
-              v-if="item.ispay && item.ispay !== '1'" 
+            <div
+              v-if="item.ispay && item.ispay !== '1'"
               class="label">付费
             </div>
           </div>
-          <div 
-            class="vitem-right" 
+          <div
+            class="vitem-right"
             style="position:relative">
             <div class="title">{{ item.title }}</div>
             <div class="name">{{ item.cate }}·{{ item.year }}{{ item.region&&'·'+item.region }}</div>
             <div class="name">{{ item.director&&'导演：'+item.director }}</div>
             <div class="name starring">{{ item.director&&'主演：'+item.starring }}</div>
-            <div 
-              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0||tvStatus.tvOnlineStatus==2||tvStatus.tvOnlineStatus==-2}" 
+            <div
+              :class="{'gray':tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==0||tvStatus.tvOnlineStatus==2||tvStatus.tvOnlineStatus==-2}"
               class="playstate playstate_unplay" >
               <a
                 href="#"
@@ -164,18 +164,18 @@
               class="update">
               {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
             </span>
-            
+
           </div>
-          
+
         </li>
       </ul>
-     
+
       <!-- 加载更多 -->
       <div class="loadmore">
         <p v-show=" loadState === 'LOADING'">正在加载中...</p>
         <p v-show=" loadState === 'LOADED'">上拉加载更多</p>
-        <p 
-          v-show="loadState === 'NO_MORE'" 
+        <p
+          v-show="loadState === 'NO_MORE'"
           class="finish">已加载全部</p>
       </div>
     </div>
@@ -210,7 +210,7 @@
     background: url("../../../../lib/base/tv/assets/new/tv_icn_search_wujieguo.png");
      background-size: 100% 100%;
      position: absolute;
-     left: 50%;  
+     left: 50%;
      transform: translateX(-50%)
   }
   p{
@@ -261,7 +261,7 @@
     background-size: 100% 100%;
     position: fixed;
     top:0;
-    left: 0; 
+    left: 0;
     right: 0;
     bottom: 0;
     z-index: -1;
@@ -293,12 +293,12 @@
     // color: #dbdbdb;;
     // font-size: 35px;
     // line-height: 35px;
-    margin-right:3px; 
+    margin-right:3px;
     P{
       width: 32px;
         height: 32px;
          background: url('~@lib/base/img/tv_icn_search.png');
-        background-size:100% 100%; 
+        background-size:100% 100%;
     }
   }
   input {
@@ -334,7 +334,7 @@
     top: 0;
     width: 40px;
     height: 60px;
-    margin-right:20px; 
+    margin-right:20px;
     // color: #d8d8d8;
     // font-size: 35px;
     // line-height: 35px;
@@ -342,7 +342,7 @@
         width: 40px;
         height: 40px;
         background: url('~@lib/base/img/tv_btn_text_delete.png');
-        background-size:100% 100%; 
+        background-size:100% 100%;
     }
     // &:active {
     //   color: #999;
@@ -352,7 +352,7 @@
 
 .search_submit {
   width: auto;
-  margin-left:32px; 
+  margin-left:32px;
   font-weight: lighter;
   font-size: 32px;
   appearance: none;
@@ -394,7 +394,7 @@
       // line-height: 18px;
       // font-size: 36px;
       // color: #76787a;
-     
+
       /*background-repeat: no-repeat;
             background-size: 100% 100%;
             background-image: url(../../../lib/base/tv/assets/btn_clear_normal.png);*/
@@ -427,6 +427,13 @@
       font-weight: lighter;
       // font-size: 24px;
       color: #5F5F60;
+      display:-webkit-box;
+      word-break:break-all;
+      -webkit-box-orient:vertical;
+      -webkit-line-clamp:1;
+      overflow:hidden;
+      text-overflow:ellipsis;
+
     }
   }
 }
@@ -564,13 +571,13 @@
     display: none;
   }
 
- 
+
   /*.label {
         position: absolute;
         right: 0;
         top: 27px;
     }*/
-  
+
   .score {
     position: absolute;
     right: 15px;
@@ -602,7 +609,7 @@
     font-size: 32px;
     color: #000000;
     margin-bottom: 20px;
-    
+
   }
   .name {
     text-align: left;
@@ -614,7 +621,7 @@
     font-size:24px;
     font-weight: lighter;
     clear: rgba(0,0,0,.5);
-    margin-bottom:4px; 
+    margin-bottom:4px;
 
   }
   .starring{
@@ -636,7 +643,7 @@
 
     background-size: 100% 100%;
     // margin-top: -4px;
-      
+
   }
   .btn {
     /*background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);*/
@@ -862,7 +869,7 @@ export default {
   mounted() {
     //  document.body.addEventListener('touchmove', function(e) {
     //    console.log(e)
-       
+
     //           e.preventDefault()
     //     }, { passive: false })
     setTimeout(()=>{
@@ -888,10 +895,10 @@ export default {
     this.$refs.search_history.style.top = searchTop
 
 
-   
+
     // window.onresize = function() { // 如果当前窗口小于一开始记录的窗口高度，那就让当前窗口等于一开始窗口的高度
     //     alert('1')
-    
+
     //     // if (document.body.scrollHeight < h) {
     //     //     document.body.style.height = h;
     //     // }
@@ -917,13 +924,13 @@ export default {
     // aa(){
     //     let b = this.$refs['search_result'].querySelector('ul')
     //     console.log(b)
-    //      this.scrollTop = b.scrollTop 
+    //      this.scrollTop = b.scrollTop
 
     //     console.log(b.offsetHeight,'offsetHeight')
     //      console.log(b.clientHeight,'clientHeight')
     //       console.log( this.scrollTop,'scrollTop')
-        
-        
+
+
     // },
     blurfn(){
       setTimeout(()=>{
@@ -932,7 +939,7 @@ export default {
     },
     scroll2(event){
       // event.preventDefault()
-         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop      
+         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         // console.log(this.scrollTop,'this.scrollTop')
         //  HdSmart.UI.toggleNav()
         // HdSmart.UI.hideKeyboard()scroll2
@@ -1017,7 +1024,7 @@ export default {
       // if (page === 1) this.isFirstLoad = true
       this.loadState = 'LOADING'
       console.log('筛选')
-      
+
       service.searchData(
         {
           keyword: this.word.trim(),
@@ -1063,11 +1070,11 @@ export default {
     },
     loadMore: _.debounce(function() {
       console.log('滚动')
-      
+
       if (this.curpage !== 3) {
         return
       }
-      var scrollTop = this.$refs['search_result'].scrollTop 
+      var scrollTop = this.$refs['search_result'].scrollTop
       if (
         scrollTop>0&&(scrollTop + this.$refs['search_result'].clientHeight >= this.$refs['search_result'].scrollHeight - 15)) {
         if (this.$store.state.detailVisible) {
@@ -1082,7 +1089,7 @@ export default {
           return
         }
         if (this.loadState === 'NO_MORE') {
-          
+
           HdSmart.UI.toast('已加载全部')
           return
         }
@@ -1127,7 +1134,7 @@ export default {
     //   // this.setHistory()
     //   console.log(this.channelId,'this.channelId')
     //   console.log(this.vid,'this.vid')
-      
+
     //   service.getDetaileData(
     //     {
     //       channelId: this.channelId,
@@ -1157,11 +1164,11 @@ export default {
      //点播：播放状态如playstate
     play(item,e) {
       if ( e && e.stopPropagation ) {
-    //因此它支持W3C的stopPropagation()方法 
-       e.stopPropagation() 
+    //因此它支持W3C的stopPropagation()方法
+       e.stopPropagation()
       }else {
-          //否则，我们需要使用IE的方式来取消事件冒泡 
-          window.event.cancelBubble = true 
+          //否则，我们需要使用IE的方式来取消事件冒泡
+          window.event.cancelBubble = true
       }
       service.getDetaileData(
         {
@@ -1191,11 +1198,11 @@ export default {
           console.log(clickItem,'clickItem')
           if (clickItem) {
             service.playVideo(clickItem.link, clickItem.name)
-          }      
+          }
         }
       )
-   
-      
+
+
     },
   }
 }

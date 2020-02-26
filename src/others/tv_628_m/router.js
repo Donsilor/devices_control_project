@@ -52,7 +52,7 @@ const router = new Router({
     name: 'search',
     component: Search,
     meta: {
-      keepAlive: true
+      keepAlive: false
     }
   },
   {
