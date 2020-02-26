@@ -1127,7 +1127,6 @@ export default {
       service.getSearchHistory((err, data) => {
         if (err) return
         this.historyData = data.data
-        this.historyData[0] = '夹克衫九分裤手机壳四十几分附件是就是就分手了就分手了解放了束带结发孙俊峰圣诞快乐解放了束带结发'
       })
     },
     // getData() {
