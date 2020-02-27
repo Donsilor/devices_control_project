@@ -3,7 +3,7 @@ import {apiList} from '../app/constant'
 import * as mockData from './mock'
 
 if (location.search.indexOf('env=desktop') != -1) {
-
+    window.room_name = '客厅'
     window.device_name = '智能筒灯'
     window.networkStatus = -1
     window.device_uuid = 545454
