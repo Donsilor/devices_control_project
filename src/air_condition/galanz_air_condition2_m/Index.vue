@@ -18,18 +18,36 @@
             class="cover"
             @touchmove.prevent/>
           <!-- 温度圆环 -->
-          <div class="container" @touchmove="touchmove($event)">
-            <div class="item-container" v-for="(item, index) in count" :key="index" :style="{transform: `rotate(${7*index-105}deg)`}">
-                <div ref="items" class="items" :id="(index)+'item'"  @touchstart="touchstart($event)" @touchmove="touchmove($event)" @touchend="touchend($event)">
+          <div 
+            class="container" 
+            >
+            <div 
+              v-for="(item, index) in count" 
+              :key="index" 
+              :style="{transform: `rotate(${7*index-105}deg)`}" 
+              class="item-container" 
+              >
+              <div 
+                ref="items" 
+                :id="(index)+'items'" 
+                class="items" 
+                @touchstart="touchstart($event)" 
+                @touchmove="touchmove($event)" 
+                @touchend="touchend($event)">
                 <!-- 小梯形 -->
-                  <div ref="item" class="item" :style="{background: 2*(deviceAttrs.temperature/10)-32>=index?calculateBg(index):'rgba(255,255,255,0.1)'}"></div>
-                </div>
+                <div 
+                  ref="item" 
+                  :id="(index)+'item'"
+                  :style="{background: 2*(deviceAttrs.temperature/10)-32>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
+                  class="item"
+                 />
+              </div>
             </div>
             
             <div
               v-if="isOffline|| deviceAttrs.switchStatus == 'off'"
               class="tm">-- <sup>°C</sup></div>
-             <div
+            <div
               v-else
               class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
             </div>
@@ -39,7 +57,7 @@
             <div
               v-show="isOffline||deviceAttrs.switchStatus == 'off'"
               :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
-        </div>
+          </div>
 
 
 
@@ -81,33 +99,41 @@
         <!-- 模式和风速 -->
         <div class="modespeed">
           <!-- 模式 -->
-            <div class="btn-wrap center" @click="showMode">
-              <div 
-                :class="[modeClass,'btn  center']" 
-                />
-              <div class="btn-name">{{modeTxt}}</div>
-           </div>
-           <!-- 风速 -->
-           <div class="btn-wrap center"  @click="showSpeed">
-              <div 
-                :class="[deviceAttrs.mode,speedClass,'btn center']" />
-              <div class="btn-name">{{speedTxt}}</div>
-           </div>
-           <!-- 定时 -->
-           <div class="btn-wrap center" @click="showTime">
-              <div 
-                :class="[deviceAttrs.mode,'clock btn center']" 
-                />
-              <div class="btn-name">定时</div>
-           </div>
+          <div 
+            class="btn-wrap center" 
+            @click="showMode">
+            <div 
+              :class="[modeClass,'btn  center']" 
+            />
+            <div class="btn-name">{{ modeTxt }}</div>
+          </div>
+          <!-- 风速 -->
+          <div 
+            class="btn-wrap center" 
+            @click="showSpeed">
+            <div 
+              :class="[deviceAttrs.mode,speedClass,'btn center']" />
+            <div class="btn-name">{{ speedTxt }}</div>
+          </div>
+          <!-- 定时 -->
+          <div 
+            class="btn-wrap center" 
+            @click="showTime">
+            <div 
+              :class="[deviceAttrs.mode,'clock btn center']" 
+            />
+            <div class="btn-name">定时</div>
+          </div>
         </div>
         <!-- 上下风 -->
-        <div class="bottom"  @click="showSwing">
+        <div 
+          class="bottom" 
+          @click="showSwing">
           <div class="Charging-protection">
             <div>上下风</div>
             <div
-              style="z-index: 100;" class="showWind">
-            </div>
+              style="z-index: 100;" 
+              class="showWind"/>
           </div>
         </div>
         <!-- 电加热开关 -->
@@ -130,19 +156,19 @@
       </div>
       <!-- 屏幕显示 -->
       <div class="screen">
-          <div class="Charging-protection">
-            <div>空调屏幕画面</div>
-            <div
-              style="z-index: 100;">
-              <input
-                :class="[deviceAttrs.mode,'switch switch-anim']"
-                :checked="deviceAttrs.digital_display=='on'"
-                :disabled="disabledLock"
-                type="checkbox"
-                @click="checkSwitch('digital_display')">
-            </div>
+        <div class="Charging-protection">
+          <div>空调屏幕画面</div>
+          <div
+            style="z-index: 100;">
+            <input
+              :class="[deviceAttrs.mode,'switch switch-anim']"
+              :checked="deviceAttrs.digital_display=='on'"
+              :disabled="disabledLock"
+              type="checkbox"
+              @click="checkSwitch('digital_display')">
           </div>
         </div>
+      </div>
       <!-- 规格选择 -->
 
       <!--选择摆风-->
@@ -164,7 +190,7 @@
       <!-- 时间选择 -->
       <SelectTime
         ref="time"
-        :deviceAttrs="deviceAttrs"
+        :device-attrs="deviceAttrs"
         @selectedTime="setReserve"
         @canceltime="canceltime" />
     </div>
@@ -329,10 +355,6 @@ export default {
     }
   },
   watch: {
-    "device.stateChange"(){
-      if(!this.moveEnd){}
-      // this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
-    },
        'deviceAttrs.temperature'() {
       if(this.deviceAttrs.temperature) {
         this.setTemperatureDis = false
@@ -384,7 +406,7 @@ export default {
             }else {
                 color = `linear-gradient(to right, #F9BB6B 0%, #ff7524 ${200-10*index}%, #EF6D5E  100%)`
             }
-            console.log(index,'index00000000');
+            console.log(index,'index00000000')
             return color
           }else{
              // 制热模式时的温度颜色
@@ -400,7 +422,7 @@ export default {
           }
       },
     touchstart(e){
-      console.log(e,'eeeeeeeee');
+      console.log(e,'eeeeeeeee')
     },
     touchmove(e){
       if(e.preventDefault){
@@ -411,26 +433,30 @@ export default {
       if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
         return 
      }
-     var touch = e.targetTouches[0];
+     var touch = e.targetTouches[0]
+    //  var ssdd = document.elementsFromPoint(touch.pageX, touch.pageY)
      var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
      this.idNum = parseInt(ele)
     },
     touchend(e){
+      console.log(e,'touchend');
+      
       if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
           return HdSmart.UI.toast('该模式不支持温度调节')
       }
+      
       var itemTemp
       if(isNaN(this.idNum)==true){
-        console.log('return掉了');
-        
+        console.log('return掉了')
+        console.log(this.idNum,'this.idNum')
         return
       }else{
         // 滑动的梯子的index和温度之间的关系式
         itemTemp = (0.5*this.idNum+16)*10
         var num = itemTemp + ""
-        console.log(num);
+        console.log(num)
         
-        console.log(num.lastIndexOf("5"),num,'itemTemp');
+        console.log(num.lastIndexOf("5"),num,'itemTemp')
         if (num.lastIndexOf("5")==2) {
           itemTemp +=5
         }
@@ -486,7 +512,7 @@ export default {
     },
     setTemperature(val,step) {
       if(val=='add'){
-        console.log(this.deviceAttrs.temperature,'now');
+        console.log(this.deviceAttrs.temperature,'now')
         if (this.deviceAttrs.temperature/10>31) return
       }
       if(val=='reduce'){
@@ -668,30 +694,34 @@ export default {
 <style lang="less" scoped>
     .container {
         width: 100%;
-        height: 800px;
+        // height: 800px;
+        height: 370px;
         margin: 20px auto;
         border: 1px solid #000;
         position: relative;
     }
     .item-container {
-        width: 20px;
-        height: 530px;
+        width: 10px;
+        height: 270px;
         position: absolute;
         left: 50%;
-        top: 100px;
+        top: 0;
         transform-origin: 50% 100%;
+        -webkit-clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
+        clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
         z-index: 99;
     }
     .items{
-      width: 56px;
-      height: 530px;
+      width: 32px;
+      height: 270px;
       z-index: 99;
     }
     .item {
-        width: 22px;
-        height: 120px;
+        width: 12px;
+        height: 64px;
         background-color: rgba(255,255,255,0.1);
         -webkit-clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
+        clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
     }
     .showWind{
       width: 40px;
