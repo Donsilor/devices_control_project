@@ -20,13 +20,13 @@
           <!-- 温度圆环 -->
           <div 
             class="container" 
-            >
+          >
             <div 
               v-for="(item, index) in count" 
               :key="index" 
               :style="{transform: `rotate(${7*index-105}deg)`}" 
               class="item-container" 
-              >
+            >
               <div 
                 ref="items" 
                 :id="(index)+'items'" 
@@ -38,9 +38,9 @@
                 <div 
                   ref="item" 
                   :id="(index)+'item'"
-                  :style="{background: 2*(deviceAttrs.temperature/10)-32>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
+                  :style="{background: 2*(itemTemp/10)-32>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
                   class="item"
-                 />
+                />
               </div>
             </div>
             
@@ -49,7 +49,7 @@
               class="tm">-- <sup>°C</sup></div>
             <div
               v-else
-              class="tm">{{ deviceAttrs.temperature | filterTm }}<sup>°C</sup>
+              class="tm">{{ itemTemp | filterTm }}<sup>°C</sup>
             </div>
             <div
               v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
@@ -130,7 +130,12 @@
           class="bottom" 
           @click="showSwing">
           <div class="Charging-protection">
-            <div>上下风</div>
+            <div v-if="deviceAttrs.wind_up=='on'">向上</div>
+            <div v-else-if="deviceAttrs.wind_mid_up=='on'">中上</div>
+            <div v-else-if="deviceAttrs.wind_middle=='on'">正中</div>
+            <div v-else-if="deviceAttrs.wind_mid_down=='on'">向下</div>
+            <div v-else-if="deviceAttrs.wind_auto=='on'">自动</div>
+            <div v-else>摆风</div>
             <div
               style="z-index: 100;" 
               class="showWind"/>
@@ -248,7 +253,7 @@ export default {
       setTemperatureDis:false,
       device_uuid: window.device_uuid||'',
       disabledLock: false,
-
+      itemTemp:'',//最终请求的温度
     }
   },
 
@@ -358,6 +363,8 @@ export default {
        'deviceAttrs.temperature'() {
       if(this.deviceAttrs.temperature) {
         this.setTemperatureDis = false
+        // 当返回的温度发生变化时，将温度值赋给itemTemp
+        this.itemTemp = this.deviceAttrs.temperature
       }
     },
   },
@@ -365,17 +372,10 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-          // this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
-          // this.reset()
+          this.itemTemp = this.deviceAttrs.temperature
         })
-      HdSmart.UI.setStatusBarColor(2)
+      HdSmart.UI.setStatusBarColor(1)
     })
-  },
-  mounted(){
-        var barPie__ring__item = document.querySelectorAll('.barPie__ring__item')
-    for(let i=0;i<barPie__ring__item.length;i++){
-      barPie__ring__item[i].style.transform = `rotate(${7.5*i}deg)`
-    }
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
@@ -394,8 +394,7 @@ export default {
                 color = '#20c6ae'
             }else {
                 color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
-            }
-            // console.log(index,'index00000000');
+            }   
             return color
           }else if(this.deviceAttrs.mode=='heat'){
             // 制热模式时的温度颜色
@@ -406,7 +405,6 @@ export default {
             }else {
                 color = `linear-gradient(to right, #F9BB6B 0%, #ff7524 ${200-10*index}%, #EF6D5E  100%)`
             }
-            console.log(index,'index00000000')
             return color
           }else{
              // 制热模式时的温度颜色
@@ -417,7 +415,6 @@ export default {
             }else {
                 color = `linear-gradient(to right, #E1B96E 0%, #F1CB85 ${200-10*index}%, #F1CB85  100%)`
             }
-            // console.log(index,'index00000000');
             return color
           }
       },
@@ -425,6 +422,8 @@ export default {
       console.log(e,'eeeeeeeee')
     },
     touchmove(e){
+      // console.log(index,'moveindex')
+      
       if(e.preventDefault){
           e.preventDefault()
       }else{
@@ -437,32 +436,33 @@ export default {
     //  var ssdd = document.elementsFromPoint(touch.pageX, touch.pageY)
      var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
      this.idNum = parseInt(ele)
-    },
-    touchend(e){
-      console.log(e,'touchend');
-      
-      if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
-          return HdSmart.UI.toast('该模式不支持温度调节')
-      }
-      
-      var itemTemp
-      if(isNaN(this.idNum)==true){
+     console.log(this.idNum,99999999)
+     this.calculateBg(this.idNum)
+    // 如果是NaN,则return
+    if(isNaN(this.idNum)==true){
         console.log('return掉了')
-        console.log(this.idNum,'this.idNum')
         return
       }else{
         // 滑动的梯子的index和温度之间的关系式
-        itemTemp = (0.5*this.idNum+16)*10
-        var num = itemTemp + ""
-        console.log(num)
-        
-        console.log(num.lastIndexOf("5"),num,'itemTemp')
+        this.itemTemp = (0.5*this.idNum+16)*10
+        var num = this.itemTemp + ""
+
+        console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
+        // 如果最后一位数字是5，则往前进1
         if (num.lastIndexOf("5")==2) {
-          itemTemp +=5
+          this.itemTemp +=5
+          console.log('进来了啦啦啦啦啦啦啦啦啦')
+          console.log(this.itemTemp,'最终传给后台的温度')
+          
         }
-        
-        this.controlDevice('temperature',itemTemp)
       }
+    },
+    touchend(){
+      if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
+          return HdSmart.UI.toast('该模式不支持温度调节')
+      }
+      this.controlDevice('temperature',this.itemTemp)
+
     },
     OfflineHelpPage(){
         this.$router.push({
@@ -470,7 +470,7 @@ export default {
        })
     },
     // 开关机
-    setSwitch(val){
+    setSwitch(){
       if (this.isOffline) return
       HdSmart.UI.vibrate()
       this.moveEnd = false
@@ -550,10 +550,6 @@ export default {
           temp = MAX_TEMP
         }
       }
-      if (temp == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
-        this.setTemperatureDis = false
-        return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
-      }
       this.controlDevice('temperature', temp)
         .then((res) => {
           if (res.code == 0) {
@@ -570,12 +566,6 @@ export default {
       if (this.isOffline||this.isClose) return
         this.moveEnd = false
       var val = this.deviceAttrs[attr] === 'on' ? 'off' : 'on'
-      // if (this.deviceAttrs.wind_up_down=='on') {
-      //   this.controlDevice('wind_left_right','off')
-      // }
-      // if (this.deviceAttrs.wind_left_right=='on') {
-      //    this.controlDevice('wind_up_down','off')
-      // }
       this.controlDevice(attr, val)
         .then(() =>{
           this.hide()
@@ -694,7 +684,7 @@ export default {
 <style lang="less" scoped>
     .container {
         width: 100%;
-        // height: 800px;
+        // height: 470px;
         height: 370px;
         margin: 20px auto;
         border: 1px solid #000;
@@ -703,17 +693,17 @@ export default {
     .item-container {
         width: 10px;
         height: 270px;
+        // height: 330px;
         position: absolute;
         left: 50%;
         top: 0;
         transform-origin: 50% 100%;
-        -webkit-clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
-        clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
         z-index: 99;
     }
     .items{
       width: 32px;
       height: 270px;
+      // height: 330px;
       z-index: 99;
     }
     .item {

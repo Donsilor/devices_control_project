@@ -85,18 +85,21 @@
 }
 .page .main .wrap-circle .tm {
   font-family: Rajdhani-Regular;
-  position: relative;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  bottom: 16px;
+  left: 50%;
   width: 130px;
+  height: 128px;
   font-size: 130px;
   color: #fff;
   text-align: center;
-  margin: 160px auto 0 auto;
 }
 .page .main .wrap-circle .tm sup {
   position: absolute;
   top: 10px;
   right: -45px;
-  font-size: 12px;
+  font-size: 24px;
   color: #fff;
   transform: scale(1);
   font-family: PingFangSC-Light;

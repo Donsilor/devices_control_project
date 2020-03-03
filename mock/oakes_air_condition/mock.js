@@ -26,7 +26,7 @@ var res = {
         speed: 'normal',
         wind_up_down: 'off',
         wind_left_right: 'off',
-        wind_up: 'off',
+        wind_up: 'on',
         wind_down: 'off',
         wind_middle: 'off',
         wind_mid_up: 'off',

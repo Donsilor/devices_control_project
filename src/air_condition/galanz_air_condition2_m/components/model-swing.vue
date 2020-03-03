@@ -42,14 +42,14 @@
           @click="setWind('wind_down')">
           <div class="btn-dehumidify center" />
           <div 
-           :class="[swing_wind.wind_down === 'on' ? 'active' : '', 'name']" >向下</div>
+            :class="[swing_wind.wind_down === 'on' ? 'active' : '', 'name']" >向下</div>
         </div>
         <div 
           class="btn"
           @click="setWind('wind_auto')">
           <div class="btn-dehumidify center" />
           <div 
-           :class="[swing_wind.wind_auto === 'on' ? 'active' : '', 'name']" >自动</div>
+            :class="[swing_wind.wind_auto === 'on' ? 'active' : '', 'name']" >自动</div>
         </div>
       </div>
       <div 
