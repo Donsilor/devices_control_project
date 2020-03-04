@@ -196,6 +196,7 @@
       <!--选择风速-->
       <model-speed
         ref="speed"
+        :device-attrs="deviceAttrs"
         :speed="deviceAttrs.speed"
         @setSpeed="setSpeed" />
     </div>
@@ -281,6 +282,9 @@ export default {
         case 'auto':
           return 'btn-auto1'
           break
+        case 'strong':
+          return 'btn-strong'
+          break
         default:
           return ''
       }
@@ -324,6 +328,9 @@ export default {
           break
         case 'auto':
           return '自动风'
+          break
+        case 'strong':
+          return '强力'
           break
         default:
           return ''
@@ -615,7 +622,7 @@ export default {
       if (this.deviceAttrs.mode == 'dehumidify') {
         return HdSmart.UI.toast('除湿模式不可调节风速')
       }
-      if (this.deviceAttrs.strong_wind=='on') {
+      if (this.deviceAttrs.speed == 'strong') {
         return HdSmart.UI.toast('强力模式下不可调节风速')
       }
       this.$refs.speed.show = true

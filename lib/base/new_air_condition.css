@@ -276,6 +276,12 @@
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan05_b.png');
   background-size: 100% 100%;
 }
+.page .modespeed .btn-wrap .cold.btn-strong {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan06_b.png');
+  background-size: 100% 100%;
+}
 .page .modespeed .btn-wrap .cold.clock {
   position: relative;
   z-index: 100;
@@ -310,6 +316,12 @@
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan05_r.png');
+  background-size: 100% 100%;
+}
+.page .modespeed .btn-wrap .heat.btn-strong {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan06_r.png');
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .heat.clock {

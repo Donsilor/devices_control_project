@@ -44,6 +44,14 @@
           <div 
             :class="[speed === 'auto' ? 'active' : '','name']" >智能</div>
         </div>
+        <div 
+          v-show="deviceAttrs.mode == 'cold'||deviceAttrs.mode == 'heat'" 
+          class="btn"
+          @click="setSpeed('strong')">
+          <div class="btn-strong center" />
+          <div 
+            :class="[speed === 'strong' ? 'active' : '','name']" >强力</div>
+        </div>
       </div>
       <div 
         class="hide" 
@@ -137,7 +145,7 @@
 </style>
 <script>
 export default {
-  props: ['speed'],
+  props: ['speed','deviceAttrs'],
   data() {
     return {
       show: false
