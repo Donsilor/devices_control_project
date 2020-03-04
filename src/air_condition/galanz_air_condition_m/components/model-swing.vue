@@ -10,28 +10,46 @@
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
         <div 
+          class="btn"
+          @click="setWind('wind_up')">
+          <div class="btn-cold center" />
+          <div 
+            :class="[swing_wind.wind_up=== 'on' ? 'active' : '', 'name']" >向上</div>
+        </div>
+        <div 
+          class="btn"
+          @click="setWind('wind_mid_up')">
+          <div class="btn-heat center" />
+          <div 
+            :class="[swing_wind.wind_mid_up === 'on' ? 'active' : '', 'name']" >中上</div>
+        </div>
+        <div 
           class="btn" 
-          @click="setWind('wind_up')">向上
+          @click="setWind('wind_middle')">
+          <div class="btn-auto center" />
+          <div 
+            :class="[swing_wind.wind_middle === 'on' ? 'active' : '', 'name']" >正中</div>
         </div>
         <div 
           class="btn"
-          @click="setWind('wind_mid_up')">中上
+          @click="setWind('wind_mid_down')">
+          <div class="btn-wind center" />
+          <div 
+            :class="[swing_wind.wind_mid_down === 'on' ? 'active' : '', 'name']" >中下</div>
         </div>
         <div 
           class="btn"
-          @click="setWind('wind_middle')">正中
+          @click="setWind('wind_down')">
+          <div class="btn-dehumidify center" />
+          <div 
+            :class="[swing_wind.wind_down === 'on' ? 'active' : '', 'name']" >向下</div>
         </div>
         <div 
           class="btn"
-          @click="setWind('wind_mid_down')">中下
-        </div>
-        <div 
-          class="btn"
-          @click="setWind('wind_down')">向下
-        </div>
-        <div 
-          class="btn"
-          @click="setWind('wind_auto')">自动
+          @click="setWind('wind_auto')">
+          <div class="btn-dehumidify center" />
+          <div 
+            :class="[swing_wind.wind_auto === 'on' ? 'active' : '', 'name']" >自动</div>
         </div>
       </div>
       <div 
@@ -80,37 +98,46 @@
       bottom: 0;
       z-index: 999999999999;
       width: 100%;
-      height: 862px;
-      color: #20282B;
-      background: #f0f2f4;
+      // height: 381px;
+      height: auto;
+      font-family: PingFangSC-Light;
+      color: #fff;
+      // background: #eee;
       // border: 1px solid #DDDDDD;
       .btns{
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        background: #fff;
+        // background: rgba(37,37,37,0.80);
+        background: #1C1C1E;
+        border-radius: 10px;
+        margin: 0 16px 16px 16px;
         .btn{
           width:100%;
           height:120px;
           line-height: 120px;
           text-align: center;
           font-size:32px;
-          border-bottom:1px solid #F0F2F4;
-          // &:first-of-type{
-          //   border-bottom:1px solid #F0F2F4;
-          // }
+          border-bottom: 0.5px solid rgba(255,255,255,.1);
+          .name{
+            &.active{
+               color:#E1B96E;
+            }
+          }
         }
       }
       .hide{
-        width: 100%;
         height: 120px;
         margin-top:21px;
         font-size: 32px;
         letter-spacing: 0;
         text-align: center;
         line-height: 120px;
-        background: #fff;
+        color: #E1B96E;
+        background: #1C1C1E;
+        border-radius: 10px;
+        margin: 0 16px 16px 16px;
       }
     }
   }

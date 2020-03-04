@@ -12,38 +12,30 @@
         <div 
           class="btn"
           @click="setSpeed('low')">
-          <div class="btn-breeze center" />
+          <div class="btn-low center" />
           <div 
-           :class="[speed === 'low' ? 'active' : '','name']" >低风</div>
+            :class="[speed === 'low' ? 'active' : '','name']" >低风</div>
         </div>
         <div 
-          class="btn"
+          class="btn" 
           @click="setSpeed('normal')">
-          <div class="btn-low center" />
+          <div class="btn-normal center" />
           <div 
             :class="[speed === 'normal' ? 'active' : '','name']" >中风</div>
         </div>
         <div 
           class="btn" 
           @click="setSpeed('high')">
-          <div class="btn-normal center" />
-          <div 
-             :class="[speed === 'high' ? 'active' : '','name']" >高风</div>
-        </div>
-        <div 
-          class="btn" 
-          v-if="mode=='cold'||mode=='heat'"
-          @click="setSpeed('strong')">
           <div class="btn-high center" />
           <div 
-             :class="[speed === 'strong' ? 'active' : '','name']" >强力</div>
+            :class="[speed === 'high' ? 'active' : '','name']" >高风</div>
         </div>
         <div 
           class="btn" 
           @click="setSpeed('auto')">
           <div class="btn-auto1 center" />
           <div 
-             :class="[speed === 'auto' ? 'active' : '','name']" >自动</div>
+            :class="[speed === 'auto' ? 'active' : '','name']" >智能</div>
         </div>
       </div>
       <div 
@@ -138,7 +130,7 @@
 </style>
 <script>
 export default {
-  props: ['mode','speed'],
+  props: ['speed'],
   data() {
     return {
       show: false

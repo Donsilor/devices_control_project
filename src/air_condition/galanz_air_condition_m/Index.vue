@@ -382,7 +382,7 @@ export default {
     // 温度圆环
       calculateBg(index){
           let color = ''
-          if(this.deviceAttrs.switchStatus=='off'){
+          if(this.deviceAttrs.switchStatus=='off'||this.isOffline){
             color = 'rgba(255,255,255,0.1)'
             return
           }

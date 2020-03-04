@@ -14,7 +14,7 @@
           @click="setSpeed('breeze')">
           <div class="btn-breeze center" />
           <div 
-           :class="[speed === 'breeze' ? 'active' : '','name']" >微风</div>
+            :class="[speed === 'breeze' ? 'active' : '','name']" >微风</div>
         </div>
         <div 
           class="btn"
@@ -28,21 +28,21 @@
           @click="setSpeed('normal')">
           <div class="btn-normal center" />
           <div 
-             :class="[speed === 'normal' ? 'active' : '','name']" >中风</div>
+            :class="[speed === 'normal' ? 'active' : '','name']" >中风</div>
         </div>
-         <div 
+        <div 
           class="btn" 
           @click="setSpeed('high')">
           <div class="btn-high center" />
           <div 
-             :class="[speed === 'high' ? 'active' : '','name']" >高风</div>
+            :class="[speed === 'high' ? 'active' : '','name']" >高风</div>
         </div>
         <div 
           class="btn" 
           @click="setSpeed('auto')">
           <div class="btn-auto1 center" />
           <div 
-             :class="[speed === 'auto' ? 'active' : '','name']" >智能</div>
+            :class="[speed === 'auto' ? 'active' : '','name']" >智能</div>
         </div>
       </div>
       <div 

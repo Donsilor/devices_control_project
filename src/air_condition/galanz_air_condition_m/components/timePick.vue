@@ -160,8 +160,8 @@
   .border{
     // position: fixed;
     position: absolute;
-    border: 1px solid rgba(.0, .0, .0, .05);
-    width: 88%;
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+    width: 90%;
     height: 113px;
     border-right: none;
     border-left: none;
@@ -187,11 +187,11 @@
     position: relative;
     .time{
       position: fixed;
-      bottom: 312px;
+      bottom: 310px;
       left: 50%;
       margin-left: -24px;
       font-size: 24px;
-      color: #000;
+      color: #fff;
     }
     .time1{
       position: fixed;
@@ -227,7 +227,7 @@
       border-radius: 0px;
       height: 70px;
       line-height: 70px;
-      color: #808080;
+      color: #fff;
       font-family: PingFangSC-Regular;
       font-size: 32px;
       transform: translateZ(-20px) rotateX(40deg);
