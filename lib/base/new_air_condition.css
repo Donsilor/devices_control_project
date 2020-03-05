@@ -370,6 +370,14 @@
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan05_y.png');
   background-size: 100% 100%;
 }
+.page .modespeed .btn-wrap .auto.btn-strong,
+.page .modespeed .btn-wrap .dehumidify.btn-strong,
+.page .modespeed .btn-wrap .wind.btn-strong {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan06_r.png');
+  background-size: 100% 100%;
+}
 .page .modespeed .btn-wrap .auto.clock,
 .page .modespeed .btn-wrap .dehumidify.clock,
 .page .modespeed .btn-wrap .wind.clock {

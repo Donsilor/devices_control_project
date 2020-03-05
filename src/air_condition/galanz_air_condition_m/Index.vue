@@ -133,7 +133,8 @@
             <div v-if="deviceAttrs.wind_up=='on'">向上</div>
             <div v-else-if="deviceAttrs.wind_mid_up=='on'">中上</div>
             <div v-else-if="deviceAttrs.wind_middle=='on'">正中</div>
-            <div v-else-if="deviceAttrs.wind_mid_down=='on'">向下</div>
+            <div v-else-if="deviceAttrs.wind_mid_down=='on'">中下</div>
+            <div v-else-if="deviceAttrs.wind_down=='on'">向下</div>
             <div v-else-if="deviceAttrs.wind_auto=='on'">自动</div>
             <div v-else>摆风</div>
             <div

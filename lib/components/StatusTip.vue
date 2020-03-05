@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="deviceAttrs.connectivity==='offline'||networkStatus==-1||networkStatus==-2"
+    v-if="deviceAttrs.connectivity==='offline'||networkStatus==-1||networkStatus==-2||deviceAttrs.error"
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
     <!-- <div class="status_bar_block"/> -->
@@ -69,10 +69,21 @@
           </div>
           <i class="arrow"/>
         </div>
+        <div
+          v-if="deviceAttrs.connectivity!=='offline'&&networkStatus!=-1&&networkStatus!=-2&&deviceAttrs.error"      
+          class="offline_bar">
+          <div class="offline_bar_div">
+            <p class="offline_bar_p">
+              <i class="error"/>
+            </p>
+            <span class="link">{{ deviceAttrs.error }}</span>
+          </div>
+        </div>
       </div>
     </div>
     <div 
-      :style="{ 'top': status_bar_height+navigation_bar_height*3 + 'px'}" 
+      v-if="!deviceAttrs.error" 
+      :style="{ 'top': status_bar_height+navigation_bar_height*3 + 'px'}"
       class="mask"/>
     <OfflineHelpPage 
       v-show="OfflineHelpPageView" 
