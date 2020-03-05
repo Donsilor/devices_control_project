@@ -112,7 +112,8 @@ export default {
     justify-content: flex-end;
   
       a.return {
-      background: url('~@lib/base/tv/assets/new/tv_arrow_back.png');
+      background: url('~@lib/base/tv/assets/new/tv_arrow_in.png');
+      transform: rotate(180deg);
       background-size: 100% 100%;
       width: 48px;
       height: 48px;
@@ -140,11 +141,10 @@ export default {
   align-items: center;
 }
 .search{
-  background: url('~@lib/base/img/tv_btn_search.png');
+  background: url('~@lib/base/tv/assets/new/kt_icn_search.png');
   background-size: 100% 100%;
-  width: 48px;
-  height: 48px;
-  
+  width: 40px;
+  height: 40px;
 }
 
 </style>
