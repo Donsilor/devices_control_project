@@ -30,8 +30,7 @@
           @touchend="touchend('bc')">
           <div
             ref="bc"
-            :class="[{ 'active': deviceAttrs.switch_status == 'on' && !isOffline && networkStatus != -1 }, 'btn', 'btn-bc center']"/>
-          <!--          <div class="btn-name">暖光</div>-->
+            :class="[switchStatus, 'btn', 'btn-bc center']"/>
         </div>
       </div>
     </div>
@@ -117,6 +116,9 @@
       isClose(){
         return this.deviceAttrs.switch_status=="on"?false:true
       },
+      switchStatus () {
+        return this.deviceAttrs.switch_status == 'on' && !this.isOffline && this.networkStatus != -1 ? 'active' : 'noactive'
+      }
     },
     watch: {
       "deviceAttrs"() {
@@ -125,7 +127,7 @@
         console.log('=============', this.loaclAttr.mode)
       },
       'device.stateChange'() {
-        this.draw(`${((this.deviceAttrs.level/2.55)+50)/200}`)
+        // this.draw(`${((this.deviceAttrs.level/2.55)+50)/200}`)
       },
       'brightness'() {
         if(this.deviceAttrs.switch_status == 'on' && !this.isOffline&& this.networkStatus != -1) {
@@ -242,7 +244,13 @@
         }
       },
       touchend(val){
-        this.draw(0, false)
+        if (this.deviceAttrs.switch_status === 'on') {
+          this.controlDevice("switch_status", 'off')
+          this.draw(0, false)
+        } else {
+          this.controlDevice("switch_status", 'on')
+          this.draw(0.75)
+        }
       },
       offset(r,d) {//根据弧度与距离计算偏移坐标
         return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
@@ -716,7 +724,7 @@
       margin-top: 24px;
       width: 100%;
       border-radius: 40px 40px 0 0;
-      background: rgba(0,0,0,0.1);
+      /*background: rgba(0,0,0,0.1);*/
       // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
       display: flex;
       // justify-content: space-evenly;
@@ -742,17 +750,16 @@
 
       display: flex;
       flex-direction: column;
-      background: rgba(0, 0, 0, 0.1);
+      /*background: rgba(0, 0, 0, 0.1);*/
       &::before {
         position: relative;
         z-index: 100;
       }
       &.active {
-        // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        // border-color: #ffbf00;
-        // background: #000;
-        // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
         background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
+      }
+      &.noactive{
+        background: rgba(37,37,37,0.8);
       }
     }
     .btn-name {
@@ -761,22 +768,6 @@
       margin-top: 16px;
       font-size: 24px;
     }
-    // .btn-start {
-    //   &::before {
-    //     content: "";
-    //     display: block;
-    //     width: 44px;
-    //     height: 44px;
-    //     background-image: url("~@lib/@{imgPath1}/btn_ac_on_cd@2x.png");
-    //     background-size: 100% 100%;
-    //   }
-    //   &.active {
-    //     &::before {
-    //       background-image: url("~@lib/@{imgPath1}/start.png");
-    //     }
-    //   }
-    // }
-
     .btn-zm {
       &::before {
         content: "";
@@ -830,19 +821,22 @@
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url("~@lib/@{imgPath3}/btn_ac_on_cd@2x.png");
         background-size: 100% 100%;
+        background-image: url("~@lib/@{imgPath3}/new_kg_btn_off.png");
       }
       &.active::before{
         display: block;
         width: 48px;
         height: 48px;
         // background-image: url("~@lib/base/yiyun_light/assets/baiguanfg2@2x.png");
+        background-image: url("~@lib/@{imgPath}/btn_ac_on_cd@2x.png") !important;
         background-size: 100% 100%;
 
       }
     }
+    &.noactive{
 
+    }
     .btn-swich {
       &::before {
         content: "";
@@ -870,7 +864,7 @@
     overflow: hidden;
     .btn-wrap {
       &.up-index{
-        opacity: .2;
+        /*opacity: .2;*/
       }
     }
   }
@@ -907,7 +901,7 @@
     // background: #efefef;
     // }
     .btn-wrap {
-      opacity: .2;
+      /*opacity: .2;*/
       // .btn {
       // &.active {
       // background: #fff;
