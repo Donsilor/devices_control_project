@@ -115,23 +115,6 @@
             <div class="btn-name">{{ speedTxt }}</div>
           </div>
         </div>
-        <!-- 强劲 -->
-        <div 
-          v-show="deviceAttrs.mode=='cold'||deviceAttrs.mode=='heat'" 
-          class="bottom">
-          <div class="Charging-protection">
-            <div>强力</div>
-            <div
-              style="z-index: 100;">
-              <input
-                :class="[deviceAttrs.mode,'switch switch-anim']"
-                :checked="deviceAttrs.strong_wind=='on'"
-                :disabled="disabledLock"
-                type="checkbox"
-                @click="checkSwitch('strong_wind')">
-            </div>
-          </div>
-        </div>
         <!-- 上下风 -->
         <div class="bottom">
           <div class="Charging-protection">
@@ -196,7 +179,6 @@
       <!--选择风速-->
       <model-speed
         ref="speed"
-        :device-attrs="deviceAttrs"
         :speed="deviceAttrs.speed"
         @setSpeed="setSpeed" />
     </div>
@@ -621,9 +603,6 @@ export default {
       if (this.isClose) return
       if (this.deviceAttrs.mode == 'dehumidify') {
         return HdSmart.UI.toast('除湿模式不可调节风速')
-      }
-      if (this.deviceAttrs.speed == 'strong') {
-        return HdSmart.UI.toast('强力模式下不可调节风速')
       }
       this.$refs.speed.show = true
     },

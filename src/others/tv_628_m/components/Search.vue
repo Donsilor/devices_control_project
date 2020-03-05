@@ -31,7 +31,6 @@
               type="text"
               placeholder="输入片名、导演、演员搜索"
               @blur="blurfn"
-
               @input="fuzzySearch">
             <div
               v-show="word != ''"
@@ -41,10 +40,6 @@
             </div>
 
           </div>
-          <!-- <input
-          type="submit"
-          value="搜索"
-          class="search_submit"> -->
           <input
             type="button"
             value="取消"
@@ -97,36 +92,6 @@
       v-show="curpage===3"
       ref="search_result"
       class="search_result">
-      <!-- <div
-        v-show="resultData.length && loadState !== 'NO_DATA' || current_channel!=''"
-        class="hd clearfix">
-        <div class="tab">
-          <a
-            :class="{active:current_channel==''}"
-            href="#"
-            @click.prevent="setParam('current_channel','')">
-            全部
-          </a>
-          <a
-            v-for="item in channels"
-            :class="{active:current_channel==item.channelId}"
-            href="#"
-            @click.prevent="setParam('current_channel',item.channelId)">
-            {{ item.channel }}
-          </a>
-        </div>
-        <div class="sorts">
-          <a
-            v-for="item in orderby"
-            :class="{active:current_orderby==item.orderId}"
-            href="#"
-            @click.prevent="setParam('current_orderby',item.orderId)">
-            {{ item.text }}
-          </a>
-        </div>
-      </div> -->
-
-
       <ul class="vlist list-m60">
         <li
           v-for="(item,index) in resultData"
@@ -250,13 +215,10 @@
   }
 }
 .page-search{
-  // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
-  // background-size: 100% 100%;
-  // background-attachment: fixed;
   height: 100%;
   &::before{
     content: "";
-    background-image: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    background-color: black;
     background-repeat:no-repeat;
     background-size: 100% 100%;
     position: fixed;
@@ -268,12 +230,9 @@
   }
 }
 .search_bar {
-   display: flex;
+  display: flex;
   height: 100%;
-  // flex: 1;
-  // padding-top: 8PX;
-  // padding-left: 100px;
- align-items: center;
+  align-items: center;
   margin: 0 32px;
 }
 .search_input {
@@ -281,6 +240,8 @@
   position: relative;
   height: 30PX;
   width: 100%;
+  background: rgba(255,255,255,0.10);
+  border-radius: 15px;
   .search{
    display: flex;
    justify-content: center;
@@ -304,7 +265,7 @@
   input {
     border: 0;
     background: rgba(0, 0, 0, 0.04);
-    color: rgba(0, 0, 0, 0.5);
+    color: white;
     height: 60px;
     border-radius: 3px;
     width: 100%;
@@ -341,7 +302,7 @@
     p{
         width: 40px;
         height: 40px;
-        background: url('~@lib/base/img/tv_btn_text_delete.png');
+        background: url('../imgs/btn_delete@1x.png');
         background-size:100% 100%;
     }
     // &:active {
@@ -372,61 +333,40 @@
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
   .hd {
-    color: #75787a;
-    // padding: 32px 0 24px;
     padding-bottom: 36px;
-    // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
     margin-bottom: 24px;
-    color: #a4a9af;
     font-family: PingFangSC-Medium;
     font-size: 48px;
-    color: #000000;
+    color: #ffffff;
     line-height: 48px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     .del {
-      // margin-right: 10px;
       width: 48px;
       height: 48px;
-      background: url('~@lib/base/tv/assets/new/tv_btn_delete.png');
+      background: url('../imgs/tv_btn_delete@2x.png');
       background-size: 100% 100%;
-      // line-height: 18px;
-      // font-size: 36px;
-      // color: #76787a;
-
-      /*background-repeat: no-repeat;
-            background-size: 100% 100%;
-            background-image: url(../../../lib/base/tv/assets/btn_clear_normal.png);*/
       &:active {
         color: #ffc700;
-        /*background-image: url(../../../lib/base/tv/assets/btn_clear_pressed.png);*/
       }
     }
   }
   .bd {
     li {
-      color: #222a37;
       height: 68px;
       line-height: 68px;
-      // width: 50%;
       box-sizing: border-box;
-      // height: 56px;
-      // line-height: 56px;
       margin-right: 20px;
       margin-bottom: 16px;
-      // white-space: nowrap;
-      // overflow: hidden;
-      // text-overflow: ellipsis;
       float: left;
       padding:0 30px;
-      background: rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 34px;
       font-family: PingFangSC-Regular;
       font-size: 24px;
       font-weight: lighter;
-      // font-size: 24px;
-      color: #5F5F60;
+      color: #FFFFFF;
       display:-webkit-box;
       word-break:break-all;
       -webkit-box-orient:vertical;
@@ -455,7 +395,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #222a37;
+    color: white;
     strong {
       color: #ffc700;
       font-weight: normal;
@@ -474,10 +414,8 @@
   -webkit-overflow-scrolling: touch;
   .hd {
     padding: 20px 32px 26px;
-    // background-color: #fff;
   }
   .tab {
-    /*border-bottom: 1px solid #dbdbdb;*/
     margin-bottom: 24px;
     overflow: hidden;
     a {
@@ -527,7 +465,7 @@
         background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
         position: absolute;
         right: 8px;
-        top: 0;
+        top: 5px;
         padding: 0 4px;
         // width: 48px;
         height: 32px;
@@ -548,6 +486,7 @@
   margin: 0;
   position: relative;
   margin-right: 36px;
+  color: white;
   img {
     width: 264px;
     height: 400px;
@@ -557,6 +496,7 @@
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 120px 120px;
+    border-radius: 10px;
   }
   .update {
     position: absolute;
@@ -570,14 +510,6 @@
     border-radius: 0 3px 3px 0;
     display: none;
   }
-
-
-  /*.label {
-        position: absolute;
-        right: 0;
-        top: 27px;
-    }*/
-
   .score {
     position: absolute;
     right: 15px;
@@ -594,10 +526,7 @@
   }
   .title{
     font-size: 32px;
-    color: #000000;
     font-weight: lighter;
-    // font-weight: 900;
-    // line-height: 80px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -607,7 +536,6 @@
     height: 45px;
     line-height: 45px;
     font-size: 32px;
-    color: #000000;
     margin-bottom: 20px;
 
   }
@@ -639,23 +567,20 @@
     vertical-align: middle;
     width: 0.533rem;
     height: 0.533rem;
-      background: url('~@lib/base/tv/assets/new/tv_icn_play2.png');
+      background: url('../imgs/tv_btn_play@2x.png');
 
     background-size: 100% 100%;
     // margin-top: -4px;
 
   }
   .btn {
-    /*background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);*/
-    /*border-radius: 45px;*/
-    background-color: #000000;
-      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+    background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
     height: 80px;
-    // line-height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #000;
+    color: #fff;
+    border-radius: 20px;
     font-size: 32px;
     font-weight: lighter;
     text-align: center;
@@ -751,18 +676,6 @@ function splitWord(kw, input) {
     '<strong>$1</strong>'
   )
 }
-// function plusReady(){
-// }
-// // 关闭自身窗口
-// function getfixed(){
-// 	var ws=plus.webview.currentWebview()
-// 	ws.setStyle({
-//         softinputMode: "adjustResize"  // 弹出软键盘时自动改变webview的高度
-//     })
-// }
-//  plus.webview.currentWebview().setStyle({
-//         softinputMode: "adjustResize"  // 弹出软键盘时自动改变webview的高度
-//     })
 export default {
   data() {
     return {
@@ -894,19 +807,10 @@ export default {
     this.$refs.search_suggest.style.top = searchTop
     this.$refs.search_history.style.top = searchTop
 
-
-
-    // window.onresize = function() { // 如果当前窗口小于一开始记录的窗口高度，那就让当前窗口等于一开始窗口的高度
-    //     alert('1')
-
-    //     // if (document.body.scrollHeight < h) {
-    //     //     document.body.style.height = h;
-    //     // }
-    // }
     addEventListener('scroll',this.scroll2, { passive: false })
   },
   destroyed() {
-     this.$refs.search_result.removeEventListener('scroll', this.loadMore)
+    this.$refs.search_result&&this.$refs.search_result.removeEventListener('scroll', this.loadMore)
     removeEventListener('scroll', this.scroll2)
   },
   //在页面离开时记录滚动位置
@@ -921,30 +825,14 @@ export default {
     })
   },
   methods: {
-    // aa(){
-    //     let b = this.$refs['search_result'].querySelector('ul')
-    //     console.log(b)
-    //      this.scrollTop = b.scrollTop
-
-    //     console.log(b.offsetHeight,'offsetHeight')
-    //      console.log(b.clientHeight,'clientHeight')
-    //       console.log( this.scrollTop,'scrollTop')
-
-
-    // },
     blurfn(){
       setTimeout(()=>{
         window.scrollTo(0,0)
       },300)
     },
     scroll2(event){
-      // event.preventDefault()
          this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        // console.log(this.scrollTop,'this.scrollTop')
-        //  HdSmart.UI.toggleNav()
-        // HdSmart.UI.hideKeyboard()scroll2
         if(this.scrollTop>=20){
-          // alert(11)
           this.$refs.search_fexid.style.background = "#fff"
           this.$refs.statusbar_fexid.style.background = "#fff"
         }else{
@@ -1013,18 +901,10 @@ export default {
     },
     goBack(){
         window.history.go(-1)
-      // if(this.isShowBar){
-      //   window.history.go(-1)
-      // } else {
-      //   service.RemoteController({ show: false })
-      //   HdSmart.UI.popWindow()
-      // }
     },
     filterData(page) {
-      // if (page === 1) this.isFirstLoad = true
       this.loadState = 'LOADING'
       console.log('筛选')
-
       service.searchData(
         {
           keyword: this.word.trim(),
@@ -1054,10 +934,6 @@ export default {
             console.log(this.resultData,'this.resultData')
             this.total = data.total
             this.pageNo = page
-            // if (this.isFirstLoad) {
-            //   this.isFirstLoad = false
-            //   window.scrollTo(0, 0)
-            // }
             if (this.total === 0) {
               this.loadState = 'NO_DATA'
             } else if (this.pageSize * this.pageNo >= this.total) {
@@ -1101,7 +977,6 @@ export default {
     showDetailInfo(item) {
       console.log(item)
       this.$store.dispatch('showDetail', item)
-      // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
       this.$router.push({
         path:"/detail",
         query:{
@@ -1129,38 +1004,6 @@ export default {
         this.historyData = data.data
       })
     },
-    // getData() {
-    //   this.loading = true
-    //   // this.setHistory()
-    //   console.log(this.channelId,'this.channelId')
-    //   console.log(this.vid,'this.vid')
-
-    //   service.getDetaileData(
-    //     {
-    //       channelId: this.channelId,
-    //       vid: this.vid
-    //     },
-    //     (err, data) => {
-    //       this.loading = false
-    //       if (err) {
-    //         // this.close()
-    //         return
-    //       }
-    //       console.log(data,'data1111')
-    //       var temp = data.data
-    //       var playlist = temp.playlist[0]
-    //       temp.playlist2 = {}
-    //       temp.playlist2.total = playlist.total
-    //       temp.playlist2.list = playlist.list.filter(
-    //         item => item.states == "1"
-    //       )
-    //       temp.playlist2.list2 = playlist.list.filter(
-    //         item => item.states != "1"
-    //       )
-    //       this.cur = Object.freeze(temp)
-    //     }
-    //   )
-    // },
      //点播：播放状态如playstate
     play(item,e) {
       if ( e && e.stopPropagation ) {
