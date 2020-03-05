@@ -40,10 +40,6 @@
             </div>
 
           </div>
-          <!-- <input
-          type="submit"
-          value="搜索"
-          class="search_submit"> -->
           <input
             type="button"
             value="取消"
@@ -347,21 +343,12 @@
     align-items: center;
     justify-content: space-between;
     .del {
-      // margin-right: 10px;
       width: 48px;
       height: 48px;
       background: url('../imgs/tv_btn_delete@2x.png');
       background-size: 100% 100%;
-      // line-height: 18px;
-      // font-size: 36px;
-      // color: #76787a;
-
-      /*background-repeat: no-repeat;
-            background-size: 100% 100%;
-            background-image: url(../../../lib/base/tv/assets/btn_clear_normal.png);*/
       &:active {
         color: #ffc700;
-        /*background-image: url(../../../lib/base/tv/assets/btn_clear_pressed.png);*/
       }
     }
   }
@@ -427,10 +414,8 @@
   -webkit-overflow-scrolling: touch;
   .hd {
     padding: 20px 32px 26px;
-    // background-color: #fff;
   }
   .tab {
-    /*border-bottom: 1px solid #dbdbdb;*/
     margin-bottom: 24px;
     overflow: hidden;
     a {
@@ -480,7 +465,7 @@
         background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
         position: absolute;
         right: 8px;
-        top: 0;
+        top: 5px;
         padding: 0 4px;
         // width: 48px;
         height: 32px;
@@ -511,6 +496,7 @@
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 120px 120px;
+    border-radius: 10px;
   }
   .update {
     position: absolute;
@@ -524,14 +510,6 @@
     border-radius: 0 3px 3px 0;
     display: none;
   }
-
-
-  /*.label {
-        position: absolute;
-        right: 0;
-        top: 27px;
-    }*/
-
   .score {
     position: absolute;
     right: 15px;
@@ -589,23 +567,20 @@
     vertical-align: middle;
     width: 0.533rem;
     height: 0.533rem;
-      background: url('~@lib/base/tv/assets/new/tv_icn_play2.png');
+      background: url('../imgs/tv_btn_play@2x.png');
 
     background-size: 100% 100%;
     // margin-top: -4px;
 
   }
   .btn {
-    /*background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);*/
-    /*border-radius: 45px;*/
-    background-color: #000000;
-      background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+    background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
     height: 80px;
-    // line-height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #000;
+    color: #fff;
+    border-radius: 20px;
     font-size: 32px;
     font-weight: lighter;
     text-align: center;
@@ -832,19 +807,10 @@ export default {
     this.$refs.search_suggest.style.top = searchTop
     this.$refs.search_history.style.top = searchTop
 
-
-
-    // window.onresize = function() { // 如果当前窗口小于一开始记录的窗口高度，那就让当前窗口等于一开始窗口的高度
-    //     alert('1')
-
-    //     // if (document.body.scrollHeight < h) {
-    //     //     document.body.style.height = h;
-    //     // }
-    // }
     addEventListener('scroll',this.scroll2, { passive: false })
   },
   destroyed() {
-     this.$refs.search_result.removeEventListener('scroll', this.loadMore)
+    this.$refs.search_result&&this.$refs.search_result.removeEventListener('scroll', this.loadMore)
     removeEventListener('scroll', this.scroll2)
   },
   //在页面离开时记录滚动位置
@@ -859,30 +825,14 @@ export default {
     })
   },
   methods: {
-    // aa(){
-    //     let b = this.$refs['search_result'].querySelector('ul')
-    //     console.log(b)
-    //      this.scrollTop = b.scrollTop
-
-    //     console.log(b.offsetHeight,'offsetHeight')
-    //      console.log(b.clientHeight,'clientHeight')
-    //       console.log( this.scrollTop,'scrollTop')
-
-
-    // },
     blurfn(){
       setTimeout(()=>{
         window.scrollTo(0,0)
       },300)
     },
     scroll2(event){
-      // event.preventDefault()
          this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        // console.log(this.scrollTop,'this.scrollTop')
-        //  HdSmart.UI.toggleNav()
-        // HdSmart.UI.hideKeyboard()scroll2
         if(this.scrollTop>=20){
-          // alert(11)
           this.$refs.search_fexid.style.background = "#fff"
           this.$refs.statusbar_fexid.style.background = "#fff"
         }else{
@@ -951,18 +901,10 @@ export default {
     },
     goBack(){
         window.history.go(-1)
-      // if(this.isShowBar){
-      //   window.history.go(-1)
-      // } else {
-      //   service.RemoteController({ show: false })
-      //   HdSmart.UI.popWindow()
-      // }
     },
     filterData(page) {
-      // if (page === 1) this.isFirstLoad = true
       this.loadState = 'LOADING'
       console.log('筛选')
-
       service.searchData(
         {
           keyword: this.word.trim(),
@@ -992,10 +934,6 @@ export default {
             console.log(this.resultData,'this.resultData')
             this.total = data.total
             this.pageNo = page
-            // if (this.isFirstLoad) {
-            //   this.isFirstLoad = false
-            //   window.scrollTo(0, 0)
-            // }
             if (this.total === 0) {
               this.loadState = 'NO_DATA'
             } else if (this.pageSize * this.pageNo >= this.total) {
@@ -1039,7 +977,6 @@ export default {
     showDetailInfo(item) {
       console.log(item)
       this.$store.dispatch('showDetail', item)
-      // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
       this.$router.push({
         path:"/detail",
         query:{
@@ -1067,38 +1004,6 @@ export default {
         this.historyData = data.data
       })
     },
-    // getData() {
-    //   this.loading = true
-    //   // this.setHistory()
-    //   console.log(this.channelId,'this.channelId')
-    //   console.log(this.vid,'this.vid')
-
-    //   service.getDetaileData(
-    //     {
-    //       channelId: this.channelId,
-    //       vid: this.vid
-    //     },
-    //     (err, data) => {
-    //       this.loading = false
-    //       if (err) {
-    //         // this.close()
-    //         return
-    //       }
-    //       console.log(data,'data1111')
-    //       var temp = data.data
-    //       var playlist = temp.playlist[0]
-    //       temp.playlist2 = {}
-    //       temp.playlist2.total = playlist.total
-    //       temp.playlist2.list = playlist.list.filter(
-    //         item => item.states == "1"
-    //       )
-    //       temp.playlist2.list2 = playlist.list.filter(
-    //         item => item.states != "1"
-    //       )
-    //       this.cur = Object.freeze(temp)
-    //     }
-    //   )
-    // },
      //点播：播放状态如playstate
     play(item,e) {
       if ( e && e.stopPropagation ) {

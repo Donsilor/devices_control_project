@@ -328,18 +328,15 @@
     .isvip {
       position: absolute;
       right: 8px;
-      top: 0;
+      top: 8px;
       padding: 0 4px;
-      background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
-      // width: 48px;
+      background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
+      border-radius: 3px;
       line-height: 32px;
-      // border-radius: 4px;
       font-size: 24px;
       text-align: center;
-      color: #000;
-      // opacity: 0.9;
+      color: #fff;
       display: block;
-      margin-bottom: 5px;
     }
     .bottom {
       width: 100%;
@@ -347,12 +344,8 @@
       line-height: 56px;
       position: absolute;
       bottom: 76px;
-      // display: flex;
-      // justify-content: space-between;
       padding: 0 12px;
-      // align-items: center;
       background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, .5));
-
       .text {
         font-family: PingFangSC-Regular;
         font-size: 20px;
@@ -360,12 +353,10 @@
         font-weight: lighter;
         float: left;
       }
-
       .score {
         color: #E1B96E;
         float: left;
       }
-
       .play {
         position: absolute;
         float: right;
@@ -374,9 +365,8 @@
         transform: translateY(-50%);
         width: 36px;
         height: 36px;
-        background: url('~@lib/base/tv/assets/new/tv_btn_play.png');
+        background: url('../imgs/tv_btn_play@2x.png');
         background-size: 100% 100%;
-
       }
     }
 
@@ -386,7 +376,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
       color: white;
-      // line-height: 2;
       height: 76px;
       text-align: left;
       font-size: 24px;
@@ -394,15 +383,14 @@
       padding: 12px 0 40px 0;
     }
   }
-
   /* 根据栏目控制样式显示 */
   .item-001 {
     .score {
       display: block;
     }
-
     img {
       background-image: url('~@lib/base/tv/assets/icn_TV_movie_white@2x.png');
+      border-radius: 10px;
     }
   }
 
@@ -438,14 +426,10 @@
 
   .loadmore {
     text-align: center;
-    /*padding: 30px 0;*/
     height: 60px;
     color: #000;
     opacity: 0.5;
     font-size: 24px;
-    // .finish {
-    //   color: #c8cacc;
-    // }
   }
 
   .spinner > div {
@@ -647,7 +631,7 @@
         }
         next()
       } else {
-        from.meta.keepAlive = false
+        // from.meta.keepAlive = false
         this.scrollTop = 0
         // this.$destroy()//销毁B的实例
         next()//当我们前进的不是detail时我们让list页面刷新
