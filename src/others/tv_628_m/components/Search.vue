@@ -31,7 +31,6 @@
               type="text"
               placeholder="输入片名、导演、演员搜索"
               @blur="blurfn"
-
               @input="fuzzySearch">
             <div
               v-show="word != ''"
@@ -97,36 +96,6 @@
       v-show="curpage===3"
       ref="search_result"
       class="search_result">
-      <!-- <div
-        v-show="resultData.length && loadState !== 'NO_DATA' || current_channel!=''"
-        class="hd clearfix">
-        <div class="tab">
-          <a
-            :class="{active:current_channel==''}"
-            href="#"
-            @click.prevent="setParam('current_channel','')">
-            全部
-          </a>
-          <a
-            v-for="item in channels"
-            :class="{active:current_channel==item.channelId}"
-            href="#"
-            @click.prevent="setParam('current_channel',item.channelId)">
-            {{ item.channel }}
-          </a>
-        </div>
-        <div class="sorts">
-          <a
-            v-for="item in orderby"
-            :class="{active:current_orderby==item.orderId}"
-            href="#"
-            @click.prevent="setParam('current_orderby',item.orderId)">
-            {{ item.text }}
-          </a>
-        </div>
-      </div> -->
-
-
       <ul class="vlist list-m60">
         <li
           v-for="(item,index) in resultData"
@@ -250,13 +219,10 @@
   }
 }
 .page-search{
-  // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
-  // background-size: 100% 100%;
-  // background-attachment: fixed;
   height: 100%;
   &::before{
     content: "";
-    background-image: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    background-color: black;
     background-repeat:no-repeat;
     background-size: 100% 100%;
     position: fixed;
@@ -268,12 +234,9 @@
   }
 }
 .search_bar {
-   display: flex;
+  display: flex;
   height: 100%;
-  // flex: 1;
-  // padding-top: 8PX;
-  // padding-left: 100px;
- align-items: center;
+  align-items: center;
   margin: 0 32px;
 }
 .search_input {
@@ -281,6 +244,8 @@
   position: relative;
   height: 30PX;
   width: 100%;
+  background: rgba(255,255,255,0.10);
+  border-radius: 15px;
   .search{
    display: flex;
    justify-content: center;
@@ -304,7 +269,7 @@
   input {
     border: 0;
     background: rgba(0, 0, 0, 0.04);
-    color: rgba(0, 0, 0, 0.5);
+    color: white;
     height: 60px;
     border-radius: 3px;
     width: 100%;
@@ -341,7 +306,7 @@
     p{
         width: 40px;
         height: 40px;
-        background: url('~@lib/base/img/tv_btn_text_delete.png');
+        background: url('../imgs/btn_delete@1x.png');
         background-size:100% 100%;
     }
     // &:active {
@@ -372,15 +337,11 @@
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
   .hd {
-    color: #75787a;
-    // padding: 32px 0 24px;
     padding-bottom: 36px;
-    // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
     margin-bottom: 24px;
-    color: #a4a9af;
     font-family: PingFangSC-Medium;
     font-size: 48px;
-    color: #000000;
+    color: #ffffff;
     line-height: 48px;
     display: flex;
     align-items: center;
@@ -389,7 +350,7 @@
       // margin-right: 10px;
       width: 48px;
       height: 48px;
-      background: url('~@lib/base/tv/assets/new/tv_btn_delete.png');
+      background: url('../imgs/tv_btn_delete@2x.png');
       background-size: 100% 100%;
       // line-height: 18px;
       // font-size: 36px;
@@ -406,27 +367,19 @@
   }
   .bd {
     li {
-      color: #222a37;
       height: 68px;
       line-height: 68px;
-      // width: 50%;
       box-sizing: border-box;
-      // height: 56px;
-      // line-height: 56px;
       margin-right: 20px;
       margin-bottom: 16px;
-      // white-space: nowrap;
-      // overflow: hidden;
-      // text-overflow: ellipsis;
       float: left;
       padding:0 30px;
-      background: rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 34px;
       font-family: PingFangSC-Regular;
       font-size: 24px;
       font-weight: lighter;
-      // font-size: 24px;
-      color: #5F5F60;
+      color: #FFFFFF;
       display:-webkit-box;
       word-break:break-all;
       -webkit-box-orient:vertical;
@@ -455,7 +408,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #222a37;
+    color: white;
     strong {
       color: #ffc700;
       font-weight: normal;
@@ -548,6 +501,7 @@
   margin: 0;
   position: relative;
   margin-right: 36px;
+  color: white;
   img {
     width: 264px;
     height: 400px;
@@ -594,10 +548,7 @@
   }
   .title{
     font-size: 32px;
-    color: #000000;
     font-weight: lighter;
-    // font-weight: 900;
-    // line-height: 80px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -607,7 +558,6 @@
     height: 45px;
     line-height: 45px;
     font-size: 32px;
-    color: #000000;
     margin-bottom: 20px;
 
   }
@@ -751,18 +701,6 @@ function splitWord(kw, input) {
     '<strong>$1</strong>'
   )
 }
-// function plusReady(){
-// }
-// // 关闭自身窗口
-// function getfixed(){
-// 	var ws=plus.webview.currentWebview()
-// 	ws.setStyle({
-//         softinputMode: "adjustResize"  // 弹出软键盘时自动改变webview的高度
-//     })
-// }
-//  plus.webview.currentWebview().setStyle({
-//         softinputMode: "adjustResize"  // 弹出软键盘时自动改变webview的高度
-//     })
 export default {
   data() {
     return {
