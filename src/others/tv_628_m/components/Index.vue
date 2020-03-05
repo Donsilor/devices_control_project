@@ -1,8 +1,8 @@
 <!-- 首页 -->
 <template>
-  <div 
+  <div
     class="page-index">
-    <!-- 遥控器 --> 
+    <!-- 遥控器 -->
     <remoteControl/>
     <!-- <div
       class="space-block" /> -->
@@ -23,28 +23,28 @@
     <!--    -->
     <status-tip
       type="首页"/>
-    <div 
-      :class="{'search-screen-bg_mt':device_uuid}" 
+    <div
+      :class="{'search-screen-bg_mt':device_uuid}"
       class="search-screen-bg">
       <div class="search-screen">
         <router-link
-          class="search2" 
+          class="search2"
           to="/search"><span class="search-img"/><span>搜索</span> </router-link>
-        <div 
-          v-show="activeIndex!=0" 
+        <div
+          v-show="activeIndex!=0"
           class="screen"
           @click="toPage(itemData)"> <span/> 筛选</div>
       </div>
     </div>
-   
+
     <!-- 设备状态提示 -->
     <!-- :bar-height="barHeight"  -->
     <!--    <div class="wrap-title">-->
     <!--      <div class="title mar">栏目分类</div>-->
     <!--    </div>-->
 
-    <div 
-      ref="icon_grid" 
+    <div
+      ref="icon_grid"
       class="icon_grid">
       <div class="icon_grid_inner">
         <div
@@ -58,14 +58,14 @@
 
 
     <!-- 栏目分类 -->
-    <div 
+    <div
       v-if="activeIndex==0"
-      style="position:relative" 
+      style="position:relative"
       class="status">
 
 
-      <div 
-        v-show="activeIndex==0" 
+      <div
+        v-show="activeIndex==0"
         class="swiper mar" >
 
         <div
@@ -95,15 +95,15 @@
         </swiper>
       </div>
     </div>
-   
-   
-   
-   
-  
+
+
+
+
+
     <!-- 列表 -->
-    
-    <div 
-      class="index-list" 
+
+    <div
+      class="index-list"
       @touchstart="touchstart"
       @touchend="touchend">
       <div
@@ -129,22 +129,22 @@
               v-lazy="getThumbPic(item.pictureUrl)"
               :data-src="item.pictureUrl"
               alt="">
-       
+
             <div class="name">{{ item.title }}</div>
             <div class="bottom">
-              <span 
-                v-show="item.channelId=='002'" 
+              <span
+                v-show="item.channelId=='002'"
                 class="text">
                 {{ getUpdateSet(item.setCount,item.lastUpdateSet) }}
               </span>
-              <span 
-                v-show="item.channelId=='001'" 
+              <span
+                v-show="item.channelId=='001'"
                 class="text score" >{{ item.score }}</span>
-              <p 
-                class="play" 
+              <p
+                class="play"
                 @click.stop="play(item)"/>
             </div>
-            
+
             <span
               v-if="item.ispay && item.ispay !== '1'"
               class="isvip">付费</span>
@@ -161,13 +161,13 @@
         <p>暂无结果</p>
       </div>
       <!-- 加载更多 -->
-      <div 
-        v-show="activeIndex!=0" 
+      <div
+        v-show="activeIndex!=0"
         class="loadmore">
         <p v-show=" loadState === 'LOADING'">正在加载中...</p>
         <p v-show=" loadState === 'LOADED'">上拉加载更多</p>
-        <p 
-          v-show="loadState === 'NO_MORE'" 
+        <p
+          v-show="loadState === 'NO_MORE'"
           class="finish">已加载全部</p>
       </div>
     </div>
@@ -192,9 +192,9 @@
           :class="{spec:!$store.state.online && !$store.state.detailVisible}"
           class="icon-detail center"
           @click.prevent="goDetail" />
- 
+
       </div>
-      
+
       <div class="block" />
     </div>
   </div>
@@ -221,7 +221,7 @@
     right: 0;
     z-index: -1;
   }
-  // // background-position:center center; 
+  // // background-position:center center;
   // &::before{
   //   //  content: ' ';
   //   // position: fixed;
@@ -259,7 +259,7 @@
         height: 24px;
         display: inline-block;
         background: url('~@lib/base/tv/assets/new/tv_arrow_more.png');
-        background-size:100% 100%; 
+        background-size:100% 100%;
       }
     }
   }
@@ -331,7 +331,7 @@
         width: 32px;
         height: 32px;
          background: url('~@lib/base/img/tv_icn_search.png');
-        background-size:100% 100%; 
+        background-size:100% 100%;
         margin-right: 20px;
       }
     }
@@ -354,11 +354,11 @@
         width:  40px;;
         height:  40px;;
         background: url('~@lib/base/tv/assets/new/tv_btn_shaixuan.png');
-        background-size:100% 100%; 
+        background-size:100% 100%;
       }
     }
   }
-} 
+}
 .search-screen-bg-mt{
   margin-top: 40px;
 }
@@ -395,7 +395,7 @@
     font-weight: 500;
     position:relative;
     font-weight:normal!important;
-    
+
     &::before{
       content: '';
       width: 0.5rem;
@@ -460,10 +460,10 @@
   li{
     margin-right: 20px;
     &:nth-child(3n){
-      margin-right:0; 
+      margin-right:0;
     }
   }
-  
+
   // align-content: space-between;
 }
 .vitem {
@@ -562,11 +562,11 @@
       width: 36px;
       height: 36px;
       background:  url('~@lib/base/tv/assets/new/tv_btn_play.png');
-      background-size:100% 100%; 
-  
+      background-size:100% 100%;
+
     }
   }
-  
+
   .name {
     text-align: left;
     white-space: nowrap;
@@ -613,7 +613,7 @@
 }
 
 .control {
-  
+
   transition: all .3s ease-out;
 
   position: fixed;
@@ -799,7 +799,7 @@
           }
       }
     }
-    
+
   }
 }
 </style>
@@ -819,7 +819,7 @@ export default {
   data() {
     const self = this
     return {
-      
+
       ios: /iPad|iPhone|iPod/.test(navigator.userAgent),
       device_uuid: window.device_uuid || '',
       device_name:window.device_name||'',
@@ -994,7 +994,7 @@ export default {
         case 1:
             console.log([this.listDY],'allList-------------------------------------')
         return [this.listDY]
-        
+
         case 2:
            console.log([ this.listDSJ],'allList-------------------------------------')
         return [ this.listDSJ]
@@ -1006,13 +1006,7 @@ export default {
            console.log([ this.listDSJ],'allList-------------------------------------')
         return [this.listDM]
       }
-      
     },
-    // homePage() {
-    //   if(homePageInfo.length == 0) {
-    //     return this.pageInit()
-    //   }
-    // }
   },
   watch: {
     activeIndex(n){
@@ -1026,13 +1020,13 @@ export default {
         if(bStop&&this.scrollToList[n]<44){
              window.scrollTo(0,44)
              return
-        } 
+        }
       this.$nextTick(()=>{
          if(bStop&&this.scrollToList[n]<44){
              window.scrollTo(0,44)
         } else{
             window.scrollTo(0,this.scrollToList[n])
-        }    
+        }
       })
     },
     '$store.state.tvStatus.tvOnlineStatus':{
@@ -1048,24 +1042,11 @@ export default {
         },
         immediate: true
     },
-    // detailVisible(visible) {
-    //   if (visible) {
-    //     this.$refs.swiper.swiper.autoplay.stop()
-    //   } else {
-    //     this.$refs.swiper.swiper.autoplay.start()
-    //   }
-    // }
-    // homePageInfo() {
-    //   if(this.homePageInfo.length == 0) {
-    //     this.pageInit()
-    //   }
-    // },
     'window.room_name'(n){
-        console.log(n,'window.room_name------------------------------------')
+        console.log(n,'window.room_name------------------------------------watch')
     }
   },
-  created() {   
-    //  this.$router.push('/NoNetwork') 
+  created() {
     this.pageInit()
     HdSmart.UI.toggleNav()
     console.log('1111',window.device_name)
@@ -1076,12 +1057,10 @@ export default {
   mounted() {
     Object.defineProperty(window,'room_name',{
       set:(newValue)=>{
-        console.log(newValue,'room_name----------------------------------------------')
-        
         this.room_name = newValue
       }
     })
-    this.maxh = this.$refs.icon_grid.offsetTop    
+    this.maxh = this.$refs.icon_grid.offsetTop
     setTimeout(()=>{
       window.scrollTo(0,1)
     },300)
@@ -1091,21 +1070,6 @@ export default {
     this.initFixedMenu()
     console.log('uu', this.channels)
     service.RemoteController({ show: false })
-    // setTimeout(()=>{
-    //   console.log('时间到')
-    //   this.$store.commit('setScreenProjectionStatus',{
-    //     tvOnlineStatus:2
-    //   })
-    //   console.log(this.$store.state.tvStatus)
-      
-    // },3000)
-    // this.$nextTick(() => {
-    //   this.pageInit()
-    //   if (!infoCache.length) {
-    //     this.pageInit()
-    //   } else {
-    //     this.homePageInfo = infoCache
-    //   }
     // })
     // 获取推荐电视信息
     // this.allList = []
@@ -1123,10 +1087,10 @@ export default {
     window.removeEventListener("scroll", this.loadMore)
     removeEventListener("scroll", this.fn)
   },
-  activated(){  
+  activated(){
       window.addEventListener("scroll", this.loadMore)
     addEventListener("scroll", this.fn)
-      
+
   },
   deactivated(){
        window.removeEventListener("scroll", this.loadMore)
@@ -1146,17 +1110,10 @@ export default {
   },
   methods: {
     fn(){
-      // console.log('滚动')
-      
       let statusbarH = document.querySelector('.statusbar').offsetHeight
       let newNavbarH = document.querySelector('.newNavbar').offsetHeight
-
-      
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       let icon_grid = this.$refs.icon_grid
-      // console.log(this.scrollTop+statusbarH+newNavbarH, this.maxh)
-      
-      // if((this.scrollTop+statusbarH+newNavbarH)>= this.maxh){
             if((this.scrollTop)>= 44){
         icon_grid.style.position = 'fixed'
         icon_grid.style.top = statusbarH+newNavbarH + 'px'
@@ -1164,26 +1121,17 @@ export default {
       }else{
         icon_grid.style.position = ''
          icon_grid.style.background = ''
-
       }
-      // console.log(this.scrollTop,this.activeIndex,'999999')
       this.scrollToList[this.activeIndex] = this.scrollTop
-      // console.log(this.activeIndex,this.scrollToList,'fn-----------------')
-      
 
-      
-      // console.log(icon_grid.offsetTop)
-      // console.log( this.scrollTop)
-      
-      
     },
     play(item,e) {
       if ( e && e.stopPropagation ) {
-    //因此它支持W3C的stopPropagation()方法 
-       e.stopPropagation() 
+    //因此它支持W3C的stopPropagation()方法
+       e.stopPropagation()
       }else {
-          //否则，我们需要使用IE的方式来取消事件冒泡 
-          window.event.cancelBubble = true 
+          //否则，我们需要使用IE的方式来取消事件冒泡
+          window.event.cancelBubble = true
       }
       service.getDetaileData(
         {
@@ -1216,10 +1164,10 @@ export default {
           // console.log(clickItem,'clickItem')
           if (clickItem) {
             service.playVideo(clickItem.link, clickItem.name)
-            
-          }      
+
+          }
         }
-      )  
+      )
     },
     back() {
       HdSmart.UI.popWindow()
@@ -1275,7 +1223,7 @@ export default {
            showBar:1
          }
        })
-      
+
       // if (this.isShowBar) {
       //   window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
       // } else {
@@ -1318,7 +1266,7 @@ export default {
         },
         (err, data) => {
           console.log(data,'333333333')
-          
+
           this.loadState = "LOADED"
           if (err) return
 
@@ -1329,7 +1277,7 @@ export default {
             data.list = []
           }
           let cid = data.channelId
-          
+
           this.$nextTick(() => {
             switch(this.activeIndex){
               case 1:
@@ -1372,9 +1320,9 @@ export default {
               this.dataList[4].list.slice(0,6)
             ]
             console.log(this.listDY,'listDY')
-            
+
             console.log( this.dataList,' this.dataList----------------------------------')
-            
+
 
             // if(cid === '001'){
             //   this.listDY = Object.freeze(
@@ -1394,12 +1342,12 @@ export default {
             this.total = data.total
             // this.pageNo = page
           console.log(page,'page')
-          
+
             this.pageNoList[this.activeIndex] = page
             // if (this.isFirstLoad) {
             //   this.isFirstLoad = false
             //   // console.log('?????????????????????????????')
-              
+
             //   window.scrollTo(0, 0)
             // }
             if (data.total === 0) {
@@ -1412,7 +1360,7 @@ export default {
             }
           })
 
-         
+
         }
       )
       // console.log('----getChannelData--------')
@@ -1464,7 +1412,7 @@ export default {
         window.pageYOffset ||
         document.body.scrollTop
         console.log(this.itemData.channelId,'3333333333333333555')
-  
+
       if ( scrollTop > 0 && scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 15) {
         // if (this.$store.state.detailVisible) {
         //   return
@@ -1475,7 +1423,7 @@ export default {
           return
         }
         // console.log(this.pageNoList[this.activeIndex] + 1,'3433333333333333333333364678')
-        
+
         this.filterData(this.itemData.channelId,this.pageNoList[this.activeIndex] + 1)
       }
     }, 300),
@@ -1488,7 +1436,7 @@ export default {
       }
       return imgObj
       }
-      
+
     },
     getUpdateSet(count, last) {
       if (!count || !last || count == "0" || last == "0") {
@@ -1508,7 +1456,7 @@ export default {
        this.itemData = item
        this.loadState = 'LOADED'
        console.log( this.activeIndex,this.itemData,555555555)
-       
+
     },
     toPage(item) {
 
@@ -1517,7 +1465,7 @@ console.log(item,'vm.scrollTopvm.scrollTop')
       // let name = encodeURIComponent(item.channel)
 
       console.log(this.$route.meta.keepAlive,'444444444444444')
-      
+
       //  window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
        this.$router.push({
          path:"/list",
@@ -1571,7 +1519,7 @@ console.log(item,'vm.scrollTopvm.scrollTop')
     },
     touchstart(e){
       this.starX = e.changedTouches[0].clientX
-      this.starY = e.changedTouches[0].clientY  
+      this.starY = e.changedTouches[0].clientY
     },
     touchend(e){
       this.endX = e.changedTouches[0].clientX
@@ -1582,7 +1530,7 @@ console.log(item,'vm.scrollTopvm.scrollTop')
       }
       if((this.endX-this.starX<-50)&&this.activeIndex!=4){
           this.activeIndex+=1
-      } 
+      }
     }
   }
 }

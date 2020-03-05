@@ -1,35 +1,22 @@
 if (process.env.NODE_ENV == 'development') {
   require('@mock/tv/index.js')
 }
-
 import Vue from 'vue'
-// import Router from 'vue-router'
-// import Vuex from 'vuex'
-console.log($,'jq-----------------')
-
-// import FastClick from 'fastclick'
-
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 import VueLazyload from 'vue-lazyload'
-
 import App from './App.vue'
-
-
 import * as service from './service'
-
 import '@lib/base/common.less'
 import '@lib/base/reset.less'
 import '@lib/base/tv/index_m.less'
 
 
 import * as filters from './filters' // global filters
-// register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
-/* eslint-disable no-unused-vars */
 import AlloyFinger from 'alloyfinger/alloy_finger' // 手势库
 import AlloyFingerVue from 'alloyfinger/vue/alloy_finger_vue'
 import store from './store'
@@ -49,10 +36,6 @@ Vue.use(VueLazyload, {
 
 // 强制关闭3d(详情页改成不透明了)
 // window.Swiper.prototype.support.transforms3d = false
-
-
-
-
 
 // hack: app多次执行ready
 let is_ready = false
