@@ -3,8 +3,7 @@
 -->
 <template>
   <div class="page-detail">
-    <!-- 遥控器 --> 
-    <remoteControl/>
+
 
     <topbar
       :back="goBack"
@@ -223,6 +222,8 @@
       </div>
     </div>
     <!-- </transition> -->
+    <!-- 遥控器 -->
+    <remoteControl :isPlay="false"/>
 </div></template>
 
 <style lang="less" scoped>

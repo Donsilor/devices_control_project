@@ -2,8 +2,7 @@
 <template>
   <div 
     class="page-index">
-    <!-- 遥控器 --> 
-    <remoteControl/>
+
     <!-- <div
       class="space-block" /> -->
     <!-- 顶部导航菜单 -->
@@ -36,27 +35,18 @@
           @click="toPage(itemData)"> <span/> 筛选</div>
       </div>
     </div>
-   
-    <!-- 设备状态提示 -->
-    <!-- :bar-height="barHeight"  -->
-    <!--    <div class="wrap-title">-->
-    <!--      <div class="title mar">栏目分类</div>-->
-    <!--    </div>-->
-
-    <div 
-      ref="icon_grid" 
-      class="icon_grid">
-      <div class="icon_grid_inner">
-        <div
-          v-for="(item, idx) in channels"
-          :class="['item' + idx, 'item', {'active': idx == activeIndex}]"
-          @click.prevent="toActive(item,idx)">{{ item.channel }}</div>
-        <div class="block" />
+      <div
+        ref="icon_grid"
+        class="icon_grid">
+        <div class="icon_grid_inner">
+          <div
+            v-for="(item, idx) in channels"
+            :class="['item' + idx, 'item', {'active': idx == activeIndex}]"
+            @click.prevent="toActive(item,idx)">{{ item.channel }}</div>
+          <div class="block" />
+          <div class="vague"></div>
+        </div>
       </div>
-    </div>
-
-
-
     <!-- 栏目分类 -->
     <div 
       v-if="activeIndex==0"
@@ -95,13 +85,8 @@
         </swiper>
       </div>
     </div>
-   
-   
-   
-   
-  
+
     <!-- 列表 -->
-    
     <div 
       class="index-list" 
       @touchstart="touchstart"
@@ -197,11 +182,14 @@
       
       <div class="block" />
     </div>
+
+    <remoteControl :isPlay="false"/>
   </div>
 </template>
 
 <style lang="less" scoped>
 @navigation_bar_height: 44PX;
+
 .center {
   display: flex;
   justify-content: center;
@@ -211,7 +199,8 @@
   &::after{
     content: "";
     padding-bottom: 48px;
-    background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    /*background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");*/
+    background-color: #000;
     background-size: 100% 100%;
     background-attachment: fixed;
     position: fixed;
@@ -221,19 +210,6 @@
     right: 0;
     z-index: -1;
   }
-  // // background-position:center center; 
-  // &::before{
-  //   //  content: ' ';
-  //   // position: fixed;
-  //   // z-index: -1;
-  //   // top: 0;
-  //   // right: 0;
-  //   // bottom: 0;
-  //   // left: 0;
-  //   // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
-  //   // background-size: 100% 100%;
-  // }
-
   .space-block{
     height: 25PX;
   }
@@ -245,7 +221,7 @@
     padding: 32px 0;
     .title {
       font-size: 32px;
-      color: #20282b;
+      color: #fff;
       font-weight: normal;
     }
     .more{
@@ -316,11 +292,9 @@
     .search2{
       width: 100%;
       height: 60px;
-      background:rgba(0, 0, 0, 0.04);
-      border-radius: 2px;
+      background: rgba(255,255,255,0.10);
+      border-radius: 15px;
       height: 60px;
-      // text-align: center;
-      // line-height:  60px;
       display: flex;
       color: #AAAAAA;
       justify-content: center;
@@ -343,7 +317,7 @@
       height: 60px;
       text-align: center;
       line-height: 60px;
-      color: #000;
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -351,9 +325,9 @@
       font-size:24px;
       span{
         display: block;
-        width:  40px;;
-        height:  40px;;
-        background: url('~@lib/base/tv/assets/new/tv_btn_shaixuan.png');
+        width:  40px;
+        height:  40px;
+        background: url('~@lib/base/tv/assets/new/tv_btn_shaix.png');
         background-size:100% 100%; 
       }
     }
@@ -376,17 +350,28 @@
 
   -webkit-overflow-scrolling: touch;
   .icon_grid_inner {
-    display: flex;
-    flex-wrap: nowrap;
+    /*display: flex;*/
+    /*flex-wrap: nowrap;*/
     width: 100%;
     overflow-x: auto;
-    display: -webkit-box;
-    -webkit-box-orient: horizontal;
+    /*display: -webkit-box;*/
+    /*-webkit-box-orient: horizontal;*/
     padding-bottom: 20px;
     margin-bottom: -20px;
+    position: relative;
     &::-webkit-scrollbar {
       display: none;
     }
+    .item{
+      float:left;
+    }
+    /*.vague{*/
+    /*  position: absolute;*/
+    /*  width: 100%;*/
+    /*  height:100%;*/
+    /*  z-index: -1;*/
+    /*  filter: blur(2px);*/
+    /*}*/
   }
   .active{
     color: #000000;
@@ -395,13 +380,12 @@
     font-weight: 500;
     position:relative;
     font-weight:normal!important;
-    
     &::before{
       content: '';
       width: 0.5rem;
       height: 0.07rem;
       // background-color: #FFC800;
-      background-image: linear-gradient(90deg, #F5D598 0%, #E1B96E 100%);
+      background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
       // border-radius: 6px;
       border-radius: 4px;
       position: absolute;
@@ -414,7 +398,7 @@
     font-weight: lighter;
     font-family: PingFangSC-Medium;
     position: relative;
-    color: #000000;
+    color: #fff;
     opacity: 0.5;
     font-size: 32px;
     text-align: center;
@@ -1160,7 +1144,7 @@ export default {
             if((this.scrollTop)>= 44){
         icon_grid.style.position = 'fixed'
         icon_grid.style.top = statusbarH+newNavbarH + 'px'
-         icon_grid.style.background= 'rgba(255,255,255,.98)'
+         icon_grid.style.background= 'rgba(0,0,0,.05)'
       }else{
         icon_grid.style.position = ''
          icon_grid.style.background = ''

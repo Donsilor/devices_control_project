@@ -16,7 +16,7 @@
       </div>
       <div>
         <div
-          v-if="tvStatus.tvOnlineStatus===0" 
+          v-if="tvStatus.tvOnlineStatus===0"
           class="offline_bar">
           <div class="offline_bar_div">
             <p class="offline_bar_p">
@@ -28,7 +28,7 @@
           </div>
         </div>
         <div
-          v-if="tvStatus.tvOnlineStatus==-1" 
+          v-if="tvStatus.tvOnlineStatus==-1"
           class="offline_bar offline_bar_wifi"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">
@@ -135,7 +135,7 @@
 }
 
 .offline_bar {
-    background: rgba(0, 0, 0, .3);
+    background: rgba(255, 255, 255, .2);
     width: 100%;
     height: 44PX;
     line-height: 44PX;

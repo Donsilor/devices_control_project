@@ -17,7 +17,7 @@
     />
     <div class="error-tip">
       <div class="NoNetwork-img">
-        <img src="~@lib/base/tv/assets/new/tv_icn_nowifi@2x.png" >
+        <img src="~@lib/base/tv/assets/new/tv_img_nowifi.png" >
       </div>
       <p>很抱歉，当前网络不可用</p>
       <!-- <button @click="fn">按钮</button> -->
@@ -63,7 +63,7 @@ export default {
   .space-block{
     height: 25PX;
   }
-   background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    background-color: rgb(0, 0, 0);
     background-size: 100% 100%;
     background-attachment: fixed;
     min-height: 100%;
@@ -81,9 +81,9 @@ export default {
         opacity: 0.39;
         font-family: PingFangSC-Regular;
         font-size: 24px;
-        color: #000000;
+        color: #fff;
         text-align: center;
-        margin-top: 64px;
+        margin-top: 34px;
       }
   }
 }

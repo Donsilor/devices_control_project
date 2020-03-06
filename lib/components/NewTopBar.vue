@@ -491,8 +491,7 @@ export default {
       justify-content: flex-end;
       align-items: center;
     p{
-
-       background: url('../base/img/tv_btn_search.png');
+       background: url('../base/tv/assets/new/kt_icn_search.png');
         background-size: 100% 100%;
     }
   }

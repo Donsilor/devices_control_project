@@ -134,23 +134,7 @@
     background-size: 100% 100%;
     width: 48px;
     height: 48px;
-
   }
-<<<<<<< HEAD
-}
-.right{
-  width: 44PX;
-  display: flex;
-  align-items: center;
-}
-.search{
-  background: url('~@lib/base/tv/assets/new/kt_icn_search.png');
-  background-size: 100% 100%;
-  width: 40px;
-  height: 40px;
-}
-=======
->>>>>>> 044af309b097df0d87438e6093cf5f29ffc3e7bd
 
 </style>
 
