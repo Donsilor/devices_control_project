@@ -71,7 +71,7 @@ export default {
       tv:this.$store.state.tvStatus.tvOnlineStatus,
       isRouterAlive:true
     }
-  },  
+  },
   computed: {
     isNotIndex() {
       return this.$store.state.detailVisible || this.$route.path != '/'
@@ -80,7 +80,7 @@ export default {
   watch:{
     '$store.state.tvStatus.tvOnlineStatus':{
         handler:function(n,v){
-          console.log('111111111111111111111111111111111',n,v)
+          console.log('app.tvOnlineStatus',n,v)
             if(n===-1){
               this.$router.push('/NoNetwork')
             }else if(v===-1){

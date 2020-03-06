@@ -48,7 +48,6 @@ HdSmart.onDeviceListen(function(data) {
   }
 })
 HdSmart.ready(() => {
-
   if (!is_ready) {
     is_ready = true
 
@@ -63,13 +62,9 @@ HdSmart.ready(() => {
     if(window.navigation_bar_height){
         store.commit('setNavigationBarHeight', window.navigation_bar_height / dpr)
     }
-
-    // setTimeout(() => {
       service.getScreenProjectionStatus((error, data) => {
         store.commit('setScreenProjectionStatus', data)
       })
-    // }, 150)
-
     window.onScreenProjectStatusChanged = function(data) {
       store.commit('setScreenProjectionStatus', data)
     }

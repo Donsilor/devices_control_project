@@ -95,13 +95,7 @@
         </swiper>
       </div>
     </div>
-
-
-
-
-
     <!-- 列表 -->
-
     <div
       class="index-list"
       @touchstart="touchstart"
@@ -148,8 +142,6 @@
             <span
               v-if="item.ispay && item.ispay !== '1'"
               class="isvip">付费</span>
-              <!--<div class="label">-->
-              <!--</div>-->
           </li>
         </ul>
       </div>
@@ -221,19 +213,6 @@
     right: 0;
     z-index: -1;
   }
-  // // background-position:center center;
-  // &::before{
-  //   //  content: ' ';
-  //   // position: fixed;
-  //   // z-index: -1;
-  //   // top: 0;
-  //   // right: 0;
-  //   // bottom: 0;
-  //   // left: 0;
-  //   // background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
-  //   // background-size: 100% 100%;
-  // }
-
   .space-block{
     height: 25PX;
   }
@@ -651,7 +630,6 @@
   }
   .right {
     margin: 25px 0;
-
     flex-shrink: 0;
     width: 654px;
     display: flex;
@@ -807,8 +785,6 @@
 <script>
 import { mapState } from 'vuex'
 import * as service from '../service'
-console.log(service,'service----------------')
-
 import _ from "../util"
 import Icon from '@lib/components/SettingIconMobile.vue'
 let infoCache = []
@@ -1031,7 +1007,7 @@ export default {
     },
     '$store.state.tvStatus.tvOnlineStatus':{
         handler:function(n,v){
-          console.log('111111111111111111111111111111111',n,v)
+          console.log('index, tvOnlineStatus',n,v)
             if(n===2){
                this.reload()
                this.pageInit()
@@ -1041,20 +1017,14 @@ export default {
             }
         },
         immediate: true
-    },
-    'window.room_name'(n){
-        console.log(n,'window.room_name------------------------------------watch')
     }
   },
   created() {
     this.pageInit()
     HdSmart.UI.toggleNav()
-    console.log('1111',window.device_name)
-    if(this.$store.state.tvStatus.tvOnlineStatus == 2){
-      // this.reload()
-    }
   },
   mounted() {
+    console.log('index-------------------------------------------mounted')
     Object.defineProperty(window,'room_name',{
       set:(newValue)=>{
         this.room_name = newValue
@@ -1083,16 +1053,19 @@ export default {
     HdSmart.UI.hideLoading()
   },
    destroyed() {
+     console.log('index-------------------------------------------destroyed')
     console.log('destroy')
     window.removeEventListener("scroll", this.loadMore)
     removeEventListener("scroll", this.fn)
   },
   activated(){
+    console.log('index-------------------------------------------activated')
       window.addEventListener("scroll", this.loadMore)
     addEventListener("scroll", this.fn)
 
   },
   deactivated(){
+    console.log('index-------------------------------------------deactivated')
        window.removeEventListener("scroll", this.loadMore)
     removeEventListener("scroll", this.fn)
   },

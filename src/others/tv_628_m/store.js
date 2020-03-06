@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 
 import * as service from './service'
 import router from './router'
-console.log(router,'router-----------------')
 
 Vue.use(Vuex)
 var scrollTop = 0
