@@ -1,6 +1,6 @@
 <template>
-  <div 
-    class="NoNetwork-page" 
+  <div
+    class="NoNetwork-page"
   >
     <!-- <div
       class="space-block" /> -->
@@ -13,13 +13,13 @@
 
     />
     <status-tip
-      v-show="device_uuid" 
+      v-show="true"
     />
     <div class="error-tip">
       <div class="NoNetwork-img">
-        <img src="~@lib/base/tv/assets/new/tv_icn_nowifi@2x.png" >
+        <img src="../imgs/tv_img_nowifi.png" >
       </div>
-      <p>很抱歉，当前网络不可用</p>
+      <p>当前网络不可用</p>
       <!-- <button @click="fn">按钮</button> -->
     </div>
   </div>
@@ -63,11 +63,12 @@ export default {
   .space-block{
     height: 25PX;
   }
-   background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
     background-size: 100% 100%;
+    background-color: black;
     background-attachment: fixed;
     min-height: 100%;
   .error-tip{
+    margin-top: 200px;
     .NoNetwork-img{
       display: flex;
       justify-content: center;
@@ -75,13 +76,13 @@ export default {
         width: 120px;
         height: 120px;
       }
-    
+
     }
       p{
         opacity: 0.39;
         font-family: PingFangSC-Regular;
         font-size: 24px;
-        color: #000000;
+        color:white;
         text-align: center;
         margin-top: 64px;
       }
