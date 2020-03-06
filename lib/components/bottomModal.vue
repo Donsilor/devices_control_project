@@ -1,15 +1,21 @@
 <template>
-    <div v-if="visibility" class="modal-box">
-      <ul>
-        <li v-for="(v, i) in dataList" :class="[{'text-active': v.value === 1}]">{{v.label}}</li>
-        <li class="text-active" @click="cancel">取消</li>
-      </ul>
-    </div>
+  <div
+    v-if="visibility"
+    class="modal-box">
+    <ul>
+      <li
+        v-for="(v, i) in dataList"
+        :class="[{'text-active': v.value === 1}]">{{ v.label }}</li>
+      <li
+        class="text-active"
+        @click="cancel">取消</li>
+    </ul>
+  </div>
 </template>
 
 <script>
     export default {
-        name: "bottomModal",
+        name: "BottomModal",
         props: {
           visibility: {
             default: true
@@ -18,14 +24,9 @@
             default: Array
           }
         },
-        data () {
+        data() {
           return {
 
-          }
-        },
-        methods: {
-          cancel () {
-            this.$parent.visibility = false
           }
         },
         watch: {
@@ -38,7 +39,12 @@
           //     document.body.removeEventListener('touchmove')
           //   }
           // }
-        }
+        },
+        methods: {
+          cancel() {
+            this.$parent.visibility = false
+          }
+        },
     }
 </script>
 

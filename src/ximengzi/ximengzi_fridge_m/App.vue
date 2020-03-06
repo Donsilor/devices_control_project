@@ -364,6 +364,10 @@ export default {
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
+      .then(() => {
+        this.level_containerValue = (+this.deviceAttrs.level_container)
+        this.level_freezerValue = (+this.deviceAttrs.level_freezer)
+      })
       HdSmart.UI.setStatusBarColor(2)
     })
   },

@@ -1,5 +1,7 @@
 <template class="a">
-  <div class="body" style="background-color: #000;height: 100%">
+  <div
+    class="body"
+    style="background-color: #000;height: 100%">
     <div
       :class="[{ 'offline': isOffline || networkStatus == -1 }, {'close': isClose}, 'page']" >
       <new-topbar
@@ -19,7 +21,9 @@
           width="560"
           height="560"
         />
-        <p class="light-mode" @click="openModal">暖光</p>
+        <p
+          class="light-mode"
+          @click="openModal">暖光</p>
       </div>
       <!-- 按钮 -->
       <div
@@ -34,7 +38,9 @@
         </div>
       </div>
     </div>
-    <BottomModal :dataList="modalLightData" :visibility="visibility"></BottomModal>
+    <BottomModal
+      :data-list="modalLightData"
+      :visibility="visibility"/>
   </div>
 </template>
 
@@ -60,10 +66,11 @@
         moveFlag: false,
         brightness: 100,
         loaclAttr: {},
-        linearGradientArr: [{
-          step: '0',
-          color: '#EF6D5E'
-        },
+        linearGradientArr: [
+          {
+            step: '0',
+            color: '#EF6D5E'
+          },
           {
             step: '1.0',
             color: '#F9BB6B'
@@ -116,18 +123,13 @@
       isClose(){
         return this.deviceAttrs.switch_status=="on"?false:true
       },
-      switchStatus () {
+      switchStatus() {
         return this.deviceAttrs.switch_status == 'on' && !this.isOffline && this.networkStatus != -1 ? 'active' : 'noactive'
       }
     },
     watch: {
-      "deviceAttrs"() {
-        this.loaclAttr = this.deviceAttrs
-        // this.reset()
-        console.log('=============', this.loaclAttr.mode)
-      },
       'device.stateChange'() {
-        // this.draw(`${((this.deviceAttrs.level/2.55)+50)/200}`)
+        this.draw(`${this.deviceAttrs.level/255}`)
       },
       'brightness'() {
         if(this.deviceAttrs.switch_status == 'on' && !this.isOffline&& this.networkStatus != -1) {
@@ -139,7 +141,7 @@
       HdSmart.ready(() => {
         this.getDeviceInfo()
           .then(() => {
-            this.draw(0.725)
+            this.draw(`${this.deviceAttrs.level/255}`)
             // this.reset()
           })
           .catch((err) => {
@@ -151,47 +153,6 @@
       })
     },
     mounted(){
-      // console.log('device', this.device);
-      // this.ctx = this.$refs.canvas.getContext("2d")
-      // // this.ctx.translate(0.5, 0.5)
-      // this.ctx.scale(2,2)
-      // this.$nextTick(() => {
-      //   let on = ("ontouchstart" in document)? {
-      //       start: "touchstart", move: "touchmove", end: "touchend"
-      //   } : {
-      //       start: "mousedown", move: "mousemove", end: "mouseup"
-      //   }
-      //     this.$refs.canvas.addEventListener(on.start,()=> {
-      //       this.moveFlag = true
-      //   },false)
-      //
-      //   this.$refs.canvas.addEventListener(on.move, (e)=> {
-      //       if(e.preventDefault){
-      //           e.preventDefault()
-      //       }else{
-      //           e.returnValue = false
-      //       }
-      //       if (this.moveFlag) {
-      //           var k = this.getXY(e,this.$refs.canvas)
-      //           var r = Math.atan2(k.x-this.ox, this.oy-k.y)
-      //           var hd = (Math.PI+r)/(2*Math.PI)
-      //           // 半圆的滑动范围判断
-      //           if (hd <= 0.75 && hd >= 0.25) {
-      //               this.draw(hd)
-      //           }else if (hd > 0.75) {
-      //             this.draw(0.75)
-      //           } else if (hd < 0.25) {
-      //             this.draw(0.25)
-      //           }
-      //       }
-      //   }, false)
-      //   this.$refs.canvas.addEventListener(on.end,()=> {
-      //       if (this.isOffline||this.isClose|| this.networkStatus == -1) return
-      //       this.moveFlag = false
-      //       if(parseInt(this.brightness*2.55) <= 15 && parseInt(this.brightness*2.55) > 0) return this.controlDevice('level',15)
-      //       this.controlDevice('level',parseInt(this.brightness*2.55))
-      //   }, false)
-      // })
       this.ctx = this.$refs.canvas.getContext("2d")
       this.ctx.scale(2,2)
       this.$nextTick(() => {
@@ -215,11 +176,11 @@
           if (this.moveFlag) {
             var k = this.getXY(e,this.$refs.canvas)
             var r = Math.atan2(k.x-this.ox, this.oy-k.y)
-            console.log('r', r)
+            // console.log('r', r)
             var hd = (Math.PI+r)/(2*Math.PI)
             // 半圆的滑动范围判断
             if (hd <= 1 && hd >= 0) {
-              console.log('开始运动')
+              // console.log('开始运动')
               this.draw(hd)
             }else{
               return
@@ -273,7 +234,7 @@
         this.ctx.shadowBlur = 0
         this.ctx.lineCap = 'round'
         // this.ctx.arc(this.ox,this.oy,this.or,1/4 * Math.PI,3/4 * Math.PI,true)//半圆(逆时针)
-        this.ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true);//整圆
+        this.ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true)//整圆
         this.ctx.stroke()
         // 画一个渐变
         // var gradient = this.ctx.createLinearGradient(this.ox, this.oy * 2, this.ox, 0)
@@ -288,7 +249,7 @@
         // this.ctx.lineCap = "round"
         // this.ctx.stroke()
         if (status&&!this.isOffline) {
-          console.log('heat111')
+          // console.log('heat111')
           // this.ctx.strokeStyle = "#DA6C00"
           this.ctx.strokeStyle = gradient
         }else{
@@ -314,7 +275,7 @@
         } else {
           this.ctx.fillText("--",this.ox,this.oy)
         }
-        console.log( Math.round((n*(16/0.75))+(16-((16*0.125)/0.75)))+"℃",'温度')
+        // console.log( Math.round((n*(16/0.75))+(16-((16*0.125)/0.75)))+"℃",'温度')
         this.thermography = Math.round((n*(16/0.75))+(16-((16*0.125)/0.75)))
         this.centigrade = Math.round((n*(16/0.75))+(16-((16*0.125)/0.75)))*10
 
@@ -342,12 +303,12 @@
         let et = e.touches? e.touches[0] : e
         let x = et.clientX
         let y = et.clientY
-        console.log('y1,', y)
-        console.log('obj.offsetTop', obj.offsetTop)
-        console.log('y1-obj.offsetTop',y - obj.offsetTop)
-        console.log('obj.offsetLeft', obj.offsetLeft)
-        console.log('document.body.scrollTop ', document.body.scrollTop)
-        console.log('document.documentElement.scrollTop ', document.documentElement.scrollTop)
+        // console.log('y1,', y)
+        // console.log('obj.offsetTop', obj.offsetTop)
+        // console.log('y1-obj.offsetTop',y - obj.offsetTop)
+        // console.log('obj.offsetLeft', obj.offsetLeft)
+        // console.log('document.body.scrollTop ', document.body.scrollTop)
+        // console.log('document.documentElement.scrollTop ', document.documentElement.scrollTop)
         return {
           x : x - obj.offsetLeft,
           y : y - obj.offsetTop
@@ -417,7 +378,7 @@
       handleMore() {
         this.isOpen = !this.isOpen
       },
-      openModal () {
+      openModal() {
         this.visibility = true
       }
     },
@@ -440,23 +401,20 @@
     }
   }
   *{ -webkit-tap-highlight-color:transparent; }
-  .page{
-    // height:100vh;
-    // background: url('~@lib/@{imgPath3}/bg02.png');
-    // background-size: 100% 100%;
-    &::before{
-      content: "";
-      background-image: url('~@lib/@{imgPath3}/bg02.png');
-      background-repeat:no-repeat;
-      background-size: 100% 100%;
-      position: fixed;
-      top:0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: -1;
-    }
-  }
+  // .page{
+  //   &::before{
+  //     content: "";
+  //     background-image: url('~@lib/@{imgPath3}/bg02.png');
+  //     background-repeat:no-repeat;
+  //     background-size: 100% 100%;
+  //     position: fixed;
+  //     top:0;
+  //     left: 0;
+  //     right: 0;
+  //     bottom: 0;
+  //     z-index: -1;
+  //   }
+  // }
   .main{
     margin-top: 85px;
     // position: relative;
@@ -465,14 +423,15 @@
     /*position: relative;*/
     // zoom: 0.5;
     .light-mode{
+      padding-top: 16px;
+      width: 200px;
+      text-align: center;
       font-size: 32px;
       color:#D9BA45;
       position: absolute;
-      /*bottom: 0px;*/
       margin-top: 140px;
-      /*left: 49%;*/
-      /*transform: translateX(-50%);*/
       z-index: 9999999999999;
+      border-top: 1px solid rgba(255,255,255,0.1);
       &:after{
         display:block;
         content:'';
@@ -481,8 +440,8 @@
         border-color:#D9BA45 transparent transparent transparent;
         /* 定位 */
         position:absolute;
-        left:40%;
-        top:110%;
+        left:46%;
+        top:120%;
       }
     }
   }
