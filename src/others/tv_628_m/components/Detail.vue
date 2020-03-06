@@ -8,7 +8,7 @@
 
     <topbar
       :back="goBack"
-      :search="false">
+      :search="true">
       <div class="title">
         {{ title }}
         <span
@@ -66,7 +66,7 @@
             class="mb"
             @click="synopsisResetFn"/>
         </transition>
-        <!-- <transition name="bottom"> -->
+        <!--弹出的简介框-->
         <div 
           ref="synopsisD"
           class="synopsisD">
@@ -245,7 +245,8 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");
+    /*background: url("../../../../lib/base/tv/assets/icn_blurry_bg@2x.png");*/
+    background-color: #000;
     background-size: 100% 100%;
   }
 }
@@ -326,10 +327,12 @@
     width: 264px;
     height: 400px;
     float: left;
+
     img {
       width: 100%;
       height: 100%;
       background-color: #525456;
+      border-radius: 20px;
       background-repeat: no-repeat;
       background-position: center center;
       background-size: 120px 120px;
@@ -383,7 +386,8 @@
     left: 0;
     width: 100%;
     max-height: 1010px;
-    background: #fff;
+    background: #1C1C1E;
+    border-radius: 10px 10px 0 0;
     z-index: 10000;
     .synopsisD-header{
     padding: 0 32px;
@@ -396,12 +400,12 @@
       p{
         font-family: PingFangSC-Regular;
         font-size: 32px;
-        color: #222A37;
+        color: #fff;
       }
       span{
         width: 48px;
         height: 48px;
-        background: url('~@lib/base/img/btn_ac_close@2x.png');
+        background: url('~@lib/base/tv/assets/new/btn_delete.png');
         background-size: 100% 100%;
       }
     }
@@ -411,13 +415,13 @@
          overflow-y: scroll;
          max-height: 846px;
       .text2{
-      border-bottom: 1px solid rgba(0,0,0,.1);
+      border-bottom: 1px solid rgba(255,255,255,.1);
       padding-bottom: 40px;
       p{
         opacity: 0.5;
         font-family: PingFangSC-Light;
         font-size: 24px;
-        color: #000000;
+        color: #fff;
         letter-spacing: 0;
         line-height: 40px;
       }
@@ -435,14 +439,14 @@
       margin: 41px 0 12px 0;
       font-family: PingFangSC-Regular;
       font-size: 24px;
-      color: #222A37;
+      color: #fff;
       line-height: 44px;
     }
     .desc2{
       opacity: 0.5;
       font-family: PingFangSC-Light;
       font-size: 24px;
-      color: #000000;
+      color: #fff;
       letter-spacing: 0;
       text-align: justify;
       line-height: 40px;
@@ -576,16 +580,15 @@
 .shortinfo {
   margin-bottom: 48px;
   p {
-    opacity: 0.5;
     font-family: PingFangSC-Light;
     font-size: 24px;
-    color: #000000;
+    color: #fff;
     letter-spacing: 0;
     line-height: 40px;
     padding-bottom:4px; 
   }
   span {
-    color: #000;
+    color: #fff;
   }
   .text_s {
     overflow: hidden;
@@ -622,18 +625,19 @@
   width: 100%;
   height: 84px;
   &.gray{
-   opacity: 0.2;
+
   }
   .btn {
     /*background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);*/
-    /*border-radius: 45px;*/
+
+    border-radius: 40px;
     background-color: #000000;
-    background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
-    height: 84px;
-    line-height: 84px;
+    background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
+    height: 80px;
+    line-height: 80px;
     display: block;
-    color: #000;
-    font-size: 36px;
+    color: #fff;
+    font-size: 32px;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -643,11 +647,12 @@
       vertical-align: middle;
       width: 40px;
       height: 40px;
-      background: url('~@lib/base/tv/assets/new/tv_icn_play2.png');
+      background: url('~@lib/base/tv/assets/new/tv_btn_play.png');
         background-size: 100% 100%;
     }
     span{
       font-size: 32px;
+      font-family: PingFangSC-Light;
     }
     .icon-play,
     .icon-playing {
@@ -722,10 +727,9 @@
 
     font-family: PingFangSC-Medium;
     font-size: 32px;
-    color: #222A37;
+    color: #fff;
     line-height: 44px;
     margin-bottom: 30px;
-    color: #222a37;
     font-weight: 600;
     font-size:32px;
     &.related {
@@ -741,7 +745,7 @@
     width: 100%;
     height: 1010px;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #1c1c1e;
     margin-left: 0;
     padding-top: 0;
 
@@ -768,7 +772,7 @@
     .close {
         width: 48px;
         height: 48px;
-        background: url('~@lib/base/img/btn_ac_close@2x.png');
+        background: url('~@lib/base/tv/assets/new/btn_delete.png');
         background-size: 100% 100%;
     }
   }
@@ -783,7 +787,7 @@
       // display: inline-block;
     
       font-size: 24px;
-      color: #000000;
+      color: #fff;
       margin-left: 2px;
       // transform: rotate(90deg);
       font-family: PingFangSC-Light;
@@ -794,10 +798,12 @@
     }
     .arrow{
       display: inline-block;
-      width: 24px;
-      height: 24px;
-      background: url('~@lib/base/tv/assets/new/tv_arrow_more.png');
+      width: 36px;
+      height: 36px;
+      background: url('~@lib/base/tv/assets/new/tv_arrow_in.png');
       background-size: 100% 100%;
+      background-color: rgba(255,255,255,.1);
+      border-radius: 18px;
     }
   }
   .bd-num {
@@ -826,16 +832,10 @@
     line-height: 118px;
     text-align: center;
     position: relative;
-    // background-color: #f0f0f0;
-    // background: rgba(0,0,0,0.2);
-    // background: #000;
-    // opacity: 0.04;
-    /*border: 1px solid #dbdbdb;*/
-    // border-radius: 8px;
     font-family: PingFangSC-Regular;
     font-size: 28px;
     letter-spacing: 0;
-    background: rgba(0,0,0,.04);
+    background: rgba(255,255,255,.08);
     color: #000;
     // &:active {
     //   background: #ebebeb;
@@ -864,13 +864,14 @@
     // margin: 0 25px 0 5px;
     float: left;
     overflow: hidden;
-    color: #222a37;
+    color: #fff;
     margin-right:22px;
     img {
       width: 320px;
       height: 180px;
       display: block;
       margin-bottom: 12px;
+      border-radius: 10px;
     }
     p {
       // text-overflow: ellipsis;
@@ -1127,7 +1128,7 @@ export default {
         document.body.scrollTop
       let topbar_fixed = document.querySelector('.topbar-fixed')
       if(scrollTop>=20){
-        topbar_fixed.style.background = '#fff'
+        topbar_fixed.style.background = '#1c1c1e'
       }else{
         topbar_fixed.style.background = ''
       }
