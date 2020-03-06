@@ -3,11 +3,24 @@
     ref="topbar"
     :class="[{'topbar-nobg':transparent}, {'topbar-black': bgBlack}]"
     class="topbar">
-    <div
+    <!-- <div
       :style="{ 'background': bgColor ,height:status_bar_height+navigation_bar_height*2+'px', 'line-height': status_bar_height+navigation_bar_height*2 + 'px'}"
-      class="topbar-block" />
+      class="topbar-block" /> -->
+    <!-- 占位头部 -->
+    <div 
+      :style="{ 'background': bgColor,height:'auto'}"
+      class="topbar-block" >
+      <div
+        :style="{height:status_bar_height+'px'}" />
+      <div
+        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"/>
+      <div
+        :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"/>
+    </div>
+
+    <!-- 定位头部，不占位 -->
     <div
-      :style="{ background: bgColor }"
+      :style="{ background: bgColor}"
       :class="['topbar-fixed', className]">
 
       <div

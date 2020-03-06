@@ -2,20 +2,18 @@
 @imgPath1: 'base/ch_air_condition/assets';
 
 .page {
-    background: #000;
+    
     padding-bottom: 24px;
-//   &::before{
-//     content: "";
-//     background-image: url('~@lib/@{imgPath1}/img_bg.png');
-//     background-repeat:no-repeat;
-//     background-size: 100% 100%;
-//     position: fixed;
-//     top:0;
-//     left: 0; 
-//     right: 0;
-//     bottom: 0;
-//     z-index: -1;
-//   }
+  &::before{
+    content: "";
+    background: #000;
+    position: fixed;
+    top:0;
+    left: 0; 
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
   &::-webkit-scrollbar {
 		display: none;
 	}
@@ -144,10 +142,13 @@
       }
       .cover{
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 370px;
+        top: 65%;
+        left: 50%;
+        width: 50%;
+        height: 78%;
+        transform: translate(-50%,-50%);
+        border-radius: 50%;
+        z-index: 100;
       }
     }
   }
@@ -409,7 +410,7 @@
               &.btn-strong{
                 position: relative;
                 z-index: 100;
-                background-image: url('~@lib/@{imgPath1}/kt_mode_fan06_r.png');
+                background-image: url('~@lib/@{imgPath1}/kt_mode_fan06_y.png');
                 background-size: 100% 100%;
               }
               &.clock{
