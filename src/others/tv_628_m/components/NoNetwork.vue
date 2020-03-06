@@ -17,7 +17,7 @@
     />
     <div class="error-tip">
       <div class="NoNetwork-img">
-        <img src="../imgs/tv_img_nowifi.png" >
+        <img src="~@lib/base/tv/assets/new/tv_img_nowifi.png" >
       </div>
       <p>当前网络不可用</p>
       <!-- <button @click="fn">按钮</button> -->
@@ -82,9 +82,9 @@ export default {
         opacity: 0.39;
         font-family: PingFangSC-Regular;
         font-size: 24px;
-        color:white;
+        color: #fff;
         text-align: center;
-        margin-top: 64px;
+        margin-top: 34px;
       }
   }
 }
