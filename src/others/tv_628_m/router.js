@@ -1,20 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 Vue.use(Router)
-import Index from './components/Index.vue'
-import List from './components/List.vue'
-import Search from './components/Search.vue'
-import Detail from './components/Detail.vue'
+const Index = () => import('./components/Index.vue')
+const List = () => import('./components/List.vue')
+const Search = () => import('./components/Search.vue')
+const Detail = () => import('./components/Detail.vue')
+const ErrorView = () => import('./components/Error.vue')
+const NoNetwork = () => import('./components/NoNetwork.vue')
+
 import Topbar from './components/Topbar.vue'
 import remoteControl from './components/remoteControl.vue'
 import NewTopbar from '@lib/components/NewTopBar.vue'
-
-import ErrorView from './components/Error.vue'
-import NoNetwork from './components/NoNetwork.vue'
 import OfflineMask from './components/OfflineMask.vue'
-// import Statusbar from './components/Statusbar.vue'
 import StatusTip from './components/StatusTip.vue'
-
 
 
 Vue.component('detail', Detail)
