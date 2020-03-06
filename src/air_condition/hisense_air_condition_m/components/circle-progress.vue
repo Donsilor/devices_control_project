@@ -27,8 +27,20 @@
         :stroke-linecap="isRound ? 'round' : 'square'"
         :stroke-dasharray="(width-radius)*3.14"
         :stroke-dashoffset="isAnimation ? (width-radius) * 3.14 : (width - radius) * 3.14 * (100 - progress) / 100"
+        fill="none"/>
+        <!-- <circle
+        ref="$dot"
+        :stroke="barColor"
+        :stroke-width="radius"
+        :stroke-linecap="isRound ? 'round' : 'square'"
+        :stroke-dasharray="(width-radius)*3.14"
+        :stroke-dashoffset="isAnimation ? (width-radius) * 3.14 : (width - radius) * 3.14 * (100 - progress) / 100+12"
+        :cy="125"
+        :cx="125"
+        r="121"
+        class="dot"
         fill="none"
-      />
+      /> -->
     </svg>
   </div>
 </template>
@@ -38,11 +50,16 @@ export default {
   props: {
     width: [Number, String], // 圆的大小
     radius: [Number, String], // 进度条厚度
+    radiusds: [Number, String], // 进度条厚度
     progress: [Number, String], // 进度条百分比
     barColor:  { // 是否是圆形画笔
       type: String,
       default: '#0FDC66',
     }, // 进度条颜色
+    dotColor:  { // 是否是圆形点
+      type: String,
+      default: '#fff',
+    }, 
     backgroundColor: String, // 背景颜色
     isAnimation: { // 是否是动画效果
       type: Boolean,
@@ -107,6 +124,20 @@ export default {
         to {stroke-dashoffset: ${(this.width - this.radius) * 3.14 * (100 - this.progress) / 100}px;}}
         .circle_progress_bar${this.id} {animation: circle_progress_keyframes_name_${this.id} ${this.duration}ms ${this.delay}ms ${this.timeFunction} forwards;}`
 
+
+
+        let styleDot = document.createElement('style')
+        styleDot.id = 'dot'
+        styleDot.type = 'text/css'
+        styleDot.innerHTML = `
+        @keyframes circle_progress_keyframes_name_dot {
+        from {stroke-circleoffset: ${(this.width - this.radiusds) * 3.14}px;}
+        to {stroke-circleoffset: ${(this.width - this.radiusds) * 3.14 * (100 - this.progress) / 100}px;}}
+        .circle_progress_bar_dot {animation: circle_progress_keyframes_name_dot ${this.duration}ms ${this.delay}ms ${this.timeFunction} forwards;}`
+
+
+
+
         let styleBg = document.createElement('style')
         styleBg.id = 'bg'
         styleBg.type = 'text/css'
@@ -128,3 +159,12 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+  // .dot{
+  //   width: 20px;
+  //   height: 20px;
+  //   border-radius: 50%;
+  //   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.10);
+  //   background-color: #fff;
+  // }
+</style>

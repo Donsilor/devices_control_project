@@ -4,27 +4,45 @@
     class="model"
     @click.self="show = false"
     @touchmove.prevent>
-    <div class="main">
-      <p class="title">选择模式</p>
+    <div 
+      v-if="show"
+      class="main show">
+      <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
         <div 
-          class="btn" 
-          @click="setMode('auto')">
-          <div :class="[mode === 'auto' ? 'active' : '', 'btn-auto center']" />
+          class="btn"
+          @click="setMode('cold')">
+          <div class="btn-cold center" />
           <div 
-            class="name" >智能</div>
+            :class="[mode === 'cold' ? 'active' : '', 'name']" >制冷</div>
         </div>
         <div 
           class="btn"
-          @click="setMode('dehumidify')">
-          <div :class="[mode === 'dehumidify' ? 'active' : '', 'btn-dehumidify center']" />
-          <div class="name">除湿</div>
+          @click="setMode('heat')">
+          <div class="btn-heat center" />
+          <div 
+            :class="[mode === 'heat' ? 'active' : '', 'name']" >制热</div>
+        </div>
+        <div 
+          class="btn" 
+          @click="setMode('auto')">
+          <div class="btn-auto center" />
+          <div 
+            :class="[mode === 'auto' ? 'active' : '', 'name']" >智能</div>
         </div>
         <div 
           class="btn"
           @click="setMode('wind')">
-          <div :class="[mode === 'wind' ? 'active' : '', 'btn-wind center']" />
-          <div class="name">送风</div>
+          <div class="btn-wind center" />
+          <div 
+            :class="[mode === 'wind' ? 'active' : '', 'name']" >送风</div>
+        </div>
+        <div 
+          class="btn"
+          @click="setMode('dehumidify')">
+          <div class="btn-dehumidify center" />
+          <div 
+           :class="[mode === 'dehumidify' ? 'active' : '', 'name']" >除湿</div>
         </div>
       </div>
       <div 
@@ -35,6 +53,17 @@
 </template>
 <style lang="less" scoped>
 @imgPath: 'base/air_condition/assets/new-air';
+@keyframes show {
+    0% {
+      bottom:-380px;
+    }
+    100% {
+       bottom:0;
+    }
+}
+.show{
+  animation: show .2s linear 0s;
+}
   .model{
     position: fixed;
     top: 0;
@@ -58,91 +87,50 @@
       background: rgba(0,0,0,0.8);
     }
     .main{
-      position: relative;
+      position: absolute;
+      bottom: 0;
       z-index: 999999999999;
-      width: 638px;
-      height: 542px;
-
-      color: #20282B;
-      background: #FFFFFF;
-      border: 1px solid #DDDDDD;
-      border-radius: 24px;
-      border-radius: 24px;
-      .title{
-        margin: 88px 48px 48px;
-        font-weight: bold;
-        font-size: 40px;
-        color: #20282B;
-      }
+      width: 100%;
+      // height: 381px;
+      height: auto;
+      font-family: PingFangSC-Light;
+      color: #fff;
+      // background: #eee;
+      // border: 1px solid #DDDDDD;
       .btns{
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-top: 68px;
+        flex-direction: column;
+        // background: rgba(37,37,37,0.80);
+        background: #1C1C1E;
+        border-radius: 10px;
+        margin: 0 16px 16px 16px;
         .btn{
-          margin: 0 32px;
+          width:100%;
+          height:120px;
+          line-height: 120px;
           text-align: center;
-
-          .btn-auto{
-            width: 120px;
-            height: 120px;
-            border: 1px solid #818181;
-            border-radius: 50%;
-            &::before{
-              content: '';
-              display: block;
-              width: 44px;
-              height: 44px;
-              background-image: url('~@lib/@{imgPath}/auto.png');
-              background-size: 100% 100%;
-            }
-          }
-          .btn-dehumidify{
-            width: 120px;
-            height: 120px;
-            border: 1px solid #818181;
-            border-radius: 50%;
-            &::before{
-              content: '';
-              display: block;
-              width: 44px;
-              height: 44px;
-              background-image: url('~@lib/@{imgPath}/dehumidify.png');
-              background-size: 100% 100%;
-            }
-          }
-          .btn-wind{
-            width: 120px;
-            height: 120px;
-            border: 1px solid #818181;
-            border-radius: 50%;
-            &::before{
-              content: '';
-              display: block;
-              width: 44px;
-              height: 44px;
-              background-image: url('~@lib/@{imgPath}/wind.png');
-              background-size: 100% 100%;
-            }
-          }
-          .active{
-            background-image: linear-gradient(90deg, #FFD500 0%, #FFBF00 100%);
-            border: none;
-          }
+          font-size:32px;
+          border-bottom: 0.5px solid rgba(255,255,255,.1);
           .name{
-            margin-top: 16px;
-            font-size: 24px;
-            color: #20282B;
+            &.active{
+               color:#E1B96E;
+            }
           }
         }
       }
       .hide{
-        margin-top:61px;
+        height: 120px;
+        margin-top:21px;
         font-size: 32px;
-        color: #FFC800;
         letter-spacing: 0;
         text-align: center;
-        line-height: 44px;
+        line-height: 120px;
+        color: #E1B96E;
+        background: #1C1C1E;
+        border-radius: 10px;
+        margin: 0 16px 16px 16px;
       }
     }
   }
