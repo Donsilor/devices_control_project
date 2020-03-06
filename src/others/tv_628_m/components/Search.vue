@@ -149,7 +149,7 @@
       v-show="loadState === 'NO_DATA'"
       class="nodata">
       <i />
-      <p>很抱歉,没有找到相关结果</p>
+      <p>没有找到相关结果</p>
     </div>
   </div>
 </template>
@@ -172,7 +172,7 @@
     display: block;
     width: 120px;
     height: 120px;
-    background: url("../../../../lib/base/tv/assets/new/tv_icn_search_wujieguo.png");
+    background: url("../imgs/tv_img_wujieg.png");
      background-size: 100% 100%;
      position: absolute;
      left: 50%;
@@ -181,9 +181,9 @@
   p{
     opacity: 0.39;
     font-family: PingFangSC-Regular;
-    font-size: 24px;
-    color: #000000;
-    padding-top: 196px;
+    font-size: 32px;
+    color: white;
+    padding-top: 150px;
   }
 }
 .statusbar {
