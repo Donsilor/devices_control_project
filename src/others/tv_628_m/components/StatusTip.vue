@@ -16,26 +16,26 @@
       </div>
       <div>
         <div
-          v-if="tvStatus.tvOnlineStatus===0" 
+          v-if="tvStatus.tvOnlineStatus===0"
           class="offline_bar">
           <div class="offline_bar_div">
             <p class="offline_bar_p">
-              <i 
+              <i
                 class="synchronization rotate"/>
             </p>
-            <span class="link">状态同步中,&nbsp;&nbsp;请稍后...</span> 
+            <span class="link">状态同步中,&nbsp;&nbsp;请稍后...</span>
 
           </div>
         </div>
         <div
-          v-if="tvStatus.tvOnlineStatus==-1" 
+          v-if="tvStatus.tvOnlineStatus==-1"
           class="offline_bar offline_bar_wifi"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">
             <p class="offline_bar_p">
               <i class="wifi"/>
             </p>
-            <span class="link">当前网络不可用</span> 
+            <span class="link">当前网络不可用</span>
 
           </div>
         </div>
@@ -52,14 +52,14 @@
           <i class="arrow"/>
         </div>
         <div
-          v-if="tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==2"      
+          v-if="tvStatus.tvOnlineStatus==-3||tvStatus.tvOnlineStatus==2"
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">
             <p class="offline_bar_p">
               <i class="error"/>
             </p>
-           
+
             <span class="link">设备已离线,查看帮助</span>
           </div>
           <i class="arrow"/>
@@ -78,6 +78,10 @@
 // .status_bar_block{
 //     height: 0;
 // }
+.status_bar{
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
 .status_bar_fixed{
     // position:fixed;
     left: 0;
@@ -92,12 +96,10 @@
     height: 44PX;
     line-height: 44PX;
     font-size: 28px;
-    color: #FFC800;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgb(255,255,255);
 }
 .sp_status_bar .text {
     max-width: 50%;
@@ -107,7 +109,6 @@
 }
 .status_bar {
     // position: absolute;
-
     width: 100%;
     z-index: 10000;
     top: 0;
@@ -115,27 +116,23 @@
     height: 44PX;
 }
 .status_bar .link {
-    color: #FFC800;
     font-weight: lighter;
 }
 .status_bar .icon-tv1 {
     display: inline-block;
     margin-right: 20px;
-    color: #FFC700;
     font-size: 36px;
 }
 .status_bar .icon-arrow {
     transform: rotate(90deg);
     display: inline-block;
     font-size: 24px;
-    color: #FFC700;
 }
 .status_bar .icon-wifi {
     display: inline-block;
 }
 
 .offline_bar {
-    background: rgba(0, 0, 0, .3);
     width: 100%;
     height: 44PX;
     line-height: 44PX;
@@ -175,7 +172,7 @@
         background: url('~@lib/base/tv/assets/new/tv_icn_tips_tongbu.png');
         background-size: 100% 100%;
       }
-     
+
     }
     .error{
       width: 20PX;
@@ -186,7 +183,7 @@
     .arrow{
       width: 20PX;
       height: 20PX;
-      background: url('~@lib/base/tv/assets/new/tv_arrow_lixian.png');
+      background: url('../imgs/tv_arrow_in.png');
       background-size: 100% 100%;
     }
 }
@@ -234,7 +231,7 @@ export default {
           ios: /iPad|iPhone|iPod/.test(navigator.userAgent)
         }
     },
-   
+
     computed: {
         tvStatus() {
             return this.$store.state.tvStatus
@@ -271,7 +268,7 @@ export default {
     //   if(this.type==='首页'&& this.$refs.status_bar_fixed){
     //     this.$refs.status_bar_fixed.style.position="absolute"
     //     this.$refs.status_bar_fixed.style.top="0"
-        
+
     //   }
     // },
     methods: {
