@@ -1,26 +1,26 @@
 <template>
   <div class="body">
     <div 
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover']" 
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover', {'scroll44': classTrue}]" 
     >
       <NewTopBar
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
         page-class=".page"
+        @hscroll="hscroll"
+        @hscrolltop="hscrolltop"
       />
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <div class="main center">
         <div class="wrap-circle">
-          <!-- 当不可调节温度时，显示这个盒子，可以挡着canvas，使它不能滑动 -->
-          <div 
-            v-if="deviceAttrs.mode=='wind'||deviceAttrs.mode=='auto'||deviceAttrs.mode=='dehumidify'" 
-            class="cover"
-            @touchmove.prevent/>
           <!-- 温度圆环 -->
           <div 
-            class="container" 
-          >
+            class="container">
+            <!-- <div 
+              class="cover"
+              @touchmove.prevent
+            /> -->
             <div 
               v-for="(item, index) in count" 
               :key="index" 
@@ -224,37 +224,14 @@ export default {
       count: 31,
       now: 0,
       idNum:0,
-      isOpen: false,
-      isShow: true,
-      width: 250,
-      radius: 8,
-      radiusds: 12,
-      progress: 30, // 0~70
-      duration: 0,
-      delay: 0,
-      // barColor: '#D8D8D8',
-      dotColor:'#fff',
-      backgroundColor: '#ececec',
-      timeShow: false,
-      typeVal: 'hand',
-      brightnessValue: 0,
-      rangStyle: '',
-      opcityStyle: 'opcity-0',
-      //圆的数据
-      ox:140,
-      oy:140,
-      or:130,
-      br:10,
-      moveFlag:false,
-      centigrade:0,//摄氏度
-      ctx: '',
-      //记录温度
-      thermography:16,
       moveEnd:false,
       setTemperatureDis:false,
       device_uuid: window.device_uuid||'',
       disabledLock: false,
       itemTemp:'',//最终请求的温度
+      hscrolll: 0,
+      hscrolltopp: 0,
+      classTrue: false
     }
   },
 
@@ -361,13 +338,20 @@ export default {
     }
   },
   watch: {
-       'deviceAttrs.temperature'() {
+    'deviceAttrs.temperature'() {
       if(this.deviceAttrs.temperature) {
         this.setTemperatureDis = false
         // 当返回的温度发生变化时，将温度值赋给itemTemp
         this.itemTemp = this.deviceAttrs.temperature
       }
     },
+    "hscrolltopp"() {
+      if(this.hscrolltopp >= this.hscrolll) {
+        this.classTrue = true
+      } else {
+        this.classTrue = false
+      }
+    }
   },
   created() {
     HdSmart.ready(() => {
@@ -378,8 +362,21 @@ export default {
       HdSmart.UI.setStatusBarColor(1)
     })
   },
+  mounted() {
+    this.$nextTick(()=>{
+      setTimeout(()=>{
+        window.scrollTo(0,0)
+      },200)
+    },)
+  },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    hscroll(val) {
+      this.hscrolll = val
+    },
+    hscrolltop(val) {
+      this.hscrolltopp = val
+    },
     // 温度圆环
       calculateBg(index){
           let color = ''
@@ -437,7 +434,6 @@ export default {
     //  var ssdd = document.elementsFromPoint(touch.pageX, touch.pageY)
      var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
      this.idNum = parseInt(ele)
-     console.log(this.idNum,99999999)
      this.calculateBg(this.idNum)
     // 如果是NaN,则return
     if(isNaN(this.idNum)==true){
@@ -447,12 +443,10 @@ export default {
         // 滑动的梯子的index和温度之间的关系式
         this.itemTemp = (0.5*this.idNum+16)*10
         var num = this.itemTemp + ""
-
-        console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
+        // console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
         // 如果最后一位数字是5，则往前进1
         if (num.lastIndexOf("5")==2) {
           this.itemTemp +=5
-          console.log('进来了啦啦啦啦啦啦啦啦啦')
           console.log(this.itemTemp,'最终传给后台的温度')
           
         }

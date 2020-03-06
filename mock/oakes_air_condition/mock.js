@@ -41,7 +41,7 @@ var res = {
         timer_switch:'on',
         time_value:0,
         close_time:'false',
-        error:'设备故障啦啦啦啦'
+        // error:'设备故障啦啦啦啦'
     },
     third_attribute:{
       "selection":"16,30;0,1,2,3,4;0,1,2,3",
