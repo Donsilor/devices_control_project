@@ -51,12 +51,12 @@
               v-else
               class="tm">{{ itemTemp | filterTm }}<sup>°C</sup>
             </div>
-            <div
+            <!-- <div
               v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"
               :class="[deviceAttrs.mode, 'c-mode']">室内温度{{ deviceAttrs.env_temperature | filterTm }}℃</div>
             <div
               v-show="isOffline||deviceAttrs.switchStatus == 'off'"
-              :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div>
+              :class="[deviceAttrs.mode, 'c-mode']">室内温度--℃</div> -->
           </div>
 
 

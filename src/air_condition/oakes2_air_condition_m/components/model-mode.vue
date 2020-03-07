@@ -10,12 +10,39 @@
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
         <div 
-          class="btn" 
-          @click="setWind('wind_up_down')">上下风
+          class="btn"
+          @click="setMode('cold')">
+          <div class="btn-cold center" />
+          <div 
+            :class="[mode === 'cold' ? 'active' : '', 'name']" >制冷</div>
         </div>
         <div 
           class="btn"
-          @click="setWind('wind_left_right')">左右风
+          @click="setMode('heat')">
+          <div class="btn-heat center" />
+          <div 
+            :class="[mode === 'heat' ? 'active' : '', 'name']" >制热</div>
+        </div>
+        <div 
+          class="btn" 
+          @click="setMode('auto')">
+          <div class="btn-auto center" />
+          <div 
+            :class="[mode === 'auto' ? 'active' : '', 'name']" >智能</div>
+        </div>
+        <div 
+          class="btn"
+          @click="setMode('wind')">
+          <div class="btn-wind center" />
+          <div 
+            :class="[mode === 'wind' ? 'active' : '', 'name']" >送风</div>
+        </div>
+        <div 
+          class="btn"
+          @click="setMode('dehumidify')">
+          <div class="btn-dehumidify center" />
+          <div 
+            :class="[mode === 'dehumidify' ? 'active' : '', 'name']" >除湿</div>
         </div>
       </div>
       <div 
@@ -64,43 +91,53 @@
       bottom: 0;
       z-index: 999999999999;
       width: 100%;
-      height: 381px;
-      color: #20282B;
-      background: #eee;
-      border: 1px solid #DDDDDD;
+      // height: 381px;
+      height: auto;
+      font-family: PingFangSC-Light;
+      color: #fff;
+      // background: #eee;
+      // border: 1px solid #DDDDDD;
       .btns{
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        background: #fff;
+        // background: rgba(37,37,37,0.80);
+        background: #1C1C1E;
+        border-radius: 10px;
+        margin: 0 16px 16px 16px;
         .btn{
           width:100%;
           height:120px;
           line-height: 120px;
           text-align: center;
           font-size:32px;
-          &:first-of-type{
-            border-bottom:1px solid #F0F2F4;
+          border-bottom: 0.5px solid rgba(255,255,255,.1);
+          .name{
+            &.active{
+               color:#E1B96E;
+            }
           }
         }
       }
       .hide{
-        width: 100%;
         height: 120px;
         margin-top:21px;
         font-size: 32px;
         letter-spacing: 0;
         text-align: center;
         line-height: 120px;
-        background: #fff;
+        color: #E1B96E;
+        background: #1C1C1E;
+        border-radius: 10px;
+        margin: 0 16px 16px 16px;
       }
     }
   }
 </style>
 <script>
 export default {
-  props: ['wind_up_down', 'wind_left_right', 'btn_wind_up_down', 'btn_wind_left_right'],
+  props: ['mode'],
   data() {
     return {
       show: false
@@ -109,8 +146,8 @@ export default {
   mounted() {
   },
   methods: {
-    setWind(attr){
-      this.$emit('setWind', attr)
+    setMode(attr){
+      this.$emit('setMode', attr)
     }
   }
 }
