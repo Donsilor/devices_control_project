@@ -154,31 +154,31 @@
       </div>
     </div>
     <!-- 控制菜单 -->
-    <div :class="[{'hide': hideMenu}, 'control']">
-      <div class="block" />
-      <div class="right">
-        <div
-          class="icon-switch center"
-          @click.prevent="cmd('rcPower')" />
-        <div
-          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-ykq center"
-          @click.prevent="cmd('remoteControlEvent')" />
+<!--    <div :class="[{'hide': hideMenu}, 'control']">-->
+<!--      <div class="block" />-->
+<!--      <div class="right">-->
+<!--        <div-->
+<!--          class="icon-switch center"-->
+<!--          @click.prevent="cmd('rcPower')" />-->
+<!--        <div-->
+<!--          :class="{spec:!$store.state.online && !$store.state.detailVisible}"-->
+<!--          class="icon-ykq center"-->
+<!--          @click.prevent="cmd('remoteControlEvent')" />-->
 
-        <div
-          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-screen center"
-          @click.prevent="cmd('screenProjectionEvent')" />
+<!--        <div-->
+<!--          :class="{spec:!$store.state.online && !$store.state.detailVisible}"-->
+<!--          class="icon-screen center"-->
+<!--          @click.prevent="cmd('screenProjectionEvent')" />-->
 
-        <div
-          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-detail center"
-          @click.prevent="goDetail" />
+<!--        <div-->
+<!--          :class="{spec:!$store.state.online && !$store.state.detailVisible}"-->
+<!--          class="icon-detail center"-->
+<!--          @click.prevent="goDetail" />-->
 
-      </div>
+<!--      </div>-->
 
-      <div class="block" />
-    </div>
+<!--      <div class="block" />-->
+<!--    </div>-->
 
     <remoteControl :isPlay="false"/>
   </div>
@@ -1030,8 +1030,7 @@ export default {
       }
     })
     this.maxh = this.$refs.icon_grid.offsetTop
-   document.body.scrollTop = 0
-    this.initFixedMenu()
+    // this.initFixedMenu()
     console.log('uu', this.channels)
     service.RemoteController({ show: false })
     // })
@@ -1305,10 +1304,7 @@ export default {
     },
      loadMore: _.debounce(function() {
        if(this.itemData.channelId === '005') return
-      var scrollTop =
-        document.documentElement.scrollTop ||
-        window.pageYOffset ||
-        document.body.scrollTop
+      var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
         console.log(this.itemData.channelId,'3333333333333333555')
       if ( scrollTop > 0 && scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 15) {
         if ( this.loadState === "LOADING" || this.loadState === "NO_DATA") { return }
