@@ -22,6 +22,7 @@
           height="560"
         />
         <p
+          v-show="deviceAttrs.switch_status=='on'"
           class="light-mode"
           @click="openModal">暖光</p>
       </div>
@@ -30,10 +31,10 @@
         class="panel-btn center">
         <div
           class="btn-wrap"
-          @touchstart ="touchstart('bc')"
-          @touchend="touchend('bc')">
+          @touchstart ="touchstart('switch')"
+          @touchend="touchend('switch')">
           <div
-            ref="bc"
+            ref="switch"
             :class="[switchStatus, 'btn', 'btn-bc center']"/>
         </div>
       </div>
@@ -156,13 +157,12 @@
       this.ctx = this.$refs.canvas.getContext("2d")
       this.ctx.scale(2,2)
       this.$nextTick(() => {
-        let isMove = false
         let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
         } : {
           start: "mousedown", move: "mousemove", end: "mouseup"
         }
-        this.$refs.canvas.addEventListener(on.start,(e)=> {
+        this.$refs.canvas.addEventListener(on.start,()=> {
           this.moveFlag = true
         },false)
 
@@ -172,7 +172,6 @@
           }else{
             e.returnValue = false
           }
-          isMove = true
           if (this.moveFlag) {
             var k = this.getXY(e,this.$refs.canvas)
             var r = Math.atan2(k.x-this.ox, this.oy-k.y)
@@ -197,26 +196,38 @@
     methods: {
       ...mapActions(['getDeviceInfo', 'doControlDevice']),
       touchstart(val) {
-        if(this.isClose) {
-          // 关
-
-        } else {
-           //开
+        if(this.isClose && val=='switch') {
+          this.$refs[val].classList.remove('animate')
+          this.$refs[val].classList.add('animate1')
+          this.$refs[val].classList.add('yellowExtend')
+          HdSmart.UI.vibrate()
+          return
         }
+        if(this.isClose||this.isOffline|| this.networkStatus == -1) return
+        this.$refs[val].classList.remove('animate')
+        this.$refs[val].classList.add('animate1')
+        this.$refs[val].classList.add('yellowExtend')
+        HdSmart.UI.vibrate()
       },
       touchend(val){
-        if (this.deviceAttrs.switch_status === 'on') {
-          this.controlDevice("switch_status", 'off')
-          this.draw(0, false)
-        } else {
-          this.controlDevice("switch_status", 'on')
-          this.draw(0.75)
+        if(this.isClose && val=='switch') {
+          this.$refs[val].classList.remove('animate1')
+          this.$refs[val].classList.add('animate')
+          this.setSwitch()
+          return
         }
+        if(this.isClose||this.isOffline|| this.networkStatus == -1) return
+        this.$refs[val].classList.remove('animate1')
+        this.$refs[val].classList.add('animate')
+        if(val == 'bc') return this.setSpeed(167)
+        if(val == 'gs') return this.setSpeed(240)
+        if(val == 'rs') return this.setSpeed(370)
+        if(val == 'switch') return this.setSwitch()
       },
       offset(r,d) {//根据弧度与距离计算偏移坐标
         return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
       },
-      draw(n, status=true) {
+      draw(n) {
         this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
         // this.ctx.stroke()
         this.ctx.beginPath()
@@ -248,7 +259,7 @@
         // this.ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI, false)
         // this.ctx.lineCap = "round"
         // this.ctx.stroke()
-        if (status&&!this.isOffline) {
+        if (this.deviceAttrs.switch_status=="on") {
           // console.log('heat111')
           // this.ctx.strokeStyle = "#DA6C00"
           this.ctx.strokeStyle = gradient
@@ -270,7 +281,7 @@
         this.ctx.textAlign = "center"
         this.ctx.textBaseline = "middle"
         // this.ctx.fillText(Math.round((n*(16/0.75))+(16-((16*0.125)/0.75)))+"℃",this.ox,this.oy)
-        if (status && !this.isOffline) {
+        if (this.deviceAttrs.switch_status=="on") {
           this.ctx.fillText(Math.round(n*100)+"%",this.ox,this.oy)
         } else {
           this.ctx.fillText("--",this.ox,this.oy)
@@ -291,7 +302,7 @@
         let d =  this.offset(n*2*Math.PI,this.or)
         // console.log('d', d)
         // 关机显示
-        if (status&&!this.isOffline) {
+        if (this.deviceAttrs.switch_status=="on") {
           this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
         }else{
           //开机显示
