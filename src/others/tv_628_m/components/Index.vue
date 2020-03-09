@@ -86,7 +86,7 @@
     </div>
 
     <!-- 列表 -->
-    <div 
+    <div
       class="index-list"
       @touchstart="touchstart"
       @touchend="touchend">
@@ -797,7 +797,6 @@ export default {
   data() {
     const self = this
     return {
-
       ios: /iPad|iPhone|iPod/.test(navigator.userAgent),
       device_uuid: window.device_uuid || '',
       device_name:window.device_name||'',
@@ -1007,11 +1006,11 @@ export default {
         }
       })
     },
-    '$store.state.tvStatus.tvOnlineStatus':{
+    'tvStatus.tvOnlineStatus':{
         handler:function(n,v){
           console.log('index, tvOnlineStatus',n,v)
             if(n===2){
-               this.reload()
+               // this.reload()
                this.pageInit()
                for (var i in this.channels) {
                   this.getinitData(this.channels[i].channelId,1)
@@ -1033,12 +1032,7 @@ export default {
       }
     })
     this.maxh = this.$refs.icon_grid.offsetTop
-    setTimeout(()=>{
-      window.scrollTo(0,1)
-    },300)
-    window.addEventListener("scroll", this.loadMore)
-    addEventListener("scroll", this.fn)
-    document.body.scrollTop = 0
+   document.body.scrollTop = 0
     this.initFixedMenu()
     console.log('uu', this.channels)
     service.RemoteController({ show: false })
@@ -1056,7 +1050,6 @@ export default {
   },
    destroyed() {
      console.log('index-------------------------------------------destroyed')
-    console.log('destroy')
     window.removeEventListener("scroll", this.loadMore)
     removeEventListener("scroll", this.fn)
   },
@@ -1182,13 +1175,7 @@ export default {
       service.onClickEvent(name)
     },
     showDetailInfo(item) {
-      // let obj = this.$store.state.tvStatus
-      // obj.tvOnlineStatus = -1
-      // this.$store.commit('setScreenProjectionStatus',obj)
-      // console.log(this.$store.state.tvStatus,'22222')
-      // return
       this.$store.dispatch('showDetail', item)
-      // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
       this.$router.push({
          path:"/detail",
          query:{
@@ -1198,18 +1185,8 @@ export default {
            showBar:1
          }
        })
-
-      // if (this.isShowBar) {
-      //   window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}&showBar=1`
-      // } else {
-      //   HdSmart.UI.pushWindow({
-      //     url: `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
-      //   })
-      // }
-      // this.$router.push({ name: 'detail', query: { channelId: item.channelId, channel: item.channel } })
-      // window.location.href = `index.html#/detail?channelId=${item.channelId}&vid=${item.vid}&ispay=${item.ispay}`
     },
-    pageInit() {
+    pageInit:_.debounce(function () {
       service.getHomePageInfo(data => {
         infoCache = this.arrayUnqiue(data,'vid') //通过VID去重
         this.homePageInfo = infoCache
@@ -1217,7 +1194,7 @@ export default {
           this.noVal = true
         }
       })
-    },
+    },300),
     /**
      * @param {object[]} arr 要去重的数组对象
      * @param {string} name 根据对象里面哪个属性去重
@@ -1241,10 +1218,8 @@ export default {
         },
         (err, data) => {
           console.log(data,'333333333')
-
           this.loadState = "LOADED"
           if (err) return
-
           if (data.data) {
             data = data.data
           }
@@ -1295,68 +1270,20 @@ export default {
               this.dataList[4].list.slice(0,6)
             ]
             console.log(this.listDY,'listDY')
-
             console.log( this.dataList,' this.dataList----------------------------------')
-
-
-            // if(cid === '001'){
-            //   this.listDY = Object.freeze(
-            //     (page === 1 ? [] : this.listDY).concat(data.list)
-            //   )
-            // } else if(cid === '002') {
-            //   this.listDSJ = data.data.list
-            // } else if(cid === '003') {
-            //   this.listZY = data.data.list
-            // } else if(cid === '004') {
-            //   this.listDM = data.data.list
-            // }
-            // this.list = Object.freeze(
-            //   (page === 1 ? [] : this.list).concat(data.list)
-            // )
-
             this.total = data.total
-            // this.pageNo = page
           console.log(page,'page')
-
             this.pageNoList[this.activeIndex] = page
-            // if (this.isFirstLoad) {
-            //   this.isFirstLoad = false
-            //   // console.log('?????????????????????????????')
-
-            //   window.scrollTo(0, 0)
-            // }
             if (data.total === 0) {
               //没有数据
               this.loadState = "NO_DATA"
             } else if (this.pageSize * page >= data.total) {
               //加载完全部
               this.loadState = "NO_MORE"
-              //HdSmart.UI.toast('已加载全部')
             }
           })
-
-
         }
       )
-      // console.log('----getChannelData--------')
-      // service.getChannelData(channelId, (err, data) => {
-      //   console.log('data',data)
-      //   if (err) {
-      //     console.log(err)
-      //     this.error = true
-      //     return
-      //   }
-      //   let cid = data.channelId
-      //   if(cid === '001'){
-      //     this.listDY = data.data.list
-      //   } else if(cid === '002') {
-      //     this.listDSJ = data.data.list
-      //   } else if(cid === '003') {
-      //     this.listZY = data.data.list
-      //   } else if(cid === '004') {
-      //     this.listDM = data.data.list
-      //   }
-      // })
     },
     getinitData(channelId){
          service.getChannelData({channelId,pageSize:21}, (err, data) => {
@@ -1387,18 +1314,12 @@ export default {
         window.pageYOffset ||
         document.body.scrollTop
         console.log(this.itemData.channelId,'3333333333333333555')
-
       if ( scrollTop > 0 && scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 15) {
-        // if (this.$store.state.detailVisible) {
-        //   return
-        // }
         if ( this.loadState === "LOADING" || this.loadState === "NO_DATA") { return }
         if (this.loadState === "NO_MORE") {
           HdSmart.UI.toast("已加载全部")
           return
         }
-        // console.log(this.pageNoList[this.activeIndex] + 1,'3433333333333333333333364678')
-
         this.filterData(this.itemData.channelId,this.pageNoList[this.activeIndex] + 1)
       }
     }, 300),
@@ -1423,9 +1344,6 @@ export default {
       }
     },
     toActive(item,idx){
-      // setTimeout(()=>{
-      //   window.scrollTo(0,1000)
-      // },300)
         console.log(this.$store.state.tvStatus)
        this.activeIndex = idx
        this.itemData = item
@@ -1436,12 +1354,7 @@ export default {
     toPage(item) {
 
 console.log(item,'vm.scrollTopvm.scrollTop')
-
-      // let name = encodeURIComponent(item.channel)
-
       console.log(this.$route.meta.keepAlive,'444444444444444')
-
-      //  window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
        this.$router.push({
          path:"/list",
          query:{
@@ -1450,16 +1363,6 @@ console.log(item,'vm.scrollTopvm.scrollTop')
            showBar:1
          }
        })
-
-      // if (this.isShowBar) {
-      //   window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${name}&showBar=1`
-      // } else {
-      //   HdSmart.UI.pushWindow({
-      //     url: `index.html#/list?channelId=${item.channelId}&channel=${name}`
-      //   })
-      // }
-      // window.location.href = `index.html#/list?channelId=${item.channelId}&channel=${item.channel}`
-      // this.$router.push({ name: 'list', query: { channelId: item.channelId, channel: item.channel } })
     },
     toListPage(idx){
       let item = {}
