@@ -272,6 +272,7 @@ export default {
       buttonDisabled: false,
       level_containerValue: '--',
       level_freezerValue: '--',
+      fastOK: false
     }
   },
   computed: {
@@ -365,8 +366,7 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(() => {
-        this.level_containerValue = (+this.deviceAttrs.level_container)
-        this.level_freezerValue = (+this.deviceAttrs.level_freezer)
+        this.fastOK = true
       })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -377,6 +377,7 @@ export default {
       this.isOpen = 'on'
     },
     setMode(val, boolean) {
+      if(this.fastOK == false) return
       if(this.isOffline) return HdSmart.UI.toast('设备已离线')
       if (this.isClose) return
       // if (this.checkedColdValue == true && this.checkedFrozenValue == true) return HdSmart.UI.toast('请先退出速冷和速冻模式', 1000)
@@ -407,6 +408,7 @@ export default {
       // })
     },
     setTemperature(attr, step, [min, max ]) {
+      if(this.fastOK == false) return
       if(this.isOffline) return HdSmart.UI.toast('设备已离线')
       this.buttonDisabled = true
       // var temp = this.deviceAttrs[attr] + step
@@ -507,6 +509,7 @@ export default {
       this.timeValue = val
     },
     cold(e, val) {
+      if(this.fastOK == false) return
       if(this.isOffline) return HdSmart.UI.toast('设备已离线')
       this.coldDisabled = true
       var value
@@ -538,6 +541,7 @@ export default {
       })
     },
     frozen(e, val) {
+      if(this.fastOK == false) return
       if(this.isOffline) return HdSmart.UI.toast('设备已离线')
       this.frozenDisabled = true
       var value
