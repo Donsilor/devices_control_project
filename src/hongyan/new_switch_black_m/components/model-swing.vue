@@ -8,9 +8,8 @@
       <div class="title">请输入开关名称</div>
       <div class="txt">
         <input
-          type="text"
           :value="txtVal"
-          id="text"
+          type="text"
           class="text"
           maxlength="10"
           @input="txt">
@@ -160,9 +159,7 @@ export default {
   },
   watch: {
     'show'() {
-      // console.log('===================', document.getElementById('text').value)
       if(this.show == false) {
-        // document.getElementById('text').value = ''
         this.txtVal = ''
       }
     }
@@ -171,7 +168,7 @@ export default {
   },
   methods: {
     txt(e) {
-      let reg = new RegExp("^[0-9\u4e00-\u9fa5]+$");
+      let reg = new RegExp("^[0-9\u4e00-\u9fa5]+$")
       if(reg.test(e.target.value)) {
         this.txtVal = e.target.value
       } else {
