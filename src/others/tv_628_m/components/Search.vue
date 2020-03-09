@@ -763,7 +763,6 @@ export default {
     }
   },
   created() {
-    // console.log(11)
     HdSmart.ready(() => {
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
@@ -771,20 +770,9 @@ export default {
       if (window.navigation_bar_height) {
         this.navigation_bar_height = window.navigation_bar_height / dpr
       }
-//       if(window.plus){
-// 	plusReady()
-// }else{
-// 	document.addEventListener('plusready', plusReady, false)
-// }
     })
-    // this.getData()
   },
   mounted() {
-    //  document.body.addEventListener('touchmove', function(e) {
-    //    console.log(e)
-
-    //           e.preventDefault()
-    //     }, { passive: false })
     setTimeout(()=>{
         window.scrollTo(0,1)
     },300)
@@ -826,9 +814,7 @@ export default {
   },
   methods: {
     blurfn(){
-      setTimeout(()=>{
-        window.scrollTo(0,0)
-      },300)
+      window.scrollTo(0,0)
     },
     scroll2(event){
          this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
