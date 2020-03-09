@@ -1010,7 +1010,6 @@ export default {
         handler:function(n,v){
           console.log('index, tvOnlineStatus',n,v)
             if(n===2){
-               // this.reload()
                this.pageInit()
                for (var i in this.channels) {
                   this.getinitData(this.channels[i].channelId,1)
