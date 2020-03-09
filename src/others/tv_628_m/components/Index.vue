@@ -2,8 +2,6 @@
 <template>
   <div
     class="page-index">
-    <!-- <div
-      class="space-block" /> -->
     <!-- 顶部导航菜单 -->
     <new-topbar
       :shutdown="true"
@@ -84,7 +82,6 @@
         </swiper>
       </div>
     </div>
-
     <!-- 列表 -->
     <div
       class="index-list"
@@ -153,33 +150,6 @@
           class="finish">已加载全部</p>
       </div>
     </div>
-    <!-- 控制菜单 -->
-<!--    <div :class="[{'hide': hideMenu}, 'control']">-->
-<!--      <div class="block" />-->
-<!--      <div class="right">-->
-<!--        <div-->
-<!--          class="icon-switch center"-->
-<!--          @click.prevent="cmd('rcPower')" />-->
-<!--        <div-->
-<!--          :class="{spec:!$store.state.online && !$store.state.detailVisible}"-->
-<!--          class="icon-ykq center"-->
-<!--          @click.prevent="cmd('remoteControlEvent')" />-->
-
-<!--        <div-->
-<!--          :class="{spec:!$store.state.online && !$store.state.detailVisible}"-->
-<!--          class="icon-screen center"-->
-<!--          @click.prevent="cmd('screenProjectionEvent')" />-->
-
-<!--        <div-->
-<!--          :class="{spec:!$store.state.online && !$store.state.detailVisible}"-->
-<!--          class="icon-detail center"-->
-<!--          @click.prevent="goDetail" />-->
-
-<!--      </div>-->
-
-<!--      <div class="block" />-->
-<!--    </div>-->
-
     <remoteControl :isPlay="false"/>
   </div>
 </template>
@@ -566,6 +536,7 @@
   }
   img {
     background-image: url('~@lib/base/tv/assets/icn_TV_movie_white@2x.png');
+    border-radius: 10px;
   }
 }
 .item-002 {
@@ -768,13 +739,14 @@
   .swiper{
     height:100%;
     .swiper-container{
+      border-radius: 13px;
       height:100%;
       .swiper-wrapper{
          height:100%;
          .swiper-slide{
             height:100%;
             a{
-              height:100%
+              height:100%;
             }
           }
       }
