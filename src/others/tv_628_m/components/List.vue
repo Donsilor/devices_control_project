@@ -2,7 +2,7 @@
 <template>
   <div class="page-list">
     <!-- 遥控器 -->
-    <remoteControl/>
+    <remoteControl :isPlay="false"/>
     <!-- 错误提示 -->
     <div
       v-if="error"

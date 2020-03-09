@@ -41,6 +41,7 @@
     width: 100%;
     position: fixed;
     bottom: 0;
+    z-index: 9999;
     .left{
       width: 100%;
       height: 100%;
