@@ -1024,7 +1024,6 @@ export default {
     HdSmart.UI.toggleNav()
   },
   mounted() {
-    console.log('index-------------------------------------------mounted')
     Object.defineProperty(window,'room_name',{
       set:(newValue)=>{
         this.room_name = newValue
@@ -1048,31 +1047,29 @@ export default {
     HdSmart.UI.hideLoading()
   },
    destroyed() {
-     console.log('index-------------------------------------------destroyed')
     window.removeEventListener("scroll", this.loadMore)
     removeEventListener("scroll", this.fn)
   },
   activated(){
-    console.log('index-------------------------------------------activated')
       window.addEventListener("scroll", this.loadMore)
     addEventListener("scroll", this.fn)
 
   },
   deactivated(){
-    console.log('index-------------------------------------------deactivated')
        window.removeEventListener("scroll", this.loadMore)
     removeEventListener("scroll", this.fn)
   },
   //在页面离开时记录滚动位置
   beforeRouteLeave(to, from, next) {
     this.scrollTop1 = document.documentElement.scrollTop || document.body.scrollTop
-    console.log(this.scrollTop1)
     next()
   },
   //进入该页面时，用之前保存的滚动位置赋值
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      document.body.scrollTop = vm.scrollTop1
+      vm.$nextTick(()=>{
+        document.documentElement.scrollTop = vm.scrollTop1
+      })
     })
   },
   methods: {
