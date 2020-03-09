@@ -41,7 +41,6 @@
             :class="['item' + idx, 'item', {'active': idx == activeIndex}]"
             @click.prevent="toActive(item,idx)">{{ item.channel }}</div>
           <div class="block" />
-          <div class="vague"></div>
         </div>
       </div>
     <!-- 栏目分类 -->
@@ -97,7 +96,7 @@
           <div class="title">{{ idx | nameType }}</div>
           <div
             class="more"
-            @click="toListPage(idx)"><span class="more_mg"/></div>
+            @click="toListPage(idx)"><span class="more_mg"><i></i></span></div>
         </div>
 
         <ul class="vlist list-m60">
@@ -198,11 +197,18 @@
       font-size: 24px;
       color: #20282B;
       .more_mg{
-        width: 24px;
-        height: 24px;
+        width: 40px;
+        height: 40px;
         display: inline-block;
-        background: url('~@lib/base/tv/assets/new/tv_arrow_more.png');
-        background-size:100% 100%;
+        background: rgba(255,255,255,0.10);
+        border-radius: 10px;
+        i{
+          background: url('~@lib/base/tv/assets/new/tv_arrow_in.png');
+          width: 40px;
+          height: 40px;
+          display: inline-block;
+          background-size:100% 100%;
+        }
       }
     }
   }
@@ -320,6 +326,7 @@
     /*display: flex;*/
     /*flex-wrap: nowrap;*/
     width: 100%;
+    height: 100%;
     overflow-x: auto;
     /*display: -webkit-box;*/
     /*-webkit-box-orient: horizontal;*/
@@ -332,13 +339,6 @@
     .item{
       float:left;
     }
-    /*.vague{*/
-    /*  position: absolute;*/
-    /*  width: 100%;*/
-    /*  height:100%;*/
-    /*  z-index: -1;*/
-    /*  filter: blur(2px);*/
-    /*}*/
   }
   .active{
     color: #000000;
@@ -1055,7 +1055,7 @@ export default {
          icon_grid.style.background= 'rgba(0,0,0,.05)'
       }else{
         icon_grid.style.position = ''
-         icon_grid.style.background = ''
+        icon_grid.style.background = ''
       }
       this.scrollToList[this.activeIndex] = this.scrollTop
 
