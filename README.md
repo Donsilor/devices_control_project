@@ -75,7 +75,13 @@ npm run build 产品名 参数
 - 泰创窗帘  src\taichuang\curtains_m
 - 控客插座
 - 热水器
-...待补充
+- 博联空气云管家 /src/broadLink/air_quality_check_m
+- 晾霸晾衣架 src/LBest/clothes_hanger_m
+- 面板 src/others/panel_m/components
+- 逸云灯 src/yiyun/yiyun_light_m
+- 新头部组件 lib/components/NewTopBar
+- 离线bannner组件 lib/components/StatusTip
+- 帮助页面  lib/components/OfflineHelpPage
 
 
 
@@ -84,6 +90,9 @@ npm run build 产品名 参数
 格兰仕空调 src\air_condition\galanz_air_condition2_m （后面有个2）
 长虹空调 src\air_condition\changhong_air_condition_m （第一个）
 康佳电视 src\konka\tv_control_m
+
+
+
 
 
 
