@@ -1,7 +1,7 @@
 <template>
   <div class="body">
     <div :class="[{'offline': isOffline }, {'close': isClose}, 'page']">
-      <!-- 顶部 -->
+      <!-- 顶部1 -->
       <topbar
         :title="device.device_name"
         bak-color="#000" />
