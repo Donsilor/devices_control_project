@@ -2,8 +2,6 @@
 <template>
   <div
     class="page-index">
-    <!-- <div
-      class="space-block" /> -->
     <!-- 顶部导航菜单 -->
     <new-topbar
       :shutdown="true"
@@ -43,7 +41,6 @@
             :class="['item' + idx, 'item', {'active': idx == activeIndex}]"
             @click.prevent="toActive(item,idx)">{{ item.channel }}</div>
           <div class="block" />
-          <div class="vague"></div>
         </div>
       </div>
     <!-- 栏目分类 -->
@@ -84,7 +81,6 @@
         </swiper>
       </div>
     </div>
-
     <!-- 列表 -->
     <div
       class="index-list"
@@ -100,7 +96,7 @@
           <div class="title">{{ idx | nameType }}</div>
           <div
             class="more"
-            @click="toListPage(idx)"><span class="more_mg"/></div>
+            @click="toListPage(idx)"><span class="more_mg"><i></i></span></div>
         </div>
 
         <ul class="vlist list-m60">
@@ -153,33 +149,6 @@
           class="finish">已加载全部</p>
       </div>
     </div>
-    <!-- 控制菜单 -->
-    <div :class="[{'hide': hideMenu}, 'control']">
-      <div class="block" />
-      <div class="right">
-        <div
-          class="icon-switch center"
-          @click.prevent="cmd('rcPower')" />
-        <div
-          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-ykq center"
-          @click.prevent="cmd('remoteControlEvent')" />
-
-        <div
-          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-screen center"
-          @click.prevent="cmd('screenProjectionEvent')" />
-
-        <div
-          :class="{spec:!$store.state.online && !$store.state.detailVisible}"
-          class="icon-detail center"
-          @click.prevent="goDetail" />
-
-      </div>
-
-      <div class="block" />
-    </div>
-
     <remoteControl :isPlay="false"/>
   </div>
 </template>
@@ -228,11 +197,18 @@
       font-size: 24px;
       color: #20282B;
       .more_mg{
-        width: 24px;
-        height: 24px;
+        width: 40px;
+        height: 40px;
         display: inline-block;
-        background: url('~@lib/base/tv/assets/new/tv_arrow_more.png');
-        background-size:100% 100%;
+        background: rgba(255,255,255,0.10);
+        border-radius: 10px;
+        i{
+          background: url('~@lib/base/tv/assets/new/tv_arrow_in.png');
+          width: 40px;
+          height: 40px;
+          display: inline-block;
+          background-size:100% 100%;
+        }
       }
     }
   }
@@ -350,6 +326,7 @@
     /*display: flex;*/
     /*flex-wrap: nowrap;*/
     width: 100%;
+    height: 100%;
     overflow-x: auto;
     /*display: -webkit-box;*/
     /*-webkit-box-orient: horizontal;*/
@@ -362,13 +339,6 @@
     .item{
       float:left;
     }
-    /*.vague{*/
-    /*  position: absolute;*/
-    /*  width: 100%;*/
-    /*  height:100%;*/
-    /*  z-index: -1;*/
-    /*  filter: blur(2px);*/
-    /*}*/
   }
   .active{
     color: #000000;
@@ -566,6 +536,7 @@
   }
   img {
     background-image: url('~@lib/base/tv/assets/icn_TV_movie_white@2x.png');
+    border-radius: 10px;
   }
 }
 .item-002 {
@@ -768,13 +739,14 @@
   .swiper{
     height:100%;
     .swiper-container{
+      border-radius: 13px;
       height:100%;
       .swiper-wrapper{
          height:100%;
          .swiper-slide{
             height:100%;
             a{
-              height:100%
+              height:100%;
             }
           }
       }
@@ -1010,7 +982,6 @@ export default {
         handler:function(n,v){
           console.log('index, tvOnlineStatus',n,v)
             if(n===2){
-               // this.reload()
                this.pageInit()
                for (var i in this.channels) {
                   this.getinitData(this.channels[i].channelId,1)
@@ -1025,15 +996,13 @@ export default {
     HdSmart.UI.toggleNav()
   },
   mounted() {
-    console.log('index-------------------------------------------mounted')
     Object.defineProperty(window,'room_name',{
       set:(newValue)=>{
         this.room_name = newValue
       }
     })
     this.maxh = this.$refs.icon_grid.offsetTop
-   document.body.scrollTop = 0
-    this.initFixedMenu()
+    // this.initFixedMenu()
     console.log('uu', this.channels)
     service.RemoteController({ show: false })
     // })
@@ -1049,31 +1018,29 @@ export default {
     HdSmart.UI.hideLoading()
   },
    destroyed() {
-     console.log('index-------------------------------------------destroyed')
     window.removeEventListener("scroll", this.loadMore)
     removeEventListener("scroll", this.fn)
   },
   activated(){
-    console.log('index-------------------------------------------activated')
       window.addEventListener("scroll", this.loadMore)
     addEventListener("scroll", this.fn)
 
   },
   deactivated(){
-    console.log('index-------------------------------------------deactivated')
        window.removeEventListener("scroll", this.loadMore)
     removeEventListener("scroll", this.fn)
   },
   //在页面离开时记录滚动位置
   beforeRouteLeave(to, from, next) {
     this.scrollTop1 = document.documentElement.scrollTop || document.body.scrollTop
-    console.log(this.scrollTop1)
     next()
   },
   //进入该页面时，用之前保存的滚动位置赋值
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      document.body.scrollTop = vm.scrollTop1
+      vm.$nextTick(()=>{
+        document.documentElement.scrollTop = vm.scrollTop1
+      })
     })
   },
   methods: {
@@ -1088,7 +1055,7 @@ export default {
          icon_grid.style.background= 'rgba(0,0,0,.05)'
       }else{
         icon_grid.style.position = ''
-         icon_grid.style.background = ''
+        icon_grid.style.background = ''
       }
       this.scrollToList[this.activeIndex] = this.scrollTop
 
@@ -1309,10 +1276,7 @@ export default {
     },
      loadMore: _.debounce(function() {
        if(this.itemData.channelId === '005') return
-      var scrollTop =
-        document.documentElement.scrollTop ||
-        window.pageYOffset ||
-        document.body.scrollTop
+      var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
         console.log(this.itemData.channelId,'3333333333333333555')
       if ( scrollTop > 0 && scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 15) {
         if ( this.loadState === "LOADING" || this.loadState === "NO_DATA") { return }

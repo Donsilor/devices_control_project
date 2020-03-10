@@ -3,11 +3,7 @@
     ref="topbar"
     :class="[{'topbar-nobg':transparent}, {'topbar-black': bgBlack}]"
     class="topbar">
-    <!-- <div
-      :style="{ 'background': bgColor ,height:status_bar_height+navigation_bar_height*2+'px', 'line-height': status_bar_height+navigation_bar_height*2 + 'px'}"
-      class="topbar-block" /> -->
-    <!-- 占位头部 -->
-    <div 
+    <div
       :style="{ 'background': bgColor,height:'auto'}"
       class="topbar-block" >
       <div
@@ -20,17 +16,11 @@
 
     <!-- 定位头部，不占位 -->
     <div
-      :style="{ background: bgColor}"
       :class="['topbar-fixed', className]">
-
       <div
         ref="statusbar"
         :style="{height:status_bar_height+'px'}"
         class="statusbar" />
-      <!-- <div
-        ref="statusbarBg"
-        :style="{height:status_bar_height+navigation_bar_height+'px'}"
-        class="statusbarBg"/> -->
       <div
         ref="newNavbar"
         :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
@@ -38,38 +28,18 @@
         <div
           class="left"
           @click.prevent="goBack">
-          <p 
-            v-if="returnBack" 
+          <p
+            v-if="returnBack"
             class="close"/>
-          <p 
-            v-if="!returnBack" 
-            class="back"/>
-            <!-- <a
+          <p
             v-if="!returnBack"
-            :style="{ 'border-color': bakColor }"
-            href="javascript:void(0);"
-            class="icon-return" /> -->
+            class="back"/>
         </div>
         <div
           v-if="showRight&&!rightSearch"
           class="right"
           @click.prevent="goDetail">
           <p/>
-          <!-- <template v-if="buttons">
-            <a
-              v-for="(item, index) in buttons"
-              :key="index"
-              :class="[item.className]"
-              href="javascript:void(0);"
-              @click.prevent="item.callback" />
-          </template>
-          <template v-else>
-            <a
-              :style="{ 'color': bakColor }"
-              :class="[{'icon-more':black},{'icon-more1':white},'center']"
-              href="javascript:void(0);"
-              @click.prevent="goDetail" />
-          </template> -->
         </div>
         <div
           v-show="rightSearch&&search"
@@ -102,7 +72,6 @@
         </button>
         <!-- <slot /> -->
       </div>
-
     </div>
 
   </div>
@@ -204,7 +173,8 @@ export default {
       scrollTop:0,
       clientHeight:0,
       scrollHeight:0,
-      rightSearch:false
+      rightSearch:false,
+      fixed: false
     }
   },
   computed:{
@@ -236,7 +206,7 @@ export default {
   deactivated(){
       removeEventListener('scroll',this.scrollfn)
   },
-  
+
   methods: {
     goBack() {
       if (typeof this.onBack === 'function') {
@@ -279,7 +249,7 @@ export default {
       let headerBottomHeight = this.$refs['header-bottom'].offsetHeight
       let headerBottom = (headerBottomHeight/44)*this.scrollTop
       let fontSize = (-6/44)*this.scrollTop+24
-      let headerBottomCenter = this.$refs['header-bottom'].offsetWidth/2-titleDom.offsetWidth/2-(this.$refs['header-bottom'].offsetWidth/375*20)  //                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+      let headerBottomCenter = this.$refs['header-bottom'].offsetWidth/2-titleDom.offsetWidth/2-(this.$refs['header-bottom'].offsetWidth/375*20)  //
       let titleLeft = (headerBottomCenter/44)*this.scrollTop
       let titleMaxWidth = (-19/44)*this.scrollTop+281
       headerBottom = headerBottom>=headerBottomHeight?headerBottomHeight:headerBottom
@@ -297,9 +267,11 @@ export default {
         pageClass.classList.add('scroll44')
         status_bar_fixed&&(status_bar_fixed.style.top  =fixedTop +"px")
         this.search&&(this.rightSearch = true)
+        this.fixed = true
       }else{
         pageClass.classList.remove('scroll44')
         this.search&&(this.rightSearch = false)
+        this.fixed = false
       }
        if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
         titleDom.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
@@ -323,34 +295,12 @@ export default {
     display: none
   }
 .newNavbar,.statusbar{
-    // background: #fff
-    // background: rgba(255,255,255,.98);
 }
-// .topbar-fixed{
-//   &::before{
-//     width: 100%;
-//     height: 100%;
-//     background: rgba(225, 225, 225, 0.6);
-//     background: red;
-//     filter: blur(20px);
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     right: 0;
-//     bottom: 0;
-//     content: '';
-//   }
-// }
   .search-screen-bg{
     // display:none
     visibility: hidden;
   }
 }
-
-
-
-
-
 
 /* topbar */
 @status_bar_height: 25PX;
@@ -378,16 +328,11 @@ export default {
     top: 0;
     z-index: 100;
     width: 100%;
-    // background: #fff;
     border:0;
-    // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
+    background-color: rgba(0,0,0,0.7);
+    backdrop-filter: blur(15px);
   }
 }
-
-
-
-
-
 .topbar-nobg {
   .topbar-fixed {
     background: transparent;
@@ -420,16 +365,6 @@ export default {
 .statusbar {
   height: @status_bar_height;
 }
-// .statusbarBg{
-//   height: @status_bar_height+@navigation_bar_height;
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   background: #fff;
-//   -webkit-filter: blur(20px);
-//   filter: blur(20px);
-// }
 .header-bottom{
   display: flex;
   justify-content: space-between;
@@ -440,15 +375,10 @@ export default {
     text-align: center;
     max-width: 562px;
     overflow: hidden;
-      white-space: nowrap;
-  text-overflow: ellipsis;
-
-    // font-size: 17PX;
-    // font-family: PingFangSC-Medium;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     font-size: 48px;
     color: #000000;
-    // font-weight: bold;
-    // line-height: 48px;
   }
 }
 
@@ -462,8 +392,6 @@ export default {
   align-items: center;
   .left,
   .right,.right-search {
-    // width: 44PX;
-    // height: @navigation_bar_height;
    width: 60px;
         height: 60px;
         border-radius: 50%;
@@ -471,7 +399,7 @@ export default {
     p{
         width: 48px;
         height: 48px;
-
+        margin-right: 4px;
     }
 
   }
