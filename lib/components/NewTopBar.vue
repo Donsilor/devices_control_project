@@ -72,7 +72,6 @@
         </button>
         <!-- <slot /> -->
       </div>
-      <div :class="[fixed ? 'vague' : '']"></div>
     </div>
 
   </div>
@@ -288,15 +287,6 @@ export default {
 
 <style lang="less">
 *{ -webkit-tap-highlight-color:transparent; }
-.vague{
-  background-color: #1f1f23;
-  filter: blur(1px);
-  z-index: -11111;
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 100%;
-}
 .scroll44{
   .status_bar_fixed{
     position: fixed
@@ -311,11 +301,6 @@ export default {
     visibility: hidden;
   }
 }
-
-
-
-
-
 
 /* topbar */
 @status_bar_height: 25PX;
