@@ -72,7 +72,7 @@
         </button>
         <!-- <slot /> -->
       </div>
-
+      <div :class="[fixed ? 'vague' : '']"></div>
     </div>
 
   </div>
@@ -174,7 +174,8 @@ export default {
       scrollTop:0,
       clientHeight:0,
       scrollHeight:0,
-      rightSearch:false
+      rightSearch:false,
+      fixed: false
     }
   },
   computed:{
@@ -267,9 +268,11 @@ export default {
         pageClass.classList.add('scroll44')
         status_bar_fixed&&(status_bar_fixed.style.top  =fixedTop +"px")
         this.search&&(this.rightSearch = true)
+        this.fixed = true
       }else{
         pageClass.classList.remove('scroll44')
         this.search&&(this.rightSearch = false)
+        this.fixed = false
       }
        if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
         titleDom.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
@@ -285,6 +288,15 @@ export default {
 
 <style lang="less">
 *{ -webkit-tap-highlight-color:transparent; }
+.vague{
+  background-color: #1f1f23;
+  filter: blur(1px);
+  z-index: -11111;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
 .scroll44{
   .status_bar_fixed{
     position: fixed
@@ -402,7 +414,7 @@ export default {
     p{
         width: 48px;
         height: 48px;
-
+        margin-right: 4px;
     }
 
   }
