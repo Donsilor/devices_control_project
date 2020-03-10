@@ -10,35 +10,28 @@
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
         <div 
-          class="btn cold"
+          class="btn"
           @click="setMode('cold')">
           <div class="btn-cold center" />
           <div 
             :class="[mode === 'cold' ? 'active' : '', 'name']" >制冷</div>
         </div>
         <div 
-          class="btn heat"
+          class="btn"
           @click="setMode('heat')">
           <div class="btn-heat center" />
           <div 
             :class="[mode === 'heat' ? 'active' : '', 'name']" >制热</div>
         </div>
         <div 
-          class="btn auto" 
-          @click="setMode('auto')">
-          <div class="btn-auto center" />
-          <div 
-            :class="[mode === 'auto' ? 'active' : '', 'name']" >智能</div>
-        </div>
-        <div 
-          class="btn wind"
+          class="btn"
           @click="setMode('wind')">
           <div class="btn-wind center" />
           <div 
             :class="[mode === 'wind' ? 'active' : '', 'name']" >送风</div>
         </div>
         <div 
-          class="btn dehumidify"
+          class="btn"
           @click="setMode('dehumidify')">
           <div class="btn-dehumidify center" />
           <div 
@@ -46,7 +39,7 @@
         </div>
       </div>
       <div 
-        :class="[mode, 'hide']" 
+        class="hide" 
         @click.self="show = false">取消</div>
     </div>
   </div>
@@ -102,11 +95,10 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        background: rgba(37,37,37,0.80);
-        // background: #1C1C1E;
+        // background: rgba(37,37,37,0.80);
+        background: #1C1C1E;
         border-radius: 10px;
         margin: 0 16px 16px 16px;
-        backdrop-filter: blur(15px);
         .btn{
           width:100%;
           height:120px;
@@ -114,39 +106,11 @@
           text-align: center;
           font-size:32px;
           border-bottom: 0.5px solid rgba(255,255,255,.1);
-          &.cold{
-            .active{
-              background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
-              -webkit-background-clip: text;
-              background-clip: text;
-              color: transparent;
-              // color: #2c9bcb;
+          .name{
+            &.active{
+               color:#E1B96E;
             }
           }
-          &.heat{
-            .active{
-              // background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
-              // -webkit-background-clip: text;
-              // background-clip: text;
-              // color: transparent;
-              color: #e8805f;
-            }
-          }
-           &.auto,&.dehumidify,&.wind{
-            .active{
-              color:#E1B96E;
-            }
-          }
-          // .name{
-          //   &.active{
-          //      color:#E1B96E;
-          //   }
-          // }
-        }
-      }
-      .cold{
-        .hide{
-
         }
       }
       .hide{

@@ -24,7 +24,7 @@
             <div 
               v-for="(item, index) in count" 
               :key="index" 
-              :style="{transform: `rotate(${7*index-105}deg)`}" 
+              :style="{transform: `rotate(${7.24*index-105}deg)`}" 
               class="item-container" 
             >
               <div 
@@ -38,7 +38,7 @@
                 <div 
                   ref="item" 
                   :id="(index)+'item'"
-                  :style="{background: 2*(itemTemp/10)-32>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
+                  :style="{background: 2*(itemTemp/10)-33>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
                   class="item"
                 />
               </div>
@@ -221,7 +221,7 @@ export default {
   },
   data() {
     return {
-      count: 31,
+      count: 30,
       now: 0,
       idNum:0,
       moveEnd:false,

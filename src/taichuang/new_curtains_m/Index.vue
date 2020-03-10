@@ -4,10 +4,11 @@
     <div class="page">
       <NewTopBar
         :scroll="true"
+        :room="device.room_name"
         :title="device.device_name"
         page-class=".page"
-        bak-color="#000"/>
-      <StatusTip v-show="device.device_uuid"/>
+        bak-color="#fff"/>
+      <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <div class="main center">
         <div 
           ref="stick" 
@@ -18,12 +19,11 @@
             class="imgBox">
             <div 
               ref="leftCurtainBox" 
-              class="leftCurtainBox"
-            >
+              class="leftCurtainBox">
               <img 
                 ref="curtainLeft"
                 class="curtainLeft" 
-                src="../../../lib/base/new_curtains/assets/single.png">
+                src="../../../lib/base/new_curtains/assets/zuo.png">
             </div>
             <div 
               ref="rightCurtainBox" 
@@ -34,7 +34,7 @@
               <img 
                 ref="curtainRight"
                 class="curtainRight" 
-                src="../../../lib/base/new_curtains/assets/single.png">  
+                src="../../../lib/base/new_curtains/assets/you.png">
             </div>
           </div>
         </div>
@@ -42,34 +42,30 @@
       </div>
       <!-- 底部按钮 -->
       <div class="panel-btn center">
-        <div
-          class="btn-wrap"
-        >
+        <div class="btn-wrap">
           <div
-            ref="close"
-            class="btn btn-close center"
-            @click="setClose"
-            @touchstart ="touchstart('close')"
-            @touchend="touchend('close')" />
-          <div class="btn-name">全关</div>
+            ref="open"
+            class="btn-open btn center"
+            @touchstart ="touchstart('open')"
+            @touchend="touchend('open')"/>
+          <div class="btn-name">全开</div>
         </div>
         <div class="btn-wrap">
           <div
             ref="pause"
             class="btn-pause btn center"
-            @click="setPause"
             @touchstart ="touchstart('pause')"
-            @touchend="touchend('pause')" />
+            @touchend="touchend('pause')"/>
           <div class="btn-name">暂停</div>
         </div>
-        <div class="btn-wrap">
+        <div
+          class="btn-wrap">
           <div
-            ref="open"
-            class="btn-open btn center"
-            @click="setOpen" 
-            @touchstart ="touchstart('open')"
-            @touchend="touchend('open')"/>
-          <div class="btn-name">全开</div>
+            ref="close"
+            class="btn btn-close center"
+            @touchstart ="touchstart('close')"
+            @touchend="touchend('close')"/>
+          <div class="btn-name">全关</div>
         </div>
       </div>
     </div>
@@ -115,6 +111,11 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    OfflineHelpPage(){
+        this.$router.push({
+         path:"/OfflineHelpPage"
+       })
+    },
     touchstart(val) {
         this.$refs[val].classList.remove('animateStart','animateEnd')
         this.$refs[val].classList.add('animateStart')
@@ -257,7 +258,7 @@ getStyle(obj,attr){
       width: 70%;
       height: 70%;
       // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
-      background: #E1B96E;
+      // background: #E1B96E;
       top: 50%;
       left: 50%;
       border-radius: 50%;
@@ -296,6 +297,7 @@ getStyle(obj,attr){
     0% {width: 100%;height: 100%;}
     100% {width: 110%;height: 110%;}
   }
+  // 全开动画
 .setOpen{
   animation: open 5s linear;
   animation-fill-mode:forwards;
@@ -308,6 +310,7 @@ getStyle(obj,attr){
     width: 40px;
   }
 }
+//全关动画
 .setClose{
   animation: close 5s linear;
   animation-fill-mode : forwards;
@@ -332,70 +335,94 @@ getStyle(obj,attr){
   min-height: 550px;
   overflow-x: hidden;
   position: relative;
-  background-image: url('~@lib/@{imgPath}/img_bg_01@2x.png');
-  background-size: 100% 100%;
+  background: #000;
   .main {
     position: relative;
-    margin-top: 100px;
+    margin-top: 120px;
     .stick{
       width: 80%;
       // height: 20px;
-      height: 586px;
+      height: 500px;
       position: relative;
       .Pole{
         position: absolute;
         width: 100%;
-        height: 20px;
+        height: 24px;
+        z-index: 99;
         &::before{
           content: "";
           display: block;
           width: 100%;
           height: 100%;
-          background-image: url('~@lib/@{imgPath}/gun.png');
+          background-image: url('~@lib/@{imgPath}/hengtiao.png');
           background-size: 100% 100%;
         }
       }
 
       .imgBox{
         position: absolute;
-        top: 16px;
-        width: 100%;
-        // height: 500px;
-        height: 500px;
+        top: 12px;
+        width: 95%;
+       transform: translate(12px, 0px);
+        height: 420px;
         .leftCurtainBox{
           position: absolute;
           top: 0;
-          left: 2px;
-          width: 50%;
-          height: 500px;
+          // left: 1%;
+          // width: 49%;
+          left:0;
+          width:50%;
+          height: 420px;
           overflow: hidden;
           .curtainLeft{
             top: 0;
             left: 0;
             width: 100%;
-            height: 500px;
+            height: 420px;
+            margin-left:1%;
             position: absolute;
+          }
+          .left{ 
+            position: absolute;
+            top: 50%;
+            right: 1px;
+            // width: 49%;
+            height: 60px;
+            margin-top: -30px;
           }
         }
         .rightCurtainBox{
            position: absolute;
            top: 0;
-           width: 50%;
-           height: 500px;
-           right: 2px;
+          //  right: 1%;
+          //  width: 49%;
+          right:0;
+          width:50%;
+           height: 420px;
            overflow: hidden;
           .curtainRight{
             top: 0;
+            right:0;
             width: 100%;
-            height: 500px;
+            height: 420px;
+            margin-right:1%;
             position: absolute;
+          }
+          .right{ 
+            position: absolute;
+            top: 50%;
+            left: 1px;
+            // width: 100%;
+            height: 60px;
+            margin-top: -30px;
           }
         }
       }
     }
     .status{
       position: absolute;
-      font-size: 24px;
+      font-size: 32px;
+      color: #FFFFFF;
       height: auto;
       bottom: 0px;
       font-family: PingFangSC-Light;
@@ -405,7 +432,7 @@ getStyle(obj,attr){
     height: auto;
     width: 100%;
     position: fixed;
-    bottom: 130px;
+    bottom: 90px;
     z-index: 9999;
     .btn {
       margin-top: 24px;
@@ -413,7 +440,7 @@ getStyle(obj,attr){
       height: 306px;
       border-radius: 40px 40px 0 0;
       // background: rgba(136, 138, 137,.4);
-      background: rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.1);
       overflow: hidden;
       display: flex;
       // justify-content: space-evenly;
@@ -444,45 +471,46 @@ getStyle(obj,attr){
         z-index: 999;
       }
       &.active {
-        background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
+        // background: #E1B96E;
         &.btn-open::before{
-          background-image: url('~@lib/@{imgPath}/off.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_quankaizhong.png');
           background-size: 100% 100%;
         }
         &.btn-pause::before{
-          background-image: url('~@lib/@{imgPath}/pause.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_zantingzhong.png');
           background-size: 100% 100%;
         }
         &.btn-close::before{
-          background-image: url('~@lib/@{imgPath}/on.png');
+          background-image: url('~@lib/@{imgPath}/btn_ac_quanguanzhong.png');
           background-size: 100% 100%;
         }
       }
     }
     .btn-name {
       text-align: center;
-      color: #000;
-      margin-top: 16px;
-      font-size: 24px;
-      line-height: 40px;
+      font-family: PingFangSC-Light;
+      font-size: 32px;
+      color: #FFFFFF;
+      margin-top: 39px;
       // opacity: .5;
     }
 
     .btn-open {
       &::before {
-        background-image: url('~@lib/@{imgPath}/off.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_quankai.png');
         background-size: 100% 100%;
       }
     }
     .btn-pause {
       &::before {
-        background-image: url('~@lib/@{imgPath}/pause.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_zanting.png');
         background-size: 100% 100%;
       }
     }
     .btn-close {
       &::before {
-        background-image: url('~@lib/@{imgPath}/on.png');
+        background-image: url('~@lib/@{imgPath}/btn_ac_quanguan.png');
         background-size: 100% 100%;
       }
     }
@@ -515,7 +543,7 @@ getStyle(obj,attr){
       &.up-index {
         opacity: 1;
         .btn-open{
-          z-index:999;
+          z-index:999999;
         }
       }
     }

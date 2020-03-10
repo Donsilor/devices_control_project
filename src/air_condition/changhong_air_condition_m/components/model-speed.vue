@@ -109,8 +109,9 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        // background: rgba(37,37,37,0.80);
-        background: #1C1C1E;
+        background: rgba(37,37,37,0.80);
+        backdrop-filter: blur(15px);
+        // background: #1C1C1E;
         border-radius: 10px;
         margin: 0 16px 16px 16px;
         .btn{

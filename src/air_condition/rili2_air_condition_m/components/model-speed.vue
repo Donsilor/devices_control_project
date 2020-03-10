@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="show"
-    class="model"
+    class="speedl"
     @click.self="show = false"
     @touchmove.prevent>
     <div 
@@ -10,43 +10,29 @@
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
         <div 
-          class="btn cold"
-          @click="setMode('cold')">
-          <div class="btn-cold center" />
+          class="btn"
+          @click="setSpeed('low')">
+          <div class="btn-low center" />
           <div 
-            :class="[mode === 'cold' ? 'active' : '', 'name']" >制冷</div>
+            :class="[speed === 'low' ? 'active' : '','name']" >低风</div>
         </div>
         <div 
-          class="btn heat"
-          @click="setMode('heat')">
-          <div class="btn-heat center" />
+          class="btn" 
+          @click="setSpeed('normal')">
+          <div class="btn-normal center" />
           <div 
-            :class="[mode === 'heat' ? 'active' : '', 'name']" >制热</div>
+            :class="[speed === 'normal' ? 'active' : '','name']" >中风</div>
         </div>
         <div 
-          class="btn auto" 
-          @click="setMode('auto')">
-          <div class="btn-auto center" />
+          class="btn" 
+          @click="setSpeed('high')">
+          <div class="btn-high center" />
           <div 
-            :class="[mode === 'auto' ? 'active' : '', 'name']" >智能</div>
-        </div>
-        <div 
-          class="btn wind"
-          @click="setMode('wind')">
-          <div class="btn-wind center" />
-          <div 
-            :class="[mode === 'wind' ? 'active' : '', 'name']" >送风</div>
-        </div>
-        <div 
-          class="btn dehumidify"
-          @click="setMode('dehumidify')">
-          <div class="btn-dehumidify center" />
-          <div 
-            :class="[mode === 'dehumidify' ? 'active' : '', 'name']" >除湿</div>
+            :class="[speed === 'high' ? 'active' : '','name']" >高风</div>
         </div>
       </div>
       <div 
-        :class="[mode, 'hide']" 
+        class="hide" 
         @click.self="show = false">取消</div>
     </div>
   </div>
@@ -64,7 +50,7 @@
 .show{
   animation: show .2s linear 0s;
 }
-  .model{
+  .speedl{
     position: fixed;
     top: 0;
     right: 0;
@@ -102,11 +88,10 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        background: rgba(37,37,37,0.80);
-        // background: #1C1C1E;
+        // background: rgba(37,37,37,0.80);
+        background: #1C1C1E;
         border-radius: 10px;
         margin: 0 16px 16px 16px;
-        backdrop-filter: blur(15px);
         .btn{
           width:100%;
           height:120px;
@@ -114,39 +99,11 @@
           text-align: center;
           font-size:32px;
           border-bottom: 0.5px solid rgba(255,255,255,.1);
-          &.cold{
-            .active{
-              background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
-              -webkit-background-clip: text;
-              background-clip: text;
-              color: transparent;
-              // color: #2c9bcb;
+          .name{
+            &.active{
+               color:#E1B96E;
             }
           }
-          &.heat{
-            .active{
-              // background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
-              // -webkit-background-clip: text;
-              // background-clip: text;
-              // color: transparent;
-              color: #e8805f;
-            }
-          }
-           &.auto,&.dehumidify,&.wind{
-            .active{
-              color:#E1B96E;
-            }
-          }
-          // .name{
-          //   &.active{
-          //      color:#E1B96E;
-          //   }
-          // }
-        }
-      }
-      .cold{
-        .hide{
-
         }
       }
       .hide{
@@ -166,7 +123,7 @@
 </style>
 <script>
 export default {
-  props: ['mode'],
+  props: ['speed'],
   data() {
     return {
       show: false
@@ -175,8 +132,8 @@ export default {
   mounted() {
   },
   methods: {
-    setMode(attr){
-      this.$emit('setMode', attr)
+    setSpeed(attr){
+      this.$emit('setSpeed', attr)
     }
   }
 }

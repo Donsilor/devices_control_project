@@ -21,7 +21,7 @@
             <div 
               v-for="(item, index) in count" 
               :key="index" 
-              :style="{transform: `rotate(${7.5*index-105}deg)`}" 
+              :style="{transform: `rotate(${7.78*index-105}deg)`}" 
               class="item-container">
               <div 
                 ref="items" 
@@ -33,7 +33,7 @@
                 <!-- 小梯形 -->
                 <div 
                   ref="item" 
-                  :style="{background: 2*(itemTemp/10)-36>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
+                  :style="{background: 2*(itemTemp/10)-37>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
                   class="item"/>
               </div>
             </div>
@@ -175,7 +175,7 @@ export default {
   },
   data() {
     return {
-      count: 29,
+      count: 28,
       now: 0,
       idNum:0,
       moveEnd:false,
@@ -390,7 +390,7 @@ export default {
         return
       }else{
         // 滑动的梯子的index和温度之间的关系式
-        this.itemTemp = (0.5*this.idNum+18)*10
+        this.itemTemp = (0.5*this.idNum+18.5)*10
         var num = this.itemTemp + ""
 
         console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')

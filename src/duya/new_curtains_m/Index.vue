@@ -115,6 +115,12 @@ export default {
       if (this.myMove==false) {
           this.newRatio()
       }
+      if (this.deviceAttrs.open_percentage == 0) {
+        this.curtainStatusText = '已关闭'
+      }
+      if (this.deviceAttrs.open_percentage == 100) {
+        this.curtainStatusText = '已打开'
+      }
     },
     'deviceAttrs.open_percentage'(newValue, oldValue) {
       this.count = this.count + 1
@@ -171,7 +177,7 @@ export default {
           let btnHeight = document.documentElement.clientHeight
           let panelBtn = document.querySelectorAll('.panel-btn')[0]
           if (btnHeight>=812) {
-            panelBtn.style.bottom = '100px'
+            panelBtn.style.bottom = '120px'
           }else if(btnHeight>=667){
             panelBtn.style.bottom = '90px'
           }else if(btnHeight>=568){
@@ -447,11 +453,11 @@ export default {
   background: #000;
   .main {
     position: relative;
-    margin-top: 140px;
+    margin-top: 120px;
     .stick{
       width: 80%;
       // height: 20px;
-      height: 586px;
+      height: 500px;
       position: relative;
       .Pole{
         position: absolute;
