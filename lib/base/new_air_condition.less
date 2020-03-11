@@ -62,6 +62,11 @@
           background-position: center;
           background-repeat: no-repeat;
          }
+         &.wind,&.auto{
+          &::before{
+            opacity: 0.3;
+          }
+         }
       }
       &.reduce{
         width: 88px;
@@ -78,7 +83,11 @@
           background-position: center;
           background-repeat: no-repeat;
          }
-
+         &.wind,&.auto{
+          &::before{
+            opacity: 0.3;
+          }
+         }
       }
     }
   }
@@ -108,7 +117,7 @@
           position: absolute;
           top: 10px;
           right: -45px;
-          font-size: 24px;
+          font-size: 32px;
           color: #fff;
           transform: scale(1);
           font-family: PingFangSC-Light;
@@ -160,7 +169,7 @@
   .starting{
     margin-top: 100px;
     margin-bottom: 86px;
-    .cold{
+    .cold,.dehumidify,.wind,.auto{
         &.switchColor{
             background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
         }
@@ -168,21 +177,6 @@
     .heat{
         &.switchColor{
             background-image: linear-gradient(270deg, #F9BB6B 0%, #EF6D5E 100%);
-        }
-    }
-    .wind{
-        &.switchColor{
-            background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
-        }
-    }
-    .auto{
-        &.switchColor{
-            background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
-        }
-    }
-    .dehumidify{
-        &.switchColor{
-            background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
         }
     }
      .btn-start{
@@ -288,7 +282,7 @@
           margin-top: 16px;
           font-size: 32px;
         }
-        .cold{
+        .cold,.dehumidify,.wind,.auto{
             &.btn-breeze{
                 position: relative;
                 z-index: 100;
@@ -373,50 +367,6 @@
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_btn_time_r.png');
-                background-size: 100% 100%;
-              }
-        }
-        .auto,.dehumidify,.wind{
-            &.btn-breeze{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath1}/kt_mode_fan01_y.png');
-                background-size: 100% 100%;
-              }
-              &.btn-low{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath1}/kt_mode_fan02_y.png');
-                background-size: 100% 100%;
-              }
-              &.btn-normal{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath1}/kt_mode_fan03_y.png');
-                background-size: 100% 100%;
-              }
-              &.btn-high{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath1}/kt_mode_fan04_y.png');
-                background-size: 100% 100%;
-              }
-              &.btn-auto1{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath1}/kt_mode_fan05_y.png');
-                background-size: 100% 100%;
-              }
-              &.btn-strong{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath1}/kt_mode_fan06_y.png');
-                background-size: 100% 100%;
-              }
-              &.clock{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath1}/kt_btn_time_y.png');
                 background-size: 100% 100%;
               }
         }
@@ -608,7 +558,7 @@
   border-top: 1px rgba(0, 0, 0, .1) solid;
 }
 .switch {
-  width: 70px;
+  width: 72px;
   height: 40px;
   position: relative;
   border: 1px solid transparent;
@@ -626,13 +576,13 @@
     width: 34px;
     height: 34px;
     position: absolute;
-    top: 0;
+    top: 1px;
     left: 0;
     border-radius: 50%;
     // box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     background: #fff;
 }
-.cold{
+.cold,.auto,.dehumidify,.wind{
     &.switch:checked {
         background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
     }
@@ -642,18 +592,8 @@
         background-image: linear-gradient(270deg, #F9BB6B 0%, #EF6D5E 100%);
     }
 }
-.auto,.dehumidify,.wind{
-    &.switch:checked {
-        background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
-    }
-}
-// .switch:checked {
-//     border-color: #E1B96E;
-//     box-shadow: #E1B96E 0 0 0 16px inset;
-//     background-color: #E1B96E;
-// }
 .switch:checked:before {
-    left: 30px;
+    left: 34px;
     background: #fff;
 }
 .switch.switch-anim {
