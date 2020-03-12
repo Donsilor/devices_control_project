@@ -50,7 +50,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
-          limit: 1, // 页面内置到APP，没必要减少请求数，反而会增加代码大小
+          limit: 8192,
           name: isProduction ? 'images/[name].[hash:7].[ext]' : utils.assetsPath(`images/[name].[hash:7].[ext]`)
         }
       },
@@ -58,7 +58,7 @@ module.exports = {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url-loader',
         options: {
-          limit: 1,
+          limit: 8192,
           name: isProduction ? 'fonts/[name].[hash:7].[ext]' : utils.assetsPath(`fonts/[name].[hash:7].[ext]`)
         }
       }
