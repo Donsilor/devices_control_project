@@ -16,8 +16,7 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}, 'panel-left']"
-            @touchstart ="touchstart('two')"
-            @touchend="touchend('two')"
+            @click="touchstart('two')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -48,9 +47,7 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}, 'panel-left']"
-            @touchstart ="touchstart('three')"
-            @touchend="touchend('three')"
-          >
+            @click ="touchstart('three')">
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
                 <div
@@ -81,8 +78,7 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}, 'panel-left']"
-            @touchstart ="touchstart('one')"
-            @touchend="touchend('one')"
+            @click="touchstart('one')"
           >
             <div
               class="panel-btn center">
@@ -115,8 +111,7 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[3].chan_status == 'on'}, 'panel-left']"
-            @touchstart ="touchstart('four')"
-            @touchend="touchend('four')"
+            @click="touchstart('four')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -156,8 +151,7 @@
             <div
               ref="SwitchOn"
               :class="['btn btn-start center']"
-              @touchstart ="touchstart('SwitchOn')"
-              @touchend="touchend('SwitchOn')"
+              @click="touchstart('SwitchOn')"
             />
             <div class="btn-name">全开</div>
           </div>
@@ -168,8 +162,7 @@
             <div
               ref="SwitchOff"
               :class="['btn btn-close center']"
-              @touchstart ="touchstart('SwitchOff')"
-              @touchend="touchend('SwitchOff')"
+              @click ="touchstart('SwitchOff')"
             />
             <div class="btn-name">全关</div>
           </div>
@@ -195,6 +188,8 @@ export default {
   data() {
     return {
       flag: true,
+      touchStartY: '',
+      touchEndY: '',
       flagOff: true,
       timeOutEvent: '',
       timeOutEventOK: false,
@@ -270,10 +265,6 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     touchstart(val) {
       if(this.isOffline|| this.networkStatus == -1) return
-      this.timeOutEvent=setTimeout(() => {
-        // this.timeOutEventOK = true
-        return this.showMode(val)
-      }, 1000)
       this.$refs[val].classList.remove('animate')
       this.$refs[val].classList.add('animate1')
       if(val == 'one' || val == 'two' || val == 'three' || val == 'four') {
@@ -281,20 +272,24 @@ export default {
         if(this.flagOn == false || this.flagOff == false) return
       }
       if(val == 'SwitchOn') {
-        this.$refs[val].classList.add('yellowExtend')
         if(this.flagOn == false) return
-        if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') return
+        if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') return this.$refs[val].classList.remove('animate1')
+        this.$refs[val].classList.add('yellowExtend')
       }
       if(val == 'SwitchOff') {
-        this.$refs[val].classList.add('yellowExtend')
+
         if(this.flagOff == false) return
-        if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') return
+        if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') return this.$refs[val].classList.remove('animate1')
+        this.$refs[val].classList.add('yellowExtend')
       }
       HdSmart.UI.vibrate()
+      setTimeout(()=>{
+        console.log('手动触发')
+        this.touchend(val)
+      },300)
     },
     touchend(val){
       if(this.isOffline|| this.networkStatus == -1) return
-      clearTimeout(this.timeOutEvent)
       this.$refs[val].classList.remove('animate1')
       this.$refs[val].classList.remove('yellowExtend')
       this.$refs[val].classList.remove('bgcStart')
@@ -318,6 +313,7 @@ export default {
       .then((res) => {
         if(res.code == 0) {
           this.$refs.swing.show = false
+          this.$refs.swing.txtVal = ''
         }
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
@@ -327,6 +323,7 @@ export default {
       .then((res) => {
         if(res.code == 0) {
           this.$refs.swing.show = false
+          this.$refs.swing.txtVal = ''
         }
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
@@ -336,6 +333,7 @@ export default {
       .then((res) => {
         if(res.code == 0) {
           this.$refs.swing.show = false
+          this.$refs.swing.txtVal = ''
         }
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
@@ -345,6 +343,7 @@ export default {
       .then((res) => {
         if(res.code == 0) {
           this.$refs.swing.show = false
+          this.$refs.swing.txtVal = ''
         }
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')

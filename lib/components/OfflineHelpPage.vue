@@ -5,7 +5,7 @@
     :class="['OfflineHelpPage',{'moveIn':moveIn},{'moveOut':moveOut}]"> -->
   <div
     ref="page"
-    :class="['OfflineHelpPage']">
+    :class="['OfflineHelpPage', {'moveOut':moveOut}]">
     <div
       ref="topbar"
       class="topbar">
@@ -91,7 +91,7 @@ export default {
       .then((res)=>{
         let obj = {}
         obj.content = res.content.replace(/\n/g,"<br/>").replace(/(\d+)/g,'<span style="font-weight:normal">$1</span>')
-        obj.router_content = res.router_content.replace(/\n/g,"<br/>").replace(/(\d+)/g,'<span style="font-weight:normal">$1</span>')
+        obj.router_content = res.router_content&&res.router_content.replace(/\n/g,"<br/>").replace(/(\d+)/g,'<span style="font-weight:normal">$1</span>')
         this.setViewHelpInfo(obj)
       })
     })
@@ -101,9 +101,9 @@ export default {
 
     goBack(){
       // 离线帮助移入移出的动画控制，先注释保留
-      // this.moveIn = false
-      // this.moveOut = true
-      this.$router.go(-1)
+      this.moveIn = false
+      this.moveOut = true
+      if(this.$router)  this.$router.go(-1)
     }
   }
 }
@@ -134,7 +134,7 @@ export default {
     }
 }
 .moveOut{
-   animation: moveOut 0.2s linear;
+   animation: moveOut linear;
    animation-fill-mode:forwards
 }
 .OfflineHelpPage {

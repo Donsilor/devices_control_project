@@ -15,8 +15,7 @@
           <div
             v-if="deviceAttrs.list"
             :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}, {'panelOne': deviceAttrs.chan_num == 1 && deviceAttrs.list && deviceAttrs.list.length == 1}, 'panel-left']"
-            @touchstart ="touchstart('one')"
-            @touchend="touchend('one')"
+            @click="touchstart('one')"
           >
             <div
               class="panel-btn center">
@@ -49,8 +48,7 @@
           <div
             v-if="deviceAttrs.chan_num != 1 && deviceAttrs.list && deviceAttrs.list[1]"
             :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}, 'panel-left']"
-            @touchstart ="touchstart('two')"
-            @touchend="touchend('two')"
+            @click="touchstart('two')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -81,8 +79,7 @@
           <div
             v-if="deviceAttrs.chan_num != 1 && deviceAttrs.chan_num != 2 && deviceAttrs.list && deviceAttrs.list[2]"
             :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}, 'panel-left']"
-            @touchstart ="touchstart('three')"
-            @touchend="touchend('three')"
+            @click="touchstart('three')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -196,10 +193,6 @@ export default {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
     touchstart(val) {
       if(this.isOffline|| this.networkStatus == -1) return
-      this.timeOutEvent=setTimeout(() => {
-        // this.timeOutEventOK = true
-        return this.showMode(val)
-      }, 1000)
       this.$refs[val].classList.remove('animate')
       this.$refs[val].classList.add('animate1')
       this.$refs[val].classList.add('bgcStart')
@@ -210,14 +203,15 @@ export default {
         this.$refs[val].classList.add('yellowExtend')
       }
       HdSmart.UI.vibrate()
+      setTimeout(()=>{
+        this.touchend(val)
+      },300)
     },
     touchend(val){
       if(this.isOffline|| this.networkStatus == -1) return
-      clearTimeout(this.timeOutEvent)
       this.$refs[val].classList.remove('animate1')
       this.$refs[val].classList.add('animate')
       this.$refs[val].classList.remove('bgcStart')
-      // if(this.timeOutEventOK) return
       if(this.$refs.swing.show == true) return
       if(val == 'one') return this.setSwitch1()
       if(val == 'two') return this.setSwitch2()
@@ -236,6 +230,7 @@ export default {
       .then((res) => {
         if(res.code == 0) {
           this.$refs.swing.show = false
+          this.$refs.swing.txtVal = ''
         }
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
@@ -245,6 +240,7 @@ export default {
       .then((res) => {
         if(res.code == 0) {
           this.$refs.swing.show = false
+          this.$refs.swing.txtVal = ''
         }
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
@@ -254,6 +250,7 @@ export default {
       .then((res) => {
         if(res.code == 0) {
           this.$refs.swing.show = false
+          this.$refs.swing.txtVal = ''
         }
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')
@@ -263,6 +260,7 @@ export default {
       .then((res) => {
         if(res.code == 0) {
           this.$refs.swing.show = false
+          this.$refs.swing.txtVal = ''
         }
         if(res == null){
            HdSmart.UI.toast('请求超时，请重试')

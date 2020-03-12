@@ -15,8 +15,7 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}, 'panel-two']"
-            @touchstart ="touchstart('two')"
-            @touchend="touchend('two')"
+            @click ="touchstart('two')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -47,8 +46,7 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}, 'panel-three']"
-            @touchstart ="touchstart('three')"
-            @touchend="touchend('three')"
+            @click ="touchstart('three')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -80,8 +78,7 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}, 'panel-one']"
-            @touchstart ="touchstart('one')"
-            @touchend="touchend('one')"
+            @click ="touchstart('one')"
           >
             <div
               class="panel-btn center">
@@ -114,8 +111,7 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[3].chan_status == 'on'}, 'panel-four']"
-            @touchstart ="touchstart('four')"
-            @touchend="touchend('four')"
+            @click ="touchstart('four')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -155,8 +151,7 @@
             <div
               ref="SwitchOn"
               :class="['btn btn-start center']"
-              @touchstart ="touchstart('SwitchOn')"
-              @touchend="touchend('SwitchOn')"
+              @click ="touchstart('SwitchOn')"
             />
             <div class="btn-name">全开</div>
           </div>
@@ -167,8 +162,7 @@
             <div
               ref="SwitchOff"
               :class="['btn btn-close center']"
-              @touchstart ="touchstart('SwitchOff')"
-              @touchend="touchend('SwitchOff')"
+              @click ="touchstart('SwitchOff')"
             />
             <div class="btn-name">全关</div>
           </div>
@@ -288,16 +282,22 @@ export default {
         if(this.flagOn == false || this.flagOff == false) return
       }
       if(val == 'SwitchOn') {
-        this.$refs[val].classList.add('yellowExtend')
+        // this.$refs[val].classList.add('yellowExtend')
         if(this.flagOn == false) return
-        if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') return
+        if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') return this.$refs[val].classList.remove('animate1')
+        this.$refs[val].classList.add('yellowExtend')
       }
       if(val == 'SwitchOff') {
-        this.$refs[val].classList.add('yellowExtend')
+        // this.$refs[val].classList.add('yellowExtend')
         if(this.flagOff == false) return
-        if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') return
+        if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') return this.$refs[val].classList.remove('animate1')
+        this.$refs[val].classList.add('yellowExtend')
       }
       HdSmart.UI.vibrate()
+      setTimeout(()=>{
+        console.log('手动触发')
+        this.touchend(val)
+      },300)
     },
     touchend(val){
       if(this.isOffline|| this.networkStatus == -1) return
@@ -855,8 +855,8 @@ body {
       position: absolute;
       width: 70%;
       height: 70%;
-      // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
-      background: #E1B96E;
+      background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
+      // background: #E1B96E;
       top: 50%;
       left: 50%;
       border-radius: 50%;
