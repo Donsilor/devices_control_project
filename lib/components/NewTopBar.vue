@@ -397,9 +397,9 @@ export default {
         border-radius: 50%;
         background: rgba(225, 225, 225, .1);
     p{
-        width: 48px;
-        height: 48px;
-        margin-right: 4px;
+        width: 40px;
+        height: 40px;
+        // margin-right: 4px;
     }
 
   }

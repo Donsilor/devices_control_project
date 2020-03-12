@@ -51,7 +51,7 @@
               ref="tm"
               class="tm">{{ itemTemp | filterTm }}<sup 
                 ref="sup" 
-                :style="{right: itemTemp ==319 ? -20+'px':8+'px'}">°C</sup>
+                :style="{right: (itemTemp/10)%1 == 0 ? 8+'px': -20 +'px'}">°C</sup>
             </div>
           </div>
           <!-- 温度按钮 -->
@@ -207,7 +207,7 @@ export default {
       flagVal: false,
       hscrolll: 0,
       hscrolltopp: 0,
-      classTrue: false
+      classTrue: false,
     }
   },
 
@@ -325,11 +325,6 @@ export default {
           this.setTemperatureDis = false
           // 当返回的温度发生变化时，将温度值赋给itemTemp
           this.itemTemp = this.deviceAttrs.temperature
-          // if (this.itemTemp=='319') {
-          //   this.$refs.sup.style.right = -20 +'px'
-          // }else{
-          //   this.$refs.sup.style.right = 12 +'px'
-          // }
         }
     },
     "hscrolltopp"() {
@@ -344,7 +339,7 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-          this.itemTemp = this.deviceAttrs.temperature
+          this.itemTemp = this.deviceAttrs.temperature  
         })
       HdSmart.UI.setStatusBarColor(1)
     })

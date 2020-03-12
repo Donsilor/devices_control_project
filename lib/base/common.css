@@ -1,0 +1,97 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+ul {
+  list-style: none;
+}
+body {
+  height: 100%;
+  line-height: 1;
+}
+a {
+  text-decoration: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+@font-face {
+  font-family: 'iconfont';
+  /* project id 616019 */
+  src: url('../iconfont/iconfont.eot');
+  src: url('../iconfont/iconfont.eot?#iefix') format('embedded-opentype'), url('../iconfont/iconfont.woff') format('woff'), url('../iconfont/iconfont.ttf') format('truetype'), url('../iconfont/iconfont.svg#iconfont') format('svg');
+}
+[class^='icon-'],
+[class*=' icon-'] {
+  position: relative;
+}
+[class^='icon-']:before,
+[class*=' icon-']:before {
+  font-family: 'iconfont' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-more::before {
+  content: "";
+  display: block;
+  width: 42px;
+  height: 42px;
+  background-image: url(../../lib/base/img/detail.png);
+  background-size: 100% 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.icon-more1::before {
+  content: "";
+  display: block;
+  width: 42px;
+  height: 42px;
+  background-image: url(../../lib/base/img/detail1.png);
+  background-size: 100% 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.ab-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-loading {
+  position: relative;
+}
+.btn-loading:after {
+  width: 90%;
+  height: 90%;
+  content: '';
+  background-image: url(air_condition/assets/buffering_mode_white.gif);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.btn-style {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}

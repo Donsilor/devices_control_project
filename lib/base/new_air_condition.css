@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'Rajdhani-Regular';
+  src: url('ch_air_condition/assets/Rajdhani-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
 .page {
   padding-bottom: 24px;
   /*隐藏掉滚动条*/
@@ -103,9 +109,9 @@
   transform: translate(-50%, -50%);
   bottom: 16px;
   left: 50%;
-  width: 130px;
+  width: 144px;
   height: 128px;
-  font-size: 130px;
+  font-size: 144px;
   color: #fff;
   text-align: center;
 }
