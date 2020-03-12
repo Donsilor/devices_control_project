@@ -252,29 +252,29 @@ export default {
       let headerBottomCenter = this.$refs['header-bottom'].offsetWidth/2-titleDom.offsetWidth/2-(this.$refs['header-bottom'].offsetWidth/375*20)  //
       let titleLeft = (headerBottomCenter/44)*this.scrollTop
       let titleMaxWidth = (-19/44)*this.scrollTop+281
-      headerBottom = headerBottom>=headerBottomHeight?headerBottomHeight:headerBottom
-      // titleMaxWidth =  this.scrollTop *24/44+20
       fontSize = fontSize<=18?18:fontSize
-      titleLeft = titleLeft<=headerBottomCenter?titleLeft :headerBottomCenter
-      titleMaxWidth = titleMaxWidth<=262?262 :titleMaxWidth
-      titleDom.style.bottom = headerBottom + 'px'
-      titleDom.style.left = titleLeft + 'px'
-      titleDom.style.fontSize = fontSize/37.5 + 'rem'
-      titleDom.style.maxWidth = titleMaxWidth/37.5 + 'rem'
       _this.$emit('hscroll', headerBottomHeight)
       _this.$emit('hscrolltop', _this.scrollTop)
+      let header = this.$refs['header-bottom']
       if( this.scrollTop>=headerBottomHeight ){
         pageClass.classList.add('scroll44')
         status_bar_fixed&&(status_bar_fixed.style.top  =fixedTop +"px")
         this.search&&(this.rightSearch = true)
         this.fixed = true
+        header.style.marginTop = -44+'px'
+        titleDom.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
       }else{
+        header.style.marginTop = (0-this.scrollTop)+'px'
+        titleDom.style.left = titleLeft + 'px'
+        titleDom.style.fontSize = fontSize/37.5 + 'rem'
+        titleDom.style.maxWidth = titleMaxWidth/37.5 + 'rem'
         pageClass.classList.remove('scroll44')
         this.search&&(this.rightSearch = false)
         this.fixed = false
       }
        if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
-        titleDom.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
+        // titleDom.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
+         header.style.marginTop = -44+'px'
         titleDom.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
         titleDom.style.fontSize = ((-6/44)*headerBottomHeight+24)/37.5 + 'rem'
         pageClass.classList.add('scroll44')
