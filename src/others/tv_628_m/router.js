@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 Vue.use(Router)
+//懒加载
 const Index = () => import('./components/Index.vue')
 const List = () => import('./components/List.vue')
 const Search = () => import('./components/Search.vue')
@@ -32,37 +34,37 @@ const router = new Router({
       keepAlive: true
     }
   },
-  {
-    path: '/list',
-    name: 'list',
-    component: List,
-    meta: {
-      keepAlive: true
+    {
+      path: '/list',
+      name: 'list',
+      component: List,
+      meta: {
+        keepAlive: true
+      }
+    },
+    {
+      path: '/detail',
+      name: 'detail',
+      component: Detail
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: Search,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/error',
+      name: 'error',
+      component: ErrorView
+    },
+    {
+      path: '/NoNetwork',
+      name: 'NoNetwork',
+      component: NoNetwork
     }
-  },
-  {
-    path: '/detail',
-    name: 'detail',
-    component: Detail
-  },
-  {
-    path: '/search',
-    name: 'search',
-    component: Search,
-    meta: {
-      keepAlive: false
-    }
-  },
-  {
-    path: '/error',
-    name: 'error',
-    component: ErrorView
-  },
-  {
-    path: '/NoNetwork',
-    name: 'NoNetwork',
-    component: NoNetwork
-  }
   ]
 })
 
