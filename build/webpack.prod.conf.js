@@ -8,6 +8,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const CompressionPlugin = require('compression-webpack-plugin');
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 var util = require('./util')
 var env = config.build.env
@@ -72,6 +73,12 @@ var webpackConfig = merge(baseWebpackConfig, {
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: utils.sortChunks
+    }),
+    //开启gzip
+    new CompressionPlugin({
+      test: /\.js$|\.html$|.\css/, // 匹配文件名
+      threshold: 10240, // 对超过10k的数据压缩
+      deleteOriginalAssets: false // true 不删除源文件 false 删除源文件
     })
     // new CopyWebpackPlugin([
     //   {
