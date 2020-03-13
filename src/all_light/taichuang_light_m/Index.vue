@@ -19,10 +19,9 @@
           width="560"
           height="560"
         />
-        <p
-          v-show="deviceAttrs.switch_status=='on'"
-          class="light-mode"
-          @click="showMode">{{ temperatureTxt }}</p>
+        <div
+          v-if="modeVal == '01'"
+          :class="deviceAttrs.switch_status=='on' ? 'light-mode' : 'no-light-mode'"/>
       </div>
       <!-- 按钮 -->
       <div
@@ -38,106 +37,90 @@
       </div>
     </div>
     <!-- 色温选择 -->
-    <model
+    <!-- <model
       ref="model"
       :temperature="deviceAttrs.temperature"
-      @setModel="setModel"/>
+      @setModel="setModel"/> -->
   </div>
 </template>
 
 <script>
-  import { mapGetters, mapState, mapActions } from 'vuex'
-  import model from './components/model'
-  export default {
-    components: {
-      model
-    },
-    data() {
-      return {
-        lightMode: '1', // 光线模式
-        isOpen: false,
-        ctx: '',
-        ox: 140,
-        oy: 140,
-        or: 110,
-        br: 10,
-        moveFlag: false,
-        brightness: 100,
-        linearGradientArr: [
-          {
-            step: '0',
-            color: '#EF6D5E'
-          },
-          {
-            step: '1.0',
-            color: '#F9BB6B'
-          }
-        ],
-      }
-    },
-    computed: {
-      ...mapGetters(['isClose', 'isOffline', 'networkStatus']),
-      ...mapState(['device', 'deviceAttrs']),
-      temperatureTxt() {
-        /* eslint-disable no-unreachable */
-        switch (this.deviceAttrs.temperature) {
-          case 370:
-            return '暖光'
-            break
-          case 240:
-            return '自然光'
-            break
-          case 167:
-            return '白光'
-            break
-          default:
-            return ''
+import { mapGetters, mapState, mapActions } from 'vuex'
+export default {
+  data() {
+    return {
+      isOpen: false,
+      toogleSpeed:true,
+      ratio:100,
+      ctx: '',
+      ox: 140,
+      oy: 140,
+      or: 110,
+      br: 10,
+      moveFlag: false,
+      brightness: 100,
+      modeVal: '01',
+      linearGradientArr: [
+        {
+          step: '0',
+          color: '#EF6D5E'
+        },
+        {
+          step: '1.0',
+          color: '#F9BB6B'
         }
-      },
-      isClose(){
-        return this.deviceAttrs.switch_status=="on"?false:true
-      },
-      switchStatus() {
-        return this.deviceAttrs.switch_status == 'on' && !this.isOffline && this.networkStatus != -1 ? 'active' : 'noactive'
-      }
+      ],
+    }
+  },
+  computed: {
+    ...mapGetters(['isClose', 'isOffline', 'networkStatus']),
+    ...mapState(['device', 'deviceAttrs', 'ThirddeviceAttrs']),
+    isClose(){
+      return this.deviceAttrs.switch_status=="on"?false:true
     },
-    watch: {
-      'device.stateChange'() {
+    switchStatus() {
+      return this.deviceAttrs.switch_status == 'on' && !this.isOffline && this.networkStatus != -1 ? 'active' : 'noactive'
+    }
+  },
+  watch: {
+    'device.stateChange'() {
+      if(this.modeVal != '01') {
         this.draw(`${this.deviceAttrs.level/255}`)
-      },
-      'brightness'() {
+      } else {
+        this.draw(1)
+      }
+
+    },
+    'brightness'() {
+      if(this.ThirddeviceAttrs.sub_device_category != '01') {
         if(this.deviceAttrs.switch_status == 'on' && !this.isOffline&& this.networkStatus != -1) {
           HdSmart.UI.vibrate()
         }
       }
     },
-    created() {
-      HdSmart.ready(() => {
-        this.getDeviceInfo()
-          .then(() => {
-            this.draw(`${this.deviceAttrs.level/255}`)
-          })
-          .catch((err) => {
-            if(err.code == -90004) {
-              HdSmart.UI.toast('网络超时，请重试')
-            }
-          })
-        HdSmart.UI.setStatusBarColor(2)
-      })
+    'ThirddeviceAttrs.sub_device_category'() {
+      if(this.ThirddeviceAttrs.sub_device_category) {
+        this.modeVal = this.ThirddeviceAttrs.sub_device_category
+      }
     },
-    mounted(){
-      this.ctx = this.$refs.canvas.getContext("2d")
-      this.ctx.scale(2,2)
-      this.$nextTick(() => {
-        setTimeout(()=>{
-          window.scrollTo(0,0)
-        },200)
+  },
+  created() {
+    HdSmart.ready(() => {
+      this.getDeviceInfo()
+      .then(()=>{
+        if(this.ThirddeviceAttrs.sub_device_category == '01') {
+          this.draw(1)
+        } else {
+          this.draw(`${this.deviceAttrs.level/255}`)
+        }
+        this.modeVal = this.ThirddeviceAttrs.sub_device_category
         let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
         } : {
           start: "mousedown", move: "mousemove", end: "mouseup"
         }
-        this.$refs.canvas.addEventListener(on.start,(e)=> {
+        if(this.ThirddeviceAttrs.sub_device_category != '01') {
+          this.$refs.canvas.addEventListener(on.start,(e)=> {
           this.br = 20
           this.moveFlag = true
           if (this.moveFlag) {
@@ -154,76 +137,92 @@
           HdSmart.UI.vibrate()
         },false)
 
-        this.$refs.canvas.addEventListener(on.move, (e)=> {
-          if(e.preventDefault){
-            e.preventDefault()
-          }else{
-            e.returnValue = false
-          }
-          if (this.moveFlag) {
-            var k = this.getXY(e,this.$refs.canvas)
-            var r = Math.atan2(k.x-this.ox, this.oy-k.y)
-            var hd = (Math.PI+r)/(2*Math.PI)
-            // 半圆的滑动范围判断
-            if (hd <= 1 && hd >= 0) {
-              this.draw(hd)
+          this.$refs.canvas.addEventListener(on.move, (e)=> {
+            if(e.preventDefault){
+              e.preventDefault()
             }else{
-              return
+              e.returnValue = false
             }
-          }
-        }, false)
+            if (this.moveFlag) {
+              var k = this.getXY(e,this.$refs.canvas)
+              var r = Math.atan2(k.x-this.ox, this.oy-k.y)
+              var hd = (Math.PI+r)/(2*Math.PI)
+              // 半圆的滑动范围判断
+              if (hd <= 1 && hd >= 0) {
+                this.draw(hd)
+              }else{
+                return
+              }
+            }
+          }, false)
 
-        this.$refs.canvas.addEventListener(on.end,()=> {
-          this.br = 10
-          this.draw(this.brightness/100)
-          if (this.isOffline||this.isClose|| this.networkStatus == -1) return
-          this.moveFlag = false
-          this.controlDevice('level',parseInt(this.brightness*2.55))
-        }, false)
+          this.$refs.canvas.addEventListener(on.end,()=> {
+            this.br = 10
+            this.draw(this.brightness/100)
+            if (this.isOffline||this.isClose|| this.networkStatus == -1) return
+            this.moveFlag = false
+            this.controlDevice('level',parseInt(this.brightness*2.55))
+          }, false)
+        }
       })
-    },
-    methods: {
-      ...mapActions(['getDeviceInfo', 'doControlDevice']),
-      // 路由跳转
+      .catch((err) => {
+        if(err.code == -90004) {
+          HdSmart.UI.toast('网络超时，请重试')
+        }
+      })
+      HdSmart.UI.setStatusBarColor(2)
+    })
+  },
+  mounted(){
+    this.ctx = this.$refs.canvas.getContext("2d")
+    this.ctx.scale(2,2)
+    this.$nextTick(() => {
+      setTimeout(()=>{
+        window.scrollTo(0,0)
+      },200)
+    })
+  },
+  methods: {
+    ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    // 路由跳转
       OfflineHelpPage(){
           this.$router.push({
           path:"/OfflineHelpPage"
         })
       },
-      // touch动画
-      touchstart(val) {
-        if(this.isClose && val=='switch') {
-          this.$refs[val].classList.remove('animate')
-          this.$refs[val].classList.add('animate1')
-          this.$refs[val].classList.add('yellowExtend')
-          HdSmart.UI.vibrate()
-          return
-        }
-        if(this.isClose||this.isOffline|| this.networkStatus == -1) return
+    touchstart(val) {
+      if(this.isClose && val=='switch') {
         this.$refs[val].classList.remove('animate')
         this.$refs[val].classList.add('animate1')
         this.$refs[val].classList.add('yellowExtend')
         HdSmart.UI.vibrate()
-      },
-      touchend(val){
-        if(this.isClose && val=='switch') {
-          this.$refs[val].classList.remove('animate1')
-          this.$refs[val].classList.add('animate')
-          this.setSwitch()
-          return
-        }
-        if(this.isClose||this.isOffline|| this.networkStatus == -1) return
+        return
+      }
+      if(this.isClose||this.isOffline|| this.networkStatus == -1) return
+      this.$refs[val].classList.add('yellowExtend')
+      this.$refs[val].classList.remove('animate')
+      this.$refs[val].classList.add('animate1')
+      HdSmart.UI.vibrate()
+    },
+    touchend(val){
+      if(this.isClose && val=='switch') {
         this.$refs[val].classList.remove('animate1')
         this.$refs[val].classList.add('animate')
-        if(val == 'bc') return this.setSpeed(167)
-        if(val == 'gs') return this.setSpeed(240)
-        if(val == 'rs') return this.setSpeed(370)
-        if(val == 'switch') return this.setSwitch()
-      },
-      offset(r,d) {//根据弧度与距离计算偏移坐标
-        return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
-      },
-      draw(n) {
+        this.setSwitch()
+        return
+      }
+      if(this.isClose||this.isOffline|| this.networkStatus == -1) return
+      this.$refs[val].classList.remove('animate1')
+      this.$refs[val].classList.add('animate')
+      if(val == 'bc') return this.setSpeed(167)
+      if(val == 'gs') return this.setSpeed(240)
+      if(val == 'rs') return this.setSpeed(370)
+      if(val == 'switch') return this.setSwitch()
+    },
+    offset(r,d) {//根据弧度与距离计算偏移坐标
+      return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
+    },
+    draw(n) {
         this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
         // this.ctx.stroke()
         this.ctx.beginPath()
@@ -261,7 +260,11 @@
         this.ctx.shadowBlur = 0
         this.ctx.arc(this.ox,this.oy,this.or,2/4 *Math.PI,(n*2+0.5)*Math.PI,false)
         this.ctx.stroke()
-        this.ctx.fillStyle = "#fff"
+        if(this.modeVal == '01') {
+          this.ctx.fillStyle = "transparent"
+        } else {
+          this.ctx.fillStyle = "#fff"
+        }
         this.ctx.font = "40px PingFangSC-Light"
         this.ctx.textAlign = "center"
         this.ctx.textBaseline = "middle"
@@ -273,7 +276,11 @@
         }
         this.thermography = Math.round((n*(16/0.75))+(16-((16*0.125)/0.75)))
         this.centigrade = Math.round((n*(16/0.75))+(16-((16*0.125)/0.75)))*10
-        this.ctx.fillStyle = "#fff"
+        if(this.modeVal == '01') {
+          this.ctx.fillStyle = "transparent"
+        } else {
+          this.ctx.fillStyle = "#fff"
+        }
         this.ctx.beginPath()
         this.ctx.shadowOffsetX = 0
         this.ctx.shadowOffsetY = 2
@@ -289,7 +296,7 @@
         }
         this.ctx.fill()
       },
-      getXY(e,obj) {
+    getXY(e,obj) {
         let et = e.touches? e.touches[0] : e
         let x = et.clientX
         let y = et.clientY
@@ -298,76 +305,50 @@
           y : y - obj.offsetTop
         }
       },
-      //
-      endLight(val){
-        if(val == 0) return this.controlDevice('level', val)
-        if(val <= 15) {
-          this.controlDevice('level', 15)
-        } else {
-          this.controlDevice('level', val)
-        }
-      },
-      newLevel(){
-      },
-      setSpeed(val) {
-        if (this.isClose||this.isOffline|| this.networkStatus == -1) return
-        this.controlDevice('temperature', val)
-      },
-      setSwitch() {
-        if (this.isOffline|| this.networkStatus == -1) return false
-        let switchStatus = ''
-        if (this.deviceAttrs.switch_status == 'on') {
-          switchStatus = 'off'
-        } else {
-          switchStatus = 'on'
-        }
-        this.controlDevice("switch", switchStatus)
-      },
-      // 显示模式弹框
-      showMode() {
-        if (this.isClose || this.isOffline || this.networkStatus == -1) return
-        this.$refs.model.show = true
-      },
-      // 模式选择
-      setModel(attr) {
-        HdSmart.UI.vibrate()
-        if(!attr) {
-          if(this.$refs.model.show) this.$refs.model.show = false
-          return
-        }
-        if(attr) return this.controlDevice("temperature", attr)
-        .then((res) => {
-          if(res.code == 0) {
-            if(this.$refs.model.show) this.$refs.model.show = false
-          }
-        })
-      },
-      controlDevice(attr, value) {
-        if(attr=='switch'){
-          return this.doControlDevice({
-            nodeid: `bulb.main.${attr}`,
-            params: {
-              attribute: {
-                [attr]: value
-              }
-            }
-          })
-        }else{
-          return this.doControlDevice({
-            nodeid: `bulb.main.${attr}`,
-            params: {
-              attribute: {
-                [attr]: value,
-                "transition_time":2,
-                "need_confirm":true
-              }
-            }
-          })
-        }
-
-      },
+    setSpeed(val) {
+      if (this.isClose||this.isOffline|| this.networkStatus == -1) return
+      this.controlDevice('temperature', val)
     },
-  }
+    setSwitch() {
+      if (this.isOffline|| this.networkStatus == -1) return false
+      let switchStatus = ''
+      if (this.deviceAttrs.switch_status == 'on') {
+        switchStatus = 'off'
+      } else {
+        switchStatus = 'on'
+      }
+      this.controlDevice("switch", switchStatus)
+    },
+    controlDevice(attr, value) {
+      if(attr=='switch'){
+         return this.doControlDevice({
+        nodeid: `bulb.main.${attr}`,
+        params: {
+          attribute: {
+            [attr]: value
+          }
+        }
+      })
+      }else{
+        return this.doControlDevice({
+        nodeid: `bulb.main.${attr}`,
+        params: {
+          attribute: {
+            [attr]: value,
+            "transition_time":2,
+            "need_confirm":true
+          }
+        }
+      })
+      }
+
+    },
+    handleMore() {
+      this.isOpen = !this.isOpen
+    }
+  },
+
+}
 </script>
 
 <style lang="less" scoped>
@@ -410,25 +391,27 @@
     /*position: relative;*/
     // zoom: 0.5;
     .light-mode{
-      padding-top: 16px;
-      width: 200px;
-      text-align: center;
-      font-size: 32px;
-      color:#D9BA45;
-      position: absolute;
       margin-top: 140px;
       z-index: 9999;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      &:after{
+      &:before{
         display:block;
         content:'';
-        border-width:8px 8px 8px 8px;
-        border-style:solid;
-        border-color:#D9BA45 transparent transparent transparent;
-        /* 定位 */
-        position:absolute;
-        left:46%;
-        top:120%;
+        width: 80px;
+        height: 80px;
+        background-image: url("~@lib/@{imgPath}/btn_ac_kaideng@2x.png");
+        background-size: 100% 100%;
+      }
+    }
+    .no-light-mode {
+      margin-top: 140px;
+      z-index: 9999;
+      &:before{
+        display:block;
+        content:'';
+        width: 80px;
+        height: 80px;
+        background-image: url("~@lib/@{imgPath}/btn_ac_guandeng@2x.png");
+        background-size: 100% 100%;
       }
     }
   }

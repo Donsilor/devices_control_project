@@ -137,8 +137,21 @@
         } : {
           start: "mousedown", move: "mousemove", end: "mouseup"
         }
-        this.$refs.canvas.addEventListener(on.start,()=> {
+        this.$refs.canvas.addEventListener(on.start,(e)=> {
+          this.br = 20
           this.moveFlag = true
+          if (this.moveFlag) {
+            var k = this.getXY(e,this.$refs.canvas)
+            var r = Math.atan2(k.x-this.ox, this.oy-k.y)
+            var hd = (Math.PI+r)/(2*Math.PI)
+            // 半圆的滑动范围判断
+            if (hd <= 1 && hd >= 0) {
+              this.draw(hd)
+            }else{
+              return
+            }
+          }
+          HdSmart.UI.vibrate()
         },false)
 
         this.$refs.canvas.addEventListener(on.move, (e)=> {
@@ -161,6 +174,8 @@
         }, false)
 
         this.$refs.canvas.addEventListener(on.end,()=> {
+          this.br = 10
+          this.draw(this.brightness/100)
           if (this.isOffline||this.isClose|| this.networkStatus == -1) return
           this.moveFlag = false
           if(parseInt(this.brightness*2.55) <= 15 && parseInt(this.brightness*2.55) > 0) return this.controlDevice('level',15)
@@ -476,7 +491,7 @@
     margin-top: 80px;
     z-index: 2;
     position: absolute;
-    width: 460px;
+    width: 521px;
     border-radius: 50%;
     // background: red;
   }
