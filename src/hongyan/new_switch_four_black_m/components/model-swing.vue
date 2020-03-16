@@ -141,7 +141,7 @@
       }
       .determine {
         margin-top: 52px;
-        background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
+        background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
         border-radius: 10px;
         color: #000000;
       }

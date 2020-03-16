@@ -79,7 +79,7 @@
           </div> -->
           <div
             v-if="deviceAttrs.chan_num != 1 && deviceAttrs.chan_num != 2 && deviceAttrs.list && deviceAttrs.list[2]"
-            :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}, {'panelThree': deviceAttrs.chan_num == 3 && deviceAttrs.list && deviceAttrs.list.length == 3},  'panel-left', 'panel-right']"
+            :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}, {'panelThree': deviceAttrs.chan_num == 3 && deviceAttrs.list && deviceAttrs.list.length == 3}, 'panel-left', 'panel-right']"
             @touchstart ="touchstart('three')"
             @touchend="touchend('three')"
           >
@@ -382,29 +382,6 @@ export default {
           }
         })
       }
-      // return this.doControlDevice({
-      //   nodeid: `switch.main.switch`,
-      //   params: {
-      //     attribute: {
-      //       [attr]: value,
-      //       ...param
-      //     }
-      //   }
-      // })
-    },
-    touchStart(e) {
-      console.log(e, 'start')
-      e.stopPropagation() //阻止冒泡
-      e.preventDefault() //阻止默认行为
-    },
-    touchMove(e) {
-      console.log(e, 'move')
-      e.stopPropagation() //阻止冒泡
-      e.preventDefault() //阻止默认行为
-    },
-    touchEnd(e) {
-      e.stopPropagation() //阻止冒泡
-      e.preventDefault() //阻止默认行为
     },
   },
 }
@@ -415,18 +392,7 @@ export default {
 @imgPath1: 'base/oakes_air_condition/assets';
 @100: 100% 100%;
 *{ -webkit-tap-highlight-color:transparent; }
-// .body {
-//   min-height: 100%;
-//   height: 100vh;
-//   touch-action: manipulation;
-//   background: url('~@lib/@{imgPath}/bg02.png');
-//   background-size: 100% 100%;
-// }
 .page {
-  // height: 100vh;
-  // overflow-x: hidden;
-  // position: relative;
-  // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
   &::before{
     content: "";
     // background-image: url('~@lib/@{imgPath1}/img_bg.png');
@@ -443,82 +409,24 @@ export default {
   &.filter {
     filter: blur(12px);
   }
-  .title {
-    // min-width: 112.5px;
-    min-width: 48PX;
-    font-size: 24px;
-    text-align: center;
-    margin-top: 26px;
-    color: #000;
-    opacity: 0.2;
-  }
-  // .zhuyi {
-  //   margin-top: 5px;
-  //   font-size: 24px;
-  //   color: #fff;
-  //   line-height: 24px;
-  // }
   .main {
     margin-top: 200px;
     position: relative;
     .bg {
       display: flex;
-      // justify-content: space-evenly;
       align-items: center;
       flex-wrap: wrap;
-      .left {
-        height: 550px;
-        padding: 0 60px;
-        flex-direction: column;
-      }
-      .middle {
-        height: 550px;
-        border-left: 1px solid rgba(00,00,00,0.14);
-        padding: 0 60px;
-        flex-direction: column;
-      }
-      .right {
-        height: 550px;
-        border-left: 1px solid rgba(00,00,00,0.14);
-        padding: 0 60px;
-        flex-direction: column;
-      }
-      .four {
-        padding: 0 40px;
-      }
-      .sty {
-        display: block;
-        width: 108px;
-        height: 152px;
-        background-image: url('~@lib/@{imgPath}/kg2.png');
-        background-size: @100;
-        text-align: center;
-      }
-      .img {
-        background-image: url('~@lib/@{imgPath}/kg1.png');
-      }
-      .bright {
-        opacity: 1;
-      }
-    }
-  }
-  .message {
-    margin-top: 36px;
-    flex-direction: column;
-    .title {
-      margin-top: 0;
-      margin-bottom: 10px;
-      opacity: 1;
     }
   }
   .panel {
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.1);
     width: 208px;
     height: 632px;
     display: flex;
     margin-bottom: 14px;
     margin-right: 2px;
     border-radius: 15px 0 0 15px;
+    border: 0.5px solid rgba(255,255,255,0.15);
   }
   .panel-right {
     margin-right: 0;
@@ -529,11 +437,9 @@ export default {
   .radiusTwo {
     border-radius: 0;
   }
-  // .panel-left {
-  //   margin-left: 7px;
-  // }
   .panelActive {
-    background: rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.15);
+    border: 0.5px solid rgba(255,255,255,0.2);
   }
   .panelOne {
     width: 314px;
@@ -546,29 +452,17 @@ export default {
     border-radius: 0 15px 15px 0;
   }
   .panel-btn {
-    // position: fixed;
-    // bottom: 0;
-    // left: 0;
-    // right: 0;
     padding: 40px 0;
     z-index: 999;
-
     background: transparent;
-    // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
-    // border-radius: 42px 42px 0px 0px;
-
     flex-wrap: wrap;
     justify-content: space-evenly;
-
     .btn {
       margin-top: 24px;
       width: 100%;
       border-radius: 40px 40px 0 0;
-      // background: #ffffff;
       background: rgba(0,0,0,0.15);
-      // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
       display: flex;
-      // justify-content: space-evenly;
       align-items: center;
     }
   }
@@ -582,10 +476,6 @@ export default {
     &.btn-wrap-two {
       width: 314px;
     }
-    &.up-index {
-      position: relative;
-      z-index: 9999;
-    }
     .btn {
       box-sizing: border-box;
       margin: 0 auto;
@@ -593,17 +483,8 @@ export default {
       height: 120px;
       border: 1px solid rgba(0,0,0,0);
       border-radius: 50%;
-
       display: flex;
       flex-direction: column;
-
-    }
-    .bor {
-      border: none;
-      box-shadow: none;
-    }
-    .btn-name-top {
-      margin-bottom: 60px;
     }
     .btn-name {
       text-align: center;
@@ -614,12 +495,8 @@ export default {
     }
     .tis {
       margin: 0 auto 442px;
-      // width: 48px;
-      // height: 8px;
       width: 32px;
       height: 32px;
-      // border-radius: 5px;
-      // background: #D8D8D8;
       &::before {
         content: "";
         display: block;
@@ -630,61 +507,25 @@ export default {
       }
     }
     .tisActive {
-      // background: #E9BE6E;
       &::before {
         background-image: url('~@lib/@{imgPath}/new_kg_img_on.png')
       }
     }
-
     .btn-switch {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       margin:  0 auto;
       &::before {
         content: "";
         display: block;
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
         background-image: url('~@lib/@{imgPath}/new_kg_btn_off.png');
         background-size: @100;
       }
       &.active {
         &::before {
           background-image: url('~@lib/@{imgPath}/new_kg_btn_on.png')
-        }
-      }
-    }
-    .btn-start {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('~@lib/@{imgPath}/kg_btn_quankai.png');
-        background-size: @100;
-      }
-      &.active {
-        // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
-        background: #E1B96E;
-        &::before {
-          background-image: url('~@lib/@{imgPath}/kg_btn_quankai.png')
-        }
-      }
-    }
-    .btn-close {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url('~@lib/@{imgPath}/kg_btn_quanguan.png');
-        background-size: @100;
-      }
-      &.active {
-        // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
-        background: #E1B96E;
-        &::before {
-          background-image: url('~@lib/@{imgPath}/kg_btn_quanguan.png')
         }
       }
     }
@@ -698,14 +539,8 @@ export default {
       left: 0;
       bottom: 0;
       right: 0;
-      // z-index: 999;
       width: 100%;
-      // background: rgba(255, 255, 255,0.1);
     }
-    // &.page {
-    //   // background: #fff;
-    //   // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
-    // }
     .panel-btn {
       background: transparent;
     }
@@ -718,17 +553,6 @@ export default {
         }
       }
     }
-    .up-index {
-      opacity: 1;
-      .btn-name {
-        opacity: 0.5;
-      }
-    }
-  }
-  .panel-btn-bottom {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
   }
 }
 .btn-add {

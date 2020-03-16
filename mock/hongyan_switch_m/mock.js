@@ -9,7 +9,7 @@ let res = {
     "switch_chan1": "on",
     "switch_chan2": "off",
     "switch_chan3": "off",
-    "chan_num": 3,
+    "chan_num": 4,
     "list": [
       {
         "chan_index": 0,
@@ -29,12 +29,12 @@ let res = {
         "chan_name": "/*- ``@",
         "chan_avatar": "123dfafga "
       },
-      // {
-      //   "chan_index": 3,
-      //   "chan_status": "off",
-      //   "chan_name": "",
-      //   "chan_avatar": "123dfafga "
-      // }
+      {
+        "chan_index": 3,
+        "chan_status": "off",
+        "chan_name": "",
+        "chan_avatar": "123dfafga "
+      }
     ],
     "connectivity": "online"
 }

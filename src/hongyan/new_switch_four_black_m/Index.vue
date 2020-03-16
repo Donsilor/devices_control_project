@@ -15,7 +15,8 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}, 'panel-two']"
-            @click ="touchstart('two')"
+            @touchstart ="touchstart('two')"
+            @touchend="touchend('two')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -46,7 +47,8 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}, 'panel-three']"
-            @click ="touchstart('three')"
+            @touchstart ="touchstart('three')"
+            @touchend="touchend('three')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -78,7 +80,8 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}, 'panel-one']"
-            @click ="touchstart('one')"
+            @touchstart ="touchstart('one')"
+            @touchend="touchend('one')"
           >
             <div
               class="panel-btn center">
@@ -111,7 +114,8 @@
           <div
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[3].chan_status == 'on'}, 'panel-four']"
-            @click ="touchstart('four')"
+            @touchstart ="touchstart('four')"
+            @touchend="touchend('four')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -286,18 +290,21 @@ export default {
         if(this.flagOn == false) return
         if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') return this.$refs[val].classList.remove('animate1')
         this.$refs[val].classList.add('yellowExtend')
+        setTimeout(()=>{
+          this.touchend(val)
+        },300)
       }
       if(val == 'SwitchOff') {
         // this.$refs[val].classList.add('yellowExtend')
         if(this.flagOff == false) return
         if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') return this.$refs[val].classList.remove('animate1')
         this.$refs[val].classList.add('yellowExtend')
+        setTimeout(()=>{
+          this.touchend(val)
+        },300)
       }
       HdSmart.UI.vibrate()
-      setTimeout(()=>{
-        console.log('手动触发')
-        this.touchend(val)
-      },300)
+
     },
     touchend(val){
       if(this.isOffline|| this.networkStatus == -1) return
@@ -466,14 +473,6 @@ export default {
           }
         })
       }
-      // return this.doControlDevice({
-      //   nodeid: `switch.main.switch`,
-      //   params: {
-      //     attribute: {
-      //       [attr]: value
-      //     }
-      //   }
-      // })
     },
   },
 }
@@ -487,18 +486,7 @@ export default {
 body {
   position: fixed;
 }
-// .body {
-  // min-height: 100%;
-  // height: 100vh;
-  // touch-action: manipulation;
-  // background: url('~@lib/@{imgPath}/bg02.png');
-  // background-size: 100% 100%;
-// }
 .page {
-  // height: 100vh;
-  // overflow-x: hidden;
-  // position: relative;
-  // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
   &::before{
     content: "";
     // background-image: url('~@lib/@{imgPath1}/img_bg.png');
@@ -516,83 +504,24 @@ body {
   &.filter {
     filter: blur(12px);
   }
-  .title {
-    // min-width: 112.5px;
-    min-width: 48PX;
-    font-size: 24px;
-    text-align: center;
-    margin-top: 26px;
-    color: #000;
-    opacity: 0.2;
-  }
-  // .zhuyi {
-  //   margin-top: 5px;
-  //   font-size: 24px;
-  //   color: #fff;
-  //   line-height: 24px;
-  // }
   .main {
     margin-top: 65px;
     position: relative;
-    margin-bottom: 212px;
     .bg {
       display: flex;
-      // justify-content: space-evenly;
       align-items: center;
       flex-wrap: wrap;
-      .left {
-        height: 550px;
-        padding: 0 60px;
-        flex-direction: column;
-      }
-      .middle {
-        height: 550px;
-        border-left: 1px solid rgba(00,00,00,0.14);
-        padding: 0 60px;
-        flex-direction: column;
-      }
-      .right {
-        height: 550px;
-        border-left: 1px solid rgba(00,00,00,0.14);
-        padding: 0 60px;
-        flex-direction: column;
-      }
-      .four {
-        padding: 0 40px;
-      }
-      .sty {
-        display: block;
-        width: 108px;
-        height: 152px;
-        background-image: url('~@lib/@{imgPath}/kg2.png');
-        background-size: @100;
-        text-align: center;
-      }
-      .img {
-        background-image: url('~@lib/@{imgPath}/kg1.png');
-      }
-      .bright {
-        opacity: 1;
-      }
-    }
-  }
-  .message {
-    margin-top: 36px;
-    flex-direction: column;
-    .title {
-      margin-top: 0;
-      margin-bottom: 10px;
-      opacity: 1;
     }
   }
   .panel {
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.1);
     width: 314px;
     height: 314px;
     display: flex;
     margin-bottom: 4px;
     margin-right: 4px;
     border-radius: 4px;
+    border: 0.5px solid rgba(255,255,255,0.15);
   }
   .panel-one {
     border-radius: 0 0 0 15px;
@@ -607,42 +536,27 @@ body {
     border-radius: 0 0 15px 0;
   }
   .panelActive {
-    background: rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.15);
+    border: 0.5px solid rgba(255,255,255,0.2);
   }
   .panel-btn {
-    // position: fixed;
-    // bottom: 0;
-    // left: 0;
-    // right: 0;
     padding: 40px 0;
     z-index: 999;
-
     background: transparent;
-    // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
-    // border-radius: 42px 42px 0px 0px;
-
     flex-wrap: wrap;
     justify-content: space-evenly;
-
     .btn {
       margin-top: 24px;
       width: 100%;
       border-radius: 40px 40px 0 0;
-      // background: #ffffff;
       background: rgba(255,255,255,0.10);
-      // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
       display: flex;
-      // justify-content: space-evenly;
       align-items: center;
     }
   }
   .btn-wrap {
     &.btn-wrap-four {
       width: 314px;
-    }
-    &.up-index {
-      position: relative;
-      z-index: 9999;
     }
     .btn {
       box-sizing: border-box;
@@ -656,13 +570,6 @@ body {
       flex-direction: column;
 
     }
-    .bor {
-      border: none;
-      box-shadow: none;
-    }
-    .btn-name-top {
-      margin-bottom: 60px;
-    }
     .btn-name {
       text-align: center;
       color: rgba(255, 255, 255, 0.3);
@@ -672,14 +579,8 @@ body {
     }
     .tis {
       margin: 0 auto 130px;
-      // width: 48px;
-      // height: 8px;
       width: 32px;
       height: 32px;
-      // border-radius: 5px;
-      // border-radius: 50%;
-      // background: #fff;
-      // opacity: 0.2;
       &::before {
         content: "";
         display: block;
@@ -690,21 +591,19 @@ body {
       }
     }
     .tisActive {
-      // background: #E1B96E;
       &::before {
         background-image: url('~@lib/@{imgPath}/new_kg_img_on.png')
       }
     }
-
     .btn-switch {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       margin:  0 auto;
       &::before {
         content: "";
         display: block;
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
         background-image: url('~@lib/@{imgPath}/new_kg_btn_off.png');
         background-size: @100;
       }
@@ -720,8 +619,8 @@ body {
         z-index: 100;
         position: relative;
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
         background-image: url('~@lib/@{imgPath}/new_kg_btn_allon.png');
         background-size: @100;
       }
@@ -739,8 +638,8 @@ body {
         z-index: 100;
         position: relative;
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
         background-image: url('~@lib/@{imgPath}/new_kg_btn_alloff.png');
         background-size: @100;
       }
@@ -762,37 +661,19 @@ body {
       left: 0;
       bottom: 0;
       right: 0;
-      // z-index: 999;
       width: 100%;
-      // background: rgba(255, 255, 255,0.1);
     }
-    // &.page {
-    //   // background: #fff;
-    //   // background: linear-gradient(0deg, #346EE6 0%, #346EE7 100%);
-    // }
     .panel-btn {
       background: transparent;
     }
     .btn-wrap {
       opacity: 0.2;
-      // .btn {
-        // &.active {
-        //   background: #fff;
-        //   border: 1px solid rgba(32,40,43,0.5);
-        // }
-      // }
-    }
-    .up-index {
-      opacity: 1;
-      .btn-name {
-        opacity: 0.5;
-      }
     }
   }
   .panel-btn-bottom {
     width: 100%;
-    // position: fixed;
-    // bottom: 0;
+    position: fixed;
+    bottom: 0;
     .panel-btn {
       padding-top: 0;
       padding-bottom: 96px;
