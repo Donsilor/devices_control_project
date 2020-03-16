@@ -242,6 +242,7 @@
   width: 100%;
   background: rgba(255,255,255,0.10);
   border-radius: 15px;
+  display: flex;
   .search{
    display: flex;
    justify-content: center;
