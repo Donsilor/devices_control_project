@@ -319,7 +319,7 @@
   display:flex;
   align-items: center;
   margin-bottom:16px;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0,0,0,0.8);
   backdrop-filter:blur(15px);
   -webkit-overflow-scrolling: touch;
   .icon_grid_inner {
