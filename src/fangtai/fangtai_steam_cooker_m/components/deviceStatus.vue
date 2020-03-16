@@ -154,11 +154,6 @@
       // 开关机
       shutdowncallback(){
         if (this.isOffline) return
-        // if (this.deviceAttrs.PowerSwitchAll == 2) {
-        //   this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 0})
-        // } else if (this.deviceAttrs.PowerSwitchAll == 0) {
-        //   this.controlDevice('PowerSwitchAll', {PowerSwitchAll: 2})
-        // }
         this.controlDevice('WorkState', {WorkState: 2}).then(res => {
           this.$router.push('/')
         })
@@ -183,34 +178,13 @@
             }
           })
         })
-        // this.$router.push({
-        //   path:'/devicePause',
-        //   query: {
-        //     preset: this.activeMode === 3 ? 110 : this.presetTemp,
-        //     activeMode : this.activeMode
-        //   }
-        // })
       },
       openWaterBox() {
-        // this.controlDevice('openWaterBox', {PushRod: 3}).then(() => {
-        //   this.$router.push({
-        //     path:'/waterBoxOpen',
-        //     query: {
-        //       preset: this.activeMode === 3 ? 110 : this.presetTemp,
-        //       activeMode : this.activeMode
-        //     }
-        //   })
-        // })
         this.controlDevice('openWaterBox', {PushRod: 3}).then(() => {
           this.$router.push({path:'/waterBoxOpen'})
         })
       },
       light() {
-        // if (this.deviceAttrs.Light == 0) {
-        //   this.controlDevice('Light', {Light: 1})
-        // } else {
-        //   this.controlDevice('Light', {Light: 0})
-        // }
         this.controlDevice('Light', {Light: 2})
       },
       transTime(time) {

@@ -2,8 +2,6 @@
   <div
     class="NoNetwork-page"
   >
-    <!-- <div
-      class="space-block" /> -->
     <new-topbar
       :shutdown="true"
       :title="device_name"
@@ -20,7 +18,6 @@
         <img src="~@lib/base/tv/assets/new/tv_img_nowifi.png" >
       </div>
       <p>当前网络不可用</p>
-      <!-- <button @click="fn">按钮</button> -->
     </div>
   </div>
 </template>
@@ -48,11 +45,6 @@ export default {
     goback(){
        HdSmart.UI.popWindow()
     }
-    // fn(){
-    //    let obj = this.$store.state.tvStatus
-    //   obj.tvOnlineStatus = 1
-    //   this.$store.commit('setScreenProjectionStatus',obj)
-    // }
   }
 
 }

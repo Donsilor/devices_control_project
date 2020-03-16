@@ -16,6 +16,7 @@ var app = util.getInputName()
 var buildTime = util.getBuildTime()
 var isMock = util.getIsMock()
 var debug = util.getdebug()
+
 // 本地测试使用
 // baseWebpackConfig.entry['after_iot'] = `${__dirname}/../src/__global_iot_proxy/${app}/index.js`;
 // 使用此entry可以进行打包后代码测试，但需要在链接后面加上 ?env=desktop
@@ -23,9 +24,9 @@ var debug = util.getdebug()
 var webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
-      sourceMap: config.build.productionSourceMap,
-      extract: true
-    })
+        sourceMap: config.build.productionSourceMap,
+        extract: true
+      })
   },
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   output: {
@@ -80,32 +81,11 @@ var webpackConfig = merge(baseWebpackConfig, {
       threshold: 10240, // 对超过10k的数据压缩
       deleteOriginalAssets: false // true 不删除源文件 false 删除源文件
     })
-    // new CopyWebpackPlugin([
-    //   {
-    //     from: path.resolve(__dirname, '../static'),
-    //     to: config.build.assetsSubDirectory,
-    //     ignore: ['.*']
-    //   }
-    // ])
   ]
 })
 
+// build后的压缩包文件
 if (config.build.productionGzip) {
-  // var CompressionWebpackPlugin = require('compression-webpack-plugin')
-
-  // webpackConfig.plugins.push(
-  //     new CompressionWebpackPlugin({
-  //         asset: '[path].gz[query]',
-  //         algorithm: 'gzip',
-  //         test: new RegExp(
-  //             '\\.(' +
-  //             config.build.productionGzipExtensions.join('|') +
-  //             ')$'
-  //         ),
-  //         threshold: 10240,
-  //         minRatio: 0.8
-  //     })
-  // )
   var ZipPlugin = require('zip-webpack-plugin')
   webpackConfig.plugins.push(
     new ZipPlugin({
@@ -114,10 +94,5 @@ if (config.build.productionGzip) {
     })
   )
 }
-//
-// if (config.build.bundleAnalyzerReport) {
-//     var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-//     webpackConfig.plugins.push(new BundleAnalyzerPlugin())
-// }
 
 module.exports = webpackConfig
