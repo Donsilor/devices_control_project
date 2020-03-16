@@ -144,8 +144,9 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('~@lib/base/img/bg02.png') no-repeat;
-  background-size: 100% 100%;
+  // background: url('~@lib/base/img/bg02.png') no-repeat;
+  // background-size: 100% 100%;
+  background: #000;
 }
 
 *{ -webkit-tap-highlight-color:transparent; }
@@ -226,7 +227,8 @@ export default {
   justify-content: space-between;
   height: @navigation_bar_height;
   position: relative;
-  color: #222a37;
+  // color: #222a37;
+  color: #fff;
   align-items: center;
   .left,
   .right,.right-search {
@@ -248,7 +250,7 @@ export default {
     position: absolute;
     left: 40px;
     p{
-        background: url('../base/img/tv_arrow_back.png');
+        background: url('../base/img/arrow_back.png');
         background-size: 100% 100%;
 
     }
@@ -278,7 +280,7 @@ export default {
   padding: 0 40px;
   line-height: 1.5em;
   font-weight: lighter;
-  color: rgba(0, 0, 0, .5);
+  color: rgba(255, 255, 255, .5);
 }
   .title {
     text-align: center;
@@ -288,6 +290,6 @@ export default {
   .viewHelpH3{
   padding: 20px 40px;
   font-size: 16PX;
-
+  color: #fff;
   }
 </style>
