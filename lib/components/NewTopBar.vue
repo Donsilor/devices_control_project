@@ -247,7 +247,6 @@ export default {
       let fixedTop =  this.$refs.statusbar.offsetHeight+this.$refs.newNavbar.offsetHeight
       let status_bar_fixed = document.querySelectorAll('.status_bar_fixed')[0]
       let headerBottomHeight = this.$refs['header-bottom'].offsetHeight
-      let headerBottom = (headerBottomHeight/44)*this.scrollTop
       let fontSize = (-6/44)*this.scrollTop+24
       let headerBottomCenter = this.$refs['header-bottom'].offsetWidth/2-titleDom.offsetWidth/2-(this.$refs['header-bottom'].offsetWidth/375*20)  //
       let titleLeft = (headerBottomCenter/44)*this.scrollTop
@@ -261,6 +260,7 @@ export default {
         status_bar_fixed&&(status_bar_fixed.style.top  =fixedTop +"px")
         this.search&&(this.rightSearch = true)
         this.fixed = true
+        titleDom.style.fontSize = 18/37.5 + 'rem'
         header.style.marginTop = -44+'px'
         titleDom.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
       }else{
@@ -273,10 +273,9 @@ export default {
         this.fixed = false
       }
        if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
-        // titleDom.style.bottom = (headerBottomHeight/44)*headerBottomHeight+ 'px'
          header.style.marginTop = -44+'px'
         titleDom.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
-        titleDom.style.fontSize = ((-6/44)*headerBottomHeight+24)/37.5 + 'rem'
+        titleDom.style.fontSize = 18/37.5 + 'rem'
         pageClass.classList.add('scroll44')
       }
     }
@@ -329,8 +328,9 @@ export default {
     z-index: 100;
     width: 100%;
     border:0;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.8);
     backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
   }
 }
 .topbar-nobg {
