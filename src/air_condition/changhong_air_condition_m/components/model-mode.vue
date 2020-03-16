@@ -52,18 +52,18 @@
   </div>
 </template>
 <style lang="less" scoped>
-@imgPath: 'base/air_condition/assets/new-air';
-@keyframes show {
-    0% {
-      bottom:-380px;
-    }
-    100% {
-       bottom:0;
-    }
-}
-.show{
-  animation: show .2s linear 0s;
-}
+  @imgPath: 'base/air_condition/assets/new-air';
+  @keyframes show {
+      0% {
+        bottom:-380px;
+      }
+      100% {
+        bottom:0;
+      }
+  }
+  .show{
+    animation: show .2s linear 0s;
+  }
   .model{
     position: fixed;
     top: 0;
