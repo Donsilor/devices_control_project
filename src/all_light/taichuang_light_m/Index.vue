@@ -20,6 +20,9 @@
           height="560"
         />
         <div
+          v-if="modeVal != '01'"
+          class="light-txt">{{ deviceAttrs.switch_status=='on' ? brightness : '_ _' }}</div>
+        <div
           v-if="modeVal == '01'"
           :class="deviceAttrs.switch_status=='on' ? 'light-mode' : 'no-light-mode'"/>
       </div>
@@ -32,15 +35,10 @@
           @touchend="touchend('switch')">
           <div
             ref="switch"
-            :class="[switchStatus, 'btn', 'btn-bc center']"/>
+            :class="[switchStatus, 'btn', 'btn-switch center']"/>
         </div>
       </div>
     </div>
-    <!-- 色温选择 -->
-    <!-- <model
-      ref="model"
-      :temperature="deviceAttrs.temperature"
-      @setModel="setModel"/> -->
   </div>
 </template>
 
@@ -49,13 +47,10 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   data() {
     return {
-      isOpen: false,
-      toogleSpeed:true,
-      ratio:100,
       ctx: '',
       ox: 140,
       oy: 140,
-      or: 110,
+      or: 120,
       br: 10,
       moveFlag: false,
       brightness: 100,
@@ -227,11 +222,11 @@ export default {
         // this.ctx.stroke()
         this.ctx.beginPath()
         this.ctx.fillStyle = 'rgba(37,37,37,0.8)'
-        this.ctx.arc(this.ox, this.oy, 80, 0, 2*Math.PI)
+        this.ctx.arc(this.ox, this.oy, 90, 0, 2*Math.PI)
         this.ctx.fill()
         // this.ctx.stroke()
         this.ctx.strokeStyle = "rgba(151,151,151,0.2)"
-        this.ctx.lineWidth = 15
+        this.ctx.lineWidth = 20
         this.ctx.beginPath()
         this.ctx.shadowColor =  "none"
         this.ctx.shadowOffsetX = 0
@@ -252,7 +247,7 @@ export default {
         }else{
           this.ctx.strokeStyle = "transparent"
         }
-        this.ctx.lineWidth = 15
+        this.ctx.lineWidth = 20
         this.ctx.beginPath()
         this.ctx.shadowColor =  "none"
         this.ctx.shadowOffsetX = 0
@@ -260,22 +255,20 @@ export default {
         this.ctx.shadowBlur = 0
         this.ctx.arc(this.ox,this.oy,this.or,2/4 *Math.PI,(n*2+0.5)*Math.PI,false)
         this.ctx.stroke()
-        if(this.modeVal == '01') {
-          this.ctx.fillStyle = "transparent"
-        } else {
-          this.ctx.fillStyle = "#fff"
-        }
-        this.ctx.font = "40px PingFangSC-Light"
-        this.ctx.textAlign = "center"
-        this.ctx.textBaseline = "middle"
+        // if(this.modeVal == '01') {
+        //   this.ctx.fillStyle = "transparent"
+        // } else {
+        //   this.ctx.fillStyle = "#fff"
+        // }
+        // this.ctx.font = "40px PingFangSC-Light"
+        // this.ctx.textAlign = "center"
+        // this.ctx.textBaseline = "middle"
         this.brightness = (Math.round(n*100))
-        if (this.deviceAttrs.switch_status=="on") {
-          this.ctx.fillText(Math.round(n*100)+"%",this.ox,this.oy)
-        } else {
-          this.ctx.fillText("--",this.ox,this.oy)
-        }
-        this.thermography = Math.round((n*(16/0.75))+(16-((16*0.125)/0.75)))
-        this.centigrade = Math.round((n*(16/0.75))+(16-((16*0.125)/0.75)))*10
+        // if (this.deviceAttrs.switch_status=="on") {
+        //   this.ctx.fillText(Math.round(n*100)+"%",this.ox,this.oy)
+        // } else {
+        //   this.ctx.fillText("--",this.ox,this.oy)
+        // }
         if(this.modeVal == '01') {
           this.ctx.fillStyle = "transparent"
         } else {
@@ -343,20 +336,20 @@ export default {
       }
 
     },
-    handleMore() {
-      this.isOpen = !this.isOpen
-    }
   },
 
 }
 </script>
 
 <style lang="less" scoped>
+@font-face{
+  font-family: 'Rajdhani-Regular';
+  src: url('~@lib/base/ch_air_condition/assets/Rajdhani-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
   @imgPath: "base/hongyan_light/assets";
-  @imgPath1: "base/blend/assets";
-  @imgPath2: "base/air_cleaner/assets/new-air";
   @imgPath3: 'base/honghan_switch/assets';
-  @imgPath4: 'base/oakes_air_condition/assets';
   @keyframes rotate {
     from {
       transform:rotate(0deg);
@@ -367,9 +360,6 @@ export default {
   }
   *{ -webkit-tap-highlight-color:transparent; }
   .page{
-    // height:100vh;
-    // background: url('~@lib/@{imgPath3}/bg02.png');
-    // background-size: 100% 100%;
     &::before{
       content: "";
       // background-image: url('~@lib/@{imgPath3}/bg02.png');
@@ -390,6 +380,20 @@ export default {
     margin-bottom: 260px;
     /*position: relative;*/
     // zoom: 0.5;
+    .light-txt{
+      padding-top: 16px;
+      font-family: 'Rajdhani-Regular';
+      text-align: center;
+      font-size: 140px;
+      position: absolute;
+      margin-top: 70px;
+      z-index: 9999;
+      color: #fff;
+      &:after {
+        content: '%';
+        font-size: 40px;
+      }
+    }
     .light-mode{
       margin-top: 140px;
       z-index: 9999;
@@ -415,245 +419,42 @@ export default {
       }
     }
   }
-  .wrap-circle {
-    position: relative;
-    left: 36%;
-    top: 35%;
-    // position: absolute;
-    // margin-top: 60px;
-    // width: 320px;
-    // height: 450px;
-    width: 208px;
-    height: 290px;
-    flex-direction: column;
-    color: #20282B;
-    .bg{
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .wind {
-      margin-bottom: 30px;
-      font-size: 24px;
-    }
-    .speed {
-      font-size: 120px;
-      &.speed-close{
-        display: flex;
-        align-items: center;
-        height: 152px;
-        margin-bottom: 20px;
-        span{
-          margin: 0 10px;
-          display: inline-block;
-          background:#757575;
-          width: 70px;
-          height: 10px;
-        }
-      }
-    }
-
-    .switch {
-      margin-top: 20px;
-      font-size: 32px;
-    }
-  }
-  .tips {
-    margin-top: 18%;
-    padding-bottom: 40px;
-    position: absolute;
-    text-align: center;
-    font-size: 46px;
-    display: flex;
-    justify-content: center;
-  }
   .canvas {
     margin-top: 80px;
     z-index: 2;
     position: absolute;
     width: 521px;
     border-radius: 50%;
-    // background: red;
-  }
-  .small {
-    background: url("~@lib/@{imgPath3}/btn_ac_on_zron@2x.png") no-repeat;
-    background-size: 100% 100%;
-    height: 26px;
-    width: 26px;
-    position: relative;
-    top: 20%;
-    left: -115%;
-  }
-  .big {
-    background: url("~@lib/@{imgPath3}/btn_ac_on_oneh@2x.png") no-repeat;
-    background-size: 100% 100%;
-    height: 26px;
-    width: 26px;
-    position: relative;
-    top: 11%;
-    right: -123%;
-  }
-  .scale {
-    // position: absolute;
-    position: relative;
-    // top: -40px;
-    left: -13%;
-    background: url("~@lib/@{imgPath3}/btn_ac_dengguang@2x.png") no-repeat;
-    background-size: 100% 100%;
-    width: 568px;
-    height: 290px;
-  }
-  .scale-close {
-    background: url("~@lib/@{imgPath3}/btn_ac_dengguanghui@2x.png") no-repeat;
-    background-size: 100% 100%;
-  }
-  .tips-btn{
-    //  position: fixed;
-    // margin-top: 100px;
-    // bottom: 20%;
-    margin: 0 auto;
-    width: 100%;
-    text-align: center;
-    font-size: 36px;
-    // color: #fff;
-    display: flex;
-    justify-content: center;
-    .ratiobg{
-      position: absolute;
-      width: 600px;
-      height: 10px;
-      background: #ccc;
-      top: 160px;
-      // left: 50%;
-      // transform: translateX(-50%);
-      border-radius: 60px;
-      .ratiobg2{
-        width: 0px;
-        height: 100%;
-        background:aqua;
-        border-radius: 60px;
-      }
-      .circle{
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background:aqua;
-        position: absolute;
-        top: -14px;
-        left: 0px;
-      }
-      .an{
-        position: absolute;
-        top: 20px;
-        left: -30px;
-      }
-      .liang{
-        position: absolute;
-        top: 20px;
-        right: -30px;;
-      }
-    }
-
-  }
-  .animation {
-    background: url("~@lib/@{imgPath3}/btn_ac_lamp@2x.png") no-repeat;
-    background-size: 100% 100%;
-  }
-  .animation1 {
-    background: url("~@lib/@{imgPath3}/btn_ac_lampnuan@2x.png") no-repeat;
-    background-size: 100% 100%;
-  }
-  .coverlight{
-    position:absolute;
-    width: 320px;
-    height: 450px;
-    clip:rect(80px 320px 450px 0px);
-  }
-  .greycircle {
-    background: url("~@lib/@{imgPath3}/btn_ac_lamp@2x.png") no-repeat;
-    background-size: 100% 100%;
-  }
-  .lianggang{
-    width: 74px;
-    height: 16px;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    background: url("~@lib/@{imgPath}/btn_ac_on_lianggang@2x.png") no-repeat;
-    background-size: 100% 100%;
   }
   .panel-btn {
-    // position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    // padding: 40px 30px 30px;
     margin-top: 66px;
     padding: 0 30px 96px;
     z-index: 9999;
     width: 100%;
-    // height: 306px;
-    // background: #ffffff;
-    // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
     border-radius: 42px 42px 0px 0px;
-
     flex-wrap: wrap;
     justify-content: center;
-
-    .more {
-      width: 750px;
-      color: #9e9e9e;
-      font-size: 24px;
-      text-align: center;
-      position: absolute;
-      left: 0;
-      top: -75px;
-      .arrow {
-        display: inline-block;
-        font-size: 32px;
-        &.up {
-          transform: rotate(90deg);
-        }
-        &.down {
-          transform: rotate(-90deg);
-        }
-      }
-    }
-
     .btn {
       margin-top: 24px;
       width: 100%;
       border-radius: 40px 40px 0 0;
-      /*background: rgba(0,0,0,0.1);*/
-      // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
       display: flex;
-      // justify-content: space-evenly;
       align-items: center;
     }
   }
-  .disabled {
-    opacity: 0.2;
-  }
   .btn-wrap {
     margin: 0 24px;
-    &.up-index {
-      position: relative;
-      z-index: 9999;
-    }
     .btn {
       box-sizing: border-box;
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      // border: 1px solid #818181;
       border-radius: 50%;
-
       display: flex;
       flex-direction: column;
-      /*background: rgba(0, 0, 0, 0.1);*/
       &::before {
         position: relative;
         z-index: 100;
@@ -665,60 +466,7 @@ export default {
         background: rgba(37,37,37,0.8);
       }
     }
-    .btn-name {
-      text-align: center;
-      color: #000;
-      margin-top: 16px;
-      font-size: 24px;
-    }
-    .btn-zm {
-      &::before {
-        content: "";
-        display: block;
-        width: 44px;
-        height: 44px;
-        background-image: url("~@lib/@{imgPath}/btn_ac_on_cd@2x.png");
-        background-size: 100% 100%;
-      }
-    }
-    .btn-rs {
-      &::before {
-        content: "";
-        display: block;
-        width: 48px;
-        height: 48px;
-        background-image: url("~@lib/@{imgPath3}/btn_ac_on_baiguang@2x.png");
-        background-size: 100% 100%;
-      }
-      &.active::before{
-        display: block;
-        width: 48px;
-        height: 48px;
-        // background-image: url("~@lib/base/yiyun_light/assets/nuanguang2@2x.png");
-        background-size: 100% 100%;
-
-      }
-    }
-
-    .btn-gs {
-      &::before {
-        content: "";
-        display: block;
-        width: 48px;
-        height: 48px;
-        background-image: url("~@lib/@{imgPath3}/btn_ac_on_ziranguang@2x.png");
-        background-size: 100% 100%;
-      }
-      &.active::before{
-        display: block;
-        width: 48px;
-        height: 48px;
-        // background-image: url("~@lib/base/yiyun_light/assets/ziranguang2@2x.png");
-        background-size: 100% 100%;
-
-      }
-    }
-    .btn-bc {
+    .btn-switch {
       &::before {
         content: "";
         display: block;
@@ -734,87 +482,11 @@ export default {
         // background-image: url("~@lib/base/yiyun_light/assets/baiguanfg2@2x.png");
         background-image: url("~@lib/@{imgPath}/btn_ac_on_cd@2x.png") !important;
         background-size: 100% 100%;
-
-      }
-    }
-    // &.noactive{
-
-    // }
-    .btn-swich {
-      &::before {
-        content: "";
-        display: block;
-        width: 48px;
-        height: 48px;
-        background-image: url("~@lib/@{imgPath4}/dakai3@2x.png");
-        background-size: 100% 100%;
-      }
-      &.active {
-        &::before {
-          background-image: url("~@lib/@{imgPath4}/dakai3@2x.png");
-        }
-      }
-    }
-  }
-  &.close {
-    .btn-wrap {
-      &.up-index{
-        opacity: 1;
       }
     }
   }
   &.offline {
     overflow: hidden;
-    // .btn-wrap {
-      // &.up-index{
-        /*opacity: .2;*/
-      // }
-    // }
-  }
-  &.close,
-  &.offline {
-    &.page {
-      .cover {
-        background: #fff;
-        .point {
-          &.left {
-            background: #d8d8d8;
-          }
-        }
-      }
-    }
-    .btn-wrap-light{
-      opacity: 1;
-      .btn {
-        &.active {
-          // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-          border-color: #ffbf00;
-          background: #E1B96E;
-        }
-      }
-    }
-
-
-  }
-  .ratiobg111{
-    position: fixed;
-    right: 100px;
-    top: 200px;
-    height: 500px;
-    width: 10px;
-    background: #ccc;
-    .circle{
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #fff;
-      position: absolute;
-      left: -15px;
-    }
-    .ratiobg2{
-      // border-radius: 50%;
-      background: rgba(255 ,255, 255, 0.6)
-    }
   }
   .animate::before{
     animation: scale 0.3s;
@@ -842,8 +514,6 @@ export default {
       transform: scale(1);
     }
   }
-
-
   .yellowExtend{
     position: relative;
     &::after{

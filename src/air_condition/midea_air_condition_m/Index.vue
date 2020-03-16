@@ -65,13 +65,13 @@
           <button
             ref="reduce"
             :disabled="setTemperatureDis"
-            class="control reduce btn"
+            :class="[deviceAttrs.mode,'control reduce btn']"
             @click="setTemperature('reduce',-10)"
           />
           <button
             ref="add"
             :disabled="setTemperatureDis"
-            class="control add btn"
+            :class="[deviceAttrs.mode,'control add btn']"
             @click="setTemperature('add',10)"
           />
         </div>
@@ -152,6 +152,7 @@
       <model-speed
         ref="speed"
         :speed="deviceAttrs.speed"
+        :mode="deviceAttrs.mode"
         @setSpeed="setSpeed" />
     </div>
   </div>
@@ -333,8 +334,20 @@ export default {
             color = 'rgba(255,255,255,0.1)'
             return
           }
-          if(this.deviceAttrs.mode=='cold'){
-            // 制冷模式时的温度颜色
+          if(this.deviceAttrs.mode=='heat'){
+            // 制热模式时的温度颜色
+            if (index < 10) {
+                color = '#EF6D5E '
+            }else if (index > 20) {
+                color = '#F9BB6B'
+            }else {
+                color = `linear-gradient(to right, #EF6D5E 0%, #ff7524 ${200-10*index}%, #F9BB6B  100%)`
+                // color="#f38f63"
+            }
+            return color
+          
+          }else{
+              // 制冷模式时的温度颜色
             if (index < 10) {
                 color = '#327fdb'
             }else if (index > 20) {
@@ -343,30 +356,10 @@ export default {
                 color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
             }
             return color
-          }else if(this.deviceAttrs.mode=='heat'){
-            // 制热模式时的温度颜色
-            if (index < 10) {
-                color = '#F9BB6B '
-            }else if (index > 20) {
-                color = '#EF6D5E'
-            }else {
-                color = `linear-gradient(to right, #F9BB6B 0%, #ff7524 ${200-10*index}%, #EF6D5E  100%)`
-            }
-            return color
-          }else{
-             // 制热模式时的温度颜色
-            if (index < 10) {
-                color = '#E1B96E  '
-            }else if (index > 20) {
-                color = '#F1CB85'
-            }else {
-                color = `linear-gradient(to right, #E1B96E 0%, #F1CB85 ${200-10*index}%, #F1CB85  100%)`
-            }
-            return color
           }
       },
     touchstart(e){
-      console.log(e,'eeeeeeeee')
+      // console.log(e,'eeeeeeeee')
     },
     touchmove(e){
       if(e.preventDefault){
@@ -374,30 +367,27 @@ export default {
       }else{
           e.returnValue = false
       }
-      // this.isMove = true
       if (this.deviceAttrs.mode=='wind') {
         return 
      }
      var touch = e.targetTouches[0]
-    //  var ssdd = document.elementsFromPoint(touch.pageX, touch.pageY)
      var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
      this.idNum = parseInt(ele)
-     console.log(this.idNum,'小梯形的id')
+    //  console.log(this.idNum,'小梯形的id')
      this.calculateBg(this.idNum)
      // 如果是NaN,则return
     if(isNaN(this.idNum)==true){
-        console.log('return掉了')
         return
       }else{
         // 滑动的梯子的index和温度之间的关系式
         this.itemTemp = (0.5*this.idNum+17.5)*10
         var num = this.itemTemp + ""
 
-        console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
+        // console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
         // 如果最后一位数字是5，则往前进1
         if (num.lastIndexOf("5")==2) {
           this.itemTemp -=5
-          console.log(this.itemTemp,'最终传给后台的温度')
+          // console.log(this.itemTemp,'最终传给后台的温度')
           
         }
       }
@@ -509,7 +499,6 @@ export default {
     },
         // check开关切换
     checkSwitch(val) {
-      // console.log(e.target.checked)
       this.disabledLock = true
       if (this.isOffline||this.isClose) return
       let checkSwitchStatus = ''
@@ -603,7 +592,13 @@ export default {
         }
       }
     }
-  }
+  } 
 }
-
+.control-tm{
+      .wind.control{
+        &::before{
+          opacity: 0.3;
+        }
+      }
+    }
 </style>

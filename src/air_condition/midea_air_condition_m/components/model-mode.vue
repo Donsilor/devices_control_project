@@ -10,44 +10,44 @@
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
         <div 
-          class="btn"
+          class="btn cold"
           @click="setMode('cold')">
           <div class="btn-cold center" />
           <div 
             :class="[mode === 'cold' ? 'active' : '', 'name']" >制冷</div>
         </div>
         <div 
-          class="btn"
+          class="btn heat"
           @click="setMode('heat')">
           <div class="btn-heat center" />
           <div 
             :class="[mode === 'heat' ? 'active' : '', 'name']" >制热</div>
         </div>
         <div 
-          class="btn" 
+          class="btn auto" 
           @click="setMode('auto')">
           <div class="btn-auto center" />
           <div 
             :class="[mode === 'auto' ? 'active' : '', 'name']" >智能</div>
         </div>
         <div 
-          class="btn"
+          class="btn wind"
           @click="setMode('wind')">
           <div class="btn-wind center" />
           <div 
             :class="[mode === 'wind' ? 'active' : '', 'name']" >送风</div>
         </div>
         <div 
-          class="btn"
+          class="btn dehumidify"
           @click="setMode('dehumidify')">
           <div class="btn-dehumidify center" />
           <div 
-           :class="[mode === 'dehumidify' ? 'active' : '', 'name']" >除湿</div>
+            :class="[mode === 'dehumidify' ? 'active' : '', 'name']" >除湿</div>
         </div>
       </div>
       <div 
-        class="hide" 
-        @click.self="show = false">取消</div>
+        :class="[mode, 'hide']" 
+        @click.self="show = false"><span @click.self="show = false">取消</span></div>
     </div>
   </div>
 </template>
@@ -102,10 +102,11 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        // background: rgba(37,37,37,0.80);
-        background: #1C1C1E;
+        background: rgba(37,37,37,0.80);
+        // background: #1C1C1E;
         border-radius: 10px;
         margin: 0 16px 16px 16px;
+        backdrop-filter: blur(15px);
         .btn{
           width:100%;
           height:120px;
@@ -113,9 +114,23 @@
           text-align: center;
           font-size:32px;
           border-bottom: 0.5px solid rgba(255,255,255,.1);
-          .name{
-            &.active{
-               color:#E1B96E;
+          &.cold,
+          &.auto,
+          &.dehumidify,
+          &.wind{
+            .active{
+              background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+              -webkit-background-clip: text;
+              background-clip: text;
+              color: transparent;
+            }
+          }
+          &.heat{
+            .active{
+              background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
+              -webkit-background-clip: text;
+              background-clip: text;
+              color: transparent;
             }
           }
         }
@@ -127,11 +142,27 @@
         letter-spacing: 0;
         text-align: center;
         line-height: 120px;
-        color: #E1B96E;
         background: #1C1C1E;
         border-radius: 10px;
         margin: 0 16px 16px 16px;
       }
+      .cold.hide,.dehumidify.hide,.wind.hide,.auto.hide{
+        span{
+          background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+        }
+      }
+      .heat.hide{
+        span{
+          background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+        }
+      }
+      
     }
   }
 </style>

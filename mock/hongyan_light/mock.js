@@ -24,7 +24,7 @@ export function generateSnapShot() {
     })
 }
 export function generateNetwork() {
-  return Mock.mock(-2)
+  return Mock.mock(0)
 }
 export function generateViewHelp() {
   return Mock.mock({
