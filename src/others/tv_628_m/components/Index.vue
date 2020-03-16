@@ -17,7 +17,7 @@
     />
     <!-- v-show="device_uuid"   -->
     <!--    -->
-    <status-tip type="首页"/>
+    <status-tip v-show="showStatus" type="首页"/>
     <div
       :class="{'search-screen-bg_mt':device_uuid}"
       class="search-screen-bg">
@@ -769,6 +769,7 @@ export default {
   data() {
     const self = this
     return {
+      showStatus: true,
       ios: /iPad|iPhone|iPod/.test(navigator.userAgent),
       device_uuid: window.device_uuid || '',
       device_name:window.device_name||'',
@@ -1052,9 +1053,11 @@ export default {
             if((this.scrollTop)>= 44){
         icon_grid.style.position = 'fixed'
         icon_grid.style.top = statusbarH+newNavbarH + 'px'
+              this.showStatus = false
       }else{
         icon_grid.style.position = ''
         icon_grid.style.background = ''
+              this.showStatus = true
       }
       this.scrollToList[this.activeIndex] = this.scrollTop
 
