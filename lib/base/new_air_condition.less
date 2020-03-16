@@ -68,11 +68,6 @@
           background-position: center;
           background-repeat: no-repeat;
          }
-         &.wind,&.auto{
-          &::before{
-            opacity: 0.3;
-          }
-         }
       }
       &.reduce{
         width: 88px;
@@ -458,8 +453,10 @@
     }
     &.page {
       .control-tm{
-        .reduce,.add {
-          opacity: .6;
+        .control{
+          &::before{
+            opacity: 0.3;
+          }
         }
       }
       .starting{

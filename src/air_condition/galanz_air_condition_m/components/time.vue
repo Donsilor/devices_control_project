@@ -7,13 +7,17 @@
       @touchmove.prevent/>
     <div
       v-if="show"
-      class="main show">
+      :class="[deviceAttrs.mode,'main show']">
       <div class="overtime">
-        <span class="title" v-if="deviceAttrs.timer_switch == 'on'&& deviceAttrs.time_value >0">{{ deviceAttrs.time_value | closeTime }}</span>
-        <span v-else class="title">设置关机时间</span>
+        <span 
+          v-if="deviceAttrs.timer_switch == 'on'&& deviceAttrs.time_value >0" 
+          class="title">{{ deviceAttrs.time_value | closeTime }}</span>
+        <span 
+          v-else 
+          class="title">设置关机时间</span>
         <span
-          class="canceltime"
           v-if="deviceAttrs.timer_switch == 'on'&& deviceAttrs.time_value >0"
+          class="canceltime"
           @click="canceltime">取消定时</span>
       </div>
       <time-pick
@@ -67,6 +71,30 @@
       background: rgba(0,0,0,0.8);
     }
   }
+        .cold,.dehumidify,.wind,.auto{
+          .canceltime,.cancel{
+            background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 32px;
+          }
+          .submit{
+            background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+          }
+        } 
+        .heat{
+          .canceltime,.cancel{
+            background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 32px;
+          }
+          .submit{
+            background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
+          }
+        }
       .main{
       position: fixed;
       left: 0;
@@ -84,15 +112,12 @@
         padding: 0 24px;
         align-items: center;
         height: 122px;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
+        border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
         .title{
           font-size: 32px;
           color: #fff;
         }
-        .canceltime{
-          font-size: 32px;
-          color: #E1B96E;
-        }
+        
       }
 
       .wrap-btns{
@@ -103,7 +128,6 @@
       .submit{
         margin-top: 50px;
         outline: none;
-        background-image: linear-gradient(270deg, #F1CB85 0%, #E1B96E 100%);
         border-radius: 10px;  
         font-size: 32px;
         color:#000;
@@ -117,7 +141,6 @@
         margin-top: 32px;
         font-size: 32px;
         line-height: 44px;
-        color: #E1B96E;
       }
     }
 </style>

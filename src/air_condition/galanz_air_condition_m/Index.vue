@@ -67,13 +67,13 @@
           <button
             ref="reduce"
             :disabled="setTemperatureDis"
-            class="control reduce btn"
+            :class="[deviceAttrs.mode,'control reduce btn']"
             @click="setTemperature('reduce',-10)"
           />
           <button
             ref="add"
             :disabled="setTemperatureDis"
-            class="control add btn"
+            :class="[deviceAttrs.mode,'control add btn']"
             @click="setTemperature('add',10)"
           />
         </div>
@@ -384,34 +384,24 @@ export default {
             color = 'rgba(255,255,255,0.1)'
             return
           }
-          if(this.deviceAttrs.mode=='cold'){
-            // 制冷模式时的温度颜色
+          if(this.deviceAttrs.mode=='heat'){
+            // 制热模式时的温度颜色
+            if (index < 10) {
+                color = '#EF6D5E '
+            }else if (index > 20) {
+                color = '#F9BB6B'
+            }else {
+                color = `linear-gradient(to right, #EF6D5E 0%, #ff7524 ${200-10*index}%, #F9BB6B  100%)`
+            }
+               
+            return color
+          }else{
             if (index < 10) {
                 color = '#327fdb'
             }else if (index > 20) {
                 color = '#20c6ae'
             }else {
                 color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
-            }   
-            return color
-          }else if(this.deviceAttrs.mode=='heat'){
-            // 制热模式时的温度颜色
-            if (index < 10) {
-                color = '#F9BB6B '
-            }else if (index > 20) {
-                color = '#EF6D5E'
-            }else {
-                color = `linear-gradient(to right, #F9BB6B 0%, #ff7524 ${200-10*index}%, #EF6D5E  100%)`
-            }
-            return color
-          }else{
-             // 制热模式时的温度颜色
-            if (index < 10) {
-                color = '#E1B96E  '
-            }else if (index > 20) {
-                color = '#F1CB85'
-            }else {
-                color = `linear-gradient(to right, #E1B96E 0%, #F1CB85 ${200-10*index}%, #F1CB85  100%)`
             }
             return color
           }
@@ -719,6 +709,13 @@ export default {
         background-size: 100% 100%;
         height: 100%;
         width: 100%;
+      }
+    }
+    .control-tm{
+      .wind.control,.auto.control,.dehumidify.control{
+        &::before{
+          opacity: 0.3;
+        }
       }
     }
 </style>

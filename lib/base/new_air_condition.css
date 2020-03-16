@@ -69,10 +69,6 @@
   background-position: center;
   background-repeat: no-repeat;
 }
-.page .control-tm .control.add.wind::before,
-.page .control-tm .control.add.auto::before {
-  opacity: 0.3;
-}
 .page .control-tm .control.reduce {
   width: 88px;
   height: 88px;
@@ -429,11 +425,9 @@
   right: 0;
   width: 100%;
 }
-.page.close.page .control-tm .reduce,
-.page.offline.cover.page .control-tm .reduce,
-.page.close.page .control-tm .add,
-.page.offline.cover.page .control-tm .add {
-  opacity: 0.6;
+.page.close.page .control-tm .control::before,
+.page.offline.cover.page .control-tm .control::before {
+  opacity: 0.3;
 }
 .page.close.page .starting .switchColor,
 .page.offline.cover.page .starting .switchColor {

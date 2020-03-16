@@ -173,6 +173,7 @@
       <model-speed
         ref="speed"
         :speed="deviceAttrs.speed"
+        :mode="deviceAttrs.mode"
         @setSpeed="setSpeed" />
     </div>
   </div>
@@ -657,6 +658,13 @@ export default {
         background-size: 100% 100%;
         height: 100%;
         width: 100%;
+      }
+    }
+    .control-tm{
+      .wind.control,.auto.control{
+        &::before{
+          opacity: 0.3;
+        }
       }
     }
 </style>

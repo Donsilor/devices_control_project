@@ -72,8 +72,8 @@
     mounted() {
       this.$nextTick(() =>{
         this.fontSize = document.documentElement.style.fontSize.replace('px', '')
-        console.log(this.dataList,'数组');
-        console.log(this.hIndex,'数组');
+        console.log(this.dataList,'数组')
+        console.log(this.hIndex,'数组')
         
       })
     },
@@ -166,19 +166,22 @@
     border-right: none;
     border-left: none;
   }
-  // .opacity,.opacity1{
-  //   opacity: 0.5;
-  //   width: 100%;
-  //   height: 60px;
-  //   position: absolute;
-  //   border: 1px solid rgba(.0, .0, .0, 1);
-  // }
-  // .opacity{
-  //   top: -18px;
-  // }
-  // .opacity1{
-  //   bottom: -18px;
-  // }
+    .cold,.dehumidify,.wind,.auto{
+      li.current{
+        background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+    }
+    .heat{
+      li.current{
+        background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+    }
   .box {
     // flex: 1;
     // height: 260px;
@@ -213,10 +216,8 @@
       transform-origin: center center;
     }
     /*滚动样式*/
-    
     li.current {
       font-size: 40px;
-      color: #E1B96E;
       height: 114px;
       line-height: 114px;
       transform: translateZ(0px) rotateX(0deg);
