@@ -4,7 +4,8 @@
       <!-- 顶部 -->
       <topbar
         :title="device.device_name"
-        :room="device.room_name"
+        :room="argv_is_mock?'':device.room_name"
+        :show-right="argv_is_mock?false:true"
         page-class=".page" />
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <!-- 灯 -->
@@ -131,6 +132,7 @@ export default {
   },
   data() {
     return {
+      argv_is_mock: false,
       flag: true,
       flagOff: true,
       timeOutEvent: '',
@@ -181,6 +183,7 @@ export default {
   watch: {
   },
   created() {
+    this.argv_is_mock = argv_is_mock
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .catch((err) => {

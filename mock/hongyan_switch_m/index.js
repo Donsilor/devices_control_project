@@ -5,7 +5,7 @@ import on from '../app'
 import {apiList} from '../app/constant'
 import * as mockData from './mock'
 
-if (location.search.indexOf('env=desktop') != -1) {
+if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
 
     window.device_name = '智能开关'
     window.networkStatus = -1

@@ -413,12 +413,13 @@
     }
     .light-mode{
       padding-top: 16px;
-      width: 200px;
+      width: 250px;
+      height: 140px;
       text-align: center;
       font-size: 32px;
       color:#D9BA45;
       position: absolute;
-      margin-top: 140px;
+      margin-top: 180px;
       z-index: 9999;
       border-top: 1px solid rgba(255,255,255,0.1);
       &:after{
@@ -429,7 +430,7 @@
         border-color:#D9BA45 transparent transparent transparent;
         position:absolute;
         left:46%;
-        top:120%;
+        top:45%;
       }
     }
   }

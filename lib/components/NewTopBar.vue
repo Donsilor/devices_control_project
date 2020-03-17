@@ -214,12 +214,18 @@ export default {
       } else if (argv_is_mock) {
         let t = new Date().getTime()
         let url = ''
+        let urlStr = location.search
         if (process.env.NODE_ENV == 'development') {
           return
         } else {
           url = `/scattered-pages-in-app/dist/experience.html?_=${t}`
         }
-        window.location.replace(url)
+        // 判断虚拟体验不同入口对退出键的处理
+        if(urlStr.indexOf("?") != -1) {
+          window.location.replace(url)
+        } else {
+          HdSmart.UI.popWindow()
+        }
       } else {
         HdSmart.UI.popWindow()
       }

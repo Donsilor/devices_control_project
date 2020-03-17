@@ -5,7 +5,8 @@
       :class="[{ 'offline': isOffline || networkStatus == -1 }, {'close': isClose}, 'page']" >
       <new-topbar
         :title="device.device_name"
-        :room="device.room_name"
+        :room="argv_is_mock?'':device.room_name"
+        :show-right="argv_is_mock?false:true"
         :scroll="true"
         page-class=".page"
       />
@@ -56,6 +57,7 @@
     },
     data() {
       return {
+        argv_is_mock: false,
         ctx: '',
         ox: 140,
         oy: 140,
@@ -112,6 +114,7 @@
       }
     },
     created() {
+      this.argv_is_mock = argv_is_mock
       HdSmart.ready(() => {
         this.getDeviceInfo()
           .then(() => {
@@ -412,12 +415,13 @@
     }
     .light-mode{
       padding-top: 16px;
-      width: 200px;
+      width: 250px;
+      height: 140px;
       text-align: center;
       font-size: 32px;
       color:#D9BA45;
       position: absolute;
-      margin-top: 140px;
+      margin-top: 180px;
       z-index: 9999;
       border-top: 1px solid rgba(255,255,255,0.1);
       &:after{
@@ -428,7 +432,7 @@
         border-color:#D9BA45 transparent transparent transparent;
         position:absolute;
         left:46%;
-        top:120%;
+        top:45%;
       }
     }
   }

@@ -9,26 +9,26 @@ let res = {
     "switch_chan1": "on",
     "switch_chan2": "off",
     "switch_chan3": "off",
-    "chan_num": 3,
+    "chan_num": 2,
     "list": [
       {
         "chan_index": 0,
         "chan_status": "off",
-        "chan_name": "卧室筒a1~啊",
+        "chan_name": "",
         "chan_avatar": "123dfafga "
       },
       {
         "chan_index": 1,
         "chan_status": "off",
-        "chan_name": "123123123123123",
+        "chan_name": "",
         "chan_avatar": "123dfafga "
       },
-      {
-        "chan_index": 2,
-        "chan_status": "off",
-        "chan_name": "/*- ``@",
-        "chan_avatar": "123dfafga "
-      },
+      // {
+      //   "chan_index": 2,
+      //   "chan_status": "off",
+      //   "chan_name": "/*- ``@",
+      //   "chan_avatar": "123dfafga "
+      // },
       // {
       //   "chan_index": 3,
       //   "chan_status": "off",
