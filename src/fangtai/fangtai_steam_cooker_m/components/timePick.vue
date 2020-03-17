@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- <div>
-      选中值为：<span>{{ selectedValue }}</span>
-    </div> -->
     <div class="wrap-box">
       <div class="box box1">
         <ul
@@ -130,8 +127,6 @@
         console.log('touchStart')
         e.stopPropagation()
         e.preventDefault()
-        // this.liheight =  document.getElementsByClassName('current-pre')[0].offsetHeight // 精度有问题
-
         let el = document.getElementsByClassName("current-pre")[0]
         this.liheight = window.getComputedStyle(el,null)
                               .getPropertyValue("height").replace('px', '')
@@ -163,18 +158,6 @@
             this.tIndex = Math.floor(-distance / this.liheight)
             this.tTop = distance / this.fontSize // 转换成 rem
           }
-          // if (this.tIndex == 101) {
-          //   this.tTop = 0
-          //   this.tIndex = 0
-          // }
-          // if (this.hIndex == 6) {
-          //   this.hTop = 0
-          //   this.hIndex = 0
-          // }
-          // if (this.mIndex == 60) {
-          //   this.mTop = 0
-          //   this.mIndex = 0
-          // }
           this.selectedValue = this.tIndex + ':' + this.hIndex + ':' + this.mIndex
         }
       },
@@ -258,19 +241,9 @@
       z-index: 0;
     }
   }
-  // .noplay{
-  //   position: absolute;
-  //   border: 1px solid rgba(.0, .0, .0, .1);
-  //   border-right: none;
-  //   border-left: none;
-  //   width: 80%;
-  //   height: 114px;
-  // }
   .box {
     flex: 1;
-    // height: 260px;
     height: 248px;
-    /*height: 380px;*/
     overflow: hidden;
     position: relative;
     z-index: 99;

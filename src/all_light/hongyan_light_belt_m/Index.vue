@@ -196,7 +196,7 @@
         if(this.isClose && val=='switch') {
           this.$refs[val].classList.remove('animate')
           this.$refs[val].classList.add('animate1')
-          this.$refs[val].classList.add('yellowExtend')
+          // this.$refs[val].classList.add('yellowExtend')
           HdSmart.UI.vibrate()
           return
         }

@@ -144,7 +144,6 @@
     mounted() {
       let pageNode = document.querySelector('.page')
       pageNode.addEventListener('scroll', (e) => {
-        // console.log(e.target.scrollTop)
         let scrollHeight = e.target.scrollTop
         if (scrollHeight === 0) {
           this.opcityStyle = 'opcity-0'
@@ -227,27 +226,14 @@
             }
           })
         })
-        // this.$router.push({path: '/deviceStatus'})
       },
       light() {
-        // if (this.deviceAttrs.Light == 0) {
-        //   this.controlDevice('Light', {Light: 1}).then(res => {
-        //     console.log('light状态', this.deviceAttrs.Light)
-        //   })
-        // } else {
-        //   this.controlDevice('Light', {Light: 0}).then(res => {
-        //     console.log('light状态', this.deviceAttrs.Light)
-        //   })
-        // }
         this.controlDevice('Light', {Light: 2})
       },
       openWaterBox() {
         this.controlDevice('openWaterBox', {PushRod: 3}).then((res) => {
-          console.log('打印开水箱日志')
-          console.log(res)
           this.$router.push({path:'/waterBoxOpen'})
         })
-        //this.$router.push({path:'/waterBoxOpen'})
       }
     }
   }

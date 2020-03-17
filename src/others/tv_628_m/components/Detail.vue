@@ -1110,21 +1110,6 @@
             this.cur = Object.freeze(temp)
             this.$nextTick(() => {
               let num = 0
-              // if(!this.cur.score){
-              //   num +=1
-              // }
-              //  if(!this.cur.year){
-              //   num +=1
-              // }
-              //  if(!this.cur.cate){
-              //   num +=1
-              // }
-              //  if(!this.cur.director){
-              //   num +=1
-              // }
-              //  if(!this.cur.starring){
-              //   num +=1
-              // }
               num = this.count([this.cur.score, this.cur.year, this.cur.cate, this.cur.director, this.cur.starring])
               let synopsis = document.querySelector('.synopsis')
               synopsis.style.height = 20 * (2 + num) + 'px'

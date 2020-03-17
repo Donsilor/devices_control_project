@@ -39,10 +39,6 @@
       ...mapState(['device', 'deviceAttrs'])
     },
     watch: {
-      'deviceAttrs'(val) {
-        console.log('上报接收中', new Date())
-        console.log(val)
-      },
       'deviceAttrs.PushRod'(val) {
         if (val == 1) {
           this.$router.push('/waterBoxOpen')

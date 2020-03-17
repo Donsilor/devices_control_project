@@ -2,7 +2,6 @@
   <div
     v-if="visible"
     class="status_bar">
-    <!-- <div class="status_bar_block"/> -->
     <div
       ref="status_bar_fixed"
       class="status_bar_fixed">
@@ -66,32 +65,23 @@
         </div>
       </div>
     </div>
-    <!-- <div
-      v-if="tvStatus.tvOnlineStatus < 0 && !ios"
-      class="offline_bar_blank"/> -->
   </div>
 </template>
 
 <style lang="less" scoped>
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
-// .status_bar_block{
-//     height: 0;
-// }
 .status_bar{
   background: rgba(255,255,255,0.2);
   color: white;
 }
 .status_bar_fixed{
-    // position:fixed;
     left: 0;
     top: 69PX;
     width: 100%;
     z-index: 999;
-    /* border-bottom:1px solid rgba(45,45,45,0.20); */
 }
 .sp_status_bar {
-    /* background: #f7f8fa; */
     text-align: center;
     height: 44PX;
     line-height: 44PX;
@@ -108,7 +98,6 @@
     white-space: nowrap;
 }
 .status_bar {
-    // position: absolute;
     width: 100%;
     z-index: 10000;
     top: 0;
@@ -264,14 +253,6 @@ export default {
         }
       })
     },
-    // mounted() {
-    //   console.log(this.type)
-    //   if(this.type==='首页'&& this.$refs.status_bar_fixed){
-    //     this.$refs.status_bar_fixed.style.position="absolute"
-    //     this.$refs.status_bar_fixed.style.top="0"
-
-    //   }
-    // },
     methods: {
         goToScreenProjectionPage() {
             service.onClickEvent("screenProjectionStatusClick")
@@ -281,6 +262,6 @@ export default {
                 tvOnlineStatus: this.tvStatus.tvOnlineStatus
             })
         }
-    },
+    }
 }
 </script>
