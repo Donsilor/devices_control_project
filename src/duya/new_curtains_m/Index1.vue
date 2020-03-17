@@ -23,9 +23,10 @@
               @touchstart="touchStart($event)"
               @touchmove="touchMove($event,'left')"
               @touchend="touchEnd($event)">
-              <div 
-                ref="curtainLeft" 
-                class="curtainLeft"/>
+              <img 
+                ref="curtainLeft"
+                class="curtainLeft" 
+                src="../../../lib/base/new_curtains/assets/zuo.png">
               <img 
                 ref="left"
                 class="left" 
@@ -38,9 +39,10 @@
               @touchstart="touchStart($event)"
               @touchmove="touchMove($event,'right')"
               @touchend="touchEnd($event)">
-              <div 
-                ref="curtainRight" 
-                class="curtainRight"/>
+              <img 
+                ref="curtainRight"
+                class="curtainRight" 
+                src="../../../lib/base/new_curtains/assets/you.png">
               <img 
                 ref="right"
                 class="right" 
@@ -164,7 +166,7 @@ export default {
     }
   },
   created() {
-    // this.newRatio()
+
   },
   mounted(){
       HdSmart.ready(() => {
@@ -184,10 +186,9 @@ export default {
             panelBtn.style.bottom = '0'
           }  
         })
-        this.newRatio()
          setTimeout(() => {
             this.newRatio()
-          }, 50)
+          }, 500)
         if (this.deviceAttrs.open_percentage=='100') {
           this.curtainStatusText = '已打开'
         }
@@ -298,27 +299,24 @@ export default {
       //除了自己的手机，其他手机都要监听
       this.myMove = true
       //滑动时计算窗帘的宽度
+      let circle = this.$refs.right.offsetHeight
       let leftCurtainBox = this.$refs.leftCurtainBox
       let rightCurtainBox = this.$refs.rightCurtainBox
-      let maxWidth = this.$refs.imgBox.offsetWidth*0.5-1//最大宽度的一半，再减掉窗帘之间的空隙
-      let circle = 14 //14是窗帘全开始的宽度
-      console.log(maxWidth,'maxWidthmaxWidthmaxWidth')
-      this.curtainWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft - this.$refs.stick.offsetLeft +circle
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.5
+      this.curtainWidth = e.targetTouches[0].pageX - leftCurtainBox.offsetLeft - this.$refs.stick.offsetLeft +circle/2 
       if(val=='right'){
         this.curtainWidth-=maxWidth 
         this.curtainWidth=maxWidth-this.curtainWidth+circle
       }
       this.curtainWidth = this.curtainWidth <= circle ? circle : this.curtainWidth
       this.curtainWidth = this.curtainWidth >= maxWidth ? maxWidth : this.curtainWidth
-      console.log( this.curtainWidth,' this.curtainWidth this.curtainWidth this.curtainWidth')
       leftCurtainBox.style.width = this.curtainWidth +"px"
       rightCurtainBox.style.width = leftCurtainBox.style.width
     },
     touchEnd(){
       this.myMove = true
-      // let circle = this.$refs.right.offsetHeight
-      let circle = 14  //14是窗帘全开始的宽度
-      let maxWidth = this.$refs.imgBox.offsetWidth*0.5-1
+      let circle = this.$refs.right.offsetHeight
+      let maxWidth = this.$refs.imgBox.offsetWidth*0.5
       this.range = 100-Math.round((this.curtainWidth-circle) / (maxWidth-circle) * 100)
       console.log(this.range)
       this.controlDevice('open_percentage',this.range)
@@ -332,12 +330,9 @@ export default {
     //根据后台返回数据得出窗帘的宽度
     newRatio(){
         if(this.myMove)return
-        // let circle = this.$refs.right.offsetHeight
-        let circle = 14//14是窗帘全开始的宽度
-        let maxWidth = this.$refs.imgBox.offsetWidth*0.5-1
-        console.log(maxWidth,'maxWidthmaxWidthmaxWidthmaxWidthmaxWidthmaxWidth')
-        let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle-1
-        console.log(width,11111111111111)
+        let circle = this.$refs.right.offsetHeight
+        let maxWidth = this.$refs.imgBox.offsetWidth*0.5
+        let width = (100-this.deviceAttrs['open_percentage'])/100*(maxWidth-circle)+circle
         $('.leftCurtainBox').animate({
             width:Math.round(width)
         },200)
@@ -375,6 +370,12 @@ export default {
   100%{
     transform: scale(0.6);
   }
+  // 90%{
+  //   transform: scale(1.3);
+  // }
+  //   100%{
+  //   transform: scale(1);
+  // }
 }
 
 .animateEnd::before{
@@ -401,6 +402,8 @@ export default {
       position: absolute;
       width: 70%;
       height: 70%;
+      // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
+      // background: #E1B96E;
       top: 50%;
       left: 50%;
       border-radius: 50%;
@@ -452,8 +455,9 @@ export default {
     position: relative;
     margin-top: 120px;
     .stick{
-      width: 560px;
-      height: 420px;
+      width: 80%;
+      // height: 20px;
+      height: 500px;
       position: relative;
       .Pole{
         position: absolute;
@@ -472,32 +476,32 @@ export default {
 
       .imgBox{
         position: absolute;
-        top: 17px;
-        // width: 528px;
-        width: 94.29%;
-        transform: translate(14px, 0px);
+        top: 12px;
+        width: 95%;
+       transform: translate(12px, 0px);
         height: 420px;
         .leftCurtainBox{
           position: absolute;
           top: 0;
+          // left: 1%;
+          // width: 49%;
           left:0;
-          // width:262px;
-          width:49.62%;
-          height: 404px;
+          width:50%;
+          height: 420px;
           overflow: hidden;
           .curtainLeft{
             top: 0;
             left: 0;
             width: 100%;
-            height: 404px;
+            height: 420px;
+            margin-left:1%;
             position: absolute;
-            background-image: linear-gradient(225deg, #1EB4F2 0%, #713DF4 100%);
-            border-radius: 0 0 0 25.3px;
           }
           .left{ 
             position: absolute;
             top: 50%;
             right: 1px;
+            // width: 49%;
             height: 60px;
             margin-top: -30px;
           }
@@ -505,24 +509,25 @@ export default {
         .rightCurtainBox{
            position: absolute;
            top: 0;
-           right:0;
-           //  width:262px;
-           width:49.62%;;
-           height: 404px;
+          //  right: 1%;
+          //  width: 49%;
+          right:0;
+          width:50%;
+           height: 420px;
            overflow: hidden;
           .curtainRight{
             top: 0;
             right:0;
             width: 100%;
-            height: 404px;
+            height: 420px;
+            margin-right:1%;
             position: absolute;
-            background-image: linear-gradient(135deg, #1EB4F2 0%, #713DF4 100%);
-            border-radius: 0 0 25.3px 0;
           }
           .right{ 
             position: absolute;
             top: 50%;
             left: 1px;
+            // width: 100%;
             height: 60px;
             margin-top: -30px;
           }
@@ -534,7 +539,7 @@ export default {
       font-size: 32px;
       color: #FFFFFF;
       height: auto;
-      bottom: -100px;
+      bottom: 0px;
       font-family: PingFangSC-Light;
     }
   }
@@ -553,6 +558,7 @@ export default {
       background: rgba(255, 255, 255, 0.1);
       overflow: hidden;
       display: flex;
+      // justify-content: space-evenly;
       align-items: center;
     }
     &.center{

@@ -60,14 +60,16 @@
           <button
             ref="reduce"
             :disabled="setTemperatureDis"
-            :class="[deviceAttrs.mode,'control reduce btn']"
-            @click="setTemperature('reduce',-10)"
+            :class="[deviceAttrs.mode,{'isReduceStart':isStart==true},{'isReduceEnd':isEnd==true},'control reduce btn']"
+            @touchstart ="startAnimate('reduce',-10)"
+            @touchend="endAnimate('reduce',-10)"
           />
           <button
             ref="add"
             :disabled="setTemperatureDis"
-            :class="[deviceAttrs.mode,'control add btn']"
-            @click="setTemperature('add',10)"
+            :class="[deviceAttrs.mode,{'isAddStart':isStart==true},{'isAddEnd':isEnd==true},'control add btn']"
+            @touchstart ="startAnimate('add',10)"
+            @touchend="endAnimate('add',10)"
           />
         </div>
       </div>
@@ -83,8 +85,9 @@
         class="starting">
         <div
           ref="switchStatus"
-          :class="[deviceAttrs.mode,{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'switchColor btn-start']"
-          @click="setSwitch('switchStatus')"
+          :class="[deviceAttrs.mode,{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},{'animateStart':isStart==true},{'animateEnd':isEnd==true},'switchColor btn-start']"
+          @touchstart ="startAnimate('switchStatus')"
+          @touchend="endAnimate('switchStatus')"
         />
       </div>
       <div
@@ -209,6 +212,12 @@ export default {
       hscrolltopp: 0,
       classTrue: false,
       isMove:false,
+      isStart:false,//按钮是否动画开始
+      isEnd:false,//按钮是否动画开始
+      isReduceStart:false,
+      isReduceEnd:false,
+      isAddStart:false,
+      isAddEnd:false,
     }
   },
 
@@ -360,57 +369,77 @@ export default {
     hscrolltop(val) {
       this.hscrolltopp = val
     },
+    // 按钮动画开始
+    startAnimate(val){
+      // if(val=='switchStatus'){
+      //   this.isStart = true
+      // }else if(val=='reduce'){
+      //   this.isReduceStart = true
+      // }else{
+      //   this.isAddStart = true
+      // }
+    },
+    // 按钮动画结束
+    endAnimate(val){
+      // if(val=='switchStatus'){
+      //   this.isEnd = true
+      //   this.setSwitch()
+      // }else if(val=='reduce'){
+      //   this.isReduceEnd = true
+      // }else{
+      //   this.isAddEnd = true
+      // }
+      
+    },
     // 温度圆环
-      calculateBg(index){
-          let color = ''
-          if(this.deviceAttrs.switchStatus=='off'||this.isOffline||this.deviceAttrs.mode=='wind'){
-            color = 'rgba(255,255,255,0.1)'
-            return
-          }
-          if(this.deviceAttrs.mode=='heat'){
-            // 制热模式时的温度颜色
-            if (index < 10) {
-                color = '#EF6D5E '
-            }else if (index > 20) {
-                color = '#F9BB6B'
-            }else {
-                color = `linear-gradient(to right, #EF6D5E 0%, #ff7524 ${200-10*index}%, #F9BB6B  100%)`
-                // color="#f38f63"
-            }
-            return color
-          
-          }else{
-              // 制冷模式时的温度颜色
-            if (index < 10) {
-                color = '#327fdb'
-            }else if (index > 20) {
-                color = '#20c6ae'
-            }else {
-                color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
-            }
-            return color
-          }
-      },
-    touchmove(e){
-      this.isMove = true
-      if(e.preventDefault){
-          e.preventDefault()
-      }else{
-          e.returnValue = false
-      }
-      if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
-        return 
-     }
-    //  滑动限制处理
-    //  if(this.flagVal == true) return
-     var touch = e.targetTouches[0]
-     var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
-     this.idNum = parseInt(ele)
-    //  console.log(this.idNum,'小梯形的id')
-    // 如果是NaN,则return
-    if(isNaN(this.idNum)==true){
-        // console.log('return掉了')
+    calculateBg(index){
+      let color = ''
+      if(this.deviceAttrs.switchStatus=='off'||this.isOffline||this.deviceAttrs.mode=='wind'){
+        color = 'rgba(255,255,255,0.1)'
         return
+      }
+      if(this.deviceAttrs.mode=='heat'){
+        // 制热模式时的温度颜色
+        if (index < 10) {
+            color = '#EF6D5E '
+        }else if (index > 20) {
+            color = '#F9BB6B'
+        }else {
+            color = `linear-gradient(to right, #EF6D5E 0%, #ff7524 ${200-10*index}%, #F9BB6B  100%)`
+            // color="#f38f63"
+        }
+        return color
+      
+      }else{
+          // 制冷模式时的温度颜色
+        if (index < 10) {
+            color = '#327fdb'
+        }else if (index > 20) {
+            color = '#20c6ae'
+        }else {
+            color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
+        }
+        return color
+      }
+    },
+    touchmove(e){
+        this.isMove = true
+        if(e.preventDefault){
+            e.preventDefault()
+        }else{
+          e.returnValue = false
+        }
+        if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
+          return 
+        }
+      //  滑动限制处理
+      //  if(this.flagVal == true) return
+      var touch = e.targetTouches[0]
+      var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
+      this.idNum = parseInt(ele)
+      //  console.log(this.idNum,'小梯形的id')
+      if(isNaN(this.idNum)==true){
+          return
       }else{
         if (this.idNum==30) {
           this.itemTemp = 319
@@ -455,10 +484,14 @@ export default {
        })
     },
     // 开关机
-    setSwitch(val){
+    setSwitch(){
       if (this.isOffline) return
       HdSmart.UI.vibrate()
       this.moveEnd = false
+       setTimeout(()=>{
+         this.isStart = false
+        this.isEnd = false
+      },500)
       let switchstatus = ''
       if (this.deviceAttrs.switchStatus=='on') {
         switchstatus = 'off'

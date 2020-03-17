@@ -42,7 +42,7 @@
           @click="setSpeed('auto')">
           <div class="btn-auto1 center" />
           <div 
-            :class="[speed === 'auto' ? 'active' : '','name']" >智能</div>
+            :class="[speed === 'auto' ? 'active' : '','name']" >自动</div>
         </div>
         <div 
           class="btn"
