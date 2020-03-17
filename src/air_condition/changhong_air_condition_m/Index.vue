@@ -31,7 +31,6 @@
                 ref="items" 
                 :id="(index)+'item'" 
                 class="items" 
-                @touchstart="touchstart($event)" 
                 @touchmove="touchmove($event)" 
                 @touchend="touchend($event)">
                 <!-- 小梯形 -->
@@ -209,6 +208,7 @@ export default {
       hscrolll: 0,
       hscrolltopp: 0,
       classTrue: false,
+      isMove:false,
     }
   },
 
@@ -391,11 +391,8 @@ export default {
             return color
           }
       },
-    touchstart(e){
-      console.log(e,'eeeeeeeee')
-      
-    },
     touchmove(e){
+      this.isMove = true
       if(e.preventDefault){
           e.preventDefault()
       }else{
@@ -407,11 +404,9 @@ export default {
     //  滑动限制处理
     //  if(this.flagVal == true) return
      var touch = e.targetTouches[0]
-    //  var ssdd = document.elementsFromPoint(touch.pageX, touch.pageY)
      var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
      this.idNum = parseInt(ele)
     //  console.log(this.idNum,'小梯形的id')
-    //  this.calculateBg(this.idNum)
     // 如果是NaN,则return
     if(isNaN(this.idNum)==true){
         // console.log('return掉了')
@@ -437,18 +432,22 @@ export default {
       if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
           return HdSmart.UI.toast('该模式不支持温度调节')
       }
+      console.log(this.isMove,'this.isMove')
+      if(this.isMove == false) return
+      console.log(1111111)
       this.flagVal = true
       this.setTemperatureDis = true
-        this.controlDevice('temperature',this.itemTemp)
-        .then((res) => {
-          // this.setTemperatureDis = false
-          if(res.code != 0) {
-            this.flagVal = false
-          }
-        })
-        .catch(() => {
+      this.controlDevice('temperature',this.itemTemp)
+      .then((res) => {
+        // this.setTemperatureDis = false
+        if(res.code != 0) {
           this.flagVal = false
-        })
+        }
+      })
+      .catch(() => {
+        this.flagVal = false
+      })
+      this.isMove = false
     },
     OfflineHelpPage(){
         this.$router.push({
@@ -480,7 +479,7 @@ export default {
       if (this.isOffline||this.isClose) return
       HdSmart.UI.vibrate()
         this.moveEnd = false
-        // this.setTemperatureDis = true
+        this.setTemperatureDis = true
 
       // 送风模式不能设置温度
       if (this.deviceAttrs.mode === 'wind'||this.deviceAttrs.mode === 'auto'||this.deviceAttrs.mode === 'dehumidify') {
