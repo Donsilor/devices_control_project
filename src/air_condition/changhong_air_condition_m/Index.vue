@@ -30,6 +30,7 @@
               <div 
                 ref="items" 
                 :id="(index)+'item'" 
+                
                 class="items" 
                 @touchmove="touchmove($event)" 
                 @touchend="touchend($event)">
@@ -421,6 +422,7 @@ export default {
         }else {
             color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
         }
+        // console.log(index,11111111111)
         return color
       }
     },
@@ -437,10 +439,15 @@ export default {
       //  滑动限制处理
       //  if(this.flagVal == true) return
       var touch = e.targetTouches[0]
-      var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
+      console.log(touch,'touchtouch')
+      var eleee = document.elementFromPoint(touch.clientX, touch.clientY)
+      console.log(eleee,'eleee')
+      var ele = document.elementFromPoint(touch.clientX, touch.clientY).id
+      console.log(ele,'小梯形的id')
       this.idNum = parseInt(ele)
-      //  console.log(this.idNum,'小梯形的id')
+       console.log(this.idNum,'小梯形的数字id')
       if(isNaN(this.idNum)==true){
+        console.log('return掉了')
           return
       }else{
         if (this.idNum==30) {

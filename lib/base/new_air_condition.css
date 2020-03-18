@@ -491,7 +491,7 @@
 .container .item-container .items {
   width: 32px;
   height: 270px;
-  z-index: 99;
+  position: absolute;
 }
 .container .item-container .items .item {
   width: 12px;
