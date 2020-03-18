@@ -1,7 +1,5 @@
 <template>
-  <div
-    id="app"
-    :class="{isIOS:isIOS}"
+  <div id="app"
     style="height: 100%;">
     <keep-alive>
       <router-view v-if="$route.meta.keepAlive&&isRouterAlive"/>
