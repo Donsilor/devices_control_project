@@ -5,19 +5,18 @@
     @click.self="show = false"
     @touchmove.prevent>
     <div class="main show">
-      <div class="title">请输入开关名称</div>
-      <div class="txt">
+      <div class="title">是否解除配置</div>
+      <!-- <div class="txt">
         <input
-          v-model="txtVal"
+          :value="txtVal"
           type="text"
           class="text"
           maxlength="10"
-          @change="txt"
-          @blur="handlePhone">
-      </div>
+          @input="txt">
+      </div> -->
       <div
         class="hide determine"
-        @click="setWind">确定</div>
+        @click="setMode">解除配置</div>
       <div
         class="hide"
         @click.self="show = false">取消</div>
@@ -155,8 +154,7 @@ export default {
   data() {
     return {
       show: false,
-      txtVal: '',
-      flag: false
+      txtVal: ''
     }
   },
   watch: {
@@ -169,30 +167,21 @@ export default {
   mounted() {
   },
   methods: {
-    txt(e) {
-      let reg = new RegExp("^[0-9\u4e00-\u9fa5]+$")
-      if(e.target.value) {
-        if(reg.test(e.target.value)) {
-          this.txtVal = e.target.value
-          this.flag = true
-        } else {
-          if(e.target.value.length >= 1) {
-            this.flag = false
-          }
-        }
-      }
-      this.txtVal = e.target.value
-    },
-    handlePhone() {
-      // 修复ios 隐藏软键盘页面没有下滑问题
-      setTimeout(() => {
-        window.scrollTo(0, 0)
-      }, 300)
-    },
-    setWind(){
-      if(!this.txtVal) return HdSmart.UI.toast('请输入开关名称')
-      if(!this.flag) return HdSmart.UI.toast('只支持中文和数字')
-      this.$emit('setWind', this.txtVal)
+    // txt(e) {
+    //   let reg = new RegExp("^[0-9\u4e00-\u9fa5]+$")
+    //   if(reg.test(e.target.value)) {
+    //     this.txtVal = e.target.value
+    //   } else {
+    //     HdSmart.UI.toast('只支持中文和数字')
+    //     if(e.target.value.length >= 1) {
+    //       e.target.value = this.txtVal
+    //     }
+    //   }
+    //   this.txtVal = e.target.value
+    // },
+    setMode(){
+      // if(!this.txtVal) return HdSmart.UI.toast('请输入开关名称')
+      this.$emit('setMode', this.txtVal)
     }
   }
 }

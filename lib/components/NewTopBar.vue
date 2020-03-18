@@ -15,8 +15,7 @@
     </div>
 
     <!-- 定位头部，不占位 -->
-    <div
-      :class="['topbar-fixed', className]">
+    <div :class="['topbar-fixed', className, {'black': !isSupport}]">
       <div
         ref="statusbar"
         :style="{height:status_bar_height+'px'}"
@@ -79,8 +78,9 @@
 
 
 <script>
+  let IsIos = /iPad|iPhone|iPod/.test(navigator.userAgent)
+let dpr = IsIos ? 1 : window.devicePixelRatio
 
-let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
 import { mapGetters } from 'vuex'
 
 export default {
@@ -168,6 +168,7 @@ export default {
   },
   data() {
     return {
+      isSupport: true,
       status_bar_height: 25,
       navigation_bar_height: 44,
       scrollTop:0,
@@ -185,14 +186,28 @@ export default {
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
-      // if (window.navigation_bar_height) {
-      //   this.navigation_bar_height = window.navigation_bar_height / dpr
-      // }
     })
   },
   mounted(){
     if(this.scroll){
        addEventListener('scroll',this.scrollfn)
+    }
+    let userAgent = navigator.userAgent
+    if (!IsIos) {
+      if (userAgent.indexOf('WOW') < 0 && userAgent.indexOf('Edge') < 0) {
+        let strStart = userAgent.indexOf('Chrome')
+        let strStop = userAgent.indexOf(' Safari')
+        let temp = userAgent.substring(strStart, strStop)
+        let broName = temp.replace(/Chrome\//i, '')
+        broName = broName.split('.')[0]
+        if (broName<76) {
+          console.log('浏览器不兼容')
+          this.isSupport = false
+        }else {
+          console.log('浏览器兼容')
+          this.isSupport = true
+        }
+      }
     }
   },
   destroyed(){
@@ -337,6 +352,10 @@ export default {
     background-color: rgba(0,0,0,0.8);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
+  }
+
+  .black{
+    background-color: rgba(0,0,0,1);
   }
 }
 .topbar-nobg {
@@ -494,6 +513,5 @@ export default {
         height: 24PX;
     }
   }
-
 
 </style>

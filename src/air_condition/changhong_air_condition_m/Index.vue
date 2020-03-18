@@ -60,15 +60,15 @@
           <button
             ref="reduce"
             :disabled="setTemperatureDis"
-            :class="[deviceAttrs.mode,{'isReduceStart':isStart==true},{'isReduceEnd':isEnd==true},'control reduce btn']"
-            @touchstart ="startAnimate('reduce',-10)"
+            :class="[deviceAttrs.mode,{'animateStart':isReduceStart==true},{'animateEnd':isReduceEnd==true},'control reduce btn']"
+            @touchstart ="startAnimate('reduce')"
             @touchend="endAnimate('reduce',-10)"
           />
           <button
             ref="add"
             :disabled="setTemperatureDis"
-            :class="[deviceAttrs.mode,{'isAddStart':isStart==true},{'isAddEnd':isEnd==true},'control add btn']"
-            @touchstart ="startAnimate('add',10)"
+            :class="[deviceAttrs.mode,{'animateStart':isAddStart==true},{'animateEnd':isAddEnd==true},'control add btn']"
+            @touchstart ="startAnimate('add')"
             @touchend="endAnimate('add',10)"
           />
         </div>
@@ -371,24 +371,26 @@ export default {
     },
     // 按钮动画开始
     startAnimate(val){
-      // if(val=='switchStatus'){
-      //   this.isStart = true
-      // }else if(val=='reduce'){
-      //   this.isReduceStart = true
-      // }else{
-      //   this.isAddStart = true
-      // }
+      if(val=='switchStatus'){
+        this.isStart = true
+      }else if(val=='reduce'){
+        this.isReduceStart = true
+      }else{
+        this.isAddStart = true
+      }
     },
     // 按钮动画结束
     endAnimate(val){
-      // if(val=='switchStatus'){
-      //   this.isEnd = true
-      //   this.setSwitch()
-      // }else if(val=='reduce'){
-      //   this.isReduceEnd = true
-      // }else{
-      //   this.isAddEnd = true
-      // }
+      if(val=='switchStatus'){
+        this.isEnd = true
+        this.setSwitch()
+      }else if(val=='reduce'){
+        this.isReduceEnd = true
+        this.setTemperature(val,-10)
+      }else{
+        this.isAddEnd = true
+        this.setTemperature(val,10)
+      }
       
     },
     // 温度圆环
@@ -513,7 +515,12 @@ export default {
       HdSmart.UI.vibrate()
         this.moveEnd = false
         this.setTemperatureDis = true
-
+      setTimeout(()=>{
+        this.isReduceStart = false
+        this.isAddStart = false
+        this.isReduceEnd = false
+        this.isAddEnd = false
+      },500)
       // 送风模式不能设置温度
       if (this.deviceAttrs.mode === 'wind'||this.deviceAttrs.mode === 'auto'||this.deviceAttrs.mode === 'dehumidify') {
         this.setTemperatureDis = false

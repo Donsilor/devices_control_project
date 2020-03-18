@@ -1,6 +1,6 @@
 <template>
-  <div 
-    ref="page" 
+  <div
+    ref="page"
     class="Allocation">
     <div
       ref="topbar"
@@ -33,35 +33,36 @@
             href="javascript:void(0);"
             class="icon-return" /> -->
           </div>
+          <div class="title">按键配置</div>
           <div
-            class="title">按键配置</div>
-    
-    
-
+            class="right"
+            @click.prevent="goDetail">
+            <p/>
+          </div>
         </div>
-      
+
       </div>
-      
+
     </div>
     <div class="viewHelpstatus">
       <div class="Prefabrication">
-        <h3 class="AllocationH3">页面预制配置</h3>
+        <h3 class="AllocationH3">面板预置配置</h3>
         <ul class="PrefabricationUl">
           <li>
             <p>开灯</p>
-            <p>打开面板面板所在房间的全部灯</p>
+            <p>打开面板所在房间的全部灯</p>
           </li>
           <li>
             <p>关灯</p>
-            <p>关闭面板面板所在房间的全部灯</p>
+            <p>关闭面板所在房间的全部灯</p>
           </li>
           <li>
             <p>打开全部</p>
-            <p>打开面板面板所在房间的全部设备</p>
+            <p>打开面板所在房间的全部设备</p>
           </li>
           <li>
             <p>关闭全部</p>
-            <p>关闭面板面板所在房间的全部设备</p>
+            <p>关闭面板所在房间的全部设备</p>
           </li>
         </ul>
       </div>
@@ -70,7 +71,7 @@
 
     <div class="viewHelpstatus">
       <div class="Prefabrication">
-        <h3 class="AllocationH3">页面预制配置</h3>
+        <h3 class="AllocationH3">APP场景</h3>
         <ul class="PrefabricationUl">
           <li>
             <p>开灯</p>
@@ -113,14 +114,14 @@ export default {
     computed:{
     ...mapGetters(['isClose', 'isOffline','networkStatus','viewHelpstatus']),
     ...mapState(['device', 'deviceAttrs']),
-   
+
   },
    created() {
     HdSmart.ready(() => {
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
-      
+
     })
   },
   methods:{
@@ -130,24 +131,28 @@ export default {
       this.$router.go(-1)
       // this.moveIn = false
       // this.moveOut = true
-    }
+    },
+    goDetail() {
+      HdSmart.UI.goDeviceDetail()
+    },
   }
 }
 </script>
 
 <style scoped lang="less">
 .Allocation {
-  width: 100%;
-  height: 100vh;
+  // width: 100%;
+  // height: 100vh;
   &::before{
     content: "";
-    width: 100%;
-    background: url('~@lib/base/img/bg02.png') no-repeat;
-    background-repeat:no-repeat;
-    background-size: 100% 100%;
+    // width: 100%;
+    // background: url('~@lib/base/img/bg02.png') no-repeat;
+    // background-repeat:no-repeat;
+    // background-size: 100% 100%;
+    background: #000;
     position: fixed;
     top:0;
-    left: 0; 
+    left: 0;
     right: 0;
     bottom: 0;
     z-index: -1;
@@ -176,14 +181,14 @@ export default {
     height: @status_bar_height+@navigation_bar_height;
   }
   .topbar-fixed {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     z-index: 100;
     width: 100%;
-    // background: #fff;
-    border:0;
-    // border-bottom: 1px solid rgba(216, 216, 216, 0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.8);
   }
 }
 
@@ -237,11 +242,11 @@ export default {
   .right,.right-search {
     // width: 44PX;
     // height: @navigation_bar_height;
-   width: 72px;
-    height: 72px;
+   width: 60px;
+    height: 60px;
     p{
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
 
     }
 
@@ -253,12 +258,25 @@ export default {
     position: absolute;
     left: 40px;
     p{
-        background: url('~@lib/base/img/tv_arrow_back.png');
+        background: url('~@lib/base/img/kt_btn_close.png');
         background-size: 100% 100%;
 
     }
   }
-  
+  .right{
+      // display: flex;
+      // justify-content: center;
+      // align-items: center;
+      position: absolute;
+      right: 40px;
+    p{
+      background: url('~@lib/base/img/kt_btn_setting.png');
+        background-size: 100% 100%;
+
+    }
+
+  }
+
 
 
   .left a,
@@ -275,12 +293,13 @@ export default {
       opacity: 0.8;
     }
   }
-  
+
 }
 .title {
   text-align: center;
   font-size: 17PX;
   width: 100%;
+  color: #fff;
 }
 .Allocationstatus{
   font-size: 28px;
@@ -289,15 +308,14 @@ export default {
 
   // font-weight: lighter;
   color: rgba(0, 0, 0, .5);
-  
+
 }
 
   .AllocationH3{
   padding: 12px 40px 24px;
   font-size: 32px;
   font-family: PingFangSC-Regular;
-
-color: #000000;
+  color: #fff;
 // margin-bottom:12px;
 
   }
@@ -306,12 +324,13 @@ color: #000000;
     font-size: 32px;
     li{
       height: 156px;
-      background:rgba(255, 255, 255, .5);
+      background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
       margin-bottom: 12px;
       padding-left: 40px;
+      border-radius: 10px;
       p{
           font-family: PingFangSC-Regular;
-          color: #000000;
+          color: #fff;
 
 
         &:nth-child(1){

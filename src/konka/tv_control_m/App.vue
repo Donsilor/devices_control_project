@@ -240,7 +240,7 @@ export default {
     setVoice(val){
       HdSmart.UI.vibrate()
       if (val=='increase') {
-        console.log(this.deviceAttrs.voice,'数字');
+        console.log(this.deviceAttrs.voice,'数字')
         if (this.isClose) return
         this.controlDevice('voice',+this.loaclAttrs.voice+1)
         .then((res)=>{
@@ -259,7 +259,7 @@ export default {
       }
     },
     controlDevice(attr, value) {
-      console.log(attr,value,'ccccccccccc');
+      console.log(attr,value,'ccccccccccc')
       
       let param = {}
       return this.doControlDevice({
