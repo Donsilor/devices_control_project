@@ -117,6 +117,7 @@
       <model-swing
         ref="swing"
         :num="num"
+        :argv_is_mock="argv_is_mock"
         @setWind="setWind" />
     </div>
   </div>

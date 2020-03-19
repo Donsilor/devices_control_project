@@ -239,7 +239,7 @@ export default {
         if(urlStr.indexOf("?") != -1) {
           window.location.replace(url)
         } else {
-          HdSmart.UI.popWindow()
+          HdSmart.UI.popWindow(true)
         }
       } else {
         HdSmart.UI.popWindow()

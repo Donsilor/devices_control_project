@@ -44,7 +44,7 @@
       </div>
 
     </div>
-    <div class="viewHelpstatus">
+    <!-- <div class="viewHelpstatus">
       <div class="Prefabrication">
         <h3 class="AllocationH3">面板预置配置</h3>
         <ul class="PrefabricationUl">
@@ -66,7 +66,7 @@
           </li>
         </ul>
       </div>
-    </div>
+    </div> -->
 
 
     <div class="viewHelpstatus">
@@ -74,20 +74,16 @@
         <h3 class="AllocationH3">APP场景</h3>
         <ul class="PrefabricationUl">
           <li>
-            <p>开灯</p>
-            <p>打开面板面板所在房间的全部灯</p>
+            <p>睡觉</p>
           </li>
           <li>
-            <p>关灯</p>
-            <p>关闭面板面板所在房间的全部灯</p>
+            <p>起床</p>
           </li>
           <li>
-            <p>打开全部</p>
-            <p>打开面板面板所在房间的全部设备</p>
+            <p>回家</p>
           </li>
           <li>
-            <p>关闭全部</p>
-            <p>关闭面板面板所在房间的全部设备</p>
+            <p>离家</p>
           </li>
         </ul>
       </div>
@@ -323,6 +319,7 @@ export default {
     padding: 0 40px 28px;
     font-size: 32px;
     li{
+      line-height: 156px;
       height: 156px;
       background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
       margin-bottom: 12px;
@@ -331,16 +328,26 @@ export default {
       p{
           font-family: PingFangSC-Regular;
           color: #fff;
-
-
         &:nth-child(1){
           font-size: 32px;
-          padding: 40px 0 12px 0;
+          // padding: 40px 0 12px 0;
         }
         &:nth-child(2){
           font-size: 24px;
         }
       }
+      &:nth-child(1){
+        background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+      }
+      &:nth-child(2){
+        background-image: linear-gradient(225deg, #FF59DA 0%, #FD30AA 100%);
+      }
+      &:nth-child(3){
+        background-image: linear-gradient(225deg, #1EB4F2 0%, #713DF4 100%);
+      }
+      // &:nth-child(4){
+      //   background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
+      // }
     }
   }
 }
