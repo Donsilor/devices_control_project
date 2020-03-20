@@ -109,7 +109,7 @@
       },
       'brightness'() {
         if(this.deviceAttrs.switch_status == 'on' && !this.isOffline&& this.networkStatus != -1) {
-          HdSmart.UI.vibrate()
+          argv_is_mock ? HdSmart.UI.vibrate(true) : HdSmart.UI.vibrate()
         }
       }
     },
@@ -154,7 +154,7 @@
               return
             }
           }
-          HdSmart.UI.vibrate()
+          argv_is_mock ? HdSmart.UI.vibrate(true) : HdSmart.UI.vibrate()
         },false)
 
         this.$refs.canvas.addEventListener(on.move, (e)=> {
@@ -199,14 +199,14 @@
           this.$refs[val].classList.remove('animate')
           this.$refs[val].classList.add('animate1')
           // this.$refs[val].classList.add('yellowExtend')
-          HdSmart.UI.vibrate()
+          argv_is_mock ? HdSmart.UI.vibrate(true) : HdSmart.UI.vibrate()
           return
         }
         if(this.isClose||this.isOffline|| this.networkStatus == -1) return
         this.$refs[val].classList.remove('animate')
         this.$refs[val].classList.add('animate1')
         this.$refs[val].classList.add('yellowExtend')
-        HdSmart.UI.vibrate()
+        argv_is_mock ? HdSmart.UI.vibrate(true) : HdSmart.UI.vibrate()
       },
       touchend(val){
         if(this.isClose && val=='switch') {
@@ -320,7 +320,7 @@
       },
       // 模式选择
       setModel(attr) {
-        HdSmart.UI.vibrate()
+        argv_is_mock ? HdSmart.UI.vibrate(true) : HdSmart.UI.vibrate()
         if(!attr) {
           if(this.$refs.model.show) this.$refs.model.show = false
           return

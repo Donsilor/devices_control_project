@@ -218,7 +218,7 @@ export default {
       if(val == 'SwitchOff') {
         this.$refs[val].classList.add('yellowExtend')
       }
-      HdSmart.UI.vibrate()
+      argv_is_mock ? HdSmart.UI.vibrate(true) : HdSmart.UI.vibrate()
     },
     touchend(val){
       if(this.isOffline|| this.networkStatus == -1) return
