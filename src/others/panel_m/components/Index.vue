@@ -200,12 +200,14 @@ export default {
         .add {
           background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
           -webkit-background-clip: text;
+          background-clip: text;
           color: transparent;
           font-size: 80px;
         }
         .dispose {
           background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
           -webkit-background-clip: text;
+          background-clip: text;
           color: transparent;
           font-size: 12px;
         }

@@ -1,7 +1,7 @@
 <template>
   <div class="body">
-    <div 
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']" 
+    <div
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']"
     >
       <NewTopBar
         :title="device.device_name"
@@ -14,30 +14,30 @@
       <div class="main center">
         <div class="btn-wrap">
           <!-- 关机 -->
-          <div 
+          <div
             ref="switchStatus"
-            class="btn-off btn" 
+            class="btn-off btn"
             @touchstart="touchstart('switchStatus')"
             @touchend="touchend('switchStatus')"/>
           <!-- 静音 -->
-          <div 
+          <div
             ref="mute"
-            :class="[{'active':deviceAttrs.mute==true},'btn-mute btn']" 
+            :class="[{'active':deviceAttrs.mute==true},'btn-mute btn']"
             @touchstart="touchstart('mute')"
             @touchend="touchend('mute')"/>
         </div>
         <!-- 外层圆 -->
         <div class="cicleBox center">
-          <div 
+          <div
             ref="upBtn"
-            class="direction" 
+            class="direction"
             @touchstart="controlStart('up')"
             @touchmove="controlMove('up')"
             @touchend="controlEnd('up')"
           >
             <div class="dot"/>
           </div>
-          <div 
+          <div
             ref="rightBtn"
             class="direction"
             @touchstart="controlStart('right')"
@@ -46,27 +46,27 @@
           >
             <div class="dot"/>
           </div>
-          <div 
+          <div
             ref="downBtn"
-            class="direction" 
+            class="direction"
             @touchstart="controlStart('down')"
             @touchmove="controlMove('down')"
             @touchend="controlEnd('down')"
           >
             <div class="dot"/>
           </div>
-          <div 
+          <div
             ref="leftBtn"
-            class="direction" 
+            class="direction"
             @touchstart="controlStart('left')"
             @touchmove="controlMove('left')"
             @touchend="controlEnd('left')"
           >
             <div class="dot"/>
           </div>
-          <div 
+          <div
             ref="centerbox"
-            class="centerbox" 
+            class="centerbox"
             @touchstart="controlStart('centerbox')"
             @touchmove="controlMove('centerbox')"
             @touchend="controlEnd('centerbox')"
@@ -78,19 +78,19 @@
       <div class="bootom">
         <!-- 返回上一页 -->
         <div class="btn-wrap">
-          <div 
+          <div
             ref="menu"
-            class="btn-menu btn" 
+            class="btn-menu btn"
             @touchstart="touchstart('menu')"
             @touchend="touchend('menu')"/>
-          <div 
+          <div
             ref="home"
-            class="btn-home btn" 
+            class="btn-home btn"
             @touchstart="touchstart('home')"
             @touchend="touchend('home')"
           />
           <div
-            ref="back" 
+            ref="back"
             class="btn-back btn"
             @touchstart="touchstart('back')"
             @touchend="touchend('back')"/>
@@ -159,7 +159,7 @@ export default {
       }
       this.$refs[val].classList.add('animateStart')
     },
-    touchend(val){ 
+    touchend(val){
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
@@ -189,7 +189,7 @@ export default {
           mutestatus = true
         }
         if (this.isClose) return
-        
+
       this.controlDevice('mute',mutestatus)
        .then((res)=>{
           if (res.code==0) {
@@ -260,7 +260,7 @@ export default {
     },
     controlDevice(attr, value) {
       console.log(attr,value,'ccccccccccc')
-      
+
       let param = {}
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
@@ -285,10 +285,10 @@ export default {
     // background-image: url('~@lib/@{imgPath}/img_bg.png');
     // background-repeat:no-repeat;
     // background-size: 100% 100%;
-    background: #000000; 
+    background: #000000;
     position: fixed;
     top:0;
-    left: 0; 
+    left: 0;
     right: 0;
     bottom: 0;
     z-index: -1;
@@ -407,6 +407,7 @@ export default {
            .btnok{
              background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
              -webkit-background-clip: text;
+             background-clip: text;
              color: transparent;
            }
         }
