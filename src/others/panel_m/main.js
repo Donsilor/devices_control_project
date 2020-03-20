@@ -17,7 +17,7 @@ import StatusTip from '@lib/components/StatusTip.vue'
 import Router from 'vue-router'
 Vue.use(Router)
 import Index from './components/Index.vue'
-import Allocation from './components/allocation.vue'
+import Allocation from './components/Allocation.vue'
 import OfflineHelpPage from '@lib/components/OfflineHelpPage.vue'
 
 

@@ -103,8 +103,6 @@ export default {
     return{
       status_bar_height:25,
       navigation_bar_height:44,
-      moveOut:false,
-      moveIn:true
     }
   },
     computed:{
@@ -125,8 +123,6 @@ export default {
 
     goBack(){
       this.$router.go(-1)
-      // this.moveIn = false
-      // this.moveOut = true
     },
     goDetail() {
       HdSmart.UI.goDeviceDetail()

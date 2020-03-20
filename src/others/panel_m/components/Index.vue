@@ -44,7 +44,7 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
-import allocation from './allocation.vue'
+import allocation from './Allocation.vue'
 import model from './model.vue'
 export default {
   components:{
