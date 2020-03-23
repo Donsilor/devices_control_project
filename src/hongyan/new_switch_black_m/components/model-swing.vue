@@ -12,7 +12,7 @@
           type="text"
           class="text"
           maxlength="10"
-          @change="txt"
+          @input="txt"
           @blur="handlePhone">
       </div>
       <div
@@ -150,6 +150,7 @@
   }
 </style>
 <script>
+  import _ from '@lib/utils.js'
 export default {
   props: ['num', 'argv_is_mock'],
   data() {
@@ -170,16 +171,13 @@ export default {
   },
   methods: {
     txt(e) {
+      e.preventDefault()
       let reg = new RegExp("^[0-9\u4e00-\u9fa5]+$")
-      if(e.target.value) {
-        if(reg.test(e.target.value)) {
-          this.txtVal = e.target.value
-          this.flag = true
-        } else {
-          if(e.target.value.length >= 1) {
-            this.flag = false
-          }
-        }
+      if(reg.test(e.target.value)) {
+        this.txtVal = e.target.value
+      } else {
+        HdSmart.UI.toast('只支持中文和数字')
+        e.target.value = e.target.value.replace(/[^0-9\u4e00-\u9fa5]/g, '')
       }
       this.txtVal = e.target.value
     },
@@ -192,10 +190,8 @@ export default {
     setWind(){
       if(argv_is_mock) {
         if(!this.txtVal) return HdSmart.UI.toast('请输入开关名称', null, true)
-        if(!this.flag) return HdSmart.UI.toast('只支持中文和数字', null, true)
       } else {
         if(!this.txtVal) return HdSmart.UI.toast('请输入开关名称')
-        if(!this.flag) return HdSmart.UI.toast('只支持中文和数字')
       }
       this.$emit('setWind', this.txtVal)
     }
