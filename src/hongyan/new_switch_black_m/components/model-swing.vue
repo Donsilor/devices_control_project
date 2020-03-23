@@ -150,7 +150,7 @@
   }
 </style>
 <script>
-  import _ from '@lib/utils.js'
+  // import _ from '@lib/utils.js'
 export default {
   props: ['num', 'argv_is_mock'],
   data() {
