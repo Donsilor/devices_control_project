@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-longpress="http://www.w3.org/1999/xhtml">
   <div class="body">
     <div :class="[{'offline': isOffline || networkStatus == -1 }, {'close': isClose}, 'page']">
       <!-- 顶部 -->
@@ -14,9 +14,10 @@
 
           <div
             v-if="deviceAttrs.list"
+            data-id="one"
             :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}, {'panelOne': (deviceAttrs.chan_num == 1 || deviceAttrs.chan_num == 2) && deviceAttrs.list && (deviceAttrs.list.length == 1 || deviceAttrs.list.length == 2)}, {'raidusOne': deviceAttrs.chan_num == 1 && deviceAttrs.list && deviceAttrs.list.length == 1}, 'panel-left']"
-            @touchstart ="touchstart('one')"
-            @touchend="touchend('one')"
+            v-longpress:[one]="showMode"
+            @click="touchstart('one')"
           >
             <div
               class="panel-btn center">
@@ -33,24 +34,12 @@
               </div>
             </div>
           </div>
-          <!-- 配置开关 -->
-          <!-- <div
-            v-else
-            :class="['panel']"
-          >
-            <div
-              class="panel-btn center">
-              <div class="btn-wrap btn-wrap-four">
-                <div class="btn-add center" />
-                <div class="add-name">配置灯</div>
-              </div>
-            </div>
-          </div> -->
           <div
             v-if="deviceAttrs.chan_num != 1 && deviceAttrs.list && deviceAttrs.list[1]"
             :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}, 'radiusTwo', {'panelTwo': deviceAttrs.chan_num == 2 && deviceAttrs.list && deviceAttrs.list.length == 2}, 'panel-left']"
-            @touchstart ="touchstart('two')"
-            @touchend="touchend('two')"
+            v-longpress:[two]="showMode"
+            data-id="two"
+            @click="touchstart('two')"
           >
             <div class="panel-btn center">
               <div :class="['btn-wrap', 'btn-wrap-four', {'btn-wrap-two': deviceAttrs.chan_num == 2 && deviceAttrs.list && deviceAttrs.list.length == 2}]">
@@ -65,24 +54,12 @@
               </div>
             </div>
           </div>
-          <!-- 配置开关 -->
-          <!-- <div
-            v-else
-            :class="['panel']"
-          >
-            <div
-              class="panel-btn center">
-              <div class="btn-wrap btn-wrap-four">
-                <div class="btn-add center" />
-                <div class="add-name">配置灯</div>
-              </div>
-            </div>
-          </div> -->
           <div
             v-if="deviceAttrs.chan_num != 1 && deviceAttrs.chan_num != 2 && deviceAttrs.list && deviceAttrs.list[2]"
             :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}, {'panelThree': deviceAttrs.chan_num == 3 && deviceAttrs.list && deviceAttrs.list.length == 3}, 'panel-left', 'panel-right']"
-            @touchstart ="touchstart('three')"
-            @touchend="touchend('three')"
+            v-longpress:[three]="showMode"
+            data-id="three"
+            @click="touchstart('three')"
           >
             <div class="panel-btn center">
               <div :class="['btn-wrap', 'btn-wrap-four', {'btn-wrap-three': deviceAttrs.chan_num == 3 && deviceAttrs.list && deviceAttrs.list.length == 3}]">
@@ -97,19 +74,6 @@
               </div>
             </div>
           </div>
-          <!-- 配置开关 -->
-          <!-- <div
-            v-else
-            :class="['panel']"
-          >
-            <div
-              class="panel-btn center">
-              <div class="btn-wrap btn-wrap-four">
-                <div class="btn-add center" />
-                <div class="add-name">配置灯</div>
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
       <!-- 按钮 -->
@@ -205,10 +169,6 @@ export default {
     },
     touchstart(val) {
       if(this.isOffline|| this.networkStatus == -1) return
-      this.timeOutEvent=setTimeout(() => {
-        // this.timeOutEventOK = true
-        return this.showMode(val)
-      }, 1000)
       this.$refs[val].classList.remove('animate')
       this.$refs[val].classList.add('animate1')
       this.$refs[val].classList.add('bgcStart')
@@ -219,14 +179,13 @@ export default {
         this.$refs[val].classList.add('yellowExtend')
       }
       argv_is_mock ? HdSmart.UI.vibrate(true) : HdSmart.UI.vibrate()
+      this.touchend(val)
     },
     touchend(val){
       if(this.isOffline|| this.networkStatus == -1) return
-      clearTimeout(this.timeOutEvent)
       this.$refs[val].classList.remove('animate1')
       this.$refs[val].classList.add('animate')
       this.$refs[val].classList.remove('bgcStart')
-      // if(this.timeOutEventOK) return
       if(this.$refs.swing.show == true) return
       if(val == 'one') return this.setSwitch1()
       if(val == 'two') return this.setSwitch2()
