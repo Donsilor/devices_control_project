@@ -11,7 +11,6 @@ import '@lib/base/common.less'
 
 import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
-// import Topbar from '@lib/components/Topbar.vue'
 import Topbar from '@lib/components/NewTopbar.vue'
 import StatusTip from '@lib/components/StatusTip.vue'
 import * as filters from './filters' // global filters
@@ -45,7 +44,7 @@ Vue.component('topbar', Topbar)
 Vue.component('StatusTip', StatusTip)
 FastClick.attach(document.body)
 Vue.directive('longpress', {
-  bind: function (el, binding, vNode) {
+  bind: function(el, binding, vNode) {
     if (typeof binding.value !== 'function') {
       const compName = vNode.context.name
       let warn = `[longpress:] provided expression '${binding.expression}' is not a function, but has to be`
@@ -55,7 +54,7 @@ Vue.directive('longpress', {
     let pressTimer = null
     let start = (e) => {
       if (e.type === 'click' && e.button !== 0) {
-        return;
+        return
       }
       if (pressTimer === null) {
         pressTimer = setTimeout(() => {
@@ -63,7 +62,7 @@ Vue.directive('longpress', {
         }, 1000)
       }
     }
-    let cancel = (e) => {
+    let cancel = () => {
       if (pressTimer !== null) {
         clearTimeout(pressTimer)
         pressTimer = null
@@ -72,12 +71,12 @@ Vue.directive('longpress', {
     const handler = (e) => {
       binding.value(e)
     }
-    el.addEventListener("mousedown", start);
-    el.addEventListener("touchstart", start);
-    el.addEventListener("click", cancel);
-    el.addEventListener("mouseout", cancel);
-    el.addEventListener("touchend", cancel);
-    el.addEventListener("touchcancel", cancel);
+    el.addEventListener("mousedown", start)
+    el.addEventListener("touchstart", start)
+    el.addEventListener("click", cancel)
+    el.addEventListener("mouseout", cancel)
+    el.addEventListener("touchend", cancel)
+    el.addEventListener("touchcancel", cancel)
   }
 })
 new Vue({
