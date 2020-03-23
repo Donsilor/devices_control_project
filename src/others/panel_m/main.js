@@ -1,6 +1,6 @@
 console.log(`argv_is_mock: ${argv_is_mock}`)
 if (argv_is_mock || process.env.NODE_ENV == 'development') {
-  require('@mock/hongyan_light/index.js')
+  require('@mock/panel/index.js')
 }
 import Vue from 'vue'
 import App from './App.vue'
@@ -12,13 +12,13 @@ import '@lib/base/animation.less'
 import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
 import NewTopBar from '@lib/components/NewTopBar.vue'
-import StatusTip from '@lib/components/StatusTip.vue'
+import StatusTip from '@lib/components/SupconStatusTip.vue'
 
 import Router from 'vue-router'
 Vue.use(Router)
 import Index from './components/Index.vue'
 import Allocation from './components/Allocation.vue'
-import OfflineHelpPage from '@lib/components/OfflineHelpPage.vue'
+import SupconOfflineHelpPage from '@lib/components/SupconOfflineHelpPage.vue'
 
 
 
@@ -34,9 +34,9 @@ const router = new Router({
     component: Allocation,
   },
   {
-    path: '/OfflineHelpPage',
-    name: 'OfflineHelpPage',
-    component: OfflineHelpPage,
+    path: '/SupconOfflineHelpPage',
+    name: 'SupconOfflineHelpPage',
+    component: SupconOfflineHelpPage,
   }
   ]
 })
