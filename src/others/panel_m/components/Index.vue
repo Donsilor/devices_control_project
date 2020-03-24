@@ -9,7 +9,7 @@
         :scroll="true"
         page-class=".page"
       />
-      <StatusTip/>
+      <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <div class="main">
         <h3>按键配置</h3>
         <div class="collocation">
@@ -94,6 +94,12 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    // 路由跳转
+      OfflineHelpPage(){
+        this.$router.push({
+        path:"/SupconOfflineHelpPage"
+      })
+    },
     fn1(val){
       console.log(val, '点击了')
       this.num = val

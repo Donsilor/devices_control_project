@@ -4,17 +4,15 @@ if (argv_is_mock || process.env.NODE_ENV == 'development') {
 }
 import Vue from 'vue'
 import App from './App.vue'
-
 import '@lib/base/reset.less'
 import '@lib/base/common.less'
-
 import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
-// import Topbar from '@lib/components/Topbar.vue'
-import NewTopBar from '@lib/components/NewTopBar.vue'
+import Topbar from '@lib/components/NewTopbar.vue'
 import StatusTip from '@lib/components/StatusTip.vue'
 import * as filters from './filters' // global filters
-// register global utility filters.
+
+import longPress from "@lib/longPress.js"
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
@@ -40,10 +38,12 @@ const router = new Router({
   ]
 })
 
-Vue.component('NewTopBar', NewTopBar)
+Vue.component('topbar', Topbar)
 Vue.component('StatusTip', StatusTip)
 FastClick.attach(document.body)
-
+Vue.directive('longpress', {
+  bind: longPress
+})
 new Vue({
     el: '#app',
     store,

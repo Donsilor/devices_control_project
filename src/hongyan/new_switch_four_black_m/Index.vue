@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-longpress="http://www.w3.org/1999/xhtml">
   <div class="body">
     <div :class="[{'offline': isOffline || networkStatus == -1}, {'close': isClose}, 'page']">
       <!-- 顶部 -->
@@ -13,10 +13,11 @@
         <div class="bg center">
 
           <div
+            v-longpress:[two]="showMode"
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}, 'panel-two']"
-            @touchstart ="touchstart('two')"
-            @touchend="touchend('two')"
+            data-id="one"
+            @click="touchstart('two')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -45,10 +46,11 @@
             </div>
           </div>
           <div
+            v-longpress:[three]="showMode"
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}, 'panel-three']"
-            @touchstart ="touchstart('three')"
-            @touchend="touchend('three')"
+            data-id="three"
+            @click="touchstart('three')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -78,10 +80,11 @@
           </div>
 
           <div
+            v-longpress:[one]="showMode"
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}, 'panel-one']"
-            @touchstart ="touchstart('one')"
-            @touchend="touchend('one')"
+            data-id="one"
+            @click="touchstart('one')"
           >
             <div
               class="panel-btn center">
@@ -112,10 +115,11 @@
           </div>
 
           <div
+            v-longpress:[four]="showMode"
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[3].chan_status == 'on'}, 'panel-four']"
-            @touchstart ="touchstart('four')"
-            @touchend="touchend('four')"
+            data-id="four"
+            @click="touchstart('four')"
           >
             <div class="panel-btn center">
               <div class="btn-wrap btn-wrap-four">
@@ -273,12 +277,12 @@ export default {
     },
     touchstart(val) {
       if(this.isOffline|| this.networkStatus == -1) return
-      if(val !== 'SwitchOn' && val !== 'SwitchOff') {
-        this.timeOutEvent=setTimeout(() => {
+      // if(val !== 'SwitchOn' && val !== 'SwitchOff') {
+      //   this.timeOutEvent=setTimeout(() => {
           // this.timeOutEventOK = true
-          return this.showMode(val)
-        }, 1000)
-      }
+      //     return this.showMode(val)
+      //   }, 1000)
+      // }
       this.$refs[val].classList.remove('animate')
       this.$refs[val].classList.add('animate1')
       if(val == 'one' || val == 'two' || val == 'three' || val == 'four') {
@@ -286,29 +290,29 @@ export default {
         if(this.flagOn == false || this.flagOff == false) return
       }
       if(val == 'SwitchOn') {
-        // this.$refs[val].classList.add('yellowExtend')
         if(this.flagOn == false) return
         if(this.deviceAttrs.list[0].chan_status == 'on' && this.deviceAttrs.list[1].chan_status == 'on' && this.deviceAttrs.list[2].chan_status == 'on' && this.deviceAttrs.list[3].chan_status == 'on') return this.$refs[val].classList.remove('animate1')
-        this.$refs[val].classList.add('yellowExtend')
+        // this.$refs[val].classList.add('yellowExtend')
         setTimeout(()=>{
           this.touchend(val)
         },300)
-      }
-      if(val == 'SwitchOff') {
-        // this.$refs[val].classList.add('yellowExtend')
+      } else if(val == 'SwitchOff') {
         if(this.flagOff == false) return
         if(this.deviceAttrs.list[0].chan_status == 'off' && this.deviceAttrs.list[1].chan_status == 'off' && this.deviceAttrs.list[2].chan_status == 'off' && this.deviceAttrs.list[3].chan_status == 'off') return this.$refs[val].classList.remove('animate1')
-        this.$refs[val].classList.add('yellowExtend')
+        // this.$refs[val].classList.add('yellowExtend')
+        setTimeout(()=>{
+          this.touchend(val)
+        },300)
+      } else {
         setTimeout(()=>{
           this.touchend(val)
         },300)
       }
       HdSmart.UI.vibrate()
-
     },
     touchend(val){
       if(this.isOffline|| this.networkStatus == -1) return
-      clearTimeout(this.timeOutEvent)
+      // clearTimeout(this.timeOutEvent)
       this.$refs[val].classList.remove('animate1')
       this.$refs[val].classList.remove('yellowExtend')
       this.$refs[val].classList.remove('bgcStart')

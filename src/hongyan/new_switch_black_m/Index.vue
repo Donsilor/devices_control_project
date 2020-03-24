@@ -13,10 +13,10 @@
         <div class="bg center">
 
           <div
-            v-if="deviceAttrs.list"
-            data-id="one"
-            :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}, {'panelOne': (deviceAttrs.chan_num == 1 || deviceAttrs.chan_num == 2) && deviceAttrs.list && (deviceAttrs.list.length == 1 || deviceAttrs.list.length == 2)}, {'raidusOne': deviceAttrs.chan_num == 1 && deviceAttrs.list && deviceAttrs.list.length == 1}, 'panel-left']"
             v-longpress:[one]="showMode"
+            v-if="deviceAttrs.list"
+            :class="['panel', {'panelActive': deviceAttrs.list[0].chan_status == 'on'}, {'panelOne': (deviceAttrs.chan_num == 1 || deviceAttrs.chan_num == 2) && deviceAttrs.list && (deviceAttrs.list.length == 1 || deviceAttrs.list.length == 2)}, {'raidusOne': deviceAttrs.chan_num == 1 && deviceAttrs.list && deviceAttrs.list.length == 1}, 'panel-left']"
+            data-id="one"
             @click="touchstart('one')"
           >
             <div
@@ -35,9 +35,9 @@
             </div>
           </div>
           <div
+            v-longpress:[two]="showMode"
             v-if="deviceAttrs.chan_num != 1 && deviceAttrs.list && deviceAttrs.list[1]"
             :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}, 'radiusTwo', {'panelTwo': deviceAttrs.chan_num == 2 && deviceAttrs.list && deviceAttrs.list.length == 2}, 'panel-left']"
-            v-longpress:[two]="showMode"
             data-id="two"
             @click="touchstart('two')"
           >
@@ -55,9 +55,9 @@
             </div>
           </div>
           <div
+            v-longpress:[three]="showMode"
             v-if="deviceAttrs.chan_num != 1 && deviceAttrs.chan_num != 2 && deviceAttrs.list && deviceAttrs.list[2]"
             :class="['panel', {'panelActive': deviceAttrs.list[2].chan_status == 'on'}, {'panelThree': deviceAttrs.chan_num == 3 && deviceAttrs.list && deviceAttrs.list.length == 3}, 'panel-left', 'panel-right']"
-            v-longpress:[three]="showMode"
             data-id="three"
             @click="touchstart('three')"
           >
@@ -179,7 +179,9 @@ export default {
         this.$refs[val].classList.add('yellowExtend')
       }
       argv_is_mock ? HdSmart.UI.vibrate(true) : HdSmart.UI.vibrate()
-      this.touchend(val)
+      setTimeout(()=>{
+        this.touchend(val)
+      },300)
     },
     touchend(val){
       if(this.isOffline|| this.networkStatus == -1) return

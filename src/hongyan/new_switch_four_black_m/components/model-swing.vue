@@ -8,11 +8,12 @@
       <div class="title">请输入开关名称</div>
       <div class="txt">
         <input
-          :value="txtVal"
+          v-model="txtVal"
           type="text"
           class="text"
           maxlength="10"
-          @input="txt">
+          @input="txt"
+          @blur="handlePhone">
       </div>
       <div
         class="hide determine"
@@ -38,7 +39,9 @@
 // .show{
 //   animation: show .2s linear 0s;
 // }
-
+input {
+  caret-color: rgba(255,255,255,0.5) !important;
+}
   .model{
     position: fixed;
     top: 0;
@@ -63,13 +66,9 @@
     }
     .main{
       position: absolute;
-      // bottom: 0;
       z-index: 999999999999;
       width: 85%;
-      // height: 381px;
-      // color: #20282B;
       background: #1E1E1E;
-      // border: 1px solid #DDDDDD;
       padding: 48px 40px 20px;
       border-radius: 10px;
       .title {
@@ -82,14 +81,13 @@
       .txt {
         .text {
           height: 104px;
-          opacity: 0.5;
           width: 100%;
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: 10px;
           font-size: 32px;
           padding: 20px;
           background: #1E1E1E;
-          color: #fff;
+          color: rgba(255,255,255,0.5);
         }
       }
       .line {
@@ -103,21 +101,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        // flex-direction: column;
         background: #fff;
         .btn{
           padding: 0px 60px;
           width:100%;
           height:120px;
           line-height: 120px;
-          // text-align: center;
           font-size:32px;
-          // &:first-of-type{
-          //   border-bottom:1px solid #F0F2F4;
-          // }
-          // &.title {
-          //   font-size: 40px;
-          // }
         }
         .img {
           margin: 0 60px 0 0;
@@ -130,7 +120,6 @@
       .hide{
         width: 100%;
         height: 100px;
-        // margin-top:21px;
         font-size: 32px;
         letter-spacing: 0;
         text-align: center;
@@ -150,11 +139,12 @@
 </style>
 <script>
 export default {
-  props: ['num'],
+  props: ['num', 'argv_is_mock'],
   data() {
     return {
       show: false,
-      txtVal: ''
+      txtVal: '',
+      flag: false
     }
   },
   watch: {
@@ -168,19 +158,34 @@ export default {
   },
   methods: {
     txt(e) {
+      e.preventDefault()
       let reg = new RegExp("^[0-9\u4e00-\u9fa5]+$")
-      if(reg.test(e.target.value)) {
-        this.txtVal = e.target.value
-      } else {
-        HdSmart.UI.toast('只支持中文和数字')
-        if(e.target.value.length >= 1) {
-          e.target.value = this.txtVal
+      if(e.target.value) {
+        if(reg.test(e.target.value)) {
+          this.txtVal = e.target.value
+          this.flag = true
+        } else {
+          if(e.target.value.length >= 1) {
+            this.flag = false
+          }
         }
       }
       this.txtVal = e.target.value
     },
+    handlePhone() {
+      // 修复ios 隐藏软键盘页面没有下滑问题
+      setTimeout(() => {
+        window.scrollTo(0, 0)
+      }, 300)
+    },
     setWind(){
-      if(!this.txtVal) return HdSmart.UI.toast('请输入开关名称')
+      if(argv_is_mock) {
+        if(!this.txtVal) return HdSmart.UI.toast('请输入开关名称', null, true)
+        if(!this.flag) return HdSmart.UI.toast('只支持中文和数字', null, true)
+      } else {
+        if(!this.txtVal) return HdSmart.UI.toast('请输入开关名称')
+        if(!this.flag) return HdSmart.UI.toast('只支持中文和数字')
+      }
       this.$emit('setWind', this.txtVal)
     }
   }
