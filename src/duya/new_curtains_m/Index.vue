@@ -4,7 +4,8 @@
     <div class="page">
       <NewTopBar
         :scroll="true"
-        :room="device.room_name"
+        :room="argv_is_mock?'':device.room_name"
+        :show-right="argv_is_mock?false:true"
         :title="device.device_name"
         page-class=".page"
         bak-color="#fff"/>
@@ -90,6 +91,7 @@
   export default {
     data() {
       return {
+        argv_is_mock: false,
         //  target_percentage: 50,
         // 点击中部到指定幅度按钮显示的信息
         coverWidth: "",
@@ -166,6 +168,9 @@
         }
       }
     },
+    created() {
+      this.argv_is_mock = argv_is_mock
+    },
     mounted() {
       HdSmart.ready(() => {
         this.getDeviceInfo()
@@ -225,7 +230,7 @@
         }
       },
       // 全开
-      setOpen: _.debounce(function () {
+      setOpen: _.debounce(function() {
         if (this.deviceAttrs.open_percentage == 100) {
           this.$refs['open'].classList.remove('yellowExtend')
         }
@@ -237,7 +242,7 @@
           })
       }, 300),
       //全关
-      setClose: _.debounce(function () {
+      setClose: _.debounce(function() {
         if (this.deviceAttrs.open_percentage == 0) {
           this.$refs['close'].classList.remove('yellowExtend')
         }
@@ -249,7 +254,7 @@
           })
       }, 300),
       //暂停
-      setPause: _.debounce(function () {
+      setPause: _.debounce(function() {
         this.btnActive = 'pause'
         this.curtainStatusText = ''
         this.myMove = false

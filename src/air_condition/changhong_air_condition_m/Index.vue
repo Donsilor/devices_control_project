@@ -1,11 +1,12 @@
 <template>
   <div class="body">
-    <div 
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover', {'scroll44': classTrue}]" 
+    <div
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover', {'scroll44': classTrue}]"
     >
       <NewTopBar
         :title="device.device_name"
-        :room="device.room_name"
+        :room="argv_is_mock?'':device.room_name"
+        :show-right="argv_is_mock?false:true"
         :scroll="true"
         page-class=".page"
         @hscroll="hscroll"
@@ -13,34 +14,34 @@
       />
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <div class="main center">
-        <div class="wrap-circle">  
+        <div class="wrap-circle">
           <!-- 温度圆环 -->
-          <div 
-            class="container" 
+          <div
+            class="container"
             @touchmove="touchmove($event)">
-            <div 
+            <div
               class="cover"
               @touchmove.prevent
             />
-            <div 
-              v-for="(item, index) in count" 
-              :key="index" 
-              :style="{transform: `rotate(${7*index-105}deg)`}" 
+            <div
+              v-for="(item, index) in count"
+              :key="index"
+              :style="{transform: `rotate(${7*index-105}deg)`}"
               class="item-container">
-              <div 
-                ref="items" 
-                :id="(index)+'item'"        
-                class="items" 
-                @touchmove="touchmove($event)" 
+              <div
+                ref="items"
+                :id="(index)+'item'"
+                class="items"
+                @touchmove="touchmove($event)"
                 @touchend="touchend($event)">
                 <!-- 小梯形 -->
-                <div 
-                  ref="item" 
-                  :style="{background: 2*(itemTemp/10)-33>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
+                <div
+                  ref="item"
+                  :style="{background: 2*(itemTemp/10)-33>=index?calculateBg(index):'rgba(255,255,255,0.1)'}"
                   class="item"/>
               </div>
             </div>
-            
+
             <div
               v-if="isOffline|| deviceAttrs.switchStatus == 'off'||deviceAttrs.mode=='wind'"
               ref="tm"
@@ -48,8 +49,8 @@
             <div
               v-else
               ref="tm"
-              class="tm">{{ itemTemp | filterTm }}<sup 
-                ref="sup" 
+              class="tm">{{ itemTemp | filterTm }}<sup
+                ref="sup"
                 :style="{right: (itemTemp/10)%1 == 0 ? 8+'px': -20 +'px'}">°C</sup>
             </div>
           </div>
@@ -94,18 +95,18 @@
         class="panel-btn center">
         <!-- 模式和风速 -->
         <div class="modespeed">
-          <div 
-            class="btn-wrap center" 
+          <div
+            class="btn-wrap center"
             @click="showMode">
-            <div 
-              :class="[modeClass,'btn  center']" 
+            <div
+              :class="[modeClass,'btn  center']"
             />
             <div class="btn-name">{{ modeTxt }}</div>
           </div>
-          <div 
-            class="btn-wrap center" 
+          <div
+            class="btn-wrap center"
             @click="showSpeed">
-            <div 
+            <div
               :class="[deviceAttrs.mode,speedClass,'btn center']" />
             <div class="btn-name">{{ speedTxt }}</div>
           </div>
@@ -141,8 +142,8 @@
           </div>
         </div>
         <!-- 电加热开关 -->
-        <div 
-          v-if="deviceAttrs.mode=='heat'" 
+        <div
+          v-if="deviceAttrs.mode=='heat'"
           class="bottom">
           <div class="Charging-protection">
             <div>电加热</div>
@@ -199,6 +200,7 @@ export default {
   },
   data() {
     return {
+      argv_is_mock: false,
       count: 31,
       now: 0,
       idNum:0,
@@ -224,7 +226,7 @@ export default {
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-    
+
     modeIsActive() {
       return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
     },
@@ -346,10 +348,11 @@ export default {
     }
   },
   created() {
+    this.argv_is_mock = argv_is_mock
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-          this.itemTemp = this.deviceAttrs.temperature  
+          this.itemTemp = this.deviceAttrs.temperature
         })
       HdSmart.UI.setStatusBarColor(1)
     })
@@ -416,7 +419,7 @@ export default {
             // color="#f38f63"
         }
         return color
-      
+
       }else{
           // 制冷模式时的温度颜色
         if (index < 10) {
@@ -439,7 +442,7 @@ export default {
         e.returnValue = false
       }
       if (this.deviceAttrs.mode=='wind') {
-        return 
+        return
       }
       //  滑动限制处理
       //  if(this.flagVal == true) return
@@ -464,13 +467,13 @@ export default {
         // 如果最后一位数字是5，则往前进1
         if (num.lastIndexOf("5")==2) {
           this.itemTemp +=5
-          console.log(this.itemTemp,'最终传给后台的温度')   
+          console.log(this.itemTemp,'最终传给后台的温度')
         }
       }
     },
     touchend(){
       if (this.deviceAttrs.mode=='wind') {
-          return HdSmart.UI.toast('送风模式不支持温度调节')
+          return argv_is_mock ? HdSmart.UI.toast('送风模式不支持温度调节', null, true) : HdSmart.UI.toast('送风模式不支持温度调节')
       }
       console.log(this.isMove,'this.isMove')
       if(this.isMove == false) return
@@ -533,7 +536,7 @@ export default {
       // 送风模式不能设置温度
       if (this.deviceAttrs.mode === 'wind') {
         this.setTemperatureDis = false
-        return HdSmart.UI.toast('送风模式不支持温度调节')
+        return argv_is_mock ? HdSmart.UI.toast('送风模式不支持温度调节', null, true) : HdSmart.UI.toast('送风模式不支持温度调节')
       }
       let temp
       if (this.deviceAttrs.temperature==319) {
@@ -543,14 +546,14 @@ export default {
         console.log(temp,'temptemptemptemp')
       }else{
         console.log(this.itemTemp)
-        // temp = +this.deviceAttrs.temperature + step 
-        temp = +this.itemTemp + step 
+        // temp = +this.deviceAttrs.temperature + step
+        temp = +this.itemTemp + step
       }
       // 最小温度
       if (temp < MIN_TEMP) {
         if (this.deviceAttrs.temperature == MIN_TEMP) {
           this.setTemperatureDis = false
-          return HdSmart.UI.toast('温度已调至最低')
+          return argv_is_mock ? HdSmart.UI.toast('温度已调至最低', null, true) : HdSmart.UI.toast('温度已调至最低')
         } else {
           temp = MIN_TEMP
         }
@@ -559,14 +562,14 @@ export default {
       if (temp > MAX_TEMP) {
         if (this.deviceAttrs.temperature == MAX_TEMP) {
           this.setTemperatureDis = false
-          return HdSmart.UI.toast('温度已调至最高')
+          return argv_is_mock ? HdSmart.UI.toast('温度已调至最高', null, true) : HdSmart.UI.toast('温度已调至最高')
         } else {
           temp = MAX_TEMP
         }
       }
       // if (temp == MAX_TEMP && this.deviceAttrs.speed == 'low' && this.deviceAttrs.mode == 'cold') {
       //   this.setTemperatureDis = false
-      //   return HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
+      //   return argv_is_mock ? HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试', null, true) : HdSmart.UI.toast('低风、制冷模式不支持此温度，请调整后重试')
       // }
       this.controlDevice('temperature', temp)
         .then((res) => {
@@ -595,10 +598,10 @@ export default {
       HdSmart.UI.vibrate()
         this.moveEnd = false
       if (this.deviceAttrs.temperature == 300 && speed == 'low' && this.deviceAttrs.mode == 'cold') {
-        return HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
+        return argv_is_mock ? HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试', null, true) : HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
       }
       // if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
-      //   return HdSmart.UI.toast('送风模式不能设置自动风速')
+      //   return argv_is_mock ? HdSmart.UI.toast('送风模式不能设置自动风速', null, true) : HdSmart.UI.toast('送风模式不能设置自动风速')
       // }
       this.controlDevice('speed', speed)
         .then(() =>{
@@ -660,7 +663,7 @@ export default {
     showSpeed() {
       if (this.isClose) return
       if (this.deviceAttrs.mode == 'dehumidify') {
-        return HdSmart.UI.toast('除湿模式不可调节风速')
+        return argv_is_mock ? HdSmart.UI.toast('除湿模式不可调节风速', null, true) : HdSmart.UI.toast('除湿模式不可调节风速')
       }
       this.$refs.speed.show = true
     },
