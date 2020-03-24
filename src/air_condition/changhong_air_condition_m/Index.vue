@@ -29,8 +29,7 @@
               class="item-container">
               <div 
                 ref="items" 
-                :id="(index)+'item'" 
-                
+                :id="(index)+'item'"        
                 class="items" 
                 @touchmove="touchmove($event)" 
                 @touchend="touchend($event)">
@@ -364,7 +363,7 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-     hscroll(val) {
+    hscroll(val) {
       this.hscrolll = val
     },
     hscrolltop(val) {
@@ -373,26 +372,31 @@ export default {
     // 按钮动画开始
     startAnimate(val){
       if(val=='switchStatus'){
+        if (this.isOffline) return
         this.isStart = true
       }else if(val=='reduce'){
+        if (this.isOffline||this.isClose) return
         this.isReduceStart = true
       }else{
+        if (this.isOffline||this.isClose) return
         this.isAddStart = true
       }
     },
     // 按钮动画结束
     endAnimate(val){
       if(val=='switchStatus'){
+        if (this.isOffline) return
         this.isEnd = true
         this.setSwitch()
       }else if(val=='reduce'){
+        if (this.isOffline||this.isClose) return
         this.isReduceEnd = true
         this.setTemperature(val,-10)
       }else{
+        if (this.isOffline||this.isClose) return
         this.isAddEnd = true
         this.setTemperature(val,10)
       }
-      
     },
     // 温度圆环
     calculateBg(index){
@@ -427,21 +431,19 @@ export default {
       }
     },
     touchmove(e){
-        this.isMove = true
-        if(e.preventDefault){
-            e.preventDefault()
-        }else{
-          e.returnValue = false
-        }
-        if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
-          return 
-        }
+      //isMove是用来判断是否是滑动
+      this.isMove = true
+      if(e.preventDefault){
+          e.preventDefault()
+      }else{
+        e.returnValue = false
+      }
+      if (this.deviceAttrs.mode=='wind') {
+        return 
+      }
       //  滑动限制处理
       //  if(this.flagVal == true) return
       var touch = e.targetTouches[0]
-      console.log(touch,'touchtouch')
-      var eleee = document.elementFromPoint(touch.clientX, touch.clientY)
-      console.log(eleee,'eleee')
       var ele = document.elementFromPoint(touch.clientX, touch.clientY).id
       console.log(ele,'小梯形的id')
       this.idNum = parseInt(ele)
@@ -467,8 +469,8 @@ export default {
       }
     },
     touchend(){
-      if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
-          return HdSmart.UI.toast('该模式不支持温度调节')
+      if (this.deviceAttrs.mode=='wind') {
+          return HdSmart.UI.toast('送风模式不支持温度调节')
       }
       console.log(this.isMove,'this.isMove')
       if(this.isMove == false) return
@@ -529,15 +531,20 @@ export default {
         this.isAddEnd = false
       },500)
       // 送风模式不能设置温度
-      if (this.deviceAttrs.mode === 'wind'||this.deviceAttrs.mode === 'auto'||this.deviceAttrs.mode === 'dehumidify') {
+      if (this.deviceAttrs.mode === 'wind') {
         this.setTemperatureDis = false
-        return HdSmart.UI.toast('该模式不支持温度调节')
+        return HdSmart.UI.toast('送风模式不支持温度调节')
       }
       let temp
       if (this.deviceAttrs.temperature==319) {
-        temp = +this.deviceAttrs.temperature+1 + step
+        console.log(this.itemTemp)
+        // temp = +this.deviceAttrs.temperature+1 + step
+        temp = +this.itemTemp+1 + step
+        console.log(temp,'temptemptemptemp')
       }else{
-        temp = +this.deviceAttrs.temperature + step
+        console.log(this.itemTemp)
+        // temp = +this.deviceAttrs.temperature + step 
+        temp = +this.itemTemp + step 
       }
       // 最小温度
       if (temp < MIN_TEMP) {
@@ -577,12 +584,6 @@ export default {
       if (this.isOffline||this.isClose) return
         this.moveEnd = false
       var val = this.deviceAttrs[attr] === 'on' ? 'off' : 'on'
-      // if (this.deviceAttrs.wind_up_down=='on') {
-      //   this.controlDevice('wind_left_right','off')
-      // }
-      // if (this.deviceAttrs.wind_left_right=='on') {
-      //    this.controlDevice('wind_up_down','off')
-      // }
       this.controlDevice(attr, val)
         .then(() =>{
           this.hide()
@@ -635,9 +636,9 @@ export default {
     },
     controlDevice(attr, value) {
       let param = {}
-      if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
-        param = { 'speed': 'low'}
-      }
+      // if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
+      //   param = { 'speed': 'low'}
+      // }
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {
@@ -707,7 +708,7 @@ export default {
       }
     }
     .control-tm{
-      .wind.control,.auto.control{
+      .wind.control{
         &::before{
           opacity: 0.3;
         }
