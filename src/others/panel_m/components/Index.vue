@@ -18,52 +18,52 @@
             <span v-if="dataList[0].board_key == 1">{{ dataList[0].scene_name }}</span>
             <div
               v-else
-              @click="fn2">
+              @click="setScene(1)">
               <span class="add">+</span>
               <div class="dispose">配置</div>
             </div>
             <p
               v-if="dataList[0].board_key == 1"
-              @click="fn1(dataList[0].value)" >解除配置</p>
+              @click="deleteScene(1)" >解除配置</p>
           </div>
           <div
             :class="['collocation-item', {'colour': dataList[1].board_key == 2}]">
             <span v-if="dataList[1].board_key == 2">{{ dataList[1].scene_name }}</span>
             <div
               v-else
-              @click="fn2">
+              @click="setScene(2)">
               <span class="add">+</span>
               <div class="dispose">配置</div>
             </div>
             <p
               v-if="dataList[1].board_key == 2"
-              @click="fn1(dataList[1].value)" >解除配置</p>
+              @click="deleteScene(2)" >解除配置</p>
           </div>
           <div
             :class="['collocation-item', {'colour': dataList[2].board_key == 3}]">
             <span v-if="dataList[2].board_key == 3">{{ dataList[2].scene_name }}</span>
             <div
               v-else
-              @click="fn2">
+              @click="setScene(3)">
               <span class="add">+</span>
               <div class="dispose">配置</div>
             </div>
             <p
               v-if="dataList[2].board_key == 3"
-              @click="fn1(dataList[2].value)" >解除配置</p>
+              @click="deleteScene(3)" >解除配置</p>
           </div>
           <div
             :class="['collocation-item', {'colour': dataList[3].board_key == 4}]">
             <span v-if="dataList[3].board_key == 4">{{ dataList[3].scene_name }}</span>
             <div
               v-else
-              @click="fn2">
+              @click="setScene(4)">
               <span class="add">+</span>
               <div class="dispose">配置</div>
             </div>
             <p
               v-if="dataList[3].board_key == 4"
-              @click="fn1(dataList[3].value)" >解除配置</p>
+              @click="deleteScene(4)" >解除配置</p>
           </div>
         </div>
       </div>
@@ -112,56 +112,56 @@ export default {
       newPageShow: false,
       num: '',
       list: [
-        {
-          "scene_id": 11,
-          "scene_name": "离家",
-          "control_state":1,
-          "enable":0,
-          "icon":"fgdfg",
-          "list_pic":{"normal":"objectId1"},
-          "detail_pic":"sfdas",
-          "board_key":11
-        },
-        {
-          "scene_id": 11,
-          "scene_name": "你好",
-          "control_state":1,
-          "enable":0,
-          "icon":"fgdfg",
-          "list_pic":{"normal":"objectId1"},
-          "detail_pic":"sfdas",
-          "board_key":1
-        },
-        {
-          "scene_id": 11,
-          "scene_name": "睡觉",
-          "control_state":1,
-          "enable":0,
-          "icon":"fgdfg",
-          "list_pic":{"normal":"objectId1"},
-          "detail_pic":"sfdas",
-          "board_key":3
-        },
-        {
-          "scene_id": 11,
-          "scene_name": "起床",
-          "control_state":1,
-          "enable":0,
-          "icon":"fgdfg",
-          "list_pic":{"normal":"objectId1"},
-          "detail_pic":"sfdas",
-          "board_key":2
-        },
-        {
-          "scene_id": 12, // 场景id
-          "scene_name": "回家", //场景名
-          "control_state":1, //控制状态
-          "enable":0, //打开状态
-          "icon":"fgdfg",
-          "list_pic":{"normal":"objectId1"}, //列表图标url,目前只有normal字段。后期扩展需要高亮和暗的图标，则加上对应字段。{"normal":"objectId1"，"bright":"sss","dark":"sdfd"}
-          "detail_pic":"sfdas", //详情图标url
-          "board_key":4
-        }
+        // {
+        //   "scene_id": 11,
+        //   "scene_name": "离家",
+        //   "control_state":1,
+        //   "enable":0,
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"},
+        //   "detail_pic":"sfdas",
+        //   "board_key":11
+        // },
+        // {
+        //   "scene_id": 11,
+        //   "scene_name": "你好",
+        //   "control_state":1,
+        //   "enable":0,
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"},
+        //   "detail_pic":"sfdas",
+        //   "board_key":1
+        // },
+        // {
+        //   "scene_id": 11,
+        //   "scene_name": "睡觉",
+        //   "control_state":1,
+        //   "enable":0,
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"},
+        //   "detail_pic":"sfdas",
+        //   "board_key":3
+        // },
+        // {
+        //   "scene_id": 11,
+        //   "scene_name": "起床",
+        //   "control_state":1,
+        //   "enable":0,
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"},
+        //   "detail_pic":"sfdas",
+        //   "board_key":2
+        // },
+        // {
+        //   "scene_id": 12, // 场景id
+        //   "scene_name": "回家", //场景名
+        //   "control_state":1, //控制状态
+        //   "enable":0, //打开状态
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"}, //列表图标url,目前只有normal字段。后期扩展需要高亮和暗的图标，则加上对应字段。{"normal":"objectId1"，"bright":"sss","dark":"sdfd"}
+        //   "detail_pic":"sfdas", //详情图标url
+        //   "board_key":40
+        // }
       ],
       dataList: [
         {},{},{},{}
@@ -177,23 +177,24 @@ export default {
     },
   },
   created() {
-    //this.getScene()
-    this.list.map((x) =>{
-            if(x.board_key == 1) {
-              this.dataList[0] = x
-            }
-            if(x.board_key == 2) {
-              this.dataList[1] = x
-            }
-            if(x.board_key == 3) {
-              this.dataList[2] = x
-            }
-            if(x.board_key == 4) {
-              this.dataList[3] = x
-            }
-            return this.dataList/* console.log(this.dataList, '11111111111111111111', this.list) */
-          })
+
     HdSmart.ready(() => {
+      this.getScene()
+      // this.list.map((x) =>{
+      //   if(x.board_key == 1) {
+      //     this.dataList[0] = x
+      //   }
+      //   if(x.board_key == 2) {
+      //     this.dataList[1] = x
+      //   }
+      //   if(x.board_key == 3) {
+      //     this.dataList[2] = x
+      //   }
+      //   if(x.board_key == 4) {
+      //     this.dataList[3] = x
+      //   }
+      //   return this.dataList
+      // })
       this.getDeviceInfo()
         .then(() => {
         })
@@ -212,25 +213,58 @@ export default {
       return new Promise((resolve, reject) => {
            HdSmart.Device.control({}, (data) => {
             console.log('========data==========',data)
-            this.list = data
+            if(data.result.list) {
+              data.result.list.map((x) =>{
+                if(x.board_key == 1) {
+                  this.dataList[0] = x
+                }
+                if(x.board_key == 2) {
+                  this.dataList[1] = x
+                }
+                if(x.board_key == 3) {
+                  this.dataList[2] = x
+                }
+                if(x.board_key == 4) {
+                  this.dataList[3] = x
+                }
+                return this.dataList
+              })
+            }
             resolve()
           },(err)=>{
             reject(err)
           },'dm_get_scene')
       })
     },
-    fn1(val){
-      console.log(val, '点击了')
-      this.num = val
+    deleteScene(i){
+      this.scene_id = i
       this.$refs.model.show = true
     },
     setMode() {
-      console.log(this.num, '确定了')
       this.$refs.model.show = false
+      this.delScene()
+      .then(() =>{
+        this.getScene()
+      })
     },
-    fn2(){
+    delScene() {
+      return new Promise((resolve, reject) => {
+        HdSmart.Device.control({
+          "scene_id": this.scene_id,
+          "board_key": -1
+        }, () => {
+          resolve()
+        },(err)=>{
+          reject(err)
+        },'dm_set_scene_config')
+      })
+    },
+    setScene(i){
       // this.newPageShow = true
-      this.$router.push('./Allocation')
+      this.$router.push({
+        name: 'Allocation',
+        params: { data: i }
+      })
     },
     goBack(){
       this.newPageShow = false

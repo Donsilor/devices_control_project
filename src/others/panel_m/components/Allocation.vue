@@ -40,50 +40,17 @@
             <p/>
           </div>
         </div>
-
       </div>
-
     </div>
-    <!-- <div class="viewHelpstatus">
-      <div class="Prefabrication">
-        <h3 class="AllocationH3">面板预置配置</h3>
-        <ul class="PrefabricationUl">
-          <li>
-            <p>开灯</p>
-            <p>打开面板所在房间的全部灯</p>
-          </li>
-          <li>
-            <p>关灯</p>
-            <p>关闭面板所在房间的全部灯</p>
-          </li>
-          <li>
-            <p>打开全部</p>
-            <p>打开面板所在房间的全部设备</p>
-          </li>
-          <li>
-            <p>关闭全部</p>
-            <p>关闭面板所在房间的全部设备</p>
-          </li>
-        </ul>
-      </div>
-    </div> -->
-
-
     <div class="viewHelpstatus">
       <div class="Prefabrication">
         <h3 class="AllocationH3">APP场景</h3>
         <ul class="PrefabricationUl">
-          <li>
-            <p>睡觉</p>
-          </li>
-          <li>
-            <p>起床</p>
-          </li>
-          <li>
-            <p>回家</p>
-          </li>
-          <li>
-            <p>离家</p>
+          <li
+            v-for="(item, i) in list"
+            :key="i"
+            @click="setScene(item.board_key)">
+            <p>{{ item.scene_name }}</p>
           </li>
         </ul>
       </div>
@@ -103,6 +70,58 @@ export default {
     return{
       status_bar_height:25,
       navigation_bar_height:44,
+      list: [
+        // {
+        //   "scene_id": 11,
+        //   "scene_name": "离家",
+        //   "control_state":1,
+        //   "enable":0,
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"},
+        //   "detail_pic":"sfdas",
+        //   "board_key":11
+        // },
+        // {
+        //   "scene_id": 11,
+        //   "scene_name": "你好",
+        //   "control_state":1,
+        //   "enable":0,
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"},
+        //   "detail_pic":"sfdas",
+        //   "board_key":1
+        // },
+        // {
+        //   "scene_id": 11,
+        //   "scene_name": "睡觉",
+        //   "control_state":1,
+        //   "enable":0,
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"},
+        //   "detail_pic":"sfdas",
+        //   "board_key":3
+        // },
+        // {
+        //   "scene_id": 11,
+        //   "scene_name": "起床",
+        //   "control_state":1,
+        //   "enable":0,
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"},
+        //   "detail_pic":"sfdas",
+        //   "board_key":2
+        // },
+        // {
+        //   "scene_id": 12, // 场景id
+        //   "scene_name": "回家", //场景名
+        //   "control_state":1, //控制状态
+        //   "enable":0, //打开状态
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"}, //列表图标url,目前只有normal字段。后期扩展需要高亮和暗的图标，则加上对应字段。{"normal":"objectId1"，"bright":"sss","dark":"sdfd"}
+        //   "detail_pic":"sfdas", //详情图标url
+        //   "board_key":40
+        // }
+      ],
     }
   },
     computed:{
@@ -112,15 +131,42 @@ export default {
   },
    created() {
     HdSmart.ready(() => {
+      this.getScene()
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
-
     })
   },
   methods:{
     ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice','getViewHelpInfo','setViewHelpInfo']),
-
+    getScene() {
+      return new Promise((resolve, reject) => {
+        HdSmart.Device.control({}, (data) => {
+          console.log('========data==========',data)
+          this.list = data
+          resolve()
+        },(err)=>{
+          reject(err)
+        },'dm_get_scene')
+      })
+    },
+    setScene(item) {
+      console.log(item, '==================', this.$route.params.data)
+      return new Promise((resolve, reject) => {
+        HdSmart.Device.control({
+          "scene_id": item,
+          "board_key": this.$route.params.data
+        }, (res) => {
+          console.log(res)
+          resolve(() =>{
+            this.goBack()
+          })
+        },(err)=>{
+          console.log(err)
+          reject(err)
+        },'dm_set_scene_config')
+      })
+    },
     goBack(){
       this.$router.go(-1)
     },

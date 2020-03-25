@@ -60,7 +60,7 @@
         ox: 140,
         oy: 140,
         or: 120,
-        br: 10,
+        br: 15,
         moveFlag: false,
         brightness: '_ _',
         linearGradientArr: [
@@ -174,7 +174,7 @@
         }, false)
 
         this.$refs.canvas.addEventListener(on.end,()=> {
-          this.br = 10
+          this.br = 15
           this.draw(this.brightness/100)
           if (this.isOffline||this.isClose|| this.networkStatus == -1) return
           this.moveFlag = false
