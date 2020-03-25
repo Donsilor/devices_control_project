@@ -14,10 +14,8 @@
         <h3>按键配置</h3>
         <div class="collocation">
           <div
-            v-for="(item,index) in collocationList"
-            :key="index"
-            :class="['collocation-item', {'colour': item.value}]">
-            <span v-if="item.value">{{ item.name }}</span>
+            :class="['collocation-item', {'colour': dataList[0].board_key == 1}]">
+            <span v-if="dataList[0].board_key == 1">{{ dataList[0].scene_name }}</span>
             <div
               v-else
               @click="fn2">
@@ -25,8 +23,47 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="item.value"
-              @click="fn1(item.value)" >解除配置</p>
+              v-if="dataList[0].board_key == 1"
+              @click="fn1(dataList[0].value)" >解除配置</p>
+          </div>
+          <div
+            :class="['collocation-item', {'colour': dataList[1].board_key == 2}]">
+            <span v-if="dataList[1].board_key == 2">{{ dataList[1].scene_name }}</span>
+            <div
+              v-else
+              @click="fn2">
+              <span class="add">+</span>
+              <div class="dispose">配置</div>
+            </div>
+            <p
+              v-if="dataList[1].board_key == 2"
+              @click="fn1(dataList[1].value)" >解除配置</p>
+          </div>
+          <div
+            :class="['collocation-item', {'colour': dataList[2].board_key == 3}]">
+            <span v-if="dataList[2].board_key == 3">{{ dataList[2].scene_name }}</span>
+            <div
+              v-else
+              @click="fn2">
+              <span class="add">+</span>
+              <div class="dispose">配置</div>
+            </div>
+            <p
+              v-if="dataList[2].board_key == 3"
+              @click="fn1(dataList[2].value)" >解除配置</p>
+          </div>
+          <div
+            :class="['collocation-item', {'colour': dataList[3].board_key == 4}]">
+            <span v-if="dataList[3].board_key == 4">{{ dataList[3].scene_name }}</span>
+            <div
+              v-else
+              @click="fn2">
+              <span class="add">+</span>
+              <div class="dispose">配置</div>
+            </div>
+            <p
+              v-if="dataList[3].board_key == 4"
+              @click="fn1(dataList[3].value)" >解除配置</p>
           </div>
         </div>
       </div>
@@ -73,7 +110,62 @@ export default {
         },
       ],
       newPageShow: false,
-      num: ''
+      num: '',
+      list: [
+        {
+          "scene_id": 11,
+          "scene_name": "离家",
+          "control_state":1,
+          "enable":0,
+          "icon":"fgdfg",
+          "list_pic":{"normal":"objectId1"},
+          "detail_pic":"sfdas",
+          "board_key":11
+        },
+        {
+          "scene_id": 11,
+          "scene_name": "你好",
+          "control_state":1,
+          "enable":0,
+          "icon":"fgdfg",
+          "list_pic":{"normal":"objectId1"},
+          "detail_pic":"sfdas",
+          "board_key":1
+        },
+        {
+          "scene_id": 11,
+          "scene_name": "睡觉",
+          "control_state":1,
+          "enable":0,
+          "icon":"fgdfg",
+          "list_pic":{"normal":"objectId1"},
+          "detail_pic":"sfdas",
+          "board_key":3
+        },
+        {
+          "scene_id": 11,
+          "scene_name": "起床",
+          "control_state":1,
+          "enable":0,
+          "icon":"fgdfg",
+          "list_pic":{"normal":"objectId1"},
+          "detail_pic":"sfdas",
+          "board_key":2
+        },
+        {
+          "scene_id": 12, // 场景id
+          "scene_name": "回家", //场景名
+          "control_state":1, //控制状态
+          "enable":0, //打开状态
+          "icon":"fgdfg",
+          "list_pic":{"normal":"objectId1"}, //列表图标url,目前只有normal字段。后期扩展需要高亮和暗的图标，则加上对应字段。{"normal":"objectId1"，"bright":"sss","dark":"sdfd"}
+          "detail_pic":"sfdas", //详情图标url
+          "board_key":4
+        }
+      ],
+      dataList: [
+        {},{},{},{}
+      ]
     }
   },
   computed: {
@@ -85,6 +177,22 @@ export default {
     },
   },
   created() {
+    //this.getScene()
+    this.list.map((x) =>{
+            if(x.board_key == 1) {
+              this.dataList[0] = x
+            }
+            if(x.board_key == 2) {
+              this.dataList[1] = x
+            }
+            if(x.board_key == 3) {
+              this.dataList[2] = x
+            }
+            if(x.board_key == 4) {
+              this.dataList[3] = x
+            }
+            return this.dataList/* console.log(this.dataList, '11111111111111111111', this.list) */
+          })
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
@@ -98,6 +206,17 @@ export default {
       OfflineHelpPage(){
         this.$router.push({
         path:"/SupconOfflineHelpPage"
+      })
+    },
+    getScene() {
+      return new Promise((resolve, reject) => {
+           HdSmart.Device.control({}, (data) => {
+            console.log('========data==========',data)
+            this.list = data
+            resolve()
+          },(err)=>{
+            reject(err)
+          },'dm_get_scene')
       })
     },
     fn1(val){

@@ -2,7 +2,7 @@
   <div class="body">
     <div :class="[{'offline': isOffline || networkStatus == -1}, {'close': isClose}, 'page']">
       <!-- 顶部 -->
-      <NewTopBar
+      <topbar
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
