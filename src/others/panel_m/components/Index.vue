@@ -14,8 +14,8 @@
         <h3>按键配置</h3>
         <div class="collocation">
           <div
-            :class="['collocation-item', {'colour': listVal[0].board_key == 1}]">
-            <span v-if="listVal[0].board_key == 1">{{ listVal[0].scene_name }}</span>
+            :class="['collocation-item', {'colour': dataList[0].board_key == 1}]">
+            <span v-if="dataList[0].board_key == 1">{{ dataList[0].scene_name }}</span>
             <div
               v-else
               @click="setScene(1)">
@@ -23,12 +23,12 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="listVal[0].board_key == 1"
-              @click="deleteScene(listVal[0].scene_id)" >解除配置</p>
+              v-if="dataList[0].board_key == 1"
+              @click="deleteScene(dataList[0].scene_id)" >解除配置</p>
           </div>
           <div
-            :class="['collocation-item', {'colour': listVal[1].board_key == 2}]">
-            <span v-if="listVal[1].board_key == 2">{{ listVal[1].scene_name }}</span>
+            :class="['collocation-item', {'colour': dataList[1].board_key == 2}]">
+            <span v-if="dataList[1].board_key == 2">{{ dataList[1].scene_name }}</span>
             <div
               v-else
               @click="setScene(2)">
@@ -36,12 +36,12 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="listVal[1].board_key == 2"
-              @click="deleteScene(listVal[1].scene_id)" >解除配置</p>
+              v-if="dataList[1].board_key == 2"
+              @click="deleteScene(dataList[1].scene_id)" >解除配置</p>
           </div>
           <div
-            :class="['collocation-item', {'colour': listVal[2].board_key == 3}]">
-            <span v-if="listVal[2].board_key == 3">{{ listVal[2].scene_name }}</span>
+            :class="['collocation-item', {'colour': dataList[2].board_key == 3}]">
+            <span v-if="dataList[2].board_key == 3">{{ dataList[2].scene_name }}</span>
             <div
               v-else
               @click="setScene(3)">
@@ -49,12 +49,12 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="listVal[2].board_key == 3"
-              @click="deleteScene(listVal[2].scene_id)" >解除配置</p>
+              v-if="dataList[2].board_key == 3"
+              @click="deleteScene(dataList[2].scene_id)" >解除配置</p>
           </div>
           <div
-            :class="['collocation-item', {'colour': listVal[3].board_key == 4}]">
-            <span v-if="listVal[3].board_key == 4">{{ listVal[3].scene_name }}</span>
+            :class="['collocation-item', {'colour': dataList[3].board_key == 4}]">
+            <span v-if="dataList[3].board_key == 4">{{ dataList[3].scene_name }}</span>
             <div
               v-else
               @click="setScene(4)">
@@ -62,8 +62,8 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="listVal[3].board_key == 4"
-              @click="deleteScene(listVal[3].scene_id)" >解除配置</p>
+              v-if="dataList[3].board_key == 4"
+              @click="deleteScene(dataList[3].scene_id)" >解除配置</p>
           </div>
         </div>
       </div>
@@ -111,58 +111,58 @@ export default {
       ],
       newPageShow: false,
       num: '',
-      // list: [
-        // {
-        //   "scene_id": 11,
-        //   "scene_name": "离家",
-        //   "control_state":1,
-        //   "enable":0,
-        //   "icon":"fgdfg",
-        //   "list_pic":{"normal":"objectId1"},
-        //   "detail_pic":"sfdas",
-        //   "board_key":11
-        // },
-        // {
-        //   "scene_id": 11,
-        //   "scene_name": "你好",
-        //   "control_state":1,
-        //   "enable":0,
-        //   "icon":"fgdfg",
-        //   "list_pic":{"normal":"objectId1"},
-        //   "detail_pic":"sfdas",
-        //   "board_key":1
-        // },
-        // {
-        //   "scene_id": 11,
-        //   "scene_name": "睡觉",
-        //   "control_state":1,
-        //   "enable":0,
-        //   "icon":"fgdfg",
-        //   "list_pic":{"normal":"objectId1"},
-        //   "detail_pic":"sfdas",
-        //   "board_key":3
-        // },
-        // {
-        //   "scene_id": 11,
-        //   "scene_name": "起床",
-        //   "control_state":1,
-        //   "enable":0,
-        //   "icon":"fgdfg",
-        //   "list_pic":{"normal":"objectId1"},
-        //   "detail_pic":"sfdas",
-        //   "board_key":2
-        // },
-        // {
-        //   "scene_id": 12, // 场景id
-        //   "scene_name": "回家", //场景名
-        //   "control_state":1, //控制状态
-        //   "enable":0, //打开状态
-        //   "icon":"fgdfg",
-        //   "list_pic":{"normal":"objectId1"}, //列表图标url,目前只有normal字段。后期扩展需要高亮和暗的图标，则加上对应字段。{"normal":"objectId1"，"bright":"sss","dark":"sdfd"}
-        //   "detail_pic":"sfdas", //详情图标url
-        //   "board_key":40
-        // }
-      // ],
+      list: [
+        {
+          "scene_id": 11,
+          "scene_name": "离家",
+          "control_state":1,
+          "enable":0,
+          "icon":"fgdfg",
+          "list_pic":{"normal":"objectId1"},
+          "detail_pic":"sfdas",
+          "board_key":11
+        },
+        {
+          "scene_id": 11,
+          "scene_name": "你好",
+          "control_state":1,
+          "enable":0,
+          "icon":"fgdfg",
+          "list_pic":{"normal":"objectId1"},
+          "detail_pic":"sfdas",
+          "board_key":1
+        },
+        {
+          "scene_id": 11,
+          "scene_name": "睡觉",
+          "control_state":1,
+          "enable":0,
+          "icon":"fgdfg",
+          "list_pic":{"normal":"objectId1"},
+          "detail_pic":"sfdas",
+          "board_key":3
+        },
+        {
+          "scene_id": 11,
+          "scene_name": "起床",
+          "control_state":1,
+          "enable":0,
+          "icon":"fgdfg",
+          "list_pic":{"normal":"objectId1"},
+          "detail_pic":"sfdas",
+          "board_key":2
+        },
+        {
+          "scene_id": 12, // 场景id
+          "scene_name": "回家", //场景名
+          "control_state":1, //控制状态
+          "enable":0, //打开状态
+          "icon":"fgdfg",
+          "list_pic":{"normal":"objectId1"}, //列表图标url,目前只有normal字段。后期扩展需要高亮和暗的图标，则加上对应字段。{"normal":"objectId1"，"bright":"sss","dark":"sdfd"}
+          "detail_pic":"sfdas", //详情图标url
+          "board_key":40
+        }
+      ],
       dataList: [
         {},{},{},{}
       ],
@@ -201,23 +201,26 @@ export default {
       // })
       this.getDeviceInfo()
         .then(() => {
-          this.getScene()
-          // this.list.map((x) =>{
-          //   if(x.board_key == 1) {
-          //     this.dataList[0] = x
-          //   }
-          //   if(x.board_key == 2) {
-          //     this.dataList[1] = x
-          //   }
-          //   if(x.board_key == 3) {
-          //     this.dataList[2] = x
-          //   }
-          //   if(x.board_key == 4) {
-          //     this.dataList[3] = x
-          //   }
-          //   this.flag = true
-          //   return this.dataList
-          // })
+          // this.getScene()
+          setTimeout(() => {
+
+            this.list.map((x) =>{
+              if(x.board_key == 1) {
+                this.dataList[0] = x
+              }
+              if(x.board_key == 2) {
+                this.dataList[1] = x
+              }
+              if(x.board_key == 3) {
+                this.dataList[2] = x
+              }
+              if(x.board_key == 4) {
+                this.dataList[3] = x
+              }
+              this.flag = true
+              return this.dataList
+            })
+          }, 1000)
         })
       HdSmart.UI.setStatusBarColor(2)
     })
