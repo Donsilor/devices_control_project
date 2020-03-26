@@ -16,8 +16,8 @@
         <canvas
           ref="canvas"
           class="canvas"
-          width="560"
-          height="560"
+          width="570"
+          height="570"
         />
         <div
           v-if="modeVal != '01'"
@@ -433,7 +433,9 @@ export default {
     margin-top: 80px;
     z-index: 2;
     position: absolute;
-    width: 521px;
+    // width: 521px;
+    width: 570px;
+    height: 570px;
     border-radius: 50%;
   }
   .panel-btn {

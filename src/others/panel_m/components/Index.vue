@@ -219,7 +219,7 @@ export default {
           //     }
           //     return this.dataList
           //   })
-          // }, 1000)
+          // }, 500)
         })
       HdSmart.UI.setStatusBarColor(2)
     })

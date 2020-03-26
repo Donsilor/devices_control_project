@@ -131,7 +131,10 @@ export default {
   },
    created() {
     HdSmart.ready(() => {
-      this.getScene()
+      this.getDeviceInfo()
+      .then(() => {
+        this.getScene()
+      })
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
