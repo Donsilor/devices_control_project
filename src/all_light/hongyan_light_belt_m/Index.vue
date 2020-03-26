@@ -56,6 +56,7 @@
     },
     data() {
       return {
+        flag: 0,
         ctx: '',
         ox: 140,
         oy: 140,
@@ -165,6 +166,13 @@
             var r = Math.atan2(k.x-this.ox, this.oy-k.y)
             var hd = (Math.PI+r)/(2*Math.PI)
             // 半圆的滑动范围判断
+            if(this.flag-hd>0.5){
+              hd = 1
+            }
+            if(hd-this.flag>0.5){
+              hd = 0
+            }
+            this.flag = hd
             if (hd <= 1 && hd >= 0) {
               this.draw(hd)
             }else{
@@ -409,6 +417,8 @@
       &:after {
         content: '%';
         font-size: 40px;
+        position: absolute;
+        bottom: 24px;
       }
     }
     .light-mode{

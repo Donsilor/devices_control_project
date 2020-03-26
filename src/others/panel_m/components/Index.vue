@@ -14,8 +14,8 @@
         <h3>按键配置</h3>
         <div class="collocation">
           <div
-            :class="['collocation-item', {'colour': dataList[0].board_key == 1}]">
-            <span v-if="dataList[0].board_key == 1">{{ dataList[0].scene_name }}</span>
+            :class="['collocation-item', {'colour': listVal[0].board_key == 1}]">
+            <span v-if="listVal[0].board_key == 1">{{ listVal[0].scene_name }}</span>
             <div
               v-else
               @click="setScene(1)">
@@ -23,12 +23,12 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="dataList[0].board_key == 1"
-              @click="deleteScene(1)" >解除配置</p>
+              v-if="listVal[0].board_key == 1"
+              @click="deleteScene(listVal[0].scene_id)" >解除配置</p>
           </div>
           <div
-            :class="['collocation-item', {'colour': dataList[1].board_key == 2}]">
-            <span v-if="dataList[1].board_key == 2">{{ dataList[1].scene_name }}</span>
+            :class="['collocation-item', {'colour': listVal[1].board_key == 2}]">
+            <span v-if="listVal[1].board_key == 2">{{ listVal[1].scene_name }}</span>
             <div
               v-else
               @click="setScene(2)">
@@ -36,12 +36,12 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="dataList[1].board_key == 2"
-              @click="deleteScene(2)" >解除配置</p>
+              v-if="listVal[1].board_key == 2"
+              @click="deleteScene(listVal[1].scene_id)" >解除配置</p>
           </div>
           <div
-            :class="['collocation-item', {'colour': dataList[2].board_key == 3}]">
-            <span v-if="dataList[2].board_key == 3">{{ dataList[2].scene_name }}</span>
+            :class="['collocation-item', {'colour': listVal[2].board_key == 3}]">
+            <span v-if="listVal[2].board_key == 3">{{ listVal[2].scene_name }}</span>
             <div
               v-else
               @click="setScene(3)">
@@ -49,12 +49,12 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="dataList[2].board_key == 3"
-              @click="deleteScene(3)" >解除配置</p>
+              v-if="listVal[2].board_key == 3"
+              @click="deleteScene(listVal[2].scene_id)" >解除配置</p>
           </div>
           <div
-            :class="['collocation-item', {'colour': dataList[3].board_key == 4}]">
-            <span v-if="dataList[3].board_key == 4">{{ dataList[3].scene_name }}</span>
+            :class="['collocation-item', {'colour': listVal[3].board_key == 4}]">
+            <span v-if="listVal[3].board_key == 4">{{ listVal[3].scene_name }}</span>
             <div
               v-else
               @click="setScene(4)">
@@ -62,8 +62,8 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="dataList[3].board_key == 4"
-              @click="deleteScene(4)" >解除配置</p>
+              v-if="listVal[3].board_key == 4"
+              @click="deleteScene(listVal[3].scene_id)" >解除配置</p>
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@ export default {
       ],
       newPageShow: false,
       num: '',
-      list: [
+      // list: [
         // {
         //   "scene_id": 11,
         //   "scene_name": "离家",
@@ -162,24 +162,28 @@ export default {
         //   "detail_pic":"sfdas", //详情图标url
         //   "board_key":40
         // }
-      ],
+      // ],
       dataList: [
         {},{},{},{}
-      ]
+      ],
+      flag: false
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    listVal() {
+      if(this.flag == true) {
+        return this.dataList
+      }
+    }
   },
   watch: {
     "device.stateChange"(){
     },
   },
   created() {
-
     HdSmart.ready(() => {
-      this.getScene()
       // this.list.map((x) =>{
       //   if(x.board_key == 1) {
       //     this.dataList[0] = x
@@ -197,6 +201,23 @@ export default {
       // })
       this.getDeviceInfo()
         .then(() => {
+          this.getScene()
+          // this.list.map((x) =>{
+          //   if(x.board_key == 1) {
+          //     this.dataList[0] = x
+          //   }
+          //   if(x.board_key == 2) {
+          //     this.dataList[1] = x
+          //   }
+          //   if(x.board_key == 3) {
+          //     this.dataList[2] = x
+          //   }
+          //   if(x.board_key == 4) {
+          //     this.dataList[3] = x
+          //   }
+          //   this.flag = true
+          //   return this.dataList
+          // })
         })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -227,6 +248,7 @@ export default {
                 if(x.board_key == 4) {
                   this.dataList[3] = x
                 }
+                this.flag = true
                 return this.dataList
               })
             }
@@ -237,6 +259,7 @@ export default {
       })
     },
     deleteScene(i){
+      this.flag = false
       this.scene_id = i
       this.$refs.model.show = true
     },
@@ -250,8 +273,12 @@ export default {
     delScene() {
       return new Promise((resolve, reject) => {
         HdSmart.Device.control({
-          "scene_id": this.scene_id,
-          "board_key": -1
+          "list":[
+            {
+            "scene_id": this.scene_id,
+            "board_key": -1
+            }
+          ]
         }, () => {
           resolve()
         },(err)=>{
@@ -268,7 +295,6 @@ export default {
     },
     goBack(){
       this.newPageShow = false
-
     },
     // 滚动事件
     controlDevice(attr, value) {
@@ -374,7 +400,4 @@ export default {
     }
   }
 }
-
-
-
 </style>

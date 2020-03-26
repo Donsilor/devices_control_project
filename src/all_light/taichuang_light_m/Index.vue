@@ -47,11 +47,12 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   data() {
     return {
+      flag: 0,
       ctx: '',
       ox: 140,
       oy: 140,
       or: 120,
-      br: 10,
+      br: 15,
       moveFlag: false,
       brightness: 100,
       modeVal: '01',
@@ -123,6 +124,13 @@ export default {
             var r = Math.atan2(k.x-this.ox, this.oy-k.y)
             var hd = (Math.PI+r)/(2*Math.PI)
             // 半圆的滑动范围判断
+            if(this.flag-hd>0.5){
+              hd = 1
+            }
+            if(hd-this.flag>0.5){
+              hd = 0
+            }
+            this.flag = hd
             if (hd <= 1 && hd >= 0) {
               this.draw(hd)
             }else{
@@ -152,7 +160,7 @@ export default {
           }, false)
 
           this.$refs.canvas.addEventListener(on.end,()=> {
-            this.br = 10
+            this.br = 15
             this.draw(this.brightness/100)
             if (this.isOffline||this.isClose|| this.networkStatus == -1) return
             this.moveFlag = false
@@ -392,6 +400,8 @@ export default {
       &:after {
         content: '%';
         font-size: 40px;
+        position: absolute;
+        bottom: 24px;
       }
     }
     .light-mode{
