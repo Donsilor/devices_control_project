@@ -14,55 +14,74 @@
         <h3>按键配置</h3>
         <div class="collocation">
           <div
-            :class="['collocation-item', {'colour': dataList[0].board_key == 1}]">
-            <span v-if="dataList[0].board_key == 1">{{ dataList[0].scene_name }}</span>
+            :class="['collocation-item', {'colour': dataList[0].board_key == 1}]"
+            @click="dataList[0].board_key == 1 ? '' : setScene(1)">
+            <div
+              v-if="dataList[0].board_key == 1"
+              class="txt">{{ dataList[0].scene_name }}</div>
             <div
               v-else
-              @click="setScene(1)">
-              <span class="add">+</span>
+              class="set">
+              <div class="add">+</div>
               <div class="dispose">配置</div>
             </div>
-            <p
+            <div
               v-if="dataList[0].board_key == 1"
-              @click="deleteScene(dataList[0].scene_id)" >解除配置</p>
+              class="delBtn"
+              @click="deleteScene(dataList[0].scene_id)">解除配置</div>
           </div>
           <div
-            :class="['collocation-item', {'colour': dataList[1].board_key == 2}]">
-            <span v-if="dataList[1].board_key == 2">{{ dataList[1].scene_name }}</span>
+            :class="['collocation-item', {'colour': dataList[1].board_key == 2}]"
+            @click="dataList[1].board_key == 2 ? '' : setScene(2)">
+            <div
+              v-if="dataList[1].board_key == 2"
+              class="txt">{{ dataList[1].scene_name }}</div>
             <div
               v-else
+              class="set"
               @click="setScene(2)">
-              <span class="add">+</span>
+              <div class="add">+</div>
               <div class="dispose">配置</div>
             </div>
             <p
               v-if="dataList[1].board_key == 2"
+              class="delBtn"
               @click="deleteScene(dataList[1].scene_id)" >解除配置</p>
           </div>
           <div
-            :class="['collocation-item', {'colour': dataList[2].board_key == 3}]">
-            <span v-if="dataList[2].board_key == 3">{{ dataList[2].scene_name }}</span>
+            :class="['collocation-item', {'colour': dataList[2].board_key == 3}]"
+            @click="dataList[2].board_key == 3 ? '' : setScene(3)">
+            <div
+              v-if="dataList[2].board_key == 3"
+              class="txt">{{ dataList[2].scene_name }}</div>
             <div
               v-else
+              class="set"
               @click="setScene(3)">
-              <span class="add">+</span>
+              <div class="add">+</div>
               <div class="dispose">配置</div>
             </div>
             <p
               v-if="dataList[2].board_key == 3"
+              class="delBtn"
               @click="deleteScene(dataList[2].scene_id)" >解除配置</p>
           </div>
           <div
-            :class="['collocation-item', {'colour': dataList[3].board_key == 4}]">
-            <span v-if="dataList[3].board_key == 4">{{ dataList[3].scene_name }}</span>
+            :class="['collocation-item', {'colour': dataList[3].board_key == 4}]"
+            @click="dataList[3].board_key == 4 ? '' : setScene(4)">
+            <div
+              v-if="dataList[3].board_key == 4"
+              class="txt">{{ dataList[3].scene_name }}</div>
             <div
               v-else
+              class="set"
               @click="setScene(4)">
-              <span class="add">+</span>
+              <div class="add">+</div>
               <div class="dispose">配置</div>
             </div>
             <p
               v-if="dataList[3].board_key == 4"
+              class="delBtn"
               @click="deleteScene(dataList[3].scene_id)" >解除配置</p>
           </div>
         </div>
@@ -130,7 +149,7 @@ export default {
           "icon":"fgdfg",
           "list_pic":{"normal":"objectId1"},
           "detail_pic":"sfdas",
-          "board_key":1
+          "board_key":12
         },
         {
           "scene_id": 11,
@@ -160,23 +179,17 @@ export default {
           "icon":"fgdfg",
           "list_pic":{"normal":"objectId1"}, //列表图标url,目前只有normal字段。后期扩展需要高亮和暗的图标，则加上对应字段。{"normal":"objectId1"，"bright":"sss","dark":"sdfd"}
           "detail_pic":"sfdas", //详情图标url
-          "board_key":40
+          "board_key":4
         }
       ],
       dataList: [
         {},{},{},{}
       ],
-      flag: false
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-    listVal() {
-      if(this.flag == true) {
-        return this.dataList
-      }
-    }
   },
   watch: {
     "device.stateChange"(){
@@ -184,43 +197,29 @@ export default {
   },
   created() {
     HdSmart.ready(() => {
-      // this.list.map((x) =>{
-      //   if(x.board_key == 1) {
-      //     this.dataList[0] = x
-      //   }
-      //   if(x.board_key == 2) {
-      //     this.dataList[1] = x
-      //   }
-      //   if(x.board_key == 3) {
-      //     this.dataList[2] = x
-      //   }
-      //   if(x.board_key == 4) {
-      //     this.dataList[3] = x
-      //   }
-      //   return this.dataList
-      // })
       this.getDeviceInfo()
         .then(() => {
-          // this.getScene()
-          setTimeout(() => {
-
-            this.list.map((x) =>{
-              if(x.board_key == 1) {
-                this.dataList[0] = x
-              }
-              if(x.board_key == 2) {
-                this.dataList[1] = x
-              }
-              if(x.board_key == 3) {
-                this.dataList[2] = x
-              }
-              if(x.board_key == 4) {
-                this.dataList[3] = x
-              }
-              this.flag = true
-              return this.dataList
-            })
-          }, 1000)
+          //接口请求
+          this.getScene()
+          //本地调试
+          // setTimeout(() => {
+          //   this.list.map((x) =>{
+          //     this.$set(this.dataList, x)
+          //     if(x.board_key == 1) {
+          //       this.dataList[0] = x
+          //     }
+          //     if(x.board_key == 2) {
+          //       this.dataList[1] = x
+          //     }
+          //     if(x.board_key == 3) {
+          //       this.dataList[2] = x
+          //     }
+          //     if(x.board_key == 4) {
+          //       this.dataList[3] = x
+          //     }
+          //     return this.dataList
+          //   })
+          // }, 1000)
         })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -236,9 +235,10 @@ export default {
     getScene() {
       return new Promise((resolve, reject) => {
            HdSmart.Device.control({}, (data) => {
-            console.log('========data==========',data)
+            console.log('========Index-data==========',data)
             if(data.result.list) {
               data.result.list.map((x) =>{
+                this.$set(this.dataList, x)
                 if(x.board_key == 1) {
                   this.dataList[0] = x
                 }
@@ -251,7 +251,6 @@ export default {
                 if(x.board_key == 4) {
                   this.dataList[3] = x
                 }
-                this.flag = true
                 return this.dataList
               })
             }
@@ -262,7 +261,6 @@ export default {
       })
     },
     deleteScene(i){
-      this.flag = false
       this.scene_id = i
       this.$refs.model.show = true
     },
@@ -347,58 +345,70 @@ export default {
     }
     .collocation{
       display: flex;
-     justify-content: space-between;
+      justify-content: space-between;
       height: 464px;
       .collocation-item{
         position: relative;
-        border-radius: 1.48px;
         flex: 1;
         margin-right: 12px;
         background: rgba(255,255,255,0.15);
         border-radius: 10px;
-        padding-top: 164px;
-        font-family: PingFangSC-Light;
+        // padding-top: 164px;
         font-size: 12px;
         color: #000000;
         text-align: center;
+        height: 466px;
         &.colour {
           background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
         }
         &:nth-child(4){
         margin-right: 0;
         }
-        span{
-          display: block;
-          height: 114px;
-          line-height: 34px;
-          padding: 40px 0;
+        .txt{
+          // height: 114px;
+          height: 384px;;
+          line-height: 466px;
+          // padding: 40px 0;
           color: #fff;
+          vertical-align: middle;
+          font-size: 24px;
         }
-        p{
-          position: absolute;
-          left: 50%;
+        .delBtn{
+          // width: 100%;
           width: 120px;
-          transform: translateX(-50%);
+          display: inline-block;
+          position: relative;
+          text-align: center;
+          vertical-align: middle;
           bottom: 0;
           height: 81px;
           line-height: 81px;
           border-top:1px solid rgba(255, 255, 255, 0.1);
           color: #fff;
+          font-size: 24px;
         }
-        .add {
-          background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          font-size: 80px;
+        .set {
+          position: relative;
+          color: #fff;
+          vertical-align: middle;
+          top: 50%;
+          transform: translateY(-50%);
+          .add {
+            background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 80px;
+          }
+          .dispose {
+            background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 24px;
+          }
         }
-        .dispose {
-          background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          font-size: 12px;
-        }
+
       }
     }
   }

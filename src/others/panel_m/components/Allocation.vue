@@ -142,7 +142,7 @@ export default {
     getScene() {
       return new Promise((resolve, reject) => {
         HdSmart.Device.control({}, (data) => {
-          console.log('========data==========',data)
+          console.log('========Allocation-data==========',data)
           this.list = data.result.list
           resolve()
         },(err)=>{
