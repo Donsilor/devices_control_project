@@ -124,6 +124,7 @@
         }
       },
       'deviceAttrs.open_percentage'(newValue, oldValue) {
+        console.log(newValue,'1111111222222222222222222222111111',oldValue)
         this.count = this.count + 1
         var _that = this
 
@@ -236,10 +237,12 @@
         }
         this.btnActive = 'open'
         this.myMove = false
-        this.controlDevice('switch', 'on')
-          .then((res) => {
-            res == null && HdSmart.UI.toast('请求超时，请重试')
-          })
+        this.deviceAttrs.open_percentage = 100
+        this.newRatio()
+        // this.controlDevice('switch', 'on')
+        //   .then((res) => {
+        //     res == null && HdSmart.UI.toast('请求超时，请重试')
+        //   })
       }, 300),
       //全关
       setClose: _.debounce(function() {
@@ -248,10 +251,12 @@
         }
         this.btnActive = 'close'
         this.myMove = false
-        this.controlDevice('switch', 'off')
-          .then((res) => {
-            res == null && HdSmart.UI.toast('请求超时，请重试')
-          })
+        this.deviceAttrs.open_percentage = 0
+        this.newRatio()
+        // this.controlDevice('switch', 'off')
+        //   .then((res) => {
+        //     res == null && HdSmart.UI.toast('请求超时，请重试')
+        //   })
       }, 300),
       //暂停
       setPause: _.debounce(function() {
@@ -263,22 +268,22 @@
         setTimeout(() => {
           this.$refs['pause'].classList.remove('yellowExtend', 'animateStart', 'animateEnd')
         }, 500)
-        this.controlDevice('switch', 'pause')
-          .then((res) => {
-            if (res) {
-              if (res.code == 0) {
-                $('.leftCurtainBox').stop()
-                $('.rightCurtainBox').stop()
-                console.log('停止了=========')
+        // this.controlDevice('switch', 'pause')
+        //   .then((res) => {
+        //     if (res) {
+        //       if (res.code == 0) {
+        //         $('.leftCurtainBox').stop()
+        //         $('.rightCurtainBox').stop()
+        //         console.log('停止了=========')
 
-              }
-            }
-            res == null && HdSmart.UI.toast('请求超时，请重试')
-          })
+        //       }
+        //     }
+        //     res == null && HdSmart.UI.toast('请求超时，请重试')
+        //   })
       }, 300),
       // clear
       // 滑动窗帘
-      touchStart(e) {
+      touchStart() {
         this.myMove = true
         this.curtainStatusText = ''
         this.btnActive = ''
@@ -312,10 +317,10 @@
         let maxWidth = this.$refs.imgBox.offsetWidth * 0.5 - 1
         this.range = 100 - Math.round((this.curtainWidth - circle) / (maxWidth - circle) * 100)
         console.log(this.range)
-        this.controlDevice('open_percentage', this.range)
-          .then((res) => {
-            res == null && HdSmart.UI.toast('请求超时，请重试')
-          })
+        // this.controlDevice('open_percentage', this.range)
+        //   .then((res) => {
+        //     res == null && HdSmart.UI.toast('请求超时，请重试')
+        //   })
       },
       //根据后台返回数据得出窗帘的宽度
       newRatio() {
@@ -551,6 +556,8 @@
         height: auto;
         bottom: -100px;
         font-family: PingFangSC-Light;
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
 
