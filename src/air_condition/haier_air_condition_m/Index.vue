@@ -152,6 +152,7 @@
       <model-speed
         ref="speed"
         :speed="deviceAttrs.speed"
+        :mode="deviceAttrs.mode"
         @setSpeed="setSpeed" />
     </div>
   </div>
@@ -333,8 +334,20 @@ export default {
             color = 'rgba(255,255,255,0.1)'
             return
           }
-          if(this.deviceAttrs.mode=='cold'){
-            // 制冷模式时的温度颜色
+           if(this.deviceAttrs.mode=='heat'){
+            // 制热模式时的温度颜色
+            if (index < 10) {
+                color = '#EF6D5E '
+            }else if (index > 20) {
+                color = '#F9BB6B'
+            }else {
+                color = `linear-gradient(to right, #EF6D5E 0%, #ff7524 ${200-10*index}%, #F9BB6B  100%)`
+                // color="#f38f63"
+            }
+            return color
+
+          }else{
+              // 制冷模式时的温度颜色
             if (index < 10) {
                 color = '#327fdb'
             }else if (index > 20) {
@@ -342,29 +355,7 @@ export default {
             }else {
                 color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
             }
-            // console.log(index,'index00000000')
-            return color
-          }else if(this.deviceAttrs.mode=='heat'){
-            // 制热模式时的温度颜色
-            if (index < 10) {
-                color = '#F9BB6B '
-            }else if (index > 20) {
-                color = '#EF6D5E'
-            }else {
-                color = `linear-gradient(to right, #F9BB6B 0%, #ff7524 ${200-10*index}%, #EF6D5E  100%)`
-            }
-            console.log(index,'index00000000')
-            return color
-          }else{
-             // 制热模式时的温度颜色
-            if (index < 10) {
-                color = '#E1B96E  '
-            }else if (index > 20) {
-                color = '#F1CB85'
-            }else {
-                color = `linear-gradient(to right, #E1B96E 0%, #F1CB85 ${200-10*index}%, #F1CB85  100%)`
-            }
-            console.log(index,'index00000000')
+            // console.log(index,11111111111)
             return color
           }
       },

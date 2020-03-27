@@ -8,7 +8,7 @@
       v-if="show"
       class="main show">
       <!-- <p class="title">选择摆风</p> -->
-      <div class="items btns">
+      <div :class="[mode,'items btns']">
         <div 
           class="btn"
           @click="setSpeed('low')">
@@ -39,8 +39,8 @@
         </div>
       </div>
       <div 
-        class="hide" 
-        @click.self="show = false">取消</div>
+        :class="[mode, 'hide']" 
+        @click.self="show = false"><span @click.self="show = false">取消</span></div>
     </div>
   </div>
 </template>
@@ -95,10 +95,30 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        // background: rgba(37,37,37,0.80);
-        background: #1C1C1E;
+        background: rgba(37,37,37,0.80);
+        backdrop-filter: blur(15px);
+        // background: #1C1C1E;
         border-radius: 10px;
         margin: 0 16px 16px 16px;
+        &.cold,
+          &.auto,
+          &.dehumidify,
+          &.wind{
+            .active{
+              background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+              -webkit-background-clip: text;
+              background-clip: text;
+              color: transparent;
+            }
+          }
+          &.heat{
+            .active{
+              background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
+              -webkit-background-clip: text;
+              background-clip: text;
+              color: transparent;
+            }
+          }
         .btn{
           width:100%;
           height:120px;
@@ -106,11 +126,7 @@
           text-align: center;
           font-size:32px;
           border-bottom: 0.5px solid rgba(255,255,255,.1);
-          .name{
-            &.active{
-               color:#E1B96E;
-            }
-          }
+          
         }
       }
       .hide{
@@ -120,17 +136,33 @@
         letter-spacing: 0;
         text-align: center;
         line-height: 120px;
-        color: #E1B96E;
+        // background: rgba(37,37,37,0.80);
         background: #1C1C1E;
         border-radius: 10px;
         margin: 0 16px 16px 16px;
+      }
+       .cold.hide,.dehumidify.hide,.wind.hide,.auto.hide{
+        span{
+          background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+        }
+      }
+      .heat.hide{
+        span{
+          background-image: linear-gradient(225deg, #F9BB6B 0%, #EF6D5E 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+        }
       }
     }
   }
 </style>
 <script>
 export default {
-  props: ['speed'],
+  props: ['speed','mode'],
   data() {
     return {
       show: false
