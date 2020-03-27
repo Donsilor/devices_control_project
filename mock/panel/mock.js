@@ -4,38 +4,6 @@
 import Mock from 'mockjs'
 
 let res = {
-    "switch_chan": "off",
-    "switch_chan0": "off",
-    "switch_chan1": "on",
-    "switch_chan2": "off",
-    "switch_chan3": "off",
-    "chan_num": 2,
-    "list": [
-      {
-        "chan_index": 0,
-        "chan_status": "off",
-        "chan_name": "",
-        "chan_avatar": "123dfafga "
-      },
-      {
-        "chan_index": 1,
-        "chan_status": "off",
-        "chan_name": "",
-        "chan_avatar": "123dfafga "
-      },
-      // {
-      //   "chan_index": 2,
-      //   "chan_status": "off",
-      //   "chan_name": "/*- ``@",
-      //   "chan_avatar": "123dfafga "
-      // },
-      // {
-      //   "chan_index": 3,
-      //   "chan_status": "off",
-      //   "chan_name": "",
-      //   "chan_avatar": "123dfafga "
-      // }
-    ],
     "connectivity": "online"
 }
 
@@ -63,59 +31,6 @@ export function generateViewHelp() {
 
 export function set(data){
     var attr = data.params.attribute
-    if(attr.switch_chan0){
-      if(attr.switch_chan0 == 'on'){
-        res.list[0].chan_status = 'on'
-      } else {
-        res.list[0].chan_status = 'off'
-      }
-    }
-    if(attr.switch_chan1){
-      if(attr.switch_chan1 == 'on'){
-        res.list[1].chan_status = 'on'
-      } else {
-        res.list[1].chan_status = 'off'
-      }
-    }
-    if(attr.switch_chan2){
-      if(attr.switch_chan2 == 'on'){
-        res.list[2].chan_status = 'on'
-      } else {
-        res.list[2].chan_status = 'off'
-      }
-    }
-    if(attr.switch_chan3){
-      if(attr.switch_chan3 == 'on'){
-        res.list[3].chan_status = 'on'
-      } else {
-        res.list[3].chan_status = 'off'
-      }
-    }
-    if(attr.chan0_name) {
-      res.list[0].chan_name = attr.chan0_name
-    }
-    if(attr.chan1_name) {
-      res.list[1].chan_name = attr.chan1_name
-    }
-    if(attr.chan2_name) {
-      res.list[2].chan_name = attr.chan2_name
-    }
-    if(attr.chan3_name) {
-      res.list[3].chan_name = attr.chan3_name
-    }
-    if(attr.switch_chan){
-      if(attr.switch_chan == 'on'){
-        res.list[0].chan_status = 'on'
-        res.list[1].chan_status = 'on'
-        res.list[2].chan_status = 'on'
-        res.list[3].chan_status = 'on'
-      } else {
-        res.list[0].chan_status = 'off'
-        res.list[1].chan_status = 'off'
-        res.list[2].chan_status = 'off'
-        res.list[3].chan_status = 'off'
-      }
-    }
     res = Object.assign({}, res, attr)
     return Mock.mock({
         code: 0

@@ -49,7 +49,7 @@
           <li
             v-for="(item, i) in list"
             :key="i"
-            @click="setScene(item.board_key)">
+            @click="settingScene(item.scene_id)">
             <p>{{ item.scene_name }}</p>
           </li>
         </ul>
@@ -131,7 +131,10 @@ export default {
   },
    created() {
     HdSmart.ready(() => {
-      this.getScene()
+      this.getDeviceInfo()
+      .then(() => {
+        this.getScene()
+      })
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
@@ -142,25 +145,31 @@ export default {
     getScene() {
       return new Promise((resolve, reject) => {
         HdSmart.Device.control({}, (data) => {
-          console.log('========data==========',data)
-          this.list = data
+          console.log('========Allocation-data==========',data)
+          this.list = data.result.list
           resolve()
         },(err)=>{
           reject(err)
         },'dm_get_scene')
       })
     },
+    settingScene(item) {
+      this.setScene(item)
+      .then(() =>{
+        this.goBack()
+      })
+    },
     setScene(item) {
-      console.log(item, '==================', this.$route.params.data)
       return new Promise((resolve, reject) => {
         HdSmart.Device.control({
-          "scene_id": item,
-          "board_key": this.$route.params.data
-        }, (res) => {
-          console.log(res)
-          resolve(() =>{
-            this.goBack()
-          })
+          "list":[
+            {
+            "scene_id": item,
+            "board_key": this.$route.params.data
+            }
+          ]
+        }, () => {
+          resolve()
         },(err)=>{
           console.log(err)
           reject(err)

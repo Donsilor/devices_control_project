@@ -17,8 +17,8 @@
         <canvas
           ref="canvas"
           class="canvas"
-          width="560"
-          height="560"
+          width="570"
+          height="570"
         />
         <div
           class="light-txt">{{ deviceAttrs.switch_status=='on' ? brightness : '_ _' }}</div>
@@ -58,11 +58,12 @@
     data() {
       return {
         argv_is_mock: false,
+        flag: 0,
         ctx: '',
         ox: 140,
         oy: 140,
         or: 120,
-        br: 10,
+        br: 15,
         moveFlag: false,
         brightness: '_ _',
         linearGradientArr: [
@@ -168,6 +169,13 @@
             var r = Math.atan2(k.x-this.ox, this.oy-k.y)
             var hd = (Math.PI+r)/(2*Math.PI)
             // 半圆的滑动范围判断
+            if(this.flag-hd>0.5){
+              hd = 1
+            }
+            if(hd-this.flag>0.5){
+              hd = 0
+            }
+            this.flag = hd
             if (hd <= 1 && hd >= 0) {
               this.draw(hd)
             }else{
@@ -177,7 +185,7 @@
         }, false)
 
         this.$refs.canvas.addEventListener(on.end,()=> {
-          this.br = 10
+          this.br = 15
           this.draw(this.brightness/100)
           if (this.isOffline||this.isClose|| this.networkStatus == -1) return
           this.moveFlag = false
@@ -411,6 +419,8 @@
       &:after {
         content: '%';
         font-size: 40px;
+        position: absolute;
+        bottom: 24px;
       }
     }
     .light-mode{
@@ -440,7 +450,9 @@
     margin-top: 80px;
     z-index: 2;
     position: absolute;
-    width: 521px;
+    // width: 521px;
+    width: 570px;
+    height: 570px;
     border-radius: 50%;
   }
   .panel-btn {
