@@ -27,7 +27,7 @@
               <p>{{ deviceAttrs.PushRod == 0 ? '开水箱' : deviceAttrs.PushRod == 1 ? '关水箱' : '' }}</p>
             </div>
           </li>
-          <li>
+          <li style="visibility: hidden">
             <div>
               <p
                 class="pause btn-style"
