@@ -70,6 +70,7 @@ export default {
     return{
       status_bar_height:25,
       navigation_bar_height:44,
+      jsonList: {},
       list: [
         // {
         //   "scene_id": 11,
@@ -146,7 +147,12 @@ export default {
       return new Promise((resolve, reject) => {
         HdSmart.Device.control({}, (data) => {
           console.log('========Allocation-data==========',data)
-          this.list = data.result.list
+          if (typeof data.result === 'string') {
+            this.jsonList = JSON.parse(data.result)
+          } else if (typeof data.result === 'object') {
+            this.jsonList = data.result
+          }
+          this.list = this.jsonList.list
           resolve()
         },(err)=>{
           reject(err)

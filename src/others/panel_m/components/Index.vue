@@ -9,15 +9,15 @@
         :scroll="true"
         page-class=".page"
       />
-      <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
+      <!-- <StatusTip @OfflineHelpPage="OfflineHelpPage"/> -->
       <div class="main">
         <h3>按键配置</h3>
         <div class="collocation">
           <div
-            :class="['collocation-item', {'colour': dataList[0].board_key == 1}]"
-            @click="dataList[0].board_key == 1 ? '' : setScene(1)">
+            :class="['collocation-item', {'colour': dataList[0].board_key == 135}]"
+            @click="dataList[0].board_key == 135 ? '' : setScene(135)">
             <div
-              v-if="dataList[0].board_key == 1"
+              v-if="dataList[0].board_key == 135"
               class="txt">{{ dataList[0].scene_name }}</div>
             <div
               v-else
@@ -26,15 +26,15 @@
               <div class="dispose">配置</div>
             </div>
             <div
-              v-if="dataList[0].board_key == 1"
+              v-if="dataList[0].board_key == 135"
               class="delBtn"
               @click="deleteScene(dataList[0].scene_id)">解除配置</div>
           </div>
           <div
-            :class="['collocation-item', {'colour': dataList[1].board_key == 2}]"
-            @click="dataList[1].board_key == 2 ? '' : setScene(2)">
+            :class="['collocation-item', {'colour': dataList[1].board_key == 136}]"
+            @click="dataList[1].board_key == 136 ? '' : setScene(136)">
             <div
-              v-if="dataList[1].board_key == 2"
+              v-if="dataList[1].board_key == 136"
               class="txt">{{ dataList[1].scene_name }}</div>
             <div
               v-else
@@ -44,15 +44,15 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="dataList[1].board_key == 2"
+              v-if="dataList[1].board_key == 136"
               class="delBtn"
               @click="deleteScene(dataList[1].scene_id)" >解除配置</p>
           </div>
           <div
-            :class="['collocation-item', {'colour': dataList[2].board_key == 3}]"
-            @click="dataList[2].board_key == 3 ? '' : setScene(3)">
+            :class="['collocation-item', {'colour': dataList[2].board_key == 137}]"
+            @click="dataList[2].board_key == 137 ? '' : setScene(137)">
             <div
-              v-if="dataList[2].board_key == 3"
+              v-if="dataList[2].board_key == 137"
               class="txt">{{ dataList[2].scene_name }}</div>
             <div
               v-else
@@ -62,15 +62,15 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="dataList[2].board_key == 3"
+              v-if="dataList[2].board_key == 137"
               class="delBtn"
               @click="deleteScene(dataList[2].scene_id)" >解除配置</p>
           </div>
           <div
-            :class="['collocation-item', {'colour': dataList[3].board_key == 4}]"
-            @click="dataList[3].board_key == 4 ? '' : setScene(4)">
+            :class="['collocation-item', {'colour': dataList[3].board_key == 138}]"
+            @click="dataList[3].board_key == 138 ? '' : setScene(138)">
             <div
-              v-if="dataList[3].board_key == 4"
+              v-if="dataList[3].board_key == 138"
               class="txt">{{ dataList[3].scene_name }}</div>
             <div
               v-else
@@ -80,7 +80,7 @@
               <div class="dispose">配置</div>
             </div>
             <p
-              v-if="dataList[3].board_key == 4"
+              v-if="dataList[3].board_key == 138"
               class="delBtn"
               @click="deleteScene(dataList[3].scene_id)" >解除配置</p>
           </div>
@@ -185,6 +185,7 @@ export default {
       dataList: [
         {},{},{},{}
       ],
+      jsonList: {}
     }
   },
   computed: {
@@ -204,19 +205,18 @@ export default {
           //本地调试
           // setTimeout(() => {
           //   this.list.map((x) =>{
-          //     this.$set(this.dataList, x)
           //     if(x.board_key == 1) {
-          //       this.dataList[0] = x
-          //     }
-          //     if(x.board_key == 2) {
-          //       this.dataList[1] = x
-          //     }
-          //     if(x.board_key == 3) {
-          //       this.dataList[2] = x
-          //     }
-          //     if(x.board_key == 4) {
-          //       this.dataList[3] = x
-          //     }
+          //         this.dataList.splice(0, 1, x)
+          //       }
+          //       if(x.board_key == 2) {
+          //         this.dataList.splice(1, 1, x)
+          //       }
+          //       if(x.board_key == 3) {
+          //         this.dataList.splice(2, 1, x)
+          //       }
+          //       if(x.board_key == 4) {
+          //         this.dataList.splice(3, 1, x)
+          //       }
           //     return this.dataList
           //   })
           // }, 500)
@@ -236,25 +236,33 @@ export default {
       return new Promise((resolve, reject) => {
            HdSmart.Device.control({}, (data) => {
             console.log('========Index-data==========',data)
-            if(data.result.list) {
-              data.result.list.map((x) =>{
-                this.$set(this.dataList, x)
-                if(x.board_key == 1) {
-                  this.dataList[0] = x
+            if (typeof data.result === 'string') {
+              this.jsonList = JSON.parse(data.result)
+            } else if (typeof data.result === 'object') {
+              this.jsonList = data.result
+            }
+            if(this.jsonList.list) {
+              this.jsonList.list.map((x) =>{
+                if(x.board_key == 135) {
+                  // this.dataList.splice(0, 1, x)
+                  this.$set(this.dataList, 0, x)
                 }
-                if(x.board_key == 2) {
-                  this.dataList[1] = x
+                if(x.board_key == 136) {
+                  // this.dataList.splice(1, 1, x)
+                  this.$set(this.dataList, 1, x)
                 }
-                if(x.board_key == 3) {
-                  this.dataList[2] = x
+                if(x.board_key == 137) {
+                  // this.dataList.splice(2, 1, x)
+                  this.$set(this.dataList, 2, x)
                 }
-                if(x.board_key == 4) {
-                  this.dataList[3] = x
+                if(x.board_key == 138) {
+                  // this.dataList.splice(3, 1, x)
+                  this.$set(this.dataList, 3, x)
                 }
                 return this.dataList
               })
             }
-            resolve()
+            resolve(data)
           },(err)=>{
             reject(err)
           },'dm_get_scene')
@@ -266,9 +274,14 @@ export default {
     },
     setMode() {
       this.$refs.model.show = false
+      this.jsonList = JSON.parse(JSON.stringify(this.jsonList))
+      this.dataList = JSON.parse(JSON.stringify(this.dataList))
       this.delScene()
       .then(() =>{
         this.getScene()
+        .then(() => {
+          this.$forceUpdate()
+        })
       })
     },
     delScene() {
