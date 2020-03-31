@@ -1,7 +1,10 @@
 <template>
   <div class="body">
     <div 
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover', {'scroll44': classTrue}]" 
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover']" 
+      @touchstart="slideBoxStart($event)"
+      @touchmove="slideBoxMove($event)"
+      @touchend="slideBoxEnd($event)"
     >
       <NewTopBar
         :title="device.device_name"
@@ -80,7 +83,7 @@
       </div>
       <!-- 底部按钮 -->
       <!-- 开关 -->
-       <div
+      <div
         class="starting">
         <div
           ref="switchStatus"
@@ -89,8 +92,10 @@
           @touchend="endAnimate('switchStatus')"
         />
       </div>
+      <!-- 底部 -->
       <div
-        class="panel-btn center">
+        ref="panel"
+        class="panel-btn center coverPannel">
         <!-- 模式和风速 -->
         <div class="modespeed">
           <!-- 模式 -->
@@ -460,22 +465,22 @@ export default {
      var touch = e.targetTouches[0]
      var ele = document.elementFromPoint(touch.clientX, touch.clientY).id
      this.idNum = parseInt(ele)
-    // 如果是NaN,则return
-    if(isNaN(this.idNum)==true){
-        console.log('return掉了')
-        return
-      }else{
-        // 滑动的梯子的index和温度之间的关系式
-        this.itemTemp = (0.5*this.idNum+16)*10
-        var num = this.itemTemp + ""
-        // console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
-        // 如果最后一位数字是5，则往前进1
-        if (num.lastIndexOf("5")==2) {
-          this.itemTemp +=5
-          console.log(this.itemTemp,'最终传给后台的温度')
-          
+      // 如果是NaN,则return
+      if(isNaN(this.idNum)==true){
+          console.log('return掉了')
+          return
+        }else{
+          // 滑动的梯子的index和温度之间的关系式
+          this.itemTemp = (0.5*this.idNum+16)*10
+          var num = this.itemTemp + ""
+          // console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
+          // 如果最后一位数字是5，则往前进1
+          if (num.lastIndexOf("5")==2) {
+            this.itemTemp +=5
+            console.log(this.itemTemp,'最终传给后台的温度')
+            
+          }
         }
-      }
     },
     touchend(){
       if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
@@ -554,16 +559,6 @@ export default {
         this.isReduceEnd = false
         this.isAddEnd = false
       },500)
-//       if(val=='add'){
-//         console.log(this.deviceAttrs.temperature,'now')
-//         if (this.deviceAttrs.temperature/10>31) return
-//       }
-//       if(val=='reduce'){
-//         // if (this.deviceAttrs.temperature/10<=16) return
-//            if (this.deviceAttrs.temperature/10>31) {
-//               return this.deviceAttrs.temperature = 310
-//            }
-//        }
       HdSmart.UI.vibrate()
         this.moveEnd = false
         this.setTemperatureDis = true
@@ -673,6 +668,22 @@ export default {
         this.disabledLock = false
       })
     },
+    slideBoxStart(e){
+      console.log(e,'touch开始')
+      this.startY = e.targetTouches[0].clientY
+    },
+    slideBoxMove(e){
+      console.log(e,'move开始')
+      this.endY = e.targetTouches[0].clientY
+      // if(this.endY - this.startY > 0)
+      this.$refs.panel.style.marginTop = this.endY - this.startY + 30+'px'
+      let slideT = this.$refs.panel.style.marginTop
+      if(slideT>30) return
+    },
+    slideBoxEnd(e){
+      console.log(e,'end结束')
+      // this.$refs.panel.top = 
+    },
     controlDevice(attr, value) {
       let param = {}
       if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
@@ -725,7 +736,7 @@ export default {
 </script>
 <style lang="less" scoped>
     .container {
-        width: 100%;
+        width: 80%;
         // height: 470px;
         height: 370px;
         margin: 20px auto;
@@ -774,5 +785,16 @@ export default {
           opacity: 0.3;
         }
       }
+    }
+    .coverPannel{
+      &:before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+    }
     }
 </style>

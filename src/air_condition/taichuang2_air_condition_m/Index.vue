@@ -21,7 +21,7 @@
             <div 
               v-for="(item, index) in count"
               :key="index" 
-              :style="{transform: `rotate(${7.78*index-105}deg)`}" 
+              :style="{transform: `rotate(${210/(count-1)*index-105}deg)`}" 
               class="item-container">
               <div 
                 ref="items" 
@@ -33,7 +33,7 @@
                 <!-- 小梯形 -->
                 <div 
                   ref="item" 
-                  :style="{background: 2*(itemTemp/10)-33>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
+                  :style="{background: 2*(itemTemp/10)-(2*(minTemp/10)+1)>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
                   class="item"/>
               </div>
             </div>
@@ -54,14 +54,16 @@
           <button
             ref="reduce"
             :disabled="setTemperatureDis"
-            class="control reduce btn"
-            @click="setTemperature('reduce',-10)"
+            :class="[deviceAttrs.mode,{'animateStart':isReduceStart==true},{'animateEnd':isReduceEnd==true},'control reduce btn']"
+            @touchstart ="startAnimate('reduce')"
+            @touchend="endAnimate('reduce',-10)"
           />
           <button
             ref="add"
             :disabled="setTemperatureDis"
-            class="control add btn"
-            @click="setTemperature('add',10)"
+            :class="[deviceAttrs.mode,{'animateStart':isAddStart==true},{'animateEnd':isAddEnd==true},'control add btn']"
+            @touchstart ="startAnimate('add')"
+            @touchend="endAnimate('add',10)"
           />
         </div>
       </div>
@@ -77,8 +79,9 @@
         class="starting">
         <div
           ref="switchStatus"
-          :class="[loaclAttr.mode,{'active': loaclAttr.switchStatus == 'on'&&!isOffline},'switchColor btn-start']"
-          @click="setSwitch('switchStatus')"
+          :class="[deviceAttrs.mode,{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},{'animateStart':isStart==true},{'animateEnd':isEnd==true},'switchColor btn-start']"
+          @touchstart ="startAnimate('switchStatus')"
+          @touchend="endAnimate('switchStatus')"
         />
       </div>
       <div
@@ -105,12 +108,15 @@
       <!--选择模式-->
       <model-mode
         ref="mode"
+        :mode-type="modeType"
         :mode="loaclAttr.mode"
         @setMode="setMode" />
       <!--选择风速-->
       <model-speed
         ref="speed"
+        :speed-type="speedType"
         :speed="loaclAttr.speed"
+        :mode="loaclAttr.mode"
         @setSpeed="setSpeed" />
     </div>
   </div>
@@ -120,7 +126,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
-const [MIN_TEMP, MAX_TEMP] = [160, 300]
+// const [MIN_TEMP, MAX_TEMP] = [160, 300]
 export default {
   components: {
     modelMode,
@@ -128,7 +134,7 @@ export default {
   },
   data() {
     return {
-     count: 28,
+      count: 0,
       now: 0,
       idNum:0,
       moveEnd:false,
@@ -140,12 +146,24 @@ export default {
       hscrolltopp: 0,
       classTrue: false,
       loaclAttr: {},
+      tempType:'',
+      speedType:'',
+      modeType:'',
+      isMove:false,
+      isStart:false,//按钮是否动画开始
+      isEnd:false,//按钮是否动画开始
+      isReduceStart:false,
+      isReduceEnd:false,
+      isAddStart:false,
+      isAddEnd:false,
+      minTemp:'',
+      maxTemp:'',
     }
   },
 
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
-    ...mapState(['device', 'deviceAttrs']),
+    ...mapState(['device', 'deviceAttrs','ThirddeviceAttrs']),
     modeClass() {
       /* eslint-disable no-unreachable */
       switch (this.loaclAttr.mode) {
@@ -163,6 +181,15 @@ export default {
           break
         case 'wind':
           return 'btn-wind'
+          break
+         case 'breath':
+          return 'btn-breath'
+          break
+        case 'sleep':
+          return 'btn-sleep'
+          break
+        case 'fresh':
+          return 'btn-fresh'
           break
         default:
           return ''
@@ -186,6 +213,15 @@ export default {
         case 'auto':
           return 'btn-auto1'
           break
+        case 'strong':
+          return 'btn-strong'
+          break
+        case 'superstrong':
+          return 'btn-superstrong'
+          break
+        case 'stopwind':
+          return 'btn-stopwind'
+          break
         default:
           return ''
       }
@@ -206,7 +242,16 @@ export default {
           return '除湿'
           break
         case 'wind':
-          return '送风'
+          return '通风'
+          break
+        case 'breath':
+          return '换气'
+          break
+        case 'sleep':
+          return '睡眠'
+          break
+        case 'fresh':
+          return '清爽'
           break
         default:
           return ''
@@ -228,7 +273,16 @@ export default {
           return '高风'
           break
         case 'auto':
-          return '自动风'
+          return '自动'
+          break
+        case 'strong':
+          return '强风'
+          break
+        case 'superstrong':
+          return '超强风'
+          break
+        case 'stopwind':
+          return '停风'
           break
         default:
           return ''
@@ -260,7 +314,20 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
+          console.log(this.count)
           this.itemTemp = this.loaclAttr.temperature
+          this.tempType = this.ThirddeviceAttrs.selection.split(";")[0]
+          this.minTemp = this.tempType.split(",")[0]*10//160
+          this.maxTemp = this.tempType.split(",")[1]*10//300
+          //设置最低温和最高温
+          this.MIN_TEMP = this.minTemp
+          this.MAX_TEMP = this.maxTemp
+          this.count = (this.MAX_TEMP/10-this.MIN_TEMP/10)*2
+          console.log(this.count,'this.count')
+          this.speedType = this.ThirddeviceAttrs.selection.split(";")[1]
+          console.log(this.speedType,'speedType')
+          this.speedNum = this.speedType.replace(/,/g, "")//取消字符串中出现的所有逗号 
+          this.modeType = this.ThirddeviceAttrs.selection.split(";")[2]
         })
       HdSmart.UI.setStatusBarColor(1)
     })
@@ -280,6 +347,35 @@ export default {
     hscrolltop(val) {
       this.hscrolltopp = val
     },
+    // 按钮动画开始
+    startAnimate(val){
+      if(val=='switchStatus'){
+        if (this.isOffline) return
+        this.isStart = true
+      }else if(val=='reduce'){
+        if (this.isOffline||this.isClose) return
+        this.isReduceStart = true
+      }else{
+        if (this.isOffline||this.isClose) return
+        this.isAddStart = true
+      }
+    },
+    // 按钮动画结束
+    endAnimate(val){
+      if(val=='switchStatus'){
+        if (this.isOffline) return
+        this.isEnd = true
+        this.setSwitch()
+      }else if(val=='reduce'){
+        if (this.isOffline||this.isClose) return
+        this.isReduceEnd = true
+        this.setTemperature(val,-10)
+      }else{
+        if (this.isOffline||this.isClose) return
+        this.isAddEnd = true
+        this.setTemperature(val,10)
+      }
+    },
     // 温度圆环
       calculateBg(index){
           let color = ''
@@ -287,76 +383,72 @@ export default {
             color = 'rgba(255,255,255,0.1)'
             return
           }
-          if(this.loaclAttr.mode=='cold'){
-            // 制冷模式时的温度颜色
-            if (index < 10) {
-                color = '#327fdb'
-            }else if (index > 20) {
-                color = '#20c6ae'
-            }else {
-                color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
+           if(this.deviceAttrs.mode=='heat'){
+              // 制热模式时的温度颜色
+              if (index < 10) {
+                  color = '#EF6D5E '
+              }else if (index > 20) {
+                  color = '#F9BB6B'
+              }else {
+                  color = `linear-gradient(to right, #EF6D5E 0%, #ff7524 ${200-10*index}%, #F9BB6B  100%)`
+                  // color="#f38f63"
+              }
+              return color
+
+            }else{
+                // 制冷模式时的温度颜色
+              if (index < 10) {
+                  color = '#327fdb'
+              }else if (index > 20) {
+                  color = '#20c6ae'
+              }else {
+                  color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
+              }
+              // console.log(index,11111111111)
+              return color
             }
-            // console.log(index,'id..............')
-            
-            return color
-          }else if(this.loaclAttr.mode=='heat'){
-            // 制热模式时的温度颜色
-            if (index < 10) {
-                color = '#F9BB6B '
-            }else if (index > 20) {
-                color = '#EF6D5E'
-            }else {
-                color = `linear-gradient(to right, #F9BB6B 0%, #ff7524 ${200-10*index}%, #EF6D5E  100%)`
-            }
-            return color
-          }else{
-             // 制热模式时的温度颜色
-            if (index < 10) {
-                color = '#E1B96E  '
-            }else if (index > 20) {
-                color = '#F1CB85'
-            }else {
-                color = `linear-gradient(to right, #E1B96E 0%, #F1CB85 ${200-10*index}%, #F1CB85  100%)`
-            }
-            return color
-          }
       },
     touchstart(e){
       console.log(e,'eeeeeeeee')
     },
     touchmove(e){
+      //isMove是用来判断是否是滑动
+      this.isMove = true
       if(e.preventDefault){
           e.preventDefault()
       }else{
           e.returnValue = false
       }
-     var touch = e.targetTouches[0]
-    //  var ssdd = document.elementsFromPoint(touch.pageX, touch.pageY)
-     var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
-     this.idNum = parseInt(ele)
-     console.log(this.idNum,'小梯形的id')
-     this.calculateBg(this.idNum)
-     // 如果是NaN,则return
-    if(isNaN(this.idNum)==true){
-        console.log('return掉了')
-        return
-      }else{
-        // 滑动的梯子的index和温度之间的关系式
-        this.itemTemp = (0.5*this.idNum+16.5)*10
-        var num = this.itemTemp + ""
+      var touch = e.targetTouches[0]
+      //  var ssdd = document.elementsFromPoint(touch.pageX, touch.pageY)
+      var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
+      this.idNum = parseInt(ele)
+      console.log(this.idNum,'小梯形的id')
+      this.calculateBg(this.idNum)
+      // 如果是NaN,则return
+      if(isNaN(this.idNum)==true){
+          console.log('return掉了')
+          return
+        }else{
+          // 滑动的梯子的index和温度之间的关系式
+          this.itemTemp = (0.5*this.idNum+(this.MIN_TEMP/10+0.5))*10
+          var num = this.itemTemp + ""
 
-        console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
-        // 如果最后一位数字是5，则往前进1
-        if (num.lastIndexOf("5")==2) {
-          this.itemTemp -=5
-          console.log(this.itemTemp,'最终传给后台的温度')
-          
+          console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
+          // 如果最后一位数字是5，则往前进1
+          if (num.lastIndexOf("5")==2) {
+            this.itemTemp -=5
+            console.log(this.itemTemp,'最终传给后台的温度')
+            
+          }
         }
-      }
     },
     touchend(){
       if (this.isOffline||this.loaclAttr.switchStatus=='off') return
+      console.log(this.isMove,'this.isMove')
+      if(this.isMove == false) return
       this.controlDevice('temperature',this.itemTemp)
+      this.isMove = false
     },
     OfflineHelpPage(){
         this.$router.push({
@@ -368,8 +460,12 @@ export default {
       if (this.isOffline) return
       HdSmart.UI.vibrate()
       this.moveEnd = false
+       setTimeout(()=>{
+         this.isStart = false
+        this.isEnd = false
+      },500)
       let switchstatus = ''
-      if (this.loaclAttr.switchStatus=='on') {
+      if (this.deviceAttrs.switchStatus=='on') {
         switchstatus = 'off'
       }else{
         switchstatus = 'on'
@@ -394,25 +490,30 @@ export default {
       HdSmart.UI.vibrate()
         this.moveEnd = false
         this.setTemperatureDis = true
-      
-      let temp = +this.loaclAttr.temperature + step
+      setTimeout(()=>{
+        this.isReduceStart = false
+        this.isAddStart = false
+        this.isReduceEnd = false
+        this.isAddEnd = false
+      },500)
+      let temp = +this.itemTemp + step
       
       // 最小温度
-      if (temp < MIN_TEMP) {
-        if (this.loaclAttr.temperature == MIN_TEMP) {
+      if (temp < this.MIN_TEMP) {
+        if (this.loaclAttr.temperature == this.MIN_TEMP) {
           this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最低')
         } else {
-          temp = MIN_TEMP
+          temp = this.MIN_TEMP
         }
       }
       // 最大温度
-      if (temp > MAX_TEMP) {
-        if (this.loaclAttr.temperature == MAX_TEMP) {
+      if (temp > this.MAX_TEMP) {
+        if (this.loaclAttr.temperature == this.MAX_TEMP) {
           this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最高')
         } else {
-          temp = MAX_TEMP
+          temp = this.MAX_TEMP
         }
       }
       this.controlDevice('temperature', temp)
