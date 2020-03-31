@@ -2,9 +2,9 @@
   <div class="body">
     <div 
       :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover']" 
-      @touchstart="slideBoxStart($event)"
-      @touchmove="slideBoxMove($event)"
-      @touchend="slideBoxEnd($event)"
+      @touchstart.prevent="slideBoxStart"
+      @touchmove.prevent="slideBoxMove"
+      @touchend.prevent="slideBoxEnd"
     >
       <NewTopBar
         :title="device.device_name"
@@ -52,7 +52,9 @@
               class="tm">-- <sup>°C</sup></div>
             <div
               v-else
-              class="tm">{{ itemTemp | filterTm }}<sup>°C</sup>
+              class="tm">{{ itemTemp | filterTm }}<sup 
+                ref="sup"
+                :style="{right: (itemTemp/10)%1 == 0 ? 8+'px': -20 +'px'}">°C</sup>
             </div>
           </div>
         </div>
@@ -92,86 +94,88 @@
           @touchend="endAnimate('switchStatus')"
         />
       </div>
-      <!-- 底部 -->
-      <div
-        ref="panel"
-        class="panel-btn center coverPannel">
-        <!-- 模式和风速 -->
-        <div class="modespeed">
-          <!-- 模式 -->
-          <div 
-            class="btn-wrap center" 
-            @click="showMode">
+      <div class="panelBox">
+        <!-- 底部 -->
+        <div
+          ref="panel"
+          class="panel-btn center">
+          <!-- 模式和风速 -->
+          <div class="modespeed">
+            <!-- 模式 -->
             <div 
-              :class="[modeClass,'btn  center']" 
-            />
-            <div class="btn-name">{{ modeTxt }}</div>
+              class="btn-wrap center" 
+              @click="showMode">
+              <div 
+                :class="[modeClass,'btn  center']" 
+              />
+              <div class="btn-name">{{ modeTxt }}</div>
+            </div>
+            <!-- 风速 -->
+            <div 
+              class="btn-wrap center" 
+              @click="showSpeed">
+              <div 
+                :class="[deviceAttrs.mode,speedClass,'btn center']" />
+              <div class="btn-name">{{ speedTxt }}</div>
+            </div>
+            <!-- 定时 -->
+            <div 
+              class="btn-wrap center" 
+              @click="showTime">
+              <div 
+                :class="[deviceAttrs.mode,'clock btn center']" 
+              />
+              <div class="btn-name">定时</div>
+            </div>
           </div>
-          <!-- 风速 -->
+          <!-- 上下风 -->
           <div 
-            class="btn-wrap center" 
-            @click="showSpeed">
-            <div 
-              :class="[deviceAttrs.mode,speedClass,'btn center']" />
-            <div class="btn-name">{{ speedTxt }}</div>
+            class="bottom" 
+            @click="showSwing">
+            <div class="Charging-protection">
+              <div v-if="deviceAttrs.wind_up=='on'">向上</div>
+              <div v-else-if="deviceAttrs.wind_mid_up=='on'">中上</div>
+              <div v-else-if="deviceAttrs.wind_middle=='on'">正中</div>
+              <div v-else-if="deviceAttrs.wind_mid_down=='on'">中下</div>
+              <div v-else-if="deviceAttrs.wind_down=='on'">向下</div>
+              <div v-else-if="deviceAttrs.wind_auto=='on'">自动</div>
+              <div v-else>摆风</div>
+              <div
+                style="z-index: 100;" 
+                class="showWind"/>
+            </div>
           </div>
-          <!-- 定时 -->
+          <!-- 电加热开关 -->
           <div 
-            class="btn-wrap center" 
-            @click="showTime">
-            <div 
-              :class="[deviceAttrs.mode,'clock btn center']" 
-            />
-            <div class="btn-name">定时</div>
+            v-if="deviceAttrs.mode=='heat'" 
+            class="bottom">
+            <div class="Charging-protection">
+              <div>电加热</div>
+              <div
+                style="z-index: 100;">
+                <input
+                  :class="[deviceAttrs.mode,'switch switch-anim']"
+                  :checked="deviceAttrs.auxiliary_heating_mode=='on'"
+                  :disabled="disabledLock"
+                  type="checkbox"
+                  @click="checkSwitch('auxiliary_heating_mode')">
+              </div>
+            </div>
           </div>
         </div>
-        <!-- 上下风 -->
-        <div 
-          class="bottom" 
-          @click="showSwing">
+        <!-- 屏幕显示 -->
+        <div class="screen">
           <div class="Charging-protection">
-            <div v-if="deviceAttrs.wind_up=='on'">向上</div>
-            <div v-else-if="deviceAttrs.wind_mid_up=='on'">中上</div>
-            <div v-else-if="deviceAttrs.wind_middle=='on'">正中</div>
-            <div v-else-if="deviceAttrs.wind_mid_down=='on'">中下</div>
-            <div v-else-if="deviceAttrs.wind_down=='on'">向下</div>
-            <div v-else-if="deviceAttrs.wind_auto=='on'">自动</div>
-            <div v-else>摆风</div>
-            <div
-              style="z-index: 100;" 
-              class="showWind"/>
-          </div>
-        </div>
-        <!-- 电加热开关 -->
-        <div 
-          v-if="deviceAttrs.mode=='heat'" 
-          class="bottom">
-          <div class="Charging-protection">
-            <div>电加热</div>
+            <div>空调屏幕画面</div>
             <div
               style="z-index: 100;">
               <input
                 :class="[deviceAttrs.mode,'switch switch-anim']"
-                :checked="deviceAttrs.auxiliary_heating_mode=='on'"
+                :checked="deviceAttrs.digital_display=='on'"
                 :disabled="disabledLock"
                 type="checkbox"
-                @click="checkSwitch('auxiliary_heating_mode')">
+                @click="checkSwitch('digital_display')">
             </div>
-          </div>
-        </div>
-      </div>
-      <!-- 屏幕显示 -->
-      <div class="screen">
-        <div class="Charging-protection">
-          <div>空调屏幕画面</div>
-          <div
-            style="z-index: 100;">
-            <input
-              :class="[deviceAttrs.mode,'switch switch-anim']"
-              :checked="deviceAttrs.digital_display=='on'"
-              :disabled="disabledLock"
-              type="checkbox"
-              @click="checkSwitch('digital_display')">
           </div>
         </div>
       </div>
@@ -240,6 +244,8 @@ export default {
       isReduceEnd:false,
       isAddStart:false,
       isAddEnd:false,
+      slideUp:false,
+      slideNum:'',
     }
   },
 
@@ -668,6 +674,7 @@ export default {
         this.disabledLock = false
       })
     },
+    // 页面滑动，展示底部盒子
     slideBoxStart(e){
       console.log(e,'touch开始')
       this.startY = e.targetTouches[0].clientY
@@ -675,10 +682,24 @@ export default {
     slideBoxMove(e){
       console.log(e,'move开始')
       this.endY = e.targetTouches[0].clientY
-      // if(this.endY - this.startY > 0)
-      this.$refs.panel.style.marginTop = this.endY - this.startY + 30+'px'
-      let slideT = this.$refs.panel.style.marginTop
-      if(slideT>30) return
+      if(this.startY - this.endY > 0){
+        this.slideUp = true
+      }else{
+        this.slideUp = false
+      }
+      this.slideNum = parseInt(this.$refs.panel.style.marginTop) 
+      if(this.slideUp== true && this.startY - this.endY >0){
+        this.$refs.panel.style.marginTop = this.endY - this.startY+'px'
+        if(this.startY - this.endY>=140){
+          this.$refs.panel.style.marginTop = -140+'px'
+        }
+      }else if(this.slideUp== false && this.startY - this.endY <0){
+        
+        this.$refs.panel.style.marginTop = this.endY - this.startY + this.slideNum +'px'
+        if(this.startY - this.endY <= -90){
+          this.$refs.panel.style.marginTop = 0+'px'
+        }
+      }
     },
     slideBoxEnd(e){
       console.log(e,'end结束')
@@ -735,6 +756,18 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.page {
+  .main{
+    .wrap-circle {
+      .tm {
+        width: 240px;
+        sup{
+          right: 16px;
+        }
+      }
+    }
+  }
+}
     .container {
         width: 80%;
         // height: 470px;
