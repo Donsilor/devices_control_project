@@ -234,11 +234,11 @@ export default {
   .right,.right-search {
     // width: 44PX;
     // height: @navigation_bar_height;
-   width: 72px;
-    height: 72px;
+   width: 60px;
+    height: 60px;
     p{
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
 
     }
 
