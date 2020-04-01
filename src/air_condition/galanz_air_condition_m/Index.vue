@@ -35,8 +35,8 @@
                 ref="items" 
                 :id="(index)+'items'" 
                 class="items" 
-                @touchmove="touchmove($event)" 
-                @touchend="touchend($event)">
+                @touchmove.stop="touchmove($event)" 
+                @touchend.stop="touchend($event)">
                 <!-- 小梯形 -->
                 <div 
                   ref="item" 
@@ -65,15 +65,15 @@
             ref="reduce"
             :disabled="setTemperatureDis"
             :class="[deviceAttrs.mode,{'animateStart':isReduceStart==true},{'animateEnd':isReduceEnd==true},'control reduce btn']"
-            @touchstart ="startAnimate('reduce')"
-            @touchend="endAnimate('reduce',-10)"
+            @touchstart.stop ="startAnimate('reduce')"
+            @touchend.stop="endAnimate('reduce',-10)"
           />
           <button
             ref="add"
             :disabled="setTemperatureDis"
             :class="[deviceAttrs.mode,{'animateStart':isAddStart==true},{'animateEnd':isAddEnd==true},'control add btn']"
-            @touchstart ="startAnimate('add')"
-            @touchend="endAnimate('add',10)"
+            @touchstart.stop ="startAnimate('add')"
+            @touchend.stop="endAnimate('add',10)"
           />
         </div>
       </div>
@@ -94,7 +94,9 @@
           @touchend="endAnimate('switchStatus')"
         />
       </div>
-      <div class="panelBox">
+      <div 
+        ref="panelBox" 
+        class="panelBox">
         <!-- 底部 -->
         <div
           ref="panel"
@@ -381,6 +383,7 @@ export default {
   },
   mounted() {
     this.$nextTick(()=>{
+      console.log()
       setTimeout(()=>{
         window.scrollTo(0,0)
       },200)
@@ -688,17 +691,19 @@ export default {
         this.slideUp = false
       }
       this.slideNum = parseInt(this.$refs.panel.style.marginTop) 
+      if(this.slideUp== true&&this.slideNum== -140) return
       if(this.slideUp== true && this.startY - this.endY >0){
-        this.$refs.panel.style.marginTop = this.endY - this.startY+'px'
-        if(this.startY - this.endY>=140){
-          this.$refs.panel.style.marginTop = -140+'px'
-        }
+        // this.$refs.panel.style.marginTop = this.endY - this.startY+'px'
+        // if(this.startY - this.endY>=50){
+        //   this.$refs.panel.style.marginTop = -140+'px'
+        // }
       }else if(this.slideUp== false && this.startY - this.endY <0){
-        
-        this.$refs.panel.style.marginTop = this.endY - this.startY + this.slideNum +'px'
-        if(this.startY - this.endY <= -90){
-          this.$refs.panel.style.marginTop = 0+'px'
-        }
+        console.log(this.endY - this.startY,'this.endY - this.startY')
+        console.log(this.slideNum,'this.slideNum')
+        // this.$refs.panel.style.marginTop = this.endY - this.startY -140 +'px'
+        // if(this.startY - this.endY <= -50){
+        //   this.$refs.panel.style.marginTop = 0+'px'
+        // }
       }
     },
     slideBoxEnd(e){
@@ -756,6 +761,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.panelBox{
+  position:relative;
+  z-index:100;
+  background:#000;
+  width:100%;
+}
 .page {
   .main{
     .wrap-circle {

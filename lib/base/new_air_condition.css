@@ -169,7 +169,7 @@
   background-image: linear-gradient(270deg, #F9BB6B 0%, #EF6D5E 100%);
 }
 .page .starting .btn-start {
-  z-index: 999;
+  z-index: 99;
   box-sizing: border-box;
   margin: 0 auto;
   width: 120px;
