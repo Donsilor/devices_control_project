@@ -9,7 +9,7 @@
         :scroll="true"
         page-class=".page"
       />
-      <!-- <StatusTip @OfflineHelpPage="OfflineHelpPage"/> -->
+      <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <div class="main">
         <h3>按键配置</h3>
         <div class="collocation">

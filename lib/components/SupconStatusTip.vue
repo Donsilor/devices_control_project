@@ -228,7 +228,7 @@ export default {
 
 .offline_bar {
   position: relative;
-    background: #a1a1a1;
+    background: rgba(255,255,255,0.1);
     opacity: 0.9;
     width: 100%;
     height: 44PX;

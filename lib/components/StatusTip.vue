@@ -4,8 +4,8 @@
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
     <!-- <div class="status_bar_block"/> -->
-    <div 
-      :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}" 
+    <div
+      :style="{ 'top': status_bar_height+navigation_bar_height*2 + 'px'}"
       class="bac_fiexd"/>
     <div
       ref="status_bar_fixed"
@@ -21,26 +21,26 @@
       </div> -->
       <div>
         <!-- <div
-          v-if="tvStatus.tvOnlineStatus==0" 
+          v-if="tvStatus.tvOnlineStatus==0"
           class="offline_bar">
           <div class="offline_bar_div">
             <p class="offline_bar_p">
-              <i 
+              <i
                 class="synchronization rotate"/>
             </p>
-            <span class="link">状态同步中,&nbsp;&nbsp;请稍后...</span> 
+            <span class="link">状态同步中,&nbsp;&nbsp;请稍后...</span>
 
           </div>
         </div> -->
         <!-- {{ networkStatus }} -->
         <div
-          v-show="networkStatus==-1" 
+          v-show="networkStatus==-1"
           class="offline_bar offline_bar_wifi">
           <div class="offline_bar_div">
             <p class="offline_bar_p">
               <i class="wifi"/>
             </p>
-            <span class="link">当前网络不可用</span> 
+            <span class="link">当前网络不可用</span>
 
           </div>
         </div>
@@ -58,7 +58,7 @@
           <i class="arrow"/>
         </div>
         <div
-          v-if="deviceAttrs.connectivity==='offline'&&networkStatus!=-1&&networkStatus!=-2"      
+          v-if="deviceAttrs.connectivity==='offline'&&networkStatus!=-1&&networkStatus!=-2"
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">
@@ -70,7 +70,7 @@
           <i class="arrow"/>
         </div>
         <div
-          v-if="deviceAttrs.connectivity!=='offline'&&networkStatus!=-1&&networkStatus!=-2&&deviceAttrs.error"      
+          v-if="deviceAttrs.connectivity!=='offline'&&networkStatus!=-1&&networkStatus!=-2&&deviceAttrs.error"
           class="offline_bar">
           <div class="offline_bar_div">
             <p class="offline_bar_p">
@@ -81,15 +81,15 @@
         </div>
       </div>
     </div>
-    <div 
-      v-if="!deviceAttrs.error" 
+    <div
+      v-if="!deviceAttrs.error"
       :style="{ 'top': status_bar_height+navigation_bar_height*3 + 'px'}"
       class="mask"/>
-    <OfflineHelpPage 
-      v-show="OfflineHelpPageView" 
+    <OfflineHelpPage
+      v-show="OfflineHelpPageView"
       ref="OfflineHelpPageView"/>
   </div>
-  
+
 </template>
 
 
@@ -122,7 +122,7 @@ export default {
     },
     watch:{
       networkStatus(n,v){
-        console.log(n,v) 
+        console.log(n,v)
       switch (n) {
         case -1:
           this.prohibitmove()
@@ -136,7 +136,7 @@ export default {
           break
         default:
           break
-      }    
+      }
       },
       'deviceAttrs.connectivity'(n,v){
         console.log(n,v,34341111)
@@ -180,12 +180,12 @@ export default {
         },
         prohibitmove(){
           if(!this.prohibit){
-            document.addEventListener('touchmove', this.touchmovefn, { passive: false }) 
+            document.addEventListener('touchmove', this.touchmovefn, { passive: false })
             this.prohibit = true
-          } 
+          }
         },
-        allowmove(){ 
-         document.removeEventListener('touchmove',this.touchmovefn, { passive: false }) 
+        allowmove(){
+         document.removeEventListener('touchmove',this.touchmovefn, { passive: false })
          this.prohibit = false
         },
         touchmovefn(e){
@@ -259,7 +259,7 @@ export default {
 
 .offline_bar {
   position: relative;
-    background: #a1a1a1;
+    background: rgba(255,255,255,0.1);
     opacity: 0.9;
     width: 100%;
     height: 44PX;
@@ -300,7 +300,7 @@ export default {
         background: url('~@lib/base/tv/assets/new/tv_icn_tips_tongbu.png');
         background-size: 100% 100%;
       }
-     
+
     }
     .error{
       width: 20PX;
@@ -314,7 +314,7 @@ export default {
       background: url('~@lib/base/tv/assets/new/tv_arrow_lixian.png');
       background-size: 100% 100%;
     }
-   
+
 }
 .offline_bar.offline_bar_wifi{
     justify-content: left;
