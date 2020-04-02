@@ -47,7 +47,10 @@
             </div>
             <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
-              class="tm">{{ deviceAttrs.env_temperature | filterTm }}<sup>°C</sup>
+              class="tm">{{ deviceAttrs.env_temperature | filterTm }}
+              <sup 
+                ref="sup"
+                :style="{right: (deviceAttrs.env_temperature/10)%1 == 0 ? 8+'px': -20 +'px'}">°C</sup>
             </div>
             <div
               v-show="!isOffline&& deviceAttrs.switchStatus == 'on'"

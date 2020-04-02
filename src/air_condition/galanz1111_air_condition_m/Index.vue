@@ -13,7 +13,9 @@
       />
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <div class="main center">
-        <div class="wrap-circle">
+        <div 
+          class="wrap-circle" 
+          @touchmove="touchmove($event)">
           <!-- 温度圆环 -->
           <div 
             class="container"
@@ -33,7 +35,7 @@
                 :id="(index)+'items'" 
                 class="items" 
                 @touchmove.stop="touchmove($event)" 
-                @touchend.stop="touchend($event)">
+                @touchcancel="touchcancel($event)">
                 <!-- 小梯形 -->
                 <div 
                   ref="item" 
@@ -213,6 +215,7 @@ import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
 import SelectTime from './components/time.vue'
+import _ from './utils'
 const [MIN_TEMP, MAX_TEMP] = [160, 310]
 export default {
   components: {
@@ -224,7 +227,6 @@ export default {
   },
   data() {
     return {
-      lastTemp:'',
       count: 30,
       now: 0,
       idNum:0,
@@ -455,6 +457,7 @@ export default {
     },
     touchmove(e){
       //isMove是用来判断是否是滑动
+      if(this.isClose) return
       this.isMove = true
       if(e.preventDefault){
           e.preventDefault()
@@ -471,31 +474,35 @@ export default {
      this.idNum = parseInt(ele)
       // 如果是NaN,则return
       if(isNaN(this.idNum)==true){
-        console.log(this.lastTemp,'最终传给后台的温度return')
-          this.lastTemp =  this.itemTemp
           console.log('return掉了')
-          // return
+          return
         }else{
           // 滑动的梯子的index和温度之间的关系式
           this.itemTemp = (0.5*this.idNum+16)*10
           var num = this.itemTemp + ""
-          // console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
+          
           // 如果最后一位数字是5，则往前进1
           if (num.lastIndexOf("5")==2) {
+            console.log(num,'numnum')
             this.itemTemp +=5
-            this.lastTemp =  this.itemTemp
+            // this.controlDevice('temperature',this.itemTemp,this.tempFunc)
             console.log(this.itemTemp,'最终传给后台的温度2222222')
+          }else{
+            this.itemTemp = (0.5*this.idNum+16)*10
+            console.log(num,'传的没有小数的温度')
+            // this.controlDevice('temperature',this.itemTemp,this.tempFunc)
           }
         }
     },
-    touchend(){
+    touchcancel(){
+      console.log(this.itemTemp,'温度touchend')
       if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
           return HdSmart.UI.toast('该模式不支持温度调节')
       }
-      if(this.isMove == false) return
+      if(this.isMove == false||this.isClose) return
       this.flagVal = true
       this.setTemperatureDis = true
-      this.controlDevice('temperature',this.lastTemp)
+      this.controlDevice('temperature',this.itemTemp)
       .then((res) => {
         // this.setTemperatureDis = false
         if(res.code != 0) {
@@ -507,6 +514,9 @@ export default {
       })
       this.isMove = false
     },
+    tempFunc: _.debounce(function(){
+
+    },500),
     OfflineHelpPage(){
         this.$router.push({
          path:"/OfflineHelpPage"
@@ -746,7 +756,7 @@ export default {
   }
 }
     .container {
-        width: 80%;
+        width: 85%;
         // height: 470px;
         height: 370px;
         margin: 20px auto;
@@ -755,26 +765,28 @@ export default {
     }
     .item-container {
         width: 10px;
-        height: 270px;
-        // height: 330px;
+        // height: 270px;
+        height: 350px;
         position: absolute;
         left: 50%;
-        top: 0;
+        // top: 0;
+        top: -80px;
         transform-origin: 50% 100%;
         z-index: 99;
-    }
-    .items{
-      width: 32px;
-      height: 270px;
-      // height: 330px;
-      z-index: 99;
-    }
-    .item {
-        width: 12px;
-        height: 64px;
-        background-color: rgba(255,255,255,0.1);
-        -webkit-clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
-        clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
+        .items{
+          width: 32px;
+          // height: 270px;
+          height: 350px;
+          z-index: 99;
+          .item {
+            width: 12px;
+            height: 64px;
+            background-color: rgba(255,255,255,0.1);
+            -webkit-clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
+            clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
+            margin-top:80px;
+          }
+        }
     }
     .showWind{
       width: 40px;
