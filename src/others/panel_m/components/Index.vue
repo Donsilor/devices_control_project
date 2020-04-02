@@ -38,8 +38,7 @@
               class="txt">{{ dataList[1].scene_name }}</div>
             <div
               v-else
-              class="set"
-              @click="setScene(2)">
+              class="set">
               <div class="add">+</div>
               <div class="dispose">配置</div>
             </div>
@@ -56,8 +55,7 @@
               class="txt">{{ dataList[2].scene_name }}</div>
             <div
               v-else
-              class="set"
-              @click="setScene(3)">
+              class="set">
               <div class="add">+</div>
               <div class="dispose">配置</div>
             </div>
@@ -74,8 +72,7 @@
               class="txt">{{ dataList[3].scene_name }}</div>
             <div
               v-else
-              class="set"
-              @click="setScene(4)">
+              class="set">
               <div class="add">+</div>
               <div class="dispose">配置</div>
             </div>
@@ -201,7 +198,37 @@ export default {
       this.getDeviceInfo()
         .then(() => {
           //接口请求
+          let that = this
           this.getScene()
+          .then((data) => {
+            console.log('========Index-data==========',data)
+            if (typeof data.result === 'string') {
+              that.jsonList = JSON.parse(data.result)
+            } else if (typeof data.result === 'object') {
+              that.jsonList = data.result
+            }
+            if(that.jsonList.list) {
+              that.jsonList.list.map((x) =>{
+                if(x.board_key == 135) {
+                  // that.dataList.splice(0, 1, x)
+                  that.$set(that.dataList, 0, x)
+                }
+                if(x.board_key == 136) {
+                  // that.dataList.splice(1, 1, x)
+                  that.$set(that.dataList, 1, x)
+                }
+                if(x.board_key == 137) {
+                  // that.dataList.splice(2, 1, x)
+                  that.$set(that.dataList, 2, x)
+                }
+                if(x.board_key == 138) {
+                  // that.dataList.splice(3, 1, x)
+                  that.$set(that.dataList, 3, x)
+                }
+                return that.dataList
+              })
+            }
+          })
           //本地调试
           // setTimeout(() => {
           //   this.list.map((x) =>{
@@ -233,35 +260,9 @@ export default {
       })
     },
     getScene() {
+      this.$forceUpdate()
       return new Promise((resolve, reject) => {
            HdSmart.Device.control({}, (data) => {
-            console.log('========Index-data==========',data)
-            if (typeof data.result === 'string') {
-              this.jsonList = JSON.parse(data.result)
-            } else if (typeof data.result === 'object') {
-              this.jsonList = data.result
-            }
-            if(this.jsonList.list) {
-              this.jsonList.list.map((x) =>{
-                if(x.board_key == 135) {
-                  // this.dataList.splice(0, 1, x)
-                  this.$set(this.dataList, 0, x)
-                }
-                if(x.board_key == 136) {
-                  // this.dataList.splice(1, 1, x)
-                  this.$set(this.dataList, 1, x)
-                }
-                if(x.board_key == 137) {
-                  // this.dataList.splice(2, 1, x)
-                  this.$set(this.dataList, 2, x)
-                }
-                if(x.board_key == 138) {
-                  // this.dataList.splice(3, 1, x)
-                  this.$set(this.dataList, 3, x)
-                }
-                return this.dataList
-              })
-            }
             resolve(data)
           },(err)=>{
             reject(err)
@@ -273,14 +274,42 @@ export default {
       this.$refs.model.show = true
     },
     setMode() {
-      this.$refs.model.show = false
-      this.jsonList = JSON.parse(JSON.stringify(this.jsonList))
-      this.dataList = JSON.parse(JSON.stringify(this.dataList))
-      this.delScene()
+      let that = this
+      that.$refs.model.show = false
+      that.jsonList = JSON.parse(JSON.stringify(that.jsonList))
+      that.dataList = JSON.parse(JSON.stringify(that.dataList))
+      that.delScene()
       .then(() =>{
-        this.getScene()
-        .then(() => {
-          this.$forceUpdate()
+        that.dataList = [{}, {}, {}, {}]
+        that.getScene()
+        .then((data) => {
+          console.log('========解除配置-data==========',data)
+          if (typeof data.result === 'string') {
+            that.jsonList = JSON.parse(data.result)
+          } else if (typeof data.result === 'object') {
+            that.jsonList = data.result
+          }
+          if(that.jsonList.list) {
+            that.jsonList.list.map((x) =>{
+              if(x.board_key == 135) {
+                // that.dataList.splice(0, 1, x)
+                that.$set(that.dataList, 0, x)
+              }
+              if(x.board_key == 136) {
+                // that.dataList.splice(1, 1, x)
+                that.$set(that.dataList, 1, x)
+              }
+              if(x.board_key == 137) {
+                // that.dataList.splice(2, 1, x)
+                that.$set(that.dataList, 2, x)
+              }
+              if(x.board_key == 138) {
+                // that.dataList.splice(3, 1, x)
+                that.$set(that.dataList, 3, x)
+              }
+              return that.dataList
+            })
+          }
         })
       })
     },
