@@ -32,8 +32,7 @@
                 ref="items" 
                 :id="(index)+'items'" 
                 class="items" 
-                @touchmove.stop="touchmove($event)" 
-                @touchend.stop="touchend($event)">
+                @touchmove.stop="touchmove($event)" >
                 <!-- 小梯形 -->
                 <div 
                   ref="item" 
@@ -208,6 +207,7 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
+import {debounce} from '@lib/utils.js'
 // import circleProgress from './components/circle-progress'
 import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
@@ -224,6 +224,7 @@ export default {
   },
   data() {
     return {
+      deControlTemp: null,
       lastTemp:'',
       count: 30,
       now: 0,
@@ -378,6 +379,7 @@ export default {
     })
   },
   mounted() {
+    this.deControlTemp= debounce(this.controlTemp, 1000)
     this.$nextTick(()=>{
       setTimeout(()=>{
         window.scrollTo(0,0)
@@ -386,6 +388,36 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    debounce(func, wait, immediate) {
+        let time
+        let debounced = function() {
+          let context = this
+          if (time) clearTimeout(time)
+
+          if (immediate) {
+            let callNow = !time
+            if (callNow) func.apply(context, arguments)
+            time = setTimeout(
+              () => {
+                time = null
+              } //见注解
+              , wait)
+          } else {
+            time = setTimeout(
+              () => {
+                func.apply(context, arguments)
+              }
+              , wait)
+          }
+        }
+
+        debounced.cancel = function() {
+          clearTimeout(time)
+          time = null
+        }
+
+        return debounced
+      },
     hscroll(val) {
       this.hscrolll = val
     },
@@ -450,9 +482,6 @@ export default {
           return color
         }
     },
-    touchstart(e){
-      console.log(e,'eeeeeeeee')
-    },
     touchmove(e){
       //isMove是用来判断是否是滑动
       this.isMove = true
@@ -484,11 +513,13 @@ export default {
           if (num.lastIndexOf("5")==2) {
             this.itemTemp +=5
             this.lastTemp =  this.itemTemp
-            console.log(this.itemTemp,'最终传给后台的温度2222222')
+            console.log(this.itemTemp,'最终传给后台的温度')
+            this.deControlTemp()
           }
         }
     },
-    touchend(){
+    controlTemp(){
+      console.log(this.itemTemp, '最终传给后台的温度controlTemp')
       if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
           return HdSmart.UI.toast('该模式不支持温度调节')
       }
