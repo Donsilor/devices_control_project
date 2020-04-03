@@ -1,7 +1,7 @@
 <template>
   <div class="body">
-    <div 
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover']" 
+    <div
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover']"
     >
       <NewTopBar
         :title="device.device_name"
@@ -13,42 +13,46 @@
       />
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <div class="main center">
-        <div class="wrap-circle">
+        <div
+          class="wrap-circle"
+          @touchmove="touchmove($event)">
           <!-- 温度圆环 -->
-          <div 
+          <div
             class="container"
             @touchmove="touchmove($event)">
-            <div 
+            <div
               class="cover"
               @touchmove.prevent
             />>
-            <div 
-              v-for="(item, index) in count" 
-              :key="index" 
-              :style="{transform: `rotate(${7.24*index-105}deg)`}" 
-              class="item-container" 
+            <div
+              v-for="(item, index) in count"
+              :key="index"
+              :style="{transform: `rotate(${7.24*index-105}deg)`}"
+              class="item-container"
             >
-              <div 
-                ref="items" 
-                :id="(index)+'items'" 
-                class="items" 
-                @touchmove.stop="touchmove($event)" >
+              <div
+                ref="items"
+                :id="(index)+'items'"
+                class="items"
+                @touchstart.stop="touchstart($event)"
+                @touchmove.stop="touchmove($event)"
+                @touchend="touchend($event)">
                 <!-- 小梯形 -->
-                <div 
-                  ref="item" 
+                <div
+                  ref="item"
                   :id="(index)+'item'"
-                  :style="{background: 2*(itemTemp/10)-33>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
+                  :style="{background: 2*(itemTemp/10)-33>=index?calculateBg(index):'rgba(255,255,255,0.1)'}"
                   class="item"
                 />
               </div>
             </div>
-            
+
             <div
               v-if="isOffline|| deviceAttrs.switchStatus == 'off'"
               class="tm">-- <sup>°C</sup></div>
             <div
               v-else
-              class="tm">{{ itemTemp | filterTm }}<sup 
+              class="tm">{{ itemTemp | filterTm }}<sup
                 ref="sup"
                 :style="{right: (itemTemp/10)%1 == 0 ? 8+'px': -20 +'px'}">°C</sup>
             </div>
@@ -90,8 +94,8 @@
           @touchend="endAnimate('switchStatus')"
         />
       </div>
-      <div 
-        ref="panelBox" 
+      <div
+        ref="panelBox"
         class="panelBox">
         <!-- 底部 -->
         <div
@@ -100,35 +104,35 @@
           <!-- 模式和风速 -->
           <div class="modespeed">
             <!-- 模式 -->
-            <div 
-              class="btn-wrap center" 
+            <div
+              class="btn-wrap center"
               @click="showMode">
-              <div 
-                :class="[modeClass,'btn  center']" 
+              <div
+                :class="[modeClass,'btn  center']"
               />
               <div class="btn-name">{{ modeTxt }}</div>
             </div>
             <!-- 风速 -->
-            <div 
-              class="btn-wrap center" 
+            <div
+              class="btn-wrap center"
               @click="showSpeed">
-              <div 
+              <div
                 :class="[deviceAttrs.mode,speedClass,'btn center']" />
               <div class="btn-name">{{ speedTxt }}</div>
             </div>
             <!-- 定时 -->
-            <div 
-              class="btn-wrap center" 
+            <div
+              class="btn-wrap center"
               @click="showTime">
-              <div 
-                :class="[deviceAttrs.mode,'clock btn center']" 
+              <div
+                :class="[deviceAttrs.mode,'clock btn center']"
               />
               <div class="btn-name">定时</div>
             </div>
           </div>
           <!-- 上下风 -->
-          <div 
-            class="bottom" 
+          <div
+            class="bottom"
             @click="showSwing">
             <div class="Charging-protection">
               <div v-if="deviceAttrs.wind_up=='on'">向上</div>
@@ -139,13 +143,13 @@
               <div v-else-if="deviceAttrs.wind_auto=='on'">自动</div>
               <div v-else>摆风</div>
               <div
-                style="z-index: 100;" 
+                style="z-index: 100;"
                 class="showWind"/>
             </div>
           </div>
           <!-- 电加热开关 -->
-          <div 
-            v-if="deviceAttrs.mode=='heat'" 
+          <div
+            v-if="deviceAttrs.mode=='heat'"
             class="bottom">
             <div class="Charging-protection">
               <div>电加热</div>
@@ -207,12 +211,12 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
-import {debounce} from '@lib/utils.js'
 // import circleProgress from './components/circle-progress'
 import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
 import SelectTime from './components/time.vue'
+import _ from './utils'
 const [MIN_TEMP, MAX_TEMP] = [160, 310]
 export default {
   components: {
@@ -224,8 +228,8 @@ export default {
   },
   data() {
     return {
-      deControlTemp: null,
-      lastTemp:'',
+      returnTemp:'',
+      isTouchStart:false,
       count: 30,
       now: 0,
       idNum:0,
@@ -251,7 +255,7 @@ export default {
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
-    
+
     modeIsActive() {
       return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
     },
@@ -379,7 +383,6 @@ export default {
     })
   },
   mounted() {
-    this.deControlTemp= debounce(this.controlTemp, 1000)
     this.$nextTick(()=>{
       setTimeout(()=>{
         window.scrollTo(0,0)
@@ -388,36 +391,6 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-    debounce(func, wait, immediate) {
-        let time
-        let debounced = function() {
-          let context = this
-          if (time) clearTimeout(time)
-
-          if (immediate) {
-            let callNow = !time
-            if (callNow) func.apply(context, arguments)
-            time = setTimeout(
-              () => {
-                time = null
-              } //见注解
-              , wait)
-          } else {
-            time = setTimeout(
-              () => {
-                func.apply(context, arguments)
-              }
-              , wait)
-          }
-        }
-
-        debounced.cancel = function() {
-          clearTimeout(time)
-          time = null
-        }
-
-        return debounced
-      },
     hscroll(val) {
       this.hscrolll = val
     },
@@ -469,7 +442,7 @@ export default {
           }else {
               color = `linear-gradient(to right, #EF6D5E 0%, #ff7524 ${200-10*index}%, #F9BB6B  100%)`
           }
-              
+
           return color
         }else{
           if (index < 10) {
@@ -482,8 +455,16 @@ export default {
           return color
         }
     },
+    touchstart(e){
+      console.log(e,'eeeeeeeee')
+      this.isTouchStart = true
+      console.log(this.isTouchStart,'start')
+    },
     touchmove(e){
+      if(this.isTouchStart == false) return
+console.log(this.isTouchStart,'move')
       //isMove是用来判断是否是滑动
+      if(this.isClose) return
       this.isMove = true
       if(e.preventDefault){
           e.preventDefault()
@@ -491,42 +472,48 @@ export default {
           e.returnValue = false
       }
       if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
-        return 
+        return
      }
      //  滑动限制处理
       //  if(this.flagVal == true) return
      var touch = e.targetTouches[0]
-     var ele = document.elementFromPoint(touch.clientX, touch.clientY).id
+     var ele = document.elementFromPoint(touch.clientX, touch.clientY)&&document.elementFromPoint(touch.clientX, touch.clientY).id
      this.idNum = parseInt(ele)
       // 如果是NaN,则return
       if(isNaN(this.idNum)==true){
-        console.log(this.lastTemp,'最终传给后台的温度return')
-          this.lastTemp =  this.itemTemp
-          console.log('return掉了')
+          console.log(this.itemTemp,'return掉了return发的温度是')
+          this.returnTemp = this.itemTemp
           // return
         }else{
           // 滑动的梯子的index和温度之间的关系式
           this.itemTemp = (0.5*this.idNum+16)*10
           var num = this.itemTemp + ""
-          // console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
+
           // 如果最后一位数字是5，则往前进1
           if (num.lastIndexOf("5")==2) {
+            console.log(num,'numnum')
             this.itemTemp +=5
-            this.lastTemp =  this.itemTemp
-            console.log(this.itemTemp,'最终传给后台的温度')
-            this.deControlTemp()
+            this.returnTemp = this.itemTemp
+            // this.controlDevice('temperature',this.itemTemp,this.tempFunc)
+            console.log(this.itemTemp,'最终传给后台的温度2222222')
+          }else{
+            this.itemTemp = (0.5*this.idNum+16)*10
+            this.returnTemp = this.itemTemp
+            console.log(num,'传的没有小数的温度')
+            // this.controlDevice('temperature',this.itemTemp,this.tempFunc)
           }
         }
     },
-    controlTemp(){
-      console.log(this.itemTemp, '最终传给后台的温度controlTemp')
+    touchend(){
+      this.isTouchStart = false
+      console.log(this.itemTemp,'温度touchend')
       if (this.deviceAttrs.mode=='auto'||this.deviceAttrs.mode=='dehumidify'||this.deviceAttrs.mode=='wind') {
           return HdSmart.UI.toast('该模式不支持温度调节')
       }
-      if(this.isMove == false) return
+      if(this.isMove == false||this.isClose) return
       this.flagVal = true
       this.setTemperatureDis = true
-      this.controlDevice('temperature',this.lastTemp)
+      this.controlDevice('temperature',this.returnTemp)
       .then((res) => {
         // this.setTemperatureDis = false
         if(res.code != 0) {
@@ -538,6 +525,9 @@ export default {
       })
       this.isMove = false
     },
+    tempFunc: _.debounce(function(){
+
+    },500),
     OfflineHelpPage(){
         this.$router.push({
          path:"/OfflineHelpPage"
@@ -563,7 +553,7 @@ export default {
         // 设置关机时间
     setReserve(time) {
       console.log(time,'888888')
-      
+
         this.controlDevice('time',{
             timer_switch:'on',
             time_value:time*2
@@ -777,7 +767,7 @@ export default {
   }
 }
     .container {
-        width: 80%;
+        width: 85%;
         // height: 470px;
         height: 370px;
         margin: 20px auto;
@@ -786,26 +776,28 @@ export default {
     }
     .item-container {
         width: 10px;
-        height: 270px;
-        // height: 330px;
+        // height: 270px;
+        height: 350px;
         position: absolute;
         left: 50%;
-        top: 0;
+        // top: 0;
+        top: -80px;
         transform-origin: 50% 100%;
         z-index: 99;
-    }
-    .items{
-      width: 32px;
-      height: 270px;
-      // height: 330px;
-      z-index: 99;
-    }
-    .item {
-        width: 12px;
-        height: 64px;
-        background-color: rgba(255,255,255,0.1);
-        -webkit-clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
-        clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
+        .items{
+          width: 32px;
+          // height: 270px;
+          height: 350px;
+          z-index: 99;
+          .item {
+            width: 12px;
+            height: 64px;
+            background-color: rgba(255,255,255,0.1);
+            -webkit-clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
+            clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
+            margin-top:80px;
+          }
+        }
     }
     .showWind{
       width: 40px;
