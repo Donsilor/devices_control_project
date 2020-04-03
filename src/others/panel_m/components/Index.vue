@@ -270,6 +270,7 @@ export default {
       })
     },
     deleteScene(i){
+      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有解绑权限')
       this.scene_id = i
       this.$refs.model.show = true
     },
@@ -330,6 +331,7 @@ export default {
       })
     },
     setScene(i){
+      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有配置权限')
       // this.newPageShow = true
       this.$router.push({
         name: 'Allocation',
@@ -448,6 +450,7 @@ export default {
             background-clip: text;
             color: transparent;
             font-size: 24px;
+            line-height: 48px;
           }
         }
 
