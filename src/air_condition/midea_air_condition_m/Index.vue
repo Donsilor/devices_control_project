@@ -1,7 +1,7 @@
 <template>
   <div class="body">
-    <div 
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover',{'scroll44': classTrue}]" 
+    <div
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover',{'scroll44': classTrue}]"
     >
       <NewTopBar
         :title="device.device_name"
@@ -15,40 +15,42 @@
       <div class="main center">
         <div class="wrap-circle">
           <!-- 温度圆环 -->
-          <div 
-            class="container" 
+          <div
+            class="container"
             @touchmove="touchmove($event)">
-            <div 
-              v-for="(item, index) in count" 
-              :key="index" 
-              :style="{transform: `rotate(${8.4*index-105}deg)`}" 
+            <div
+              v-for="(item, index) in count"
+              :key="index"
+              :style="{transform: `rotate(${8.4*index-105}deg)`}"
               class="item-container">
-              <div 
-                ref="items" 
-                :id="(index)+'item'" 
-                class="items" 
-                @touchstart="touchstart($event)" 
-                @touchmove="touchmove($event)" 
+              <div
+                ref="items"
+                :id="(index)+'item'"
+                class="items"
+                @touchstart="touchstart($event)"
+                @touchmove="touchmove($event)"
                 @touchend="touchend($event)">
                 <!-- 小梯形 -->
-                <div 
-                  ref="item" 
-                  :style="{background: 2*(itemTemp/10)-35>=index?calculateBg(index):'rgba(255,255,255,0.1)'}" 
+                <div
+                  ref="item"
+                  :style="{background: 2*(itemTemp/10)-35>=index?calculateBg(index):'rgba(255,255,255,0.1)'}"
                   class="item"/>
               </div>
             </div>
-            
+
             <div
               v-if="isOffline|| deviceAttrs.switchStatus == 'off'"
               class="tm">-- <sup>°C</sup></div>
             <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode!=='wind'"
-              class="tm">{{ itemTemp | filterTm }}<sup>°C</sup>
+              class="tm">{{ itemTemp | filterTm }}<sup
+                ref="sup"
+                :style="{right: (itemTemp/10)%1 == 0 ? 8+'px': -20 +'px'}">°C</sup>
             </div>
             <div
               v-if="!isOffline&& deviceAttrs.switchStatus == 'on'&&deviceAttrs.mode=='wind'"
               class="tm">{{ deviceAttrs.env_temperature | filterTm }}
-              <sup 
+              <sup
                 ref="sup"
                 :style="{right: (deviceAttrs.env_temperature/10)%1 == 0 ? 8+'px': -20 +'px'}">°C</sup>
             </div>
@@ -99,18 +101,18 @@
         class="panel-btn center">
         <!-- 模式和风速 -->
         <div class="modespeed">
-          <div 
-            class="btn-wrap center" 
+          <div
+            class="btn-wrap center"
             @click="showMode">
-            <div 
-              :class="[modeClass,'btn  center']" 
+            <div
+              :class="[modeClass,'btn  center']"
             />
             <div class="btn-name">{{ modeTxt }}</div>
           </div>
-          <div 
-            class="btn-wrap center" 
+          <div
+            class="btn-wrap center"
             @click="showSpeed">
-            <div 
+            <div
               :class="[deviceAttrs.mode,speedClass,'btn center']" />
             <div class="btn-name">{{ speedTxt }}</div>
           </div>
@@ -348,7 +350,7 @@ export default {
                 // color="#f38f63"
             }
             return color
-          
+
           }else{
               // 制冷模式时的温度颜色
             if (index < 10) {
@@ -371,7 +373,7 @@ export default {
           e.returnValue = false
       }
       if (this.deviceAttrs.mode=='wind') {
-        return 
+        return
      }
      var touch = e.targetTouches[0]
      var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
@@ -391,7 +393,7 @@ export default {
         if (num.lastIndexOf("5")==2) {
           this.itemTemp -=5
           // console.log(this.itemTemp,'最终传给后台的温度')
-          
+
         }
       }
     },
@@ -595,7 +597,7 @@ export default {
         }
       }
     }
-  } 
+  }
 }
 .control-tm{
       .wind.control{
