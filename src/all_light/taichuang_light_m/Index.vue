@@ -124,6 +124,7 @@ export default {
             var r = Math.atan2(k.x-this.ox, this.oy-k.y)
             var hd = (Math.PI+r)/(2*Math.PI)
             // 半圆的滑动范围判断
+            this.flag = hd
             if(this.flag-hd>0.5){
               hd = 1
             }
