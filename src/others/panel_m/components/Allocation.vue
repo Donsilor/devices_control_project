@@ -42,6 +42,7 @@
         </div>
       </div>
     </div>
+    <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
     <div class="viewHelpstatus">
       <div class="Prefabrication">
         <h3 class="AllocationH3">APP场景</h3>
@@ -143,6 +144,12 @@ export default {
   },
   methods:{
     ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice','getViewHelpInfo','setViewHelpInfo']),
+    // 路由跳转
+      OfflineHelpPage(){
+        this.$router.push({
+        path:"/SupconOfflineHelpPage"
+      })
+    },
     getScene() {
       return new Promise((resolve, reject) => {
         HdSmart.Device.control({}, (data) => {

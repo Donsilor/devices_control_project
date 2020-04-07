@@ -209,19 +209,19 @@ export default {
             }
             if(that.jsonList.list) {
               that.jsonList.list.map((x) =>{
-                if(x.board_key == 135) {
+                if(x.board_key == 135 && x.enable == 1) {
                   // that.dataList.splice(0, 1, x)
                   that.$set(that.dataList, 0, x)
                 }
-                if(x.board_key == 136) {
+                if(x.board_key == 136 && x.enable == 1) {
                   // that.dataList.splice(1, 1, x)
                   that.$set(that.dataList, 1, x)
                 }
-                if(x.board_key == 137) {
+                if(x.board_key == 137 && x.enable == 1) {
                   // that.dataList.splice(2, 1, x)
                   that.$set(that.dataList, 2, x)
                 }
-                if(x.board_key == 138) {
+                if(x.board_key == 138 && x.enable == 1) {
                   // that.dataList.splice(3, 1, x)
                   that.$set(that.dataList, 3, x)
                 }
@@ -292,19 +292,19 @@ export default {
           }
           if(that.jsonList.list) {
             that.jsonList.list.map((x) =>{
-              if(x.board_key == 135) {
+              if(x.board_key == 135 && x.enable == 1) {
                 // that.dataList.splice(0, 1, x)
                 that.$set(that.dataList, 0, x)
               }
-              if(x.board_key == 136) {
+              if(x.board_key == 136 && x.enable == 1) {
                 // that.dataList.splice(1, 1, x)
                 that.$set(that.dataList, 1, x)
               }
-              if(x.board_key == 137) {
+              if(x.board_key == 137 && x.enable == 1) {
                 // that.dataList.splice(2, 1, x)
                 that.$set(that.dataList, 2, x)
               }
-              if(x.board_key == 138) {
+              if(x.board_key == 138 && x.enable == 1) {
                 // that.dataList.splice(3, 1, x)
                 that.$set(that.dataList, 3, x)
               }
