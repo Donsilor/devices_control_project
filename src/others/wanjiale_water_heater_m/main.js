@@ -18,6 +18,27 @@ Vue.component('StatusTip', StatusTip)
 FastClick.attach(document.body)
 import * as filters from './filters' // global filters
 
+// H5路由处理
+import Router from 'vue-router'
+Vue.use(Router)
+import Index from './Index.vue'
+import OfflineHelpPage from '@lib/components/OfflineHelpPage.vue'
+
+
+const router = new Router({
+  routes: [{
+    path: '/',
+    name: 'index',
+    component: Index,
+  },
+  {
+    path: '/OfflineHelpPage',
+    name: 'OfflineHelpPage',
+    component: OfflineHelpPage,
+  }
+  ]
+})
+
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
@@ -26,5 +47,6 @@ Object.keys(filters).forEach(key => {
 new Vue({
     el: '#app',
     store,
+    router,
     render: h => h(App)
 })
