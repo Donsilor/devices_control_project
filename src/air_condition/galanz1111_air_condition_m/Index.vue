@@ -1,7 +1,11 @@
 <template>
   <div class="body">
     <div
-      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover']"
+      ref="wrapper"
+      :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover wrapper']"
+      @touchstart="pageStart($event)"
+      @touchmove="pageMove($event)"
+      @touchend="pageEnd($event)"
     >
       <NewTopBar
         :title="device.device_name"
@@ -94,89 +98,93 @@
           @touchend="endAnimate('switchStatus')"
         />
       </div>
-      <div
-        ref="panelBox"
-        class="panelBox">
-        <!-- 底部 -->
+      <div 
+        ref="bottomPanel" 
+        class="bottomPanel">
         <div
-          ref="panel"
-          class="panel-btn center">
-          <!-- 模式和风速 -->
-          <div class="modespeed">
-            <!-- 模式 -->
-            <div
-              class="btn-wrap center"
-              @click="showMode">
+          ref="panelBox"
+          :class="[{'slideUp':slideUp==true},{'slideDown':slideDown==true},'panelBox']">
+          <!-- 底部 -->
+          <div
+            ref="panel"
+            class="panel-btn center">
+            <!-- 模式和风速 -->
+            <div class="modespeed">
+              <!-- 模式 -->
               <div
-                :class="[modeClass,'btn  center']"
-              />
-              <div class="btn-name">{{ modeTxt }}</div>
+                class="btn-wrap center"
+                @click="showMode">
+                <div
+                  :class="[modeClass,'btn  center']"
+                />
+                <div class="btn-name">{{ modeTxt }}</div>
+              </div>
+              <!-- 风速 -->
+              <div
+                class="btn-wrap center"
+                @click="showSpeed">
+                <div
+                  :class="[deviceAttrs.mode,speedClass,'btn center']" />
+                <div class="btn-name">{{ speedTxt }}</div>
+              </div>
+              <!-- 定时 -->
+              <div
+                class="btn-wrap center"
+                @click="showTime">
+                <div
+                  :class="[deviceAttrs.mode,'clock btn center']"
+                />
+                <div class="btn-name">定时</div>
+              </div>
             </div>
-            <!-- 风速 -->
+            <!-- 上下风 -->
             <div
-              class="btn-wrap center"
-              @click="showSpeed">
-              <div
-                :class="[deviceAttrs.mode,speedClass,'btn center']" />
-              <div class="btn-name">{{ speedTxt }}</div>
+              class="bottom"
+              @click="showSwing">
+              <div class="Charging-protection">
+                <div v-if="deviceAttrs.wind_up=='on'">向上</div>
+                <div v-else-if="deviceAttrs.wind_mid_up=='on'">中上</div>
+                <div v-else-if="deviceAttrs.wind_middle=='on'">正中</div>
+                <div v-else-if="deviceAttrs.wind_mid_down=='on'">中下</div>
+                <div v-else-if="deviceAttrs.wind_down=='on'">向下</div>
+                <div v-else-if="deviceAttrs.wind_auto=='on'">自动</div>
+                <div v-else>摆风</div>
+                <div
+                  style="z-index: 100;"
+                  class="showWind"/>
+              </div>
             </div>
-            <!-- 定时 -->
+            <!-- 电加热开关 -->
             <div
-              class="btn-wrap center"
-              @click="showTime">
-              <div
-                :class="[deviceAttrs.mode,'clock btn center']"
-              />
-              <div class="btn-name">定时</div>
+              v-if="deviceAttrs.mode=='heat'"
+              class="bottom">
+              <div class="Charging-protection">
+                <div>电加热</div>
+                <div
+                  style="z-index: 100;">
+                  <input
+                    :class="[deviceAttrs.mode,'switch switch-anim']"
+                    :checked="deviceAttrs.auxiliary_heating_mode=='on'"
+                    :disabled="disabledLock"
+                    type="checkbox"
+                    @click="checkSwitch('auxiliary_heating_mode')">
+                </div>
+              </div>
             </div>
           </div>
-          <!-- 上下风 -->
-          <div
-            class="bottom"
-            @click="showSwing">
+          <!-- 屏幕显示 -->
+          <div class="screen">
             <div class="Charging-protection">
-              <div v-if="deviceAttrs.wind_up=='on'">向上</div>
-              <div v-else-if="deviceAttrs.wind_mid_up=='on'">中上</div>
-              <div v-else-if="deviceAttrs.wind_middle=='on'">正中</div>
-              <div v-else-if="deviceAttrs.wind_mid_down=='on'">中下</div>
-              <div v-else-if="deviceAttrs.wind_down=='on'">向下</div>
-              <div v-else-if="deviceAttrs.wind_auto=='on'">自动</div>
-              <div v-else>摆风</div>
-              <div
-                style="z-index: 100;"
-                class="showWind"/>
-            </div>
-          </div>
-          <!-- 电加热开关 -->
-          <div
-            v-if="deviceAttrs.mode=='heat'"
-            class="bottom">
-            <div class="Charging-protection">
-              <div>电加热</div>
+              <div>空调屏幕画面</div>
               <div
                 style="z-index: 100;">
                 <input
                   :class="[deviceAttrs.mode,'switch switch-anim']"
-                  :checked="deviceAttrs.auxiliary_heating_mode=='on'"
+                  :checked="deviceAttrs.digital_display=='on'"
                   :disabled="disabledLock"
                   type="checkbox"
-                  @click="checkSwitch('auxiliary_heating_mode')">
+                  @click="checkSwitch('digital_display')">
               </div>
-            </div>
-          </div>
-        </div>
-        <!-- 屏幕显示 -->
-        <div class="screen">
-          <div class="Charging-protection">
-            <div>空调屏幕画面</div>
-            <div
-              style="z-index: 100;">
-              <input
-                :class="[deviceAttrs.mode,'switch switch-anim']"
-                :checked="deviceAttrs.digital_display=='on'"
-                :disabled="disabledLock"
-                type="checkbox"
-                @click="checkSwitch('digital_display')">
             </div>
           </div>
         </div>
@@ -216,7 +224,7 @@ import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
 import SelectTime from './components/time.vue'
-import _ from './utils'
+import BScroll from 'better-scroll'
 const [MIN_TEMP, MAX_TEMP] = [160, 310]
 export default {
   components: {
@@ -249,6 +257,11 @@ export default {
       isReduceEnd:false,
       isAddStart:false,
       isAddEnd:false,
+      slideUp:false,
+      slideDown:false,
+      slideUpStyle:'',
+      unHeat:'',
+      Heat:'',
     }
   },
 
@@ -383,14 +396,85 @@ export default {
     })
   },
   mounted() {
+    this.initScroll()
     this.$nextTick(()=>{
+      console.log(this.$refs.panelBox.offsetHeight,'offsetHeight')
+      console.log(this.$refs.panelBox.offsetTop,'offsetTop')
+      console.log(document.documentElement.clientHeight,'clientHeight')
+      // this.slideUpStyle = document.querySelectorAll('.slideUp')[0]
       setTimeout(()=>{
+        console.log(this.$refs.panelBox.offsetTop,'this.$refs.panelBox.offsetTop')
         window.scrollTo(0,0)
       },200)
     },)
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    pageStart(e){
+      console.log(e)
+      this.startY = e.targetTouches[0].clientY
+      console.log(this.startY,'startY')
+    },
+    pageMove(e){
+      console.log(e)
+      this.moveY = e.targetTouches[0].clientY
+      console.log(this.moveY,'moveY')
+      console.log(this.moveY - this.startY,'4845')//往上滑，得到一个负数
+      this.$refs.bottomPanel.classList.add('pannelCover')       
+      if(this.moveY - this.startY < 0){
+        this.slideDown = false
+        this.slideUp = true
+        if(this.deviceAttrs.mode!='heat'){
+          this.$refs.panelBox.style.top = document.documentElement.clientHeight - this.$refs.panelBox.offsetHeight - 12 + 'px'
+          this.unHeat = this.$refs.panelBox.style.top
+          console.log(this.unHeat,'this.unHeat')
+        }else{
+          this.$refs.panelBox.style.bottom = 10+'px'
+          this.$refs.panelBox.style.top = 'unset'
+          // this.$refs.panelBox.style.top = document.documentElement.clientHeight - this.$refs.panelBox.offsetHeight - 6 + 'px'
+          // this.Heat = this.$refs.panelBox.style.top
+          console.log(this.Heat,'this.Heat')
+        }
+        
+      }else{
+        this.slideUp = false
+        this.slideDown = true
+        this.$refs.bottomPanel.classList.remove('pannelCover')
+        this.$refs.panelBox.style.top = 'unset'
+        this.$refs.panelBox.style.bottom = 'unset'
+      }
+      // if(this.moveY - this.startY < 0){
+      //   this.slideDown = false
+      //   this.slideUp = true
+      //   console.log(this.$refs.panelBox.offsetHeight,'this.$refs.panelBox.offsetHeight')
+      //   this.$refs.panelBox.style.top = document.documentElement.clientHeight - this.$refs.panelBox.offsetHeight - 6 + 'px'
+      //   console.log('上')
+      // }else if(this.moveY - this.startY > 0){
+      //   this.slideUp = false
+      //   this.slideDown = true
+      //   console.log('下')
+      //    this.$refs.panelBox.style.top = 'unset'
+      //    console.log(this.$refs.panelBox.style.top,'this.$refs.panelBox.style.top')
+      // }else{
+      //   this.slideUp = false
+      //   this.slideDown = false
+      // }
+    },
+    pageEnd(e){
+      console.log(e)
+    },
+    initScroll() {
+      this.$nextTick(()=>{
+        if(!this.Scroll) {
+          this.Scroll = new BScroll(this.$refs.wrapper,{
+            click: true,      // 配置允许点击事件
+            scrollY: true     // 开启纵向滚动
+          })
+        } else {
+          this.Scroll.refresh()    // 重新计算 better-scroll，当 DOM 结构发生变化的时确保滚动效果正常
+        }
+      })
+    },
     hscroll(val) {
       this.hscrolll = val
     },
@@ -462,7 +546,7 @@ export default {
     },
     touchmove(e){
       if(this.isTouchStart == false) return
-console.log(this.isTouchStart,'move')
+      console.log(this.isTouchStart,'move')
       //isMove是用来判断是否是滑动
       if(this.isClose) return
       this.isMove = true
@@ -483,26 +567,23 @@ console.log(this.isTouchStart,'move')
       if(isNaN(this.idNum)==true){
           console.log(this.itemTemp,'return掉了return发的温度是')
           this.returnTemp = this.itemTemp
-          // return
         }else{
-          // 滑动的梯子的index和温度之间的关系式
-          this.itemTemp = (0.5*this.idNum+16)*10
-          var num = this.itemTemp + ""
-
-          // 如果最后一位数字是5，则往前进1
-          if (num.lastIndexOf("5")==2) {
-            console.log(num,'numnum')
-            this.itemTemp +=5
-            this.returnTemp = this.itemTemp
-            // this.controlDevice('temperature',this.itemTemp,this.tempFunc)
-            console.log(this.itemTemp,'最终传给后台的温度2222222')
-          }else{
+            // 滑动的梯子的index和温度之间的关系式
             this.itemTemp = (0.5*this.idNum+16)*10
-            this.returnTemp = this.itemTemp
-            console.log(num,'传的没有小数的温度')
-            // this.controlDevice('temperature',this.itemTemp,this.tempFunc)
-          }
-        }
+            var num = this.itemTemp + ""
+
+            // 如果最后一位数字是5，则往前进1
+            if (num.lastIndexOf("5")==2) {
+              console.log(num,'numnum')
+              this.itemTemp +=5
+              this.returnTemp = this.itemTemp
+              console.log(this.itemTemp,'最终传给后台的温度2222222')
+            }else{
+              this.itemTemp = (0.5*this.idNum+16)*10
+              this.returnTemp = this.itemTemp
+              console.log(num,'传的没有小数的温度')
+            }
+      }
     },
     touchend(){
       this.isTouchStart = false
@@ -525,9 +606,6 @@ console.log(this.isTouchStart,'move')
       })
       this.isMove = false
     },
-    tempFunc: _.debounce(function(){
-
-    },500),
     OfflineHelpPage(){
         this.$router.push({
          path:"/OfflineHelpPage"
@@ -562,17 +640,17 @@ console.log(this.isTouchStart,'move')
     // 取消定时
     canceltime(){
        this.controlDevice('close_time','true')
-      //  .then((res) => {
-      //    if(res.code == 0) {
-      //      this.loaclAttr.close_time = true
-      //    } else {
-      //      HdSmart.UI.toast('操作失败')
-      //    }
-      //  })
     },
     // 设置模式
     setMode(val) {
       if (this.isClose ||this.isOffline) return
+      if(this.deviceAttrs.mode=='heat'&&val!='heat'&&this.slideUp){
+        this.$refs.panelBox.style.bottom = 10+'px'
+        // this.$refs.panelBox.style.top = document.documentElement.clientHeight - this.$refs.panelBox.offsetHeight - 6 + 'px'
+        this.$refs.panelBox.style.top = 'unset'
+      }else if(this.deviceAttrs.mode!=='heat'&&val=='heat'&&this.slideUp){
+        this.$refs.panelBox.style.top = this.unHeat
+      }
       this.controlDevice('mode', val)
       .then(() =>{
           this.hide()
@@ -648,9 +726,6 @@ console.log(this.isTouchStart,'move')
       if (this.deviceAttrs.temperature == 300 && speed == 'low' && this.deviceAttrs.mode == 'cold') {
         return HdSmart.UI.toast('低风、制冷模式下不支持此温度，请调整后重试')
       }
-      // if(this.deviceAttrs.mode == 'wind' && speed == 'auto') {
-      //   return HdSmart.UI.toast('送风模式不能设置自动风速')
-      // }
       this.controlDevice('speed', speed)
         .then(() =>{
           this.hide()
@@ -746,13 +821,40 @@ console.log(this.isTouchStart,'move')
 }
 </script>
 <style lang="less" scoped>
-// .panelBox{
-//   position:relative;
-//   z-index:100;
-//   background:#000;
-//   width:100%;
-//   bottom:0;
-//   height:auto;
+.panelBox{
+  position:absolute;
+  z-index:100;
+  background:#000;
+  width:100%;
+}
+.slideUp{
+  // animation: animateUp .2s linear 0s;
+  // animation-fill-mode : forwards;
+  position:absolute;
+  z-index:100;
+  background:#000;
+  width:100%;
+  transition: top .2s;
+}
+.slideDown{
+  // animation: animateDown .2s linear 0s;
+  // animation-fill-mode : forwards;
+}
+// @keyframes animateUp{
+//   from{
+//     bottom:normal;
+//   }
+//   to{
+//     bottom:12px;
+//   }
+// }
+// @keyframes animateDown{
+//   from{
+//     bottom:12px;
+//   }
+//   to{
+//     bottom:normal;
+//   }
 // }
 .page {
   .main{
@@ -818,5 +920,12 @@ console.log(this.isTouchStart,'move')
           opacity: 0.3;
         }
       }
+    }
+    .pannelCover{
+      position:absolute;
+      top:0;
+      bottom:0;
+      left:0;
+      right:0;
     }
 </style>

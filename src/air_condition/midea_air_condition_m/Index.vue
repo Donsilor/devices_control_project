@@ -65,19 +65,22 @@
 
 
         </div>
+        <!-- 温度按钮 -->
         <div
           class="control-tm center">
           <button
             ref="reduce"
             :disabled="setTemperatureDis"
-            :class="[deviceAttrs.mode,'control reduce btn']"
-            @click="setTemperature('reduce',-10)"
+            :class="[deviceAttrs.mode,{'animateStart':isReduceStart==true},{'animateEnd':isReduceEnd==true},'control reduce btn']"
+            @touchstart.stop ="startAnimate('reduce')"
+            @touchend.stop="endAnimate('reduce',-10)"
           />
           <button
             ref="add"
             :disabled="setTemperatureDis"
-            :class="[deviceAttrs.mode,'control add btn']"
-            @click="setTemperature('add',10)"
+            :class="[deviceAttrs.mode,{'animateStart':isAddStart==true},{'animateEnd':isAddEnd==true},'control add btn']"
+            @touchstart.stop ="startAnimate('add')"
+            @touchend.stop="endAnimate('add',10)"
           />
         </div>
       </div>
@@ -93,8 +96,9 @@
         class="starting">
         <div
           ref="switchStatus"
-          :class="[deviceAttrs.mode,{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},'switchColor btn-start']"
-          @click="setSwitch('switchStatus')"
+          :class="[deviceAttrs.mode,{'active': deviceAttrs.switchStatus == 'on'&&!isOffline},{'animateStart':isStart==true},{'animateEnd':isEnd==true},'switchColor btn-start']"
+          @touchstart ="startAnimate('switchStatus')"
+          @touchend="endAnimate('switchStatus')"
         />
       </div>
       <div
@@ -181,6 +185,8 @@ export default {
   },
   data() {
     return {
+      returnTemp:'',
+      isTouchStart:false,
       count: 26,
       now: 0,
       idNum:0,
@@ -189,10 +195,17 @@ export default {
       device_uuid: window.device_uuid||'',
       disabledLock: false,
       itemTemp:'',//最终请求的温度,
+      flagVal: false,
       isMove:false,//是否滑动了
       hscrolll: 0,
       hscrolltopp: 0,
       classTrue: false,
+      isStart:false,//按钮是否动画开始
+      isEnd:false,//按钮是否动画开始
+      isReduceStart:false,
+      isReduceEnd:false,
+      isAddStart:false,
+      isAddEnd:false,
     }
   },
 
@@ -290,8 +303,7 @@ export default {
   },
   watch: {
     "device.stateChange"(){
-      if(!this.moveEnd){}
-      // this.draw(`${0.125+0.053*(this.deviceAttrs.temperature/10-16)}`)
+      this.flagVal = false
     },
        'deviceAttrs.temperature'() {
       if(this.deviceAttrs.temperature) {
@@ -326,47 +338,82 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-      hscroll(val) {
+        // 按钮动画开始
+    startAnimate(val){
+      if(val=='switchStatus'){
+        if (this.isOffline) return
+        this.isStart = true
+      }else if(val=='reduce'){
+        if (this.isOffline||this.isClose) return
+        this.isReduceStart = true
+      }else{
+        if (this.isOffline||this.isClose) return
+        this.isAddStart = true
+      }
+    },
+    // 按钮动画结束
+    endAnimate(val){
+      if(val=='switchStatus'){
+        if (this.isOffline) return
+        this.isEnd = true
+        this.setSwitch()
+      }else if(val=='reduce'){
+        if (this.isOffline||this.isClose) return
+        this.isReduceEnd = true
+        this.setTemperature(val,-10)
+      }else{
+        if (this.isOffline||this.isClose) return
+        this.isAddEnd = true
+        this.setTemperature(val,10)
+      }
+    },
+    hscroll(val) {
       this.hscrolll = val
     },
     hscrolltop(val) {
       this.hscrolltopp = val
     },
     // 温度圆环
-      calculateBg(index){
-          let color = ''
-          if(this.deviceAttrs.switchStatus=='off'||this.isOffline){
-            color = 'rgba(255,255,255,0.1)'
-            return
+    calculateBg(index){
+        let color = ''
+        if(this.deviceAttrs.switchStatus=='off'||this.isOffline){
+          color = 'rgba(255,255,255,0.1)'
+          return
+        }
+        if(this.deviceAttrs.mode=='heat'){
+          // 制热模式时的温度颜色
+          if (index < 10) {
+              color = '#EF6D5E '
+          }else if (index > 20) {
+              color = '#F9BB6B'
+          }else {
+              color = `linear-gradient(to right, #EF6D5E 0%, #ff7524 ${200-10*index}%, #F9BB6B  100%)`
+              // color="#f38f63"
           }
-          if(this.deviceAttrs.mode=='heat'){
-            // 制热模式时的温度颜色
-            if (index < 10) {
-                color = '#EF6D5E '
-            }else if (index > 20) {
-                color = '#F9BB6B'
-            }else {
-                color = `linear-gradient(to right, #EF6D5E 0%, #ff7524 ${200-10*index}%, #F9BB6B  100%)`
-                // color="#f38f63"
-            }
-            return color
+          return color
 
-          }else{
-              // 制冷模式时的温度颜色
-            if (index < 10) {
-                color = '#327fdb'
-            }else if (index > 20) {
-                color = '#20c6ae'
-            }else {
-                color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
-            }
-            return color
+        }else{
+            // 制冷模式时的温度颜色
+          if (index < 10) {
+              color = '#327fdb'
+          }else if (index > 20) {
+              color = '#20c6ae'
+          }else {
+              color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
           }
-      },
+          return color
+        }
+    },
     touchstart(e){
-      // console.log(e,'eeeeeeeee')
+      this.isTouchStart = true
+      console.log(this.isTouchStart,'start')
     },
     touchmove(e){
+      if(this.isTouchStart == false) return
+      console.log(this.isTouchStart,'move')
+      //isMove是用来判断是否是滑动
+      if(this.isClose) return
+      this.isMove = true
       if(e.preventDefault){
           e.preventDefault()
       }else{
@@ -375,34 +422,55 @@ export default {
       if (this.deviceAttrs.mode=='wind') {
         return
      }
+
+     //  滑动限制处理
+      //  if(this.flagVal == true) return
      var touch = e.targetTouches[0]
-     var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
+     var ele = document.elementFromPoint(touch.clientX, touch.clientY)&&document.elementFromPoint(touch.clientX, touch.clientY).id
      this.idNum = parseInt(ele)
-    //  console.log(this.idNum,'小梯形的id')
-     this.calculateBg(this.idNum)
-     // 如果是NaN,则return
-    if(isNaN(this.idNum)==true){
-        return
-      }else{
-        // 滑动的梯子的index和温度之间的关系式
-        this.itemTemp = (0.5*this.idNum+17.5)*10
-        var num = this.itemTemp + ""
+      // 如果是NaN,则return
+      if(isNaN(this.idNum)==true){
+          console.log(this.itemTemp,'return掉了return发的温度是')
+          this.returnTemp = this.itemTemp
+        }else{
+            // 滑动的梯子的index和温度之间的关系式
+            this.itemTemp = (0.5*this.idNum+17)*10
+            var num = this.itemTemp + ""
 
-        // console.log(num.lastIndexOf("5"),num,'this.itemTemp未处理之前的温度')
-        // 如果最后一位数字是5，则往前进1
-        if (num.lastIndexOf("5")==2) {
-          this.itemTemp -=5
-          // console.log(this.itemTemp,'最终传给后台的温度')
-
-        }
+            // 如果最后一位数字是5，则往前进1
+            if (num.lastIndexOf("5")==2) {
+              console.log(num,'numnum')
+              this.itemTemp +=5
+              this.returnTemp = this.itemTemp
+              console.log(this.itemTemp,'最终传给后台的温度2222222')
+            }else{
+              this.itemTemp = (0.5*this.idNum+17)*10
+              this.returnTemp = this.itemTemp
+              console.log(num,'传的没有小数的温度')
+            }
       }
     },
     touchend(){
+      this.isTouchStart = false
+      console.log(this.itemTemp,'温度touchend')
       if (this.isOffline||this.deviceAttrs.switchStatus=='off') return
       if (this.deviceAttrs.mode=='wind') {
           return HdSmart.UI.toast('送风模式不支持温度调节')
       }
-      this.controlDevice('temperature',this.itemTemp)
+      if(this.isMove == false||this.isClose) return
+      this.flagVal = true
+      this.setTemperatureDis = true
+      this.controlDevice('temperature',this.returnTemp)
+      .then((res) => {
+        // this.setTemperatureDis = false
+        if(res.code != 0) {
+          this.flagVal = false
+        }
+      })
+      .catch(() => {
+        this.flagVal = false
+      })
+      this.isMove = false
     },
     OfflineHelpPage(){
         this.$router.push({
@@ -414,6 +482,10 @@ export default {
       if (this.isOffline) return
       HdSmart.UI.vibrate()
       this.moveEnd = false
+      setTimeout(()=>{
+         this.isStart = false
+        this.isEnd = false
+      },500)
       let switchstatus = ''
       if (this.deviceAttrs.switchStatus=='on') {
         switchstatus = 'off'
@@ -432,6 +504,12 @@ export default {
     },
     setTemperature(val,step) {
       if (this.isOffline||this.isClose) return
+      setTimeout(()=>{
+        this.isReduceStart = false
+        this.isAddStart = false
+        this.isReduceEnd = false
+        this.isAddEnd = false
+      },500)
       HdSmart.UI.vibrate()
         this.moveEnd = false
         this.setTemperatureDis = true
@@ -441,7 +519,7 @@ export default {
         this.setTemperatureDis = false
         return HdSmart.UI.toast('送风模式不支持温度调节')
       }
-      let temp = +this.deviceAttrs.temperature + step
+      let temp = +this.itemTemp + step
       // 最小温度
       if (temp < MIN_TEMP) {
         if (this.deviceAttrs.temperature == MIN_TEMP) {

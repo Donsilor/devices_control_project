@@ -17,7 +17,7 @@ var res = {
     device_name: '挂式空调',
     default_device_name: '挂式空调',
     attribute: {
-        // selection:"17,31;0,2,3,5;1,2,3,4,5,7",
+        // selection:"17,30;0,2,3,5;1,2,3,4,5,7",
         switchStatus: "on",
         temperature: 280.0,
         env_temperature: 200,
@@ -38,7 +38,7 @@ var res = {
         wind_down:'off',
     },
     third_attribute:{
-      "selection":"15,33;1,2,3;0,1,2,3,4",
+      "selection":"17,30;1,2,3;0,1,2,3,4",
       "id":"10",
       "tantron_id":"b5dc664042c5edab"
     }
