@@ -262,6 +262,7 @@ export default {
       slideUpStyle:'',
       unHeat:'',
       Heat:'',
+      offsetT:'',
     }
   },
 
@@ -400,6 +401,7 @@ export default {
     this.$nextTick(()=>{
       console.log(this.$refs.panelBox.offsetHeight,'offsetHeight')
       console.log(this.$refs.panelBox.offsetTop,'offsetTop')
+      this.offsetT = this.$refs.panelBox.offsetTop
       console.log(document.documentElement.clientHeight,'clientHeight')
       // this.slideUpStyle = document.querySelectorAll('.slideUp')[0]
       setTimeout(()=>{
@@ -422,43 +424,53 @@ export default {
       console.log(this.moveY - this.startY,'4845')//往上滑，得到一个负数
       this.$refs.bottomPanel.classList.add('pannelCover')       
       if(this.moveY - this.startY < 0){
+        console.log(11111)
         this.slideDown = false
         this.slideUp = true
         if(this.deviceAttrs.mode!='heat'){
-          this.$refs.panelBox.style.top = document.documentElement.clientHeight - this.$refs.panelBox.offsetHeight - 12 + 'px'
+          let a = document.documentElement.clientHeight - this.$refs.panelBox.offsetHeight - 12 + 'px'//盒子能滑到的最高点
+          console.log(a,'a')
+          // if(parseInt(a) < document.documentElement.clientHeight - this.$refs.panelBox.offsetHeight - 12) {return}
+          this.$refs.panelBox.style.top = this.offsetT-(this.startY - this.moveY) + 'px'
+           
           this.unHeat = this.$refs.panelBox.style.top
-          console.log(this.unHeat,'this.unHeat')
+          if(parseInt(this.unHeat)<parseInt(a)){
+            this.unHeat = this.$refs.panelBox.style.top = a 
+          }
         }else{
-          this.$refs.panelBox.style.bottom = 10+'px'
-          this.$refs.panelBox.style.top = 'unset'
+          let c = document.documentElement.clientHeight - this.$refs.panelBox.offsetHeight - 12 + 'px'//盒子能滑到的最低点
+          console.log(c,'c')
+          console.log(this.unHeat,'this.unHeat')
+          console.log(this.startY - this.moveY,'this.startY - this.moveY')
+          this.$refs.panelBox.style.top = parseInt(this.unHeat)-(this.startY - this.moveY) + 'px'
+          console.log(this.$refs.panelBox.style.top,'heattop')
+          if(parseInt(this.$refs.panelBox.style.top)<parseInt(c)){
+            this.$refs.panelBox.style.bottom = 10+'px'
+            this.$refs.panelBox.style.top = 'unset'
+          }
+          // this.$refs.panelBox.style.bottom = 10+'px'
+          // this.$refs.panelBox.style.top = 'unset'
           // this.$refs.panelBox.style.top = document.documentElement.clientHeight - this.$refs.panelBox.offsetHeight - 6 + 'px'
           // this.Heat = this.$refs.panelBox.style.top
           console.log(this.Heat,'this.Heat')
         }
         
       }else{
+        console.log(22222)
         this.slideUp = false
         this.slideDown = true
         this.$refs.bottomPanel.classList.remove('pannelCover')
-        this.$refs.panelBox.style.top = 'unset'
-        this.$refs.panelBox.style.bottom = 'unset'
+        this.$refs.panelBox.style.top = parseInt(this.unHeat) +(this.moveY - this.startY) +'px'
+        console.log(this.$refs.panelBox.style.top,'9999')
+        if(parseInt(this.$refs.panelBox.style.top)>=this.offsetT){
+          this.$refs.panelBox.style.bottom = 'unset'
+          this.$refs.panelBox.style.top = 'unset'
+          // this.$refs.panelBox.style.top = this.offsetT + 'px'
+        }
+        // this.$refs.panelBox.style.top = 'unset'
+        // this.$refs.panelBox.style.bottom = 'unset'
       }
-      // if(this.moveY - this.startY < 0){
-      //   this.slideDown = false
-      //   this.slideUp = true
-      //   console.log(this.$refs.panelBox.offsetHeight,'this.$refs.panelBox.offsetHeight')
-      //   this.$refs.panelBox.style.top = document.documentElement.clientHeight - this.$refs.panelBox.offsetHeight - 6 + 'px'
-      //   console.log('上')
-      // }else if(this.moveY - this.startY > 0){
-      //   this.slideUp = false
-      //   this.slideDown = true
-      //   console.log('下')
-      //    this.$refs.panelBox.style.top = 'unset'
-      //    console.log(this.$refs.panelBox.style.top,'this.$refs.panelBox.style.top')
-      // }else{
-      //   this.slideUp = false
-      //   this.slideDown = false
-      // }
+
     },
     pageEnd(e){
       console.log(e)
@@ -827,35 +839,6 @@ export default {
   background:#000;
   width:100%;
 }
-.slideUp{
-  // animation: animateUp .2s linear 0s;
-  // animation-fill-mode : forwards;
-  position:absolute;
-  z-index:100;
-  background:#000;
-  width:100%;
-  transition: top .2s;
-}
-.slideDown{
-  // animation: animateDown .2s linear 0s;
-  // animation-fill-mode : forwards;
-}
-// @keyframes animateUp{
-//   from{
-//     bottom:normal;
-//   }
-//   to{
-//     bottom:12px;
-//   }
-// }
-// @keyframes animateDown{
-//   from{
-//     bottom:12px;
-//   }
-//   to{
-//     bottom:normal;
-//   }
-// }
 .page {
   .main{
     .wrap-circle {
@@ -868,39 +851,39 @@ export default {
     }
   }
 }
-    .container {
-        width: 85%;
-        // height: 470px;
-        height: 370px;
-        margin: 20px auto;
-        border: 1px solid #000;
-        position: relative;
-    }
-    .item-container {
-        width: 10px;
-        // height: 270px;
-        height: 350px;
-        position: absolute;
-        left: 50%;
-        // top: 0;
-        top: -80px;
-        transform-origin: 50% 100%;
-        z-index: 99;
-        .items{
-          width: 32px;
-          // height: 270px;
-          height: 350px;
-          z-index: 99;
-          .item {
-            width: 12px;
-            height: 64px;
-            background-color: rgba(255,255,255,0.1);
-            -webkit-clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
-            clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
-            margin-top:80px;
-          }
-        }
-    }
+    // .container {
+    //     width: 85%;
+    //     // height: 470px;
+    //     height: 370px;
+    //     margin: 20px auto;
+    //     border: 1px solid #000;
+    //     position: relative;
+    // }
+    // .item-container {
+    //     width: 10px;
+    //     // height: 270px;
+    //     height: 350px;
+    //     position: absolute;
+    //     left: 50%;
+    //     // top: 0;
+    //     top: -80px;
+    //     transform-origin: 50% 100%;
+    //     z-index: 99;
+    //     .items{
+    //       width: 32px;
+    //       // height: 270px;
+    //       height: 350px;
+    //       z-index: 99;
+    //       .item {
+    //         width: 12px;
+    //         height: 64px;
+    //         background-color: rgba(255,255,255,0.1);
+    //         -webkit-clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
+    //         clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
+    //         margin-top:80px;
+    //       }
+    //     }
+    // }
     .showWind{
       width: 40px;
       height: 40px;
