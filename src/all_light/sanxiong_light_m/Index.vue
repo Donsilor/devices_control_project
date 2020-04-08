@@ -133,6 +133,7 @@
             var r = Math.atan2(k.x-this.ox, this.oy-k.y)
             var hd = (Math.PI+r)/(2*Math.PI)
             // 半圆的滑动范围判断
+            this.flag = hd
             if (hd <= 1 && hd >= 0) {
               this.draw(hd)
             }else{

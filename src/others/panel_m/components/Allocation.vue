@@ -42,6 +42,7 @@
         </div>
       </div>
     </div>
+    <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
     <div class="viewHelpstatus">
       <div class="Prefabrication">
         <h3 class="AllocationH3">APP场景</h3>
@@ -49,7 +50,7 @@
           <li
             v-for="(item, i) in list"
             :key="i"
-            @click="settingScene(item.scene_id)">
+            @click="settingScene(item.scene_id, item.enable)">
             <p>{{ item.scene_name }}</p>
           </li>
         </ul>
@@ -116,7 +117,7 @@ export default {
         //   "scene_id": 12, // 场景id
         //   "scene_name": "回家", //场景名
         //   "control_state":1, //控制状态
-        //   "enable":0, //打开状态
+        //   "enable":1, //打开状态
         //   "icon":"fgdfg",
         //   "list_pic":{"normal":"objectId1"}, //列表图标url,目前只有normal字段。后期扩展需要高亮和暗的图标，则加上对应字段。{"normal":"objectId1"，"bright":"sss","dark":"sdfd"}
         //   "detail_pic":"sfdas", //详情图标url
@@ -143,6 +144,12 @@ export default {
   },
   methods:{
     ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice','getViewHelpInfo','setViewHelpInfo']),
+    // 路由跳转
+      OfflineHelpPage(){
+        this.$router.push({
+        path:"/SupconOfflineHelpPage"
+      })
+    },
     getScene() {
       return new Promise((resolve, reject) => {
         HdSmart.Device.control({}, (data) => {
@@ -159,7 +166,8 @@ export default {
         },'dm_get_scene')
       })
     },
-    settingScene(item) {
+    settingScene(item, enable) {
+      if(enable == 0) return HdSmart.UI.toast('该场景未启用')
       this.setScene(item)
       .then(() =>{
         this.goBack()

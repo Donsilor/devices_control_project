@@ -209,19 +209,19 @@ export default {
             }
             if(that.jsonList.list) {
               that.jsonList.list.map((x) =>{
-                if(x.board_key == 135) {
+                if(x.board_key == 135 && x.enable == 1) {
                   // that.dataList.splice(0, 1, x)
                   that.$set(that.dataList, 0, x)
                 }
-                if(x.board_key == 136) {
+                if(x.board_key == 136 && x.enable == 1) {
                   // that.dataList.splice(1, 1, x)
                   that.$set(that.dataList, 1, x)
                 }
-                if(x.board_key == 137) {
+                if(x.board_key == 137 && x.enable == 1) {
                   // that.dataList.splice(2, 1, x)
                   that.$set(that.dataList, 2, x)
                 }
-                if(x.board_key == 138) {
+                if(x.board_key == 138 && x.enable == 1) {
                   // that.dataList.splice(3, 1, x)
                   that.$set(that.dataList, 3, x)
                 }
@@ -270,6 +270,7 @@ export default {
       })
     },
     deleteScene(i){
+      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有解绑权限')
       this.scene_id = i
       this.$refs.model.show = true
     },
@@ -291,19 +292,19 @@ export default {
           }
           if(that.jsonList.list) {
             that.jsonList.list.map((x) =>{
-              if(x.board_key == 135) {
+              if(x.board_key == 135 && x.enable == 1) {
                 // that.dataList.splice(0, 1, x)
                 that.$set(that.dataList, 0, x)
               }
-              if(x.board_key == 136) {
+              if(x.board_key == 136 && x.enable == 1) {
                 // that.dataList.splice(1, 1, x)
                 that.$set(that.dataList, 1, x)
               }
-              if(x.board_key == 137) {
+              if(x.board_key == 137 && x.enable == 1) {
                 // that.dataList.splice(2, 1, x)
                 that.$set(that.dataList, 2, x)
               }
-              if(x.board_key == 138) {
+              if(x.board_key == 138 && x.enable == 1) {
                 // that.dataList.splice(3, 1, x)
                 that.$set(that.dataList, 3, x)
               }
@@ -330,6 +331,7 @@ export default {
       })
     },
     setScene(i){
+      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有配置权限')
       // this.newPageShow = true
       this.$router.push({
         name: 'Allocation',
@@ -448,6 +450,7 @@ export default {
             background-clip: text;
             color: transparent;
             font-size: 24px;
+            line-height: 48px;
           }
         }
 
