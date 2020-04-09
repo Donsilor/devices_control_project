@@ -5,7 +5,6 @@
       <topbar
         :title="device.device_name"
         :room="device.room_name"
-        :scroll="true"
         page-class=".page" />
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <!-- 灯 -->
@@ -28,7 +27,7 @@
                   ref="two"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[1].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[1].chan_name?switchTitle1:'开关2' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[1].chan_name?switchTitle1:'左上键' }}</div>
               </div>
             </div>
           </div>
@@ -61,7 +60,7 @@
                   ref="three"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[2].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[2].chan_name?switchTitle2:'开关3' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[2].chan_name?switchTitle2:'右上键' }}</div>
               </div>
             </div>
           </div>
@@ -96,7 +95,7 @@
                   ref="one"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[0].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[0].chan_name?switchTitle0:'开关1' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[0].chan_name?switchTitle0:'左下键' }}</div>
               </div>
             </div>
           </div>
@@ -130,7 +129,7 @@
                   ref="four"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[3].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[3].chan_name?switchTitle3:'开关4' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[3].chan_name?switchTitle3:'右下键' }}</div>
               </div>
             </div>
           </div>
@@ -327,6 +326,7 @@ export default {
       if(val == 'SwitchOff') return this.setSwitchOff('off')
     },
     showMode(val) {
+      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有编辑权限')
       this.num = val
       this.$refs.swing.show = true
       // this.timeOutEventOK = false
@@ -509,7 +509,7 @@ body {
     filter: blur(12px);
   }
   .main {
-    margin-top: 65px;
+    margin-top: 200px;
     position: relative;
     .bg {
       display: flex;

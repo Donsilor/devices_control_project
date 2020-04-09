@@ -30,7 +30,7 @@
                   ref="one"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[0].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[0].chan_name?switchTitle0:'开关1' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[0].chan_name?switchTitle0:deviceAttrs.chan_num == 1?device.room_name+'开关':'左键' }}</div>
               </div>
             </div>
           </div>
@@ -50,7 +50,7 @@
                   ref="two"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[1].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[1].chan_name?switchTitle1:'开关2' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[1].chan_name?switchTitle1:deviceAttrs.chan_num == 2?'右键':'中键' }}</div>
               </div>
             </div>
           </div>
@@ -70,7 +70,7 @@
                   ref="three"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[2].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[2].chan_name?switchTitle2:'开关3' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[2].chan_name?switchTitle2:'右键' }}</div>
               </div>
             </div>
           </div>
@@ -197,6 +197,7 @@ export default {
       if(val == 'SwitchOff') return this.setSwitchOff('off')
     },
     showMode(val) {
+      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有编辑权限')
       this.num = val
       this.$refs.swing.show = true
       // this.timeOutEventOK = false

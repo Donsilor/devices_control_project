@@ -194,9 +194,12 @@ export default {
     },
   },
   created() {
+    console.log('created=====第一步')
     HdSmart.ready(() => {
+      console.log('HdSmart.ready=====第二步')
       this.getDeviceInfo()
         .then(() => {
+          console.log('getDeviceInfo回调=====第三步')
           //接口请求
           let that = this
           this.getScene()

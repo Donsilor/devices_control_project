@@ -53,12 +53,12 @@
             <p class="offline_bar_p">
               <i class="error"/>
             </p>
-            <span class="link">路由器已离线,查看帮助</span>
+            <span class="link">中控已离线,查看帮助</span>
           </div>
           <i class="arrow"/>
         </div>
         <div
-          v-if="deviceAttrs.connectivity==='offline'&&networkStatus!=-1&&networkStatus!=-2"
+          v-if="deviceAttrs.connectivity==='offline'&&networkStatus!=-1"
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">

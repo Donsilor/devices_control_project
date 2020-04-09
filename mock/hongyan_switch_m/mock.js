@@ -26,7 +26,7 @@ let res = {
       // {
       //   "chan_index": 2,
       //   "chan_status": "off",
-      //   "chan_name": "/*- ``@",
+      //   "chan_name": "",
       //   "chan_avatar": "123dfafga "
       // },
       // {
@@ -45,6 +45,7 @@ export function generateSnapShot() {
         code: 0,
         result: {
             "device_name": "智能开关",
+            "room_name": "客厅",
             "device_uuid":3434,
             "attribute": res
         }

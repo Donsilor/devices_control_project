@@ -35,7 +35,7 @@
           <i class="arrow"/>
         </div> -->
         <div
-          v-if="deviceAttrs.connectivity==='offline'&&networkStatus!=-1&&networkStatus!=-2"
+          v-if="deviceAttrs.connectivity==='offline'&&networkStatus!=-1"
           class="offline_bar"
           @click="goToOfflineHelpPage">
           <div class="offline_bar_div">
