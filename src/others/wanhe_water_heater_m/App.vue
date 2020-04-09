@@ -1,12 +1,16 @@
 <template>
-  <div class="body">
+  <div
+    ref="body"
+    class="body"
+    @touchstart="bodyTouchstart"
+    @touchmove="bodyTouchmove"
+    @touchend="bodyTouchEnd">
     <div
       :class="[{ 'offline': isOffline }, {'close': isClose}, 'page', {'scroll44': classTrue}]"
     >
       <NewTopBar
         :title="device.device_name"
         :room="device.room_name"
-        :scroll="true"
         @hscroll="hscroll"
         @hscrolltop="hscrolltop"/>
       <!-- <StatusTip v-show="device.device_uuid"/> -->
@@ -14,26 +18,26 @@
         <div class="wrap-circle">
           <div class="showtemp">
             <div
-              v-if="loaclAttr.connectivity == 'offline'||loaclAttr.switchStatus=='off'||loaclAttr.mode=='wind'"
+              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switch=='off'||deviceAttrs.mode=='wind'"
               class="tm">-- <sup>°C</sup></div>
             <div
-              v-if="!isOffline&& loaclAttr.switchStatus == 'on'&&loaclAttr.mode!=='auto'&&loaclAttr.mode!='wind'"
+              v-if="!isOffline&& deviceAttrs.switch == 'on'&&deviceAttrs.mode!=='auto'&&deviceAttrs.mode!='wind'"
               class="tm">{{ thermography }}<sup>°C</sup>
             </div>
             <div
-              v-if="!isOffline&& loaclAttr.switchStatus == 'on'&&loaclAttr.mode=='auto'"
+              v-if="!isOffline&& deviceAttrs.switch == 'on'&&deviceAttrs.mode=='auto'"
               class="tm">25<sup>°C</sup>
             </div>
             <div
-              v-show="!isOffline&& loaclAttr.switchStatus == 'on'"
-              :class="[loaclAttr.mode, 'c-mode']">当前温度{{ loaclAttr.env_temperature | filterTm }}°C</div>
+              v-show="!isOffline&& deviceAttrs.switch == 'on'"
+              :class="[deviceAttrs.mode, 'c-mode']">当前温度{{ deviceAttrs.env_temperature | filterTm }}°C</div>
             <div
-              v-show="isOffline||loaclAttr.switchStatus == 'off'"
-              :class="[loaclAttr.mode, 'c-mode']">当前温度--°C</div>
+              v-show="isOffline||deviceAttrs.switch == 'off'"
+              :class="[deviceAttrs.mode, 'c-mode']">当前温度--°C</div>
           </div>
           <!-- 当不可调节温度时，显示这个盒子，可以挡着canvas，使它不能滑动 -->
           <div
-            v-if="loaclAttr.mode=='wind'||loaclAttr.mode=='auto'"
+            v-if="deviceAttrs.mode=='wind'||deviceAttrs.mode=='auto'"
             class="cover"
             @touchmove.prevent/>
           <canvas
@@ -59,95 +63,85 @@
           />
         </div>
       </div>
-      <!-- 当前状态 -->
-      <!-- <div
-        v-show="loaclAttr.timer_switch == 'on'&& loaclAttr.timer_value >0"
-        class="status">
-        {{ loaclAttr.timer_value | closeTime }}
-      </div> -->
-      <!-- 底部按钮 -->
       <!-- 开关 -->
       <div
         class="starting">
         <div
           ref="switchStatus"
-          :class="[loaclAttr.mode,{'active': loaclAttr.switchStatus == 'on'&&!isOffline},' btn-start switchColor']"
+          :class="[deviceAttrs.mode,{'active': deviceAttrs.switch == 'on'&&!isOffline},' btn-start switchColor']"
           @click="setSwitch('switchStatus')"
         />
       </div>
       <div
-        class="panel-btn center">
-        <!-- 模式和风速 -->
-        <!-- <div class="modespeed">
+        ref="bottomControl"
+        :style="{bottom: bottom1}"
+        class="bottom-control">
+        <div
+          class="panel-btn center">
+
           <div
-            class="btn-wrap center"
-            @click="showMode">
-            <div
-              :class="[modeClass,'btn  center']"
-            />
-            <div class="btn-name">{{ modeTxt }}</div>
-          </div>
-          <div
-            class="btn-wrap center"
-            @click="showSpeed">
-            <div
-              :class="[loaclAttr.mode,speedClass,'btn center']" />
-            <div class="btn-name">{{ speedTxt }}</div>
-          </div>
-        </div> -->
-        <div class="bottom">
-          <div class="Charging-protection">
-            <div>模式</div>
-            <div
-              style="z-index: 100;">
-              <div class="timing-right">{{ custom ? "普通模式" : modeTitle }}</div>
+            class="bottom noborder"
+            @click.stop="showMode">
+            <div class="Charging-protection">
+              <div>模式</div>
+              <div
+                style="z-index: 100;">
+                <div class="timing-right">{{ custom ? "普通模式" : modeTitle }}</div>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- 上下风 -->
-        <div class="bottom">
-          <div class="Charging-protection">
-            <div>童锁</div>
-            <div
-              style="z-index: 100;">
-              <input
-                :class="[loaclAttr.mode,'switch switch-anim']"
-                :checked="loaclAttr.wind_up_down=='on'"
-                :disabled="disabledLock"
-                type="checkbox"
-                @click="checkSwitch('wind_up_down')">
+          <!-- 上下风 -->
+          <div class="bottom">
+            <div class="Charging-protection">
+              <div>童锁</div>
+              <div
+                style="z-index: 100;">
+                <input
+                  :class="[deviceAttrs.mode,'switch switch-anim']"
+                  :checked="deviceAttrs.wind_up_down=='on'"
+                  :disabled="disabledLock"
+                  type="checkbox"
+                  @click="checkSwitch('wind_up_down')">
+              </div>
             </div>
           </div>
-        </div>
-        <!-- 左右风 -->
-        <div class="bottom">
-          <div class="Charging-protection">
-            <div>智能防冻</div>
+          <!-- 左右风 -->
+          <div class="bottom">
+            <div class="Charging-protection">
+              <div>智能防冻</div>
+              <div
+                style="z-index: 100;">
+                <input
+                  :class="[deviceAttrs.mode,'switch switch-anim']"
+                  :checked="deviceAttrs.wind_left_right=='on'"
+                  :disabled="disabledLock"
+                  type="checkbox"
+                  @click="checkSwitch('wind_left_right')">
+              </div>
+            </div>
+          </div>
+          <!-- 模式和风速 -->
+          <div class="modespeed">
             <div
-              style="z-index: 100;">
-              <input
-                :class="[loaclAttr.mode,'switch switch-anim']"
-                :checked="loaclAttr.wind_left_right=='on'"
-                :disabled="disabledLock"
-                type="checkbox"
-                @click="checkSwitch('wind_left_right')">
+              class="btn-wrap">
+              <div class="title">用气</div>
+              <div class="txt">实时 0m³/h</div>
+              <div class="txt">累计 14355333330.2m³</div>
+            </div>
+            <div
+              class="btn-wrap">
+              <div class="title">用水</div>
+              <div class="txt">实时 0m³/h</div>
+              <div class="txt">累计 14355333330.2m³</div>
             </div>
           </div>
         </div>
       </div>
-      <!-- 规格选择 -->
-      <!-- 风速 -->
-
       <!--选择模式-->
       <model-mode
         ref="mode"
-        :mode="loaclAttr.mode"
+        :mode="deviceAttrs.mode"
         @setMode="setMode" />
-      <!--选择风速-->
-      <model-speed
-        ref="speed"
-        :speed="loaclAttr.speed"
-        @setSpeed="setSpeed" />
     </div>
   </div>
 </template>
@@ -155,32 +149,13 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
 import modelMode from './components/model-mode'
-import modelSpeed from './components/model-speed'
 const [MIN_TEMP, MAX_TEMP] = [160, 320]
 export default {
   components: {
     modelMode,
-    modelSpeed,
   },
   data() {
     return {
-      isOpen: false,
-      isShow: true,
-      width: 250,
-      radius: 8,
-      progress: 30, // 0~70
-      duration: 0,
-      delay: 0,
-      // barColor: '#D8D8D8',
-      backgroundColor: '#ececec',
-      timeShow: false,
-      typeVal: 'hand',
-      brightnessValue: 0,
-      rangStyle: '',
-      opcityStyle: 'opcity-0',
-      animation:false,
-      loaclAttr: {},
-            //圆的数据
       ox:140,
       oy:140,
       or:120,
@@ -188,10 +163,8 @@ export default {
       moveFlag:false,
       centigrade:0,//摄氏度
       ctx: '',
-      //记录温度
       thermography:16,
       setTemperatureDis:false,
-      moveEnd:false,
       hscrolll: 0,
       hscrolltopp: 0,
       classTrue: false,
@@ -207,6 +180,12 @@ export default {
         }
       ],
       custom: true,
+      bottom1: '0',
+      touchStartPoint: 0,
+      touchEndPoint: 0,
+      canMove: false,
+      minVisibleHeight:0,
+      controlHight:0,
     }
   },
 
@@ -214,105 +193,17 @@ export default {
     ...mapGetters(['isOffline']),
     ...mapState(['device', 'deviceAttrs']),
     isClose(){
-      return this.loaclAttr.switchStatus == 'on'?false:true
+      return this.deviceAttrs.switch == 'on'?false:true
     },
     isOffline(){
-      return this.loaclAttr.connectivity == 'online'?false:true
+      return this.deviceAttrs.connectivity == 'online'?false:true
     },
-    modeIsActive() {
-      return this.loaclAttr.mode == 'auto' || this.loaclAttr.mode == 'dehumidify' || this.loaclAttr.mode == 'wind'
-    },
-    windIsActive() {
-      return this.loaclAttr.wind_up_down == 'on' || this.loaclAttr.wind_left_right == 'on'
-    },
-    modeClass() {
-      /* eslint-disable no-unreachable */
-      switch (this.loaclAttr.mode) {
-        case 'auto':
-          return 'btn-auto'
-          break
-        case 'dehumidify':
-          return 'btn-dehumidify'
-          break
-        case 'wind':
-          return 'btn-wind'
-          break
-        default:
-          return 'btn-wind'
-      }
-    },
-    speedClass() {
-      /* eslint-disable no-unreachable */
-      switch (this.loaclAttr.speed) {
-        case 'low':
-          return 'btn-low'
-          break
-        case 'normal':
-          return 'btn-normal'
-          break
-        case 'high':
-          return 'btn-high'
-          break
-        case 'auto':
-          return 'btn-auto'
-          break
-        default:
-          return 'btn-low'
-      }
-    },
-    modeTxt(){
-        /* eslint-disable no-unreachable */
-      switch (this.loaclAttr.mode) {
-        case 'cold':
-          return '制冷'
-          break
-          case 'heat':
-          return '制热'
-          break
-        case 'auto':
-          return '智能'
-          break
-        case 'dehumidify':
-          return '除湿'
-          break
-        case 'wind':
-          return '送风'
-          break
-        default:
-          return ''
-      }
-    },
-    speedTxt(){
-        /* eslint-disable no-unreachable */
-      switch (this.loaclAttr.speed) {
-        case 'breeze':
-          return '微风'
-          break
-         case 'low':
-          return '低风'
-          break
-        case 'normal':
-          return '中风'
-          break
-        case 'high':
-          return '高风'
-          break
-        case 'auto':
-          return '自动风'
-          break
-        default:
-          return ''
-      }
-    }
   },
   watch: {
     "deviceAttrs"() {
-      this.loaclAttr = this.deviceAttrs
-      // this.reset()
-      console.log('=============', this.loaclAttr.mode)
     },
     "device.stateChange"(){
-        this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
+        this.draw(`${0.125+0.046875*(this.deviceAttrs.temperature/10-16)}`)
     },
     "hscrolltopp"() {
       if(this.hscrolltopp >= this.hscrolll) {
@@ -326,16 +217,27 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-            this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
+            this.draw(`${0.125+0.046875*(this.deviceAttrs.temperature/10-16)}`)
           // this.reset()
         })
       HdSmart.UI.setStatusBarColor(2)
     })
+    if(document.body.offsetHeight == 568) {
+      this.minVisibleHeight = 25
+    } else if(document.body.offsetHeight < 620) {
+      this.minVisibleHeight = 50
+    } else {
+      this.minVisibleHeight = 100
+    }
   },
   mounted(){
     this.ctx = this.$refs.canvas.getContext("2d")
     this.ctx.scale(2,2)
     this.$nextTick(() => {
+      setTimeout(() => {
+        window.scrollTo(0, 0)
+      }, 200)
+      this.resetPosition()
       let isMove = false
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
@@ -343,11 +245,18 @@ export default {
           start: "mousedown", move: "mousemove", end: "mouseup"
       }
         this.$refs.canvas.addEventListener(on.start,(e)=> {
+          e.stopPropagation()
+        if(e.preventDefault){
+            e.preventDefault()
+        }else{
+            e.returnValue = false
+        }
           this.br = 20
           this.moveFlag = true
       },false)
 
       this.$refs.canvas.addEventListener(on.move, (e)=> {
+        e.stopPropagation()
         if(e.preventDefault){
             e.preventDefault()
         }else{
@@ -377,9 +286,8 @@ export default {
             .then((res) => {
               if (res) {
                 if(res.code == 0) {
-                  this.loaclAttr.temperature = this.centigrade
-                  this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
-                  console.log(this.loaclAttr.temperature,'-------------------------------------')
+                  this.deviceAttrs.temperature = this.centigrade
+                  this.draw(`${0.125+0.046875*(this.deviceAttrs.temperature/10-16)}`)
                 }
                 if (res == null) {
                   HdSmart.UI.toast('操作失败')
@@ -393,6 +301,94 @@ export default {
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    resetPosition() {
+      this.$nextTick(() => {
+        let bottomHeight = this.$refs.bottomControl.offsetHeight
+        if (this.controlHight===bottomHeight) return
+        let result = document.body.offsetHeight - this.$refs.switchStatus.offsetTop - this.$refs.switchStatus.offsetHeight
+        let showHight = this.controlHight?this.controlHight + parseFloat(getComputedStyle(this.$refs.bottomControl).bottom): bottomHeight
+        if (result < bottomHeight) {
+          this.canMove = true
+          if (this.controlHight<bottomHeight) {
+            this.bottom1 = this.controlHight? showHight-bottomHeight + 'px':-(bottomHeight - this.minVisibleHeight) + 'px'
+          }else {
+            if (showHight>= bottomHeight) {
+              this.bottom1 = '10px'
+            }else {
+              this.bottom1 = showHight-bottomHeight + 'px'
+            }
+          }
+        } else {
+          if(showHight>=bottomHeight){
+            this.bottom1 = '10px'
+            this.canMove = false
+          }else {
+            this.minVisibleHeight = showHight
+            this.bottom1 = showHight-bottomHeight + 'px'
+            this.canMove = true
+          }
+        }
+        this.controlHight = bottomHeight
+      })
+    },
+    bodyTouchstart(e) {
+      this.touchStartPoint = e.touches[0].pageY
+      this.touchEndPoint = e.touches[0].pageY
+      this.bottom1 = getComputedStyle(this.$refs.bottomControl).bottom
+    },
+    bodyTouchmove(e) {
+      if (!this.canMove) return
+      let pageY =  e.changedTouches[0].pageY
+      let bottomHeight = this.$refs.bottomControl.offsetHeight
+      let IsUp = pageY - this.touchEndPoint < 0
+      let bottomOff = parseFloat(this.bottom1)
+      let position = bottomOff
+      if (IsUp && bottomOff >= -(bottomHeight - this.minVisibleHeight)||(!IsUp && bottomOff <= 10)) {
+        position = bottomOff - (pageY - this.touchEndPoint)
+      }
+      if (position>10) position = 10
+      if (position<this.minVisibleHeight-bottomHeight) {
+        position = this.minVisibleHeight-bottomHeight
+      }
+      this.bottom1 = position+ 'px'
+      this.touchEndPoint = pageY
+    },
+    bodyTouchEnd() {
+      if (Math.abs(this.touchEndPoint - this.touchStartPoint) > 30) {
+        if (this.touchStartPoint - this.touchEndPoint > 0) {
+          this.gentlyMove('up')
+        } else {
+          this.gentlyMove('down')
+        }
+      }
+    },
+    gentlyMove(direction = 'up') {
+      let bottomOff = parseFloat(getComputedStyle(this.$refs.bottomControl).bottom)
+      if (direction === 'down') {
+        if (bottomOff > -(this.$refs.bottomControl.offsetHeight - this.minVisibleHeight)) {
+          this.bottom1 = bottomOff>=0? bottomOff*0.9- 0.3+ 'px':bottomOff*1.05- 0.5+'px'
+          requestAnimationFrame(() => {
+            this.gentlyMove(direction)
+          })
+        } else {
+          this.bottom1 = -(this.$refs.bottomControl.offsetHeight - this.minVisibleHeight) + 'px'
+        }
+      } else {
+        if (bottomOff < 0) {
+          this.bottom1 = bottomOff*0.9+ 1+ 'px'
+          requestAnimationFrame(() => {
+            this.gentlyMove(direction)
+          })
+        } else if (bottomOff<=10) {
+          this.bottom1 = bottomOff*1.1+ 1+ 'px'
+          requestAnimationFrame(() => {
+            this.gentlyMove(direction)
+          })
+        }else {
+          this.bottom1 = '10px'
+        }
+      }
+    },
     hscroll(val) {
       this.hscrolll = val
     },
@@ -403,7 +399,7 @@ export default {
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
-        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+        if (this.deviceAttrs.switch=='off'||this.isOffline) return
       }
        let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
@@ -425,7 +421,7 @@ export default {
       if (val == 'switchStatus') {
         if (this.isOffline) return
       }else{
-        if (this.deviceAttrs.switchStatus=='off'||this.isOffline) return
+        if (this.deviceAttrs.switch=='off'||this.isOffline) return
       }
       let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
@@ -457,7 +453,7 @@ export default {
         gradient.addColorStop(element.step, element.color)
       })
       this.ctx.strokeStyle = gradient
-      if (this.loaclAttr.switchStatus=='on'&&!this.isOffline) {
+      if (this.deviceAttrs.switch=='on'&&!this.isOffline) {
         this.ctx.strokeStyle = gradient
       }else{
         this.ctx.strokeStyle = "transparent"
@@ -484,7 +480,7 @@ export default {
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
       // 开机显示
-      if (this.loaclAttr.switchStatus=='on'&&!this.isOffline&&this.deviceAttrs.mode!=='wind'&&this.deviceAttrs.mode!=='auto') {
+      if (this.deviceAttrs.switch=='on'&&!this.isOffline&&this.deviceAttrs.mode!=='wind'&&this.deviceAttrs.mode!=='auto') {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
       }else{
         //关机显示
@@ -501,34 +497,8 @@ export default {
             y : y - obj.offsetTop  + (document.body.scrollTop || document.documentElement.scrollTop) -145
         }
     },
-    // 设置关机时间
-    // setReserve(time) {
-    //   let h = parseInt(time[0].split(':')[0])
-    //   let m = parseInt(time[0].split(':')[1]) > 0 ? 1: 0
-    //   console.log(h,m,'hm')
-    //     this.controlDevice('time',{
-    //         timer_value:h*2+m,
-    //         timer_switch:'off'
-    //     })
-    // },
-    // // 取消定时
-    // canceltime(){
-    //    this.controlDevice('close_time','true')
-    //    .then((res) => {
-    //      if(res.code == 0) {
-    //        this.loaclAttr.close_time = true
-    //      } else {
-    //        HdSmart.UI.toast('操作失败')
-    //      }
-    //    })
-    //    .catch(() => {
-    //      HdSmart.UI.toast('操作失败')
-    //    })
-    // },
     // 开关机
     setSwitch(val){
-      // console.log(document.documentElement.scrollTop,'===========')
-
       if (this.isOffline) return
       HdSmart.UI.vibrate()
             this.touchstart(val)
@@ -536,7 +506,7 @@ export default {
         this.touchend(val)
       }, 150)
       let switchstatus = ''
-      if (this.loaclAttr.switchStatus=='on') {
+      if (this.deviceAttrs.switch=='on') {
         switchstatus = 'off'
       }else{
         switchstatus = 'on'
@@ -545,7 +515,7 @@ export default {
       .then((res) => {
           if (res) {
             if(res.code == 0) {
-                this.loaclAttr.switchStatus = switchstatus
+                this.deviceAttrs.switch = switchstatus
             }
           }
           if(res == null){
@@ -561,12 +531,12 @@ export default {
       setTimeout(() => {
         this.touchend(val)
       }, 150)
-      if (val == this.loaclAttr.mode ) return
+      if (val == this.deviceAttrs.mode ) return
       this.controlDevice('mode', val)
        .then((res) => {
          if (res) {
            if(res.code == 0) {
-            this.loaclAttr.mode = val
+            this.deviceAttrs.mode = val
             // this.reset()
             this.hide()
            }
@@ -574,7 +544,7 @@ export default {
         if(res == null){
            HdSmart.UI.toast('操作失败')
            this.$refs[val].classList.remove('yellowExtend')
-           this.$refs[this.loaclAttr.mode].classList.add('active')
+           this.$refs[this.deviceAttrs.mode].classList.add('active')
         }
        })
     },
@@ -586,19 +556,19 @@ export default {
         this.touchend(val,temp)
       }, 150)
       this.setTemperatureDis = true
-      if(this.loaclAttr.mode == 'auto') {
+      if(this.deviceAttrs.mode == 'auto') {
         this.setTemperatureDis = false
         return HdSmart.UI.toast('智能模式不支持温度调节')
       }
       // 送风模式不能设置温度
-      if (this.loaclAttr.mode === 'wind') {
+      if (this.deviceAttrs.mode === 'wind') {
         this.setTemperatureDis = false
         return HdSmart.UI.toast('送风模式不支持温度调节')
       }
-      let temp = +this.loaclAttr.temperature + step
+      let temp = +this.deviceAttrs.temperature + step
       // 最小温度
       if (temp < MIN_TEMP) {
-        if (this.loaclAttr.temperature == MIN_TEMP) {
+        if (this.deviceAttrs.temperature == MIN_TEMP) {
           this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最低')
         } else {
@@ -607,7 +577,7 @@ export default {
       }
       // 最大温度
       if (temp > MAX_TEMP) {
-        if (this.loaclAttr.temperature == MAX_TEMP) {
+        if (this.deviceAttrs.temperature == MAX_TEMP) {
           this.setTemperatureDis = false
           return HdSmart.UI.toast('温度已调至最高')
         } else {
@@ -618,9 +588,9 @@ export default {
        .then((res) => {
           if (res) {
             if(res.code == 0) {
-              this.loaclAttr.temperature = temp
+              this.deviceAttrs.temperature = temp
               this.setTemperatureDis = false
-              this.draw(`${0.125+0.046875*(this.loaclAttr.temperature/10-16)}`)
+              this.draw(`${0.125+0.046875*(this.deviceAttrs.temperature/10-16)}`)
             }
           }
         if(res == null){
@@ -628,54 +598,16 @@ export default {
         }
        })
     },
-    // 设置摆风
-    setWind(attr) {
+    showMode() {
       if (this.isClose) return
-      var val = this.loaclAttr[attr] === 'on' ? 'off' : 'on'
-      // if (this.deviceAttrs.wind_up_down=='on') {
-      //   this.controlDevice('wind_left_right','off')
-      // }
-      // if (this.deviceAttrs.wind_left_right=='on') {
-      //    this.controlDevice('wind_up_down','off')
-      // }
-      console.log(attr,val,'2222222222222222222222')
-
-      this.controlDevice(attr, val)
-        .then((res) => {
-         if (res) {
-           if(res.code == 0) {
-            this.loaclAttr[attr] = val
-            this.hide()
-           }
-         }
-         if(res == null){
-           HdSmart.UI.toast('操作失败')
-         }
-       })
+      this.$refs.mode.show = true
     },
-    // 设置风速
-    setSpeed(speed) {
-      if (this.isOffline||this.isClose) return
-      HdSmart.UI.vibrate()
-      if(this.loaclAttr.mode == 'wind' && speed == 'auto') {
-        return HdSmart.UI.toast('送风模式不能设置自动风速')
-      }
-      this.controlDevice('speed', speed)
-        .then((res) => {
-          if(res.code == 0) {
-            this.loaclAttr.speed = speed
-            this.hide()
-         } else {
-           HdSmart.UI.toast('操作失败')
-         }
-       })
-       .catch(() => {
-         HdSmart.UI.toast('操作失败')
-       })
+    hide(){
+      if(this.$refs.swing.show) this.$refs.swing.show = false
+      if(this.$refs.mode.show) this.$refs.mode.show = false
+      if(this.$refs.speed.show) this.$refs.speed.show = false
     },
     controlDevice(attr, value) {
-      // console.log(this.loaclAttr,'-------------------------------------')
-
       let param = {}
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
@@ -687,49 +619,6 @@ export default {
         }
       })
     },
-    // 重置动画
-    // reset() {
-    //   // this.barColor = this.getBarColor()
-    //   this.progress = this.getProgress()
-    //   this.$nextTick(() => {
-    //     this.$refs.$circle.init()
-    //   })
-    // },
-    showSwing() {
-      if (this.isClose||this.isOffline) return
-      this.$refs.swing.show = true
-    },
-    showMode() {
-      if (this.isClose) return
-      this.$refs.mode.show = true
-    },
-    showSpeed() {
-      if (this.isClose) return
-      this.$refs.speed.show = true
-      this.$nextTick(()=>{
-        this.animation = true
-      },0)
-    },
-    showTime() {
-      if (this.isClose) return
-      this.$refs.time.show = true
-    },
-    hide(){
-      if(this.$refs.swing.show) this.$refs.swing.show = false
-      if(this.$refs.mode.show) this.$refs.mode.show = false
-      if(this.$refs.speed.show) this.$refs.speed.show = false
-    },
-
-    getProgress() {
-      // 计算温度进度条
-      if (this.loaclAttr.mode=='auto') {
-        return 70 /(32 - 16) * (250 / 10 - 16)
-      }else if(this.loaclAttr.mode=='wind'){
-        return 0
-      }else{
-        return 70 /(32 - 16) * (this.loaclAttr.temperature / 10 - 16)
-      }
-    }
   }
 }
 </script>
@@ -743,15 +632,15 @@ export default {
   font-weight: normal;
   font-style: normal;
 }
+.body{
+    height: 100vh;
+  }
 .canvas {
   // width: 560px;
 }
 .page {
   &::before{
     content: "";
-    // background-image: url('~@lib/@{imgPath1}/img_bg.png');
-    // background-repeat:no-repeat;
-    // background-size: 100% 100%;
     background: #000;;
     position: fixed;
     top:0;
@@ -763,19 +652,6 @@ export default {
   &::-webkit-scrollbar {
 		display: none;
 	}
-  &.filter {
-    filter: blur(12px);
-  }
-  .progress{
-    transform: rotate(-126deg);
-    position: relative;
-  }
-  .c-status {
-    margin-top: 30px;
-    font-size: 24px;
-    color: #35353d;
-    text-align: center;
-  }
   .control-tm{
     position: relative;
     top: -90px;
@@ -824,11 +700,6 @@ export default {
           background-position: center;
           background-repeat: no-repeat;
          }
-        //  &.wind,&.auto{
-        //   &::before{
-        //     opacity: 0.3;
-        //   }
-        //  }
       }
     }
   }
@@ -892,49 +763,30 @@ export default {
       }
     }
   }
-  .status{
-    text-align: center;
-    font-size: 24px;
-    color: #20282B;
-  }
   .starting{
-    // margin-top: 100px;
-    margin-bottom: 86px;
-     .btn-start{
-        z-index: 99;
-        box-sizing: border-box;
-        margin: 0 auto;
-        width: 120px;
-        height: 120px;
-        // border: 1px solid #818181;
-        background-image: linear-gradient(225deg, #FF59DA 0%, #FD30AA 100%);
-        border-radius: 50%;
-        position: relative;
-        // &.active{
-        //   // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
-        //   background: #E1B96E;
-        // }
-        &::before{
-          content: "";
-          position: absolute;
-          z-index: 100;
-          left: 50%;
-          top: 50%;
-          margin-left: -24px;
-          margin-top: -24px;
-          background-image: url('~@lib/@{imgPath2}/kt_btn_on.png');
-          background-size: 100% 100%;
-          width: 48px;
-          height: 48px;
-        }
-     }
-      .btn-name{
-        text-align: center;
-        color: #000;
-        margin-top: 16px;
-        font-size: 24px;
-        font-family: PingFangSC-Light;
-      }
+    .btn-start{
+    z-index: 99;
+    box-sizing: border-box;
+    margin: 0 auto;
+    width: 120px;
+    height: 120px;
+    background-image: linear-gradient(225deg, #FF59DA 0%, #FD30AA 100%);
+    border-radius: 50%;
+    position: relative;
+    &::before{
+      content: "";
+      position: absolute;
+      z-index: 100;
+      left: 50%;
+      top: 50%;
+      margin-left: -24px;
+      margin-top: -24px;
+      background-image: url('~@lib/@{imgPath2}/kt_btn_on.png');
+      background-size: 100% 100%;
+      width: 48px;
+      height: 48px;
+    }
+    }
   }
   .panel-btn {
     flex-direction: column;
@@ -949,7 +801,6 @@ export default {
     -webkit-overflow-scrolling: touch;
     background: rgba(255, 255, 255, 0.1);
   }
-
   /*隐藏掉滚动条*/
 	.panel-btn::-webkit-scrollbar {
 		display: none;
@@ -961,288 +812,35 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-top: 0.5px solid #000;
     .btn-wrap {
-        width: 100%;
-        height: 180px;
-        flex-direction: column;
-        &:first-of-type{
-            border-right: 0.5px solid #000;
-        }
-        &:nth-of-type(2){
-          border-right: 0.5px solid #000;
-        }
-        &:last-of-type{
-          border-right: none;
-        }
-        .btn {
-          box-sizing: border-box;
-          margin: 0 auto;
-          width: 44px;
-          height: 44px;
-          // border: 1px solid #818181;
-          background: rgba(0,0,0,0.05);
-
-          display: flex;
-          flex-direction: column;
-          &::before {
-            position: relative;
-            z-index: 100;
-            content: "";
-            display: block;
-            width: 44px;
-            height: 44px;
-          }
-        //   &.active {
-        //     // background-image: linear-gradient(to right, #F1CB85, #E1B96E);
-        //     background: #E1B96E;
-        //   }
-        }
-        .btn-name {
-          text-align: center;
-          color: #fff;
-          margin-top: 16px;
-          font-size: 32px;
-        }
-        .cold,.dehumidify,.wind,.auto{
-            &.btn-breeze{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan01_b.png');
-                background-size: 100% 100%;
-              }
-              &.btn-low{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan02_b.png');
-                background-size: 100% 100%;
-              }
-              &.btn-normal{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan03_b.png');
-                background-size: 100% 100%;
-              }
-              &.btn-high{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan04_b.png');
-                background-size: 100% 100%;
-              }
-              &.btn-auto1{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan05_b.png');
-                background-size: 100% 100%;
-              }
-              &.btn-strong{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan06_b.png');
-                background-size: 100% 100%;
-              }
-              &.clock{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_btn_time_b.png');
-                background-size: 100% 100%;
-              }
-        }
-        .heat{
-            &.btn-breeze{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan01_r.png');
-                background-size: 100% 100%;
-              }
-              &.btn-low{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan02_r.png');
-                background-size: 100% 100%;
-              }
-              &.btn-normal{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan03_r.png');
-                background-size: 100% 100%;
-              }
-              &.btn-high{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan04_r.png');
-                background-size: 100% 100%;
-              }
-              &.btn-auto1{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan05_r.png');
-                background-size: 100% 100%;
-              }
-              &.btn-strong{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_mode_fan06_r.png');
-                background-size: 100% 100%;
-              }
-              &.clock{
-                position: relative;
-                z-index: 100;
-                background-image: url('~@lib/@{imgPath2}/kt_btn_time_r.png');
-                background-size: 100% 100%;
-              }
-        }
-        .btn-cold {
-          &::before {
-            position: relative;
-            z-index: 100;
-            background-image: url('~@lib/@{imgPath2}/kt_mode_cold.png');
-            background-size: 100% 100%;
-          }
-        }
-        .btn-heat {
-          &::before {
-            position: relative;
-            z-index: 100;
-            background-image: url('~@lib/@{imgPath2}/kt_mode_heat.png');
-            background-size: 100% 100%;
-          }
-        }
-        .btn-time {
-          &::before {
-            position: relative;
-            z-index: 100;
-            background-image: url('~@lib/@{imgPath2}/kt_mode_cold.png');
-            background-size: 100% 100%;
-          }
-        }
-        .btn-wind {
-          &::before {
-            position: relative;
-            z-index: 100;
-            background-image: url('~@lib/@{imgPath2}/kt_mode_songfeng.png');
-            background-size: 100% 100%;
-          }
-        }
-
-        .btn-dehumidify {
-          &::before {
-            position: relative;
-            z-index: 100;
-            background-image: url('~@lib/@{imgPath2}/kt_mode_dry.png');
-            background-size: 100% 100%;
-          }
-        }
-        .btn-auto{
-          &::before {
-            position: relative;
-            z-index: 100;
-            background-image: url('~@lib/@{imgPath2}/kt_mode_auto.png');
-            background-size: 100% 100%;
-          }
-        }
-        .btn-breath {
-          &::before {
-            background-image: url('~@lib/@{imgPath2}/kt_mode_cold.png');
-            background-size: 100% 100%;
-          }
-        }
-        .btn-sleep {
-          &::before {
-            background-image: url('~@lib/@{imgPath2}/kt_mode_cold.png');
-            background-size: 100% 100%;
-          }
-        }
-        .btn-fresh {
-          &::before {
-            background-image: url('~@lib/@{imgPath2}/kt_mode_cold.png');
-            background-size: 100% 100%;
-          }
-        }
-      }
-  }
-  .optionbox{
-    width: 100%;
-    margin: 10px 0 90px 0;
-    font-family: PingFangSC-Light;
-    .option{
+      padding: 0 40px;
       width: 100%;
-      height: 120px;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-      padding: 0 40px;
-      >div{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 32px;
-        color: #000;
-        >span{
-          display: inline-block;
-          line-height: 120px;
-          height: 120px;
-          &:last-of-type{
-            color: rgba(0, 0, 0, 0.5);
-          }
-          &.check{
-            display: flex;
-            align-items: center;
-            >img{
-              width: 32px;
-            }
-          }
-        }
+      // height: 180px;
+      flex-direction: column;
+      &:first-of-type{
+          border-right: 0.5px solid #000;
       }
-    }
-    .option1{
-      padding: 0 40px;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-            .check{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 32px;
-        color: #000;
-        >span{
-          display: inline-block;
-          line-height: 120px;
-          height: 120px;
-          font-size: 32px;
-          color: #000;
-        }
-        .checkBox{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            .speedBtn{
-              width: 96px;
-              height: 64px;
-              text-align: center;
-              line-height: 64px;
-              font-family: PingFangSC-Light;
-              font-size: 32px;
-              margin-right: 20px;
-              color: #000;
-              opacity: .5;
-              &:last-of-type{
-                margin-right: 0px;
-              }
-              &.active{
-                opacity: 1;
-                position: relative;
-                &::before{
-                  display: block;
-                  content: "";
-                  width: 8px;
-                  height: 8px;
-                  border-radius: 50%;
-                  background: #000;
-                  position: absolute;
-                  bottom: 0;
-                  left: 50%;
-                  margin-left: -4px;
-                }
-              }
-            }
-          }
+      &:nth-of-type(2){
+        border-right: 0.5px solid #000;
+      }
+      &:last-of-type{
+        border-right: none;
+      }
+      .title {
+        opacity: 0.5;
+        font-family: PingFangSC-Light;
+        font-size: 12px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        margin-bottom: 12px;
+      }
+      .txt {
+        font-family: PingFangSC-Light;
+        font-size: 12px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        margin-bottom: 4px;
       }
     }
   }
@@ -1286,17 +884,9 @@ export default {
       .bottom{
         opacity:.3;
       }
-      .screen{
-          .Charging-protection{
-              opacity: 0.3;
-          }
-      }
     }
     .btn-wrap {
       opacity: .3;
-      &.up-index {
-        opacity: 1;
-      }
       .btn {
         &.active {
           background: #fff;
@@ -1304,25 +894,15 @@ export default {
         }
       }
     }
-    .optionbox{
-      opacity: .3;
-    }
-    // .bottom{
-    //   opacity: .3;
-    // }
   }
 }
 .bottom{
   width: 100%;
   height: 120px;
   border-top: 0.5px solid #000;
-}
-.screen{
-  height: 120px;
-  margin: 12px 24px 12px;
-  background: rgba(255,255,255,.1);
-  border-radius: 10px;
-  color: #fff;
+  &.noborder {
+    border-top: none;
+  }
 }
 .timing,.Charging-protection{
   padding: 0 40px;
@@ -1335,29 +915,24 @@ export default {
   line-height: 120px;
   border-top: 1px rgba(0, 0, 0, .1) solid;
   .timing-right {
-        // position: relative;
-        // z-index: 999;
-        display: flex;
-        align-items: center;
-        height: 64px;
-        line-height: 64px;
-        font-size: 32px;
-        color: #fff;
-        opacity: 0.5;
-        &::after {
-          content: "";
-          margin-left: 10px;;
-          display: inline-block;
-          border-top: 1px solid;
-          border-right: 1px solid;
-          width: 10px;
-          height: 10px;
-          transform: rotate(45deg);
-          // opacity: 0.5;
-          // position: relative;
-          // top: 2px;
-        }
-      }
+    display: flex;
+    align-items: center;
+    height: 64px;
+    line-height: 64px;
+    font-size: 32px;
+    color: #fff;
+    opacity: 0.5;
+    &::after {
+      content: "";
+      margin-left: 10px;;
+      display: inline-block;
+      border-top: 1px solid;
+      border-right: 1px solid;
+      width: 10px;
+      height: 10px;
+      transform: rotate(45deg);
+    }
+  }
 }
 .switch {
   width: 72px;
@@ -1418,12 +993,6 @@ export default {
   100%{
     transform: scale(0.6);
   }
-  // 90%{
-  //   transform: scale(1.3);
-  // }
-  //   100%{
-  //   transform: scale(1);
-  // }
 }
 
 .animateEnd::before{
@@ -1490,5 +1059,12 @@ export default {
   @keyframes bgcStart {
     0% {width: 100%;height: 100%;}
     100% {width: 110%;height: 110%;}
+  }
+  .bottom-control {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    z-index: 1000;
+    background-color: black;
   }
 </style>

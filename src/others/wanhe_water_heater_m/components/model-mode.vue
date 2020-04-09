@@ -4,49 +4,63 @@
     class="model"
     @click.self="show = false"
     @touchmove.prevent>
-    <div 
+    <div
       v-if="show"
       class="main show">
       <!-- <p class="title">选择摆风</p> -->
       <div class="items btns">
-        <div 
+        <div
           class="btn"
           @click="setMode('cold')">
           <div class="btn-cold center" />
-          <div 
-            :class="[mode === 'cold' ? 'active' : '', 'name']" >制冷</div>
+          <div
+            :class="[mode === 'cold' ? 'active' : '', 'name']" >普通</div>
         </div>
-        <div 
+        <div
           class="btn"
           @click="setMode('heat')">
           <div class="btn-heat center" />
-          <div 
-            :class="[mode === 'heat' ? 'active' : '', 'name']" >制热</div>
+          <div
+            :class="[mode === 'heat' ? 'active' : '', 'name']" >自适应</div>
         </div>
-        <div 
-          class="btn" 
+        <div
+          class="btn"
           @click="setMode('auto')">
           <div class="btn-auto center" />
-          <div 
-            :class="[mode === 'auto' ? 'active' : '', 'name']" >智能</div>
+          <div
+            :class="[mode === 'auto' ? 'active' : '', 'name']" >节能</div>
         </div>
-        <div 
+        <div
           class="btn"
           @click="setMode('wind')">
           <div class="btn-wind center" />
-          <div 
-            :class="[mode === 'wind' ? 'active' : '', 'name']" >送风</div>
+          <div
+            :class="[mode === 'wind' ? 'active' : '', 'name']" >厨房</div>
         </div>
-        <div 
+        <div
           class="btn"
           @click="setMode('dehumidify')">
           <div class="btn-dehumidify center" />
-          <div 
-            :class="[mode === 'dehumidify' ? 'active' : '', 'name']" >除湿</div>
+          <div
+            :class="[mode === 'dehumidify' ? 'active' : '', 'name']" >定制1</div>
+        </div>
+        <div
+          class="btn"
+          @click="setMode('wind')">
+          <div class="btn-wind center" />
+          <div
+            :class="[mode === 'wind' ? 'active' : '', 'name']" >定制2</div>
+        </div>
+        <div
+          class="btn"
+          @click="setMode('wind')">
+          <div class="btn-wind center" />
+          <div
+            :class="[mode === 'wind' ? 'active' : '', 'name']" >定制3</div>
         </div>
       </div>
-      <div 
-        class="hide" 
+      <div
+        class="hide"
         @click.self="show = false">取消</div>
     </div>
   </div>
@@ -115,7 +129,10 @@
           border-bottom: 0.5px solid rgba(255,255,255,.1);
           .name{
             &.active{
-               color:#E1B96E;
+              background-image: linear-gradient(225deg, #FF59DA 0%, #FD30AA 100%);
+              -webkit-background-clip: text;
+              background-clip: text;
+              color: transparent;
             }
           }
         }
@@ -127,7 +144,7 @@
         letter-spacing: 0;
         text-align: center;
         line-height: 120px;
-        color: #E1B96E;
+        color: #FD30AA;
         background: #1C1C1E;
         border-radius: 10px;
         margin: 0 16px 16px 16px;
