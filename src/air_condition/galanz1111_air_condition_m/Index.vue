@@ -1,9 +1,9 @@
 <template>
   <div 
     class="body" 
-    @touchstart="bodyTouchstart"
-    @touchmove="bodyTouchmove"
-    @touchend="bodyTouchEnd">
+    @touchstart.passive="bodyTouchstart"
+    @touchmove.passive="bodyTouchmove"
+    @touchend.passive="bodyTouchEnd">
     <div
       :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover']"
     >
@@ -232,6 +232,7 @@ export default {
   },
   data() {
     return {
+      canGentlyMove:true,
       minVisibleHeight:100,
       controlHight:0,
       deControlTemp: null,
@@ -373,7 +374,7 @@ export default {
         this.flagVal = false
       },
       'deviceAttrs.mode'() {
-        this.resetPosition(true)
+        this.resetPosition()
       },
     'deviceAttrs.temperature'() {
       if(this.deviceAttrs.temperature) {
@@ -404,51 +405,56 @@ export default {
       setTimeout(()=>{
         window.scrollTo(0,0)
       },200)
-      this.resetPosition()
+      this.resetPosition(true)
     },)
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
-      resetPosition(isReset = false) {
-          this.$nextTick(() => {
-            let bottomHeight = this.$refs.bottomControl.offsetHeight
-            if (this.controlHight===bottomHeight) return
-            let result = document.body.offsetHeight - this.$refs.switchStatus.offsetTop - this.$refs.switchStatus.offsetHeight
-            let showHight = this.controlHight?this.controlHight + parseFloat(getComputedStyle(this.$refs.bottomControl).bottom): bottomHeight
-            if (result < bottomHeight) {
-              this.canMove = true
-              if (this.controlHight<bottomHeight) {
-                this.bottom1 = this.controlHight? showHight-bottomHeight + 'px':-(bottomHeight - this.minVisibleHeight) + 'px'
-              }else {
-                if (showHight>= bottomHeight) {
-                  this.bottom1 = '10px'
-                }else {
-                  this.bottom1 = showHight-bottomHeight + 'px'
-                }
-              }
-            } else {
-              if(showHight>=bottomHeight){
+      resetPosition(isFirst = false) {
+        this.$nextTick(() => {
+          let bottomHeight = this.$refs.bottomControl.offsetHeight
+          if (this.controlHight===bottomHeight) return
+          let result = document.body.offsetHeight - this.$refs.switchStatus.offsetTop - this.$refs.switchStatus.offsetHeight
+          let showHight = this.controlHight?this.controlHight + parseFloat(getComputedStyle(this.$refs.bottomControl).bottom): bottomHeight
+          if (result < bottomHeight) {
+            this.canMove = true
+            if (this.controlHight<bottomHeight) {
+              this.bottom1 = this.controlHight? showHight-bottomHeight + 'px':-(bottomHeight - this.minVisibleHeight) + 'px'
+            }else {
+              if (showHight>= bottomHeight) {
                 this.bottom1 = '10px'
-                this.canMove = false
               }else {
-                this.minVisibleHeight = showHight
                 this.bottom1 = showHight-bottomHeight + 'px'
-                this.canMove = true
               }
             }
-            this.controlHight = bottomHeight
-          })
+          } else {
+            if (isFirst) {
+              this.minVisibleHeight = showHight
+            }
+            if(showHight>=bottomHeight){
+              this.bottom1 = '10px'
+              this.canMove = false
+            }else {
+              this.minVisibleHeight = showHight
+              this.bottom1 = showHight-bottomHeight + 'px'
+              this.canMove = true
+            }
+          }
+          this.controlHight = bottomHeight
+        })
       },
       hideMemu() {
         if (!this.canMove) return
         this.bottom1 = -(this.$refs.bottomControl.offsetHeight - this.minVisibleHeight) + 'px'
       },
       bodyTouchstart(e) {
+        this.canGentlyMove = false
         this.touchStartPoint = e.touches[0].pageY
         this.touchEndPoint = e.touches[0].pageY
         this.bottom1 = getComputedStyle(this.$refs.bottomControl).bottom
       },
       bodyTouchmove(e) {
+        this.canGentlyMove = false
         if (!this.canMove) return
         let pageY =  e.changedTouches[0].pageY
         let bottomHeight = this.$refs.bottomControl.offsetHeight
@@ -466,6 +472,7 @@ export default {
         this.touchEndPoint = pageY
       },
       bodyTouchEnd(e) {
+        this.canGentlyMove = true
         if (Math.abs(this.touchEndPoint - this.touchStartPoint) > 30) {
           if (this.touchStartPoint - this.touchEndPoint > 0) {
             this.gentlyMove('up')
@@ -475,6 +482,7 @@ export default {
         }
       },
       gentlyMove(direction = 'up') {
+        if (!this.canGentlyMove) return
         let bottomOff = parseFloat(getComputedStyle(this.$refs.bottomControl).bottom)
         if (direction === 'down') {
           if (bottomOff > -(this.$refs.bottomControl.offsetHeight - this.minVisibleHeight)) {
