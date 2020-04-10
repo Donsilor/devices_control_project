@@ -11,52 +11,52 @@
       <div class="items btns">
         <div
           class="btn"
-          @click="setMode('cold')">
+          @click="setMode('common')">
           <div class="btn-cold center" />
           <div
-            :class="[mode === 'cold' ? 'active' : '', 'name']" >普通</div>
+            :class="[mode === 'common' ? 'active' : '', 'name']" >普通</div>
         </div>
         <div
           class="btn"
-          @click="setMode('heat')">
+          @click="setMode('adaptive')">
           <div class="btn-heat center" />
           <div
-            :class="[mode === 'heat' ? 'active' : '', 'name']" >自适应</div>
+            :class="[mode === 'adaptive' ? 'active' : '', 'name']" >自适应</div>
         </div>
         <div
           class="btn"
-          @click="setMode('auto')">
+          @click="setMode('green')">
           <div class="btn-auto center" />
           <div
-            :class="[mode === 'auto' ? 'active' : '', 'name']" >节能</div>
+            :class="[mode === 'green' ? 'active' : '', 'name']" >节能</div>
         </div>
         <div
           class="btn"
-          @click="setMode('wind')">
+          @click="setMode('kitchen')">
           <div class="btn-wind center" />
           <div
-            :class="[mode === 'wind' ? 'active' : '', 'name']" >厨房</div>
+            :class="[mode === 'kitchen' ? 'active' : '', 'name']" >厨房</div>
         </div>
         <div
           class="btn"
-          @click="setMode('dehumidify')">
+          @click="setMode('customize1')">
           <div class="btn-dehumidify center" />
           <div
-            :class="[mode === 'dehumidify' ? 'active' : '', 'name']" >定制1</div>
+            :class="[mode === 'customize1' ? 'active' : '', 'name']" >定制1</div>
         </div>
         <div
           class="btn"
-          @click="setMode('wind')">
+          @click="setMode('customize2')">
           <div class="btn-wind center" />
           <div
-            :class="[mode === 'wind' ? 'active' : '', 'name']" >定制2</div>
+            :class="[mode === 'customize2' ? 'active' : '', 'name']" >定制2</div>
         </div>
         <div
           class="btn"
-          @click="setMode('wind')">
+          @click="setMode('customize3')">
           <div class="btn-wind center" />
           <div
-            :class="[mode === 'wind' ? 'active' : '', 'name']" >定制3</div>
+            :class="[mode === 'customize3' ? 'active' : '', 'name']" >定制3</div>
         </div>
       </div>
       <div
