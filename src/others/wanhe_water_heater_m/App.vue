@@ -712,7 +712,7 @@ export default {
     height: 100vh;
   }
 .canvas {
-  // width: 560px;
+  width: 560px;
 }
 .page {
   &::before{
