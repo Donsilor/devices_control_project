@@ -10,6 +10,15 @@
         page-class=".page"
       />
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
+
+      <!-- 新需求待定 -->
+      <!-- <div
+        class="list headerMargin"
+        @click="showMode">
+        <div class="left">名称</div>
+        <div class="right after">面板</div>
+      </div> -->
+
       <div class="main">
         <h3>按键配置</h3>
         <div class="collocation">
@@ -83,6 +92,33 @@
           </div>
         </div>
       </div>
+
+      <!-- 新需求待定 -->
+      <!-- <div class="list centerMargin">
+        <div class="left">固件版本</div>
+        <div class="right">1.0.2</div>
+      </div>
+      <div class="list noneBorder">
+        <div class="left">设备工作模式</div>
+        <div class="right">WIFI模式</div>
+      </div>
+      <div class="list noneBorder">
+        <div class="left">品牌</div>
+        <div class="right">星络</div>
+      </div>
+      <div class="list noneBorder">
+        <div class="left">型号</div>
+        <div class="right">PAK417310</div>
+      </div>
+      <div class="list noneBorder">
+        <div class="left">设备识别号</div>
+        <div class="right">D0:BA:E3:70:00:A8</div>
+      </div>
+      <div class="list footer">
+        <div class="left">添加时间</div>
+        <div class="right">2019-04-17 20:37</div>
+      </div> -->
+
       <!-- 配置页 -->
       <allocation
         v-show="newPageShow"
@@ -91,6 +127,10 @@
       <model
         ref="model"
         @setMode="setMode" />
+      <!--弹框-->
+      <model-swing
+        ref="swing"
+        @setWind="setWind" />
     </div>
   </div>
 </template>
@@ -99,10 +139,12 @@
 import { mapGetters, mapState, mapActions } from 'vuex'
 import allocation from './Allocation.vue'
 import model from './model.vue'
+import modelSwing from './model-swing'
 export default {
   components:{
     allocation,
-    model
+    model,
+    modelSwing
   },
   data() {
     return {
@@ -136,7 +178,7 @@ export default {
           "icon":"fgdfg",
           "list_pic":{"normal":"objectId1"},
           "detail_pic":"sfdas",
-          "board_key":11
+          "board_key":135
         },
         {
           "scene_id": 11,
@@ -235,16 +277,16 @@ export default {
           //本地调试
           // setTimeout(() => {
           //   this.list.map((x) =>{
-          //     if(x.board_key == 1) {
+          //     if(x.board_key == 135) {
           //         this.dataList.splice(0, 1, x)
           //       }
-          //       if(x.board_key == 2) {
+          //       if(x.board_key == 136) {
           //         this.dataList.splice(1, 1, x)
           //       }
-          //       if(x.board_key == 3) {
+          //       if(x.board_key == 137) {
           //         this.dataList.splice(2, 1, x)
           //       }
-          //       if(x.board_key == 4) {
+          //       if(x.board_key == 138) {
           //         this.dataList.splice(3, 1, x)
           //       }
           //     return this.dataList
@@ -333,7 +375,7 @@ export default {
         },'dm_set_scene_config')
       })
     },
-    setScene(i){
+    setScene(i) {
       if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有配置权限')
       // this.newPageShow = true
       this.$router.push({
@@ -344,7 +386,12 @@ export default {
     goBack(){
       this.newPageShow = false
     },
-    // 滚动事件
+    showMode() {
+      this.$refs.swing.show = true
+    },
+    setWind() {
+
+    },
     controlDevice(attr, value) {
       let param = {}
       return this.doControlDevice({
@@ -382,18 +429,25 @@ export default {
 	}
   .main{
     padding: 214px 40px 0;
+    // 新需求待定
+    // padding: 30px 24px 48px;
+    // border-top: 0.5px solid rgba(255,255,255,0.20);
+    // border-bottom: 0.5px solid rgba(255,255,255,0.20);
+    // background: rgba(255,255,255,0.08);
     h3{
       font-family: PingFangSC-Regular;
       font-size: 32px;
       color: #fff;
       height: 44px;
       line-height: 44px;
-      margin-bottom: 24px;
+      margin-bottom: 30px;
     }
     .collocation{
       display: flex;
       justify-content: space-between;
-      height: 464px;
+      height: 466px;
+      // 新需求待定
+      // height: 360px;
       .collocation-item{
         position: relative;
         flex: 1;
@@ -405,6 +459,10 @@ export default {
         color: #000000;
         text-align: center;
         height: 466px;
+      // 新需求待定
+        // height: 360px;
+        // border-radius: 6px;
+        // border: 0.5px solid rgba(255,255,255,0.20);
         &.colour {
           background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
         }
@@ -459,6 +517,54 @@ export default {
 
       }
     }
+  }
+  .list {
+    background: rgba(255,255,255,0.08);
+    height: 104px;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: inset 0 0 0 0 rgba(255,255,255,0.10), inset 0 0 0 0 rgba(255,255,255,0.10);
+    border-top: 0.5px solid rgba(255,255,255,0.20);
+    border-bottom: 0.5px solid rgba(255,255,255,0.20);
+    .left {
+      font-size: 32px;
+      color: #FFFFFF;
+    }
+    .right {
+      opacity: 0.5;
+      font-family: PingFangSC-Light;
+      font-size: 32px;
+      color: #FFFFFF;
+      &.after {
+        &::after {
+          content: "";
+          margin-left: 20px;;
+          display: inline-block;
+          border-top: 1px solid;
+          border-right: 1px solid;
+          width: 10px;
+          height: 10px;
+          transform: rotate(45deg);
+          position: relative;
+          top: -1px;
+          right: 2px;
+        }
+      }
+    }
+  }
+  .headerMargin {
+    margin: 20px 0 48px;
+  }
+  .centerMargin {
+    margin: 48px 0 80px;
+  }
+  .noneBorder {
+    border-bottom: none;
+  }
+  .footer {
+    margin-bottom: 12px;
   }
 }
 </style>
