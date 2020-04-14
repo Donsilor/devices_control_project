@@ -16,7 +16,7 @@ var res = {
   "deviceSubCategory": 0,
   "connectivity": "online",
   "currenttemperature":90,
-  "error":"running",
+  "error":"",
   // 万和热水器属性
   "setWTemp": 47, //预设温度
   "outWTemp": 37, //当前温度

@@ -18,17 +18,17 @@
         <div class="wrap-circle">
           <div class="showtemp">
             <div
-              v-if="deviceAttrs.connectivity == 'offline'||deviceAttrs.switch=='off'"
+              v-if="isError || isOffline||deviceAttrs.switch=='off'"
               class="tm">-- <sup>°C</sup></div>
             <div
-              v-if="!isOffline&& deviceAttrs.switch == 'on'"
+              v-if="!isError && !isOffline&& deviceAttrs.switch == 'on'"
               class="tm">{{ thermography }}<sup>°C</sup>
             </div>
             <div
-              v-show="!isOffline&& deviceAttrs.switch == 'on'"
+              v-show="!isError && !isOffline&& deviceAttrs.switch == 'on'"
               :class="['c-mode']">当前温度{{ deviceAttrs.outWTemp | filterTm }}°C</div>
             <div
-              v-show="isOffline||deviceAttrs.switch == 'off'"
+              v-show="isError || isOffline||deviceAttrs.switch == 'off'"
               :class="['c-mode']">当前温度--°C</div>
           </div>
           <canvas
@@ -59,7 +59,7 @@
         class="starting">
         <div
           ref="switchStatus"
-          :class="[{'active': deviceAttrs.switch == 'on'&&!isOffline},' btn-start switchColor']"
+          :class="[{'active': !isError && deviceAttrs.switch == 'on'&&!isOffline},' btn-start switchColor']"
           @click="setSwitch('switchStatus')"
         />
       </div>
@@ -90,7 +90,7 @@
                 <input
                   :class="['switch switch-anim']"
                   :checked="deviceAttrs.childLock=='on'"
-                  :disabled="disabledLock || isOffline || isClose"
+                  :disabled="isError || disabledLock || isOffline || isClose"
                   type="checkbox"
                   @click="checkSwitch('childLock')">
               </div>
@@ -105,7 +105,7 @@
                 <input
                   :class="['switch switch-anim']"
                   :checked="deviceAttrs.antiFreeze=='on'"
-                  :disabled="disabledLock || isOffline || isClose"
+                  :disabled="isError || disabledLock || isOffline || isClose"
                   type="checkbox"
                   @click="checkSwitch('antiFreeze')">
               </div>
@@ -191,6 +191,9 @@ export default {
     },
     isOffline(){
       return this.deviceAttrs.connectivity == 'online'?false:true
+    },
+    isError() {
+      return this.deviceAttrs.error ? true : false
     },
     modeName() {
       /* eslint-disable no-unreachable */
@@ -323,7 +326,7 @@ export default {
       this.$refs.canvas.addEventListener(on.end,()=> {
         this.br = 15
         this.draw(this.allHD)
-        if (this.isOffline||this.isClose) return
+        if (this.isError || this.isOffline||this.isClose) return
           this.moveFlag = false
           if (isMove) {
             this.controlDevice('setWTemp',this.centigrade)
@@ -447,9 +450,9 @@ export default {
     },
     touchstart(val) {
       if (val == 'switchStatus') {
-        if (this.isOffline) return
+        if (this.isError || this.isOffline) return
       }else{
-        if (this.deviceAttrs.switch=='off'||this.isOffline) return
+        if (this.isError || this.deviceAttrs.switch=='off'||this.isOffline) return
       }
        let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
@@ -469,9 +472,9 @@ export default {
     },
     touchend(val){
       if (val == 'switchStatus') {
-        if (this.isOffline) return
+        if (this.isError || this.isOffline) return
       }else{
-        if (this.deviceAttrs.switch=='off'||this.isOffline) return
+        if (this.isError || this.deviceAttrs.switch=='off'||this.isOffline) return
       }
       let btn = document.querySelectorAll('.btn')
       for(let i=0;i<btn.length;i++){
@@ -502,7 +505,7 @@ export default {
         gradient.addColorStop(element.step, element.color)
       })
       this.ctx.strokeStyle = gradient
-      if (this.deviceAttrs.switch=='on'&&!this.isOffline) {
+      if (!this.isError && this.deviceAttrs.switch=='on'&&!this.isOffline) {
         this.ctx.strokeStyle = gradient
       }else{
         this.ctx.strokeStyle = "transparent"
@@ -544,7 +547,7 @@ export default {
       let d =  this.offset(n*2*Math.PI,this.or)
       // console.log('d', d)
       // 开机显示
-      if (this.deviceAttrs.switch=='on'&&!this.isOffline) {
+      if (!this.isError && this.deviceAttrs.switch=='on'&&!this.isOffline) {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
       }else{
         //关机显示
@@ -563,7 +566,7 @@ export default {
     },
     // 开关机
     setSwitch(val){
-      if (this.isOffline) return
+      if (this.isError || this.isOffline) return
       HdSmart.UI.vibrate()
             this.touchstart(val)
       setTimeout(() => {
@@ -589,7 +592,7 @@ export default {
     },
     // 设置模式
     setMode(val) {
-      if(this.isClose||this.isOffline) return
+      if(this.isError || this.isClose||this.isOffline) return
       HdSmart.UI.vibrate()
       if (val == this.deviceAttrs.mode ) return
       this.controlDevice('mode', val)
@@ -608,7 +611,7 @@ export default {
     },
     // 调节温度
     setTemperature(val) {
-      if (this.isOffline||this.isClose) return
+      if (this.isError || this.isOffline||this.isClose) return
       if(this.allFlag) return
       HdSmart.UI.vibrate()
             this.touchstart(val)
@@ -666,7 +669,7 @@ export default {
        })
     },
     checkSwitch(val) {
-      if (this.isOffline || this.isClose) return
+      if (this.isError || this.isOffline || this.isClose) return
       this.disabledLock = true
       let checkSwitchStatus = ''
       if (this.deviceAttrs[val] == 'on') {
@@ -683,7 +686,7 @@ export default {
       })
     },
     showMode() {
-      if (this.isClose) return
+      if (this.isError || this.isOffline || this.isClose) return
       this.$refs.mode.show = true
     },
     hide(){
