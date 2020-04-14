@@ -192,11 +192,6 @@
         var width = (91.3 / 100 * this.localBrightness) +"%"
         document.querySelector('.rang_width').style.width = width
       },
-      // 'deviceAttrs.level'() {
-      //   this.localBrightness = this.deviceAttrs.level / 2.55
-      //   var width = (91.3 / 100 * this.localBrightness) +"%"
-      //   document.querySelector('.rang_width').style.width = width
-      // }
     },
     created() {
       HdSmart.ready(() => {
@@ -299,11 +294,9 @@
         }
         this.flagVal = false
         this.rangeVal = e.target.value
-        console.log('=========1===============', e.target.value)
         if((parseInt(e.target.value * 2.55) == 254 ? 255 : parseInt(e.target.value * 2.55)) == this.localLevel) return
         if(this.rangeDisabled == true) return
         // HdSmart.UI.vibrate()
-        console.log('==========2==============')
         var max = e.target.getAttribute("max")
         var width = (91.3 / max * e.target.value) +"%"
         document.querySelector('.rang_width').style.width = width
@@ -318,12 +311,10 @@
       changeSpeed(e) {
         if(this.flagVal == true) return
         // if(this.onePice == true) return
-        console.log('=========3===============', e.target.value)
         if((parseInt(e.target.value * 2.55) == 254 ? 255 : parseInt(e.target.value * 2.55)) == this.localLevel) return
         if(this.rangeDisabled == true) return
         this.rangeDisabled = true
         if(this.deviceAttrs.switch_status != 'on' || this.isOffline || this.networkStatus == -1) return
-        console.log('=========4===============')
         var lowLevel = 0
         this.localBrightness = e.target.value
         if(this.localBrightness == 0) {
@@ -346,12 +337,10 @@
         if(this.flagVal == true) return
         if(this.onePice == false) return
         this.onePice = false
-        console.log('=========3end===============', e.target.value)
         if((parseInt(e.target.value * 2.55) == 254 ? 255 : parseInt(e.target.value * 2.55)) == this.localLevel) return
         if(this.rangeDisabled == true) return
         this.rangeDisabled = true
         if(this.deviceAttrs.switch_status != 'on' || this.isOffline || this.networkStatus == -1) return
-        console.log('=========4===============')
         var lowLevel = 0
         this.localBrightness = e.target.value
         if(this.localBrightness == 0) {
@@ -393,13 +382,22 @@
         }
         if(switchStatus == 'on') {
           if(this.lockOpenVal) {
-            if(this.deviceAttrs.mode == '1') return
+            if(this.deviceAttrs.mode == '1') return HdSmart.UI.toast('缓慢开灯中')
             return this.controlDevice("mode", '1')
-              .then((res) => {
+            .then((res) => {
+              if(res.code == 0) {
+                this.switchOn = true
+              }
+            })
+          } else {
+            if(this.deviceAttrs.mode == '1') {
+              return this.controlDevice("switch", 'off', {'level': this.deviceAttrs.level})
+              then((res) => {
                 if(res.code == 0) {
-                  this.switchOn = true
+                  this.switchOn = false
                 }
               })
+            }
           }
         }
         if(this.deviceAttrs.mode == '1' || this.deviceAttrs.mode == '2') {
@@ -438,6 +436,7 @@
 </script>
 
 <style lang="less" scoped>
+  @backgroundPath: "base/img";
   @imgPath: "base/hongyan_light/assets";
   @imgPath1: "base/blend/assets";
   @imgPath2: "base/air_cleaner/assets/new-air";
@@ -450,7 +449,7 @@
     // background-size: 100% 100%;
     &::before{
       content: "";
-      background-image: url('~@lib/@{imgPath3}/bg02.png');
+      background-image: url('~@lib/@{backgroundPath}/bg02.png');
       background-repeat:no-repeat;
       background-size: 100% 100%;
       position: fixed;
