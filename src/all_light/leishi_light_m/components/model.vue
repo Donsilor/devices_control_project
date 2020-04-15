@@ -10,38 +10,24 @@
       <div class="items btns">
         <div
           class="btn"
-          @click="setWind()">
+          @click="setModel(0)">
           <div class="btn-low center" />
           <div
-            :class="[custom||mode=='0' ? 'active' : '','name']" >自定义</div>
+            :class="[temperature === 0 ? 'active' : '','name']" >暖光</div>
         </div>
         <div
           class="btn"
-          @click="setWind('3')">
+          @click="setModel(145)">
           <div class="btn-normal center" />
           <div
-            :class="[!custom&&mode=='3' ? 'active' : '','name']" >阅读</div>
+            :class="[temperature === 145 ? 'active' : '','name']" >自然光</div>
         </div>
         <div
           class="btn"
-          @click="setWind('5')">
+          @click="setModel(255)">
           <div class="btn-high center" />
           <div
-            :class="[!custom&&mode=='5' ? 'active' : '','name']" >温暖</div>
-        </div>
-        <div
-          class="btn"
-          @click="setWind('6')">
-          <div class="btn-high center" />
-          <div
-            :class="[!custom&&mode=='6' ? 'active' : '','name']" >夜灯</div>
-        </div>
-        <div
-          class="btn"
-          @click="setWind('4')">
-          <div class="btn-high center" />
-          <div
-            :class="[!custom&&mode=='4' ? 'active' : '','name']" >影院</div>
+            :class="[temperature === 255 ? 'active' : '','name']" >白光</div>
         </div>
       </div>
       <div
@@ -122,7 +108,7 @@
         letter-spacing: 0;
         text-align: center;
         line-height: 120px;
-        color:rgb(193, 113, 83);
+        color: rgb(193, 113, 83);
         background: #1C1C1E;
         border-radius: 10px;
         margin: 0 16px 16px 16px;
@@ -132,7 +118,7 @@
 </style>
 <script>
 export default {
-  props: ['mode', 'custom'],
+  props: ['temperature'],
   data() {
     return {
       show: false
@@ -141,8 +127,8 @@ export default {
   mounted() {
   },
   methods: {
-    setWind(attr){
-      this.$emit('setWind', attr)
+    setModel(attr){
+      this.$emit('setModel', attr)
     }
   }
 }

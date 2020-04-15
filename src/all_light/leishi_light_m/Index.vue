@@ -6,19 +6,25 @@
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
-        bak-color="#000"
         page-class=".page"
       />
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <!-- 灯泡 -->
-      <div class="main center" >
+      <div
+        class="main center"
+      >
+        <canvas
+          ref="canvas"
+          class="canvas"
+          width="570"
+          height="570"
+        />
         <div
-          class="wrap-circle center">
-          <div
-            :class="[{'animation': !isClose }, {'greycircle': isClose }, 'bg']" />
-          <div
-            :class="[{'animation1': switchOn || !isClose }, 'bg']" />
-        </div>
+          class="light-txt">{{ deviceAttrs.switch_status=='on' ? brightness : '_ _' }}</div>
+        <div
+          v-show="deviceAttrs.switch_status=='on'"
+          :class="['light-mode', {'none': temperatureTxt}]"
+          @click="showTemperature">{{ temperatureTxt }}</div>
       </div>
       <!-- 开关按钮 -->
       <div
@@ -44,46 +50,6 @@
         </div>
         <div class="line"/>
         <div
-          v-show="custom || deviceAttrs.mode == '0'"
-          :class="['footer-line', {'opa': isClose || isOffline}]">
-          <div class="footer-title">亮度</div>
-          <div class="range">
-            <input
-              :class="[{'range-zero': rangeColor || doorValue=='off'}]"
-              :value="localBrightness"
-              :disabled="isClose || isOffline || networkStatus == -1 || rangeDisabled"
-              type="range"
-              min="1"
-              max="100"
-              step="1"
-              @input="changeSpeedMove"
-              @change="changeSpeed">
-            <p :class="['rang_width', {'rang_bak': doorValue=='off'}]"/>
-          </div>
-        </div>
-        <div
-          v-show="custom || deviceAttrs.mode == '0'"
-          class="line"/>
-        <div
-          v-show="custom || deviceAttrs.mode == '0'"
-          :class="['footer-line', {'opa': isClose || isOffline}]">
-          <div class="footer-title">色温</div>
-          <div class="footer-nav">
-            <div
-              :class="['footer-nav-btn', {'active': deviceAttrs.temperature == 255}]"
-              @click="setSpeed(255)">冷光</div>
-            <div
-              :class="['footer-nav-btn', {'active': deviceAttrs.temperature == 145}]"
-              @click="setSpeed(145)">自然光</div>
-            <div
-              :class="['footer-nav-btn', {'active': deviceAttrs.temperature == 0}]"
-              @click="setSpeed(0)">暖光</div>
-          </div>
-        </div>
-        <div
-          v-show="custom || deviceAttrs.mode == '0'"
-          class="line"/>
-        <div
           v-show="deviceAttrs.switch_status == 'on'"
           class="footer-line">
           <div class="footer-title">关灯时缓慢变暗</div>
@@ -93,9 +59,6 @@
             type="checkbox"
             @click="lockClose">
         </div>
-        <!-- <div
-          v-show="deviceAttrs.switch_status == 'on'"
-          class="line"/> -->
         <div
           v-show="deviceAttrs.switch_status == 'off'"
           class="footer-line">
@@ -113,6 +76,11 @@
         :mode="deviceAttrs.mode"
         :custom="custom"
         @setWind="setWind" />
+      <!-- 色温选择 -->
+      <model
+        ref="model"
+        :temperature="deviceAttrs.temperature"
+        @setModel="setModel"/>
     </div>
   </div>
 </template>
@@ -120,28 +88,35 @@
 <script>
   import { mapGetters, mapState, mapActions } from 'vuex'
   import modelSwing from './components/model-swing'
+  import model from './components/model'
   export default {
     components: {
-      modelSwing
+      modelSwing,
+      model
     },
     data() {
       return {
-        brightness: 0,
-        rangeColor: 'on',
-        doorValue: 'on',
         custom: false,
         vibrate: 0,
         lockCloseVal: false,
         lockOpenVal: false,
-        rangeDisabled: false,
-        speedDisabled: false,
-        localBrightness: 0,
-        switchOn: false,
-        localLevel: 0,
-        moceVal: 0,
-        onePice: true,
-        rangeVal: 0,
-        flagVal: false
+        ctx: '',
+        ox: 140,
+        oy: 140,
+        or: 120,
+        br: 15,
+        moveFlag: false,
+        brightness: '_ _',
+        linearGradientArr: [
+          {
+            step: '0',
+            color: '#EF6D5E'
+          },
+          {
+            step: '1.0',
+            color: '#F9BB6B'
+          }
+        ],
       }
     },
     computed: {
@@ -169,44 +144,41 @@
             return ''
         }
       },
+      temperatureTxt() {
+        /* eslint-disable no-unreachable */
+        switch (this.deviceAttrs.temperature) {
+          case 0:
+            return '暖光'
+            break
+          case 145:
+            return '自然光'
+            break
+          case 255:
+            return '白光'
+            break
+          default:
+            return ''
+        }
+      },
       isClose(){
         return this.deviceAttrs.switch_status=="on"?false:true
       },
     },
     watch: {
       'device.stateChange'() {
-        if(this.localLevel != this.deviceAttrs.level) {
-          this.rangeDisabled = false
-        }
-        this.localLevel = this.deviceAttrs.level
-        this.speedDisabled = false
         if(this.deviceAttrs.mode == '0' || this.deviceAttrs.mode == '1' || this.deviceAttrs.mode == '2') {
           this.custom = true
         } else {
           this.custom = false
         }
-        if(this.deviceAttrs.mode != '1') {
-          this.switchOn = false
-        }
-        this.localBrightness = this.deviceAttrs.level / 2.55
-        var width = (91.3 / 100 * this.localBrightness) +"%"
-        document.querySelector('.rang_width').style.width = width
+        this.draw(`${this.deviceAttrs.level/255}`)
       },
-      // 'deviceAttrs.level'() {
-      //   this.localBrightness = this.deviceAttrs.level / 2.55
-      //   var width = (91.3 / 100 * this.localBrightness) +"%"
-      //   document.querySelector('.rang_width').style.width = width
-      // }
     },
     created() {
       HdSmart.ready(() => {
         this.getDeviceInfo()
           .then(()=>{
-            this.localLevel = this.deviceAttrs.level
-            this.localBrightness = this.deviceAttrs.level / 2.55
-            this.moceVal = this.localBrightness
-            var width = (91.3 / 100 * this.localBrightness) +"%"
-            document.querySelector('.rang_width').style.width = width
+            this.draw(`${this.deviceAttrs.level/255}`)
             if(this.deviceAttrs.mode == '1') {
               this.lockOpenVal = true
               this.custom = true
@@ -224,6 +196,71 @@
         HdSmart.UI.setStatusBarColor(2)
       })
     },
+    mounted(){
+      this.ctx = this.$refs.canvas.getContext("2d")
+      this.ctx.scale(2,2)
+      this.$nextTick(() => {
+        setTimeout(()=>{
+          window.scrollTo(0,0)
+        },200)
+        let on = ("ontouchstart" in document)? {
+          start: "touchstart", move: "touchmove", end: "touchend"
+        } : {
+          start: "mousedown", move: "mousemove", end: "mouseup"
+        }
+        this.$refs.canvas.addEventListener(on.start,(e)=> {
+          this.br = 20
+          this.moveFlag = true
+          if (this.moveFlag) {
+            var k = this.getXY(e,this.$refs.canvas)
+            var r = Math.atan2(k.x-this.ox, this.oy-k.y)
+            var hd = (Math.PI+r)/(2*Math.PI)
+            // 半圆的滑动范围判断
+            this.flag = hd
+            if (hd <= 1 && hd >= 0) {
+              this.draw(hd)
+            }else{
+              return
+            }
+          }
+          argv_is_mock ? HdSmart.UI.vibrate(true) : HdSmart.UI.vibrate()
+        },false)
+
+        this.$refs.canvas.addEventListener(on.move, (e)=> {
+          if(e.preventDefault){
+            e.preventDefault()
+          }else{
+            e.returnValue = false
+          }
+          if (this.moveFlag) {
+            var k = this.getXY(e,this.$refs.canvas)
+            var r = Math.atan2(k.x-this.ox, this.oy-k.y)
+            var hd = (Math.PI+r)/(2*Math.PI)
+            // 半圆的滑动范围判断
+            if(this.flag-hd>0.5){
+              hd = 1
+            }
+            if(hd-this.flag>0.5){
+              hd = 0
+            }
+            this.flag = hd
+            if (hd <= 1 && hd >= 0) {
+              this.draw(hd)
+            }else{
+              return
+            }
+          }
+        }, false)
+
+        this.$refs.canvas.addEventListener(on.end,()=> {
+          this.br = 15
+          this.draw(this.brightness/100)
+          if (this.isOffline||this.isClose|| this.networkStatus == -1) return
+          this.moveFlag = false
+          this.controlDevice('level',parseInt(this.brightness*2.55))
+        }, false)
+      })
+    },
     methods: {
       ...mapActions(['getDeviceInfo', 'doControlDevice']),
       // 路由跳转
@@ -232,19 +269,86 @@
           path:"/OfflineHelpPage"
         })
       },
+      offset(r,d) {//根据弧度与距离计算偏移坐标
+        return {x: -Math.sin(r)*d, y: Math.cos(r)*d}
+      },
+      draw(n) {
+        this.ctx.clearRect(0,0,this.$refs.canvas.width,this.$refs.canvas.height)
+        // this.ctx.stroke()
+        this.ctx.beginPath()
+        this.ctx.fillStyle = 'rgba(37,37,37,0.8)'
+        this.ctx.arc(this.ox, this.oy, 90, 0, 2*Math.PI)
+        this.ctx.fill()
+        // this.ctx.stroke()
+        this.ctx.strokeStyle = "rgba(151,151,151,0.2)"
+        this.ctx.lineWidth = 20
+        this.ctx.beginPath()
+        this.ctx.shadowColor =  "none"
+        this.ctx.shadowOffsetX = 0
+        this.ctx.shadowOffsetY = 0
+        this.ctx.shadowBlur = 0
+        this.ctx.lineCap = 'round'
+        // this.ctx.arc(this.ox,this.oy,this.or,1/4 * Math.PI,3/4 * Math.PI,true)//半圆(逆时针)
+        this.ctx.arc(this.ox,this.oy,this.or,0,2*Math.PI,true)//整圆
+        this.ctx.stroke()
+        // 画一个渐变
+        var gradient = this.ctx.createLinearGradient(0, this.oy * 2, 2*this.ox, 0)
+        this.linearGradientArr.forEach(element => {
+          gradient.addColorStop(element.step, element.color)
+        })
+        this.ctx.strokeStyle = gradient
+        if (this.deviceAttrs.switch_status=="on") {
+          this.ctx.strokeStyle = gradient
+        }else{
+          this.ctx.strokeStyle = "transparent"
+        }
+        this.ctx.lineWidth = 20
+        this.ctx.beginPath()
+        this.ctx.shadowColor =  "none"
+        this.ctx.shadowOffsetX = 0
+        this.ctx.shadowOffsetY = 0
+        this.ctx.shadowBlur = 0
+        this.ctx.arc(this.ox,this.oy,this.or,2/4 *Math.PI,(n*2+0.5)*Math.PI,false)
+        this.ctx.stroke()
+        this.brightness = (Math.round(n*100))
+        this.ctx.fillStyle = "#fff"
+        this.ctx.beginPath()
+        this.ctx.shadowOffsetX = 0
+        this.ctx.shadowOffsetY = 2
+        this.ctx.shadowBlur = 4
+        this.ctx.shadowColor = "rgba(0, 0, 0, 0.1)"
+        let d =  this.offset(n*2*Math.PI,this.or)
+        // 开机显示
+        if (this.deviceAttrs.switch_status=="on") {
+          this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
+        }else{
+          //关机显示
+          this.ctx.arc(0,0,0,0,0,true)
+        }
+        this.ctx.fill()
+      },
+      getXY(e,obj) {
+        let et = e.touches? e.touches[0] : e
+        let x = et.clientX
+        let y = et.clientY
+        return {
+          x : x - obj.offsetLeft,
+          y : y - obj.offsetTop
+        }
+      },
       // touch动画
       touchstart(val) {
         if(this.isClose && val=='switch') {
           this.$refs[val].classList.remove('animate')
           this.$refs[val].classList.add('animate1')
-          this.$refs[val].classList.add('yellowExtend')
+          // this.$refs[val].classList.add('yellowExtend')
           HdSmart.UI.vibrate()
           return
         }
         if(this.isClose||this.isOffline|| this.networkStatus == -1) return
         this.$refs[val].classList.remove('animate')
         this.$refs[val].classList.add('animate1')
-        this.$refs[val].classList.add('yellowExtend')
+        // this.$refs[val].classList.add('yellowExtend')
         HdSmart.UI.vibrate()
       },
       touchend(val){
@@ -257,15 +361,17 @@
         if(this.isClose||this.isOffline|| this.networkStatus == -1) return
         this.$refs[val].classList.remove('animate1')
         this.$refs[val].classList.add('animate')
-        if(val == 'bc') return this.setSpeed(370)
-        if(val == 'gs') return this.setSpeed(240)
-        if(val == 'rs') return this.setSpeed(167)
         if(val == 'switch') return this.setSwitch()
       },
       // 显示模式弹框
       showMode() {
         if (this.isClose || this.isOffline || this.networkStatus == -1) return
         this.$refs.swing.show = true
+      },
+      // 显示色温弹框
+      showTemperature() {
+        if (this.isClose || this.isOffline || this.networkStatus == -1) return
+        this.$refs.model.show = true
       },
       // 模式选择
       setWind(attr) {
@@ -284,6 +390,15 @@
             }
           })
       },
+      // 色温选择
+      setModel(attr) {
+        return this.controlDevice("temperature", attr)
+        .then((res) => {
+          if(res.code == 0) {
+            if(this.$refs.model.show) this.$refs.model.show = false
+          }
+        })
+      },
       lockClose(e) {
         HdSmart.UI.vibrate()
         this.lockCloseVal = e.target.checked
@@ -291,91 +406,6 @@
       lockOpen(e) {
         HdSmart.UI.vibrate()
         this.lockOpenVal = e.target.checked
-      },
-      changeSpeedMove(e) {
-        if(e.target.value == this.rangeVal) {
-          this.flagVal = true
-          return
-        }
-        this.flagVal = false
-        this.rangeVal = e.target.value
-        console.log('=========1===============', e.target.value)
-        if((parseInt(e.target.value * 2.55) == 254 ? 255 : parseInt(e.target.value * 2.55)) == this.localLevel) return
-        if(this.rangeDisabled == true) return
-        // HdSmart.UI.vibrate()
-        console.log('==========2==============')
-        var max = e.target.getAttribute("max")
-        var width = (91.3 / max * e.target.value) +"%"
-        document.querySelector('.rang_width').style.width = width
-        if(e.target.value == 0) {
-          this.rangeColor = 'on'
-        } else {
-          this.rangeColor = 'off'
-        }
-        this.moceVal = e.target.value
-        this.localBrightness = e.target.value
-      },
-      changeSpeed(e) {
-        if(this.flagVal == true) return
-        // if(this.onePice == true) return
-        console.log('=========3===============', e.target.value)
-        if((parseInt(e.target.value * 2.55) == 254 ? 255 : parseInt(e.target.value * 2.55)) == this.localLevel) return
-        if(this.rangeDisabled == true) return
-        this.rangeDisabled = true
-        if(this.deviceAttrs.switch_status != 'on' || this.isOffline || this.networkStatus == -1) return
-        console.log('=========4===============')
-        var lowLevel = 0
-        this.localBrightness = e.target.value
-        if(this.localBrightness == 0) {
-          lowLevel = 2
-        } else if(this.localBrightness == 100) {
-          lowLevel = 255
-        }
-        HdSmart.UI.vibrate()
-        this.controlDevice('level', lowLevel ? lowLevel : parseInt(this.localBrightness * 2.55))
-          .then((res) => {
-            if(res.code != 0) {
-              this.rangeDisabled = false
-            }
-          })
-          .catch(() => {
-            this.rangeDisabled = false
-          })
-      },
-      changeSpeedEnd(e) {
-        if(this.flagVal == true) return
-        if(this.onePice == false) return
-        this.onePice = false
-        console.log('=========3end===============', e.target.value)
-        if((parseInt(e.target.value * 2.55) == 254 ? 255 : parseInt(e.target.value * 2.55)) == this.localLevel) return
-        if(this.rangeDisabled == true) return
-        this.rangeDisabled = true
-        if(this.deviceAttrs.switch_status != 'on' || this.isOffline || this.networkStatus == -1) return
-        console.log('=========4===============')
-        var lowLevel = 0
-        this.localBrightness = e.target.value
-        if(this.localBrightness == 0) {
-          lowLevel = 2
-        } else if(this.localBrightness == 100) {
-          lowLevel = 255
-        }
-        HdSmart.UI.vibrate()
-        this.controlDevice('level', lowLevel ? lowLevel : parseInt(this.localBrightness * 2.55))
-          .then((res) => {
-            if(res.code != 0) {
-              this.rangeDisabled = false
-            }
-          })
-          .catch(() => {
-            this.rangeDisabled = false
-          })
-      },
-      setSpeed(val) {
-        if (this.isClose||this.isOffline|| this.networkStatus == -1) return
-        if(this.speedDisabled == true) return
-        this.speedDisabled = true
-        HdSmart.UI.vibrate()
-        this.controlDevice('temperature', val)
       },
       setSwitch() {
         if (this.isOffline|| this.networkStatus == -1) return false
@@ -393,13 +423,16 @@
         }
         if(switchStatus == 'on') {
           if(this.lockOpenVal) {
-            if(this.deviceAttrs.mode == '1') return
+            if(this.deviceAttrs.mode == '1') return HdSmart.UI.toast('缓慢开灯中')
             return this.controlDevice("mode", '1')
-              .then((res) => {
-                if(res.code == 0) {
-                  this.switchOn = true
-                }
+            .then(() => {
+            })
+          } else {
+            if(this.deviceAttrs.mode == '1') {
+              return this.controlDevice("switch", 'off', {'level': this.deviceAttrs.level})
+              then(() => {
               })
+            }
           }
         }
         if(this.deviceAttrs.mode == '1' || this.deviceAttrs.mode == '2') {
@@ -438,21 +471,19 @@
 </script>
 
 <style lang="less" scoped>
+@font-face{
+  font-family: 'Rajdhani-Regular';
+  src: url('~@lib/base/ch_air_condition/assets/Rajdhani-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
   @imgPath: "base/hongyan_light/assets";
-  @imgPath1: "base/blend/assets";
-  @imgPath2: "base/air_cleaner/assets/new-air";
   @imgPath3: 'base/honghan_switch/assets';
-  @imgPath4: 'base/oakes_air_condition/assets';
   *{ -webkit-tap-highlight-color:transparent; }
   .page{
-    // height:100vh;
-    // background: url('~@lib/@{imgPath3}/bg02.png');
-    // background-size: 100% 100%;
     &::before{
       content: "";
-      background-image: url('~@lib/@{imgPath3}/bg02.png');
-      background-repeat:no-repeat;
-      background-size: 100% 100%;
+      background: #000;
       position: fixed;
       top:0;
       left: 0;
@@ -463,59 +494,60 @@
   }
   .main{
     margin-top: 85px;
-    // position: relative;
     height: 400px;
-    // margin-bottom: 470px;
-  }
-  .wrap-circle {
-    position: relative;
-    // left: 36%;
-    // top: 35%;
-    // position: absolute;
-    // margin-top: 60px;
-    // width: 320px;
-    // height: 450px;
-    width: 208px;
-    height: 290px;
-    flex-direction: column;
-    color: #20282B;
-    .bg{
+    margin-bottom: 260px;
+    .light-txt{
+      padding-top: 16px;
+      font-family: 'Rajdhani-Regular';
+      text-align: center;
+      font-size: 140px;
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      margin-top: 40px;
+      z-index: 9999;
+      color: #fff;
+      &:after {
+        content: '%';
+        font-size: 40px;
+        position: absolute;
+        bottom: 24px;
+      }
     }
-    .wind {
-      margin-bottom: 30px;
-      font-size: 24px;
-    }
-    .speed {
-      font-size: 120px;
-      &.speed-close{
-        display: flex;
-        align-items: center;
-        height: 152px;
-        margin-bottom: 20px;
-        span{
-          margin: 0 10px;
-          display: inline-block;
-          background:#757575;
-          width: 70px;
-          height: 10px;
+    .light-mode{
+      padding-top: 16px;
+      width: 250px;
+      height: 140px;
+      text-align: center;
+      font-size: 32px;
+      color:#D9BA45;
+      position: absolute;
+      margin-top: 180px;
+      z-index: 9999;
+      border-top: 1px solid rgba(255,255,255,0.1);
+
+      &.none {
+        &:after{
+          display:block;
+          content:'';
+          border-width:8px 8px 8px 8px;
+          border-style:solid;
+          border-color:#D9BA45 transparent transparent transparent;
+          position:absolute;
+          left:46%;
+          top:45%;
         }
       }
     }
-
-    .switch {
-      margin-top: 20px;
-      font-size: 32px;
-    }
+  }
+  .canvas {
+    margin-top: 80px;
+    z-index: 2;
+    position: absolute;
+    // width: 521px;
+    width: 570px;
+    height: 570px;
+    border-radius: 50%;
   }
   .tips-btn{
-    //  position: fixed;
-    // margin-top: 100px;
-    // bottom: 20%;
     margin: 0 auto;
     width: 100%;
     text-align: center;
@@ -543,122 +575,25 @@
       }
       .footer-title {
         font-size: 32px;
-        color: #000000;
+        color: #fff;
       }
       .timing-right {
-        // position: relative;
-        // z-index: 999;
         display: flex;
         align-items: center;
         height: 64px;
         line-height: 64px;
         font-size: 28px;
-        color: #000000;
+        color: #fff;
+        opacity: 0.5;
         &::after {
           content: "";
+          margin-left: 10px;;
           display: inline-block;
-          background-image: url('~@lib/base/oakes_air_condition/assets/arrow_in.png');
-          background-size: 100% 100%;
-          width: 32px;
-          height: 32px;
-          // position: relative;
-          // top: 2px;
-        }
-      }
-      input[type="range"] {
-        display: block;
-        -webkit-appearance: none;
-        // background-color: #bdc3c7;
-        background: rgba(101,101,101,0.3);
-        width: 100%;
-        height: 2px;
-        border-radius: 5px;
-        margin: 0 auto;outline: 0;
-        // &::before {
-        //     content: "";
-        //     position: absolute;
-        //     top: -24px;
-        //     left: -50px;
-        //     display: block;
-        //     width: 48px;
-        //     height: 48px;
-        //     background-image: url("~@lib/@{imgPath3}/btn_ac_on_zron@2x.png");
-        //     background-size: 100% 100%;
-        //   }
-        //   &::after {
-        //     content: "";
-        //     position: absolute;
-        //     top: -24px;
-        //     right: -55px;
-        //     display: block;
-        //     width: 48px;
-        //     height: 48px;
-        //     background-image: url("~@lib/@{imgPath3}/btn_ac_on_oneh@2x.png");
-        //     background-size: 100% 100%;
-        //   }
-      }
-      input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        background-color: #E1B96E;
-        border: 1px solid #E1B96E;
-        // width: 76px;
-        // height: 52px;
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        // border: 2px solid white;
-        cursor: pointer;
-        // transition: 0.3s ease-in-out;
-      }
-
-      .range {
-        position: relative;
-        width: 80%;
-        // margin: 0 auto;
-        // .range-zero::-webkit-slider-thumb {
-        //   background: #EDEDED;
-        // }
-        // .range-zero {
-        //   background: #EDEDED;
-        // }
-        .rang_width {
-          position: absolute;
-          top: 0;
-          left: 0;
-          background: #E1B96E;
-          height: 2px;
-          border-radius: 5px 0 0 5px;
-        }
-      }
-      .footer-nav {
-        display: flex;
-        // width: 480px;
-        .footer-nav-btn {
-          // width: 120px;
-          height: 64px;
-          line-height: 64px;
-          // background: rgba(0,0,0,0.04);
-          font-size: 28px;
-          color: #000000;
-          text-align: center;
-          margin-left: 64px;
-          opacity: 0.5;
-          &.active {
-            opacity: 1;
-            position: relative;
-            &::before{
-              display: block;
-              content: "";
-              width: 8px;
-              height: 8px;
-              border-radius: 50%;
-              background: #000;
-              position: absolute;
-              bottom: 0;
-              left: 50%;
-              margin-left: -4px;
-            }
-          }
+          border-top: 1px solid;
+          border-right: 1px solid;
+          width: 10px;
+          height: 10px;
+          transform: rotate(45deg);
         }
       }
       .switch {
@@ -674,7 +609,7 @@
         -webkit-appearance: none;
         user-select: none;
         outline: none;
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: rgba(255,255,255,0.19);
       }
       .switch:before {
         content: '';
@@ -685,16 +620,16 @@
         left: 0;
         border-radius: 20px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-        background: #000;
+        background: #fff;
       }
       .switch:checked {
-        border-color: #E1B96E;
-        box-shadow: #E1B96E 0 0 0 16px inset;
-        background-color: #E1B96E;
+        // border-color: #EF6D5E;
+        // box-shadow: #E1B96E 0 0 0 16px inset;
+        background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
       }
       .switch:checked:before {
         left: 30px;
-        background: #000000;
+        background: #fff;
       }
       .switch.switch-anim {
         transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
@@ -712,50 +647,6 @@
       }
     }
   }
-  .animation {
-    background: url("~@lib/@{imgPath3}/btn_ac_lamp@2x.png") no-repeat;
-    background-size: 100% 100%;
-  }
-  .animation1 {
-    background: url("~@lib/@{imgPath3}/btn_ac_lampnuan@2x.png") no-repeat;
-    background-size: 100% 100%;
-  }
-  .greycircle {
-    background: url("~@lib/@{imgPath3}/btn_ac_lamp@2x.png") no-repeat;
-    background-size: 100% 100%;
-  }
-  .panel-btn {
-    // position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    // padding: 40px 30px 30px;
-    margin-top: 66px;
-    padding: 0 30px 96px;
-    z-index: 9999;
-    width: 100%;
-    // height: 306px;
-    // background: #ffffff;
-    // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
-    border-radius: 42px 42px 0px 0px;
-
-    flex-wrap: wrap;
-    justify-content: center;
-
-    .btn {
-      margin-top: 24px;
-      width: 100%;
-      border-radius: 40px 40px 0 0;
-      background: rgba(0,0,0,0.1);
-      // box-shadow: 0 -3px 28px 0 rgba(209, 209, 209, 0.5);
-      display: flex;
-      // justify-content: space-evenly;
-      align-items: center;
-    }
-  }
-  .disabled {
-    opacity: 0.2;
-  }
   .btn-wrap {
     margin: 0 24px;
     &.up-index {
@@ -767,98 +658,31 @@
       margin: 0 auto;
       width: 120px;
       height: 120px;
-      // border: 1px solid #818181;
       border-radius: 50%;
 
       display: flex;
       flex-direction: column;
-      background: rgba(0, 0, 0, 0.1);
+      background: rgba(255,255,255,0.1);
       &::before {
         position: relative;
         z-index: 100;
       }
       &.active {
-        // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-        // border-color: #ffbf00;
-        // background: #000;
-        // background-image: linear-gradient(221deg, #F1CB85 10%, #E1B96E 81%);
-        background: #E1B96E;
+        background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
       }
     }
-    .btn-name {
-      text-align: center;
-      color: #000;
-      margin-top: 16px;
-      font-size: 24px;
-    }
-    .btn-rs {
-      &::before {
-        content: "";
-        display: block;
-        width: 48px;
-        height: 48px;
-        background-image: url("~@lib/@{imgPath3}/btn_ac_on_baiguang@2x.png");
-        background-size: 100% 100%;
-      }
-      &.active::before{
-        display: block;
-        width: 48px;
-        height: 48px;
-        // background-image: url("~@lib/base/yiyun_light/assets/nuanguang2@2x.png");
-        background-size: 100% 100%;
-
-      }
-    }
-
-    .btn-gs {
-      &::before {
-        content: "";
-        display: block;
-        width: 48px;
-        height: 48px;
-        background-image: url("~@lib/@{imgPath3}/btn_ac_on_ziranguang@2x.png");
-        background-size: 100% 100%;
-      }
-      &.active::before{
-        display: block;
-        width: 48px;
-        height: 48px;
-        // background-image: url("~@lib/base/yiyun_light/assets/ziranguang2@2x.png");
-        background-size: 100% 100%;
-
-      }
-    }
-    .btn-bc {
-      &::before {
-        content: "";
-        display: block;
-        width: 48px;
-        height: 48px;
-        background-image: url("~@lib/@{imgPath3}/btn_ac_on_cd@2x.png");
-        background-size: 100% 100%;
-      }
-      &.active::before{
-        display: block;
-        width: 48px;
-        height: 48px;
-        // background-image: url("~@lib/base/yiyun_light/assets/baiguanfg2@2x.png");
-        background-size: 100% 100%;
-
-      }
-    }
-
     .btn-swich {
       &::before {
         content: "";
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url("~@lib/@{imgPath4}/dakai3@2x.png");
+        background-image: url("~@lib/@{imgPath3}/new_kg_btn_off.png");
         background-size: 100% 100%;
       }
       &.active {
         &::before {
-          background-image: url("~@lib/@{imgPath4}/dakai3@2x.png");
+          background-image: url("~@lib/@{imgPath}/btn_ac_on_cd@2x.png") !important;
         }
       }
     }
@@ -880,57 +704,9 @@
   }
   &.close,
   &.offline {
-    // background-image: url("~@lib/@{imgPath}/beij@3x.png");
-    //   background-size: 100% 100%;
-    // &:before {
-    // content: "";
-    // position: fixed;
-    // top: 82PX;
-
-    // left: 0;
-    // bottom: 0;
-    // right: 0;
-    // z-index: 999;
-    // width: 100%;
-    // background: rgba(0, 0, 0, 0.1);
-    // }
-    &.page {
-      // background-image: url("~@lib/@{imgPath}/beij@3x.png");
-      // background-size: 100% 100%;
-
-      .cover {
-        background: #fff;
-        .point {
-          &.left {
-            background: #d8d8d8;
-          }
-        }
-      }
-    }
-    // .panel-btn {
-    // background: #efefef;
-    // }
     .btn-wrap {
       opacity: .2;
-      // .btn {
-      //   &.active {
-      //     background: #fff;
-      //     border: 1px solid #818181;
-      //   }
-      // }
     }
-    .btn-wrap-light{
-      opacity: 1;
-      .btn {
-        &.active {
-          // background-image: linear-gradient(-90deg, #ffd500 0%, #ffbf00 100%);
-          border-color: #ffbf00;
-          background: #E1B96E;
-        }
-      }
-    }
-
-
   }
   .animate::before{
     animation: scale 0.3s;

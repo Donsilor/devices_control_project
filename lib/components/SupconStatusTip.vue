@@ -47,7 +47,7 @@
           <i class="arrow"/>
         </div>
         <div
-          v-if="deviceAttrs.connectivity!=='offline'&&networkStatus!=-1&&networkStatus!=-2&&deviceAttrs.error"
+          v-if="deviceAttrs.connectivity!=='offline'&&networkStatus!=-1&&deviceAttrs.error"
           class="offline_bar">
           <div class="offline_bar_div">
             <p class="offline_bar_p">

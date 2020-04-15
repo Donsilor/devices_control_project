@@ -2,8 +2,9 @@
 import Mock from 'mockjs'
 
 var res = {
+  // 万家乐热水器属性
   "reserve": 880,
-  "mode": "dy_expansion",
+  // "mode": "dy_expansion",
   "set_temperature": 50,
   "switch": "on",
   "fault": "normal",
@@ -15,7 +16,17 @@ var res = {
   "deviceSubCategory": 0,
   "connectivity": "online",
   "currenttemperature":90,
-  "error":"running"
+  "error":"",
+  // 万和热水器属性
+  "setWTemp": 47, //预设温度
+  "outWTemp": 37, //当前温度
+  "mode": "adaptive", //模式
+  "childLock": "off", //童锁
+  "antiFreeze": "on", //智能防冻
+  "curGas": "20", //实时用气
+  "totalGas": "664.9", //累计用气
+  "curAff": "75", //实时用水
+  "totalWater": "4442.2", //累计用水
 }
 export function generateSnapShot() {
   return Mock.mock({
