@@ -134,6 +134,8 @@ export default {
   },
   data() {
     return {
+      returnTemp:'',
+      isTouchStart:false,
       count: 0,
       now: 0,
       idNum:0,
@@ -410,8 +412,10 @@ export default {
       },
     touchstart(e){
       console.log(e,'eeeeeeeee')
+      this.isTouchStart = true
     },
     touchmove(e){
+      if(this.isTouchStart == false) return
       //isMove是用来判断是否是滑动
       this.isMove = true
       if(e.preventDefault){
@@ -421,14 +425,14 @@ export default {
       }
       var touch = e.targetTouches[0]
       //  var ssdd = document.elementsFromPoint(touch.pageX, touch.pageY)
-      var ele = document.elementFromPoint(touch.pageX, touch.pageY).id
+      var ele = document.elementFromPoint(touch.clientX, touch.clientY)&&document.elementFromPoint(touch.pageX, touch.pageY).id
       this.idNum = parseInt(ele)
       console.log(this.idNum,'小梯形的id')
       this.calculateBg(this.idNum)
       // 如果是NaN,则return
       if(isNaN(this.idNum)==true){
-          console.log('return掉了')
-          return
+          console.log(this.itemTemp,'return掉了return发的温度是')
+          this.returnTemp = this.itemTemp
         }else{
           // 滑动的梯子的index和温度之间的关系式
           this.itemTemp = (0.5*this.idNum+(this.MIN_TEMP/10+0.5))*10
@@ -438,16 +442,21 @@ export default {
           // 如果最后一位数字是5，则往前进1
           if (num.lastIndexOf("5")==2) {
             this.itemTemp -=5
+            this.returnTemp = this.itemTemp
             console.log(this.itemTemp,'最终传给后台的温度')
-            
+          }else{
+            this.itemTemp = (0.5*this.idNum+(this.MIN_TEMP/10+0.5))*10
+            this.returnTemp = this.itemTemp
+            console.log(num,'传的没有小数的温度')
           }
         }
     },
     touchend(){
+      this.isTouchStart = false
       if (this.isOffline||this.loaclAttr.switchStatus=='off') return
       console.log(this.isMove,'this.isMove')
       if(this.isMove == false) return
-      this.controlDevice('temperature',this.itemTemp)
+      this.controlDevice('temperature',this.returnTemp)
       this.isMove = false
     },
     OfflineHelpPage(){

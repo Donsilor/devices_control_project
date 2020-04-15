@@ -112,9 +112,9 @@
               class="btn-wrap center"
               @click="showMode">
               <div
-                :class="[modeClass,'btn  center']"
+                :class="['btn-'+deviceAttrs.mode,'btn  center']"
               />
-              <div class="btn-name">{{ modeTxt }}</div>
+              <div class="btn-name">{{ deviceAttrs.mode | modeTxt }}</div>
             </div>
             <!-- 风速 -->
             <div
@@ -122,7 +122,7 @@
               @click="showSpeed">
               <div
                 :class="[deviceAttrs.mode,speedClass,'btn center']" />
-              <div class="btn-name">{{ speedTxt }}</div>
+              <div class="btn-name">{{ deviceAttrs.speed | speedTxt }}</div>
             </div>
             <!-- 定时 -->
             <div
@@ -215,7 +215,6 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
-// import circleProgress from './components/circle-progress'
 import modelSwing from './components/model-swing'
 import modelMode from './components/model-mode'
 import modelSpeed from './components/model-speed'
@@ -224,7 +223,6 @@ import SelectTime from './components/time.vue'
 const [MIN_TEMP, MAX_TEMP] = [160, 310]
 export default {
   components: {
-    // circleProgress,
     modelSwing,
     modelMode,
     modelSpeed,
@@ -271,34 +269,6 @@ export default {
     bottemOff() {
         return -(this.$refs.bottomControl.offsetHeight - 135) + 'px'
     },
-    modeIsActive() {
-      return this.deviceAttrs.mode == 'auto' || this.deviceAttrs.mode == 'dehumidify' || this.deviceAttrs.mode == 'wind'
-    },
-    windIsActive() {
-      return this.deviceAttrs.wind_up_down == 'on' || this.deviceAttrs.wind_left_right == 'on'
-    },
-    modeClass() {
-      /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
-        case 'cold':
-          return 'btn-cold'
-          break
-          case 'heat':
-          return 'btn-heat'
-          break
-        case 'auto':
-          return 'btn-auto'
-          break
-        case 'dehumidify':
-          return 'btn-dehumidify'
-          break
-        case 'wind':
-          return 'btn-wind'
-          break
-        default:
-          return 'btn-cold'
-      }
-    },
     speedClass() {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.speed) {
@@ -321,53 +291,6 @@ export default {
           return ''
       }
     },
-    modeTxt(){
-        /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.mode) {
-        case 'cold':
-          return '制冷'
-          break
-          case 'heat':
-          return '制热'
-          break
-        case 'auto':
-          return '智能'
-          break
-        case 'dehumidify':
-          return '除湿'
-          break
-        case 'wind':
-          return '送风'
-          break
-        default:
-          return '制冷'
-      }
-    },
-    speedTxt(){
-        /* eslint-disable no-unreachable */
-      switch (this.deviceAttrs.speed) {
-        case 'breeze':
-          return '微风'
-          break
-         case 'low':
-          return '低风'
-          break
-        case 'normal':
-          return '中风'
-          break
-        case 'high':
-          return '高风'
-          break
-        case 'auto':
-          return '自动风'
-          break
-        case 'strong':
-          return '强力'
-          break
-        default:
-          return ''
-      }
-    }
   },
   watch: {
     'device.stateChange'() {
@@ -402,6 +325,10 @@ export default {
   },
   mounted() {
     this.$nextTick(()=>{
+      //如果是iphone5等小屏手机，底部盒子默认显示高度减少
+      if(document.documentElement.clientHeight < 600){
+        this.minVisibleHeight = 65
+      }
       setTimeout(()=>{
         window.scrollTo(0,0)
       },200)
@@ -551,27 +478,27 @@ export default {
           color = 'rgba(255,255,255,0.1)'
           return
         }
-        if(this.deviceAttrs.mode=='heat'){
-          // 制热模式时的温度颜色
-          if (index < 10) {
-              color = '#EF6D5E '
-          }else if (index > 20) {
-              color = '#F9BB6B'
-          }else {
-              color = `linear-gradient(to right, #EF6D5E 0%, #ff7524 ${200-10*index}%, #F9BB6B  100%)`
-          }
+         if(this.deviceAttrs.mode=='heat'){
+            // 制热模式时的温度颜色
+            if (index < 10) {
+                color = '#EF6D5E '
+            }else if (index > 20) {
+                color = '#F9BB6B'
+            }else {
+                color = `linear-gradient(to right, #EF6D5E 0%, #ff7524 ${200-10*index}%, #F9BB6B  100%)`
+            }
 
-          return color
-        }else{
-          if (index < 10) {
-              color = '#327fdb'
-          }else if (index > 20) {
-              color = '#20c6ae'
-          }else {
-              color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
-          }
-          return color
-        }
+            return color
+         }else{
+            if (index < 10) {
+                color = '#327fdb'
+            }else if (index > 20) {
+                color = '#20c6ae'
+            }else {
+                color = `linear-gradient(to right, #327fdb 0%, #28a9c3 ${200-10*index}%, #20c6ae 100%)`
+            }
+            return color
+         }
     },
     touchstart(e){
       console.log(e,'eeeeeeeee')
@@ -799,9 +726,6 @@ export default {
     },
     controlDevice(attr, value) {
       let param = {}
-      if(attr == 'mode' && value == 'wind' && this.deviceAttrs.speed == 'auto'){
-        param = { 'speed': 'low'}
-      }
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {
@@ -839,11 +763,6 @@ export default {
       if(this.$refs.mode.show) this.$refs.mode.show = false
       if(this.$refs.speed.show) this.$refs.speed.show = false
     },
-
-    getProgress() {
-      // 计算温度进度条
-      // return 70 /(30 - 16) * (this.deviceAttrs.temperature / 10 - 16)
-    }
   },
 }
 </script>
@@ -870,39 +789,6 @@ export default {
     }
   }
 }
-    // .container {
-    //     width: 85%;
-    //     // height: 470px;
-    //     height: 370px;
-    //     margin: 20px auto;
-    //     border: 1px solid #000;
-    //     position: relative;
-    // }
-    // .item-container {
-    //     width: 10px;
-    //     // height: 270px;
-    //     height: 350px;
-    //     position: absolute;
-    //     left: 50%;
-    //     // top: 0;
-    //     top: -80px;
-    //     transform-origin: 50% 100%;
-    //     z-index: 99;
-    //     .items{
-    //       width: 32px;
-    //       // height: 270px;
-    //       height: 350px;
-    //       z-index: 99;
-    //       .item {
-    //         width: 12px;
-    //         height: 64px;
-    //         background-color: rgba(255,255,255,0.1);
-    //         -webkit-clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
-    //         clip-path: polygon(100% 0,75% 100%, 25% 100%, 0 0);
-    //         margin-top:80px;
-    //       }
-    //     }
-    // }
     .showWind{
       width: 40px;
       height: 40px;
@@ -922,12 +808,5 @@ export default {
           opacity: 0.3;
         }
       }
-    }
-    .pannelCover{
-      position:absolute;
-      top:0;
-      bottom:0;
-      left:0;
-      right:0;
     }
 </style>

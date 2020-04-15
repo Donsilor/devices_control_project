@@ -131,7 +131,10 @@
         &.cold,
           &.auto,
           &.dehumidify,
-          &.wind{
+          &.wind,
+          &.breath,
+          &.sleep,
+          &.fresh{
             .active{
               background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
               -webkit-background-clip: text;
@@ -169,7 +172,7 @@
         border-radius: 10px;
         margin: 0 16px 16px 16px;
       }
-       .cold.hide,.dehumidify.hide,.wind.hide,.auto.hide{
+       .cold.hide,.dehumidify.hide,.wind.hide,.auto.hide,.breath.hide,.sleep.hide,.fresh.hide{
         span{
           background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
           -webkit-background-clip: text;

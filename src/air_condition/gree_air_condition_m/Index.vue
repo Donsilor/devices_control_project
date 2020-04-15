@@ -385,7 +385,7 @@ export default {
           this.returnTemp = this.itemTemp
         }else{
             // 滑动的梯子的index和温度之间的关系式
-            this.itemTemp = (0.5*this.idNum+16.5)*10
+            this.itemTemp = (0.5*this.idNum+16)*10
             var num = this.itemTemp + ""
 
             // 如果最后一位数字是5，则往前进1
@@ -395,7 +395,7 @@ export default {
               this.returnTemp = this.itemTemp
               console.log(this.itemTemp,'最终传给后台的温度2222222')
             }else{
-              this.itemTemp = (0.5*this.idNum+16.5)*10
+              this.itemTemp = (0.5*this.idNum+16)*10
               this.returnTemp = this.itemTemp
               console.log(num,'传的没有小数的温度')
             }

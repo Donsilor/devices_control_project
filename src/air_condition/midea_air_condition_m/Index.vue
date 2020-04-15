@@ -1,5 +1,9 @@
 <template>
-  <div class="body">
+  <div 
+    class="body"
+    @touchstart.passive="bodyTouchstart"
+    @touchmove.passive="bodyTouchmove"
+    @touchend.passive="bodyTouchEnd">
     <div
       :class="[{ 'offline': isOffline }, {'close': isClose}, 'page cover',{'scroll44': classTrue}]"
     >
@@ -101,53 +105,58 @@
           @touchend="endAnimate('switchStatus')"
         />
       </div>
-      <div
-        class="panel-btn center">
-        <!-- 模式和风速 -->
-        <div class="modespeed">
-          <div
-            class="btn-wrap center"
-            @click="showMode">
+      <div 
+        ref="bottomControl"
+        :style="{bottom: bottom1}" 
+        class="bottom-control">
+        <div
+          class="panel-btn center">
+          <!-- 模式和风速 -->
+          <div class="modespeed">
             <div
-              :class="[modeClass,'btn  center']"
-            />
-            <div class="btn-name">{{ modeTxt }}</div>
-          </div>
-          <div
-            class="btn-wrap center"
-            @click="showSpeed">
+              class="btn-wrap center"
+              @click="showMode">
+              <div
+                :class="[modeClass,'btn  center']"
+              />
+              <div class="btn-name">{{ modeTxt }}</div>
+            </div>
             <div
-              :class="[deviceAttrs.mode,speedClass,'btn center']" />
-            <div class="btn-name">{{ speedTxt }}</div>
-          </div>
-        </div>
-        <!-- 上下风 -->
-        <div class="bottom">
-          <div class="Charging-protection">
-            <div>上下风</div>
-            <div
-              style="z-index: 100;">
-              <input
-                :class="[deviceAttrs.mode,'switch switch-anim']"
-                :checked="deviceAttrs.wind_up_down=='on'"
-                :disabled="disabledLock"
-                type="checkbox"
-                @click="checkSwitch('wind_up_down')">
+              class="btn-wrap center"
+              @click="showSpeed">
+              <div
+                :class="[deviceAttrs.mode,speedClass,'btn center']" />
+              <div class="btn-name">{{ speedTxt }}</div>
             </div>
           </div>
-        </div>
-        <!-- 左右风 -->
-        <div class="bottom">
-          <div class="Charging-protection">
-            <div>左右风</div>
-            <div
-              style="z-index: 100;">
-              <input
-                :class="[deviceAttrs.mode,'switch switch-anim']"
-                :checked="deviceAttrs.wind_left_right=='on'"
-                :disabled="disabledLock"
-                type="checkbox"
-                @click="checkSwitch('wind_left_right')">
+          <!-- 上下风 -->
+          <div class="bottom">
+            <div class="Charging-protection">
+              <div>上下风</div>
+              <div
+                style="z-index: 100;">
+                <input
+                  :class="[deviceAttrs.mode,'switch switch-anim']"
+                  :checked="deviceAttrs.wind_up_down=='on'"
+                  :disabled="disabledLock"
+                  type="checkbox"
+                  @click="checkSwitch('wind_up_down')">
+              </div>
+            </div>
+          </div>
+          <!-- 左右风 -->
+          <div class="bottom">
+            <div class="Charging-protection">
+              <div>左右风</div>
+              <div
+                style="z-index: 100;">
+                <input
+                  :class="[deviceAttrs.mode,'switch switch-anim']"
+                  :checked="deviceAttrs.wind_left_right=='on'"
+                  :disabled="disabledLock"
+                  type="checkbox"
+                  @click="checkSwitch('wind_left_right')">
+              </div>
             </div>
           </div>
         </div>
@@ -185,6 +194,15 @@ export default {
   },
   data() {
     return {
+      canGentlyMove:true,
+      minVisibleHeight:100,
+      controlHight:0,
+      deControlTemp: null,
+      positionRecord: 0,
+      canMove: false,
+      bottom1: '0',
+      touchStartPoint: 0,
+      touchEndPoint: 0,
       returnTemp:'',
       isTouchStart:false,
       count: 26,
@@ -212,6 +230,9 @@ export default {
   computed: {
     ...mapGetters(['isClose', 'isOffline']),
     ...mapState(['device', 'deviceAttrs']),
+    bottemOff() {
+        return -(this.$refs.bottomControl.offsetHeight - 135) + 'px'
+    },
     modeClass() {
       /* eslint-disable no-unreachable */
       switch (this.deviceAttrs.mode) {
@@ -305,6 +326,9 @@ export default {
     "device.stateChange"(){
       this.flagVal = false
     },
+    'deviceAttrs.mode'() {
+        this.resetPosition()
+      },
        'deviceAttrs.temperature'() {
       if(this.deviceAttrs.temperature) {
         this.setTemperatureDis = false
@@ -331,13 +355,117 @@ export default {
   },
   mounted(){
     this.$nextTick(()=>{
+      //如果是iphone5等小屏手机，底部盒子默认显示高度减少
+      if(document.documentElement.clientHeight < 600){
+        this.minVisibleHeight = 65
+      }
         setTimeout(()=>{
           window.scrollTo(0,0)
         },200)
+        this.resetPosition(true)
       })
   },
   methods: {
     ...mapActions(['getDeviceInfo', 'doControlDevice']),
+    resetPosition(isFirst = false) {
+        this.$nextTick(() => {
+          let bottomHeight = this.$refs.bottomControl.offsetHeight
+          if (this.controlHight===bottomHeight) return
+          let result = document.body.offsetHeight - this.$refs.switchStatus.offsetTop - this.$refs.switchStatus.offsetHeight
+          let showHight = this.controlHight?this.controlHight + parseFloat(getComputedStyle(this.$refs.bottomControl).bottom): bottomHeight
+          if (result < bottomHeight) {
+            this.canMove = true
+            if (this.controlHight<bottomHeight) {
+              this.bottom1 = this.controlHight? showHight-bottomHeight + 'px':-(bottomHeight - this.minVisibleHeight) + 'px'
+            }else {
+              if (showHight>= bottomHeight) {
+                this.bottom1 = '10px'
+              }else {
+                this.bottom1 = showHight-bottomHeight + 'px'
+              }
+            }
+          } else {
+            if (isFirst) {
+              this.minVisibleHeight = showHight
+            }
+            if(showHight>=bottomHeight){
+              this.bottom1 = '10px'
+              this.canMove = false
+            }else {
+              this.minVisibleHeight = showHight
+              this.bottom1 = showHight-bottomHeight + 'px'
+              this.canMove = true
+            }
+          }
+          this.controlHight = bottomHeight
+        })
+      },
+      hideMemu() {
+        if (!this.canMove) return
+        this.bottom1 = -(this.$refs.bottomControl.offsetHeight - this.minVisibleHeight) + 'px'
+      },
+      bodyTouchstart(e) {
+        this.canGentlyMove = false
+        this.touchStartPoint = e.touches[0].pageY
+        this.touchEndPoint = e.touches[0].pageY
+        this.bottom1 = getComputedStyle(this.$refs.bottomControl).bottom
+      },
+      bodyTouchmove(e) {
+        this.canGentlyMove = false
+        if (!this.canMove) return
+        let pageY =  e.changedTouches[0].pageY
+        let bottomHeight = this.$refs.bottomControl.offsetHeight
+        let IsUp = pageY - this.touchEndPoint < 0
+        let bottomOff = parseFloat(this.bottom1)
+        let position = bottomOff
+        if (IsUp && bottomOff >= -(bottomHeight - this.minVisibleHeight)||(!IsUp && bottomOff <= 10)) {
+          position = bottomOff - (pageY - this.touchEndPoint)
+        }
+        if (position>10) position = 10
+        if (position<this.minVisibleHeight-bottomHeight) {
+          position = this.minVisibleHeight-bottomHeight
+        }
+        this.bottom1 = position+ 'px'
+        this.touchEndPoint = pageY
+      },
+      bodyTouchEnd(e) {
+        this.canGentlyMove = true
+        if (Math.abs(this.touchEndPoint - this.touchStartPoint) > 30) {
+          if (this.touchStartPoint - this.touchEndPoint > 0) {
+            this.gentlyMove('up')
+          } else {
+            this.gentlyMove('down')
+          }
+        }
+      },
+      gentlyMove(direction = 'up') {
+        if (!this.canGentlyMove) return
+        let bottomOff = parseFloat(getComputedStyle(this.$refs.bottomControl).bottom)
+        if (direction === 'down') {
+          if (bottomOff > -(this.$refs.bottomControl.offsetHeight - this.minVisibleHeight)) {
+            this.bottom1 = bottomOff>=0? bottomOff*0.9- 0.3+ 'px':bottomOff*1.05- 0.5+'px'
+            requestAnimationFrame(() => {
+              this.gentlyMove(direction)
+            })
+          } else {
+            this.bottom1 = -(this.$refs.bottomControl.offsetHeight - this.minVisibleHeight) + 'px'
+          }
+        } else {
+          if (bottomOff < 0) {
+            this.bottom1 = bottomOff*0.9+ 1+ 'px'
+            requestAnimationFrame(() => {
+              this.gentlyMove(direction)
+            })
+          } else if (bottomOff<=10) {
+            this.bottom1 = bottomOff*1.1+ 1+ 'px'
+            requestAnimationFrame(() => {
+              this.gentlyMove(direction)
+            })
+          }else {
+            this.bottom1 = '10px'
+          }
+        }
+      },
         // 按钮动画开始
     startAnimate(val){
       if(val=='switchStatus'){
@@ -665,6 +793,16 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.body{
+    height: 100vh;
+  }
+.bottom-control {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    z-index: 1000;
+    background-color: black;
+  }
 .page {
   .main{
     .wrap-circle {

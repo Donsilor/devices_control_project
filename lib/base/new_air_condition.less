@@ -282,7 +282,7 @@
           margin-top: 16px;
           font-size: 32px;
         }
-        .cold,.dehumidify,.wind,.auto{
+        .cold,.dehumidify,.wind,.auto,.breath,.sleep,.fresh{
             &.btn-breeze{
                 position: relative;
                 z-index: 100;
@@ -317,6 +317,18 @@
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan06_b.png');
+                background-size: 100% 100%;
+              }
+              &.btn-superstrong{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_superstrong_b.png');
+                background-size: 100% 100%;
+              }
+              &.btn-stopwind{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_stopwind_b.png');
                 background-size: 100% 100%;
               }
               &.clock{
@@ -361,6 +373,18 @@
                 position: relative;
                 z-index: 100;
                 background-image: url('~@lib/@{imgPath1}/kt_mode_fan06_r.png');
+                background-size: 100% 100%;
+              }
+              &.btn-superstrong{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_superstrong_r.png');
+                background-size: 100% 100%;
+              }
+              &.btn-stopwind{
+                position: relative;
+                z-index: 100;
+                background-image: url('~@lib/@{imgPath1}/kt_mode_stopwind_r.png');
                 background-size: 100% 100%;
               }
               &.clock{
@@ -421,19 +445,19 @@
         }
         .btn-breath {
           &::before {
-            background-image: url('~@lib/@{imgPath1}/kt_mode_cold.png');
+            background-image: url('~@lib/@{imgPath1}/kt_mode_breath.png');
             background-size: 100% 100%;
           }
         }
         .btn-sleep {
           &::before {
-            background-image: url('~@lib/@{imgPath1}/kt_mode_cold.png');
+            background-image: url('~@lib/@{imgPath1}/kt_mode_sleep.png');
             background-size: 100% 100%;
           }
         }
         .btn-fresh {
           &::before {
-            background-image: url('~@lib/@{imgPath1}/kt_mode_cold.png');
+            background-image: url('~@lib/@{imgPath1}/kt_mode_fresh.png');
             background-size: 100% 100%;
           }
         }

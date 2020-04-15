@@ -260,7 +260,10 @@
 .page .modespeed .btn-wrap .cold.btn-breeze,
 .page .modespeed .btn-wrap .dehumidify.btn-breeze,
 .page .modespeed .btn-wrap .wind.btn-breeze,
-.page .modespeed .btn-wrap .auto.btn-breeze {
+.page .modespeed .btn-wrap .auto.btn-breeze,
+.page .modespeed .btn-wrap .breath.btn-breeze,
+.page .modespeed .btn-wrap .sleep.btn-breeze,
+.page .modespeed .btn-wrap .fresh.btn-breeze {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan01_b.png');
@@ -269,7 +272,10 @@
 .page .modespeed .btn-wrap .cold.btn-low,
 .page .modespeed .btn-wrap .dehumidify.btn-low,
 .page .modespeed .btn-wrap .wind.btn-low,
-.page .modespeed .btn-wrap .auto.btn-low {
+.page .modespeed .btn-wrap .auto.btn-low,
+.page .modespeed .btn-wrap .breath.btn-low,
+.page .modespeed .btn-wrap .sleep.btn-low,
+.page .modespeed .btn-wrap .fresh.btn-low {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan02_b.png');
@@ -278,7 +284,10 @@
 .page .modespeed .btn-wrap .cold.btn-normal,
 .page .modespeed .btn-wrap .dehumidify.btn-normal,
 .page .modespeed .btn-wrap .wind.btn-normal,
-.page .modespeed .btn-wrap .auto.btn-normal {
+.page .modespeed .btn-wrap .auto.btn-normal,
+.page .modespeed .btn-wrap .breath.btn-normal,
+.page .modespeed .btn-wrap .sleep.btn-normal,
+.page .modespeed .btn-wrap .fresh.btn-normal {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan03_b.png');
@@ -287,7 +296,10 @@
 .page .modespeed .btn-wrap .cold.btn-high,
 .page .modespeed .btn-wrap .dehumidify.btn-high,
 .page .modespeed .btn-wrap .wind.btn-high,
-.page .modespeed .btn-wrap .auto.btn-high {
+.page .modespeed .btn-wrap .auto.btn-high,
+.page .modespeed .btn-wrap .breath.btn-high,
+.page .modespeed .btn-wrap .sleep.btn-high,
+.page .modespeed .btn-wrap .fresh.btn-high {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan04_b.png');
@@ -296,7 +308,10 @@
 .page .modespeed .btn-wrap .cold.btn-auto1,
 .page .modespeed .btn-wrap .dehumidify.btn-auto1,
 .page .modespeed .btn-wrap .wind.btn-auto1,
-.page .modespeed .btn-wrap .auto.btn-auto1 {
+.page .modespeed .btn-wrap .auto.btn-auto1,
+.page .modespeed .btn-wrap .breath.btn-auto1,
+.page .modespeed .btn-wrap .sleep.btn-auto1,
+.page .modespeed .btn-wrap .fresh.btn-auto1 {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan05_b.png');
@@ -305,16 +320,46 @@
 .page .modespeed .btn-wrap .cold.btn-strong,
 .page .modespeed .btn-wrap .dehumidify.btn-strong,
 .page .modespeed .btn-wrap .wind.btn-strong,
-.page .modespeed .btn-wrap .auto.btn-strong {
+.page .modespeed .btn-wrap .auto.btn-strong,
+.page .modespeed .btn-wrap .breath.btn-strong,
+.page .modespeed .btn-wrap .sleep.btn-strong,
+.page .modespeed .btn-wrap .fresh.btn-strong {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan06_b.png');
   background-size: 100% 100%;
 }
+.page .modespeed .btn-wrap .cold.btn-superstrong,
+.page .modespeed .btn-wrap .dehumidify.btn-superstrong,
+.page .modespeed .btn-wrap .wind.btn-superstrong,
+.page .modespeed .btn-wrap .auto.btn-superstrong,
+.page .modespeed .btn-wrap .breath.btn-superstrong,
+.page .modespeed .btn-wrap .sleep.btn-superstrong,
+.page .modespeed .btn-wrap .fresh.btn-superstrong {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_superstrong_b.png');
+  background-size: 100% 100%;
+}
+.page .modespeed .btn-wrap .cold.btn-stopwind,
+.page .modespeed .btn-wrap .dehumidify.btn-stopwind,
+.page .modespeed .btn-wrap .wind.btn-stopwind,
+.page .modespeed .btn-wrap .auto.btn-stopwind,
+.page .modespeed .btn-wrap .breath.btn-stopwind,
+.page .modespeed .btn-wrap .sleep.btn-stopwind,
+.page .modespeed .btn-wrap .fresh.btn-stopwind {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_stopwind_b.png');
+  background-size: 100% 100%;
+}
 .page .modespeed .btn-wrap .cold.clock,
 .page .modespeed .btn-wrap .dehumidify.clock,
 .page .modespeed .btn-wrap .wind.clock,
-.page .modespeed .btn-wrap .auto.clock {
+.page .modespeed .btn-wrap .auto.clock,
+.page .modespeed .btn-wrap .breath.clock,
+.page .modespeed .btn-wrap .sleep.clock,
+.page .modespeed .btn-wrap .fresh.clock {
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_btn_time_b.png');
@@ -354,6 +399,18 @@
   position: relative;
   z-index: 100;
   background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fan06_r.png');
+  background-size: 100% 100%;
+}
+.page .modespeed .btn-wrap .heat.btn-superstrong {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_superstrong_r.png');
+  background-size: 100% 100%;
+}
+.page .modespeed .btn-wrap .heat.btn-stopwind {
+  position: relative;
+  z-index: 100;
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_stopwind_r.png');
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .heat.clock {
@@ -399,15 +456,15 @@
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .btn-breath::before {
-  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_cold.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_breath.png');
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .btn-sleep::before {
-  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_cold.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_sleep.png');
   background-size: 100% 100%;
 }
 .page .modespeed .btn-wrap .btn-fresh::before {
-  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_cold.png');
+  background-image: url('~@lib/base/ch_air_condition/assets/kt_mode_fresh.png');
   background-size: 100% 100%;
 }
 .page.close:before,
