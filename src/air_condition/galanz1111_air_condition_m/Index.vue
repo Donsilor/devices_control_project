@@ -342,8 +342,8 @@ export default {
           let bottomHeight = this.$refs.bottomControl.offsetHeight
           if (this.controlHight===bottomHeight) return
           let result = document.body.offsetHeight - this.$refs.switchStatus.offsetTop - this.$refs.switchStatus.offsetHeight
-          let showHight = this.controlHight?this.controlHight + parseFloat(getComputedStyle(this.$refs.bottomControl).bottom): bottomHeight
-          if (result < bottomHeight) {
+          let showHight = this.controlHight?this.controlHight + parseFloat(getComputedStyle(this.$refs.bottomControl).bottom): bottomHeight+10
+          if (result < bottomHeight+ 10) {
             this.canMove = true
             if (this.controlHight<bottomHeight) {
               this.bottom1 = this.controlHight? showHight-bottomHeight + 'px':-(bottomHeight - this.minVisibleHeight) + 'px'
@@ -360,7 +360,11 @@ export default {
             }
             if(showHight>=bottomHeight){
               this.bottom1 = '10px'
-              this.canMove = false
+              if (result < bottomHeight+ 10) {
+                this.canMove = true
+              }else {
+                this.canMove=false
+              }
             }else {
               this.minVisibleHeight = showHight
               this.bottom1 = showHight-bottomHeight + 'px'
