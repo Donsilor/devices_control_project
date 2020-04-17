@@ -14,7 +14,7 @@
     background: #000;
     position: fixed;
     top:0;
-    left: 0; 
+    left: 0;
     right: 0;
     bottom: 0;
     z-index: -1;
@@ -179,9 +179,13 @@
         }
     }
      .btn-start{
+        position: relative !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        margin: 0 !important;
         z-index: 99;
         box-sizing: border-box;
-        margin: 0 auto;
+        // margin: 0 auto;
         width: 120px;
         height: 120px;
         // border: 1px solid #818181;
@@ -260,7 +264,7 @@
           height: 44px;
           // border: 1px solid #818181;
           background: rgba(0,0,0,0.05);
-    
+
           display: flex;
           flex-direction: column;
           &::before {
@@ -426,7 +430,7 @@
             background-size: 100% 100%;
           }
         }
-    
+
         .btn-dehumidify {
           &::before {
             position: relative;

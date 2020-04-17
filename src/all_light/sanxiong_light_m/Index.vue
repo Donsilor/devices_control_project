@@ -445,6 +445,9 @@
   .btn-wrap {
     margin: 0 24px;
     .btn {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
       box-sizing: border-box;
       margin: 0 auto;
       width: 120px;

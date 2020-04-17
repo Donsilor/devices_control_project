@@ -774,6 +774,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.btn-start {
+  position: relative !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin: 0 !important;
+}
  .body{
     height: 100vh;
   }

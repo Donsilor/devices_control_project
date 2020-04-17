@@ -857,9 +857,12 @@ export default {
   }
   .starting{
     .btn-start{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 99;
     box-sizing: border-box;
-    margin: 0 auto;
+    // margin: 0 auto;
     width: 120px;
     height: 120px;
     background-image: linear-gradient(225deg, #FF59DA 0%, #FD30AA 100%);
