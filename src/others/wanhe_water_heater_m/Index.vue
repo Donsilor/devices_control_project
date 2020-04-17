@@ -350,13 +350,13 @@ export default {
         path:"/OfflineHelpPage"
       })
     },
-    resetPosition() {
+    resetPosition(isFirst = false) {
       this.$nextTick(() => {
         let bottomHeight = this.$refs.bottomControl.offsetHeight
         if (this.controlHight===bottomHeight) return
         let result = document.body.offsetHeight - this.$refs.switchStatus.offsetTop - this.$refs.switchStatus.offsetHeight
-        let showHight = this.controlHight?this.controlHight + parseFloat(getComputedStyle(this.$refs.bottomControl).bottom): bottomHeight
-        if (result < bottomHeight) {
+        let showHight = this.controlHight?this.controlHight + parseFloat(getComputedStyle(this.$refs.bottomControl).bottom): bottomHeight + 10
+        if (result < bottomHeight + 10) {
           this.canMove = true
           if (this.controlHight<bottomHeight) {
             this.bottom1 = this.controlHight? showHight-bottomHeight + 'px':-(bottomHeight - this.minVisibleHeight) + 'px'
@@ -368,9 +368,16 @@ export default {
             }
           }
         } else {
+          if (isFirst) {
+            this.minVisibleHeight = showHight
+          }
           if(showHight>=bottomHeight){
             this.bottom1 = '10px'
-            this.canMove = false
+            if (result < bottomHeight+ 10) {
+              this.canMove = true
+            }else {
+              this.canMove=false
+            }
           }else {
             this.minVisibleHeight = showHight
             this.bottom1 = showHight-bottomHeight + 'px'
@@ -850,9 +857,12 @@ export default {
   }
   .starting{
     .btn-start{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 99;
     box-sizing: border-box;
-    margin: 0 auto;
+    // margin: 0 auto;
     width: 120px;
     height: 120px;
     background-image: linear-gradient(225deg, #FF59DA 0%, #FD30AA 100%);
