@@ -3,21 +3,61 @@
     <div
       :class="[{ 'offline': isOffline }, {'close': isClose}, 'page']"
     >
-      <NewTopBar
-        :title="device.device_name"
-        :room="device.room_name"
-        :scroll="true"
-        page-class=".page"
-      />
+      <div
+        ref="topbar"
+        class="topbar">
+        <div
+          :style="{ height:status_bar_height+navigation_bar_height+'px', 'line-height': status_bar_height+navigation_bar_height + 'px'}"
+          class="topbar-block" />
+        <div
+
+          :class="['topbar-fixed']">
+
+          <div
+            ref="statusbar"
+            :style="{height:status_bar_height+'px'}"
+            class="statusbar" />
+          <!-- <div
+        ref="statusbarBg"
+        :style="{height:status_bar_height+navigation_bar_height+'px'}"
+        class="statusbarBg"/> -->
+          <div
+            ref="newNavbar"
+            :style="{height:navigation_bar_height+'px', 'line-height': navigation_bar_height + 'px'}"
+            class="newNavbar">
+            <div
+              class="left"
+              @click.prevent="goBack">
+              <p/>
+            <!-- <a
+            :style="{ 'border-color': bakColor }"
+            href="javascript:void(0);"
+            class="icon-return" /> -->
+            </div>
+            <div class="title">面板配置</div>
+            <!-- <div
+              class="right"
+              @click.prevent="goDetail">
+              <p/>
+            </div> -->
+          </div>
+        </div>
+      </div>
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
 
       <!-- 新需求待定 -->
-      <!-- <div
-        class="list headerMargin"
-        @click="showMode">
+      <div
+        class="list headerMarginTop"
+        @click.prevent="showMode">
         <div class="left">名称</div>
         <div class="right after">面板</div>
-      </div> -->
+      </div>
+      <div
+        class="list headerMarginBottom"
+        @click.prevent="goDetail">
+        <div class="left">所属房间</div>
+        <div class="right after">客厅</div>
+      </div>
 
       <div class="main">
         <h3>按键配置</h3>
@@ -94,35 +134,33 @@
       </div>
 
       <!-- 新需求待定 -->
-      <!-- <div class="list centerMargin">
-        <div class="left">固件版本</div>
-        <div class="right">1.0.2</div>
+      <div
+        class="list centerMarginTop"
+        @click.prevent="goDetail">
+        <div class="left">设备信息</div>
+        <div class="right after"/>
       </div>
-      <div class="list noneBorder">
-        <div class="left">设备工作模式</div>
-        <div class="right">WIFI模式</div>
+      <div class="list centerMarginBottom">
+        <div class="left">固件信息</div>
+        <div class="right interval">1.0.2</div>
       </div>
-      <div class="list noneBorder">
-        <div class="left">品牌</div>
-        <div class="right">星络</div>
-      </div>
-      <div class="list noneBorder">
-        <div class="left">型号</div>
-        <div class="right">PAK417310</div>
-      </div>
-      <div class="list noneBorder">
-        <div class="left">设备识别号</div>
-        <div class="right">D0:BA:E3:70:00:A8</div>
+
+      <div
+        class="list noneBorder"
+        @click.prevent="goDetail">
+        <div class="left">使用帮助</div>
+        <div class="right after"/>
       </div>
       <div class="list footer">
-        <div class="left">添加时间</div>
-        <div class="right">2019-04-17 20:37</div>
-      </div> -->
+        <div class="left">客服电话</div>
+        <div class="right interval">400 090 6666</div>
+      </div>
 
-      <!-- 配置页 -->
-      <allocation
-        v-show="newPageShow"
-        @goBack="goBack"/>
+      <div
+        class="list flexCenter"
+        @click.prevent="showMode">
+        <div class="listCenter">解绑</div>
+      </div>
       <!--弹框-->
       <model
         ref="model"
@@ -137,17 +175,17 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
-import allocation from './Allocation.vue'
 import model from './model.vue'
 import modelSwing from './model-swing'
 export default {
   components:{
-    allocation,
     model,
     modelSwing
   },
   data() {
     return {
+      status_bar_height:25,
+      navigation_bar_height:44,
       checkboxVal: true,
       collocationList:[
         {
@@ -167,7 +205,6 @@ export default {
           name: "关闭全部"
         },
       ],
-      newPageShow: false,
       num: '',
       list: [
         {
@@ -188,7 +225,7 @@ export default {
           "icon":"fgdfg",
           "list_pic":{"normal":"objectId1"},
           "detail_pic":"sfdas",
-          "board_key":12
+          "board_key":136
         },
         {
           "scene_id": 11,
@@ -198,7 +235,7 @@ export default {
           "icon":"fgdfg",
           "list_pic":{"normal":"objectId1"},
           "detail_pic":"sfdas",
-          "board_key":3
+          "board_key":137
         },
         {
           "scene_id": 11,
@@ -208,7 +245,7 @@ export default {
           "icon":"fgdfg",
           "list_pic":{"normal":"objectId1"},
           "detail_pic":"sfdas",
-          "board_key":2
+          "board_key":138
         },
         {
           "scene_id": 12, // 场景id
@@ -236,62 +273,62 @@ export default {
     },
   },
   created() {
-    console.log('created=====第一步')
     HdSmart.ready(() => {
-      console.log('HdSmart.ready=====第二步')
+      if (window.status_bar_height) {
+        this.status_bar_height = window.status_bar_height / dpr
+      }
       this.getDeviceInfo()
         .then(() => {
-          console.log('getDeviceInfo回调=====第三步')
           //接口请求
-          let that = this
-          this.getScene()
-          .then((data) => {
-            console.log('========Index-data==========',data)
-            if (typeof data.result === 'string') {
-              that.jsonList = JSON.parse(data.result)
-            } else if (typeof data.result === 'object') {
-              that.jsonList = data.result
-            }
-            if(that.jsonList.list) {
-              that.jsonList.list.map((x) =>{
-                if(x.board_key == 135 && x.enable == 1) {
-                  // that.dataList.splice(0, 1, x)
-                  that.$set(that.dataList, 0, x)
-                }
-                if(x.board_key == 136 && x.enable == 1) {
-                  // that.dataList.splice(1, 1, x)
-                  that.$set(that.dataList, 1, x)
-                }
-                if(x.board_key == 137 && x.enable == 1) {
-                  // that.dataList.splice(2, 1, x)
-                  that.$set(that.dataList, 2, x)
-                }
-                if(x.board_key == 138 && x.enable == 1) {
-                  // that.dataList.splice(3, 1, x)
-                  that.$set(that.dataList, 3, x)
-                }
-                return that.dataList
-              })
-            }
-          })
+          // let that = this
+          // this.getScene()
+          // .then((data) => {
+          //   console.log('========Index-data==========',data)
+          //   if (typeof data.result === 'string') {
+          //     that.jsonList = JSON.parse(data.result)
+          //   } else if (typeof data.result === 'object') {
+          //     that.jsonList = data.result
+          //   }
+          //   if(that.jsonList.list) {
+          //     that.jsonList.list.map((x) =>{
+          //       if(x.board_key == 135 && x.enable == 1) {
+          //         // that.dataList.splice(0, 1, x)
+          //         that.$set(that.dataList, 0, x)
+          //       }
+          //       if(x.board_key == 136 && x.enable == 1) {
+          //         // that.dataList.splice(1, 1, x)
+          //         that.$set(that.dataList, 1, x)
+          //       }
+          //       if(x.board_key == 137 && x.enable == 1) {
+          //         // that.dataList.splice(2, 1, x)
+          //         that.$set(that.dataList, 2, x)
+          //       }
+          //       if(x.board_key == 138 && x.enable == 1) {
+          //         // that.dataList.splice(3, 1, x)
+          //         that.$set(that.dataList, 3, x)
+          //       }
+          //       return that.dataList
+          //     })
+          //   }
+          // })
           //本地调试
-          // setTimeout(() => {
-          //   this.list.map((x) =>{
-          //     if(x.board_key == 135) {
-          //         this.dataList.splice(0, 1, x)
-          //       }
-          //       if(x.board_key == 136) {
-          //         this.dataList.splice(1, 1, x)
-          //       }
-          //       if(x.board_key == 137) {
-          //         this.dataList.splice(2, 1, x)
-          //       }
-          //       if(x.board_key == 138) {
-          //         this.dataList.splice(3, 1, x)
-          //       }
-          //     return this.dataList
-          //   })
-          // }, 500)
+          setTimeout(() => {
+            this.list.map((x) =>{
+              if(x.board_key == 135) {
+                  this.dataList.splice(0, 1, x)
+                }
+                if(x.board_key == 136) {
+                  this.dataList.splice(1, 1, x)
+                }
+                if(x.board_key == 137) {
+                  this.dataList.splice(2, 1, x)
+                }
+                if(x.board_key == 138) {
+                  this.dataList.splice(3, 1, x)
+                }
+              return this.dataList
+            })
+          }, 500)
         })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -377,20 +414,22 @@ export default {
     },
     setScene(i) {
       if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有配置权限')
-      // this.newPageShow = true
       this.$router.push({
         name: 'Allocation',
         params: { data: i }
       })
     },
     goBack(){
-      this.newPageShow = false
+      HdSmart.UI.popWindow()
     },
     showMode() {
       this.$refs.swing.show = true
     },
     setWind() {
 
+    },
+    goDetail() {
+      HdSmart.UI.goDeviceDetail()
     },
     controlDevice(attr, value) {
       let param = {}
@@ -430,10 +469,10 @@ export default {
   .main{
     padding: 214px 40px 0;
     // 新需求待定
-    // padding: 30px 24px 48px;
-    // border-top: 0.5px solid rgba(255,255,255,0.20);
-    // border-bottom: 0.5px solid rgba(255,255,255,0.20);
-    // background: rgba(255,255,255,0.08);
+    padding: 30px 24px 48px;
+    border-top: 0.5px solid rgba(255,255,255,0.20);
+    border-bottom: 0.5px solid rgba(255,255,255,0.20);
+    background: rgba(255,255,255,0.08);
     h3{
       font-family: PingFangSC-Regular;
       font-size: 32px;
@@ -445,9 +484,8 @@ export default {
     .collocation{
       display: flex;
       justify-content: space-between;
-      height: 466px;
       // 新需求待定
-      // height: 360px;
+      height: 360px;
       .collocation-item{
         position: relative;
         flex: 1;
@@ -458,22 +496,32 @@ export default {
         font-size: 12px;
         color: #000000;
         text-align: center;
-        height: 466px;
       // 新需求待定
-        // height: 360px;
-        // border-radius: 6px;
-        // border: 0.5px solid rgba(255,255,255,0.20);
+        height: 360px;
+        border-radius: 6px;
+        border: 0.5px solid rgba(255,255,255,0.20);
         &.colour {
           background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
+          border: none;
+          &:nth-child(2){
+            background-image: linear-gradient(225deg, #FF59DA 0%, #FD30AA 100%);
+          }
+          &:nth-child(3){
+            background-image: linear-gradient(225deg, #1EB4F2 0%, #713DF4 100%);
+          }
+          &:nth-child(4){
+            background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
+          }
         }
         &:nth-child(4){
         margin-right: 0;
         }
         .txt{
-          // height: 114px;
-          height: 384px;;
-          line-height: 466px;
-          // padding: 40px 0;
+          height: 278px;;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          // line-height: 466px;
           color: #fff;
           vertical-align: middle;
           font-size: 24px;
@@ -481,16 +529,14 @@ export default {
         .delBtn{
           // width: 100%;
           width: 120px;
-          display: inline-block;
-          position: relative;
-          text-align: center;
-          vertical-align: middle;
-          bottom: 0;
           height: 81px;
-          line-height: 81px;
           border-top:1px solid rgba(255, 255, 255, 0.1);
           color: #fff;
           font-size: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto;
         }
         .set {
           position: relative;
@@ -532,6 +578,10 @@ export default {
       font-size: 32px;
       color: #FFFFFF;
     }
+    .listCenter {
+      font-size: 32px;
+      color: #FF0000;
+    }
     .right {
       opacity: 0.5;
       font-family: PingFangSC-Light;
@@ -552,19 +602,183 @@ export default {
           right: 2px;
         }
       }
+      &.interval {
+        &::after {
+          content: "";
+          margin-left: 21px;;
+          display: inline-block;
+          // border-top: 1px solid;
+          // border-right: 1px solid;
+          width: 10px;
+          height: 10px;
+          transform: rotate(45deg);
+          position: relative;
+          top: -1px;
+          right: 2px;
+        }
+      }
     }
   }
-  .headerMargin {
-    margin: 20px 0 48px;
+  .headerMarginTop {
+    margin-top: 20px;
   }
-  .centerMargin {
-    margin: 48px 0 80px;
+  .headerMarginBottom {
+    border-top: none;
+    margin-bottom: 48px;
+  }
+  .centerMarginTop {
+    margin-top: 48px;
+  }
+  .centerMarginBottom {
+    border-top: none;
+    margin-bottom: 48px;
   }
   .noneBorder {
     border-bottom: none;
   }
   .footer {
-    margin-bottom: 12px;
+    margin-bottom: 48px;
   }
+  .flexCenter {
+    justify-content: center
+  }
+}
+/* topbar */
+@status_bar_height: 25PX;
+@navigation_bar_height: 44PX;
+.topbar{
+  position: relative;
+  z-index: 9999;
+  .icon-search{
+    &::before{
+      font-size: 20PX;
+      position: relative;
+      bottom: 14px;
+    }
+}
+  .topbar-block {
+    height: @status_bar_height+@navigation_bar_height;
+  }
+  .topbar-fixed {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+
+
+
+
+.topbar-nobg {
+  .topbar-fixed {
+    background: transparent;
+    border-bottom: none;
+  }
+  .navbar {
+    color: #fff;
+    .left a,
+    .right a {
+      color: #fff;
+    }
+  }
+}
+
+.topbar-black {
+  .topbar-fixed {
+    // background: #20282b;
+    background: #35353d;
+    border-bottom: none;
+  }
+  .navbar {
+    color: #fff;
+    .left a,
+    .right a {
+      color: #fff;
+    }
+  }
+}
+
+.statusbar {
+  height: @status_bar_height;
+}
+
+
+.newNavbar {
+  display: flex;
+  padding: 0 40px;
+  justify-content: space-between;
+  height: @navigation_bar_height;
+  position: relative;
+  color: #222a37;
+  align-items: center;
+  .left,
+  .right,.right-search {
+    // width: 44PX;
+    // height: @navigation_bar_height;
+   width: 60px;
+    height: 60px;
+    p{
+        width: 40px;
+        height: 40px;
+
+    }
+
+  }
+  .left{
+    // display: flex;
+    // justify-content: flex-start;
+    // align-items: center;
+    position: absolute;
+    left: 40px;
+    // background: rgba(255,255,255,0.05);
+    p{
+        background: url('~@lib/base/img/arrow_back.png');
+        background-size: 100% 100%;
+
+    }
+  }
+  .right{
+      // display: flex;
+      // justify-content: center;
+      // align-items: center;
+      position: absolute;
+      right: 40px;
+    p{
+      background: url('~@lib/base/img/kt_btn_setting.png');
+        background-size: 100% 100%;
+
+    }
+
+  }
+
+
+
+  .left a,
+  .right a {
+    width: @navigation_bar_height;
+    height: @navigation_bar_height;
+    display: block;
+    line-height: @navigation_bar_height;
+    color: #222a37;
+    text-align: center;
+    font-size: 17PX;
+    text-decoration: none;
+    &:active {
+      opacity: 0.8;
+    }
+  }
+
+}
+.title {
+  text-align: center;
+  font-size: 17PX;
+  width: 100%;
+  color: #fff;
 }
 </style>

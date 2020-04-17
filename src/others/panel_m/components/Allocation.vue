@@ -34,11 +34,11 @@
             class="icon-return" /> -->
           </div>
           <div class="title">按键配置</div>
-          <div
+          <!-- <div
             class="right"
             @click.prevent="goDetail">
             <p/>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -224,10 +224,6 @@ export default {
 /* topbar */
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
-.no-work{
-  opacity: 0.3;
-  position: relative;
-}
 .topbar{
   position: relative;
   z-index: 9999;
@@ -319,7 +315,7 @@ export default {
     position: absolute;
     left: 40px;
     p{
-        background: url('~@lib/base/img/kt_btn_close.png');
+        background: url('~@lib/base/img/arrow_back.png');
         background-size: 100% 100%;
 
     }

@@ -405,7 +405,7 @@ export default {
         this.bottom1 = position+ 'px'
         this.touchEndPoint = pageY
       },
-      bodyTouchEnd(e) {
+      bodyTouchEnd() {
         this.canGentlyMove = true
         if (Math.abs(this.touchEndPoint - this.touchStartPoint) > 30) {
           if (this.touchStartPoint - this.touchEndPoint > 0) {
