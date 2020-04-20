@@ -180,10 +180,10 @@ export default {
     },
     setWind(){
       if(argv_is_mock) {
-        if(!this.txtVal) return HdSmart.UI.toast('请输入开关名称', null, true)
+        if(!this.txtVal) return HdSmart.UI.toast('请输入面板名称', null, true)
         if(!this.flag) return HdSmart.UI.toast('只支持中文和数字', null, true)
       } else {
-        if(!this.txtVal) return HdSmart.UI.toast('请输入开关名称')
+        if(!this.txtVal) return HdSmart.UI.toast('请输入面板名称')
         if(!this.flag) return HdSmart.UI.toast('只支持中文和数字')
       }
       this.$emit('setWind', this.txtVal)

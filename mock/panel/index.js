@@ -8,6 +8,7 @@ import * as mockData from './mock'
 if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
 
     window.device_name = '中控面板'
+    window.room_name = '客厅'
     window.networkStatus = -1
     window.device_uuid = 41515
 

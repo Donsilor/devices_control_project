@@ -48,15 +48,15 @@
       <!-- 新需求待定 -->
       <div
         class="list headerMarginTop"
-        @click.prevent="showMode">
+        @click.prevent="showSwing">
         <div class="left">名称</div>
-        <div class="right after">面板</div>
+        <div class="right after">{{ name }}</div>
       </div>
       <div
         class="list headerMarginBottom"
-        @click.prevent="goDetail">
+        @click.prevent="goRoom">
         <div class="left">所属房间</div>
-        <div class="right after">客厅</div>
+        <div class="right after">{{ room }}</div>
       </div>
 
       <div class="main">
@@ -136,7 +136,7 @@
       <!-- 新需求待定 -->
       <div
         class="list centerMarginTop"
-        @click.prevent="goDetail">
+        @click.prevent="goInfo">
         <div class="left">设备信息</div>
         <div class="right after"/>
       </div>
@@ -147,7 +147,7 @@
 
       <div
         class="list noneBorder"
-        @click.prevent="goDetail">
+        @click.prevent="goHelp">
         <div class="left">使用帮助</div>
         <div class="right after"/>
       </div>
@@ -158,17 +158,21 @@
 
       <div
         class="list flexCenter"
-        @click.prevent="showMode">
+        @click.prevent="showUntying">
         <div class="listCenter">解绑</div>
       </div>
-      <!--弹框-->
+      <!--解除配置弹框-->
       <model
         ref="model"
         @setMode="setMode" />
-      <!--弹框-->
+      <!--修改名称弹框-->
       <model-swing
         ref="swing"
         @setWind="setWind" />
+      <!--解绑弹框-->
+      <untying
+        ref="untying"
+        @setUntying="setUntying" />
     </div>
   </div>
 </template>
@@ -176,11 +180,16 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
 import model from './model.vue'
+import untying from './untying'
 import modelSwing from './model-swing'
+
+let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
+
 export default {
   components:{
     model,
-    modelSwing
+    modelSwing,
+    untying
   },
   data() {
     return {
@@ -261,7 +270,12 @@ export default {
       dataList: [
         {},{},{},{}
       ],
-      jsonList: {}
+      jsonList: {},
+      updatedList: {},
+      name: '',
+      room: '',
+      deviceId: '',
+      deviceUuid: '',
     }
   },
   computed: {
@@ -270,66 +284,51 @@ export default {
   },
   watch: {
     "device.stateChange"(){
+      this.name = this.device.device_name
+      this.room = this.device.room_name
+      this.deviceId = this.device.device_id
+    },
+    "device.device_name"(){
+      this.name = this.device.device_name
+    },
+    "device.room_name"(){
+      this.room = this.device.room_name
+    },
+    "device.device_id"(){
+      this.deviceId = this.device.device_id
+    },
+    "device.device_uuid"(){
+      this.deviceUuid = this.device.device_uuid
     },
   },
   created() {
     HdSmart.ready(() => {
+      this.getDeviceInfo()
+      .then(() => {
+        //接口请求
+        this.getScene()
+        //本地调试
+        // setTimeout(() => {
+        //   this.list.map((x) =>{
+        //     if(x.board_key == 135) {
+        //         this.dataList.splice(0, 1, x)
+        //       }
+        //       if(x.board_key == 136) {
+        //         this.dataList.splice(1, 1, x)
+        //       }
+        //       if(x.board_key == 137) {
+        //         this.dataList.splice(2, 1, x)
+        //       }
+        //       if(x.board_key == 138) {
+        //         this.dataList.splice(3, 1, x)
+        //       }
+        //     return this.dataList
+        //   })
+        // }, 500)
+      })
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
-      this.getDeviceInfo()
-        .then(() => {
-          //接口请求
-          // let that = this
-          // this.getScene()
-          // .then((data) => {
-          //   console.log('========Index-data==========',data)
-          //   if (typeof data.result === 'string') {
-          //     that.jsonList = JSON.parse(data.result)
-          //   } else if (typeof data.result === 'object') {
-          //     that.jsonList = data.result
-          //   }
-          //   if(that.jsonList.list) {
-          //     that.jsonList.list.map((x) =>{
-          //       if(x.board_key == 135 && x.enable == 1) {
-          //         // that.dataList.splice(0, 1, x)
-          //         that.$set(that.dataList, 0, x)
-          //       }
-          //       if(x.board_key == 136 && x.enable == 1) {
-          //         // that.dataList.splice(1, 1, x)
-          //         that.$set(that.dataList, 1, x)
-          //       }
-          //       if(x.board_key == 137 && x.enable == 1) {
-          //         // that.dataList.splice(2, 1, x)
-          //         that.$set(that.dataList, 2, x)
-          //       }
-          //       if(x.board_key == 138 && x.enable == 1) {
-          //         // that.dataList.splice(3, 1, x)
-          //         that.$set(that.dataList, 3, x)
-          //       }
-          //       return that.dataList
-          //     })
-          //   }
-          // })
-          //本地调试
-          setTimeout(() => {
-            this.list.map((x) =>{
-              if(x.board_key == 135) {
-                  this.dataList.splice(0, 1, x)
-                }
-                if(x.board_key == 136) {
-                  this.dataList.splice(1, 1, x)
-                }
-                if(x.board_key == 137) {
-                  this.dataList.splice(2, 1, x)
-                }
-                if(x.board_key == 138) {
-                  this.dataList.splice(3, 1, x)
-                }
-              return this.dataList
-            })
-          }, 500)
-        })
       HdSmart.UI.setStatusBarColor(2)
     })
   },
@@ -341,31 +340,12 @@ export default {
         path:"/SupconOfflineHelpPage"
       })
     },
+    // 获取所有场景
     getScene() {
+      let that = this
       this.$forceUpdate()
       return new Promise((resolve, reject) => {
-           HdSmart.Device.control({}, (data) => {
-            resolve(data)
-          },(err)=>{
-            reject(err)
-          },'dm_get_scene')
-      })
-    },
-    deleteScene(i){
-      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有解绑权限')
-      this.scene_id = i
-      this.$refs.model.show = true
-    },
-    setMode() {
-      let that = this
-      that.$refs.model.show = false
-      that.jsonList = JSON.parse(JSON.stringify(that.jsonList))
-      that.dataList = JSON.parse(JSON.stringify(that.dataList))
-      that.delScene()
-      .then(() =>{
-        that.dataList = [{}, {}, {}, {}]
-        that.getScene()
-        .then((data) => {
+        HdSmart.Device.control({}, (data) => {
           console.log('========解除配置-data==========',data)
           if (typeof data.result === 'string') {
             that.jsonList = JSON.parse(data.result)
@@ -375,27 +355,45 @@ export default {
           if(that.jsonList.list) {
             that.jsonList.list.map((x) =>{
               if(x.board_key == 135 && x.enable == 1) {
-                // that.dataList.splice(0, 1, x)
                 that.$set(that.dataList, 0, x)
               }
               if(x.board_key == 136 && x.enable == 1) {
-                // that.dataList.splice(1, 1, x)
                 that.$set(that.dataList, 1, x)
               }
               if(x.board_key == 137 && x.enable == 1) {
-                // that.dataList.splice(2, 1, x)
                 that.$set(that.dataList, 2, x)
               }
               if(x.board_key == 138 && x.enable == 1) {
-                // that.dataList.splice(3, 1, x)
                 that.$set(that.dataList, 3, x)
               }
               return that.dataList
             })
           }
-        })
+          resolve(data)
+        },(err)=>{
+          reject(err)
+        },'dm_get_scene')
       })
     },
+    // 接触配置弹框
+    deleteScene(i){
+      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有解绑权限')
+      this.scene_id = i
+      this.$refs.model.show = true
+    },
+    // 解除配置
+    setMode() {
+      let that = this
+      that.$refs.model.show = false
+      that.jsonList = JSON.parse(JSON.stringify(that.jsonList))
+      that.dataList = JSON.parse(JSON.stringify(that.dataList))
+      that.delScene()
+      .then(() =>{
+        that.dataList = [{}, {}, {}, {}]
+        that.getScene()
+      })
+    },
+    // 解除配置接口
     delScene() {
       return new Promise((resolve, reject) => {
         HdSmart.Device.control({
@@ -412,6 +410,7 @@ export default {
         },'dm_set_scene_config')
       })
     },
+    // 跳转按键配置
     setScene(i) {
       if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有配置权限')
       this.$router.push({
@@ -419,17 +418,61 @@ export default {
         params: { data: i }
       })
     },
+    // 关闭webview
     goBack(){
       HdSmart.UI.popWindow()
     },
-    showMode() {
+    // 解绑面板弹框
+    showUntying() {
+      this.$refs.untying.show = true
+    },
+    // 解绑面板弹框隐藏
+    setUntying() {
+      this.$refs.untying.show = false
+    },
+    // 修改面板名称弹框
+    showSwing() {
       this.$refs.swing.show = true
     },
-    setWind() {
-
+    // 修改面板名称
+    setWind(t) {
+      return new Promise((resolve, reject) => {
+        HdSmart.Device.control({
+          "list":[
+            {
+            "device_id": this.deviceId,
+            "device_uuid": this.deviceUuid,
+            "device_name": t
+            }
+          ]
+        }, (data) => {
+          if (typeof data.result === 'string') {
+            this.updatedList = JSON.parse(data.result)
+          } else if (typeof data.result === 'object') {
+            this.updatedList = data.result
+          }
+          this.$refs.swing.show = false
+          this.name = this.updatedList.list[0].device_name
+          resolve(data)
+        },(err)=>{
+          reject(err)
+        },'dm_update_device')
+      })
     },
     goDetail() {
       HdSmart.UI.goDeviceDetail()
+    },
+    // 跳转所属房间
+    goRoom() {
+      HdSmart.UI.goDeviceRoom()
+    },
+    // 跳转设备信息
+    goInfo() {
+      HdSmart.UI.goDeviceInfo()
+    },
+    // 跳转使用帮助
+    goHelp() {
+      HdSmart.UI.goDeviceHelp()
     },
     controlDevice(attr, value) {
       let param = {}
@@ -711,7 +754,7 @@ export default {
 
 .newNavbar {
   display: flex;
-  padding: 0 40px;
+  padding: 0 24px;
   justify-content: space-between;
   height: @navigation_bar_height;
   position: relative;
@@ -735,7 +778,7 @@ export default {
     // justify-content: flex-start;
     // align-items: center;
     position: absolute;
-    left: 40px;
+    // left: 40px;
     // background: rgba(255,255,255,0.05);
     p{
         background: url('~@lib/base/img/arrow_back.png');
