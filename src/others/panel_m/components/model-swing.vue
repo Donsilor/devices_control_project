@@ -39,6 +39,7 @@
 // .show{
 //   animation: show .2s linear 0s;
 // }
+input:focus { outline: none; }
 input {
   caret-color: rgba(255,255,255,0.5) !important;
 }

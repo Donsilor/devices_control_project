@@ -172,6 +172,7 @@
       <!--解绑弹框-->
       <untying
         ref="untying"
+        :family="familyId"
         @setUntying="setUntying" />
     </div>
   </div>
@@ -276,6 +277,7 @@ export default {
       room: '',
       deviceId: '',
       deviceUuid: '',
+      familyId: '',
     }
   },
   computed: {
@@ -287,6 +289,8 @@ export default {
       this.name = this.device.device_name
       this.room = this.device.room_name
       this.deviceId = this.device.device_id
+      this.deviceUuid = this.device.device_uuid
+      this.familyId = this.device.family_id
     },
     "device.device_name"(){
       this.name = this.device.device_name
@@ -299,6 +303,9 @@ export default {
     },
     "device.device_uuid"(){
       this.deviceUuid = this.device.device_uuid
+    },
+    "device.family_id"(){
+      this.familyId = this.device.family_id
     },
   },
   created() {

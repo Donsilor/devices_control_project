@@ -96,6 +96,7 @@
         border-bottom: 1px solid rgba(255,255,255,0.1);
         display: flex;
         align-items: center;
+        justify-content: space-between;
         input:focus { outline: none; }
         .text {
           height: 104px;
@@ -174,7 +175,7 @@
 </style>
 <script>
 export default {
-  props: ['num'],
+  props: ['family'],
   data() {
     return {
       show: false,
@@ -264,7 +265,7 @@ export default {
       let i = 0
       let that = this
       that.setTerval = setInterval(function() {
-        that.codeText = (--time)+"秒后重发"
+        that.codeText = (--time)+"秒"
         i++
         if (i==1) {
           that.isdisabled=true
@@ -308,7 +309,7 @@ export default {
     unbindRouter() {
       return new Promise((resolve, reject) => {
         HdSmart.Device.control({
-          "family_id": window.family_id,
+          "family_id": this.family,
           "router_uuid":window.router_uuid
         }, (data) => {
           resolve(data)
