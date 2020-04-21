@@ -164,6 +164,10 @@ export default {
     switchimg:{
       type:String,
       default:''
+    },
+    reset: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -294,10 +298,12 @@ export default {
         this.fixed = false
       }
        if((this.clientHeight+this.scrollTop == this.scrollHeight)&&this.switchimg!="tv"){
-         header.style.marginTop = -44+'px'
-        titleDom.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
-        titleDom.style.fontSize = 18/37.5 + 'rem'
-        pageClass.classList.add('scroll44')
+         if(this.reset == false) {
+          header.style.marginTop = -44+'px'
+          titleDom.style.left = ((headerBottomCenter/44)*headerBottomHeight) + 'px'
+          titleDom.style.fontSize = 18/37.5 + 'rem'
+          pageClass.classList.add('scroll44')
+        }
       }
     }
   }
@@ -314,8 +320,8 @@ export default {
   .header-bottom-right{
     display: none
   }
-.newNavbar,.statusbar{
-}
+// .newNavbar,.statusbar{
+// }
   .search-screen-bg{
     // display:none
     visibility: hidden;

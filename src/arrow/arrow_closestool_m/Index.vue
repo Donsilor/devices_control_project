@@ -2,7 +2,7 @@
  * @Author: Hykleri
  * @Date: 2020-01-06 10:25:00
  * @Last Modified by: Hykleri
- * @Last Modified time: 2020-04-21 15:56:26
+ * @Last Modified time: 2020-04-21 16:32:14
  */
 <template>
   <div
@@ -13,7 +13,6 @@
         :title="device.device_name"
         :room="device.room_name"
         :scroll="true"
-        bak-color="#000"
         page-class=".page" />
       <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
       <!-- 主体部分 -->
