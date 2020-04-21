@@ -30,7 +30,7 @@
                   ref="one"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[0].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[0].chan_name?switchTitle0:'开关1' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[0].chan_name?switchTitle0:'左键' }}</div>
               </div>
             </div>
           </div>
@@ -50,7 +50,7 @@
                   ref="two"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[1].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[1].chan_name?switchTitle1:'开关2' }}</div>
+                <div class="btn-name">{{ deviceAttrs.list[1].chan_name?switchTitle1:'右键' }}</div>
               </div>
             </div>
           </div>

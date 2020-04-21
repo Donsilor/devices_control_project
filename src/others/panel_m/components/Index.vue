@@ -382,9 +382,9 @@ export default {
         },'dm_get_scene')
       })
     },
-    // 接触配置弹框
+    // 解除配置弹框
     deleteScene(i){
-      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有解绑权限')
+      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有家庭管理员可以执行此操作')
       this.scene_id = i
       this.$refs.model.show = true
     },
@@ -419,7 +419,7 @@ export default {
     },
     // 跳转按键配置
     setScene(i) {
-      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有配置权限')
+      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有家庭管理员可以执行此操作')
       this.$router.push({
         name: 'Allocation',
         params: { data: i }
@@ -431,6 +431,7 @@ export default {
     },
     // 解绑面板弹框
     showUntying() {
+      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有家庭管理员可以执行此操作')
       this.$refs.untying.show = true
     },
     // 解绑面板弹框隐藏
@@ -439,6 +440,7 @@ export default {
     },
     // 修改面板名称弹框
     showSwing() {
+      if(window.house_holder_status == 0) return HdSmart.UI.toast('只有家庭管理员可以执行此操作')
       this.$refs.swing.show = true
     },
     // 修改面板名称

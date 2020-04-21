@@ -145,7 +145,8 @@ export default {
     return {
       show: false,
       txtVal: '',
-      flag: false
+      flag: false,
+      numLength: false
     }
   },
   watch: {
@@ -163,12 +164,16 @@ export default {
       let reg = new RegExp("^[0-9\u4e00-\u9fa5]+$")
       if(e.target.value) {
         if(reg.test(e.target.value)) {
-          this.txtVal = e.target.value
           this.flag = true
-        } else {
-          if(e.target.value.length >= 1) {
-            this.flag = false
+          if(e.target.value.length >= 2) {
+            this.txtVal = e.target.value
+            this.flag = true
+            this.numLength = true
+          } else {
+            this.numLength = false
           }
+        } else {
+          this.flag = false
         }
       }
       this.txtVal = e.target.value
@@ -180,13 +185,9 @@ export default {
       }, 300)
     },
     setWind(){
-      if(argv_is_mock) {
-        if(!this.txtVal) return HdSmart.UI.toast('请输入面板名称', null, true)
-        if(!this.flag) return HdSmart.UI.toast('只支持中文和数字', null, true)
-      } else {
-        if(!this.txtVal) return HdSmart.UI.toast('请输入面板名称')
-        if(!this.flag) return HdSmart.UI.toast('只支持中文和数字')
-      }
+      if(!this.txtVal) return HdSmart.UI.toast('面板名称不能为空')
+      if(!this.flag) return HdSmart.UI.toast('只能输入中文和数字')
+      if(!this.numLength) return HdSmart.UI.toast('最少需要2个字')
       this.$emit('setWind', this.txtVal)
     }
   }

@@ -77,7 +77,7 @@
               <div>模式</div>
               <div
                 style="z-index: 100;">
-                <div class="timing-right">{{ modeName }}模式</div>
+                <div class="timing-right after">{{ modeName }}模式</div>
               </div>
             </div>
           </div>
@@ -85,7 +85,7 @@
           <div class="bottom">
             <div class="Charging-protection">
               <div>童锁</div>
-              <div
+              <!-- <div
                 style="z-index: 100;">
                 <input
                   :class="['switch switch-anim']"
@@ -93,6 +93,10 @@
                   :disabled="isError || disabledLock || isOffline || isClose"
                   type="checkbox"
                   @click="checkSwitch('childLock')">
+              </div> -->
+              <div
+                style="z-index: 100;">
+                <div class="timing-right">{{ deviceAttrs.childLock=='on'?'已开启':'已关闭' }}</div>
               </div>
             </div>
           </div>
@@ -100,7 +104,7 @@
           <div class="bottom">
             <div class="Charging-protection">
               <div>智能防冻</div>
-              <div
+              <!-- <div
                 style="z-index: 100;">
                 <input
                   :class="['switch switch-anim']"
@@ -108,6 +112,10 @@
                   :disabled="isError || disabledLock || isOffline || isClose"
                   type="checkbox"
                   @click="checkSwitch('antiFreeze')">
+              </div> -->
+              <div
+                style="z-index: 100;">
+                <div class="timing-right">{{ deviceAttrs.antiFreeze=='on'?'已开启':'已关闭' }}</div>
               </div>
             </div>
           </div>
@@ -1017,15 +1025,17 @@ export default {
     font-size: 32px;
     color: #fff;
     opacity: 0.5;
-    &::after {
-      content: "";
-      margin-left: 10px;;
-      display: inline-block;
-      border-top: 1px solid;
-      border-right: 1px solid;
-      width: 10px;
-      height: 10px;
-      transform: rotate(45deg);
+    &.after {
+      &::after {
+        content: "";
+        margin-left: 10px;;
+        display: inline-block;
+        border-top: 1px solid;
+        border-right: 1px solid;
+        width: 10px;
+        height: 10px;
+        transform: rotate(45deg);
+      }
     }
   }
 }
