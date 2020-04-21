@@ -10,11 +10,32 @@ import '@lib/base/common.less'
 
 import store from '@lib/store/index.js'
 import FastClick from 'fastclick'
-import Topbar from '@lib/components/Topbar.vue'
 import NewTopbar from '@lib/components/NewTopbar.vue'
+import StatusTip from '@lib/components/StatusTip.vue'
 
-Vue.component('topbar', Topbar)
+// H5路由处理
+import Router from 'vue-router'
+Vue.use(Router)
+import Index from './Index.vue'
+import OfflineHelpPage from '@lib/components/OfflineHelpPage.vue'
+
+
+const router = new Router({
+  routes: [{
+    path: '/',
+    name: 'index',
+    component: Index,
+  },
+  {
+    path: '/OfflineHelpPage',
+    name: 'OfflineHelpPage',
+    component: OfflineHelpPage,
+  }
+  ]
+})
+
 Vue.component('newtopbar', NewTopbar)
+Vue.component('StatusTip', StatusTip)
 FastClick.attach(document.body)
 import * as filters from './filters' // global filters
 
@@ -26,5 +47,6 @@ Object.keys(filters).forEach(key => {
 new Vue({
     el: '#app',
     store,
+    router,
     render: h => h(App)
 })
