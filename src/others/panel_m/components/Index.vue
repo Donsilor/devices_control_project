@@ -285,33 +285,38 @@ export default {
     ...mapState(['device', 'deviceAttrs']),
   },
   watch: {
-    "device.stateChange"(){
-      this.name = this.device.device_name
-      this.room = this.device.room_name
-      this.deviceId = this.device.device_id
-      this.deviceUuid = this.device.device_uuid
-      this.familyId = this.device.family_id
-    },
-    "device.device_name"(){
-      this.name = this.device.device_name
-    },
-    "device.room_name"(){
-      this.room = this.device.room_name
-    },
-    "device.device_id"(){
-      this.deviceId = this.device.device_id
-    },
-    "device.device_uuid"(){
-      this.deviceUuid = this.device.device_uuid
-    },
-    "device.family_id"(){
-      this.familyId = this.device.family_id
-    },
+    // "device.stateChange"(){
+    //   this.name = this.device.device_name
+    //   this.room = this.device.room_name
+    //   this.deviceId = this.device.device_id
+    //   this.deviceUuid = this.device.device_uuid
+    //   this.familyId = this.device.family_id
+    // },
+    // "device.device_name"(){
+    //   this.name = this.device.device_name
+    // },
+    // "device.room_name"(){
+    //   this.room = this.device.room_name
+    // },
+    // "device.device_id"(){
+    //   this.deviceId = this.device.device_id
+    // },
+    // "device.device_uuid"(){
+    //   this.deviceUuid = this.device.device_uuid
+    // },
+    // "device.family_id"(){
+    //   this.familyId = this.device.family_id
+    // },
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
       .then(() => {
+        this.name = this.device.device_name
+        this.room = this.device.room_name
+        this.deviceId = this.device.device_id
+        this.deviceUuid = this.device.device_uuid
+        this.familyId = this.device.family_id
         //接口请求
         this.getScene()
         //本地调试
@@ -462,6 +467,9 @@ export default {
           }
           this.$refs.swing.show = false
           this.name = this.updatedList.list[0].device_name
+          if(data.code == 0) {
+            HdSmart.UI.syncName(this.updatedList.list[0].device_name)
+          }
           resolve(data)
         },(err)=>{
           reject(err)

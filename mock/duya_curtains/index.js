@@ -7,7 +7,7 @@ import * as mockData from './mock'
 
 if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
 
-    window.device_name = '客厅的窗帘'
+    window.device_name = '窗帘'
 
     on(apiList.device_getsnapshot, function(data, done){
         done(mockData.generateSnapShot())

@@ -171,25 +171,25 @@
     },
     created() {
       this.argv_is_mock = argv_is_mock
+      this.$nextTick(() => {
+        // 针对不同手机调整按钮的位置
+        let btnHeight = document.documentElement.clientHeight
+        let panelBtn = document.querySelectorAll('.panel-btn')[0]
+        if (btnHeight >= 812) {
+          panelBtn.style.bottom = '120px'
+        } else if (btnHeight >= 667) {
+          panelBtn.style.bottom = '90px'
+        } else if (btnHeight >= 568) {
+          panelBtn.style.bottom = '30px'
+        } else {
+          panelBtn.style.bottom = '0'
+        }
+      })
     },
     mounted() {
       HdSmart.ready(() => {
         this.getDeviceInfo()
           .then(() => {
-            this.$nextTick(() => {
-              // 针对不同手机调整按钮的位置
-              let btnHeight = document.documentElement.clientHeight
-              let panelBtn = document.querySelectorAll('.panel-btn')[0]
-              if (btnHeight >= 812) {
-                panelBtn.style.bottom = '120px'
-              } else if (btnHeight >= 667) {
-                panelBtn.style.bottom = '90px'
-              } else if (btnHeight >= 568) {
-                panelBtn.style.bottom = '30px'
-              } else {
-                panelBtn.style.bottom = '0'
-              }
-            })
             this.newRatio()
             setTimeout(() => {
               this.newRatio()

@@ -9,7 +9,7 @@
       <div
         v-show="flagMode==false"
         class="title small">解绑面板后，面板直连设备将同时解绑</div>
-      <div
+      <!-- <div
         v-show="flagMode==true"
         class="txt">
         <input
@@ -23,7 +23,7 @@
         <div
           class="button"
           @click="button">{{ codeText }}</div>
-      </div>
+      </div> -->
       <div
         class="hide determine"
         @click="flagMode == false ? setNext() : setUntying()">{{ flagMode == false ? '下一步' : '立即解绑' }}</div>
@@ -238,19 +238,24 @@ export default {
     },
     // 解绑
     setUntying(){
-      if(!this.txtVal) return HdSmart.UI.toast('请输入验证码')
-      if(!this.flag) return HdSmart.UI.toast('请输入数字')
-      this.checkPhoneCode()
-      .then((res) => {
-        if(res.code == 0) {
+      // if(!this.txtVal) return HdSmart.UI.toast('请输入验证码')
+      // if(!this.flag) return HdSmart.UI.toast('请输入数字')
+      // this.checkPhoneCode()
+      // .then((res) => {
+        // if(res.code == 0) {
           this.unbindRouter()
           .then((res) => {
             if(res.code == 0) {
               HdSmart.UI.goHomePage()
+            } else {
+              HdSmart.UI.toast('解绑失败')
             }
           })
-        }
-      })
+          .catch(() => {
+            HdSmart.UI.toast('解绑失败')
+          })
+        // }
+      // })
       this.$emit('setUntying', this.txtVal)
     },
     //获取手机验证码

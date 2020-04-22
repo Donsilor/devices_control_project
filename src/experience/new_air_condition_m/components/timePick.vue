@@ -3,19 +3,21 @@
     <!-- <div>
       选中值为：<span>{{ selectedValue }}</span>
     </div> -->
-    <div class="wrap-box">
+    <div
+      class="wrap-box"
+      @touchstart="touchStart($event,'hours')"
+      @touchmove="touchMove($event,'hours')"
+      @touchend="touchEnd($event, 'hours')">
       <div class="border"/>
       <div class="opacity"/>
       <div class="opacity1"/>
       <div class="box">
-        <ul 
-          :style="{ top: hTop+0.85 +'rem' }" 
-          class="list" 
-          @touchstart="touchStart($event,'hours')" 
-          @touchmove="touchMove($event,'hours')" 
-          @touchend="touchEnd($event, 'hours')">
+        <ul
+          :style="{ top: hTop+0.85 +'rem' }"
+          class="list"
+        >
           <li class="current-pre"/>
-          <li 
+          <li
             v-for="(it, idx) in dataList.hours"
             :key="idx"
             :class="{'current-pre': hIndex!==idx,
@@ -24,14 +26,14 @@
         <div class="time">小时</div>
       </div>
       <!-- <div class="box">
-        <ul 
-          :style="{ top: mTop+0.85 +'rem' }" 
-          class="list" 
-          @touchstart="touchStart($event,'minute')" 
-          @touchmove="touchMove($event,'minute')" 
+        <ul
+          :style="{ top: mTop+0.85 +'rem' }"
+          class="list"
+          @touchstart="touchStart($event,'minute')"
+          @touchmove="touchMove($event,'minute')"
           @touchend="touchEnd($event,'minute')">
           <li class="current-pre"/>
-          <li 
+          <li
             v-for="(it, idx) in dataList.minute"
             :key="idx"
             :class="{'current-pre': mIndex!==idx,
@@ -74,7 +76,7 @@
         this.fontSize = document.documentElement.style.fontSize.replace('px', '')
         console.log(this.dataList,'数组')
         console.log(this.hIndex,'数组')
-        
+
       })
     },
     methods: {
@@ -131,11 +133,11 @@
           }
           this.hTop = - (this.hIndex * this.liheight) / this.fontSize
           console.log(this.hTop)
-          
+
         }
         this.selectedValue = this.hIndex+1
         console.log(this.selectedValue)
-        
+
       },
     }
   }
@@ -209,7 +211,7 @@
       margin: 0 120px;
       text-align: center;
     }
-    
+
     .list li {
       box-sizing: border-box;
       user-select: none;
