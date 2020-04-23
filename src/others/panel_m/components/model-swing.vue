@@ -8,10 +8,12 @@
       <div class="title">请输入面板名称</div>
       <div class="txt">
         <input
+          ref="gain"
           v-model="txtVal"
           type="text"
           class="text"
           maxlength="10"
+          autofocus="autofocus"
           @input="txt"
           @blur="handlePhone">
       </div>
@@ -140,7 +142,7 @@ input {
 </style>
 <script>
 export default {
-  props: ['num', 'argv_is_mock'],
+  props: ['device_name', 'argv_is_mock'],
   data() {
     return {
       show: false,
@@ -151,10 +153,15 @@ export default {
   },
   watch: {
     'show'() {
+      this.txtVal = this.device_name
       if(this.show == false) {
         this.txtVal = ''
+      } else {
+        this.$nextTick(() => {
+          this.$refs.gain.focus()
+        },100)
       }
-    }
+    },
   },
   mounted() {
   },
@@ -182,7 +189,7 @@ export default {
       // 修复ios 隐藏软键盘页面没有下滑问题
       setTimeout(() => {
         window.scrollTo(0, 0)
-      }, 300)
+      }, 0)
     },
     setWind(){
       if(!this.txtVal) return HdSmart.UI.toast('面板名称不能为空')

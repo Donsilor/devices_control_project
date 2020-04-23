@@ -234,7 +234,7 @@ export default {
     handlePhone() {
       setTimeout(() => {
         window.scrollTo(0, 0)
-      }, 300)
+      }, 0)
     },
     // 解绑
     setUntying(){

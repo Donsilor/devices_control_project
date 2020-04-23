@@ -168,6 +168,7 @@
       <!--修改名称弹框-->
       <model-swing
         ref="swing"
+        :device_name="name"
         @setWind="setWind" />
       <!--解绑弹框-->
       <untying
@@ -215,7 +216,6 @@ export default {
           name: "关闭全部"
         },
       ],
-      num: '',
       list: [
         {
           "scene_id": 11,
