@@ -34,7 +34,7 @@
             href="javascript:void(0);"
             class="icon-return" /> -->
             </div>
-            <div class="title">面板配置</div>
+            <div class="title">智能开关配置</div>
             <!-- <div
               class="right"
               @click.prevent="goDetail">
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
+      <!-- <StatusTip @OfflineHelpPage="OfflineHelpPage"/> -->
 
       <!-- 新需求待定 -->
       <div
@@ -142,7 +142,7 @@
       </div>
       <div class="list centerMarginBottom">
         <div class="left">固件信息</div>
-        <div class="right interval">1.0.2</div>
+        <div class="right interval">1.0.0</div>
       </div>
 
       <div
@@ -174,6 +174,7 @@
       <untying
         ref="untying"
         :family="familyId"
+        :deviceuu="deviceUuid"
         @setUntying="setUntying" />
     </div>
   </div>

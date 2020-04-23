@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <StatusTip @OfflineHelpPage="OfflineHelpPage"/>
+    <!-- <StatusTip @OfflineHelpPage="OfflineHelpPage"/> -->
     <div class="viewHelpstatus">
       <div class="Prefabrication">
         <h3 class="AllocationH3">APP场景</h3>

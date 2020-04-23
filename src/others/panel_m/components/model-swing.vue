@@ -5,7 +5,7 @@
     @click.self="show = false"
     @touchmove.prevent>
     <div class="main show">
-      <div class="title">请输入面板名称</div>
+      <div class="title">请输入智能开关名称</div>
       <div class="txt">
         <input
           ref="gain"
@@ -147,8 +147,8 @@ export default {
     return {
       show: false,
       txtVal: '',
-      flag: false,
-      numLength: false
+      flag: true,
+      numLength: true
     }
   },
   watch: {
@@ -192,7 +192,7 @@ export default {
       }, 0)
     },
     setWind(){
-      if(!this.txtVal) return HdSmart.UI.toast('面板名称不能为空')
+      if(!this.txtVal) return HdSmart.UI.toast('智能开关名称不能为空')
       if(!this.flag) return HdSmart.UI.toast('只能输入中文和数字')
       if(!this.numLength) return HdSmart.UI.toast('最少需要2个字')
       this.$emit('setWind', this.txtVal)

@@ -262,8 +262,8 @@ export default {
       this.minVisibleHeight = 25
     } else if(document.body.offsetHeight < 620) {
       this.minVisibleHeight = 50
-    } else if(document.body.offsetHeight < 620) {
-      this.minVisibleHeight = 50
+    } else if(document.body.offsetHeight < 680) {
+      this.minVisibleHeight = 75
     } else if(document.body.offsetHeight < 812){
       this.minVisibleHeight = 100
     } else {

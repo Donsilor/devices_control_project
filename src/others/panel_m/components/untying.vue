@@ -5,12 +5,10 @@
     @click.self="show = false"
     @touchmove.prevent>
     <div class="main show">
-      <div class="title">解绑面板</div>
+      <div class="title">解绑智能开关</div>
       <div
-        v-show="flagMode==false"
-        class="title small">解绑面板后，面板直连设备将同时解绑</div>
+        class="title small">智能开关直连设备将同时解绑</div>
       <!-- <div
-        v-show="flagMode==true"
         class="txt">
         <input
           :value="txtVal"
@@ -26,7 +24,7 @@
       </div> -->
       <div
         class="hide determine"
-        @click="flagMode == false ? setNext() : setUntying()">{{ flagMode == false ? '下一步' : '立即解绑' }}</div>
+        @click="setUntying">立即解绑</div>
       <div
         class="hide"
         @click.self="show = false">取消</div>
@@ -175,7 +173,7 @@
 </style>
 <script>
 export default {
-  props: ['family'],
+  props: ['family', 'deviceuu'],
   data() {
     return {
       show: false,
@@ -186,14 +184,12 @@ export default {
       setTerval: null,
       setOut: null,
       isdisabled: false,
-      flagMode: false
     }
   },
   watch: {
     'show'() {
       if(this.show == false) {
         this.txtVal = ''
-        this.flagMode = false
         clearInterval(this.setTerval)
         clearTimeout(this.setOut)
         this.isdisabled = false
@@ -210,10 +206,6 @@ export default {
     })
   },
   methods: {
-    // 下一步
-    setNext() {
-      this.flagMode = true
-    },
     // @input
     txt(e) {
       e.preventDefault()
@@ -315,7 +307,7 @@ export default {
       return new Promise((resolve, reject) => {
         HdSmart.Device.control({
           "family_id": this.family,
-          "router_uuid":window.router_uuid
+          "router_uuid":this.deviceuu
         }, (data) => {
           resolve(data)
         },(err)=>{
