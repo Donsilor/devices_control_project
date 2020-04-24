@@ -154,6 +154,8 @@ export default {
   watch: {
     'show'() {
       this.txtVal = this.device_name
+      this.numLength = true
+      this.flag = true
       if(this.show == false) {
         this.txtVal = ''
       } else {

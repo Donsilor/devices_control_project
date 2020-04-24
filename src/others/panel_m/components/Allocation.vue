@@ -9,9 +9,7 @@
         :style="{ height:status_bar_height+navigation_bar_height+'px', 'line-height': status_bar_height+navigation_bar_height + 'px'}"
         class="topbar-block" />
       <div
-
         :class="['topbar-fixed']">
-
         <div
           ref="statusbar"
           :style="{height:status_bar_height+'px'}"
@@ -56,16 +54,12 @@
         </ul>
       </div>
     </div>
-
-
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
-
 let dpr = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 1 : window.devicePixelRatio
-
 export default {
   data(){
     return{
@@ -83,53 +77,12 @@ export default {
         //   "detail_pic":"sfdas",
         //   "board_key":11
         // },
-        // {
-        //   "scene_id": 11,
-        //   "scene_name": "你好",
-        //   "control_state":1,
-        //   "enable":0,
-        //   "icon":"fgdfg",
-        //   "list_pic":{"normal":"objectId1"},
-        //   "detail_pic":"sfdas",
-        //   "board_key":1
-        // },
-        // {
-        //   "scene_id": 11,
-        //   "scene_name": "睡觉",
-        //   "control_state":1,
-        //   "enable":0,
-        //   "icon":"fgdfg",
-        //   "list_pic":{"normal":"objectId1"},
-        //   "detail_pic":"sfdas",
-        //   "board_key":3
-        // },
-        // {
-        //   "scene_id": 11,
-        //   "scene_name": "起床",
-        //   "control_state":1,
-        //   "enable":0,
-        //   "icon":"fgdfg",
-        //   "list_pic":{"normal":"objectId1"},
-        //   "detail_pic":"sfdas",
-        //   "board_key":2
-        // },
-        // {
-        //   "scene_id": 12, // 场景id
-        //   "scene_name": "回家", //场景名
-        //   "control_state":1, //控制状态
-        //   "enable":1, //打开状态
-        //   "icon":"fgdfg",
-        //   "list_pic":{"normal":"objectId1"}, //列表图标url,目前只有normal字段。后期扩展需要高亮和暗的图标，则加上对应字段。{"normal":"objectId1"，"bright":"sss","dark":"sdfd"}
-        //   "detail_pic":"sfdas", //详情图标url
-        //   "board_key":40
-        // }
       ],
     }
   },
     computed:{
     ...mapGetters(['isClose', 'isOffline','networkStatus','viewHelpstatus']),
     ...mapState(['device', 'deviceAttrs']),
-
   },
    created() {
     HdSmart.ready(() => {
@@ -140,10 +93,11 @@ export default {
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
+      HdSmart.UI.setStatusBarColor(1)
     })
   },
   methods:{
-    ...mapActions(['getDeviceInfo','getNetworkInfo','setNetworkStatus','doControlDevice','getViewHelpInfo','setViewHelpInfo']),
+    ...mapActions(['getDeviceInfo']),
     // 路由跳转
       OfflineHelpPage(){
         this.$router.push({
@@ -185,7 +139,6 @@ export default {
         }, () => {
           resolve()
         },(err)=>{
-          console.log(err)
           reject(err)
         },'dm_set_scene_config')
       })
@@ -201,15 +154,12 @@ export default {
 </script>
 
 <style scoped lang="less">
+html, body {
+  background: #000 !important;
+}
 .Allocation {
-  // width: 100%;
-  // height: 100vh;
   &::before{
     content: "";
-    // width: 100%;
-    // background: url('~@lib/base/img/bg02.png') no-repeat;
-    // background-repeat:no-repeat;
-    // background-size: 100% 100%;
     background: #000;
     position: fixed;
     top:0;
@@ -218,9 +168,7 @@ export default {
     bottom: 0;
     z-index: -1;
   }
-
 *{ -webkit-tap-highlight-color:transparent; }
-
 /* topbar */
 @status_bar_height: 25PX;
 @navigation_bar_height: 44PX;
@@ -233,7 +181,7 @@ export default {
       position: relative;
       bottom: 14px;
     }
-}
+  }
   .topbar-block {
     height: @status_bar_height+@navigation_bar_height;
   }
@@ -248,11 +196,6 @@ export default {
     background-color: rgba(0, 0, 0, 0.8);
   }
 }
-
-
-
-
-
 .topbar-nobg {
   .topbar-fixed {
     background: transparent;
@@ -266,10 +209,8 @@ export default {
     }
   }
 }
-
 .topbar-black {
   .topbar-fixed {
-    // background: #20282b;
     background: #35353d;
     border-bottom: none;
   }
@@ -281,12 +222,9 @@ export default {
     }
   }
 }
-
 .statusbar {
   height: @status_bar_height;
 }
-
-
 .newNavbar {
   display: flex;
   padding: 0 40px;
@@ -297,45 +235,29 @@ export default {
   align-items: center;
   .left,
   .right,.right-search {
-    // width: 44PX;
-    // height: @navigation_bar_height;
    width: 60px;
     height: 60px;
     p{
-        width: 40px;
-        height: 40px;
-
+      width: 40px;
+      height: 40px;
     }
-
   }
   .left{
-    // display: flex;
-    // justify-content: flex-start;
-    // align-items: center;
     position: absolute;
     left: 40px;
     p{
-        background: url('~@lib/base/img/arrow_back.png');
-        background-size: 100% 100%;
-
+      background: url('~@lib/base/img/arrow_back.png');
+      background-size: 100% 100%;
     }
   }
   .right{
-      // display: flex;
-      // justify-content: center;
-      // align-items: center;
-      position: absolute;
-      right: 40px;
+    position: absolute;
+    right: 40px;
     p{
       background: url('~@lib/base/img/kt_btn_setting.png');
-        background-size: 100% 100%;
-
+      background-size: 100% 100%;
     }
-
   }
-
-
-
   .left a,
   .right a {
     width: @navigation_bar_height;
@@ -350,7 +272,6 @@ export default {
       opacity: 0.8;
     }
   }
-
 }
 .title {
   text-align: center;
@@ -362,19 +283,13 @@ export default {
   font-size: 28px;
   padding: 0 40px;
   line-height: 1.5em;
-
-  // font-weight: lighter;
   color: rgba(0, 0, 0, .5);
-
 }
-
   .AllocationH3{
   padding: 12px 40px 24px;
   font-size: 32px;
   font-family: PingFangSC-Regular;
   color: #fff;
-// margin-bottom:12px;
-
   }
   .PrefabricationUl{
     padding: 0 40px 28px;
@@ -391,7 +306,6 @@ export default {
           color: #fff;
         &:nth-child(1){
           font-size: 32px;
-          // padding: 40px 0 12px 0;
         }
         &:nth-child(2){
           font-size: 24px;
@@ -406,9 +320,6 @@ export default {
       &:nth-child(3){
         background-image: linear-gradient(225deg, #1EB4F2 0%, #713DF4 100%);
       }
-      // &:nth-child(4){
-      //   background-image: linear-gradient(45deg, #EF6D5E 0%, #F9BB6B 100%);
-      // }
     }
   }
 }

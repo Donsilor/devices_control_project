@@ -6,14 +6,6 @@
     @touchmove.prevent>
     <div class="main show">
       <div class="title">是否解除配置</div>
-      <!-- <div class="txt">
-        <input
-          :value="txtVal"
-          type="text"
-          class="text"
-          maxlength="10"
-          @input="txt">
-      </div> -->
       <div
         class="hide determine"
         @click="setMode">解除配置</div>
@@ -63,13 +55,9 @@
     }
     .main{
       position: absolute;
-      // bottom: 0;
       z-index: 999999999999;
       width: 85%;
-      // height: 381px;
-      // color: #20282B;
       background: #1E1E1E;
-      // border: 1px solid #DDDDDD;
       padding: 48px 40px 20px;
       border-radius: 10px;
       .title {
@@ -103,21 +91,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        // flex-direction: column;
         background: #fff;
         .btn{
           padding: 0px 60px;
           width:100%;
           height:120px;
           line-height: 120px;
-          // text-align: center;
           font-size:32px;
-          // &:first-of-type{
-          //   border-bottom:1px solid #F0F2F4;
-          // }
-          // &.title {
-          //   font-size: 40px;
-          // }
         }
         .img {
           margin: 0 60px 0 0;
@@ -130,7 +110,6 @@
       .hide{
         width: 100%;
         height: 100px;
-        // margin-top:21px;
         font-size: 32px;
         letter-spacing: 0;
         text-align: center;

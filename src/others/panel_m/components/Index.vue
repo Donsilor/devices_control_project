@@ -10,9 +10,7 @@
           :style="{ height:status_bar_height+navigation_bar_height+'px', 'line-height': status_bar_height+navigation_bar_height + 'px'}"
           class="topbar-block" />
         <div
-
           :class="['topbar-fixed']">
-
           <div
             ref="statusbar"
             :style="{height:status_bar_height+'px'}"
@@ -44,8 +42,6 @@
         </div>
       </div>
       <!-- <StatusTip @OfflineHelpPage="OfflineHelpPage"/> -->
-
-      <!-- 新需求待定 -->
       <div
         class="list headerMarginTop"
         @click.prevent="showSwing">
@@ -133,7 +129,6 @@
         </div>
       </div>
 
-      <!-- 新需求待定 -->
       <div
         class="list centerMarginTop"
         @click.prevent="goInfo">
@@ -286,28 +281,6 @@ export default {
     ...mapState(['device', 'deviceAttrs']),
   },
   watch: {
-    // "device.stateChange"(){
-    //   this.name = this.device.device_name
-    //   this.room = this.device.room_name
-    //   this.deviceId = this.device.device_id
-    //   this.deviceUuid = this.device.device_uuid
-    //   this.familyId = this.device.family_id
-    // },
-    // "device.device_name"(){
-    //   this.name = this.device.device_name
-    // },
-    // "device.room_name"(){
-    //   this.room = this.device.room_name
-    // },
-    // "device.device_id"(){
-    //   this.deviceId = this.device.device_id
-    // },
-    // "device.device_uuid"(){
-    //   this.deviceUuid = this.device.device_uuid
-    // },
-    // "device.family_id"(){
-    //   this.familyId = this.device.family_id
-    // },
   },
   created() {
     HdSmart.ready(() => {
@@ -342,7 +315,7 @@ export default {
       if (window.status_bar_height) {
         this.status_bar_height = window.status_bar_height / dpr
       }
-      HdSmart.UI.setStatusBarColor(2)
+      HdSmart.UI.setStatusBarColor(1)
     })
   },
   methods: {
@@ -508,14 +481,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@imgPath:"base/konka_tv/assets";
+html, body {
+  background: #000 !important;
+}
   .page {
-    // height: 100vh;
   &::before{
     content: "";
-    // background-image: url('~@lib/@{imgPath}/img_bg.png');
-    // background-repeat:no-repeat;
-    // background-size: 100% 100%;
     background: #000;
     position: fixed;
     top:0;
@@ -528,8 +499,6 @@ export default {
 		display: none;
 	}
   .main{
-    padding: 214px 40px 0;
-    // 新需求待定
     padding: 30px 24px 48px;
     border-top: 0.5px solid rgba(255,255,255,0.20);
     border-bottom: 0.5px solid rgba(255,255,255,0.20);
@@ -545,19 +514,15 @@ export default {
     .collocation{
       display: flex;
       justify-content: space-between;
-      // 新需求待定
       height: 360px;
       .collocation-item{
         position: relative;
         flex: 1;
         margin-right: 12px;
         background: rgba(255,255,255,0.15);
-        border-radius: 10px;
-        // padding-top: 164px;
         font-size: 12px;
         color: #000000;
         text-align: center;
-      // 新需求待定
         height: 360px;
         border-radius: 6px;
         border: 0.5px solid rgba(255,255,255,0.20);
@@ -582,13 +547,11 @@ export default {
           display: flex;
           align-items: center;
           justify-content: center;
-          // line-height: 466px;
           color: #fff;
           vertical-align: middle;
           font-size: 24px;
         }
         .delBtn{
-          // width: 100%;
           width: 120px;
           height: 81px;
           border-top:1px solid rgba(255, 255, 255, 0.1);
@@ -621,7 +584,6 @@ export default {
             line-height: 48px;
           }
         }
-
       }
     }
   }
@@ -668,8 +630,6 @@ export default {
           content: "";
           margin-left: 21px;;
           display: inline-block;
-          // border-top: 1px solid;
-          // border-right: 1px solid;
           width: 10px;
           height: 10px;
           transform: rotate(45deg);
@@ -731,11 +691,6 @@ export default {
     background-color: rgba(0, 0, 0, 0.8);
   }
 }
-
-
-
-
-
 .topbar-nobg {
   .topbar-fixed {
     background: transparent;
@@ -749,10 +704,8 @@ export default {
     }
   }
 }
-
 .topbar-black {
   .topbar-fixed {
-    // background: #20282b;
     background: #35353d;
     border-bottom: none;
   }
@@ -764,12 +717,9 @@ export default {
     }
   }
 }
-
 .statusbar {
   height: @status_bar_height;
 }
-
-
 .newNavbar {
   display: flex;
   padding: 0 24px;
@@ -780,46 +730,28 @@ export default {
   align-items: center;
   .left,
   .right,.right-search {
-    // width: 44PX;
-    // height: @navigation_bar_height;
    width: 60px;
     height: 60px;
     p{
-        width: 40px;
-        height: 40px;
-
+      width: 40px;
+      height: 40px;
     }
-
   }
   .left{
-    // display: flex;
-    // justify-content: flex-start;
-    // align-items: center;
     position: absolute;
-    // left: 40px;
-    // background: rgba(255,255,255,0.05);
     p{
-        background: url('~@lib/base/img/arrow_back.png');
-        background-size: 100% 100%;
-
+      background: url('~@lib/base/img/arrow_back.png');
+      background-size: 100% 100%;
     }
   }
   .right{
-      // display: flex;
-      // justify-content: center;
-      // align-items: center;
       position: absolute;
       right: 40px;
     p{
       background: url('~@lib/base/img/kt_btn_setting.png');
-        background-size: 100% 100%;
-
+      background-size: 100% 100%;
     }
-
   }
-
-
-
   .left a,
   .right a {
     width: @navigation_bar_height;
@@ -834,7 +766,6 @@ export default {
       opacity: 0.8;
     }
   }
-
 }
 .title {
   text-align: center;
