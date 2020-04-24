@@ -804,7 +804,6 @@ export default {
     }
   }
   .main {
-    // position: relative;
     margin-top:44px;
     &.center {
       flex-direction: column;
