@@ -3,7 +3,7 @@
     <div class="title">{{remindTip}}</div>
     <div class="date">2020/03/16 18:35</div>
     <div class="datas">
-      <bodyData :status="0" :value="66" name="体重" unit="kg"></bodyData>
+      <bodyData :status="0" :value="weight" name="体重" unit="kg"></bodyData>
       <bodyData :status="FatStatus()" :value="bodyFatRate" name="体脂率" unit="%"></bodyData>
       <bodyData :status="MuscleStatus()" :value="muscleRate" name="骨骼肌率" unit="%"></bodyData>
     </div>
@@ -36,10 +36,15 @@
     components: {lineChart, bodyData, detailSwitch},
     data() {
       return {
-        BMI: 30,
+        BMI: 0,
         sex: 0,
-        muscleRate: 35,
-        bodyFatRate: 22,
+        muscleRate: 0,
+        bodyFatRate: 0,
+        weightList:[],
+        bodyFatList:[],
+        muscleList:[],
+        timeList:[],
+        weight: 0,
         options,
         fatLevel: 2,
         isUnusual: true,
@@ -68,33 +73,64 @@
         }
         str = str + '   BMI:' + `${this.BMI}`
         return str
-      },
-      muscleStatus() {
-        if (this.muscleRate < 31) {
-          return 2
-        } else if (this.muscleRate >= 31 && this.muscleRate <= 34) {
-          return 0
-        } else {
-          return 1
-        }
-      },
+      }
     },
     props: {
       fatData: {
-        type: Object,
+        type: Array,
         default() {
-          return {}
+          return []
         }
+      }
+    },
+    watch:{
+      fatData:{
+        handler(value) {
+          this.weight = value[0].attribute.value1
+          this.bodyFatRate = value[0].attribute.value8
+          this.muscleRate = value[0].attribute.value3
+          this.BMI = value[0].attribute.value11
+          this.weightList= value.map(item=>{
+            return item.attribute.value1
+          })
+          this.bodyFatList= value.map(item=>{
+            return item.attribute.value8
+          })
+          this.muscleList= value.map(item=>{
+            return item.attribute.value3
+          })
+          this.timeList = value.map(item => {
+            return item.attribute.createTime
+          })
+
+        },
+        immediate:true
       }
     },
     mounted() {
       this.options.series = [
-        creatSerie(Echart, '#3198F2', [120, 132, 101, 134, 90, 230, 210])
+        creatSerie(Echart, '#3198F2', this.weightList)
       ]
+      this.options.xAxis[0].data = this.timeList
     },
     methods: {
       itemClick(index) {
         this.currentIndex = index
+        if (index ===0) {
+          this.options.series = [
+            creatSerie(Echart,'#713DF4', this.weightList)
+          ]
+
+        }else if (index ===1){
+          this.options.series = [
+            creatSerie(Echart,'#713DF4', this.bodyFatList)
+          ]
+        } else if (index ===2){
+          this.options.series = [
+            creatSerie(Echart,'#713DF4', this.muscleList)
+          ]
+        }
+
       },
       FatStatus(){
         if (this.bodyFatRate < 15) {

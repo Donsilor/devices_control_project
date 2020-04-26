@@ -28,10 +28,13 @@ export default {
           color: 'rgba(255,255,255,0.5)',
         },
         formatter: function (value, index) {
-          return value.replace(' ', '\n');
+          console.log('formatter====',value)
+          let arr = value.split(' ')[0].split('-')
+          let str = arr[2]+ '-'+ arr[1]
+          return str.replace(/-/g, '\n');
         },
       },
-      data: ['16 1990.10', '12 1990.10', '5 1990.10', '8 1990.10', '4 1990年10月', '4 1990年10月', '9 1990年10月']
+      data: []
     }
   ],
   yAxis: [

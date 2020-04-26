@@ -33,28 +33,35 @@
   import bodyData from '@/ruiji_mirror_m/components/bodyData.vue'
   import detailSwitch from '@/ruiji_mirror_m/components/detailSwitch.vue'
   import creatSerie from '@/ruiji_mirror_m/assets/datas/creatSerie.js'
+
   export default {
     name: "bloodPressure",
     components: {lineChart, bodyData, detailSwitch},
     data() {
       return {
-        options:options,
-        sPressure: 150,
-        rPressure: 80,
-        heartRate: 120,
+        options: options,
+        sPressureList: [],
+        rPressureList: [],
+        heartRateList: [],
+        timeList: [],
+        sPressure: 0,
+        rPressure: 0,
+        heartRate: 0,
         bodyDatas: [
-          {name: '收缩压', value: '126', unit: 'mmhg', status: 0},
-          {name: '舒张压', value: '84', unit: 'mmhg', status: 0},
-          {name: '心率', value: '126', unit: 'bpm', status: 0}
+          {name: '收缩压', value: '0', unit: 'mmhg', status: 0},
+          {name: '舒张压', value: '0', unit: 'mmhg', status: 0},
+          {name: '心率', value: '0', unit: 'bpm', status: 0}
         ],
         currentIndex: 3
       };
     },
-    mounted(){
+    mounted() {
       this.options.series = [
-        creatSerie(Echart,'#3198F2', [120, 132, 101, 134, 90, 230, 210]),
-        creatSerie(Echart,'#713DF4', [320, 332, 301, 334, 390, 330, 320])
+        creatSerie(Echart, '#713DF4', this.rPressureList),
+        creatSerie(Echart, '#3198F2', this.sPressureList)
       ]
+      this.options.xAxis[0].data = this.timeList
+      console.log('this.options=====', this.options)
     },
     computed: {
       remindTip() {
@@ -62,41 +69,59 @@
           return '您的血压、心率正常'
         } else if ((this.sPressure >= 90 && this.sPressure <= 140) && (this.rPressure > 90) && (this.heartRate >= 60 && this.heartRate <= 100)) {
           return '您的血压偏高心率正常'
-        } else if ((this.sPressure >140) && (this.rPressure >= 60 && this.rPressure <= 90) && (this.heartRate >= 60 && this.heartRate <= 100)) {
+        } else if ((this.sPressure > 140) && (this.rPressure >= 60 && this.rPressure <= 90) && (this.heartRate >= 60 && this.heartRate <= 100)) {
           return '您的血压偏高心率正常'
-        }else if((this.sPressure >= 90 && this.sPressure <= 140) && (this.rPressure <60) && (this.heartRate >= 60 && this.heartRate <= 100)) {
+        } else if ((this.sPressure >= 90 && this.sPressure <= 140) && (this.rPressure < 60) && (this.heartRate >= 60 && this.heartRate <= 100)) {
           return '您的血压偏低心率正常'
-        }else if((this.sPressure >140) && (this.rPressure >90) && (this.heartRate >= 60 && this.heartRate <= 100)) {
+        } else if ((this.sPressure > 140) && (this.rPressure > 90) && (this.heartRate >= 60 && this.heartRate <= 100)) {
           return '您的血压偏高心率正常'
-        }else if ((this.sPressure >= 90 && this.sPressure <= 140) && (this.rPressure >= 60 && this.rPressure <= 90) && (this.heartRate >100)) {
+        } else if ((this.sPressure >= 90 && this.sPressure <= 140) && (this.rPressure >= 60 && this.rPressure <= 90) && (this.heartRate > 100)) {
           return '您的血压正常心率偏高'
-        }else if ((this.sPressure >= 90 && this.sPressure <= 140) && (this.rPressure >= 60 && this.rPressure <= 90) && (this.heartRate <60)) {
+        } else if ((this.sPressure >= 90 && this.sPressure <= 140) && (this.rPressure >= 60 && this.rPressure <= 90) && (this.heartRate < 60)) {
           return '您的血压正常心率偏低'
-        }else if ((this.sPressure >= 90 && this.sPressure <= 140) && (this.rPressure <60) && (this.heartRate <60)) {
+        } else if ((this.sPressure >= 90 && this.sPressure <= 140) && (this.rPressure < 60) && (this.heartRate < 60)) {
           return '您的血压偏低心率偏低'
-        }else if ((this.sPressure >140) && (this.rPressure > 90) && (this.heartRate >100)) {
+        } else if ((this.sPressure > 140) && (this.rPressure > 90) && (this.heartRate > 100)) {
           return '您的血压偏高心率偏高!'
-        }else if ((this.sPressure >140) && (this.rPressure > 90) && (this.heartRate <60)) {
+        } else if ((this.sPressure > 140) && (this.rPressure > 90) && (this.heartRate < 60)) {
           return '您的血压偏高心率偏低!'
-        } else if ((this.sPressure >140) && (this.rPressure >= 60 && this.rPressure <= 90) && (this.heartRate >100)) {
+        } else if ((this.sPressure > 140) && (this.rPressure >= 60 && this.rPressure <= 90) && (this.heartRate > 100)) {
           return '您的血压偏高心率偏高!'
-        }else {
+        } else {
           return '您的血压、心率正常'
         }
       }
     },
     watch: {
-      bloodData:{
+      bloodData: {
         handler(value) {
+          this.sPressure = value[0].attribute.value1
+          this.rPressure = value[0].attribute.value2
+          this.heartRate = value[0].attribute.value3
+          this.bodyDatas[0].value = this.sPressure
+          this.bodyDatas[1].value = this.rPressure
+          this.bodyDatas[2].value = this.heartRate
+          this.sPressureList = value.map(item => {
+            return item.attribute.value1
+          })
+          this.rPressureList = value.map(item => {
+            return item.attribute.value2
+          })
+          this.heartRateList = value.map(item => {
+            return item.attribute.value3
+          })
+          this.timeList = value.map(item => {
+            return item.attribute.createTime
+          })
         },
-        immediate:true
+        immediate: true
       }
     },
     props: {
       bloodData: {
-        type: Object,
+        type: Array,
         default() {
-          return {}
+          return []
         }
       }
     },
@@ -105,12 +130,12 @@
         this.currentIndex = index
         if (index === 3) {
           this.options.series = [
-            creatSerie(Echart,'#3198F2', [120, 132, 101, 134, 90, 230, 210]),
-            creatSerie(Echart,'#713DF4', [320, 332, 301, 334, 390, 330, 320])
+            creatSerie(Echart, '#713DF4', this.rPressureList),
+            creatSerie(Echart, '#3198F2', this.sPressureList)
           ]
         } else {
           this.options.series = [
-            creatSerie(Echart,'#713DF4', [320, 332, 301, 334, 390, 330, 320])
+            creatSerie(Echart, '#713DF4', this.heartRateList)
           ]
         }
       }

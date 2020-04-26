@@ -4,8 +4,8 @@
       <type-switch :type="0" :currentIndex.sync="currentIndex" :isActive="currentIndex===0"></type-switch>
       <type-switch :type="1" :currentIndex.sync="currentIndex" :isActive="currentIndex===1"></type-switch>
     </div>
-    <blood-pressure v-if="currentIndex===0" :bloodData="{}"></blood-pressure>
-    <body-fat v-if="currentIndex===1" :fatData="{}"></body-fat>
+    <blood-pressure v-if="currentIndex===0" :bloodData="bloodData"></blood-pressure>
+    <body-fat v-if="currentIndex===1" :fatData="fatData"></body-fat>
   </div>
 </template>
 
@@ -22,8 +22,150 @@
     },
     data() {
       return {
-        bloodData:{},
-        fatData:{},
+        bloodData:[{
+          attribute: {
+            createTime: "2020-04-26 17:02:00",
+            value1: "150",
+            value10: "0.0",
+            value11: "16.3",
+            value2: "85",
+            value3: "100",
+            value4: "0.0",
+            value5: "0.0",
+            value6: 0,
+            value7: "0.0",
+            value8: "0.0",
+            value9: "0.0",
+          },
+          "device_id": 8087252,
+          "family_id": 27225,
+          "status_modified_at": 1587892191082,
+          type: "395318.bmi",
+          "updated_at": 1587892191,
+        },
+          {
+            attribute: {
+              createTime: "2020-04-26 17:02:00",
+              value1: "110",
+              value10: "0.0",
+              value11: "17.3",
+              value2: "88",
+              value3: "99",
+              value4: "0.0",
+              value5: "0.0",
+              value6: 0,
+              value7: "0.0",
+              value8: "0.0",
+              value9: "0.0",
+            },
+            "device_id": 8087252,
+            "family_id": 27225,
+            "status_modified_at": 1587891986852,
+            type: "317888.bmi",
+            "updated_at": 1587891986,
+          },{
+            attribute: {
+              createTime: "2020-04-26 17:02:00",
+              value1: "110",
+              value10: "0.0",
+              value11: "17.3",
+              value2: "88",
+              value3: "99",
+              value4: "0.0",
+              value5: "0.0",
+              value6: 0,
+              value7: "0.0",
+              value8: "0.0",
+              value9: "0.0",
+            },
+            "device_id": 8087252,
+            "family_id": 27225,
+            "status_modified_at": 1587891986852,
+            type: "317888.bmi",
+            "updated_at": 1587891986,
+          },{
+            attribute: {
+              createTime: "2020-04-26 17:02:00",
+              value1: "110",
+              value10: "0.0",
+              value11: "17.3",
+              value2: "88",
+              value3: "100",
+              value4: "0.0",
+              value5: "0.0",
+              value6: 0,
+              value7: "0.0",
+              value8: "0.0",
+              value9: "0.0",
+            },
+            "device_id": 8087252,
+            "family_id": 27225,
+            "status_modified_at": 1587891986852,
+            type: "317888.bmi",
+            "updated_at": 1587891986,
+          },{
+            attribute: {
+              createTime: "2020-04-26 17:02:00",
+              value1: "110",
+              value10: "0.0",
+              value11: "17.3",
+              value2: "78",
+              value3: "110",
+              value4: "0.0",
+              value5: "0.0",
+              value6: 0,
+              value7: "0.0",
+              value8: "0.0",
+              value9: "0.0",
+            },
+            "device_id": 8087252,
+            "family_id": 27225,
+            "status_modified_at": 1587891986852,
+            type: "317888.bmi",
+            "updated_at": 1587891986,
+          },{
+            attribute: {
+              createTime: "2020-04-26 17:02:00",
+              value1: "110",
+              value10: "0.0",
+              value11: "17.3",
+              value2: "80",
+              value3: "125",
+              value4: "0.0",
+              value5: "0.0",
+              value6: 0,
+              value7: "0.0",
+              value8: "0.0",
+              value9: "0.0",
+            },
+            "device_id": 8087252,
+            "family_id": 27225,
+            "status_modified_at": 1587891986852,
+            type: "317888.bmi",
+            "updated_at": 1587891986,
+          }
+        ],
+        fatData:[{
+          attribute: {
+            createTime: "2020-04-26 17:02:00",
+            value1: "150",
+            value10: "0.0",
+            value11: "16.3",
+            value2: "85",
+            value3: "100",
+            value4: "0.0",
+            value5: "0.0",
+            value6: 0,
+            value7: "0.0",
+            value8: "0.0",
+            value9: "0.0",
+          },
+          "device_id": 8087252,
+          "family_id": 27225,
+          "status_modified_at": 1587892191082,
+          type: "395318.bmi",
+          "updated_at": 1587892191,
+        },],
         currentIndex: 0,
       }
     },
@@ -43,10 +185,10 @@
           this.itemTemp = this.deviceAttrs.temperature
         })
         this.requestData('get_dev_status_list', {"type": "blood", "size": 100, "begin": 0}).then(res=>{
-          this.bloodData=res
+          // this.bloodData=res
         })
         this.requestData('get_dev_status_list', {"type": "bmi", "size": 100, "begin": 0}).then(res=>{
-          this.fatData=res
+          // this.fatData=res
         })
         HdSmart.UI.setStatusBarColor(1)
       })
