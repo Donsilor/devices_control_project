@@ -331,42 +331,68 @@ export default {
       this.$refs.swing.show = true
       // this.timeOutEventOK = false
     },
-    setWind(val) {
-      if(this.num == 'one') return this.controlDevice("chan0_name", val, 'on')
-      .then((res) => {
-        if(res.code == 0) {
-          this.$refs.swing.show = false
+    async setWind(val) {
+      try {
+        if(this.num == 'one') await this.updateSwitchName(val, 0)
+        if(this.num == 'two') await this.updateSwitchName(val, 1)
+        if(this.num == 'three') await this.updateSwitchName(val, 2)
+        if(this.num == 'four') await this.updateSwitchName(val, 3)
+        this.$refs.swing.show = false
+      }
+      catch(err) {
+        if(err == null) {
+          HdSmart.UI.toast('请求超时，请重试')
         }
-        if(res == null){
-           HdSmart.UI.toast('请求超时，请重试')
-        }
-      })
-      if(this.num == 'two') return this.controlDevice("chan1_name", val, 'on')
-      .then((res) => {
-        if(res.code == 0) {
-          this.$refs.swing.show = false
-        }
-        if(res == null){
-           HdSmart.UI.toast('请求超时，请重试')
-        }
-      })
-      if(this.num == 'three') return this.controlDevice("chan2_name", val, 'on')
-      .then((res) => {
-        if(res.code == 0) {
-          this.$refs.swing.show = false
-        }
-        if(res == null){
-           HdSmart.UI.toast('请求超时，请重试')
-        }
-      })
-      if(this.num == 'four') return this.controlDevice("chan3_name", val, 'on')
-      .then((res) => {
-        if(res.code == 0) {
-          this.$refs.swing.show = false
-        }
-        if(res == null){
-           HdSmart.UI.toast('请求超时，请重试')
-        }
+      }
+      // if(this.num == 'one') return this.controlDevice("chan0_name", val, 'on')
+      // .then((res) => {
+      //   if(res.code == 0) {
+      //     this.$refs.swing.show = false
+      //   }
+      //   if(res == null){
+      //      HdSmart.UI.toast('请求超时，请重试')
+      //   }
+      // })
+      // if(this.num == 'two') return this.controlDevice("chan1_name", val, 'on')
+      // .then((res) => {
+      //   if(res.code == 0) {
+      //     this.$refs.swing.show = false
+      //   }
+      //   if(res == null){
+      //      HdSmart.UI.toast('请求超时，请重试')
+      //   }
+      // })
+      // if(this.num == 'three') return this.controlDevice("chan2_name", val, 'on')
+      // .then((res) => {
+      //   if(res.code == 0) {
+      //     this.$refs.swing.show = false
+      //   }
+      //   if(res == null){
+      //      HdSmart.UI.toast('请求超时，请重试')
+      //   }
+      // })
+      // if(this.num == 'four') return this.controlDevice("chan3_name", val, 'on')
+      // .then((res) => {
+      //   if(res.code == 0) {
+      //     this.$refs.swing.show = false
+      //   }
+      //   if(res == null){
+      //      HdSmart.UI.toast('请求超时，请重试')
+      //   }
+      // })
+    },
+    updateSwitchName(val, idx) {
+      return new Promise((resolve, reject) => {
+        HdSmart.Device.control({
+          "family_id": this.device.family_id,
+          "device_uuid": this.device.device_uuid,
+          "chan_name": val,
+          "chan_index": idx
+        }, (data) => {
+          resolve(data)
+        },(err)=>{
+          reject(err)
+        },'dm_update_switch_name')
       })
     },
     setSwitchOn(val) {
