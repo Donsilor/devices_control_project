@@ -83,7 +83,7 @@
         } else if ((this.sPressure > 140) && (this.rPressure >= 60 && this.rPressure <= 90) && (this.heartRate > 100)) {
           return '您的血压偏高心率偏高!'
         } else {
-          return '--'
+          return '您的数据异常'
         }
       }
     },
@@ -112,8 +112,8 @@
           })
 
           this.options.series = [
-            creatSerie(Echart, '#713DF4', this.rPressureList),
-            creatSerie(Echart, '#3198F2', this.sPressureList)
+            creatSerie(Echart, '#713DF4','舒张压', this.rPressureList),
+            creatSerie(Echart, '#3198F2','收缩压', this.sPressureList)
           ]
           this.options.xAxis[0].data = this.timeList
           this.options.dataZoom[0].startValue = this.timeList.length-5
@@ -135,12 +135,12 @@
         this.currentIndex = index
         if (index === 3) {
           this.options.series = [
-            creatSerie(Echart, '#713DF4', this.rPressureList),
-            creatSerie(Echart, '#3198F2', this.sPressureList)
+            creatSerie(Echart, '#713DF4','舒张压', this.rPressureList),
+            creatSerie(Echart, '#3198F2', '收缩压',this.sPressureList)
           ]
         } else {
           this.options.series = [
-            creatSerie(Echart, '#1EB4F2', this.heartRateList)
+            creatSerie(Echart, '#1EB4F2','心率', this.heartRateList)
           ]
         }
       }

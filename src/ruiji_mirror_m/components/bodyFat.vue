@@ -104,7 +104,7 @@
             return item.attribute.createTime
           })
           this.options.series = [
-            creatSerie(Echart, '#713DF4', this.weightList)
+            creatSerie(Echart, '#713DF4','体重', this.weightList)
           ]
           this.options.xAxis[0].data = this.timeList
 
@@ -119,16 +119,16 @@
         this.currentIndex = index
         if (index ===0) {
           this.options.series = [
-            creatSerie(Echart,'#713DF4', this.weightList)
+            creatSerie(Echart,'#713DF4','体重', this.weightList)
           ]
 
         }else if (index ===1){
           this.options.series = [
-            creatSerie(Echart,'#713DF4', this.bodyFatList)
+            creatSerie(Echart,'#713DF4','体脂率', this.bodyFatList)
           ]
         } else if (index ===2){
           this.options.series = [
-            creatSerie(Echart,'#713DF4', this.muscleList)
+            creatSerie(Echart,'#713DF4','骨骼肌率', this.muscleList)
           ]
         }
 
