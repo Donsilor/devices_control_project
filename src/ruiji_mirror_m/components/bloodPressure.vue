@@ -19,9 +19,9 @@
           <detailSwitch :type="4" @itemClick="itemClick" :isActive="currentIndex===4"></detailSwitch>
         </div>
       </div>
-      <div class="bottm">
-        <line-chart :options="options"></line-chart>
-      </div>
+    </div>
+    <div class="bottm">
+      <line-chart :options="options"></line-chart>
     </div>
   </div>
 </template>
@@ -56,12 +56,7 @@
       };
     },
     mounted() {
-      this.options.series = [
-        creatSerie(Echart, '#713DF4', this.rPressureList),
-        creatSerie(Echart, '#3198F2', this.sPressureList)
-      ]
-      this.options.xAxis[0].data = this.timeList
-      console.log('this.options=====', this.options)
+
     },
     computed: {
       remindTip() {
@@ -88,31 +83,41 @@
         } else if ((this.sPressure > 140) && (this.rPressure >= 60 && this.rPressure <= 90) && (this.heartRate > 100)) {
           return '您的血压偏高心率偏高!'
         } else {
-          return '您的血压、心率正常'
+          return '--'
         }
       }
     },
     watch: {
       bloodData: {
         handler(value) {
-          this.sPressure = value[0].attribute.value1
-          this.rPressure = value[0].attribute.value2
-          this.heartRate = value[0].attribute.value3
+          if (!value) return
+          this.sPressure = value[0]&&value[0].attribute.value1
+          this.rPressure = value[0]&&value[0].attribute.value2
+          this.heartRate = value[0]&&value[0].attribute.value3
           this.bodyDatas[0].value = this.sPressure
           this.bodyDatas[1].value = this.rPressure
           this.bodyDatas[2].value = this.heartRate
-          this.sPressureList = value.map(item => {
+          let arr = [...value].reverse()
+          this.sPressureList = arr.map(item => {
             return item.attribute.value1
           })
-          this.rPressureList = value.map(item => {
+          this.rPressureList = arr.map(item => {
             return item.attribute.value2
           })
-          this.heartRateList = value.map(item => {
+          this.heartRateList = arr.map(item => {
             return item.attribute.value3
           })
-          this.timeList = value.map(item => {
+          this.timeList = arr.map(item => {
             return item.attribute.createTime
           })
+
+          this.options.series = [
+            creatSerie(Echart, '#713DF4', this.rPressureList),
+            creatSerie(Echart, '#3198F2', this.sPressureList)
+          ]
+          this.options.xAxis[0].data = this.timeList
+          this.options.dataZoom[0].startValue = this.timeList.length-5
+          this.options.dataZoom[0].endValue = this.timeList.length -1
         },
         immediate: true
       }
@@ -135,7 +140,7 @@
           ]
         } else {
           this.options.series = [
-            creatSerie(Echart, '#713DF4', this.heartRateList)
+            creatSerie(Echart, '#1EB4F2', this.heartRateList)
           ]
         }
       }
@@ -150,8 +155,11 @@
     color: white;
     background: #19191C;
     padding-top: 60px;
-    padding: 60px 24px 10px;
-
+    padding: 60px 0 10px;
+   .title,.date,.datas,.trend{
+     padding-left: 24px;
+     padding-right: 24px;
+   }
     .title {
       font-size: 36px;
     }

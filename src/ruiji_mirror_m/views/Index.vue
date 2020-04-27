@@ -22,137 +22,15 @@
     },
     data() {
       return {
-        bloodData:[{
-          attribute: {
-            createTime: "2020-04-26 17:02:00",
-            value1: "150",
-            value10: "0.0",
-            value11: "16.3",
-            value2: "85",
-            value3: "100",
-            value4: "0.0",
-            value5: "0.0",
-            value6: 0,
-            value7: "0.0",
-            value8: "0.0",
-            value9: "0.0",
-          },
-          "device_id": 8087252,
-          "family_id": 27225,
-          "status_modified_at": 1587892191082,
-          type: "395318.bmi",
-          "updated_at": 1587892191,
-        },
-          {
-            attribute: {
-              createTime: "2020-04-26 17:02:00",
-              value1: "110",
-              value10: "0.0",
-              value11: "17.3",
-              value2: "88",
-              value3: "99",
-              value4: "0.0",
-              value5: "0.0",
-              value6: 0,
-              value7: "0.0",
-              value8: "0.0",
-              value9: "0.0",
-            },
-            "device_id": 8087252,
-            "family_id": 27225,
-            "status_modified_at": 1587891986852,
-            type: "317888.bmi",
-            "updated_at": 1587891986,
-          },{
-            attribute: {
-              createTime: "2020-04-26 17:02:00",
-              value1: "110",
-              value10: "0.0",
-              value11: "17.3",
-              value2: "88",
-              value3: "99",
-              value4: "0.0",
-              value5: "0.0",
-              value6: 0,
-              value7: "0.0",
-              value8: "0.0",
-              value9: "0.0",
-            },
-            "device_id": 8087252,
-            "family_id": 27225,
-            "status_modified_at": 1587891986852,
-            type: "317888.bmi",
-            "updated_at": 1587891986,
-          },{
-            attribute: {
-              createTime: "2020-04-26 17:02:00",
-              value1: "110",
-              value10: "0.0",
-              value11: "17.3",
-              value2: "88",
-              value3: "100",
-              value4: "0.0",
-              value5: "0.0",
-              value6: 0,
-              value7: "0.0",
-              value8: "0.0",
-              value9: "0.0",
-            },
-            "device_id": 8087252,
-            "family_id": 27225,
-            "status_modified_at": 1587891986852,
-            type: "317888.bmi",
-            "updated_at": 1587891986,
-          },{
-            attribute: {
-              createTime: "2020-04-26 17:02:00",
-              value1: "110",
-              value10: "0.0",
-              value11: "17.3",
-              value2: "78",
-              value3: "110",
-              value4: "0.0",
-              value5: "0.0",
-              value6: 0,
-              value7: "0.0",
-              value8: "0.0",
-              value9: "0.0",
-            },
-            "device_id": 8087252,
-            "family_id": 27225,
-            "status_modified_at": 1587891986852,
-            type: "317888.bmi",
-            "updated_at": 1587891986,
-          },{
-            attribute: {
-              createTime: "2020-04-26 17:02:00",
-              value1: "110",
-              value10: "0.0",
-              value11: "17.3",
-              value2: "80",
-              value3: "125",
-              value4: "0.0",
-              value5: "0.0",
-              value6: 0,
-              value7: "0.0",
-              value8: "0.0",
-              value9: "0.0",
-            },
-            "device_id": 8087252,
-            "family_id": 27225,
-            "status_modified_at": 1587891986852,
-            type: "317888.bmi",
-            "updated_at": 1587891986,
-          }
-        ],
+        bloodData:[],
         fatData:[{
           attribute: {
             createTime: "2020-04-26 17:02:00",
-            value1: "150",
+            value1: "0",
             value10: "0.0",
-            value11: "16.3",
-            value2: "85",
-            value3: "100",
+            value11: "0",
+            value2: "0",
+            value3: "0",
             value4: "0.0",
             value5: "0.0",
             value6: 0,
@@ -165,7 +43,7 @@
           "status_modified_at": 1587892191082,
           type: "395318.bmi",
           "updated_at": 1587892191,
-        },],
+        }],
         currentIndex: 0,
       }
     },
@@ -185,10 +63,10 @@
           this.itemTemp = this.deviceAttrs.temperature
         })
         this.requestData('get_dev_status_list', {"type": "blood", "size": 100, "begin": 0}).then(res=>{
-          // this.bloodData=res
+          this.bloodData=res
         })
         this.requestData('get_dev_status_list', {"type": "bmi", "size": 100, "begin": 0}).then(res=>{
-          // this.fatData=res
+          this.fatData=res
         })
         HdSmart.UI.setStatusBarColor(1)
       })
@@ -202,8 +80,12 @@
       requestData(method, param) {
         return new Promise((resolve, reject) => {
           HdSmart.network.httpRequest(method, param, function (response) {
-            console.log('get_dev_status_list-----HdSmart.network.httpRequest--response=====', response)
-            resolve(response)
+            console.log('get_dev_status_list-httpRequest--response=====', response)
+            if (Array.isArray(response))  {
+              resolve(response)
+            }else {
+              HdSmart.UI.toast('请求错误', 1500)
+            }
           })
         })
       },

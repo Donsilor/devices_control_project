@@ -15,7 +15,7 @@ if (argv_is_mock || location.search.indexOf('env=desktop') != -1) {
         done(mockData.generateSnapShot())
     })
   on('get_dev_status_list', function(data, done){
-    done(mockData.generateSnapShot())
+    done(mockData.getRuijiData())
   })
     on(apiList.device_getnetwork, function(data, done){
       done(mockData.generateNetwork())

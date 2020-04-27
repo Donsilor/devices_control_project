@@ -53,7 +53,7 @@
     },
     computed: {
       remindTip() {
-        let str = ''
+        let str = '您的体型正常'
         let status = 0
         if (this.BMI >= 18.5 && this.BMI <= 23.9) {
           str = '您的体型正常'
@@ -90,28 +90,29 @@
           this.bodyFatRate = value[0].attribute.value8
           this.muscleRate = value[0].attribute.value3
           this.BMI = value[0].attribute.value11
-          this.weightList= value.map(item=>{
+          let arr = [...value].reverse()
+          this.weightList= arr.map(item=>{
             return item.attribute.value1
           })
-          this.bodyFatList= value.map(item=>{
+          this.bodyFatList= arr.map(item=>{
             return item.attribute.value8
           })
-          this.muscleList= value.map(item=>{
+          this.muscleList= arr.map(item=>{
             return item.attribute.value3
           })
-          this.timeList = value.map(item => {
+          this.timeList = arr.map(item => {
             return item.attribute.createTime
           })
+          this.options.series = [
+            creatSerie(Echart, '#713DF4', this.weightList)
+          ]
+          this.options.xAxis[0].data = this.timeList
 
         },
         immediate:true
       }
     },
     mounted() {
-      this.options.series = [
-        creatSerie(Echart, '#3198F2', this.weightList)
-      ]
-      this.options.xAxis[0].data = this.timeList
     },
     methods: {
       itemClick(index) {
