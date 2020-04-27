@@ -77,6 +77,36 @@ export default {
         //   "detail_pic":"sfdas",
         //   "board_key":11
         // },
+        // {
+        //   "scene_id": 11,
+        //   "scene_name": "离家",
+        //   "control_state":1,
+        //   "enable":0,
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"},
+        //   "detail_pic":"sfdas",
+        //   "board_key":11
+        // },
+        // {
+        //   "scene_id": 11,
+        //   "scene_name": "离家",
+        //   "control_state":1,
+        //   "enable":0,
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"},
+        //   "detail_pic":"sfdas",
+        //   "board_key":11
+        // },
+        // {
+        //   "scene_id": 11,
+        //   "scene_name": "离家",
+        //   "control_state":1,
+        //   "enable":0,
+        //   "icon":"fgdfg",
+        //   "list_pic":{"normal":"objectId1"},
+        //   "detail_pic":"sfdas",
+        //   "board_key":11
+        // },
       ],
     }
   },
@@ -227,7 +257,7 @@ html, body {
 }
 .newNavbar {
   display: flex;
-  padding: 0 40px;
+  padding: 0 24px;
   justify-content: space-between;
   height: @navigation_bar_height;
   position: relative;
@@ -244,7 +274,7 @@ html, body {
   }
   .left{
     position: absolute;
-    left: 40px;
+    // left: 40px;
     p{
       background: url('~@lib/base/img/arrow_back.png');
       background-size: 100% 100%;
@@ -279,20 +309,14 @@ html, body {
   width: 100%;
   color: #fff;
 }
-.Allocationstatus{
-  font-size: 28px;
-  padding: 0 40px;
-  line-height: 1.5em;
-  color: rgba(0, 0, 0, .5);
-}
   .AllocationH3{
-  padding: 12px 40px 24px;
+  padding: 24px;
   font-size: 32px;
   font-family: PingFangSC-Regular;
   color: #fff;
   }
   .PrefabricationUl{
-    padding: 0 40px 28px;
+    padding: 0 24px;
     font-size: 32px;
     li{
       line-height: 156px;
@@ -311,14 +335,14 @@ html, body {
           font-size: 24px;
         }
       }
-      &:nth-child(1){
-        background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
-      }
       &:nth-child(2){
         background-image: linear-gradient(225deg, #FF59DA 0%, #FD30AA 100%);
       }
       &:nth-child(3){
         background-image: linear-gradient(225deg, #1EB4F2 0%, #713DF4 100%);
+      }
+      &:nth-child(4){
+        background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
       }
     }
   }
