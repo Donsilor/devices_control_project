@@ -17,9 +17,9 @@
             <detailSwitch :type="2" @itemClick="itemClick" :isActive="currentIndex===2"></detailSwitch>
           </div>
         </div>
-        <div class="bottm">
-          <line-chart :options="options"></line-chart>
-        </div>
+      </div>
+      <div class="bottm">
+        <line-chart :options="options"></line-chart>
       </div>
     </div>
     <div class="no-data" v-if="fatData.length===0">
@@ -177,8 +177,11 @@
     color: white;
     background: #19191C;
     padding-top: 60px;
-    padding: 60px 24px 10px;
-
+    padding: 60px 0 10px;
+    .title,.date,.datas,.trend{
+      padding-left: 24px;
+      padding-right: 24px;
+    }
     .title {
       font-size: 36px;
     }
