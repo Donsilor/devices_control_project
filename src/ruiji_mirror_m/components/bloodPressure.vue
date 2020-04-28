@@ -1,29 +1,37 @@
 <template>
-  <div class="container">
-    <div class="title">{{remindTip}}</div>
-    <div class="date">2020/03/16 18:35</div>
-    <div class="datas">
-      <bodyData v-for="item in bodyDatas"
-                :status="item.status"
-                :key="item.name"
-                :value="item.value"
-                :name="item.name"
-                :unit="item.unit">
-      </bodyData>
-    </div>
-    <div class="trend">
-      <div class="top-title">
-        <div class="left">趋势</div>
-        <div class="right">
-          <detailSwitch :type="3" @itemClick="itemClick" :isActive="currentIndex===3"></detailSwitch>
-          <detailSwitch :type="4" @itemClick="itemClick" :isActive="currentIndex===4"></detailSwitch>
+  <div>
+    <div class="container" v-if="bloodData.length>0">
+      <div class="title">{{remindTip}}</div>
+      <div class="date">2020/03/16 18:35</div>
+      <div class="datas">
+        <bodyData v-for="item in bodyDatas"
+                  :status="item.status"
+                  :key="item.name"
+                  :value="item.value"
+                  :name="item.name"
+                  :unit="item.unit">
+        </bodyData>
+      </div>
+      <div class="trend">
+        <div class="top-title">
+          <div class="left">趋势</div>
+          <div class="right">
+            <detailSwitch :type="3" @itemClick="itemClick" :isActive="currentIndex===3"></detailSwitch>
+            <detailSwitch :type="4" @itemClick="itemClick" :isActive="currentIndex===4"></detailSwitch>
+          </div>
         </div>
       </div>
+      <div class="bottm">
+        <line-chart :options="options"></line-chart>
+      </div>
     </div>
-    <div class="bottm">
-      <line-chart :options="options"></line-chart>
+    <div class="no-data" v-if="bloodData.length===0">
+      <img src="../assets/imgs/mj_icn_nodata.png" alt="">
+      <p>您还没有测量呢</p>
+      <p>暂无数据哦</p>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -199,6 +207,23 @@
           justify-content: space-between;
         }
       }
+    }
+  }
+  .no-data{
+    text-align: center;
+    margin-top: 302px;
+    img {
+      width: 104px;
+    }
+    p{
+      width: 100%;
+      opacity: 0.2;
+      font-family: PingFangSC-Light;
+      font-size: 32px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 48px;
     }
   }
 </style>

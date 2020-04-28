@@ -100,7 +100,7 @@
   .back-container {
     font-size: 32px;
     color: white;
-    background-color: black;
+    background-color: #19191C;
   }
   .button-control {
     display: flex;

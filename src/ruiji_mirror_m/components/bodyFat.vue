@@ -1,26 +1,34 @@
 <template>
-  <div class="container">
-    <div class="title">{{remindTip}}</div>
-    <div class="date">2020/03/16 18:35</div>
-    <div class="datas">
-      <bodyData :status="0" :value="weight" name="体重" unit="kg"></bodyData>
-      <bodyData :status="FatStatus()" :value="bodyFatRate" name="体脂率" unit="%"></bodyData>
-      <bodyData :status="MuscleStatus()" :value="muscleRate" name="骨骼肌率" unit="%"></bodyData>
-    </div>
-    <div class="trend">
-      <div class="top-title">
-        <div class="left">趋势</div>
-        <div class="right">
-          <detailSwitch :type="0" @itemClick="itemClick" :isActive="currentIndex===0"></detailSwitch>
-          <detailSwitch :type="1" @itemClick="itemClick" :isActive="currentIndex===1"></detailSwitch>
-          <detailSwitch :type="2" @itemClick="itemClick" :isActive="currentIndex===2"></detailSwitch>
+  <div>
+    <div class="container" v-if="fatData.length>0">
+      <div class="title">{{remindTip}}</div>
+      <div class="date">2020/03/16 18:35</div>
+      <div class="datas">
+        <bodyData :status="0" :value="weight" name="体重" unit="kg"></bodyData>
+        <bodyData :status="FatStatus()" :value="bodyFatRate" name="体脂率" unit="%"></bodyData>
+        <bodyData :status="MuscleStatus()" :value="muscleRate" name="骨骼肌率" unit="%"></bodyData>
+      </div>
+      <div class="trend">
+        <div class="top-title">
+          <div class="left">趋势</div>
+          <div class="right">
+            <detailSwitch :type="0" @itemClick="itemClick" :isActive="currentIndex===0"></detailSwitch>
+            <detailSwitch :type="1" @itemClick="itemClick" :isActive="currentIndex===1"></detailSwitch>
+            <detailSwitch :type="2" @itemClick="itemClick" :isActive="currentIndex===2"></detailSwitch>
+          </div>
+        </div>
+        <div class="bottm">
+          <line-chart :options="options"></line-chart>
         </div>
       </div>
-      <div class="bottm">
-        <line-chart :options="options"></line-chart>
-      </div>
+    </div>
+    <div class="no-data" v-if="fatData.length===0">
+      <img src="../assets/imgs/mj_icn_nodata.png" alt="">
+      <p>您还没有测量呢</p>
+      <p>暂无数据哦</p>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -215,6 +223,23 @@
       background-image: linear-gradient(to right, #CC44D5, #FA277A);
       -webkit-background-clip: text;
       color: transparent;
+    }
+  }
+  .no-data{
+    text-align: center;
+    margin-top: 302px;
+    img {
+      width: 104px;
+    }
+    p{
+      width: 100%;
+      opacity: 0.2;
+      font-family: PingFangSC-Light;
+      font-size: 32px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 48px;
     }
   }
 </style>

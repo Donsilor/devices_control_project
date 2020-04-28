@@ -21,5 +21,9 @@
 </script>
 
 <style>
+  body{
+    height: 100vh;
+    background-color: #19191C;
+  }
 
 </style>
