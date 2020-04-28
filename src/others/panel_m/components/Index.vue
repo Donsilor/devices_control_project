@@ -499,7 +499,7 @@ html, body {
 		display: none;
 	}
   .main{
-    padding: 30px 24px 48px;
+    padding: 30px 24px 40px;
     border-top: 0.5px solid rgba(255,255,255,0.20);
     border-bottom: 0.5px solid rgba(255,255,255,0.20);
     background: rgba(255,255,255,0.08);
@@ -514,16 +514,17 @@ html, body {
     .collocation{
       display: flex;
       justify-content: space-between;
-      height: 360px;
+      height: 424px;
+      flex-wrap: wrap;
       .collocation-item{
         position: relative;
-        flex: 1;
-        margin-right: 12px;
-        background: rgba(255,255,255,0.15);
+        margin: 0 12px 12px 0;
+        // background: rgba(255,255,255,0.15);
         font-size: 12px;
         color: #000000;
         text-align: center;
-        height: 360px;
+        height: 200px;
+        width: 344px;
         border-radius: 6px;
         border: 0.5px solid rgba(255,255,255,0.20);
         &.colour {
@@ -539,11 +540,14 @@ html, body {
             background-image: linear-gradient(225deg, #1DD3A6 0%, #347ADF 100%);
           }
         }
+        &:nth-child(2){
+        margin-right: 0;
+        }
         &:nth-child(4){
         margin-right: 0;
         }
         .txt{
-          height: 278px;;
+          height: 132px;;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -552,8 +556,8 @@ html, body {
           font-size: 24px;
         }
         .delBtn{
-          width: 120px;
-          height: 81px;
+          width: 320px;
+          height: 66px;
           border-top:1px solid rgba(255, 255, 255, 0.1);
           color: #fff;
           font-size: 24px;

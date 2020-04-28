@@ -30,6 +30,9 @@
             <div
               v-show="isError || isOffline||deviceAttrs.switch == 'off'"
               :class="['c-mode']">当前温度--°C</div>
+            <div
+              v-show="isError || isOffline||deviceAttrs.waterState == 'on'"
+              :class="['c-mode color']">出水中</div>
           </div>
           <canvas
             ref="canvas"
@@ -240,6 +243,7 @@ export default {
       } else {
         this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
       }
+      this.allHD = 0
     },
     "hscrolltopp"() {
       if(this.hscrolltopp >= this.hscrolll) {
@@ -254,7 +258,7 @@ export default {
       this.getDeviceInfo()
         .then(() => {
             this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
-          // this.reset()
+            // this.allHD = ((this.deviceAttrs.setWTemp)-30)/40
         })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -278,7 +282,6 @@ export default {
         window.scrollTo(0, 0)
       }, 200)
       this.resetPosition()
-      let isMove = false
       let on = ("ontouchstart" in document)? {
           start: "touchstart", move: "touchmove", end: "touchend"
       } : {
@@ -291,20 +294,41 @@ export default {
         }else{
             e.returnValue = false
         }
-          this.br = 20
+
           this.moveFlag = true
+          console.log('进来了start')
           if (this.moveFlag) {
-              var k = this.getXY(e,this.$refs.canvas)
-              var r = Math.atan2(k.x-this.ox, this.oy-k.y)
-              var hd = (Math.PI+r)/(2*Math.PI)
-              // 半圆的滑动范围判断
+            var k = this.getXY(e,this.$refs.canvas)
+            var r = Math.atan2(k.x-this.ox, this.oy-k.y)
+            var hd = (Math.PI+r)/(2*Math.PI)
+            // 半圆的滑动范围判断
+            if(this.deviceAttrs.mode == 'kitchen') {
+              if (hd <= 0.375 && hd >= 0.125) {
+                this.br = 20
+                this.draw(hd)
+                this.allHD = hd
+              }else{
+                HdSmart.UI.toast('超出当前模式温度限制氛围')
+                return
+              }
+            } else if(this.deviceAttrs.childLock == 'on') {
+              if (hd <= 0.45 && hd >= 0.125) {
+                this.br = 20
+                this.draw(hd)
+                this.allHD = hd
+              }else{
+                HdSmart.UI.toast('超出童锁温度限制氛围')
+                return
+              }
+            } else {
               if (hd <= 0.875 && hd >= 0.125) {
-                  this.draw(hd)
-                  this.allHD = hd
-                  console.log(hd, '滑动范围')
+                this.br = 20
+                this.draw(hd)
+                this.allHD = hd
               }else{
                 return
               }
+            }
           }
       },false)
 
@@ -315,38 +339,57 @@ export default {
         }else{
             e.returnValue = false
         }
-        this.allFlag = true
-        isMove = true
           if (this.moveFlag) {
-              var k = this.getXY(e,this.$refs.canvas)
-              var r = Math.atan2(k.x-this.ox, this.oy-k.y)
-              var hd = (Math.PI+r)/(2*Math.PI)
-              // 半圆的滑动范围判断
-              if (hd <= 0.875 && hd >= 0.125) {
-                  this.draw(hd)
-                  this.allHD = hd
+            var k = this.getXY(e,this.$refs.canvas)
+            var r = Math.atan2(k.x-this.ox, this.oy-k.y)
+            var hd = (Math.PI+r)/(2*Math.PI)
+            // 半圆的滑动范围判断
+            if(this.deviceAttrs.mode == 'kitchen') {
+              if(hd <= 0.375 && hd >= 0.125) {
+                this.draw(hd)
+                this.allHD = hd
               }else{
                 return
               }
+            } else if(this.deviceAttrs.childLock == 'on') {
+              if (hd <= 0.45 && hd >= 0.125) {
+                this.br = 20
+                this.draw(hd)
+                this.allHD = hd
+              }else{
+                return
+              }
+            } else {
+              if(hd <= 0.875 && hd >= 0.125) {
+                this.draw(hd)
+                this.allHD = hd
+              }else{
+                return
+              }
+            }
           }
       }, false)
 
       this.$refs.canvas.addEventListener(on.end,()=> {
-        this.br = 15
-        this.draw(this.allHD)
         if (this.isError || this.isOffline||this.isClose) return
-          this.moveFlag = false
-          if (isMove) {
-            this.controlDevice('setWTemp',this.centigrade)
-            .then((res) => {
-              if (res) {
-                if (res == null) {
-                  HdSmart.UI.toast('操作失败')
-                }
+        this.moveFlag = false
+        console.log('进来了end', this.allHD)
+        if(this.allHD <= 0.875 && this.allHD >= 0.125) {
+          this.br = 15
+          this.draw(this.allHD)
+          this.allFlag = true
+          this.controlDevice('setWTemp',this.centigrade)
+          .then((res) => {
+            if (res) {
+              if (res == null) {
+                HdSmart.UI.toast('操作失败')
               }
-            })
-          }
-        isMove = false
+            }
+          })
+        }else{
+          return
+        }
+
       }, false)
     })
   },
@@ -560,7 +603,6 @@ export default {
       this.ctx.shadowBlur = 4
       this.ctx.shadowColor = "rgba(0, 0, 0, 0.1)"
       let d =  this.offset(n*2*Math.PI,this.or)
-      // console.log('d', d)
       // 开机显示
       if (!this.isError && this.deviceAttrs.switch=='on'&&!this.isOffline) {
         this.ctx.arc(this.ox+d.x,this.oy+d.y,this.br,0,2*Math.PI,true)
@@ -609,7 +651,8 @@ export default {
     setMode(val) {
       if(this.isError || this.isClose||this.isOffline) return
       HdSmart.UI.vibrate()
-      if (val == this.deviceAttrs.mode ) return
+      if(val == this.deviceAttrs.mode ) return
+      if(this.deviceAttrs.waterState == 'on' && val != 'common') return HdSmart.UI.toast('出水中只能切换普通模式')
       this.controlDevice('mode', val)
        .then((res) => {
          if (res) {
@@ -671,6 +714,45 @@ export default {
         }
       }
       this.allHD = 0
+
+      if(this.deviceAttrs.mode == 'kitchen') {
+        if(temp > 45 && val == 'add') {
+          return HdSmart.UI.toast('当前模式已调至最高')
+        } else if(temp > 45 && val != 'add') {
+          return this.controlDevice('setWTemp', 45)
+          .then((res) => {
+            if (res) {
+              if(res.code == 0) {
+                this.setTemperatureDis = false
+              }
+            }
+            if(res == null){
+              HdSmart.UI.toast('操作失败')
+            }
+          })
+        }
+        if(temp < 35) return HdSmart.UI.toast('当前模式已调至最低')
+      }
+
+      if(this.deviceAttrs.childLock == 'on') {
+        if(temp > 48 && val == 'add') {
+          return HdSmart.UI.toast('童锁温度已调至最高')
+        } else if(temp > 48 && val != 'add') {
+          return this.controlDevice('setWTemp', 48)
+          .then((res) => {
+            if (res) {
+              if(res.code == 0) {
+                this.setTemperatureDis = false
+              }
+            }
+            if(res == null){
+              HdSmart.UI.toast('操作失败')
+            }
+          })
+        }
+        if(temp < 35) return HdSmart.UI.toast('童锁温度已调至最高')
+      }
+
       this.controlDevice('setWTemp', temp)
        .then((res) => {
           if (res) {
@@ -736,7 +818,7 @@ export default {
     height: 100vh;
   }
 .canvas {
-  width: 560px;
+  // width: 560px;
 }
 .page {
   &::before{
@@ -813,44 +895,45 @@ export default {
       zoom: 0.5;
       .showtemp{
         position: absolute;
-        top: 45%;
-        left: 49.5%;
-        width: 280px;
-        height: 280px;
+        top: 50%;
+        left: 50%;
+        // width: 400px;
+        // height: 400px;
         transform: translate(-50%, -50%);
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
         .tm{
           // margin-top: 60PX;
           font-family: Rajdhani-Regular;
           position: relative;
-          font-size: 160px;
+          font-size: 320px;
           color: #fff;
           text-align: center;
-          transform: scale(2);
+          // transform: scale(2);
           sup{
             position: absolute;
             top: -5px;
             right: -22px;
             font-size: 24px;
             color: #fff;
-            transform: scale(1);
+            // transform: scale(1);
           }
         }
         .c-mode{
           font-family: Rajdhani-Regular;
           position: absolute;
-          transform: translate(-50%,-50%);
-          top: 120%;
-          left: 50%;
-          width: 216px;
-          height: 48px;
+          position: relative;
           font-size: 24px;
+          height: 36px;
+          line-height: 36px;
           text-align: center;
-          line-height: 48px;
           zoom:2;
           color: #fff;
+          &.color {
+            color: #FF59DA;
+          }
         }
       }
       .cover{
