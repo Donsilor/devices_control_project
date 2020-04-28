@@ -657,7 +657,7 @@ export default {
       .then((res) => {
           if (res) {
             if(res.code == 0) {
-                this.deviceAttrs.switch = switchstatus
+                // this.deviceAttrs.switch = switchstatus
             }
           }
           if(res == null){
