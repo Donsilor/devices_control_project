@@ -1,5 +1,5 @@
 <template>
-  <div id="chart"></div>
+  <div ref="chart" id="chart"></div>
 </template>
 
 <script>
@@ -30,7 +30,7 @@
       }
     },
     mounted() {
-      this.mychart = Echart.init(document.getElementById('chart'));
+      this.mychart = Echart.init(this.$refs.chart);
       this.mychart.setOption(this.options)
     }
   }
@@ -39,6 +39,6 @@
 <style scoped>
   #chart {
     width: 100%;
-    height: 650px;
+    height: 550px;
   }
 </style>
