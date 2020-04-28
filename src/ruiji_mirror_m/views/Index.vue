@@ -23,27 +23,7 @@
     data() {
       return {
         bloodData:[],
-        fatData:[{
-          attribute: {
-            createTime: "2020-04-26 17:02:00",
-            value1: "0",
-            value10: "0.0",
-            value11: "0",
-            value2: "0",
-            value3: "0",
-            value4: "0.0",
-            value5: "0.0",
-            value6: 0,
-            value7: "0.0",
-            value8: "0.0",
-            value9: "0.0",
-          },
-          "device_id": 8087252,
-          "family_id": 27225,
-          "status_modified_at": 1587892191082,
-          type: "395318.bmi",
-          "updated_at": 1587892191,
-        }],
+        fatData:[],
         currentIndex: 0,
       }
     },

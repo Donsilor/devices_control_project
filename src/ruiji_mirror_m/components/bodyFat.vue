@@ -45,6 +45,13 @@
     data() {
       return {
         BMI: 0,
+        lineColor:  new Echart.graphic.LinearGradient(1, 0, 0, 0, [{
+           offset: 0,
+           color: '#1EB4F2'
+         }, {
+           offset: 1,
+           color: '#713DF4'
+        }]),//线条渐变色
         sex: 0,
         muscleRate: 0,
         bodyFatRate: 0,
@@ -112,7 +119,7 @@
             return item.attribute.createTime
           })
           this.options.series = [
-            creatSerie(Echart, '#713DF4','体重', this.weightList)
+            creatSerie(Echart, 'rgba(74,118,215)','体重', this.weightList, this.lineColor)
           ]
           this.options.xAxis[0].data = this.timeList
 
@@ -127,16 +134,16 @@
         this.currentIndex = index
         if (index ===0) {
           this.options.series = [
-            creatSerie(Echart,'#713DF4','体重', this.weightList)
+            creatSerie(Echart,'rgba(74,118,215)','体重', this.weightList, this.lineColor)
           ]
 
         }else if (index ===1){
           this.options.series = [
-            creatSerie(Echart,'#713DF4','体脂率', this.bodyFatList)
+            creatSerie(Echart,'rgba(74,118,215)','体脂率', this.bodyFatList,this.lineColor)
           ]
         } else if (index ===2){
           this.options.series = [
-            creatSerie(Echart,'#713DF4','骨骼肌率', this.muscleList)
+            creatSerie(Echart,'rgba(74,118,215)','骨骼肌率', this.muscleList,this.lineColor)
           ]
         }
 

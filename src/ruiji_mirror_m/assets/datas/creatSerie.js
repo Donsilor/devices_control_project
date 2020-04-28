@@ -1,5 +1,12 @@
 
-const creatSerie =function (Echart,color,name, data) {
+const creatSerie =function (Echart,color,name, data,lineColor) {
+  // new Echart.graphic.LinearGradient(0, 0, 1, 0, [{
+  //   offset: 0,
+  //   color: '#0000FF'
+  // }, {
+  //   offset: 1,
+  //   color: '#CD5C5C'
+  // }]),//线条渐变色
   return {
     type: 'line',
     name:name,
@@ -9,17 +16,11 @@ const creatSerie =function (Echart,color,name, data) {
     itemStyle: {
       normal: {
         color: color,//折线点的颜色
-        // lineStyle: {        // 系列级个性化折线样式
-        //   width: 2,
-        //   type: 'solid',
-        //   color: new Echart.graphic.LinearGradient(0, 0, 1, 0, [{
-        //     offset: 0,
-        //     color: '#0000FF'
-        //   }, {
-        //     offset: 1,
-        //     color: '#CD5C5C'
-        //   }]),//线条渐变色
-        // }
+        lineStyle: {        // 系列级个性化折线样式
+          width: 2,
+          type: 'solid',
+          color:lineColor||color
+        }
       }
     },
     areaStyle: {
