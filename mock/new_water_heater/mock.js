@@ -28,7 +28,8 @@ var res = {
   "curAff": "75", //实时用水
   "totalWater": "4442.2", //累计用水
   "heatState": "off", //加热状态
-  "waterState": 'on' //出水状态
+  "waterState": 'on', //出水状态
+  "err": ''
 }
 export function generateSnapShot() {
   return Mock.mock({
