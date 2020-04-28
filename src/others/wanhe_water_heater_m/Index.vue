@@ -31,8 +31,11 @@
               v-show="isError || isOffline||deviceAttrs.switch == 'off'"
               :class="['c-mode']">当前温度--°C</div>
             <div
-              v-show="isError || isOffline||deviceAttrs.waterState == 'on'"
+              v-if="!isClose && !isError && !isOffline && deviceAttrs.waterState == 'on'"
               :class="['c-mode color']">出水中</div>
+            <div
+              v-else
+              :class="['c-mode color']">&nbsp;</div>
           </div>
           <canvas
             ref="canvas"
@@ -144,17 +147,23 @@
         ref="mode"
         :mode="deviceAttrs.mode"
         @setMode="setMode" />
+      <!--报错弹框-->
+      <error
+        ref="error"
+        :error="deviceAttrs.err"/>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex'
-import modelMode from './components/model-mode'
+import modelMode from './components/model-mode.vue'
+import error from './components/err.vue'
 const [MIN_TEMP, MAX_TEMP] = [35, 65]
 export default {
   components: {
     modelMode,
+    error
   },
   data() {
     return {
@@ -204,7 +213,7 @@ export default {
       return this.deviceAttrs.connectivity == 'online'?false:true
     },
     isError() {
-      return this.deviceAttrs.error ? true : false
+      return this.deviceAttrs.err ? true : false
     },
     modeName() {
       /* eslint-disable no-unreachable */
@@ -237,6 +246,11 @@ export default {
   },
   watch: {
     "device.stateChange"(){
+      if(this.deviceAttrs.err) {
+        this.$refs.error.show = true
+      } else {
+        this.$refs.error.show = false
+      }
       this.allFlag = false
       if(this.allHD) {
         this.draw(this.allHD)
@@ -257,8 +271,12 @@ export default {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
-            this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
-            // this.allHD = ((this.deviceAttrs.setWTemp)-30)/40
+          if(this.deviceAttrs.err) {
+            this.$refs.error.show = true
+          } else {
+            this.$refs.error.show = false
+          }
+          this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
         })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -818,7 +836,7 @@ export default {
     height: 100vh;
   }
 .canvas {
-  // width: 560px;
+  width: 560px;
 }
 .page {
   &::before{
