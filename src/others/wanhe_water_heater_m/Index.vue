@@ -200,6 +200,7 @@ export default {
       allHD: 0,
       allFlag: false,
       canGentlyMove:true,
+      customizeTemp: false,
     }
   },
 
@@ -258,6 +259,24 @@ export default {
         this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
       }
       this.allHD = 0
+      if(this.deviceAttrs.mode == 'customize1' || this.deviceAttrs.mode == 'customize2' || this.deviceAttrs.mode == 'customize3') {
+        this.customizeTemp = true
+      } else {
+        this.customizeTemp = false
+      }
+      if(this.deviceAttrs.temp) {
+        if(this.deviceAttrs.mode == 'customize1' && this.deviceAttrs.temp.customize1) {
+          this.draw(`${((this.deviceAttrs.temp.customize1)-30)/40}`)
+        } else if(this.deviceAttrs.mode == 'customize2' && this.deviceAttrs.temp.customize2) {
+          this.draw(`${((this.deviceAttrs.temp.customize2)-30)/40}`)
+        } else if(this.deviceAttrs.mode == 'customize3' && this.deviceAttrs.temp.customize3) {
+          this.draw(`${((this.deviceAttrs.temp.customize3)-30)/40}`)
+        } else {
+          this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
+        }
+      } else {
+        this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
+      }
     },
     "hscrolltopp"() {
       if(this.hscrolltopp >= this.hscrolll) {
@@ -276,7 +295,24 @@ export default {
           } else {
             this.$refs.error.show = false
           }
-          this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
+          if(this.deviceAttrs.mode == 'customize1' || this.deviceAttrs.mode == 'customize2' || this.deviceAttrs.mode == 'customize3') {
+            this.customizeTemp = true
+          } else {
+            this.customizeTemp = false
+          }
+          if(this.deviceAttrs.temp) {
+            if(this.deviceAttrs.mode == 'customize1' && this.deviceAttrs.temp.customize1) {
+              this.draw(`${((this.deviceAttrs.temp.customize1)-30)/40}`)
+            } else if(this.deviceAttrs.mode == 'customize2' && this.deviceAttrs.temp.customize2) {
+              this.draw(`${((this.deviceAttrs.temp.customize2)-30)/40}`)
+            } else if(this.deviceAttrs.mode == 'customize3' && this.deviceAttrs.temp.customize3) {
+              this.draw(`${((this.deviceAttrs.temp.customize3)-30)/40}`)
+            } else {
+              this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
+            }
+          } else {
+            this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
+          }
         })
       HdSmart.UI.setStatusBarColor(2)
     })
@@ -396,14 +432,25 @@ export default {
           this.br = 15
           this.draw(this.allHD)
           this.allFlag = true
-          this.controlDevice('setWTemp',this.centigrade)
-          .then((res) => {
-            if (res) {
-              if (res == null) {
-                HdSmart.UI.toast('操作失败')
+          if(this.customizeTemp) {
+            this.controlDevice('setWTemp',this.centigrade, this.deviceAttrs.mode)
+            .then((res) => {
+              if (res) {
+                if (res == null) {
+                  HdSmart.UI.toast('操作失败')
+                }
               }
-            }
-          })
+            })
+          } else {
+            this.controlDevice('setWTemp',this.centigrade)
+            .then((res) => {
+              if (res) {
+                if (res == null) {
+                  HdSmart.UI.toast('操作失败')
+                }
+              }
+            })
+          }
         }else{
           return
         }
@@ -675,7 +722,10 @@ export default {
        .then((res) => {
          if (res) {
            if(res.code == 0) {
-            this.hide()
+             if(val == 'customize1' && this.deviceAttrs.temp.customize1) this.controlDevice('setWTemp', this.deviceAttrs.temp.customize1)
+             if(val == 'customize2' && this.deviceAttrs.temp.customize2) this.controlDevice('setWTemp', this.deviceAttrs.temp.customize2)
+             if(val == 'customize3' && this.deviceAttrs.temp.customize3) this.controlDevice('setWTemp', this.deviceAttrs.temp.customize3)
+              this.hide()
            }
          }
         if(res == null){
@@ -770,18 +820,32 @@ export default {
         }
         if(temp < 35) return HdSmart.UI.toast('童锁温度已调至最高')
       }
-
-      this.controlDevice('setWTemp', temp)
-       .then((res) => {
+      if(this.customizeTemp) {
+        this.controlDevice('setWTemp', temp, this.deviceAttrs.mode)
+        .then((res) => {
           if (res) {
             if(res.code == 0) {
               this.setTemperatureDis = false
             }
           }
         if(res == null){
-           HdSmart.UI.toast('操作失败')
+          HdSmart.UI.toast('操作失败')
         }
        })
+      } else {
+        this.controlDevice('setWTemp', temp)
+        .then((res) => {
+          if (res) {
+            if(res.code == 0) {
+              this.setTemperatureDis = false
+            }
+          }
+          if(res == null){
+          HdSmart.UI.toast('操作失败')
+          }
+       })
+      }
+
     },
     checkSwitch(val) {
       if (this.isError || this.isOffline || this.isClose) return
@@ -807,14 +871,22 @@ export default {
     hide(){
       if(this.$refs.mode.show) this.$refs.mode.show = false
     },
-    controlDevice(attr, value) {
-      let param = {}
+    controlDevice(attr, value, mode) {
+      if(mode) {
+        var param = {
+          'temp': {
+            'customize1': mode == 'customize1' ? value : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize1 : 0,
+            'customize2': mode == 'customize2' ? value : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize2 : 0,
+            'customize3': mode == 'customize3' ? value : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize3 : 0,
+          }
+        }
+      }
       return this.doControlDevice({
         nodeid: `airconditioner.main.${attr}`,
         params: {
           attribute: {
             [attr]: value,
-            ...param
+            ...param,
           }
         }
       })
