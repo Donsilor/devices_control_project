@@ -43,9 +43,11 @@
           this.itemTemp = this.deviceAttrs.temperature
         })
         this.requestData('get_dev_status_list', {"type": "blood", "size": 100, "begin": 0}).then(res=>{
+          console.log('get_dev_status_list---blood=====', res)
           this.bloodData=res
         })
         this.requestData('get_dev_status_list', {"type": "bmi", "size": 100, "begin": 0}).then(res=>{
+          console.log('get_dev_status_list---bmi=====', res)
           this.fatData=res
         })
         HdSmart.UI.setStatusBarColor(1)
@@ -60,7 +62,6 @@
       requestData(method, param) {
         return new Promise((resolve, reject) => {
           HdSmart.network.httpRequest(method, param, function (response) {
-            console.log('get_dev_status_list-httpRequest--response=====', response)
             if (!response.error)  {
               resolve(response.list)
             }else {
