@@ -8,10 +8,12 @@
       <div class="title">请输入开关名称</div>
       <div class="txt">
         <input
+          ref="gain"
           v-model="txtVal"
           type="text"
           class="text"
           maxlength="10"
+          autofocus="autofocus"
           @input="txt"
           @blur="handlePhone">
       </div>
@@ -39,6 +41,7 @@
 // .show{
 //   animation: show .2s linear 0s;
 // }
+input:focus { outline: none; }
 input {
   caret-color: rgba(255,255,255,0.5) !important;
 }
@@ -138,20 +141,40 @@ input {
   }
 </style>
 <script>
+import { mapState } from 'vuex'
 export default {
-  props: ['num', 'argv_is_mock'],
+  props: ['num', 'argv_is_mock', 'remarks','chan_num'],
   data() {
     return {
       show: false,
       txtVal: '',
-      flag: false,
-      numLength: false
+      flag: true,
+      numLength: true
     }
+  },
+  computed: {
+    ...mapState(['device']),
   },
   watch: {
     'show'() {
+      if(this.remarks) {
+        this.txtVal = this.remarks
+      } else {
+        if(this.chan_num == 1) this.txtVal = this.device.room_name + '开关'
+        if(this.chan_num == 2 && this.num == 'one') this.txtVal = '左键'
+        if(this.chan_num == 2 && this.num == 'two') this.txtVal = '右键'
+        if(this.chan_num == 3 && this.num == 'one') this.txtVal = '左键'
+        if(this.chan_num == 3 && this.num == 'two') this.txtVal = '中键'
+        if(this.chan_num == 3 && this.num == 'three') this.txtVal = '右键'
+      }
+      this.numLength = true
+      this.flag = true
       if(this.show == false) {
         this.txtVal = ''
+      } else {
+        this.$nextTick(() => {
+          this.$refs.gain.focus()
+        },100)
       }
     }
   },
@@ -181,7 +204,7 @@ export default {
       // 修复ios 隐藏软键盘页面没有下滑问题
       setTimeout(() => {
         window.scrollTo(0, 0)
-      }, 300)
+      }, 0)
     },
     setWind(){
       if(argv_is_mock) {

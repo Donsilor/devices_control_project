@@ -15,7 +15,7 @@
             v-longpress:[two]="showMode"
             v-if="deviceAttrs.list && deviceAttrs.chan_num==4"
             :class="['panel', {'panelActive': deviceAttrs.list[1].chan_status == 'on'}, 'panel-two']"
-            data-id="one"
+            data-id="two"
             @click="touchstart('two')"
           >
             <div class="panel-btn center">
@@ -27,7 +27,7 @@
                   ref="two"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[1].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[1].chan_name?switchTitle1:'左上键' }}</div>
+                <div class="btn-name">{{ name1?name1:'左上键' }}</div>
               </div>
             </div>
           </div>
@@ -60,7 +60,7 @@
                   ref="three"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[2].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[2].chan_name?switchTitle2:'右上键' }}</div>
+                <div class="btn-name">{{ name2?name2:'右上键' }}</div>
               </div>
             </div>
           </div>
@@ -95,7 +95,7 @@
                   ref="one"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[0].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[0].chan_name?switchTitle0:'左下键' }}</div>
+                <div class="btn-name">{{ name0?name0:'左下键' }}</div>
               </div>
             </div>
           </div>
@@ -129,7 +129,7 @@
                   ref="four"
                   :class="['btn-switch', 'center', {'active': deviceAttrs.list[3].chan_status == 'on'}]"
                 />
-                <div class="btn-name">{{ deviceAttrs.list[3].chan_name?switchTitle3:'右下键' }}</div>
+                <div class="btn-name">{{ name3?name3:'右下键' }}</div>
               </div>
             </div>
           </div>
@@ -178,6 +178,7 @@
       <!--弹框-->
       <model-swing
         ref="swing"
+        :remarks="remarks"
         :num="num"
         @setWind="setWind" />
     </div>
@@ -198,48 +199,57 @@ export default {
       flagOff: true,
       timeOutEvent: '',
       timeOutEventOK: false,
-      num: ''
+      num: '',
+      remarks: '',
+      name0: '',
+      name1: '',
+      name2: '',
+      name3: '',
+      initial_name0: '',
+      initial_name1: '',
+      initial_name2: '',
+      initial_name3: '',
     }
   },
   computed: {
     ...mapGetters(['isClose', 'isOffline', 'networkStatus']),
     ...mapState(['device', 'deviceAttrs']),
-    switchTitle0() {
-      if(this.deviceAttrs.list[0].chan_name) {
-        if(this.deviceAttrs.list[0].chan_name.length > 6) {
-          return this.deviceAttrs.list[0].chan_name.slice(0,6) + '...'
-        } else {
-          return this.deviceAttrs.list[0].chan_name
-        }
-      }
-    },
-    switchTitle1() {
-      if(this.deviceAttrs.list[1].chan_name) {
-        if(this.deviceAttrs.list[1].chan_name.length > 6) {
-          return this.deviceAttrs.list[1].chan_name.slice(0,6) + '...'
-        } else {
-          return this.deviceAttrs.list[1].chan_name
-        }
-      }
-    },
-    switchTitle2() {
-      if(this.deviceAttrs.list[2].chan_name) {
-        if(this.deviceAttrs.list[2].chan_name.length > 6) {
-          return this.deviceAttrs.list[2].chan_name.slice(0,6) + '...'
-        } else {
-          return this.deviceAttrs.list[2].chan_name
-        }
-      }
-    },
-    switchTitle3() {
-      if(this.deviceAttrs.list[3].chan_name) {
-        if(this.deviceAttrs.list[3].chan_name.length > 6) {
-          return this.deviceAttrs.list[3].chan_name.slice(0,6) + '...'
-        } else {
-          return this.deviceAttrs.list[3].chan_name
-        }
-      }
-    },
+    // switchTitle0() {
+    //   if(this.deviceAttrs.list[0].chan_name) {
+    //     if(this.deviceAttrs.list[0].chan_name.length > 6) {
+    //       return this.deviceAttrs.list[0].chan_name.slice(0,6) + '...'
+    //     } else {
+    //       return this.deviceAttrs.list[0].chan_name
+    //     }
+    //   }
+    // },
+    // switchTitle1() {
+    //   if(this.deviceAttrs.list[1].chan_name) {
+    //     if(this.deviceAttrs.list[1].chan_name.length > 6) {
+    //       return this.deviceAttrs.list[1].chan_name.slice(0,6) + '...'
+    //     } else {
+    //       return this.deviceAttrs.list[1].chan_name
+    //     }
+    //   }
+    // },
+    // switchTitle2() {
+    //   if(this.deviceAttrs.list[2].chan_name) {
+    //     if(this.deviceAttrs.list[2].chan_name.length > 6) {
+    //       return this.deviceAttrs.list[2].chan_name.slice(0,6) + '...'
+    //     } else {
+    //       return this.deviceAttrs.list[2].chan_name
+    //     }
+    //   }
+    // },
+    // switchTitle3() {
+    //   if(this.deviceAttrs.list[3].chan_name) {
+    //     if(this.deviceAttrs.list[3].chan_name.length > 6) {
+    //       return this.deviceAttrs.list[3].chan_name.slice(0,6) + '...'
+    //     } else {
+    //       return this.deviceAttrs.list[3].chan_name
+    //     }
+    //   }
+    // },
   },
   watch: {
     'deviceAttrs.list'() {
@@ -258,6 +268,40 @@ export default {
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
+      .then(() => {
+        if(this.deviceAttrs.list[0].chan_name) {
+          this.initial_name0 = this.deviceAttrs.list[0].chan_name
+          if(this.deviceAttrs.list[0].chan_name.length > 6) {
+            this.name0 = this.deviceAttrs.list[0].chan_name.slice(0,6) + '...'
+          } else {
+            this.name0 = this.deviceAttrs.list[0].chan_name
+          }
+        }
+        if(this.deviceAttrs.list[1].chan_name) {
+          this.initial_name1 = this.deviceAttrs.list[1].chan_name
+          if(this.deviceAttrs.list[1].chan_name.length > 6) {
+            this.name1 = this.deviceAttrs.list[1].chan_name.slice(0,6) + '...'
+          } else {
+            this.name1 = this.deviceAttrs.list[1].chan_name
+          }
+        }
+        if(this.deviceAttrs.list[2].chan_name) {
+          this.initial_name2 = this.deviceAttrs.list[2].chan_name
+          if(this.deviceAttrs.list[2].chan_name.length > 6) {
+            this.name2 = this.deviceAttrs.list[2].chan_name.slice(0,6) + '...'
+          } else {
+            this.name2 = this.deviceAttrs.list[2].chan_name
+          }
+        }
+        if(this.deviceAttrs.list[3].chan_name) {
+          this.initial_name3 = this.deviceAttrs.list[3].chan_name
+          if(this.deviceAttrs.list[3].chan_name.length > 6) {
+            this.name3 = this.deviceAttrs.list[3].chan_name.slice(0,6) + '...'
+          } else {
+            this.name3 = this.deviceAttrs.list[3].chan_name
+          }
+        }
+      })
       .catch((err) => {
         if(err.code == -90004) {
           HdSmart.UI.toast('网络超时，请重试')
@@ -327,16 +371,48 @@ export default {
     },
     showMode(val) {
       if(window.house_holder_status == 0) return HdSmart.UI.toast('只有户主有编辑权限')
+      if(val == 'one') this.remarks = this.initial_name0
+      if(val == 'two') this.remarks = this.initial_name1
+      if(val == 'three') this.remarks = this.initial_name2
+      if(val == 'four') this.remarks = this.initial_name3
       this.num = val
       this.$refs.swing.show = true
       // this.timeOutEventOK = false
     },
     async setWind(val) {
       try {
-        if(this.num == 'one') await this.updateSwitchName(val, 0)
-        if(this.num == 'two') await this.updateSwitchName(val, 1)
-        if(this.num == 'three') await this.updateSwitchName(val, 2)
-        if(this.num == 'four') await this.updateSwitchName(val, 3)
+        if(this.num == 'one') {
+          await this.updateSwitchName(val, 0)
+          this.initial_name0 = val
+          if(val.length > 6) {
+            val = val.slice(0,6) + '...'
+          }
+          this.name0 = val
+        }
+        if(this.num == 'two') {
+          await this.updateSwitchName(val, 1)
+          this.initial_name1 = val
+          if(val.length > 6) {
+            val = val.slice(0,6) + '...'
+          }
+          this.name1 = val
+        }
+        if(this.num == 'three') {
+          await this.updateSwitchName(val, 2)
+          this.initial_name2 = val
+          if(val.length > 6) {
+            val = val.slice(0,6) + '...'
+          }
+          this.name2 = val
+        }
+        if(this.num == 'four') {
+          await this.updateSwitchName(val, 3)
+          this.initial_name3 = val
+          if(val.length > 6) {
+            val = val.slice(0,6) + '...'
+          }
+          this.name3 = val
+        }
         this.$refs.swing.show = false
       }
       catch(err) {
@@ -535,7 +611,8 @@ body {
     filter: blur(12px);
   }
   .main {
-    margin-top: 200px;
+    // margin-top: 200px;
+    margin-top: 15%;
     position: relative;
     .bg {
       display: flex;

@@ -20,16 +20,21 @@ var res = {
   // 万和热水器属性
   "setWTemp": 55, //预设温度
   "outWTemp": 37, //当前温度
-  "mode": "kitchen", //模式
-  "childLock": "on", //童锁
+  "mode": "customize2", //模式
+  "childLock": "off", //童锁
   "antiFreeze": "on", //智能防冻
   "curGas": "20", //实时用气
   "totalGas": "664.9", //累计用气
   "curAff": "75", //实时用水
   "totalWater": "4442.2", //累计用水
   "heatState": "off", //加热状态
-  "waterState": 'on', //出水状态
-  "err": ''
+  "waterState": 'off', //出水状态
+  "err": '',
+  // "temp": {
+  //   "customize1": 36,
+  //   "customize2": 65,
+  //   "customize3": 0,
+  // }
 }
 export function generateSnapShot() {
   return Mock.mock({
