@@ -253,12 +253,12 @@ export default {
         this.$refs.error.show = false
       }
       this.allFlag = false
-      if(this.allHD) {
-        this.draw(this.allHD)
-      } else {
-        this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
-      }
-      this.allHD = 0
+      // if(this.allHD) {
+      //   this.draw(this.allHD)
+      // } else {
+      //   this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
+      // }
+      // this.allHD = 0
       if(this.deviceAttrs.mode == 'customize1' || this.deviceAttrs.mode == 'customize2' || this.deviceAttrs.mode == 'customize3') {
         this.customizeTemp = true
       } else {
@@ -266,17 +266,34 @@ export default {
       }
       if(this.deviceAttrs.temp) {
         if(this.deviceAttrs.mode == 'customize1' && this.deviceAttrs.temp.customize1) {
-          this.draw(`${((this.deviceAttrs.temp.customize1)-30)/40}`)
+          if(this.allHD) {
+            this.draw(this.allHD)
+          } else {
+            this.draw(`${((this.deviceAttrs.temp.customize1)-30)/40}`)
+          }
         } else if(this.deviceAttrs.mode == 'customize2' && this.deviceAttrs.temp.customize2) {
-          this.draw(`${((this.deviceAttrs.temp.customize2)-30)/40}`)
+          if(this.allHD) {
+            this.draw(this.allHD)
+          } else {
+            this.draw(`${((this.deviceAttrs.temp.customize2)-30)/40}`)
+          }
         } else if(this.deviceAttrs.mode == 'customize3' && this.deviceAttrs.temp.customize3) {
-          this.draw(`${((this.deviceAttrs.temp.customize3)-30)/40}`)
+          if(this.allHD) {
+            this.draw(this.allHD)
+          } else {
+            this.draw(`${((this.deviceAttrs.temp.customize3)-30)/40}`)
+          }
+        } else if(this.allHD) {
+          this.draw(this.allHD)
         } else {
           this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
         }
+      } else if(this.allHD) {
+        this.draw(this.allHD)
       } else {
         this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
       }
+      this.allHD = 0
     },
     "hscrolltopp"() {
       if(this.hscrolltopp >= this.hscrolll) {
