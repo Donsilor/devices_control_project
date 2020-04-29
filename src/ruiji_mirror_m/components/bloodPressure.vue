@@ -98,7 +98,7 @@
     watch: {
       bloodData: {
         handler(value) {
-          if (!value) return
+          if (!value||value.length===0) return
           this.sPressure = value[0] && value[0].attribute.value1
           this.rPressure = value[0] && value[0].attribute.value2
           this.heartRate = value[0] && value[0].attribute.value3
