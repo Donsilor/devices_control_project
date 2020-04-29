@@ -1,5 +1,4 @@
 const creatSerie = function (color, name, data, lineColor) {
-  console.log('addfdfdfd=====', arguments)
   return {
     type: 'line',
     name: name,
