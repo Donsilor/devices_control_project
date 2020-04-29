@@ -101,6 +101,7 @@
     watch:{
       fatData:{
         handler(value) {
+          if (value.length===0)return
           this.weight = value[0].attribute.value1
           this.bodyFatRate = value[0].attribute.value8
           this.muscleRate = value[0].attribute.value3
