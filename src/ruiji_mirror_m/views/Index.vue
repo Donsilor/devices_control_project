@@ -61,8 +61,8 @@
         return new Promise((resolve, reject) => {
           HdSmart.network.httpRequest(method, param, function (response) {
             console.log('get_dev_status_list-httpRequest--response=====', response)
-            if (Array.isArray(response))  {
-              resolve(response)
+            if (!response.error)  {
+              resolve(response.list)
             }else {
               HdSmart.UI.toast('请求错误', 1500)
             }

@@ -8,9 +8,9 @@ import router from './router'
 import '@lib/base/reset.less'
 
 import store from '@lib/store/index.js'
-import FastClick from 'fastclick'
+// import FastClick from 'fastclick'
 
-FastClick.attach(document.body)
+// FastClick.attach(document.body)
 import * as filters from './filters' // global filters
 // register global utility filters.
 Object.keys(filters).forEach(key => {
