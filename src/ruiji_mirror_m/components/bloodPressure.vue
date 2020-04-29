@@ -99,9 +99,9 @@
       bloodData: {
         handler(value) {
           if (!value) return
-          this.sPressure = value[0]&&value[0].attribute.value1
-          this.rPressure = value[0]&&value[0].attribute.value2
-          this.heartRate = value[0]&&value[0].attribute.value3
+          this.sPressure = value[0] && value[0].attribute.value1
+          this.rPressure = value[0] && value[0].attribute.value2
+          this.heartRate = value[0] && value[0].attribute.value3
           this.bodyDatas[0].value = this.sPressure
           this.bodyDatas[1].value = this.rPressure
           this.bodyDatas[2].value = this.heartRate
@@ -120,12 +120,12 @@
           })
 
           this.options.series = [
-            creatSerie(Echart, '#713DF4','舒张压', this.rPressureList),
-            creatSerie(Echart, '#3198F2','收缩压', this.sPressureList)
+            creatSerie('#713DF4', '舒张压', this.rPressureList),
+            creatSerie('#3198F2', '收缩压', this.sPressureList)
           ]
           this.options.xAxis[0].data = this.timeList
-          this.options.dataZoom[0].startValue = this.timeList.length-5
-          this.options.dataZoom[0].endValue = this.timeList.length -1
+          this.options.dataZoom[0].startValue = this.timeList.length - 5
+          this.options.dataZoom[0].endValue = this.timeList.length - 1
         },
         immediate: true
       }
@@ -143,12 +143,12 @@
         this.currentIndex = index
         if (index === 3) {
           this.options.series = [
-            creatSerie(Echart, '#713DF4','舒张压', this.rPressureList),
-            creatSerie(Echart, '#3198F2', '收缩压',this.sPressureList)
+            creatSerie('#713DF4', '舒张压', this.rPressureList),
+            creatSerie('#3198F2', '收缩压', this.sPressureList)
           ]
         } else {
           this.options.series = [
-            creatSerie(Echart, '#1EB4F2','心率', this.heartRateList)
+            creatSerie('#1EB4F2', '心率', this.heartRateList)
           ]
         }
       }
@@ -164,10 +164,12 @@
     background: #19191C;
     padding-top: 60px;
     padding: 60px 0 10px;
-   .title,.date,.datas,.trend{
-     padding-left: 24px;
-     padding-right: 24px;
-   }
+
+    .title, .date, .datas, .trend {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
     .title {
       font-size: 36px;
     }
@@ -209,13 +211,16 @@
       }
     }
   }
-  .no-data{
+
+  .no-data {
     text-align: center;
     margin-top: 302px;
+
     img {
       width: 104px;
     }
-    p{
+
+    p {
       width: 100%;
       opacity: 0.2;
       font-family: PingFangSC-Light;

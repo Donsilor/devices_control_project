@@ -1,6 +1,16 @@
 
 
 const currentYear = new Date().getFullYear()
+function getName(idName, seriesName) {
+  idName = idName.replace('0','')
+  let name = ''
+  if (idName===seriesName) {
+    name = seriesName
+  }else {
+    name = idName
+  }
+  return name
+}
 export default {
   grid: {
     left: '6.5%',
@@ -16,14 +26,25 @@ export default {
     backgroundColor: 'rgba(245, 245, 245, 0.8)',
     borderWidth: 1,
     formatter:function (tipData) {
-      console.log('tipData====', tipData)
-      if (tipData.length>1) {
-        return tipData[0].name.slice(5,16).replace('-','/')+
-          `<br/>`+`${tipData[1].seriesName}:`+`${tipData[1].value}`+`<br/>`+
-          `${tipData[1].seriesName}:${tipData[0].value}`
+      let name = getName(tipData[0].seriesId, tipData[0].seriesName)
+      let unit = ''
+      if (name.includes('舒张压')) {
+        unit='/mmhg'
+      }else if (name.includes('体重')){
+        unit='/kg'
+      } else if (name.includes('心率')){
+        unit='/bpm'
+      }else {
+        unit = '%'
       }
-      return tipData[0].name.slice(5,16).replace('-','/')+
-        `<br/>`+ `${tipData[0].seriesName}:${tipData[0].value}`
+      if (tipData.length>1) {
+        let name2 = getName(tipData[1].seriesId, tipData[1].seriesName)
+        return tipData[0].name.slice(5,16).replace('-','/')+
+          `<br/>`+`${name2}:`+`${tipData[1].value}${unit}`+`<br/>`+
+          `${name}: ${tipData[0].value}${unit}`
+      }
+      return tipData[0].name.slice(5,16).replace('-','')+
+        `<br/>`+ `${name}: ${tipData[0].value}${unit}`
 
     },
     padding: 10,
@@ -33,22 +54,18 @@ export default {
     },
     position: function (pos, params, el, elRect, size) {
       // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
-      console.log('pos====', pos)
-      console.log('size====', size)
-      console.log('params====', params)
       let left = 0
       if (pos[0]>size.viewSize[0]/2) {
         left = pos[0]- 120
       }else {
         left = pos[0]
       }
-      console.log('left====', left)
       return [size.viewSize[0]/2 - size.contentSize[0]/2+20, '0%'];
     },
     extraCssText: '' +
       'width: 121px;' +
-      'height:57px;' +
       'background-image: linear-gradient(225deg, #1EB4F2 0%, #713DF4 100%);' +
+      'font-size:14px;'+
       'line-height:20px'
   },
   dataZoom: [

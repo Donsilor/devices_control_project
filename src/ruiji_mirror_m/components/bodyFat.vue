@@ -120,9 +120,11 @@
             return item.attribute.createTime
           })
           this.options.series = [
-            creatSerie(Echart, 'rgba(74,118,215)','体重', this.weightList, this.lineColor)
+            creatSerie('#3198F2','体重', this.weightList, this.lineColor)
           ]
           this.options.xAxis[0].data = this.timeList
+          this.options.dataZoom[0].startValue = this.timeList.length-5
+          this.options.dataZoom[0].endValue = this.timeList.length -1
 
         },
         immediate:true
@@ -135,16 +137,16 @@
         this.currentIndex = index
         if (index ===0) {
           this.options.series = [
-            creatSerie(Echart,'rgba(74,118,215)','体重', this.weightList, this.lineColor)
+            creatSerie('#3198F2','体重', this.weightList, this.lineColor)
           ]
 
         }else if (index ===1){
           this.options.series = [
-            creatSerie(Echart,'rgba(74,118,215)','体脂率', this.bodyFatList,this.lineColor)
+            creatSerie('#3198F2','体脂率', this.bodyFatList,this.lineColor)
           ]
         } else if (index ===2){
           this.options.series = [
-            creatSerie(Echart,'rgba(74,118,215)','骨骼肌率', this.muscleList,this.lineColor)
+            creatSerie('#3198F2','骨骼肌率', this.muscleList,this.lineColor)
           ]
         }
 
