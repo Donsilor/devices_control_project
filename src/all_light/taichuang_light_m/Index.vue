@@ -66,6 +66,7 @@ export default {
           color: '#F9BB6B'
         }
       ],
+      allHD: 0,
     }
   },
   computed: {
@@ -81,7 +82,12 @@ export default {
   watch: {
     'device.stateChange'() {
       if(this.modeVal != '01') {
-        this.draw(`${this.deviceAttrs.level/255}`)
+        if(this.allHD) {
+          this.draw(this.allHD)
+        } else {
+          this.draw(`${this.deviceAttrs.level/255}`)
+        }
+        this.allHD = 0
       } else {
         this.draw(1)
       }
@@ -134,6 +140,7 @@ export default {
             this.flag = hd
             if (hd <= 1 && hd >= 0) {
               this.draw(hd)
+              this.allHD = hd
             }else{
               return
             }
@@ -154,6 +161,7 @@ export default {
               // 半圆的滑动范围判断
               if (hd <= 1 && hd >= 0) {
                 this.draw(hd)
+                this.allHD = hd
               }else{
                 return
               }
@@ -162,7 +170,8 @@ export default {
 
           this.$refs.canvas.addEventListener(on.end,()=> {
             this.br = 15
-            this.draw(this.brightness/100)
+            // this.draw(this.brightness/100)
+            this.draw(this.allHD)
             if (this.isOffline||this.isClose|| this.networkStatus == -1) return
             this.moveFlag = false
             this.controlDevice('level',parseInt(this.brightness*2.55))
