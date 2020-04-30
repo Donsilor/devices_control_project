@@ -105,7 +105,7 @@
           this.weight = value[0].attribute.value1
           this.bodyFatRate = value[0].attribute.value8
           this.muscleRate = value[0].attribute.value3
-          this.BMI = value[0].attribute.value11
+          this.BMI = value[0].attribute.value11 || 0
           let arr = [...value].reverse()
           this.weightList= arr.map(item=>{
             return item.attribute.value1

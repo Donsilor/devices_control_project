@@ -26,24 +26,25 @@ export default {
     backgroundColor: 'rgba(245, 245, 245, 0.8)',
     borderWidth: 1,
     formatter:function (tipData) {
+      let time = tipData[0].name.slice(5,16).replace('-','/')
       let name = getName(tipData[0].seriesId, tipData[0].seriesName)
       let unit = ''
       if (name.includes('舒张压')) {
-        unit='/mmhg'
+        unit=' mmhg'
       }else if (name.includes('体重')){
-        unit='/kg'
+        unit=' kg'
       } else if (name.includes('心率')){
-        unit='/bpm'
+        unit=' bpm'
       }else {
-        unit = '%'
+        unit = ' %'
       }
       if (tipData.length>1) {
         let name2 = getName(tipData[1].seriesId, tipData[1].seriesName)
-        return tipData[0].name.slice(5,16).replace('-','/')+
+        return time+
           `<br/>`+`${name2}:`+`${tipData[1].value}${unit}`+`<br/>`+
           `${name}: ${tipData[0].value}${unit}`
       }
-      return tipData[0].name.slice(5,16).replace('-','')+
+      return time+
         `<br/>`+ `${name}: ${tipData[0].value}${unit}`
 
     },
