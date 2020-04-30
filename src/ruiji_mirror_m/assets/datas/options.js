@@ -30,13 +30,13 @@ export default {
       let name = getName(tipData[0].seriesId, tipData[0].seriesName)
       let unit = ''
       if (name.includes('舒张压')) {
-        unit=' mmhg'
+        unit='mmhg'
       }else if (name.includes('体重')){
-        unit=' kg'
+        unit='kg'
       } else if (name.includes('心率')){
-        unit=' bpm'
+        unit='bpm'
       }else {
-        unit = ' %'
+        unit = '%'
       }
       if (tipData.length>1) {
         let name2 = getName(tipData[1].seriesId, tipData[1].seriesName)

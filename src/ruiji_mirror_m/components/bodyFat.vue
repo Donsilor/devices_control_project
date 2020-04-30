@@ -102,10 +102,10 @@
       fatData:{
         handler(value) {
           if (!value||value.length===0) return
-          this.weight = value[0].attribute.value1
-          this.bodyFatRate = value[0].attribute.value8
-          this.muscleRate = value[0].attribute.value3
-          this.BMI = value[0].attribute.value11 || 0
+          this.weight = parseFloat(value[0].attribute.value1)
+          this.bodyFatRate = parseFloat(value[0].attribute.value8)
+          this.muscleRate = parseFloat(value[0].attribute.value3)
+          this.BMI = parseFloat(value[0].attribute.value11) || 0
           let arr = [...value].reverse()
           this.weightList= arr.map(item=>{
             return item.attribute.value1

@@ -99,9 +99,9 @@
       bloodData: {
         handler(value) {
           if (!value||value.length===0) return
-          this.sPressure = value[0] && value[0].attribute.value1
-          this.rPressure = value[0] && value[0].attribute.value2
-          this.heartRate = value[0] && value[0].attribute.value3
+          this.sPressure = parseFloat(value[0] && value[0].attribute.value1)
+          this.rPressure = parseFloat(value[0] && value[0].attribute.value2)
+          this.heartRate = parseFloat(value[0] && value[0].attribute.value3)
           this.bodyDatas[0].value = this.sPressure
           this.bodyDatas[1].value = this.rPressure
           this.bodyDatas[2].value = this.heartRate
