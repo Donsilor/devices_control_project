@@ -102,7 +102,7 @@
         }
       },
       'deviceAttrs.WorkState'(val) {
-        if (val == 0) {
+        if (val == 5) {
           if (Math.floor(this.deviceAttrs.RemainingTime) == 0) {
             this.$router.push({path: '/deviceFinish'})
           } else {
