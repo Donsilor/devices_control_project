@@ -94,9 +94,9 @@ export default {
           let arr = value.split(' ')[0].split('-')
           let str = ''
           if (currentYear+''===arr[0]) {
-             str = arr[2]+ ' -- '+ arr[1]
+             str = arr[2]+ ' —— '+ arr[1]
           }else {
-            str = arr[2]+ ' -- '+arr[0]+ '.' + arr[1]
+            str = arr[2]+ ' —— '+arr[0]+ '.' + arr[1]
           }
 
           return str.replace(/ /g, '\n');
