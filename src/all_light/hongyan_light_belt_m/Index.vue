@@ -74,6 +74,7 @@
             color: '#F9BB6B'
           }
         ],
+        allHD: 0,
       }
     },
     computed: {
@@ -104,7 +105,12 @@
     },
     watch: {
       'device.stateChange'() {
-        this.draw(`${this.deviceAttrs.level/255}`)
+        if(this.allHD) {
+          this.draw(this.allHD)
+        } else {
+          this.draw(`${this.deviceAttrs.level/255}`)
+        }
+        this.allHD = 0
       },
       'brightness'() {
         if(this.deviceAttrs.switch_status == 'on' && !this.isOffline&& this.networkStatus != -1) {
@@ -149,6 +155,7 @@
             this.flag = hd
             if (hd <= 1 && hd >= 0) {
               this.draw(hd)
+              this.allHD = hd
             }else{
               return
             }
@@ -176,6 +183,7 @@
             this.flag = hd
             if (hd <= 1 && hd >= 0) {
               this.draw(hd)
+              this.allHD = hd
             }else{
               return
             }
@@ -183,9 +191,10 @@
         }, false)
 
         this.$refs.canvas.addEventListener(on.end,()=> {
-          this.br = 15
-          this.draw(this.brightness/100)
           if (this.isOffline||this.isClose|| this.networkStatus == -1) return
+          this.br = 15
+          // this.draw(this.brightness/100)
+          this.draw(this.allHD)
           this.moveFlag = false
           if(parseInt(this.brightness*2.55) <= 15 && parseInt(this.brightness*2.55) > 0) return this.controlDevice('level',15)
           this.controlDevice('level',parseInt(this.brightness*2.55))

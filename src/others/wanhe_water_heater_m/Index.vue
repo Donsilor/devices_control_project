@@ -360,12 +360,12 @@ export default {
       }
         this.$refs.canvas.addEventListener(on.start,(e)=> {
           e.stopPropagation()
-        if(e.preventDefault){
-            e.preventDefault()
-        }else{
-            e.returnValue = false
-        }
-
+          if(e.preventDefault){
+              e.preventDefault()
+          }else{
+              e.returnValue = false
+          }
+          if(this.deviceAttrs.mode == 'adaptive') return HdSmart.UI.toast('自适应模式无法调节温度')
           this.moveFlag = true
           console.log('进来了start')
           if (this.moveFlag) {
@@ -410,6 +410,7 @@ export default {
         }else{
             e.returnValue = false
         }
+        if(this.deviceAttrs.mode == 'adaptive') return
           if (this.moveFlag) {
             var k = this.getXY(e,this.$refs.canvas)
             var r = Math.atan2(k.x-this.ox, this.oy-k.y)
@@ -443,6 +444,7 @@ export default {
 
       this.$refs.canvas.addEventListener(on.end,()=> {
         if (this.isError || this.isOffline||this.isClose) return
+        if(this.deviceAttrs.mode == 'adaptive') return
         this.moveFlag = false
         console.log('进来了end', this.allHD)
         if(this.allHD <= 0.875 && this.allHD >= 0.125) {
@@ -756,6 +758,7 @@ export default {
     setTemperature(val) {
       if (this.isError || this.isOffline||this.isClose) return
       if(this.allFlag) return
+      if(this.deviceAttrs.mode == 'adaptive') return HdSmart.UI.toast('自适应模式无法调节温度')
       HdSmart.UI.vibrate()
             this.touchstart(val)
       setTimeout(() => {
