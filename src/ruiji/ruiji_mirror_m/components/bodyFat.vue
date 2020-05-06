@@ -32,12 +32,12 @@
 </template>
 
 <script>
-  import lineChart from '@/ruiji_mirror_m/components/lineData.vue'
-  import options from '@/ruiji_mirror_m/assets/datas/options.js'
-  import bodyData from '@/ruiji_mirror_m/components/bodyData.vue'
-  import detailSwitch from '@/ruiji_mirror_m/components/detailSwitch.vue'
+  import lineChart from '@/ruiji/ruiji_mirror_m/components/lineData.vue'
+  import options from '@/ruiji/ruiji_mirror_m/assets/datas/options.js'
+  import bodyData from '@/ruiji/ruiji_mirror_m/components/bodyData.vue'
+  import detailSwitch from '@/ruiji/ruiji_mirror_m/components/detailSwitch.vue'
   import Echart from 'echarts'
-  import creatSerie from '@/ruiji_mirror_m/assets/datas/creatSerie.js'
+  import creatSerie from '@/ruiji/ruiji_mirror_m/assets/datas/creatSerie.js'
 
   export default {
     name: "bodyFat",

@@ -10,8 +10,8 @@
 </template>
 
 <script>
-  import up from '@/ruiji_mirror_m/assets/imgs/btn_ac_shangsheng@3x.png'
-  import down from '@/ruiji_mirror_m/assets/imgs/btn_ac_xiajiang@3x.png'
+  import up from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_shangsheng@3x.png'
+  import down from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_xiajiang@3x.png'
 
   export default {
     name: "bodyData",

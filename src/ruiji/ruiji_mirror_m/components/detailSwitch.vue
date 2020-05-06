@@ -6,16 +6,16 @@
 </template>
 
 <script>
-  import tizhongimg1 from '@/ruiji_mirror_m/assets/imgs/btn_ac_tizhong@3x.png'
-  import tizhongimg2 from '@/ruiji_mirror_m/assets/imgs/btn_ac_tizhong2@3x.png'
-  import tizhiimg1 from '@/ruiji_mirror_m/assets/imgs/btn_ac_tizhi2@3x.png'
-  import tizhiimg2 from '@/ruiji_mirror_m/assets/imgs/btn_ac_tizhi@3x.png'
-  import gugejiimg1 from '@/ruiji_mirror_m/assets/imgs/btn_ac_gugeji2@3x.png'
-  import gugejiimg2 from '@/ruiji_mirror_m/assets/imgs/btn_ac_gugeji@3x.png'
-  import xuyajiimg1 from '@/ruiji_mirror_m/assets/imgs/btn_ac_xuyaji@3x.png'
-  import xuyajiimg2 from '@/ruiji_mirror_m/assets/imgs/btn_ac_xuyaji2@3x.png'
-  import xinlvimg1 from '@/ruiji_mirror_m/assets/imgs/btn_ac_xinlv2@3x.png'
-  import xinlvimg2 from '@/ruiji_mirror_m/assets/imgs/btn_ac_xinlv@3x.png'
+  import tizhongimg1 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_tizhong@3x.png'
+  import tizhongimg2 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_tizhong2@3x.png'
+  import tizhiimg1 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_tizhi2@3x.png'
+  import tizhiimg2 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_tizhi@3x.png'
+  import gugejiimg1 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_gugeji2@3x.png'
+  import gugejiimg2 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_gugeji@3x.png'
+  import xuyajiimg1 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_xuyaji@3x.png'
+  import xuyajiimg2 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_xuyaji2@3x.png'
+  import xinlvimg1 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_xinlv2@3x.png'
+  import xinlvimg2 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_xinlv@3x.png'
   export default {
     name: "detailSwitch",
     data(){

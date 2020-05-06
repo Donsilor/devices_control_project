@@ -1,6 +1,6 @@
 console.log(`argv_is_mock: ${argv_is_mock}`)
 if (argv_is_mock || process.env.NODE_ENV == 'development') {
-  require('@mock/ruiji_mirror/index.js')
+  require('@mock/ruiji_mirror')
 }
 import Vue from 'vue'
 import App from './App.vue'

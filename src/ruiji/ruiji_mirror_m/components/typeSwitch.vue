@@ -6,10 +6,10 @@
 </template>
 
 <script>
-  import img1 from '@/ruiji_mirror_m/assets/imgs/btn_ac_xuyaji@3x.png'
-  import img2 from '@/ruiji_mirror_m/assets/imgs/btn_ac_xuyaji2@3x.png'
-  import img3 from '@/ruiji_mirror_m/assets/imgs/btn_ac_tizhicheng2@3x.png'
-  import img4 from '@/ruiji_mirror_m/assets/imgs/btn_ac_tizhicheng@3x.png'
+  import img1 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_xuyaji@3x.png'
+  import img2 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_xuyaji2@3x.png'
+  import img3 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_tizhicheng2@3x.png'
+  import img4 from '@/ruiji/ruiji_mirror_m/assets/imgs/btn_ac_tizhicheng@3x.png'
 
   export default {
     name: "typeSwitch",
@@ -48,7 +48,8 @@
 <style lang="less" scoped>
 .container{
   display: flex;
-  flex-grow: 1;
+  /*flex-grow: 1;*/
+  width: 50%;
   height: 128px;
   flex-direction: column;
   justify-content: center;
