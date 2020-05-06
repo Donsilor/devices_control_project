@@ -13,7 +13,6 @@
           type="text"
           class="text"
           maxlength="10"
-          autofocus="autofocus"
           @input="txt"
           @blur="handlePhone">
       </div>
@@ -169,10 +168,6 @@ export default {
       this.flag = true
       if(this.show == false) {
         this.txtVal = ''
-      } else {
-        this.$nextTick(() => {
-          this.$refs.gain.focus()
-        },100)
       }
     }
   },
