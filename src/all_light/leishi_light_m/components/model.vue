@@ -10,24 +10,24 @@
       <div class="items btns">
         <div
           class="btn"
-          @click="setModel(0)">
+          @click="setModel('0')">
           <div class="btn-low center" />
           <div
-            :class="[temperature === 0 ? 'active' : '','name']" >暖光</div>
+            :class="[temperature == '0' ? 'active' : '','name']" >暖光</div>
         </div>
         <div
           class="btn"
-          @click="setModel(145)">
+          @click="setModel('145')">
           <div class="btn-normal center" />
           <div
-            :class="[temperature === 145 ? 'active' : '','name']" >自然光</div>
+            :class="[temperature == '145' ? 'active' : '','name']" >自然光</div>
         </div>
         <div
           class="btn"
-          @click="setModel(255)">
+          @click="setModel('255')">
           <div class="btn-high center" />
           <div
-            :class="[temperature === 255 ? 'active' : '','name']" >白光</div>
+            :class="[temperature == '255' ? 'active' : '','name']" >白光</div>
         </div>
       </div>
       <div

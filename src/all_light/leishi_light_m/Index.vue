@@ -148,17 +148,17 @@
       temperatureTxt() {
         /* eslint-disable no-unreachable */
         switch (this.deviceAttrs.temperature) {
-          case 0:
+          case '0':
             return '暖光'
             break
-          case 145:
+          case '145':
             return '自然光'
             break
-          case 255:
+          case '255':
             return '白光'
             break
           default:
-            return ''
+            return '色温'
         }
       },
       isClose(){
@@ -200,7 +200,7 @@
               HdSmart.UI.toast('网络超时，请重试')
             }
           })
-        HdSmart.UI.setStatusBarColor(2)
+        HdSmart.UI.setStatusBarColor(1)
       })
     },
     mounted(){
