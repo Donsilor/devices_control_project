@@ -48,6 +48,7 @@ HdSmart.onDeviceListen(function(data) {
   }
 })
 HdSmart.ready(() => {
+  console.log('HdSmart.ready====')
   if (!is_ready) {
     is_ready = true
 
