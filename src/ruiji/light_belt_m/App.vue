@@ -2,9 +2,7 @@
   <div>
     <new-top-bar :scroll="true" title="灯带控制"></new-top-bar>
     <status-tip></status-tip>
-    <p>画布：</p>
-    <canvas id="myCanvas" width="375" height="300" style="border:1px solid #d3d3d3;background:#ffffff;">
-      Your browser does not support the HTML5 canvas tag.
+    <canvas @touchstart="touchStart" @touchmove="touchMove" ref="canvas" width="375" height="375">
     </canvas>
   </div>
 </template>
@@ -18,16 +16,21 @@
       NewTopBar,
       StatusTip
     },
+    data(){
+      return{
+        context:null,
+        top:0
+      }
+    },
     mounted() {
-      var c = document.getElementById("myCanvas");
-      var ctx = c.getContext("2d");
+      var canvas = this.$refs.canvas
+      console.log('canvas====', canvas.offsetTop)
+      this.top = canvas.offsetTop
+      this.context = canvas.getContext("2d");
       let that = this
+      let context = this.context
       this.preImage(color,function(img){
-        ctx.drawImage(img,10,10,100,100);
-        let colors = ctx.getImageData(80,30,1,1)
-        console.log('color=====', that.getPixelColor(colors))
-        ctx.fillStyle = that.getPixelColor(colors).hex
-        ctx.fillRect(0,200,100,100)
+        context.drawImage(img,0,0,375,375);
       })
     },
     methods: {
@@ -70,14 +73,18 @@
           a: a
         }
       },
-      touchmove(e) {
-        console.log('e======', e)
+      touchStart(e) {
+        console.log('touchStart======', e.touches[0])
+        this.colorChange(e.touches[0])
       },
-      touchmove1(e) {
-        console.log('e1111======', e)
+      touchMove(e) {
+        console.log('touchMove======', e.touches[0])
+        this.colorChange(e.touches[0])
       },
-      test() {
-        console.log('nihao')
+      colorChange(touchPoint) {
+        let colors = this.context.getImageData(touchPoint.clientX,touchPoint.clientY-this.top,1,1)
+        this.context.fillStyle = this.getPixelColor(colors).hex
+        this.context.fillRect(0,200,50,50)
       }
     }
   }
