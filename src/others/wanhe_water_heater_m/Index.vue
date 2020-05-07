@@ -331,7 +331,7 @@ export default {
             this.draw(`${((this.deviceAttrs.setWTemp)-30)/40}`)
           }
         })
-      HdSmart.UI.setStatusBarColor(2)
+      HdSmart.UI.setStatusBarColor(1)
     })
     if(document.body.offsetHeight == 568) {
       this.minVisibleHeight = 25
@@ -744,6 +744,7 @@ export default {
              if(val == 'customize1' && this.deviceAttrs.temp.customize1) this.controlDevice('setWTemp', this.deviceAttrs.temp.customize1)
              if(val == 'customize2' && this.deviceAttrs.temp.customize2) this.controlDevice('setWTemp', this.deviceAttrs.temp.customize2)
              if(val == 'customize3' && this.deviceAttrs.temp.customize3) this.controlDevice('setWTemp', this.deviceAttrs.temp.customize3)
+             if(val == 'kitchen' && this.deviceAttrs.setWTemp > 45) this.controlDevice('setWTemp', 45)
               this.hide()
            }
          }
@@ -826,7 +827,7 @@ export default {
         if(temp > 48 && val == 'add') {
           return HdSmart.UI.toast('童锁温度已调至最高')
         } else if(temp > 48 && val != 'add') {
-          return this.controlDevice('setWTemp', 48)
+          return this.controlDevice('setWTemp', 48, this.deviceAttrs.mode)
           .then((res) => {
             if (res) {
               if(res.code == 0) {

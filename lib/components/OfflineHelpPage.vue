@@ -45,18 +45,16 @@
         </div>
 
       </div>
-      <h3
+      <!-- <h3
         v-if="networkStatus=='-2'"
-        class="viewHelpH3">路由器离线</h3>
+        class="viewHelpH3">路由器离线</h3> -->
       <h3
-        v-else
         class="viewHelpH3">设备离线</h3>
-      <div
+      <!-- <div
         v-if="networkStatus=='-2'"
         class="viewHelpstatus"
-        v-html="viewHelpstatus.router_content"/>
+        v-html="viewHelpstatus.router_content"/> -->
       <div
-        v-else
         class="viewHelpstatus"
         v-html="viewHelpstatus.content"/>
     </div>

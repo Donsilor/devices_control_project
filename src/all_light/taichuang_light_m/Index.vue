@@ -183,7 +183,7 @@ export default {
           HdSmart.UI.toast('网络超时，请重试')
         }
       })
-      HdSmart.UI.setStatusBarColor(2)
+      HdSmart.UI.setStatusBarColor(1)
     })
   },
   mounted(){

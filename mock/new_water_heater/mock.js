@@ -21,7 +21,7 @@ var res = {
   "setWTemp": 55, //预设温度
   "outWTemp": 37, //当前温度
   "mode": "customize2", //模式
-  "childLock": "off", //童锁
+  "childLock": "on", //童锁
   "antiFreeze": "on", //智能防冻
   "curGas": "20", //实时用气
   "totalGas": "664.9", //累计用气
