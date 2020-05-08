@@ -2,7 +2,7 @@
   <div>
     <div class="container" v-if="fatData.length>0">
       <div class="title">{{remindTip}}</div>
-      <div class="date">2020/03/16 18:35</div>
+      <div class="date">{{time}}</div>
       <div class="datas">
         <bodyData :status="0" :value="weight" name="体重" unit="kg"></bodyData>
         <bodyData :status="FatStatus()" :value="bodyFatRate" name="体脂率" unit="%"></bodyData>
@@ -38,13 +38,14 @@
   import detailSwitch from '@/ruiji/ruiji_mirror_m/components/detailSwitch.vue'
   import Echart from 'echarts'
   import creatSerie from '@/ruiji/ruiji_mirror_m/assets/datas/creatSerie.js'
-
+  import {datePattern} from '@/ruiji/ruiji_mirror_m/assets/js/util.js'
   export default {
     name: "bodyFat",
     components: {lineChart, bodyData, detailSwitch},
     data() {
       return {
         BMI: 0,
+        time:'',
         lineColor:  new Echart.graphic.LinearGradient(1, 0, 0, 0, [{
            offset: 0,
            color: '#1EB4F2'
@@ -102,6 +103,7 @@
       fatData:{
         handler(value) {
           if (!value||value.length===0) return
+          this.time =datePattern(value[0].attribute.createTime,'yyyy/MM/dd HH:mm')
           this.weight = parseFloat(value[0].attribute.value1)
           this.bodyFatRate = parseFloat(value[0].attribute.value8)
           this.muscleRate = parseFloat(value[0].attribute.value3)
