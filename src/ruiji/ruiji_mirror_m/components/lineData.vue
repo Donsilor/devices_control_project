@@ -24,7 +24,6 @@
     watch:{
       options: {
         handler: function (value) {
-          console.log('数据更新', this.mychart)
           this.mychart&&this.mychart.setOption(value, true)
         },
         deep:true
