@@ -4,6 +4,7 @@
 
 <script>
   import Echart from 'echarts'
+  import eBus from '@/ruiji/ruiji_mirror_m/assets/datas/eventBus.js'
 
   export default {
     name: "lineData",
@@ -32,6 +33,17 @@
     mounted() {
       this.mychart = Echart.init(this.$refs.chart);
       this.mychart.setOption(this.options)
+      let that = this
+      let timer
+      eBus.$on('hideToolTip',function () {
+        timer&&clearTimeout(timer)
+        timer = setTimeout(function () {
+          that.mychart.dispatchAction({
+            type: 'hideTip'
+          })
+        },4000)
+
+      })
     }
   }
 </script>

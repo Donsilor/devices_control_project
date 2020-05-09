@@ -1,6 +1,7 @@
 
 
 const currentYear = new Date().getFullYear()
+import eBus from './eventBus'
 function getName(idName, seriesName) {
   idName = idName.replace('0','')
   let name = ''
@@ -54,14 +55,20 @@ export default {
       fontSize:'12px'
     },
     position: function (pos, params, el, elRect, size) {
-      // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
-      let left = 0
-      if (pos[0]>size.viewSize[0]/2) {
-        left = pos[0]- 120
-      }else {
-        left = pos[0]
-      }
-      return [size.viewSize[0]/2 - size.contentSize[0]/2+20, '0%'];
+      // console.log('pos======',pos)
+      // console.log('params======',params)
+      // console.log('el======',el)
+      // console.log('elRect======',elRect)
+      // console.log('size======',size)
+      // // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
+      // let left = 0
+      // if (pos[0]>size.viewSize[0]/2) {
+      //   left = size.viewSize[0]- size.contentSize[0]-30
+      // }else {
+      //   left = pos[0]
+      // }
+      eBus.$emit('hideToolTip')
+      // return [left, '0%'];
     },
     extraCssText: '' +
       'width: 121px;' +
