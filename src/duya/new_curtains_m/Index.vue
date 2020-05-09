@@ -200,7 +200,7 @@
               this.curtainStatusText = '已关闭'
             }
           })
-        HdSmart.UI.setStatusBarColor(2)
+        HdSmart.UI.setStatusBarColor(1)
       })
     },
     methods: {
@@ -278,7 +278,7 @@
       }, 300),
       // clear
       // 滑动窗帘
-      touchStart(e) {
+      touchStart() {
         this.myMove = true
         this.curtainStatusText = ''
         this.btnActive = ''

@@ -77,6 +77,9 @@
           }
         ],
         allHD: 0,
+        touch: false,
+        threshold: 0,
+        relieve: false,
       }
     },
     computed: {
@@ -107,6 +110,9 @@
     },
     watch: {
       'device.stateChange'() {
+        if(this.deviceAttrs.level == 0 || this.deviceAttrs.level >= 254) {
+          this.relieve = false
+        }
         if(this.allHD) {
           this.draw(this.allHD)
         } else {
@@ -156,6 +162,26 @@
             var hd = (Math.PI+r)/(2*Math.PI)
             // 半圆的滑动范围判断
             this.flag = hd
+            this.threshold = hd
+            if(this.deviceAttrs.level == 0 && this.threshold < 0.985) {
+              this.relieve = true
+            }
+            if(this.deviceAttrs.level >= 254 && this.threshold > 0.015) {
+              this.relieve = true
+            }
+            if(hd > (this.deviceAttrs.level/255 - 0.015) && hd < (this.deviceAttrs.level/255 + 0.015)) {
+              this.touch = true
+              return
+            }
+            if(this.deviceAttrs.level == 0 && (hd == 1 || hd >= 0.985)) {
+              this.touch = true
+              return
+            }
+            if(this.deviceAttrs.level >= 252 && (hd == 0 || hd <= 0.015)) {
+              this.touch = true
+              return
+            }
+            this.touch = false
             if (hd <= 1 && hd >= 0) {
               this.draw(hd)
               this.allHD = hd
@@ -177,6 +203,17 @@
             var r = Math.atan2(k.x-this.ox, this.oy-k.y)
             var hd = (Math.PI+r)/(2*Math.PI)
             // 半圆的滑动范围判断
+            if(this.deviceAttrs.level == 0 && (this.threshold >= 0.5) && !this.relieve) {
+              this.threshold = hd
+              this.flag = hd
+              return
+            }
+            if(this.deviceAttrs.level >= 254 && (this.threshold <= 0.5) && !this.relieve) {
+              this.threshold = hd
+              this.flag = hd
+              return
+            }
+            this.touch = false
             if(this.flag-hd>0.5){
               hd = 1
             }
@@ -196,6 +233,7 @@
         this.$refs.canvas.addEventListener(on.end,()=> {
           if (this.isOffline||this.isClose|| this.networkStatus == -1) return
           this.br = 15
+          if(this.touch) return
           // this.draw(this.brightness/100)
           this.draw(this.allHD)
           this.moveFlag = false
