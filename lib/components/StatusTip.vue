@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="deviceAttrs.connectivity==='offline'||networkStatus==-1||networkStatus==-2||deviceAttrs.error"
+    v-if="deviceAttrs.connectivity==='offline'||networkStatus==-1||deviceAttrs.error"
     class="status_bar">
     <!-- v-show="device.device_uuid"  -->
     <!-- <div class="status_bar_block"/> -->
@@ -145,7 +145,7 @@ export default {
           this.prohibitmove()
           break
        case 'online':
-          if(this.networkStatus==-1||this.networkStatus==-2)return
+          if(this.networkStatus==-1)return
           this.allowmove()
           break
         default:

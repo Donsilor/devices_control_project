@@ -201,6 +201,7 @@ export default {
       allFlag: false,
       canGentlyMove:true,
       customizeTemp: false,
+      oneFlag: false,
     }
   },
 
@@ -214,7 +215,7 @@ export default {
       return this.deviceAttrs.connectivity == 'online'?false:true
     },
     isError() {
-      return this.deviceAttrs.err ? true : false
+      return /* this.deviceAttrs.err ? true :  */false
     },
     modeName() {
       /* eslint-disable no-unreachable */
@@ -249,6 +250,9 @@ export default {
     "device.stateChange"(){
       if(this.deviceAttrs.err) {
         this.$refs.error.show = true
+        setTimeout(() => {
+          this.$refs.error.show = false
+        }, 1000 * 10)
       } else {
         this.$refs.error.show = false
       }
@@ -301,14 +305,54 @@ export default {
       } else {
         this.classTrue = false
       }
+    },
+    "deviceAttrs.setWTemp"() {
+      if(this.oneFlag) {
+        if(this.deviceAttrs.mode == 'customize1' || this.deviceAttrs.mode == 'customize2' || this.deviceAttrs.mode == 'customize3') {
+          if(this.deviceAttrs.temp && this.deviceAttrs.mode == 'customize1') {
+            this.deviceAttrs.temp.customize1 = this.deviceAttrs.setWTemp
+            this.controlDevice({}, {}, {}, {
+              'temp': {
+                'customize1': this.deviceAttrs.mode == 'customize1' ? this.deviceAttrs.setWTemp : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize1 : 0,
+                'customize2': this.deviceAttrs.mode == 'customize2' ? this.deviceAttrs.setWTemp : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize2 : 0,
+                'customize3': this.deviceAttrs.mode == 'customize3' ? this.deviceAttrs.setWTemp : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize3 : 0,
+              }
+            })
+          }
+          if(this.deviceAttrs.temp && this.deviceAttrs.mode == 'customize2') {
+            this.deviceAttrs.temp.customize2 = this.deviceAttrs.setWTemp
+            this.controlDevice({}, {}, {}, {
+              'temp': {
+                'customize1': this.deviceAttrs.mode == 'customize1' ? this.deviceAttrs.setWTemp : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize1 : 0,
+                'customize2': this.deviceAttrs.mode == 'customize2' ? this.deviceAttrs.setWTemp : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize2 : 0,
+                'customize3': this.deviceAttrs.mode == 'customize3' ? this.deviceAttrs.setWTemp : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize3 : 0,
+              }
+            })
+          }
+          if(this.deviceAttrs.temp && this.deviceAttrs.mode == 'customize3') {
+            this.deviceAttrs.temp.customize3 = this.deviceAttrs.setWTemp
+            this.controlDevice({}, {}, {}, {
+              'temp': {
+                'customize1': this.deviceAttrs.mode == 'customize1' ? this.deviceAttrs.setWTemp : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize1 : 0,
+                'customize2': this.deviceAttrs.mode == 'customize2' ? this.deviceAttrs.setWTemp : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize2 : 0,
+                'customize3': this.deviceAttrs.mode == 'customize3' ? this.deviceAttrs.setWTemp : this.deviceAttrs.temp ? this.deviceAttrs.temp.customize3 : 0,
+              }
+            })
+          }
+        }
+      }
     }
   },
   created() {
     HdSmart.ready(() => {
       this.getDeviceInfo()
         .then(() => {
+          this.oneFlag = true
           if(this.deviceAttrs.err) {
             this.$refs.error.show = true
+            setTimeout(() => {
+              this.$refs.error.show = false
+            }, 1000 * 10)
           } else {
             this.$refs.error.show = false
           }
@@ -892,7 +936,7 @@ export default {
     hide(){
       if(this.$refs.mode.show) this.$refs.mode.show = false
     },
-    controlDevice(attr, value, mode) {
+    controlDevice(attr, value, mode, obj) {
       if(mode) {
         var param = {
           'temp': {
@@ -902,15 +946,27 @@ export default {
           }
         }
       }
-      return this.doControlDevice({
-        nodeid: `airconditioner.main.${attr}`,
-        params: {
-          attribute: {
-            [attr]: value,
-            ...param,
+      if(obj) {
+        return this.doControlDevice({
+          nodeid: `airconditioner.main.temp`,
+          params: {
+            attribute: {
+              ...obj,
+            }
           }
-        }
-      })
+        })
+      } else {
+        return this.doControlDevice({
+          nodeid: `airconditioner.main.${attr}`,
+          params: {
+            attribute: {
+              [attr]: value,
+              ...param,
+              ...obj,
+            }
+          }
+        })
+      }
     },
   }
 }

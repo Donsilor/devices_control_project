@@ -29,11 +29,11 @@ var res = {
   "totalWater": "4442.2", //累计用水
   "heatState": "off", //加热状态
   "waterState": 'off', //出水状态
-  "err": '', //报错
+  "err": '128', //报错
   "temp": {
     "customize1": 36, //定制模式1温度
     "customize2": 65, //定制模式2温度
-    "customize3": 0, //定制模式3温度
+    "customize3": 45, //定制模式3温度
   }
 }
 export function generateSnapShot() {
