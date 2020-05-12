@@ -104,9 +104,9 @@
         handler(value) {
           if (!value||value.length===0) return
           this.time =datePattern(value[0].attribute.createTime,'yyyy/MM/dd HH:mm')
-          this.weight = parseFloat(value[0].attribute.value1)
-          this.bodyFatRate = parseFloat(value[0].attribute.value8)
-          this.muscleRate = parseFloat(value[0].attribute.value3)
+          this.weight = value[0].attribute.value1?parseFloat(value[0].attribute.value1):'--'
+          this.bodyFatRate = value[0].attribute.value8?parseFloat(value[0].attribute.value8):'--'
+          this.muscleRate = value[0].attribute.value3?parseFloat(value[0].attribute.value3):'--'
           this.BMI = parseFloat(value[0].attribute.value11) || 0
           let arr = [...value].reverse()
           this.weightList= arr.map(item=>{
@@ -154,6 +154,9 @@
 
       },
       FatStatus(){
+        if (typeof this.bodyFatRate === 'string') {
+          return 0
+        }
         if (this.bodyFatRate < 15) {
           return 2
         } else if (this.bodyFatRate >= 15 && this.bodyFatRate <= 18) {
@@ -163,6 +166,9 @@
         }
       },
       MuscleStatus() {
+        if (typeof this.muscleRate === 'string') {
+          return 0
+        }
         if (this.muscleRate < 31) {
           return 2
         } else if (this.muscleRate >= 31 && this.muscleRate <= 34) {
