@@ -19,7 +19,7 @@ const router = new Router({
       name: 'OfflineHelpPage',
       component: OfflineHelpPage,
       meta: {
-        keepAlive: true
+        keepAlive: false
       }
     }
   ]

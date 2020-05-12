@@ -12,7 +12,8 @@ export function generateSnapShot() {
         method: 'dr_report_dev_status',
         code: 0,
         result: {
-            "device_name": "中控面板",
+            "device_name": "锐吉魔镜",
+            "room_name": "房间",
             "device_uuid":3434,
             "attribute": res
         }

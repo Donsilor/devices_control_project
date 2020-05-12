@@ -1,5 +1,10 @@
 <template>
   <div class="back-container">
+    <new-top-bar :scroll="true"
+                 :title="device.device_name"
+                 :room="device.room_name">
+    </new-top-bar>
+    <status-tip @OfflineHelpPage="OfflineHelpPage"></status-tip>
     <div class="button-control">
       <type-switch :type="1" :currentIndex.sync="currentIndex" :isActive="true"></type-switch>
 <!--      <type-switch :type="0" :currentIndex.sync="currentIndex" :isActive="currentIndex===0"></type-switch>-->
@@ -14,11 +19,15 @@
   import bloodPressure from '@/ruiji/ruiji_mirror_m/components/bloodPressure.vue'
   import bodyFat from '@/ruiji/ruiji_mirror_m/components/bodyFat.vue'
   import typeSwitch from '@/ruiji/ruiji_mirror_m/components/typeSwitch.vue'
+  import NewTopBar from '@lib/components/NewTopBar.vue'
+  import StatusTip from '@lib/components/StatusTip.vue'
   export default {
     components: {
       bodyFat,
       bloodPressure,
       typeSwitch,
+      NewTopBar,
+      StatusTip
     },
     data() {
       return {
@@ -27,7 +36,6 @@
         currentIndex: 0,
       }
     },
-
     computed: {
       ...mapGetters(['isClose', 'isOffline']),
       ...mapState(['device', 'deviceAttrs'])
@@ -59,6 +67,11 @@
     },
     methods: {
       ...mapActions(['getDeviceInfo', 'doControlDevice']),
+      OfflineHelpPage(){
+        this.$router.push({
+          path:"/OfflineHelpPage"
+        })
+      },
       requestData(method, param) {
         return new Promise((resolve, reject) => {
           HdSmart.network.httpRequest(method, param, function (response) {
