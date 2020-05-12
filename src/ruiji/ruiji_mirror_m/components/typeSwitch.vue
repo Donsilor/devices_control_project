@@ -39,6 +39,9 @@
     },
     methods:{
       switchClick(){
+        if (this.type===0) {
+          HdSmart.UI.toast('敬请期待')
+        }
         this.$emit('update:currentIndex', this.type)
       }
     }

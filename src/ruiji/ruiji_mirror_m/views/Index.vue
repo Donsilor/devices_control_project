@@ -7,7 +7,7 @@
     <status-tip @OfflineHelpPage="OfflineHelpPage"></status-tip>
     <div class="button-control">
       <type-switch :type="1" :currentIndex.sync="currentIndex" :isActive="true"></type-switch>
-<!--      <type-switch :type="0" :currentIndex.sync="currentIndex" :isActive="currentIndex===0"></type-switch>-->
+      <type-switch :type="0" :currentIndex.sync="currentIndex" :isActive="false"></type-switch>
     </div>
 <!--    <blood-pressure v-if="currentIndex===0" :bloodData="bloodData"></blood-pressure>-->
     <body-fat v-if="true" :fatData="fatData"></body-fat>
