@@ -83,7 +83,7 @@ export default {
       realtime: true,
       startValue: 1,
       endValue: 5,
-      filterMode: 'none',
+      filterMode: 'filter',
       minValueSpan:3,
       maxValueSpan:100,
       // zoomLock: true
