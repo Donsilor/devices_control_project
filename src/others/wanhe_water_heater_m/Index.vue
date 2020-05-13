@@ -423,8 +423,7 @@ export default {
                 this.draw(hd)
                 this.allHD = hd
               }else{
-                HdSmart.UI.toast('超出当前模式温度限制氛围')
-                return
+                if(hd >= 0.45) return HdSmart.UI.toast('超出当前模式温度限制范围')
               }
             } else if(this.deviceAttrs.childLock == 'on') {
               if (hd <= 0.45 && hd >= 0.125) {
@@ -432,8 +431,7 @@ export default {
                 this.draw(hd)
                 this.allHD = hd
               }else{
-                HdSmart.UI.toast('超出童锁温度限制氛围')
-                return
+                if(hd >= 0.525) return HdSmart.UI.toast('超出童锁温度限制范围')
               }
             } else {
               if (hd <= 0.875 && hd >= 0.125) {
@@ -465,7 +463,7 @@ export default {
                 this.draw(hd)
                 this.allHD = hd
               }else{
-                return
+                if(hd >= 0.45) return HdSmart.UI.toast('超出当前模式温度限制范围')
               }
             } else if(this.deviceAttrs.childLock == 'on') {
               if (hd <= 0.45 && hd >= 0.125) {
@@ -473,7 +471,7 @@ export default {
                 this.draw(hd)
                 this.allHD = hd
               }else{
-                return
+                if(hd >= 0.525) return HdSmart.UI.toast('超出童锁温度限制范围')
               }
             } else {
               if(hd <= 0.875 && hd >= 0.125) {
@@ -1083,7 +1081,7 @@ export default {
             position: absolute;
             top: -5px;
             right: -22px;
-            font-size: 24px;
+            font-size: 48px;
             color: #fff;
             // transform: scale(1);
           }
@@ -1182,14 +1180,14 @@ export default {
       .title {
         opacity: 0.5;
         font-family: PingFangSC-Light;
-        font-size: 12px;
+        font-size: 20px;
         color: #FFFFFF;
         letter-spacing: 0;
         margin-bottom: 12px;
       }
       .txt {
         font-family: PingFangSC-Light;
-        font-size: 12px;
+        font-size: 20px;
         color: #FFFFFF;
         letter-spacing: 0;
         margin-bottom: 4px;
