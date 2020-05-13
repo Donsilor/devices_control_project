@@ -209,8 +209,15 @@ export default {
           }
         })
         return
+      }else if(val=='menu'){
+        if (this.isClose) return
+        this.controlDevice('tv_key','82')
+      }else if(val=='home'){
+        if (this.isClose) return
+        this.controlDevice('tv_key','3')
       }else{
-        return HdSmart.UI.toast('该功能尚未开放')
+        if (this.isClose) return
+        this.controlDevice('tv_key','4')
       }
     },
     // 开关机
@@ -242,12 +249,23 @@ export default {
     controlEnd(val){
       if (val== 'centerbox') {
         this.$refs.centerbox.classList.remove('active')
-        return HdSmart.UI.toast('该功能尚未开放')
-        // this.controlDevice('button','confirm')
+        if (this.isClose) return
+        this.controlDevice('tv_key','66')
       }else{
         this.$refs[val+"Btn"].classList.remove('active')
-        return HdSmart.UI.toast('该功能尚未开放')
-        // this.controlDevice('point_move',val)
+        if(val=='up'){
+          if (this.isClose) return
+          this.controlDevice('tv_key','19')
+        }else if(val=='down'){
+          if (this.isClose) return
+          this.controlDevice('tv_key','20')
+        }else if(val=='left'){
+          if (this.isClose) return
+          this.controlDevice('tv_key','21')
+        }else{
+          if (this.isClose) return
+          this.controlDevice('tv_key','22')
+        }
       }
     },
     // 音量加减
