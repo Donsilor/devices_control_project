@@ -74,7 +74,8 @@ export default {
       'width: 121px;' +
       'background-image: linear-gradient(225deg, #1EB4F2 0%, #713DF4 100%);' +
       'font-size:14px;'+
-      'line-height:20px'
+      'line-height:20px;'+
+      'border: none'
   },
   dataZoom: [
     {
