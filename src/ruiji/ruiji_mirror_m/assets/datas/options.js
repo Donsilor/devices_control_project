@@ -19,6 +19,8 @@ export default {
     bottom: '3%',
     containLabel: true
   },
+  animationDuration:0,
+  animation:true,
   tooltip: {
     trigger: 'axis',
     axisPointer: {
@@ -81,11 +83,12 @@ export default {
     {
       type: 'inside',
       realtime: true,
+      throttle:0,
       startValue: 1,
       endValue: 5,
-      filterMode: 'filter',
-      minValueSpan:3,
-      maxValueSpan:100,
+      filterMode: 'weakFilter',
+      minValueSpan:5,
+      maxValueSpan:10,
       // zoomLock: true
     }],
   xAxis: [
