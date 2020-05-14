@@ -20,7 +20,7 @@ var res = {
   // 万和热水器属性
   "setWTemp": 55, //预设温度
   "outWTemp": 37, //当前温度
-  "mode": "customize2", //模式
+  "mode": "common", //模式
   "childLock": "on", //童锁
   "antiFreeze": "on", //智能防冻
   "curGas": "20", //实时用气
@@ -29,7 +29,7 @@ var res = {
   "totalWater": "4442.2", //累计用水
   "heatState": "off", //加热状态
   "waterState": 'off', //出水状态
-  "err": '128', //报错
+  "err": '', //报错
   "temp": {
     "customize1": 36, //定制模式1温度
     "customize2": 65, //定制模式2温度
