@@ -15,11 +15,12 @@ function getName(idName, seriesName) {
 export default {
   grid: {
     left: '6.5%',
+    top:'11%',
     right: '6.5%',
     bottom: '3%',
     containLabel: true
   },
-  animationDuration:0,
+  animationDurationUpdate:100,
   animation:true,
   tooltip: {
     trigger: 'axis',
@@ -83,7 +84,7 @@ export default {
     {
       type: 'inside',
       realtime: true,
-      throttle:0,
+      throttle:100,
       startValue: 1,
       endValue: 5,
       filterMode: 'weakFilter',
