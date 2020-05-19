@@ -1,0 +1,204 @@
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+}
+html{
+  background-color: black;
+}
+input, textarea {
+  -webkit-touch-callout: auto;
+  -webkit-user-select: auto;
+  -khtml-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+}
+@font-face {
+    font-family: 'iconfont';  /* project id 616019 */
+    src: url('../../iconfont/iconfont.eot');
+    src: url('../../iconfont/iconfont.eot?#iefix') format('embedded-opentype'),
+    url('../../iconfont/iconfont.woff') format('woff'),
+    url('../../iconfont/iconfont.ttf') format('truetype'),
+    url('../../iconfont/iconfont.svg#iconfont') format('svg');
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+    position: relative;
+    &:before {
+        font-family: 'iconfont' !important;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+.navbar .left a.icon-return {
+  border-color: #fff;
+}
+// .icon-more:before{
+//   content: '\e61d';
+// }
+.icon-search:before{content: '\e631';}
+.icon-shut:before{content: '\e645';}
+.icon-home:before{content: '\e644';}
+.icon-volup:before{content: '\e642';}
+.icon-voldown:before{content: '\e60c';}
+.icon-back:before{content: '\e60a';}
+.icon-movie:before,
+.icon-001:before{content: '\e609';}
+.icon-tv:before,
+.icon-002:before{content: '\e608';}
+.icon-tv1:before{content: '\e641';}
+.icon-anime:before,
+.icon-003:before{content: '\e64a';}
+.icon-variety:before,
+.icon-004:before{content: '\e63a';}
+.icon-screening:before{content: '\e636';}
+.icon-control:before{content: '\e643';}
+.icon-play:before,
+.icon-playing:before
+{content: '\e62f';}
+.icon-arrow:before{content: '\e63c';}
+.icon-del:before{content: '\e630';}
+.icon-del1:before{content: '\e62e';}
+.icon-close:before{content: '\e646';}
+.icon-error:before{content: '\e63f';}
+.icon-wifi:before{content: '\eda9';}
+
+@status_bar_height:20PX;
+@navigation_bar_height:44PX;
+
+.topbar-block {
+    height: 64PX;
+    // background: #fff;
+}
+
+.topbar-fixed{
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    // background: #fff;
+    border-bottom: 1px solid rgba(216, 216, 216, .7);
+}
+
+.statusbar{
+    height: @status_bar_height;
+}
+
+.navbar {
+    height: @navigation_bar_height;
+    position: relative;
+    color: #fff;
+    .left, .right {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        height: @navigation_bar_height;
+        transform: translateY(-50%);
+    }
+    .left{
+        left: 0;
+        right: auto;
+    }
+    .title {
+        text-align: center;
+        font-size: 17PX;
+    }
+    a {
+        width: @navigation_bar_height;
+        height: @navigation_bar_height;
+        display: block;
+        line-height: @navigation_bar_height;
+        color: #fff;
+        text-align: center;
+        font-size: 17PX;
+        text-decoration: none;
+        &:active {
+            opacity: .8;
+        }
+    }
+
+}
+
+.swiper {
+  // .swiper-container {
+  //   // border-radius: 11.5px;
+  // }
+  .swiper-slide {
+    width: 750px;
+    height: 302px;
+    background: url(../../../lib/base/tv/assets/img_default_recommend.png)
+      no-repeat;
+    background-size: 100%;
+  }
+  a {
+    display: block;
+    width: 750px;
+    height: 302px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    overflow: hidden;
+  }
+  img {
+    width: 100%;
+  }
+  .swiper-slide .title {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    color: #fff;
+    font-size: 28px;
+    height: 120px;
+    width: 100%;
+    padding-top: 50px;
+    padding-left: 30px;
+    background-image: linear-gradient(
+      -180deg,
+      rgba(47, 49, 51, 0) 0%,
+      #2f3133 100%
+    );
+  }
+  .channelName{
+    position: absolute;
+    right: 0;
+    top: 24px;
+
+    text-align: center;
+    padding: 0 12px 0 20px;
+    height: 48px;
+    line-height: 48px;
+    background: #F05645;
+    border-radius: 11.5px 0px 0px 11.5px;
+    font-size: 24px;
+    color: #fff;
+  }
+  .swiper-container-horizontal > .swiper-pagination-bullets {
+    width: auto;
+    left: auto;
+    right: 30px;
+    bottom: 23px;
+  }
+  .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    opacity: 0.5;
+    background: rgba(220, 225, 234, 0.7);
+    border-radius: 50%;
+    transition: width 0.5s;
+    opacity: 0.3;
+    background: #fff;
+  }
+  .swiper-pagination-bullet-active {
+    opacity: 1;
+  }
+}

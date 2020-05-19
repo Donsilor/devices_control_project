@@ -1,0 +1,13 @@
+{
+    "req_id": 4519118,
+    "timestamp": 1521508661121,
+    "method": "dm_set",
+    "params": {
+        "attribute": {
+            "switch": "on"
+        },
+        "device_uuid": "000b2a5b440100000000b0f89321e7e1",
+        "user_id": 5027
+    },
+    "nodeid": "wash_machine.main.switch"
+}

@@ -1,0 +1,542 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-touch-callout: none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+}
+ul {
+  list-style: none;
+}
+body {
+  line-height: 1;
+}
+a {
+  text-decoration: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@font-face {
+  font-family: 'iconfont'; /* project id 616019 */
+  src: url('../../iconfont/iconfont.eot');
+  src: url('../../iconfont/iconfont.eot?#iefix') format('embedded-opentype'),
+    url('../../iconfont/iconfont.woff') format('woff'),
+    url('../../iconfont/iconfont.ttf') format('truetype'),
+    url('../../iconfont/iconfont.svg#iconfont') format('svg');
+}
+
+[class^='icon-'],
+[class*=' icon-'] {
+  position: relative;
+  &:before {
+    font-family: 'iconfont' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+.navbar .left a.icon-return {
+  border-color: #fff;
+}
+
+.icon-more:before {
+  content: '\e61d';
+}
+.icon-switch:before {
+  content: '\e620';
+}
+.icon-less:before {
+  content: '\e613';
+}
+.icon-plus:before {
+  content: '\e611';
+}
+.icon-mode:before {
+  content: '\e615';
+}
+.icon-speed:before {
+  content: '\e60e';
+}
+.icon-s1:before {
+  content: '\e60e';
+}
+.icon-s2:before {
+  content: '\e62c';
+}
+.icon-s3:before {
+  content: '\e610';
+}
+.icon-vertical:before {
+  content: '\e626';
+}
+.icon-horizontal:before {
+  content: '\e62b';
+}
+.icon-mute:before {
+  content: '\e614';
+}
+.icon-cold:before {
+  content: '\e62a';
+}
+.icon-heat:before {
+  content: '\e629';
+}
+.icon-dehumidify:before {
+  content: '\e60f';
+}
+.icon-auto:before {
+  content: '\e627';
+}
+.icon-wind:before {
+  content: '\e628';
+}
+
+.wrap-off,
+.wrap-on,
+.wrap-error {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+/* page on */
+.wrap-on {
+  color: #fff;
+  /*background: #46bcff;*/
+  background-image: linear-gradient(-180deg, #00a0d0 0%, #17d7d2 100%);
+
+  a {
+    color: #fff;
+  }
+  .bg {
+    position: absolute;
+    top: 200px;
+    left: 0;
+    height: 800px;
+    width: 100%;
+    background-image: url('./assets/bg_img_default@2x.png');
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+  }
+
+  &.cold {
+    background-image: linear-gradient(-180deg, #0159d7 0%, #1ebbfd 100%);
+    .bg {
+      background-image: url('./assets/bg_img_cold@2x.png');
+    }
+  }
+
+  &.heat {
+    background-image: linear-gradient(-180deg, #f8610c 0%, #fac061 100%);
+    .bg {
+      background-image: url('./assets/bg_img_hot@2x.png');
+    }
+  }
+
+  &.dehumidify {
+    background-image: linear-gradient(-180deg, #34d280 0%, #13d5dc 100%);
+    .bg {
+      background-image: url('./assets/bg_img_dry@2x.png');
+    }
+  }
+
+  .header {
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 240px;
+    .name {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 12px;
+    }
+    .status {
+      font-size: 40px;
+      color: #fff;
+      text-align: center;
+    }
+  }
+}
+
+.current_temp {
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 400px;
+  line-height: 170px;
+  .num {
+    font-size: 170px;
+    font-family: PingFangSC-Medium;
+  }
+  .unit {
+    font-size: 60px;
+    line-height: 110px;
+    font-family: PingFangSC-Regular;
+    position: relative;
+    vertical-align: top;
+  }
+  .line {
+    border-bottom: 2px solid #fff;
+    width: 80px;
+    display: inline-block;
+    height: 100px;
+  }
+}
+.btn-minus,
+.btn-add {
+  position: absolute;
+  top: 440px;
+  width: 96px;
+  height: 90px;
+  line-height: 90px;
+  font-size: 30px;
+  text-align: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  &.disabled {
+    opacity: 0.5;
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+}
+.btn-minus {
+  left: 64px;
+}
+.btn-add {
+  right: 64px;
+}
+.btn-off {
+  transition: all 1s;
+  &-toggle {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+.btn-toggle {
+  position: absolute;
+  right: 32px;
+  top: 212px;
+  width: 96px;
+  height: 96px;
+  background-image: url(./assets/btn_aircon_more_normal@2x.png);
+  background-size: 100% 100%;
+  background-position: center center;
+  &:active {
+    background-image: url(./assets/btn_aircon_more_pressed@2x.png);
+  }
+}
+
+.btns {
+  display: flex;
+  flex-wrap: wrap;
+
+  li {
+    // float: left;
+    margin: 0 25px 0;
+    text-align: center;
+    width: 120px;
+    height: 200px;
+    font-size: 28px;
+    &.disabled {
+      opacity: 0.5;
+    }
+  }
+  a, .a-link {
+    width: 120px;
+    height: 120px;
+    display: block;
+    margin-bottom: 20px;
+    font-size: 56px;
+    line-height: 120px;
+    text-align: center;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    color: #fff;
+    &:active {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
+}
+.btns-hold {
+  position: absolute;
+  left: 50%;
+  bottom: 140px;
+  width: 700px;
+  transform: translateX(-50%);
+  padding: 0 35px;
+  .on {
+    font-weight: bold;
+  }
+  .btns {
+    margin-bottom: -60px;
+    flex-direction: row;
+    justify-content: space-between;
+
+    a:active {
+      background-color: rgba(0, 0, 0, 0.1);
+      border-width: 0;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    }
+  }
+}
+.btns-more {
+  color: #a4a9af;
+  p {
+    text-align: center;
+    font-size: 28px;
+    padding: 24px 0;
+    color: #c8cacc;
+  }
+  li {
+    margin: 80px 32px 0;
+  }
+  .on {
+    color: #2d333c;
+  }
+  .btns a, .btns .a-link {
+    border: 1px solid #d4d8de;
+    color: #d4d8de;
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.1);
+      border-width: 0;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+      color: #222a37;
+    }
+    &.on {
+      color: #222a37;
+      background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);
+      border-width: 0;
+    }
+  }
+}
+.modal-body {
+  padding-top: 0;
+  padding-bottom: 20px;
+} /*
+.btn-cold {
+    background-image: url(./assets/btn_aircon_sleep_normal.png);
+    &:active {
+        background-image: url(./assets/btn_aircon_sleep.png);
+    }
+    &.on {
+        background-image: url(./assets/btn_aircon_sleep.png);
+    }
+}
+.btn-heat {
+    background-image: url(./assets/btn_aircon_heat_normal.png);
+    &:active {
+        background-image: url(./assets/btn_aircon_heat.png);
+    }
+    &.on {
+        background-image: url(./assets/btn_aircon_heat.png);
+    }
+}
+.btn-dehumidify {
+    background-image: url(./assets/btn_aircon_dry.png);
+    &:active {
+        background-image: url(./assets/btn_aircon_dry_preesed.png);
+    }
+    &.on {
+        background-image: url(./assets/btn_aircon_dry_preesed.png);
+    }
+}
+.btn-speed {
+    background-image: url(./assets/btn_airvolume_auto_normal@2x.png);
+    &:active {
+        background-image: url(./assets/btn_airvolume_auto_pressed@2x.png);
+    }
+}
+.btn-s1 {
+    background-image: url(./assets/btn_airvolume_s_normal.png);
+    &:active {
+        background-image: url(./assets/icn_airvolume_s.png);
+    }
+    &.on {
+        background-image: url(./assets/icn_airvolume_s.png);
+    }
+}
+.btn-s2 {
+    background-image: url(./assets/btn_airvolume_m_normal.png);
+    &:active {
+        background-image: url(./assets/icn_airvolume_m.png);
+    }
+    &.on {
+        background-image: url(./assets/icn_airvolume_m.png);
+    }
+}
+.btn-s3 {
+    background-image: url(./assets/icn_airvolume_l_normal.png);
+    &:active {
+        background-image: url(./assets/icn_airvolume_l.png);
+    }
+    &.on {
+        background-image: url(./assets/icn_airvolume_l.png);
+    }
+}
+.btn-auto {
+    background-image: url(./assets/btn_aircon_ai_normal.png);
+    &:active {
+        background-image: url(./assets/btn_aircon_ai_active.png);
+    }
+    &.on {
+        background-image: url(./assets/btn_aircon_ai_active.png);
+    }
+}
+.btn-wind {
+    background-image: url(./assets/btn_aircon_blow_normal@2x.png);
+    &:active {
+        background-image: url(./assets/btn_aircon_blow_pressed@2x.png);
+    }
+    &.on {
+        background-image: url(./assets/btn_aircon_blow_active@2x.png);
+    }
+}
+.btn-vertical {
+    background-image: url(./assets/btn_aircon_vertical_normal@2x.png);
+    &:active {
+        background-image: url(./assets/btn_aircon_vertical_pressed@2x.png);
+    }
+    &.on {
+        background-image: url(./assets/btn_aircon_vertical_active@2x.png);
+    }
+}
+.btn-horizontal {
+    background-image: url(./assets/btn_aircon_horizontal_normal@2x.png);
+    &:active {
+        background-image: url(./assets/btn_aircon_horizontal_pressed@2x.png);
+    }
+    &.on {
+        background-image: url(./assets/btn_aircon_horizontal_active@2x.png);
+    }
+}*/
+.tip {
+  position: absolute;
+  left: 0;
+  top: 510px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-size: 28px;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* page off */
+.wrap-off {
+  background: #f2f2f2;
+
+  .bg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 480px;
+    width: 100%;
+    //background: url(./assets/img_bg_aircon_off@2x.png)
+    //    no-repeat;
+    //background-size: 100%;
+  }
+  .header {
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 200px;
+
+    .name {
+      font-size: 40px;
+      color: #222a37;
+      margin-bottom: 12px;
+    }
+    .status {
+      font-size: 30px;
+      color: #a4a9af;
+    }
+  }
+}
+.ac1,
+.ac2 {
+  position: absolute;
+  left: 50%;
+  top: 370px;
+  width: 560px;
+  height: 560px;
+  background-image: url(./assets/img_aircon_off@2x.png);
+  background-size: 100% 100%;
+  transform: translateX(-50%);
+}
+.ac2 {
+  background-image: url(./assets/img_aircon1_off@2x.png);
+}
+.btn-on {
+  position: absolute;
+  left: 50%;
+  bottom: 140px;
+  width: 160px;
+  height: 160px;
+  line-height: 160px;
+  text-align: center;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background-image: linear-gradient(90deg, #ffda00 0%, #ffc700 100%);
+  color: #222a37;
+  &:active {
+    opacity: 0.5;
+  }
+}
+
+/* error tip */
+.wrap-error {
+  background: #f2f2f2;
+}
+.error-tip {
+  text-align: center;
+  color: #c8cacc;
+  font-size: 32px;
+  position: absolute;
+  left: 0%;
+  top: 30%;
+  width: 100%;
+  i {
+    display: block;
+    width: 360px;
+    height: 360px;
+    background: url(./assets/img_disconnection@2x.png) no-repeat;
+    background-size: 100% 100%;
+    margin: 0 auto 36px;
+  }
+}
+
+.tip {
+  top: 320px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

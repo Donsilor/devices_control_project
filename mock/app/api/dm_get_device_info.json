@@ -1,0 +1,48 @@
+{
+    "method": "dm_get_device_info",
+    "timestamp": 1521508705,
+    "req_id": 36,
+    "msg": "success",
+    "code": 0,
+    "result": {
+        "device_uuid": "000b2a5b440100000000b0f89321e7e1",
+        "user_id": 5027,
+        "device_id": 194581666850785,
+        "family_id": 5028,
+        "room_id": 1,
+        "device_category_id": 17,
+        "created_at": 1521426555,
+        "updated_at": 1521426555,
+        "device_name": "智能洗衣机",
+        "default_device_name": "智能洗衣机",
+        "attribute": {
+            "child_lock_switch": "off",
+            "auto_detergent_switch": "condensed",
+            "add_laundry_switch": "off",
+            "sterilization": "off",
+            "spin": 1000,
+            "temperature": 0,
+            "reserve_wash": 0,
+            "mode": "high_speed_15m",
+            "status": "standby",
+            "drying": "no_drying",
+            "time_left": 15,
+            "operation": "wash",
+            "drying_duration": 0,
+            "switch": "on",
+            "deviceModel": "XQG85-FD3011HBD",
+            "manufactureId": "tcl",
+            "deviceCategory": "wash_machine.main",
+            "deviceSubCategory": 0,
+            "connectivity": "online",
+            "error": [
+                {
+                    "code": "E3",
+                    "msg": "Door lock failure",
+                    "status": 1,
+                    "modified_at": 1521508688698
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,273 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+a {
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.bg,
+.cloud {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+.bg {
+    background-image: linear-gradient(-180deg, #2499ff 0%, #13d5dc 100%);
+}
+.cloud {
+    background: url(./assets/img_clould.png) repeat-x left 180px;
+    background-size: 1660px;
+}
+.name {
+    font-size: 30px;
+    color: #ffffff;
+    position: absolute;
+    top: 144px;
+    left: 0;
+    text-align: center;
+    width: 100%;
+}
+.tip {
+    font-size: 28px;
+    color: #fff;
+    position: absolute;
+    top: 195px;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    line-height: 40px;
+}
+.entity {
+    position: absolute;
+    left: 0%;
+    top: 344px;
+    width: 100%;
+    .top {
+        width: 644px;
+        height: 60px;
+        margin: 0 auto;
+        background: url(./assets/group_up.png) no-repeat;
+        background-size: 100% 100%;
+    }
+    .center {
+        width: 609px;
+        height: 240px;
+        min-height: 60px;
+        max-height: 240px;
+        // transition-property: height;
+        // transition-duration: 28s;
+        margin: -30px auto 0;
+        background: url(./assets/group_down02.png) no-repeat;
+        background-size: 100% 100%;
+    }
+    .bottom {
+        width: 939px;
+        height: 85px;
+        margin: 0 auto;
+        background: url(./assets/group_down.png) no-repeat;
+        background-size: 100% 100%;
+    }
+    .light {
+        position: absolute;
+        left: 50%;
+        top: 34px;
+        width: 898px;
+        height: 298px;
+        transform: translate(-50%, 0);
+        background: url(./assets/img_light.png) no-repeat;
+        background-size: 100% 100%;
+    }
+    .wind {
+        position: absolute;
+        left: 50%;
+        top: 64px;
+        width: 464px;
+        height: 92px;
+        transform: translate(-50%, 0);
+        background: url(./assets/img_wind.png) no-repeat;
+        background-size: 100% 100%;
+    }
+    .hotdry {
+        position: absolute;
+        left: 50%;
+        top: 64px;
+        width: 464px;
+        height: 92px;
+        transform: translate(-50%, 0);
+        background: url(./assets/img_hotdry.png) no-repeat;
+        background-size: 100% 100%;
+    }
+    .slight {
+        position: absolute;
+        left: 50%;
+        top: 36px;
+        width: 302px;
+        height: 182px;
+        transform: translate(-50%, 0);
+        background: url(./assets/img_sj.png) no-repeat;
+        background-size: 100% 100%;
+    }
+}
+.control {
+    position: absolute;
+    left: 0;
+    top: 744px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    a {
+        width: 144px;
+        height: 144px;
+        margin: 0 45px;
+        display: block;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+    .btn-up {
+        background-image: url(./assets/btn_open12.png);
+        &:active {
+            background-image: url(./assets/btn_open08.png);
+        }
+    }
+    .btn-pause {
+        background-image: url(./assets/btn_pause10.png);
+        &:active {
+            background-image: url(./assets/btn_pause06.png);
+        }
+    }
+    .btn-down {
+        background-image: url(./assets/btn_open_copy11.png);
+        &:active {
+            background-image: url(./assets/btn_open_copy07.png);
+        }
+    }
+    .btn-light {
+        background-image: url(./assets/btn_pause_copy09.png);
+        &:active {
+            background-image: url(./assets/btn_pause_copy05.png);
+        }
+        &.on {
+            background-image: url(./assets/btn_pause_copy01.png);
+        }
+    }
+}
+
+.modal {
+    width: 752px;
+}
+.modal-body {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    a {
+        display: block;
+        font-size: 24px;
+        color: #76787a;
+        margin: 0 48px;
+        i {
+            width: 120px;
+            height: 120px;
+            display: block;
+            margin-bottom: 18px;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+        }
+        &.on {
+            color: #46bcff;
+        }
+    }
+}
+
+.btn-wind {
+    i {
+        background-image: url(./assets/btn_clothes_hanger_hotdry_normal1.png);
+    }
+    &:active {
+        i {
+            background-image: url(./assets/btn_clothes_hanger_hotdry_disable2.png);
+        }
+    }
+    &.on {
+        i {
+            background-image: url(./assets/btn_clothes_hanger_hotdry_active3.png);
+        }
+    }
+}
+.btn-bake {
+    i {
+        background-image: url(./assets/btn_clothes_hanger_hotdry_normal4.png);
+    }
+    &:active {
+        i {
+            background-image: url(./assets/btn_clothes_hanger_hotdry_disable5.png);
+        }
+    }
+    &.on {
+        i {
+            background-image: url(./assets/btn_clothes_hanger_hotdry_active6.png);
+        }
+    }
+}
+.btn-sterilize {
+    i {
+        background-image: url(./assets/btn_clothes_hanger_hotdry_normal7.png);
+    }
+    &:active {
+        i {
+            background-image: url(./assets/btn_clothes_hanger_hotdry_disable8.png);
+        }
+    }
+    &.on {
+        i {
+            background-image: url(./assets/btn_clothes_hanger_hotdry_active9.png);
+        }
+    }
+}
+
+.btn-mode {
+    position: absolute;
+    right: 60px;
+    top: 132px;
+    width: 96px;
+    height: 96px;
+    background-image: url(./assets/more_normal.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    &:active {
+        background-image: url(./assets/more_active.png);
+    }
+}
+.page-error {
+    height: 100%;
+    background: #f2f2f2;
+    text-align: center;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+.error-tip {
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+.error-tip p {
+    min-height: 30px;
+    font-size: 30px;
+    margin: 24px 0 110px 0;
+    opacity: 1;
+    position: relative;
+}

@@ -1,0 +1,24 @@
+{
+    "method": "dr_report_dev_alert",
+    "timestamp": 1521518164,
+    "result": {
+        "status_modified_at": 1521518164953,
+        "family_id": 5028,
+        "device_id": 1186134,
+        "device_name": "",
+        "default_device_name": "",
+        "device_category_id": 19,
+        "device_uuid": "000c773c210100000000000000121956",
+        "updated_at": 1521518164,
+        "attribute": {
+            "error": [
+                {
+                    "code": "E3",
+                    "msg": "Test alarm",
+                    "status": 1,
+                    "modified_at": 1521518164939
+                }
+            ]
+        }
+    }
+}
